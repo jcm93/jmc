@@ -1,3 +1,4 @@
+
 //
 //  AppDelegate.swift
 //  minimalTunes
@@ -12,14 +13,39 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet weak var window: NSWindow!
+    
+    var mainWindowController: MainWindowController?
+    
+    func initializeLibrary() {
+        let itlp = iTunesLibraryParser()
+        itlp.makeLibrary(managedObjectContext)
+    }
 
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         // Insert code here to initialize your application
+        //initializeLibrary()
+        let fuckTransform = TransformerIntegerToTimestamp()
+        NSValueTransformer.setValueTransformer(fuckTransform, forName: "AssTransform")
+        let mainWindowController = MainWindowController(windowNibName: "MainWindowController")
+        mainWindowController.showWindow(self)
+        self.mainWindowController = mainWindowController
+        let server = demoServer("/Users/johnmoody/")
+        do {
+            try server.start()
+        }
+        catch {
+            print("err")
+        }
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {
         // Insert code here to tear down your application
+         do {
+         try managedObjectContext.save()
+         } catch {
+         fatalError("Failure to save context: \(error)")
+         }
     }
 
     // MARK: - Core Data stack
@@ -70,7 +96,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
             let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("CocoaAppCD.storedata")
             do {
-                try coordinator!.addPersistentStoreWithType(NSXMLStoreType, configuration: nil, URL: url, options: nil)
+                try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
             } catch {
                 failError = error as NSError
             }
@@ -93,10 +119,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }()
 
     lazy var managedObjectContext: NSManagedObjectContext = {
+        print("im herea")
         // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.) This property is optional since there are legitimate error conditions that could cause the creation of the context to fail.
         let coordinator = self.persistentStoreCoordinator
         var managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
+        print("im herea2")
         return managedObjectContext
     }()
 
