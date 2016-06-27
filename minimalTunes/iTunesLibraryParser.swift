@@ -16,12 +16,12 @@ import CoreData
 import Cocoa
 
 class iTunesLibraryParser {
-    let libDict = NSMutableDictionary(contentsOfFile: "/Volumes/Macintosh HD/CS/shittyTunes/shitTunes/shitTunes/iTunes Library.xml")
+    let libDict = NSMutableDictionary(contentsOfFile: "/Volumes/Macintosh HD/CS/minimalTunes/minimalTunes/iTunes Library.xml")
     let XMLMasterPlaylistTrackArray = NSArray()
     let XMLTrackDictionaryDictionary = NSDictionary()
     var masterPlaylistDictList = [NSDictionary()]
     
-    var artistSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_artist", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "sort_album", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "track_num", ascending:true)]
+    var artistSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_artist", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "sort_album", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "track_num", ascending:true), NSSortDescriptor(key: "name", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:)))]
     var albumSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_album", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "track_num", ascending: true), NSSortDescriptor(key: "sort_name", ascending:true, selector: #selector(NSString.localizedStandardCompare(_:)))]
     var dateAddedSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "date_added", ascending: true, selector: #selector(NSDate.compare(_:))), NSSortDescriptor(key: "sort_artist", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "sort_album", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "track_num", ascending:true)]
     
@@ -41,6 +41,11 @@ class iTunesLibraryParser {
             return nil
         }
     }
+    
+    var addedArtists = NSMutableDictionary()
+    var addedAlbums = NSMutableDictionary()
+    var addedComposers = NSMutableDictionary()
+    var addedGenres = NSMutableDictionary()
     
     
     func makeLibrary(moc: NSManagedObjectContext) {
@@ -67,6 +72,8 @@ class iTunesLibraryParser {
         cd_shared_header.name = "Shared Libraries"
         cd_shared_header.sort_order = 1
         
+        //create column browser headers
+        
         //create master playlist source list item
         let cd_library_master_playlist_source_item = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: moc) as! SourceListItem
         cd_library_master_playlist_source_item.parent = cd_library_header
@@ -76,6 +83,10 @@ class iTunesLibraryParser {
         //create the master playlist
         let cd_library_master_playlist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: moc) as! SongCollection
         cd_library_master_playlist.name = "Master Playlist"
+        
+        //create master id array
+        let master_id_array = NSEntityDescription.insertNewObjectForEntityForName("MasterIDArray", inManagedObjectContext: moc) as! MasterIDArray
+        var id_array = [Int]()
         
         //attach the master playlist to the master playlist source list entity
         cd_library_master_playlist.if_master_list_item = cd_library_master_playlist_source_item
@@ -91,9 +102,13 @@ class iTunesLibraryParser {
             var track_id, track_num, time, size, bit_rate, sample_rate, play_count, skip_count, rating: Int
             var date_released, date_modified, date_added, date_last_played, date_last_skipped: NSDate
             var status, compilation: Bool
+            var placeholderArtist: Artist?
+            var placeholderAlbum: Album?
+            
             if (XMLTrackDict!.objectForKey("Track ID") != nil) {
                 track_id = XMLTrackDict!.objectForKey("Track ID") as! Int
                 cd_track.id = track_id
+                id_array.append(track_id)
             }
             if (XMLTrackDict!.objectForKey("Track Type") != nil) {
                 kind = XMLTrackDict!.objectForKey("Track Type") as! String
@@ -137,31 +152,38 @@ class iTunesLibraryParser {
             }
             if (XMLTrackDict!.objectForKey("Artist") != nil) {
                 artist = XMLTrackDict!.objectForKey("Artist") as! String
-                /*let artist_check = instanceCheck("Artist", instanceName: artist, context: moc)
-                if (artist_check != nil) {
-                    cd_track.artist = artist_check as! Artist
+                if addedArtists.objectForKey(artist) != nil {
+                    placeholderArtist = addedArtists.objectForKey(artist) as! Artist
+                    cd_track.artist = placeholderArtist
                 }
                 else {
                     let new_artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: moc) as! Artist
                     new_artist.name = artist
-                    new_artist.library = cd_library
                     cd_track.artist = new_artist
-                }*/
-                cd_track.artist = artist
+                    placeholderArtist = new_artist
+                    addedArtists.setValue(new_artist, forKey: artist)
+                    //let new_artist_view = NSEntityDescription.insertNewObjectForEntityForName("ArtistColumnBrowserObject", inManagedObjectContext: moc)
+                    //new_artist_view.artist = new_artist
+                }
             }
             if (XMLTrackDict!.objectForKey("Album") != nil) {
                 album = XMLTrackDict!.objectForKey("Album") as! String
-                /*let album_check = instanceCheck("Album", instanceName: album, context: moc)
-                 if (album_check != nil) {
-                 cd_track.album = album_check as! Album
-                 }
-                 else {
-                 let new_album = NSEntityDescription.insertNewObjectForEntityForName("Album", inManagedObjectContext: moc) as! Album
-                 new_album.name = album
-                 cd_track.album = new_album
-                 new_album.library = cd_library
-                 }*/
-                cd_track.album = album
+                if (addedAlbums.objectForKey(album) != nil) {
+                    let the_album = addedAlbums.objectForKey(album)
+                    placeholderArtist?.addAlbumsObject(the_album as! Album)
+                    placeholderAlbum = the_album as! Album
+                    cd_track.album = the_album as! Album
+                    
+                }
+                else {
+                    let new_album = NSEntityDescription.insertNewObjectForEntityForName("Album", inManagedObjectContext: moc) as! Album
+                    new_album.name = album
+                    cd_track.album = new_album
+                    placeholderAlbum = new_album
+                    addedAlbums.setValue(new_album, forKey: album)
+                    /*let new_album_view = NSEntityDescription.insertNewObjectForEntityForName("AlbumColumnBrowserObject", inManagedObjectContext: moc)
+                    new_album_view.album = new_album*/
+                }
             }
             if (XMLTrackDict!.objectForKey("Track Number") != nil) {
                 track_num = XMLTrackDict!.objectForKey("Track Number") as! Int
@@ -173,17 +195,18 @@ class iTunesLibraryParser {
             }
             if (XMLTrackDict!.objectForKey("Album Artist") != nil) {
                 album_artist = XMLTrackDict!.objectForKey("Album Artist") as! String
-                /*let album_artist_check = instanceCheck("Artist", instanceName: album_artist, context: moc)
-                if (album_artist_check != nil) {
-                    cd_track.album_artist = album_artist_check as! Artist
+                if addedArtists.objectForKey(album_artist) != nil {
+                    let the_album_artist = addedArtists.objectForKey(album_artist) as! Artist
+                    placeholderAlbum?.album_artist = the_album_artist
                 }
                 else {
-                    let new_artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: moc) as! Artist
-                    new_artist.name = album_artist
-                    cd_track.album_artist = new_artist
-                    new_artist.library = cd_library
-                }*/
-                cd_track.album_artist = album_artist
+                    let new_album_artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: moc) as! Artist
+                    new_album_artist.name = album_artist
+                    placeholderAlbum?.album_artist = new_album_artist
+                    addedArtists.setValue(new_album_artist, forKey: album_artist)
+                    //let new_album_artist_view = NSEntityDescription.insertNewObjectForEntityForName("ArtistColumnBrowserObject", inManagedObjectContext: moc)
+                    //new_album_artist_view.artist = new_album_artist
+                }
             }
             if (XMLTrackDict!.objectForKey("Skip Count") != nil) {
                 skip_count = XMLTrackDict!.objectForKey("Skip Count") as! Int
@@ -210,20 +233,24 @@ class iTunesLibraryParser {
                 cd_track.sort_album = sort_album
             }
             else {
-                cd_track.sort_album = cd_track.album
+                if cd_track.album != nil {
+                    cd_track.sort_album = (cd_track.album! as Album).name
+                }
             }
             if (XMLTrackDict!.objectForKey("Genre") != nil) {
                 genre = XMLTrackDict!.objectForKey("Genre") as! String
-                /*let genre_check = instanceCheck("Genre", instanceName: genre, context: moc)
-                if (genre_check != nil) {
-                    cd_track.genre = genre_check as! Genre
+                if addedGenres.objectForKey(genre) != nil {
+                    let the_genre = addedGenres.objectForKey(genre)
+                    cd_track.genre = the_genre as! Genre
                 }
                 else {
                     let new_genre = NSEntityDescription.insertNewObjectForEntityForName("Genre", inManagedObjectContext: moc) as! Genre
                     new_genre.name = genre
                     cd_track.genre = new_genre
-                }*/
-                cd_track.genre = genre
+                    addedGenres.setValue(new_genre, forKey: genre)
+                    //let new_genre_view = NSEntityDescription.insertNewObjectForEntityForName("GenreColumnBrowserObject", inManagedObjectContext: moc)
+                    //new_genre_view.genre = new_genre
+                }
             }
             if (XMLTrackDict!.objectForKey("Rating") != nil) {
                 rating = XMLTrackDict!.objectForKey("Rating") as! Int
@@ -243,16 +270,18 @@ class iTunesLibraryParser {
             }
             if (XMLTrackDict!.objectForKey("Composer") != nil) {
                 composer = XMLTrackDict!.objectForKey("Composer") as! String
-                /*let composer_check = instanceCheck("Composer", instanceName: composer, context: moc)
-                if (composer_check != nil) {
-                    cd_track.composer = composer_check as! Composer
+                if addedComposers.objectForKey(composer) != nil {
+                    let the_composer = addedComposers.objectForKey(composer)
+                    cd_track.composer = the_composer as! Composer
                 }
                 else {
                     let new_composer = NSEntityDescription.insertNewObjectForEntityForName("Composer", inManagedObjectContext: moc) as! Composer
                     new_composer.name = composer
                     cd_track.composer = new_composer
-                }*/
-                cd_track.composer = composer
+                    addedComposers.setValue(new_composer, forKey: composer)
+                    //let new_composer_view = NSEntityDescription.insertNewObjectForEntityForName("ComposerColumnBrowserObject", inManagedObjectContext: moc)
+                    //new_composer_view.composer = new_composer
+                }
             }
             if (XMLTrackDict!.objectForKey("Sort Composer") != nil) {
                 sort_composer = XMLTrackDict!.objectForKey("Sort Composer") as! String
@@ -267,7 +296,9 @@ class iTunesLibraryParser {
                 cd_track.sort_artist = sort_artist
             }
             else {
-                cd_track.sort_artist = cd_track.artist
+                if (cd_track.artist != nil) {
+                    cd_track.sort_artist = (cd_track.artist! as Artist).name
+                }
             }
             if (XMLTrackDict!.objectForKey("Compilation") != nil) {
                 compilation = XMLTrackDict!.objectForKey("Compilation") as! Bool
@@ -276,6 +307,7 @@ class iTunesLibraryParser {
             }
             search_field = ""
         }
+        master_id_array.array = id_array
         print("beginning sort")
         let poop = NSFetchRequest(entityName: "Track")
         var song_array = NSArray()
@@ -290,12 +322,10 @@ class iTunesLibraryParser {
         for (index, item) in song_array.enumerate() {
             (item as! Track).artist_sort_order = index
         }
-        print("im here")
         song_array = song_array.sortedArrayUsingDescriptors(albumSortDescriptors)
         for (index, item) in song_array.enumerate() {
             (item as! Track).album_sort_order = index
         }
-        print("im here 2")
         song_array = song_array.sortedArrayUsingDescriptors(dateAddedSortDescriptors)
         for (index, item) in song_array.enumerate() {
             (item as! Track).date_added_sort_order = index

@@ -1,4 +1,5 @@
 
+
 //
 //  AppDelegate.swift
 //  minimalTunes
@@ -11,8 +12,6 @@ import Cocoa
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-
-    @IBOutlet weak var window: NSWindow!
     
     var mainWindowController: MainWindowController?
     
@@ -28,8 +27,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let fuckTransform = TransformerIntegerToTimestamp()
         NSValueTransformer.setValueTransformer(fuckTransform, forName: "AssTransform")
         let mainWindowController = MainWindowController(windowNibName: "MainWindowController")
-        mainWindowController.showWindow(self)
         self.mainWindowController = mainWindowController
+        //set up bindings
+        mainWindowController.showWindow(self)
+        mainWindowController.becomeFirstResponder()
         let server = demoServer("/Users/johnmoody/")
         do {
             try server.start()
@@ -119,13 +120,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }()
 
     lazy var managedObjectContext: NSManagedObjectContext = {
-        print("im herea")
         // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.) This property is optional since there are legitimate error conditions that could cause the creation of the context to fail.
         let coordinator = self.persistentStoreCoordinator
         var managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
-        print("im herea2")
         return managedObjectContext
+        
     }()
 
     // MARK: - Core Data Saving and Undo support
@@ -163,6 +163,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         do {
+            print("im here")
             try managedObjectContext.save()
         } catch {
             let nserror = error as NSError
