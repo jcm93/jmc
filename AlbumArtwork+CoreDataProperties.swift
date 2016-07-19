@@ -2,7 +2,7 @@
 //  AlbumArtwork+CoreDataProperties.swift
 //  minimalTunes
 //
-//  Created by John Moody on 6/22/16.
+//  Created by John Moody on 7/14/16.
 //  Copyright © 2016 John Moody. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -14,8 +14,8 @@ import CoreData
 
 extension AlbumArtwork {
 
-    @NSManaged var artwork: NSObject?
+    @NSManaged var artwork_location: NSObject?
+    @NSManaged var image_hash: NSNumber?
     @NSManaged var collection_album: AlbumArtworkCollection?
-    @NSManaged var collection_primary: AlbumArtworkCollection?
 
 }

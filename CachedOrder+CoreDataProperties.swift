@@ -1,8 +1,8 @@
 //
-//  TagColumnBrowserObject+CoreDataProperties.swift
+//  CachedOrder+CoreDataProperties.swift
 //  minimalTunes
 //
-//  Created by John Moody on 6/22/16.
+//  Created by John Moody on 7/14/16.
 //  Copyright © 2016 John Moody. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -12,7 +12,9 @@
 import Foundation
 import CoreData
 
-extension TagColumnBrowserObject {
+extension CachedOrder {
 
+    @NSManaged var order: String?
+    @NSManaged var tracks: NSOrderedSet?
 
 }

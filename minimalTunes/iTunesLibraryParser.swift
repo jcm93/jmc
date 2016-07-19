@@ -15,15 +15,35 @@ import Foundation
 import CoreData
 import Cocoa
 
-class iTunesLibraryParser {
-    let libDict = NSMutableDictionary(contentsOfFile: "/Volumes/Macintosh HD/CS/minimalTunes/minimalTunes/iTunes Library.xml")
-    let XMLMasterPlaylistTrackArray = NSArray()
-    let XMLTrackDictionaryDictionary = NSDictionary()
-    var masterPlaylistDictList = [NSDictionary()]
+class iTunesLibraryParser: NSObject {
+    let libDict: NSMutableDictionary
+    let XMLPlaylistArray: NSArray
+    let XMLMasterPlaylistDict: NSDictionary
+    let XMLMasterPlaylistTrackArray: NSArray
+    let XMLTrackDictionaryDictionary: NSDictionary
+    dynamic var numSongs: Int
+    dynamic var numImportedSongs: Int = 0
+    dynamic var doneSongs: Bool = false
+    dynamic var numPlaylists: Int
+    dynamic var numImportedPlaylists: Int = 0
     
     var artistSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_artist", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "sort_album", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "track_num", ascending:true), NSSortDescriptor(key: "name", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:)))]
     var albumSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_album", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "track_num", ascending: true), NSSortDescriptor(key: "sort_name", ascending:true, selector: #selector(NSString.localizedStandardCompare(_:)))]
+    //var albumSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_album", ascending: true)]
     var dateAddedSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "date_added", ascending: true, selector: #selector(NSDate.compare(_:))), NSSortDescriptor(key: "sort_artist", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "sort_album", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "track_num", ascending:true)]
+    var nameSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_name", ascending:true, selector: #selector(NSString.localizedStandardCompare(_:)))]
+    var timeSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "time", ascending: true), NSSortDescriptor(key: "sort_name", ascending:true, selector: #selector(NSString.localizedStandardCompare(_:)))]
+    
+    
+    init(path: String) throws {
+        libDict = NSMutableDictionary(contentsOfFile: path)!
+        XMLPlaylistArray = libDict.objectForKey("Playlists") as! NSArray
+        XMLMasterPlaylistDict = XMLPlaylistArray[0] as! NSDictionary
+        XMLMasterPlaylistTrackArray = XMLMasterPlaylistDict.objectForKey("Playlist Items") as! NSArray
+        XMLTrackDictionaryDictionary = libDict.objectForKey("Tracks") as! NSDictionary
+        numSongs = XMLMasterPlaylistTrackArray.count
+        numPlaylists = XMLPlaylistArray.count
+    }
     
     func instanceCheck(entity: String, instance: String, instanceName: Int, context: NSManagedObjectContext) -> NSManagedObject?
     {
@@ -47,13 +67,10 @@ class iTunesLibraryParser {
     var addedComposers = NSMutableDictionary()
     var addedGenres = NSMutableDictionary()
     
-    
-    func makeLibrary(moc: NSManagedObjectContext) {
-        //initialize XML stuff
-        let XMLPlaylistArray = libDict!.objectForKey("Playlists") as! NSArray
-        let XMLMasterPlaylistDict = XMLPlaylistArray[0] as! NSDictionary
-        let XMLMasterPlaylistTrackArray = XMLMasterPlaylistDict.objectForKey("Playlist Items") as! NSArray
-        let XMLTrackDictionaryDictionary = libDict!.objectForKey("Tracks") as! NSDictionary
+    func makeLibrary() {
+        var moc: NSManagedObjectContext = {
+            return (NSApplication.sharedApplication().delegate
+                as? AppDelegate)?.managedObjectContext }()!
         
         //create the library entity
         let cd_library = NSEntityDescription.insertNewObjectForEntityForName("Library", inManagedObjectContext: moc) as! Library
@@ -84,10 +101,6 @@ class iTunesLibraryParser {
         let cd_library_master_playlist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: moc) as! SongCollection
         cd_library_master_playlist.name = "Master Playlist"
         
-        //create master id array
-        let master_id_array = NSEntityDescription.insertNewObjectForEntityForName("MasterIDArray", inManagedObjectContext: moc) as! MasterIDArray
-        var id_array = [Int]()
-        
         //attach the master playlist to the master playlist source list entity
         cd_library_master_playlist.if_master_list_item = cd_library_master_playlist_source_item
         cd_library_master_playlist.if_master_library = cd_library
@@ -97,7 +110,6 @@ class iTunesLibraryParser {
             cd_library_master_playlist.addTracksObject(cd_track)
             let id = item.objectForKey("Track ID")?.description
             let XMLTrackDict = XMLTrackDictionaryDictionary.objectForKey(id!)
-            masterPlaylistDictList.append(XMLTrackDict as! NSDictionary)
             var name, sort_name, artist, sort_artist, composer, sort_composer, album, sort_album, file_kind, genre, kind, comments, search_field, album_artist, location: String
             var track_id, track_num, time, size, bit_rate, sample_rate, play_count, skip_count, rating: Int
             var date_released, date_modified, date_added, date_last_played, date_last_skipped: NSDate
@@ -108,7 +120,6 @@ class iTunesLibraryParser {
             if (XMLTrackDict!.objectForKey("Track ID") != nil) {
                 track_id = XMLTrackDict!.objectForKey("Track ID") as! Int
                 cd_track.id = track_id
-                id_array.append(track_id)
             }
             if (XMLTrackDict!.objectForKey("Track Type") != nil) {
                 kind = XMLTrackDict!.objectForKey("Track Type") as! String
@@ -306,30 +317,61 @@ class iTunesLibraryParser {
                 //cd_track.album?.is_compilation = compilation
             }
             search_field = ""
+            dispatch_async(dispatch_get_main_queue()) {
+                self.numImportedSongs += 1
+            }
         }
-        master_id_array.array = id_array
+        dispatch_async(dispatch_get_main_queue()) {
+            self.doneSongs = true
+        }
         print("beginning sort")
         let poop = NSFetchRequest(entityName: "Track")
         var song_array = NSArray()
         poop.sortDescriptors = artistSortDescriptors
+        let before = NSDate()
         do {
             try song_array = moc.executeFetchRequest(poop)
         }
         catch {
             print("err")
         }
+        let after = NSDate()
+        let diff = after.timeIntervalSinceDate(before)
+        print(diff)
         print(song_array.count)
+        let cachedArtistOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: moc) as! CachedOrder
         for (index, item) in song_array.enumerate() {
-            (item as! Track).artist_sort_order = index
+            (item as! Track).addOrdersObject(cachedArtistOrder)
         }
+        cachedArtistOrder.order = "Artist"
+        let cachedAlbumOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: moc) as! CachedOrder
         song_array = song_array.sortedArrayUsingDescriptors(albumSortDescriptors)
         for (index, item) in song_array.enumerate() {
-            (item as! Track).album_sort_order = index
+            (item as! Track).addOrdersObject(cachedAlbumOrder)
         }
+        cachedAlbumOrder.order = "Album"
+        let dateAddedOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: moc) as! CachedOrder
         song_array = song_array.sortedArrayUsingDescriptors(dateAddedSortDescriptors)
         for (index, item) in song_array.enumerate() {
-            (item as! Track).date_added_sort_order = index
+            (item as! Track).addOrdersObject(dateAddedOrder)
         }
+        dateAddedOrder.order = "Date Added"
+        
+        song_array = song_array.sortedArrayUsingDescriptors(timeSortDescriptors)
+        let cachedTimeOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: moc) as! CachedOrder
+        for (index, item) in song_array.enumerate() {
+            (item as! Track).addOrdersObject(cachedTimeOrder)
+        }
+        cachedTimeOrder.order = "Time"
+        
+        song_array = song_array.sortedArrayUsingDescriptors(nameSortDescriptors)
+        let cachedNameOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: moc) as! CachedOrder
+        for (index, item) in song_array.enumerate() {
+            (item as! Track).addOrdersObject(cachedNameOrder)
+        }
+        cachedNameOrder.order = "Name"
+
+        print("done sorting")
         
         //create playlists
         for playlistDict in XMLPlaylistArray {
@@ -352,6 +394,9 @@ class iTunesLibraryParser {
             cd_playlist_source_list_item.name = cd_playlist.name
             cd_playlist_source_list_item.playlist = cd_playlist
             cd_playlist_source_list_item.library = cd_library
+            dispatch_async(dispatch_get_main_queue()) {
+                self.numImportedPlaylists += 1
+            }
         }
         
         //create shared library examples

@@ -35,7 +35,7 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     var duration_seconds: Double?
     var duration_frames: Int64?
     var track_frame_offset: Double?
-    var timer: NSTimer?
+    var is_paused: Bool?
     
     var total_offset_frames: Int64 = 0
     var total_offset_seconds: Int64 = 0
@@ -50,12 +50,18 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     }
     
     func playImmediately(track: Track) {
+        print("paused value is \(is_paused)")
         currentTrack = track
         initializePlayback()
-        play()
+        if (is_paused == false || is_paused == nil) {
+            play()
+        }
     }
     
     func addTrackToQueue(track: Track, index: Int?) {
+        print("adding track to audio queue")
+        print(index)
+        print(trackQueue.count)
         if (currentTrack == nil) {
             playImmediately(track)
         }
@@ -63,7 +69,7 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
             trackQueue.append(track)
         }
         else {
-            if (index != nil) {
+            if (index != nil && index < trackQueue.count) {
                 trackQueue.insert(track, atIndex: index!)
             }
             else {
@@ -78,7 +84,9 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
             return
         }
         else {
-            swap(&trackQueue[first_index], &trackQueue[second_index])
+            let tmp = trackQueue[first_index]
+            trackQueue[first_index] = trackQueue[second_index]
+            trackQueue[second_index] = tmp
         }
     }
     
@@ -213,14 +221,31 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     
     func skip() {
         currentHandlerType = .skip
+        is_paused = !curNode.playing
         if (trackQueue.count > 0) {
-            curNode.stop()
+            if (is_paused == false) {
+                curNode.stop()
+            }
+            else {
+                curNode.play()
+                curNode.stop()
+            }
         }
         else {
             observerDonePlaying()
-            curNode.stop()
+            if (is_paused == false) {
+                curNode.stop()
+            }
+            else {
+                curNode.play()
+                curNode.stop()
+            }
         }
-        curNode.play()
+        total_offset_seconds = 0
+        total_offset_frames = 0
+        if is_paused == false {
+            curNode.play()
+        }
         currentHandlerType = .natural
     }
     
@@ -234,7 +259,9 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
         currentHandlerType = .seek
         curNode.stop()
         curNode.scheduleSegment(curFile!, startingFrame: frame, frameCount: UInt32(duration_frames!)-UInt32(frame), atTime: nil, completionHandler: handleCompletion)
-        curNode.play()
+        if (is_paused == false) {
+            curNode.play()
+        }
         total_offset_frames = 0
         total_offset_seconds = 0
         currentHandlerType = .natural
@@ -249,10 +276,12 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     
     
     func play() {
+        is_paused = false
         curNode.play()
 
     }
     func pause() {
+        is_paused = true
         curNode.pause()
     }
 }

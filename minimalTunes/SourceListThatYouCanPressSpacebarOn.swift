@@ -11,6 +11,10 @@ import Cocoa
 class SourceListThatYouCanPressSpacebarOn: NSOutlineView {
     
     var mainWindowController: MainWindowController?
+    
+    override func awakeFromNib() {
+        self.registerForDraggedTypes(["SourceListItem", "Track"])
+    }
 
     override func drawRect(dirtyRect: NSRect) {
         super.drawRect(dirtyRect)

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="PreferencesWindowController" customModule="minimalTunes" customModuleProvider="target">
+            <connections>
+                <outlet property="tabView" destination="Wri-Sy-6dx" id="gPp-MV-XEE"/>
+                <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" unifiedTitleAndToolbar="YES" fullSizeContentView="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="240" width="480" height="303"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+            <view key="contentView" id="se5-gp-TjO">
+                <rect key="frame" x="0.0" y="0.0" width="480" height="303"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <tabView fixedFrame="YES" type="noTabsNoBorder" translatesAutoresizingMaskIntoConstraints="NO" id="Wri-Sy-6dx">
+                        <rect key="frame" x="0.0" y="33" width="480" height="192"/>
+                        <font key="font" metaFont="system"/>
+                        <tabViewItems>
+                            <tabViewItem label="Item 0" identifier="" id="5wv-L6-agV">
+                                <view key="view" ambiguous="YES" id="S9T-MJ-G6F">
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                            </tabViewItem>
+                            <tabViewItem label="Item 1" identifier="" id="qrQ-IW-Jgv">
+                                <view key="view" id="0Rx-Vg-ejf">
+                                    <rect key="frame" x="0.0" y="0.0" width="480" height="192"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                            </tabViewItem>
+                            <tabViewItem label="Item 2" identifier="" id="rTh-ia-5Tn">
+                                <view key="view" id="urC-l1-HwO">
+                                    <rect key="frame" x="0.0" y="0.0" width="480" height="192"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                            </tabViewItem>
+                            <tabViewItem label="Item 3" identifier="" id="iG8-pk-Cr0">
+                                <view key="view" id="gVW-Yu-6dW">
+                                    <rect key="frame" x="0.0" y="0.0" width="480" height="192"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                            </tabViewItem>
+                            <tabViewItem label="Item 4" identifier="" id="5lq-Na-gwj">
+                                <view key="view" id="VkB-49-Rj6">
+                                    <rect key="frame" x="0.0" y="0.0" width="480" height="192"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                            </tabViewItem>
+                        </tabViewItems>
+                    </tabView>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CkL-eI-Dfk">
+                        <rect key="frame" x="394" y="-1" width="81" height="32"/>
+                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="phd-85-0zB">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                        </buttonCell>
+                    </button>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FAF-oG-BsF">
+                        <rect key="frame" x="313" y="-1" width="81" height="32"/>
+                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="f1F-xD-62n">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                        </buttonCell>
+                    </button>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lut-X7-lQi">
+                        <rect key="frame" x="7" y="176" width="261" height="18"/>
+                        <buttonCell key="cell" type="check" title="Automatically play files added to library" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="vwe-IM-fFO">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UO0-mS-xED">
+                        <rect key="frame" x="7" y="203" width="138" height="17"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Double click behavior:" id="Oe2-Nx-JbU">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rJo-vA-tht">
+                        <rect key="frame" x="144" y="197" width="76" height="26"/>
+                        <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="4Vb-KX-kJD">
+                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="menu"/>
+                            <menu key="menu" id="P6A-gh-jiX">
+                                <items>
+                                    <menuItem title="Play" id="DQb-gV-WuL"/>
+                                    <menuItem title="Queue" id="o0m-GW-YY5"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                    </popUpButton>
+                </subviews>
+            </view>
+            <toolbar key="toolbar" implicitIdentifier="483C4042-24D6-48BF-AC68-296C8F73563D" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="oeq-An-LBY">
+                <allowedToolbarItems>
+                    <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="q2C-NO-BkR"/>
+                    <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="i3O-D1-xcE"/>
+                    <toolbarItem implicitItemIdentifier="C51189BB-32EE-44A1-922E-B0858A3D7FA4" label="Library" paletteLabel="Library" tag="-1" image="NSFolder" autovalidates="NO" selectable="YES" id="oPY-uk-yzh">
+                        <connections>
+                            <action selector="libraryPressed:" target="-2" id="E3K-Lx-5fB"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="9B6DD26F-0B14-4FCC-999B-6C822A9110D2" label="Playback" paletteLabel="Playback" tag="-1" image="PlayImage" autovalidates="NO" selectable="YES" id="8En-hf-qdB">
+                        <connections>
+                            <action selector="playbackPressed:" target="-2" id="fvK-mO-q2d"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="9F216F3D-9A8F-4D78-B07A-6CD015F89DA1" label="Sharing" paletteLabel="Sharing" tag="-1" image="NSEveryone" autovalidates="NO" selectable="YES" id="HmA-Sr-R7H">
+                        <connections>
+                            <action selector="sharingPressed:" target="-2" id="acN-Ag-3St"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="2AD00D0B-C7A2-4FDA-9EB6-2CA4D4E481D6" label="General" paletteLabel="General" tag="-1" image="NSPreferencesGeneral" autovalidates="NO" selectable="YES" id="iL7-6p-AQs">
+                        <connections>
+                            <action selector="generalPressed:" target="-2" id="OS0-L4-doV"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="64B97852-8D6D-4C76-A150-1A884EF9459D" label="Advanced" paletteLabel="Advanced" tag="-1" image="NSBonjour" autovalidates="NO" selectable="YES" id="5LE-wf-XJP">
+                        <connections>
+                            <action selector="advancedPressed:" target="-2" id="yK5-4f-8PK"/>
+                        </connections>
+                    </toolbarItem>
+                </allowedToolbarItems>
+                <defaultToolbarItems>
+                    <toolbarItem reference="i3O-D1-xcE"/>
+                    <toolbarItem reference="iL7-6p-AQs"/>
+                    <toolbarItem reference="8En-hf-qdB"/>
+                    <toolbarItem reference="HmA-Sr-R7H"/>
+                    <toolbarItem reference="oPY-uk-yzh"/>
+                    <toolbarItem reference="5LE-wf-XJP"/>
+                    <toolbarItem reference="i3O-D1-xcE"/>
+                </defaultToolbarItems>
+            </toolbar>
+            <connections>
+                <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
+            </connections>
+            <point key="canvasLocation" x="198" y="370.5"/>
+        </window>
+    </objects>
+    <resources>
+        <image name="NSBonjour" width="32" height="32"/>
+        <image name="NSEveryone" width="32" height="32"/>
+        <image name="NSFolder" width="32" height="32"/>
+        <image name="NSPreferencesGeneral" width="32" height="32"/>
+        <image name="PlayImage" width="100" height="100"/>
+    </resources>
+</document>

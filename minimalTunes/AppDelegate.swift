@@ -1,5 +1,6 @@
 
 
+
 //
 //  AppDelegate.swift
 //  minimalTunes
@@ -14,29 +15,78 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
     
     var mainWindowController: MainWindowController?
+    var yeOldeFileHandler: YeOldeFileHandler?
+    var preferencesWindowController: PreferencesWindowController?
+    var setupWindowController: InitialSetupWindowController?
+    var importWindow: ImportWindowController?
+    var importProgressBar: ImportProgressBar?
+    var iTunesParser: iTunesLibraryParser?
     
-    func initializeLibrary() {
-        let itlp = iTunesLibraryParser()
-        itlp.makeLibrary(managedObjectContext)
+    @IBAction func jumpToSelection(sender: AnyObject) {
+        mainWindowController!.jumpToSelection()
+    }
+    func initializeLibraryAndShowMainWindow() {
+        mainWindowController = MainWindowController(windowNibName: "MainWindowController")
+        if NSUserDefaults.standardUserDefaults().boolForKey("hasMusic") == true {
+            mainWindowController?.hasMusic = true
+        }
+        else {
+            mainWindowController?.hasMusic = false
+        }
+        mainWindowController?.showWindow(self)
+    }
+    
+    @IBAction func addToLibrary(sender: AnyObject) {
+        openFiles()
+    }
+    func openFiles() {
+        
+        let myFileDialog: NSOpenPanel = NSOpenPanel()
+        let handler = YeOldeFileHandler()
+        myFileDialog.allowsMultipleSelection = true
+        myFileDialog.canChooseDirectories = false
+        myFileDialog.runModal()
+        
+        for url in myFileDialog.URLs {
+            handler.getTrackFromFile(url.absoluteString)
+        }
+
+    }
+    
+    func initializeProgressBarWindow() {
+        importProgressBar = ImportProgressBar(windowNibName: "ImportProgressBar")
+        importProgressBar?.iTunesParser = self.iTunesParser
+        importProgressBar?.initialize()
+        importProgressBar?.showWindow(self)
     }
 
-
+    @IBAction func openPreferences(sender: AnyObject) {
+        preferencesWindowController = PreferencesWindowController(windowNibName: "PreferencesWindowController")
+        preferencesWindowController?.showWindow(self)
+    }
+    
+    //probably dumb and bad.
+    @IBAction func testyThing(sender: AnyObject) {
+        if mainWindowController?.advancedFilterScrollView.hidden == true {
+            mainWindowController?.advancedFilterScrollView.hidden = false
+            
+        }
+        else {
+            mainWindowController?.advancedFilterScrollView.hidden = true
+        }
+    }
+    
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         // Insert code here to initialize your application
-        //initializeLibrary()
         let fuckTransform = TransformerIntegerToTimestamp()
+        yeOldeFileHandler = YeOldeFileHandler()
         NSValueTransformer.setValueTransformer(fuckTransform, forName: "AssTransform")
-        let mainWindowController = MainWindowController(windowNibName: "MainWindowController")
-        self.mainWindowController = mainWindowController
-        //set up bindings
-        mainWindowController.showWindow(self)
-        mainWindowController.becomeFirstResponder()
-        let server = demoServer("/Users/johnmoody/")
-        do {
-            try server.start()
-        }
-        catch {
-            print("err")
+        if NSUserDefaults.standardUserDefaults().boolForKey("hasStartedBefore") != true {
+            print("has not started before")
+            setupWindowController = InitialSetupWindowController(windowNibName: "InitialSetupWindowController")
+            setupWindowController?.showWindow(self)
+        } else {
+            initializeLibraryAndShowMainWindow()
         }
     }
 
@@ -47,6 +97,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
          } catch {
          fatalError("Failure to save context: \(error)")
          }
+    }
+    
+    func showMainWindow() {
+        mainWindowController = MainWindowController(windowNibName: "MainWindowController")
+        mainWindowController!.showWindow(self)
     }
 
     // MARK: - Core Data stack
@@ -90,14 +145,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 failError = nserror
             }
         }
-        
+    
         // Create the coordinator and store
         var coordinator: NSPersistentStoreCoordinator? = nil
         if failError == nil {
             coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
             let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("CocoaAppCD.storedata")
             do {
-                try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+                var options = Dictionary<NSObject, AnyObject>()
+                options[NSMigratePersistentStoresAutomaticallyOption] = true
+                options[NSInferMappingModelAutomaticallyOption] = true
+                options[NSSQLitePragmasOption] = ["journal_mode" : "DELETE"]
+                try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: options)
             } catch {
                 failError = error as NSError
             }
@@ -163,7 +222,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         do {
-            print("im here")
             try managedObjectContext.save()
         } catch {
             let nserror = error as NSError
