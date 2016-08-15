@@ -6,7 +6,7 @@
 //  Copyright © 2016 John Moody. All rights reserved.
 //
 
-//houses functions for editing tags, re-cacheing sorts
+//houses functions for editing tags, re-cacheing sorts, finding album artwork
 
 import Cocoa
 

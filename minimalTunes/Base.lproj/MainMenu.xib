@@ -80,6 +80,9 @@
                                     <action selector="addToLibrary:" target="Voe-Tx-rLC" id="CPH-2g-kqO"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Add to Library..." id="nza-hH-6jo">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
                             <menuItem title="Open…" keyEquivalent="o" id="IAo-SY-fd9">
                                 <connections>
                                     <action selector="openDocument:" target="-1" id="bVn-NM-KNZ"/>

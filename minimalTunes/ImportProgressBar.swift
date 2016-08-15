@@ -23,24 +23,41 @@ class ImportProgressBar: NSWindowController {
         iTunesParser?.addObserver(self, forKeyPath: "doneSongs", options: .New, context: &my_special_context)
         iTunesParser?.addObserver(self, forKeyPath: "numPlaylists", options: .New, context: &my_special_context)
         iTunesParser?.addObserver(self, forKeyPath: "numImportedPlaylists", options: .New, context: &my_special_context)
+        iTunesParser?.addObserver(self, forKeyPath: "doneSorting", options: .New, context: &my_special_context)
+        iTunesParser?.addObserver(self, forKeyPath: "numSorts", options: .New, context: &my_special_context)
+        iTunesParser?.addObserver(self, forKeyPath: "numDoneSorts", options: .New, context: &my_special_context)
+        iTunesParser?.addObserver(self, forKeyPath: "donePlaylists", options: .New, context: &my_special_context)
     }
     
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
          if keyPath == "doneSongs" {
-            print("here")
+            print("finished songs, progressing to sorting")
+            self.progressIndicator.doubleValue = 0
+            self.progressIndicator.bind("value", toObject: iTunesParser!, withKeyPath: "numDoneSorts", options: nil)
+            self.progressIndicator.bind("maxValue", toObject: iTunesParser!, withKeyPath: "numSorts", options: nil)
+            progressString.stringValue = "Caching sorts..."
+        }
+        if keyPath == "doneSorts" {
             self.progressIndicator.doubleValue = 0
             self.progressIndicator.bind("value", toObject: iTunesParser!, withKeyPath: "numImportedPlaylists", options: nil)
             self.progressIndicator.bind("maxValue", toObject: iTunesParser!, withKeyPath: "numPlaylists", options: nil)
             progressString.stringValue = "Importing playlists..."
-            
+        }
+        if keyPath == "doneEverything" {
+            print("progress bar here")
+            self.window?.close()
         }
     }
     
     func doStuff() {
+        print("doing stuff as a progress bar")
         dispatch_async(dispatch_get_main_queue()) {
             self.progressString.stringValue = "Importing songs..."
         }
-        self.iTunesParser?.makeLibrary()
+        self.progressIndicator.bind("value", toObject: iTunesParser!, withKeyPath: "numImportedSongs", options: nil)
+        self.progressIndicator.bind("maxValue", toObject: iTunesParser!, withKeyPath: "numSongs", options: nil)
+        self.iTunesParser?.numImportedSongs = 0
+        self.iTunesParser!.makeLibrary()
     }
     
     override func windowDidLoad() {

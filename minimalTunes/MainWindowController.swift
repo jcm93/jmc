@@ -15,6 +15,7 @@ private var my_context = 0
 
 class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchFieldDelegate, NSTableViewDelegate {
     
+    @IBOutlet weak var artCollectionView: NSCollectionView!
     @IBOutlet weak var noMusicView: NSView!
     @IBOutlet weak var queueScrollView: NSScrollView!
     @IBOutlet weak var queueButton: NSButton!
@@ -43,7 +44,9 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     @IBOutlet var auxPlaylistArrayController: DragAndDropArrayController!
     @IBOutlet weak var sourceListView: SourceListThatYouCanPressSpacebarOn!
     @IBOutlet weak var libraryTableView: TableViewYouCanPressSpacebarOn!
-    @IBOutlet weak var albumArtView: NSImageView!
+    @IBOutlet weak var albumArtView: DragAndDropImageView!
+    @IBOutlet var artCollectionArrayController: NSArrayController!
+    @IBOutlet weak var infoField: NSTextField!
     
     enum windowFocus {
         case playlist
@@ -76,6 +79,13 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     var focusedColumn: NSTableColumn?
     var asc: Bool?
     
+    let numberFormatter = NSNumberFormatter()
+    let dateFormatter = NSDateComponentsFormatter()
+    let sizeFormatter = NSByteCountFormatter()
+    let fileManager = NSFileManager.defaultManager()
+    
+    
+    
     //initialize managed object context
     
     
@@ -97,48 +107,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         }
         return result
     }()
-    
-    /*lazy var allArtistTracks: NSOrderedSet? = {
-        let fetch_request = NSFetchRequest(entityName: "CachedOrder")
-        let pred = NSPredicate(format: "order == %@", "Artist")
-        fetch_request.predicate = pred
-        do {
-            let results = try self.managedContext.executeFetchRequest(fetch_request) as! [CachedOrder]
-            print("did a fetch request")
-            let thing = results[0].tracks
-            return thing
-        } catch {
-            return nil
-        }
-    }()
-    
-    lazy var allAlbumTracks: NSOrderedSet? = {
-        let fetch_request = NSFetchRequest(entityName: "CachedOrder")
-        let pred = NSPredicate(format: "order == %@", "Album")
-        fetch_request.predicate = pred
-        do {
-            let results = try self.managedContext.executeFetchRequest(fetch_request) as! [CachedOrder]
-            print("did a fetch request")
-            let thing = results[0].tracks
-            return thing
-        } catch {
-            return nil
-        }
-    }()
-    
-    lazy var allDateAddedTracks: NSOrderedSet? = {
-        let fetch_request = NSFetchRequest(entityName: "CachedOrder")
-        let pred = NSPredicate(format: "order == %@", "Date Added")
-        fetch_request.predicate = pred
-        do {
-            let results = try self.managedContext.executeFetchRequest(fetch_request) as! [CachedOrder]
-            print("did a fetch request")
-            let thing = results[0].tracks
-            return thing
-        } catch {
-            return nil
-        }
-    }()*/
+
     
     
     
@@ -326,6 +295,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     @IBAction func makePlaylistFromTrackQueueSelection(sender: AnyObject) {
         trackQueueTableDelegate.makePlaylistFromSelection()
     }
+    
     func tableViewDoubleClick(sender: AnyObject) {
         guard currentTableView!.selectedRow >= 0 , let item = (currentArrayController!.selectedObjects) else {
             return
@@ -363,6 +333,8 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         checkQueueList(track)
         queue.playImmediately(track)
         initializePlayerBarForNewTrack()
+        print("about to init album art")
+        initAlbumArt(track)
         currentTrack = track
     }
     
@@ -376,6 +348,8 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     
     func tableView(tableView: NSTableView, mouseDownInHeaderOfTableColumn tableColumn: NSTableColumn) {
         print("called")
+        print("caching \(tableColumn.identifier)")
+        NSUserDefaults.standardUserDefaults().setObject(tableColumn.identifier, forKey: "lastColumn")
         if focusedColumn == tableColumn {
             tableViewArrayController.content = (tableViewArrayController.content as! [Track]).reverse()
             if asc == true {
@@ -427,6 +401,8 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
                 focusedColumn = tableColumn
             }
         }
+        print(tableViewArrayController.selectedObjects)
+        print(libraryTableView.selectedRowIndexes)
         tableView.reloadData()
     }
     
@@ -604,8 +580,24 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
                     }
                 }
             }
+            updateInfo()
         }
     }
+    
+    func updateInfo() {
+        print("called")
+        let trackArray = currentArrayController?.arrangedObjects as! [Track]
+        let numItems = trackArray.count
+        let totalSize = trackArray.map({return ($0.size!.longLongValue)}).reduce(0, combine: {$0 + $1})
+        let totalTime = trackArray.map({return $0.time!.doubleValue}).reduce(0, combine: {$0 + $1})
+        let numString = numberFormatter.stringFromNumber(numItems)
+        let sizeString = sizeFormatter.stringFromByteCount(totalSize)
+        let timeString = dateFormatter.stringFromTimeInterval(totalTime/1000)
+        infoString = "\(numString!) items; \(timeString!); \(sizeString)"
+        infoField.stringValue = infoString!
+    }
+    
+    
 
     @IBAction func trackListTriangleClicked(sender: AnyObject) {
         if trackListBox.hidden == true {
@@ -618,22 +610,32 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     }
     
     //mark album art
+    
     func initAlbumArt(track: Track) {
-        if track.album != nil && track.album!.art != nil && track.album!.art!.art!.count != 0 {
-            let art = track.album!.art!.art
-            if art != currentTrack?.album?.art?.art {
-                let path = (art?.mutableCopy() as! [AlbumArtwork])[0].artwork_location as! String
-                let image = NSImage(contentsOfFile: path)
-                albumArtView.image = image
-            }
+        if track.album != nil && track.album!.primary_art != nil {
+            print("here")
+            let art = track.album!.primary_art
+            let path = art?.artwork_location as! String
+            let url = NSURL(string: path)
+            let image = NSImage(contentsOfURL: url!)
+            albumArtView.image = image
         }
+        else {
+            
+        }
+        /*if track.album?.other_art != nil {
+            artCollectionView.hidden = false
+            artCollectionView.dataSource = artCollectionArrayController
+            artCollectionArrayController.content = track.album!.other_art!.art!.mutableCopy().array
+            
+        }*/
     }
     
     override func awakeFromNib() {
         /*sourceListView.expandItem(nil, expandChildren: true)
         sourceListView.selectRowIndexes(NSIndexSet.init(index: 1), byExtendingSelection: false)
         dispatch_async(dispatch_get_main_queue()) {
-            self.sourceListView.expandItem(nil, expandChildren: true)
+            self.sourceListView.expandItem(nil, expandChildren: exptrue)
             self.sourceListView.selectRowIndexes(NSIndexSet.init(index: 1), byExtendingSelection: false)
             print("executed this block")
         }*/
@@ -641,6 +643,9 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     
     
     override func windowDidLoad() {
+        numberFormatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
+        dateFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyle.Full
+        print(hasMusic)
         if (hasMusic == false) {
             noMusicView.hidden = false
             libraryTableScrollView.hidden = true
@@ -681,18 +686,26 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         if (hasMusic == true) {
             print(cachedOrders[0])
         }
+        albumArtView.mainWindowController = self
         trackQueueTableView.setDataSource(trackQueueTableDelegate)
         trackQueueTableView.setDelegate(trackQueueTableDelegate)
         trackQueueTableDelegate.tableView = trackQueueTableView
+        let currentColumn = NSUserDefaults.standardUserDefaults().objectForKey("lastColumn")
+        print("retrieving \(currentColumn) from cache")
         trackQueueTableView.registerForDraggedTypes(["Track", "public.TrackQueueView"])
         trackQueueTableDelegate.mainWindowController = self
         queueScrollView.hidden = true
         current_source_play_order = (tableViewArrayController.content as! [Track]).map( {return $0.id as! Int})
         print(current_source_play_order!.count)
         volumeSlider.continuous = true
+        artCollectionView.hidden = true
         //predicateEditor.rowTemplates = rowTemplates
         //predicateEditor.addRow(nil)
         self.window!.titleVisibility = NSWindowTitleVisibility.Hidden
         self.window!.titlebarAppearsTransparent = true
+        updateInfo()
+        if currentColumn != nil {
+            tableView(libraryTableView, mouseDownInHeaderOfTableColumn: libraryTableView!.tableColumns[libraryTableView!.columnWithIdentifier(currentColumn as! String)])
+        }
     }
 }

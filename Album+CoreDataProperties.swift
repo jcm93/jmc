@@ -2,7 +2,7 @@
 //  Album+CoreDataProperties.swift
 //  minimalTunes
 //
-//  Created by John Moody on 7/14/16.
+//  Created by John Moody on 7/19/16.
 //  Copyright © 2016 John Moody. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -18,8 +18,9 @@ extension Album {
     @NSManaged var name: String?
     @NSManaged var release_date: NSDate?
     @NSManaged var album_artist: Artist?
-    @NSManaged var art: AlbumArtworkCollection?
+    @NSManaged var other_art: AlbumArtworkCollection?
     @NSManaged var properties: Property?
     @NSManaged var tracks: NSSet?
+    @NSManaged var primary_art: AlbumArtwork?
 
 }

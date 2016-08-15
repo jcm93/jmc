@@ -21,10 +21,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var importWindow: ImportWindowController?
     var importProgressBar: ImportProgressBar?
     var iTunesParser: iTunesLibraryParser?
+    let fileManager = NSFileManager.defaultManager()
     
     @IBAction func jumpToSelection(sender: AnyObject) {
         mainWindowController!.jumpToSelection()
     }
+    
+    
     func initializeLibraryAndShowMainWindow() {
         mainWindowController = MainWindowController(windowNibName: "MainWindowController")
         if NSUserDefaults.standardUserDefaults().boolForKey("hasMusic") == true {
@@ -50,14 +53,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         for url in myFileDialog.URLs {
             handler.getTrackFromFile(url.absoluteString)
         }
-
     }
     
     func initializeProgressBarWindow() {
         importProgressBar = ImportProgressBar(windowNibName: "ImportProgressBar")
-        importProgressBar?.iTunesParser = self.iTunesParser
-        importProgressBar?.initialize()
-        importProgressBar?.showWindow(self)
+        importProgressBar!.iTunesParser = self.iTunesParser!
+        importProgressBar!.initialize()
+        importProgressBar!.showWindow(self)
     }
 
     @IBAction func openPreferences(sender: AnyObject) {
@@ -69,7 +71,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBAction func testyThing(sender: AnyObject) {
         if mainWindowController?.advancedFilterScrollView.hidden == true {
             mainWindowController?.advancedFilterScrollView.hidden = false
-            
         }
         else {
             mainWindowController?.advancedFilterScrollView.hidden = true

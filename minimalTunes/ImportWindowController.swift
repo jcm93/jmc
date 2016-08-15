@@ -8,6 +8,8 @@
 
 import Cocoa
 
+private var my_special_context = 0
+
 class ImportWindowController: NSWindowController {
     
     @IBOutlet weak var OKButton: NSButton!
@@ -17,6 +19,10 @@ class ImportWindowController: NSWindowController {
     var path: String?
     var iTunesParser: iTunesLibraryParser?
     var mainWindowController: MainWindowController?
+    
+    let managedContext: NSManagedObjectContext = {
+        return (NSApplication.sharedApplication().delegate
+            as? AppDelegate)?.managedObjectContext }()!
     
     var moveFiles: Bool = true
 
@@ -40,40 +46,37 @@ class ImportWindowController: NSWindowController {
     }
     
     @IBAction func confirmClicked(sender: AnyObject) {
-        /*let appDelegate = (NSApplication.sharedApplication().delegate as! AppDelegate)
-        appDelegate.iTunesParser = iTunesParser
-        appDelegate.initializeProgressBarWindow()
-        
-        NSUserDefaults.standardUserDefaults().setObject(pathURL.path, forKey: "libraryPath")
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            appDelegate.importProgressBar?.doStuff()
-            dispatch_async(dispatch_get_main_queue()) {
-                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasMusic")
-                self.completionHandler()
-            }
-        }*/
         var pathURL = NSURL(fileURLWithPath: path!)
         pathURL = pathURL.URLByDeletingLastPathComponent!
         pathURL = pathURL.URLByAppendingPathComponent("iTunes Music", isDirectory: true)
         NSUserDefaults.standardUserDefaults().setObject(pathURL.path, forKey: "libraryPath")
-        do {iTunesParser = try iTunesLibraryParser(path: path!)}catch{print("Error")}
-        iTunesParser?.makeLibrary()
-        completionHandler()
-        self.window?.close()
+        let appDelegate = (NSApplication.sharedApplication().delegate as! AppDelegate)
+        appDelegate.iTunesParser = self.iTunesParser
+        appDelegate.initializeProgressBarWindow()
+        print("made it here")
+        appDelegate.importProgressBar?.doStuff()
+        iTunesParser?.addObserver(self, forKeyPath: "doneEverything", options: .New, context: &my_special_context)
+    }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        if keyPath == "doneEverything" {
+            print("window controller here")
+            completionHandler()
+        }
     }
     
     func completionHandler() {
-        let managedContext: NSManagedObjectContext = {
-            return (NSApplication.sharedApplication().delegate
-                as? AppDelegate)?.managedObjectContext }()!
         //do { try managedContext.save() } catch {print("\(error)")}
+        let appDelegate = (NSApplication.sharedApplication().delegate as! AppDelegate)
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasMusic")
         self.mainWindowController?.libraryTableScrollView.hidden = false
         self.mainWindowController?.noMusicView.hidden = true
         self.mainWindowController?.sourceListView.hidden = false
         self.mainWindowController?.expandSourceView()
-        
+        appDelegate.importProgressBar?.window?.close()
+        self.window?.close()
     }
+    
     func openFile() {
         
         let myFileDialog: NSOpenPanel = NSOpenPanel()

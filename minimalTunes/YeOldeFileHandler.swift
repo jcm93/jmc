@@ -167,6 +167,7 @@ class YeOldeFileHandler: NSObject {
                     }
                 case "artwork":
                     hasArt = true
+                    print("has artwork")
                     art = key.value as! NSData
                     let artImage = NSImage(data: art!)
                 
@@ -240,15 +241,22 @@ class YeOldeFileHandler: NSObject {
         
 
         if hasArt == true {
+            print("delaing with album art")
             let artHash = art!.hashValue
             let currentAlbumArt: AlbumArtworkCollection
-            if track.album!.art == nil {
+            if track.album!.primary_art == nil {
+                let newArtworkCollection = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtworkCollection", inManagedObjectContext: managedContext) as! AlbumArtworkCollection
+                newArtworkCollection.album = track.album
+                currentAlbumArt = newArtworkCollection
+                return track
+            }
+            else if track.album?.other_art == nil {
                 let newArtworkCollection = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtworkCollection", inManagedObjectContext: managedContext) as! AlbumArtworkCollection
                 newArtworkCollection.album = track.album
                 currentAlbumArt = newArtworkCollection
             }
             else {
-                currentAlbumArt = track.album!.art!
+                currentAlbumArt = track.album!.other_art!
             }
             var contains = false
             for artwork in (currentAlbumArt.art)! {
@@ -258,22 +266,27 @@ class YeOldeFileHandler: NSObject {
             }
             if contains == false {
                 let newArtwork = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtwork", inManagedObjectContext: managedContext) as! AlbumArtwork
-                newArtwork.collection_album = currentAlbumArt
+                newArtwork.collection = currentAlbumArt
                 let artCount = currentAlbumArt.art?.count
                 newArtwork.image_hash = artHash
-                let artFilename = albumDirectoryPath! + "/Embedded Artwork - \(artCount).png"
+                let artFilename = albumDirectoryPath! + "/embed - \(artCount!).png"
                 newArtwork.artwork_location = artFilename
                 let artImage = NSImage(data: art!)
                 let artTIFF = artImage?.TIFFRepresentation
                 let artRep = NSBitmapImageRep(data: artTIFF!)
                 let artPNG = artRep?.representationUsingType(.NSPNGFileType, properties: [:])
-                do {try artPNG?.writeToFile(artFilename, options: NSDataWritingOptions.AtomicWrite)
+                do {
+                    try artPNG?.writeToFile(artFilename, options: NSDataWritingOptions.AtomicWrite)
                 }catch {
                     print("error writing file: \(error)")
                 }
             }
         }
-        
+        for order in NSUserDefaults.standardUserDefaults().arrayForKey("cachedOrders")! {
+            let managedID = managedContext.persistentStoreCoordinator?.managedObjectIDForURIRepresentation(order as! NSURL)
+            let cachedOrder = managedContext.objectWithID(managedID!) as! CachedOrder
+            reorderForTracks([track], cachedOrder: cachedOrder)
+        }
         return track
     }
 }

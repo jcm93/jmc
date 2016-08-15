@@ -2,7 +2,7 @@
 //  Album.swift
 //  minimalTunes
 //
-//  Created by John Moody on 7/14/16.
+//  Created by John Moody on 7/19/16.
 //  Copyright © 2016 John Moody. All rights reserved.
 //
 

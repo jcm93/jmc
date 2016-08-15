@@ -5,19 +5,21 @@
         <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="release_date" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="album_artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="albums" inverseEntity="Artist" syncable="YES"/>
-        <relationship name="art" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AlbumArtworkCollection" inverseName="album" inverseEntity="AlbumArtworkCollection" syncable="YES"/>
+        <relationship name="other_art" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AlbumArtworkCollection" inverseName="album" inverseEntity="AlbumArtworkCollection" syncable="YES"/>
+        <relationship name="primary_art" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AlbumArtwork" inverseName="primary_album" inverseEntity="AlbumArtwork" syncable="YES"/>
         <relationship name="properties" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Property" inverseName="album" inverseEntity="Property" syncable="YES"/>
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="album" inverseEntity="Track" syncable="YES"/>
     </entity>
     <entity name="AlbumArtwork" representedClassName=".AlbumArtwork" syncable="YES">
         <attribute name="artwork_location" optional="YES" attributeType="Transformable" syncable="YES"/>
-        <attribute name="image_hash" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="collection_album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AlbumArtworkCollection" inverseName="art" inverseEntity="AlbumArtworkCollection" syncable="YES"/>
+        <attribute name="image_hash" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <relationship name="collection" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AlbumArtworkCollection" inverseName="art" inverseEntity="AlbumArtworkCollection" syncable="YES"/>
+        <relationship name="primary_album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="primary_art" inverseEntity="Album" syncable="YES"/>
     </entity>
     <entity name="AlbumArtworkCollection" representedClassName=".AlbumArtworkCollection" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="art" inverseEntity="Album" syncable="YES"/>
-        <relationship name="art" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AlbumArtwork" inverseName="collection_album" inverseEntity="AlbumArtwork" syncable="YES"/>
+        <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="other_art" inverseEntity="Album" syncable="YES"/>
+        <relationship name="art" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AlbumArtwork" inverseName="collection" inverseEntity="AlbumArtwork" syncable="YES"/>
     </entity>
     <entity name="Artist" representedClassName=".Artist" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
@@ -128,8 +130,8 @@
         <attribute name="source_list_item_name" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Album" positionX="-1278" positionY="162" width="128" height="150"/>
-        <element name="AlbumArtwork" positionX="-209" positionY="423" width="128" height="90"/>
+        <element name="Album" positionX="-1278" positionY="162" width="128" height="165"/>
+        <element name="AlbumArtwork" positionX="-209" positionY="423" width="128" height="105"/>
         <element name="AlbumArtworkCollection" positionX="-371" positionY="423" width="128" height="90"/>
         <element name="Artist" positionX="-1262" positionY="-0" width="128" height="135"/>
         <element name="CachedOrder" positionX="-1071" positionY="99" width="128" height="75"/>
