@@ -69,8 +69,7 @@ class TagEditorWindow: NSWindowController {
         for order in mainWindowController!.cachedOrders {
             reorderForTracks(self.selectedTracks!, cachedOrder: order)
         }
-        self.mainWindowController?.currentArrayController?.rearrangeObjects()
-        self.mainWindowController?.currentTableView?.reloadData()
+        self.mainWindowController?.refreshTableView()
         
         
     }

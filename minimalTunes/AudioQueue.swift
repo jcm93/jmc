@@ -1,4 +1,4 @@
-//
+ //
 //  AudioQueue.swift
 //  minimalTunes
 //
@@ -42,12 +42,6 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     
     var mainWindowController: MainWindowController?
     
-    
-    func getTimeAsString(time: NSTimeInterval) -> String {
-        let seconds = Int(time) % 60
-        let minutes = (Int(time) / 60) % 60
-        return String(format: "%0.2d:%0.2d", minutes, seconds)
-    }
     
     func playImmediately(track: Track) {
         print("paused value is \(is_paused)")
@@ -151,9 +145,10 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     }
     
     func handleCompletion() {
-        //called any time the current node is stopped, whether for a seek, skip, or natural playback operation ending.
+        //called any time the current node is stopped, whether for a seek, skip, or natural playback operation ending
         //if this is the result of a scheduleFile or scheduleSegment operation, it is called after the last segment of the buffer is scheduled, not played. this is not the case for scheduleBuffer operations
         //will require rewrite for gapless streaming media, potentially...
+        //this can probably crash all over the place if the database can't be accessed for any reason
         print("handle completion called")
         switch currentHandlerType {
         case .natural:

@@ -13,6 +13,9 @@ public class HttpServer: HttpServerIO {
     
     private let router = HttpRouter()
     
+    var dataTask: NSURLSessionUploadTask?
+    let defaultSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+    
     public override init() {
         self.DELETE = MethodRoute(method: "DELETE", router: router)
         self.UPDATE = MethodRoute(method: "UPDATE", router: router)

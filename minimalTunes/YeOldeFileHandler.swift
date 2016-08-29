@@ -66,6 +66,7 @@ func getArt(name: String) -> AlbumArtworkCollection? {
 class YeOldeFileHandler: NSObject {
     
     var organizesMedia: Bool = true
+    let fileManager = NSFileManager.defaultManager()
     
     lazy var managedContext: NSManagedObjectContext = {
         return (NSApplication.sharedApplication().delegate
@@ -93,9 +94,28 @@ class YeOldeFileHandler: NSObject {
         return ""
     }
     
+    func getArtworkFromFile(filename: String) -> NSData? {
+        print("checking for art in file")
+        let url = NSURL(string: filename)
+        let mediaObject = AVAsset(URL: url!)
+        var art: NSData?
+        let commonMeta = mediaObject.commonMetadata
+        for metadataItem in commonMeta {
+            if metadataItem.commonKey == "artwork" {
+                print("found art in file")
+                art = metadataItem.value as? NSData
+            }
+        }
+        if art != nil {
+            return art
+        }
+        else {
+            return nil
+        }
+    }
+    
     func getTrackFromFile(filename: String) -> Track? {
         var hasArt = false
-        let fileManager = NSFileManager.defaultManager()
         let track = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: managedContext) as! Track
         let url = NSURL(string: filename)
         let actualFilename = url?.lastPathComponent
@@ -238,50 +258,11 @@ class YeOldeFileHandler: NSObject {
             track.location = "File://" + filePath!.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLPathAllowedCharacterSet())!
         default: break
         }
-        
 
         if hasArt == true {
-            print("delaing with album art")
-            let artHash = art!.hashValue
-            let currentAlbumArt: AlbumArtworkCollection
-            if track.album!.primary_art == nil {
-                let newArtworkCollection = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtworkCollection", inManagedObjectContext: managedContext) as! AlbumArtworkCollection
-                newArtworkCollection.album = track.album
-                currentAlbumArt = newArtworkCollection
-                return track
-            }
-            else if track.album?.other_art == nil {
-                let newArtworkCollection = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtworkCollection", inManagedObjectContext: managedContext) as! AlbumArtworkCollection
-                newArtworkCollection.album = track.album
-                currentAlbumArt = newArtworkCollection
-            }
-            else {
-                currentAlbumArt = track.album!.other_art!
-            }
-            var contains = false
-            for artwork in (currentAlbumArt.art)! {
-                if (artwork as! AlbumArtwork).image_hash == artHash {
-                    contains = true
-                }
-            }
-            if contains == false {
-                let newArtwork = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtwork", inManagedObjectContext: managedContext) as! AlbumArtwork
-                newArtwork.collection = currentAlbumArt
-                let artCount = currentAlbumArt.art?.count
-                newArtwork.image_hash = artHash
-                let artFilename = albumDirectoryPath! + "/embed - \(artCount!).png"
-                newArtwork.artwork_location = artFilename
-                let artImage = NSImage(data: art!)
-                let artTIFF = artImage?.TIFFRepresentation
-                let artRep = NSBitmapImageRep(data: artTIFF!)
-                let artPNG = artRep?.representationUsingType(.NSPNGFileType, properties: [:])
-                do {
-                    try artPNG?.writeToFile(artFilename, options: NSDataWritingOptions.AtomicWrite)
-                }catch {
-                    print("error writing file: \(error)")
-                }
-            }
+            addPrimaryArtForTrack(track, art: art!, albumDirectoryPath: albumDirectoryPath!)
         }
+        
         for order in NSUserDefaults.standardUserDefaults().arrayForKey("cachedOrders")! {
             let managedID = managedContext.persistentStoreCoordinator?.managedObjectIDForURIRepresentation(order as! NSURL)
             let cachedOrder = managedContext.objectWithID(managedID!) as! CachedOrder

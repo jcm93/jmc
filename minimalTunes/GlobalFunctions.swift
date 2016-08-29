@@ -10,6 +10,12 @@
 
 import Cocoa
 
+func getTimeAsString(time: NSTimeInterval) -> String {
+    let seconds = Int(time) % 60
+    let minutes = (Int(time) / 60) % 60
+    return String(format: "%0.2d:%0.2d", minutes, seconds)
+}
+
 func editArtist(tracks: [Track]?, artistName: String) {
     print(artistName)
     let managedContext: NSManagedObjectContext = {
@@ -293,6 +299,89 @@ func reorderForTracks(tracks: [Track], cachedOrder: CachedOrder) {
         fuckYou.insertObject(track, atIndex: index)
     }
     cachedOrder.tracks = fuckYou.copy() as? NSOrderedSet
+}
+
+func addPrimaryArtForTrack(track: Track, art: NSData, albumDirectoryPath: String) -> Track {
+    print("adding new primary album art")
+    let artHash = art.hashValue
+    let newArtwork = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtwork", inManagedObjectContext: managedContext) as! AlbumArtwork
+    newArtwork.image_hash = artHash
+    if track.album!.primary_art != nil {
+        let contains: Bool = {
+            if track.album?.primary_art?.image_hash == artHash {
+                return true
+            }
+            else {
+                return false
+            }
+        }()
+        guard contains != true else {return track}
+        if track.album!.other_art != nil {
+            let contains: Bool = {
+                for album in track.album!.other_art!.art! {
+                    if (album as! AlbumArtwork).image_hash == artHash {
+                        return true
+                    }
+                }
+                return false
+            }()
+            guard contains != true else {return track}
+            track.album!.other_art!.addArtObject(track.album!.primary_art!)
+        }
+        else if track.album!.other_art == nil {
+            let newArtworkCollection = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtworkCollection", inManagedObjectContext: managedContext) as! AlbumArtworkCollection
+            newArtworkCollection.album = track.album!
+            newArtworkCollection.addArtObject(track.album!.primary_art!)
+        }
+    }
+    let thing = "/\(artHash).png"
+    let artFilename = albumDirectoryPath + thing
+    newArtwork.artwork_location = artFilename
+    let artImage = NSImage(data: art)
+    let artTIFF = artImage?.TIFFRepresentation
+    let artRep = NSBitmapImageRep(data: artTIFF!)
+    let artPNG = artRep?.representationUsingType(.NSPNGFileType, properties: [:])
+    track.album?.primary_art = newArtwork
+    print("writing to \(artFilename)")
+    do {
+        try artPNG?.writeToFile(artFilename, options: NSDataWritingOptions.AtomicWrite)
+    }catch {
+        print("error writing file: \(error)")
+    }
+    return track
+}
+
+func addSecondaryArtForTrack(track: Track, art: NSData, albumDirectoryPath: String) -> Track {
+    let artHash = art.hashValue
+    let newArtwork = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtwork", inManagedObjectContext: managedContext) as! AlbumArtwork
+    newArtwork.image_hash = artHash
+    if track.album!.other_art != nil {
+        let contains: Bool = {
+            for album in track.album!.other_art!.art! {
+                if (album as! AlbumArtwork).image_hash == artHash {
+                    return true
+                }
+            }
+            return false
+        }()
+        guard contains != true else {return track}
+        track.album!.other_art!.addArtObject(track.album!.primary_art!)
+    }
+    let thing = "/\(artHash).png"
+    let artFilename = albumDirectoryPath + thing
+    newArtwork.artwork_location = artFilename
+    let artImage = NSImage(data: art)
+    let artTIFF = artImage?.TIFFRepresentation
+    let artRep = NSBitmapImageRep(data: artTIFF!)
+    let artPNG = artRep?.representationUsingType(.NSPNGFileType, properties: [:])
+    track.album?.primary_art = newArtwork
+    print("writing to \(artFilename)")
+    do {
+        try artPNG?.writeToFile(artFilename, options: NSDataWritingOptions.AtomicWrite)
+    }catch {
+        print("error writing file: \(error)")
+    }
+    return track
 }
 
 

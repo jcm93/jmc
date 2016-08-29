@@ -31,7 +31,7 @@ class iTunesLibraryParser: NSObject {
     dynamic var doneSorting: Bool = false
     dynamic var donePlaylists: Bool = false
     dynamic var doneEverything: Bool = false
-    let numCachedSorts = 5
+    let numCachedSorts = 6
     
     var moc: NSManagedObjectContext = {() -> NSManagedObjectContext in
         let mainContext = (NSApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext
@@ -114,363 +114,371 @@ class iTunesLibraryParser: NSObject {
         moc.undoManager?.beginUndoGrouping()
         moc.performBlock() {
          
-        //create the library entity
-        let cd_library = NSEntityDescription.insertNewObjectForEntityForName("Library", inManagedObjectContext: self.moc) as! Library
-        print("1")
-        
-        //create source list headers
-        let cd_library_header = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
-        cd_library_header.is_header = true
-        cd_library_header.name = "Library"
-        cd_library_header.sort_order = 0
-        let cd_playlists_header = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
-        cd_playlists_header.is_header = true
-        cd_playlists_header.name = "Playlists"
-        cd_playlists_header.sort_order = 2
-        let cd_shared_header = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
-        cd_shared_header.is_header = true
-        cd_shared_header.name = "Shared Libraries"
-        cd_shared_header.sort_order = 1
-        print("2")
-        
-        //create column browser headers
-        
-        //create master playlist source list item
-        let cd_library_master_playlist_source_item = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
-        cd_library_master_playlist_source_item.parent = cd_library_header
-        cd_library_master_playlist_source_item.name = "Music"
-        cd_library_master_playlist_source_item.library = cd_library
-        
-        //create the master playlist
-        let cd_library_master_playlist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: self.moc) as! SongCollection
-        cd_library_master_playlist.name = "Master Playlist"
-        
-        //attach the master playlist to the master playlist source list entity
-        cd_library_master_playlist.if_master_list_item = cd_library_master_playlist_source_item
-        cd_library_master_playlist.if_master_library = cd_library
-        print("3")
-        for item in self.XMLMasterPlaylistTrackArray {
-            let cd_track = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: self.moc) as! Track
-            cd_library_master_playlist.addTracksObject(cd_track)
-            let id = item.objectForKey("Track ID")?.description
-            let XMLTrackDict = self.XMLTrackDictionaryDictionary.objectForKey(id!)
-            var name, sort_name, artist, sort_artist, composer, sort_composer, album, sort_album, file_kind, genre, kind, comments, search_field, album_artist, location: String
-            var track_id, track_num, time, size, bit_rate, sample_rate, play_count, skip_count, rating: Int
-            var date_released, date_modified, date_added, date_last_played, date_last_skipped: NSDate
-            var status, compilation: Bool
-            var placeholderArtist: Artist?
-            var placeholderAlbum: Album?
+            //create the library entity
+            let cd_library = NSEntityDescription.insertNewObjectForEntityForName("Library", inManagedObjectContext: self.moc) as! Library
+            print("1")
             
-            if (XMLTrackDict!.objectForKey("Track ID") != nil) {
-                track_id = XMLTrackDict!.objectForKey("Track ID") as! Int
-                cd_track.id = track_id
-            }
-            if (XMLTrackDict!.objectForKey("Track Type") != nil) {
-                kind = XMLTrackDict!.objectForKey("Track Type") as! String
-                cd_track.file_kind = kind
-            }
-            if (XMLTrackDict!.objectForKey("Skip Date") != nil) {
-                date_last_skipped = XMLTrackDict!.objectForKey("Skip Date") as! NSDate
-                cd_track.date_last_skipped = date_last_skipped
-            }
-            if (XMLTrackDict!.objectForKey("Sample Rate") != nil) {
-                sample_rate = XMLTrackDict!.objectForKey("Sample Rate") as! Int
-                cd_track.sample_rate = sample_rate
-            }
-            if (XMLTrackDict!.objectForKey("Kind") != nil) {
-                file_kind = XMLTrackDict!.objectForKey("Kind") as! String
-                cd_track.file_kind = file_kind
-            }
-            if (XMLTrackDict!.objectForKey("Comments") != nil) {
-                comments = XMLTrackDict!.objectForKey("Comments") as! String
-                cd_track.comments = comments
-            }
-            if (XMLTrackDict!.objectForKey("Play Date UTC") != nil) {
-                date_last_played = XMLTrackDict!.objectForKey("Play Date UTC") as! NSDate
-                cd_track.date_last_played = date_last_played
-            }
-            else if (XMLTrackDict!.objectForKey("Play Date") != nil) {
-                date_last_played = XMLTrackDict!.objectForKey("Play Date") as! NSDate
-                cd_track.date_last_played = date_last_played
-            }
-            if (XMLTrackDict!.objectForKey("Date Added") != nil) {
-                date_added = XMLTrackDict!.objectForKey("Date Added") as! NSDate
-                cd_track.date_added = date_added
-            }
-            if (XMLTrackDict!.objectForKey("Size") != nil) {
-                size = XMLTrackDict!.objectForKey("Size") as! Int
-                cd_track.size = size
-            }
-            if (XMLTrackDict!.objectForKey("Location") != nil) {
-                location = XMLTrackDict?.objectForKey("Location") as! String
-                cd_track.location = location
-            }
-            if (XMLTrackDict!.objectForKey("Artist") != nil) {
-                artist = XMLTrackDict!.objectForKey("Artist") as! String
-                if self.addedArtists.objectForKey(artist) != nil {
-                    placeholderArtist = self.addedArtists.objectForKey(artist) as! Artist
-                    cd_track.artist = placeholderArtist
+            //create source list headers
+            let cd_library_header = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
+            cd_library_header.is_header = true
+            cd_library_header.name = "Library"
+            cd_library_header.sort_order = 0
+            let cd_playlists_header = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
+            cd_playlists_header.is_header = true
+            cd_playlists_header.name = "Playlists"
+            cd_playlists_header.sort_order = 2
+            let cd_shared_header = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
+            cd_shared_header.is_header = true
+            cd_shared_header.name = "Shared Libraries"
+            cd_shared_header.sort_order = 1
+            print("2")
+            
+            //create column browser headers
+            
+            //create master playlist source list item
+            let cd_library_master_playlist_source_item = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
+            cd_library_master_playlist_source_item.parent = cd_library_header
+            cd_library_master_playlist_source_item.name = "Music"
+            cd_library_master_playlist_source_item.library = cd_library
+            
+            //create the master playlist
+            let cd_library_master_playlist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: self.moc) as! SongCollection
+            cd_library_master_playlist.name = "Master Playlist"
+            
+            //attach the master playlist to the master playlist source list entity
+            cd_library_master_playlist.if_master_list_item = cd_library_master_playlist_source_item
+            cd_library_master_playlist.if_master_library = cd_library
+            print("3")
+            for item in self.XMLMasterPlaylistTrackArray {
+                let cd_track = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: self.moc) as! Track
+                cd_library_master_playlist.addTracksObject(cd_track)
+                let id = item.objectForKey("Track ID")?.description
+                let XMLTrackDict = self.XMLTrackDictionaryDictionary.objectForKey(id!)
+                var name, sort_name, artist, sort_artist, composer, sort_composer, album, sort_album, file_kind, genre, kind, comments, search_field, album_artist, location: String
+                var track_id, track_num, time, size, bit_rate, sample_rate, play_count, skip_count, rating: Int
+                var date_released, date_modified, date_added, date_last_played, date_last_skipped: NSDate
+                var status, compilation: Bool
+                var placeholderArtist: Artist?
+                var placeholderAlbum: Album?
+                
+                if (XMLTrackDict!.objectForKey("Track ID") != nil) {
+                    track_id = XMLTrackDict!.objectForKey("Track ID") as! Int
+                    cd_track.id = track_id
+                }
+                if (XMLTrackDict!.objectForKey("Track Type") != nil) {
+                    kind = XMLTrackDict!.objectForKey("Track Type") as! String
+                    cd_track.file_kind = kind
+                }
+                if (XMLTrackDict!.objectForKey("Skip Date") != nil) {
+                    date_last_skipped = XMLTrackDict!.objectForKey("Skip Date") as! NSDate
+                    cd_track.date_last_skipped = date_last_skipped
+                }
+                if (XMLTrackDict!.objectForKey("Sample Rate") != nil) {
+                    sample_rate = XMLTrackDict!.objectForKey("Sample Rate") as! Int
+                    cd_track.sample_rate = sample_rate
+                }
+                if (XMLTrackDict!.objectForKey("Kind") != nil) {
+                    file_kind = XMLTrackDict!.objectForKey("Kind") as! String
+                    cd_track.file_kind = file_kind
+                }
+                if (XMLTrackDict!.objectForKey("Comments") != nil) {
+                    comments = XMLTrackDict!.objectForKey("Comments") as! String
+                    cd_track.comments = comments
+                }
+                if (XMLTrackDict!.objectForKey("Play Date UTC") != nil) {
+                    date_last_played = XMLTrackDict!.objectForKey("Play Date UTC") as! NSDate
+                    cd_track.date_last_played = date_last_played
+                }
+                else if (XMLTrackDict!.objectForKey("Play Date") != nil) {
+                    date_last_played = XMLTrackDict!.objectForKey("Play Date") as! NSDate
+                    cd_track.date_last_played = date_last_played
+                }
+                if (XMLTrackDict!.objectForKey("Date Added") != nil) {
+                    date_added = XMLTrackDict!.objectForKey("Date Added") as! NSDate
+                    cd_track.date_added = date_added
+                }
+                if (XMLTrackDict!.objectForKey("Size") != nil) {
+                    size = XMLTrackDict!.objectForKey("Size") as! Int
+                    cd_track.size = size
+                }
+                if (XMLTrackDict!.objectForKey("Location") != nil) {
+                    location = XMLTrackDict?.objectForKey("Location") as! String
+                    cd_track.location = location
+                }
+                if (XMLTrackDict!.objectForKey("Artist") != nil) {
+                    artist = XMLTrackDict!.objectForKey("Artist") as! String
+                    if self.addedArtists.objectForKey(artist) != nil {
+                        placeholderArtist = self.addedArtists.objectForKey(artist) as! Artist
+                        cd_track.artist = placeholderArtist
+                    }
+                    else {
+                        let new_artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: self.moc) as! Artist
+                        new_artist.name = artist
+                        cd_track.artist = new_artist
+                        placeholderArtist = new_artist
+                        self.addedArtists.setValue(new_artist, forKey: artist)
+                        //let new_artist_view = NSEntityDescription.insertNewObjectForEntityForName("ArtistColumnBrowserObject", inManagedObjectContext: moc)
+                        //new_artist_view.artist = new_artist
+                    }
+                }
+                if (XMLTrackDict!.objectForKey("Album") != nil) {
+                    album = XMLTrackDict!.objectForKey("Album") as! String
+                    if (self.addedAlbums.objectForKey(album) != nil) {
+                        let the_album = self.addedAlbums.objectForKey(album)
+                        placeholderArtist?.addAlbumsObject(the_album as! Album)
+                        placeholderAlbum = the_album as! Album
+                        cd_track.album = the_album as! Album
+                        
+                    }
+                    else {
+                        let new_album = NSEntityDescription.insertNewObjectForEntityForName("Album", inManagedObjectContext: self.moc) as! Album
+                        new_album.name = album
+                        cd_track.album = new_album
+                        placeholderAlbum = new_album
+                        self.addedAlbums.setValue(new_album, forKey: album)
+                        /*let new_album_view = NSEntityDescription.insertNewObjectForEntityForName("AlbumColumnBrowserObject", inManagedObjectContext: moc)
+                        new_album_view.album = new_album*/
+                    }
+                }
+                if (XMLTrackDict!.objectForKey("Track Number") != nil) {
+                    track_num = XMLTrackDict!.objectForKey("Track Number") as! Int
+                    cd_track.track_num = track_num
+                }
+                if (XMLTrackDict!.objectForKey("Name") != nil) {
+                    name = XMLTrackDict!.objectForKey("Name") as! String
+                    cd_track.name = name
+                }
+                if (XMLTrackDict!.objectForKey("Album Artist") != nil) {
+                    album_artist = XMLTrackDict!.objectForKey("Album Artist") as! String
+                    if self.addedArtists.objectForKey(album_artist) != nil {
+                        let the_album_artist = self.addedArtists.objectForKey(album_artist) as! Artist
+                        placeholderAlbum?.album_artist = the_album_artist
+                    }
+                    else {
+                        let new_album_artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: self.moc) as! Artist
+                        new_album_artist.name = album_artist
+                        placeholderAlbum?.album_artist = new_album_artist
+                        self.addedArtists.setValue(new_album_artist, forKey: album_artist)
+                        //let new_album_artist_view = NSEntityDescription.insertNewObjectForEntityForName("ArtistColumnBrowserObject", inManagedObjectContext: moc)
+                        //new_album_artist_view.artist = new_album_artist
+                    }
+                }
+                if (XMLTrackDict!.objectForKey("Skip Count") != nil) {
+                    skip_count = XMLTrackDict!.objectForKey("Skip Count") as! Int
+                    cd_track.skip_count = skip_count
+                }
+                if (XMLTrackDict!.objectForKey("Play Count") != nil) {
+                    play_count = XMLTrackDict!.objectForKey("Play Count") as! Int
+                    cd_track.play_count = play_count
+                }
+                if (XMLTrackDict!.objectForKey("Bit Rate") != nil) {
+                    bit_rate = XMLTrackDict!.objectForKey("Bit Rate") as! Int
+                    cd_track.bit_rate = bit_rate
+                }
+                if (XMLTrackDict!.objectForKey("Total Time") != nil) {
+                    time = XMLTrackDict!.objectForKey("Total Time") as! Int
+                    cd_track.time = time
+                }
+                if (XMLTrackDict!.objectForKey("Date Modified") != nil) {
+                    date_modified = XMLTrackDict!.objectForKey("Date Modified") as! NSDate
+                    cd_track.date_modified = date_modified
+                }
+                if (XMLTrackDict!.objectForKey("Sort Album") != nil) {
+                    sort_album = XMLTrackDict!.objectForKey("Sort Album") as! String
+                    cd_track.sort_album = sort_album
                 }
                 else {
-                    let new_artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: self.moc) as! Artist
-                    new_artist.name = artist
-                    cd_track.artist = new_artist
-                    placeholderArtist = new_artist
-                    self.addedArtists.setValue(new_artist, forKey: artist)
-                    //let new_artist_view = NSEntityDescription.insertNewObjectForEntityForName("ArtistColumnBrowserObject", inManagedObjectContext: moc)
-                    //new_artist_view.artist = new_artist
+                    if cd_track.album != nil {
+                        cd_track.sort_album = (cd_track.album! as Album).name
+                    }
                 }
-            }
-            if (XMLTrackDict!.objectForKey("Album") != nil) {
-                album = XMLTrackDict!.objectForKey("Album") as! String
-                if (self.addedAlbums.objectForKey(album) != nil) {
-                    let the_album = self.addedAlbums.objectForKey(album)
-                    placeholderArtist?.addAlbumsObject(the_album as! Album)
-                    placeholderAlbum = the_album as! Album
-                    cd_track.album = the_album as! Album
-                    
+                if (XMLTrackDict!.objectForKey("Genre") != nil) {
+                    genre = XMLTrackDict!.objectForKey("Genre") as! String
+                    if self.addedGenres.objectForKey(genre) != nil {
+                        let the_genre = self.addedGenres.objectForKey(genre)
+                        cd_track.genre = the_genre as! Genre
+                    }
+                    else {
+                        let new_genre = NSEntityDescription.insertNewObjectForEntityForName("Genre", inManagedObjectContext: self.moc) as! Genre
+                        new_genre.name = genre
+                        cd_track.genre = new_genre
+                        self.addedGenres.setValue(new_genre, forKey: genre)
+                        //let new_genre_view = NSEntityDescription.insertNewObjectForEntityForName("GenreColumnBrowserObject", inManagedObjectContext: moc)
+                        //new_genre_view.genre = new_genre
+                    }
                 }
-                else {
-                    let new_album = NSEntityDescription.insertNewObjectForEntityForName("Album", inManagedObjectContext: self.moc) as! Album
-                    new_album.name = album
-                    cd_track.album = new_album
-                    placeholderAlbum = new_album
-                    self.addedAlbums.setValue(new_album, forKey: album)
-                    /*let new_album_view = NSEntityDescription.insertNewObjectForEntityForName("AlbumColumnBrowserObject", inManagedObjectContext: moc)
-                    new_album_view.album = new_album*/
+                if (XMLTrackDict!.objectForKey("Rating") != nil) {
+                    rating = XMLTrackDict!.objectForKey("Rating") as! Int
+                    cd_track.rating = rating
                 }
-            }
-            if (XMLTrackDict!.objectForKey("Track Number") != nil) {
-                track_num = XMLTrackDict!.objectForKey("Track Number") as! Int
-                cd_track.track_num = track_num
-            }
-            if (XMLTrackDict!.objectForKey("Name") != nil) {
-                name = XMLTrackDict!.objectForKey("Name") as! String
-                cd_track.name = name
-            }
-            if (XMLTrackDict!.objectForKey("Album Artist") != nil) {
-                album_artist = XMLTrackDict!.objectForKey("Album Artist") as! String
-                if self.addedArtists.objectForKey(album_artist) != nil {
-                    let the_album_artist = self.addedArtists.objectForKey(album_artist) as! Artist
-                    placeholderAlbum?.album_artist = the_album_artist
+                if (XMLTrackDict!.objectForKey("Sort Name") != nil) {
+                    sort_name = XMLTrackDict!.objectForKey("Sort Name") as! String
+                    cd_track.sort_name = sort_name
                 }
                 else {
-                    let new_album_artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: self.moc) as! Artist
-                    new_album_artist.name = album_artist
-                    placeholderAlbum?.album_artist = new_album_artist
-                    self.addedArtists.setValue(new_album_artist, forKey: album_artist)
-                    //let new_album_artist_view = NSEntityDescription.insertNewObjectForEntityForName("ArtistColumnBrowserObject", inManagedObjectContext: moc)
-                    //new_album_artist_view.artist = new_album_artist
+                    cd_track.sort_name = cd_track.name
                 }
-            }
-            if (XMLTrackDict!.objectForKey("Skip Count") != nil) {
-                skip_count = XMLTrackDict!.objectForKey("Skip Count") as! Int
-                cd_track.skip_count = skip_count
-            }
-            if (XMLTrackDict!.objectForKey("Play Count") != nil) {
-                play_count = XMLTrackDict!.objectForKey("Play Count") as! Int
-                cd_track.play_count = play_count
-            }
-            if (XMLTrackDict!.objectForKey("Bit Rate") != nil) {
-                bit_rate = XMLTrackDict!.objectForKey("Bit Rate") as! Int
-                cd_track.bit_rate = bit_rate
-            }
-            if (XMLTrackDict!.objectForKey("Total Time") != nil) {
-                time = XMLTrackDict!.objectForKey("Total Time") as! Int
-                cd_track.time = time
-            }
-            if (XMLTrackDict!.objectForKey("Date Modified") != nil) {
-                date_modified = XMLTrackDict!.objectForKey("Date Modified") as! NSDate
-                cd_track.date_modified = date_modified
-            }
-            if (XMLTrackDict!.objectForKey("Sort Album") != nil) {
-                sort_album = XMLTrackDict!.objectForKey("Sort Album") as! String
-                cd_track.sort_album = sort_album
-            }
-            else {
-                if cd_track.album != nil {
-                    cd_track.sort_album = (cd_track.album! as Album).name
+                if (XMLTrackDict!.objectForKey("Release Date") != nil) {
+                    date_released = XMLTrackDict!.objectForKey("Release Date") as! NSDate
+                    //problem?
+                    //cd_track.date_released = date_released
                 }
-            }
-            if (XMLTrackDict!.objectForKey("Genre") != nil) {
-                genre = XMLTrackDict!.objectForKey("Genre") as! String
-                if self.addedGenres.objectForKey(genre) != nil {
-                    let the_genre = self.addedGenres.objectForKey(genre)
-                    cd_track.genre = the_genre as! Genre
+                if (XMLTrackDict!.objectForKey("Composer") != nil) {
+                    composer = XMLTrackDict!.objectForKey("Composer") as! String
+                    if self.addedComposers.objectForKey(composer) != nil {
+                        let the_composer = self.addedComposers.objectForKey(composer)
+                        cd_track.composer = the_composer as! Composer
+                    }
+                    else {
+                        let new_composer = NSEntityDescription.insertNewObjectForEntityForName("Composer", inManagedObjectContext: self.moc) as! Composer
+                        new_composer.name = composer
+                        cd_track.composer = new_composer
+                        self.addedComposers.setValue(new_composer, forKey: composer)
+                        //let new_composer_view = NSEntityDescription.insertNewObjectForEntityForName("ComposerColumnBrowserObject", inManagedObjectContext: moc)
+                        //new_composer_view.composer = new_composer
+                    }
+                }
+                if (XMLTrackDict!.objectForKey("Sort Composer") != nil) {
+                    sort_composer = XMLTrackDict!.objectForKey("Sort Composer") as! String
+                    //fuck sort composer
+                }
+                if (XMLTrackDict!.objectForKey("Disabled") != nil) {
+                    status = XMLTrackDict!.objectForKey("Disabled") as! Bool
+                    cd_track.status = status
+                }
+                if (XMLTrackDict!.objectForKey("Sort Artist") != nil) {
+                    sort_artist = XMLTrackDict!.objectForKey("Sort Artist") as! String
+                    cd_track.sort_artist = sort_artist
                 }
                 else {
-                    let new_genre = NSEntityDescription.insertNewObjectForEntityForName("Genre", inManagedObjectContext: self.moc) as! Genre
-                    new_genre.name = genre
-                    cd_track.genre = new_genre
-                    self.addedGenres.setValue(new_genre, forKey: genre)
-                    //let new_genre_view = NSEntityDescription.insertNewObjectForEntityForName("GenreColumnBrowserObject", inManagedObjectContext: moc)
-                    //new_genre_view.genre = new_genre
+                    if (cd_track.artist != nil) {
+                        cd_track.sort_artist = (cd_track.artist! as Artist).name
+                    }
                 }
-            }
-            if (XMLTrackDict!.objectForKey("Rating") != nil) {
-                rating = XMLTrackDict!.objectForKey("Rating") as! Int
-                cd_track.rating = rating
-            }
-            if (XMLTrackDict!.objectForKey("Sort Name") != nil) {
-                sort_name = XMLTrackDict!.objectForKey("Sort Name") as! String
-                cd_track.sort_name = sort_name
-            }
-            else {
-                cd_track.sort_name = cd_track.name
-            }
-            if (XMLTrackDict!.objectForKey("Release Date") != nil) {
-                date_released = XMLTrackDict!.objectForKey("Release Date") as! NSDate
-                //problem?
-                //cd_track.date_released = date_released
-            }
-            if (XMLTrackDict!.objectForKey("Composer") != nil) {
-                composer = XMLTrackDict!.objectForKey("Composer") as! String
-                if self.addedComposers.objectForKey(composer) != nil {
-                    let the_composer = self.addedComposers.objectForKey(composer)
-                    cd_track.composer = the_composer as! Composer
+                if (XMLTrackDict!.objectForKey("Compilation") != nil) {
+                    compilation = XMLTrackDict!.objectForKey("Compilation") as! Bool
+                    //problem?
+                    //cd_track.album?.is_compilation = compilation
                 }
-                else {
-                    let new_composer = NSEntityDescription.insertNewObjectForEntityForName("Composer", inManagedObjectContext: self.moc) as! Composer
-                    new_composer.name = composer
-                    cd_track.composer = new_composer
-                    self.addedComposers.setValue(new_composer, forKey: composer)
-                    //let new_composer_view = NSEntityDescription.insertNewObjectForEntityForName("ComposerColumnBrowserObject", inManagedObjectContext: moc)
-                    //new_composer_view.composer = new_composer
-                }
+                search_field = ""
+                self.numImportedSongs += 1
+                self.importSongUIUpdate(self.numImportedSongs)
             }
-            if (XMLTrackDict!.objectForKey("Sort Composer") != nil) {
-                sort_composer = XMLTrackDict!.objectForKey("Sort Composer") as! String
-                //fuck sort composer
+            dispatch_async(dispatch_get_main_queue()) {
+                self.doneSongs = true
+                self.numSorts = self.numCachedSorts * self.numSongs
             }
-            if (XMLTrackDict!.objectForKey("Disabled") != nil) {
-                status = XMLTrackDict!.objectForKey("Disabled") as! Bool
-                cd_track.status = status
+            print("beginning sort")
+            let poop = NSFetchRequest(entityName: "Track")
+            var song_array = NSArray()
+            poop.sortDescriptors = self.artistSortDescriptors
+            let before = NSDate()
+            do {
+                try song_array = self.moc.executeFetchRequest(poop)
             }
-            if (XMLTrackDict!.objectForKey("Sort Artist") != nil) {
-                sort_artist = XMLTrackDict!.objectForKey("Sort Artist") as! String
-                cd_track.sort_artist = sort_artist
+            catch {
+                print("err")
             }
-            else {
-                if (cd_track.artist != nil) {
-                    cd_track.sort_artist = (cd_track.artist! as Artist).name
-                }
+            dispatch_async(dispatch_get_main_queue()) {
+                self.numImportedSongs = self.numSongs
             }
-            if (XMLTrackDict!.objectForKey("Compilation") != nil) {
-                compilation = XMLTrackDict!.objectForKey("Compilation") as! Bool
-                //problem?
-                //cd_track.album?.is_compilation = compilation
+            let after = NSDate()
+            let diff = after.timeIntervalSinceDate(before)
+            print(diff)
+            print(song_array.count)
+            let cachedArtistOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
+            for (index, item) in song_array.enumerate() {
+                (item as! Track).addOrdersObject(cachedArtistOrder)
+                self.importSortUIUpdate(index)
             }
-            search_field = ""
-            self.numImportedSongs += 1
-            self.importSongUIUpdate(self.numImportedSongs)
-        }
-        dispatch_async(dispatch_get_main_queue()) {
-            self.doneSongs = true
-            self.numSorts = self.numCachedSorts * self.numSongs
-        }
-        print("beginning sort")
-        let poop = NSFetchRequest(entityName: "Track")
-        var song_array = NSArray()
-        poop.sortDescriptors = self.artistSortDescriptors
-        let before = NSDate()
-        do {
-            try song_array = self.moc.executeFetchRequest(poop)
-        }
-        catch {
-            print("err")
-        }
-        let after = NSDate()
-        let diff = after.timeIntervalSinceDate(before)
-        print(diff)
-        print(song_array.count)
-        let cachedArtistOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
-        for (index, item) in song_array.enumerate() {
-            (item as! Track).addOrdersObject(cachedArtistOrder)
-            self.importSortUIUpdate(index)
-        }
-        cachedArtistOrder.order = "Artist"
-        let cachedAlbumOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
-        song_array = song_array.sortedArrayUsingDescriptors(self.albumSortDescriptors)
-        for (index, item) in song_array.enumerate() {
-            (item as! Track).addOrdersObject(cachedAlbumOrder)
-            self.importSortUIUpdate(index)
-        }
-        cachedAlbumOrder.order = "Album"
-        let dateAddedOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
-        song_array = song_array.sortedArrayUsingDescriptors(self.dateAddedSortDescriptors)
-        for (index, item) in song_array.enumerate() {
-            (item as! Track).addOrdersObject(dateAddedOrder)
-            self.importSortUIUpdate(index)
-        }
-        dateAddedOrder.order = "Date Added"
-        
-        song_array = song_array.sortedArrayUsingDescriptors(self.timeSortDescriptors)
-        let cachedTimeOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
-        for (index, item) in song_array.enumerate() {
-            (item as! Track).addOrdersObject(cachedTimeOrder)
-            self.importSortUIUpdate(index)
-        }
-        cachedTimeOrder.order = "Time"
-        
-        song_array = song_array.sortedArrayUsingDescriptors(self.nameSortDescriptors)
-        let cachedNameOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
-        for (index, item) in song_array.enumerate() {
-            (item as! Track).addOrdersObject(cachedNameOrder)
-            self.importSortUIUpdate(index)
-        }
-        cachedNameOrder.order = "Name"
+            cachedArtistOrder.order = "Artist"
+            let cachedAlbumOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
+            song_array = song_array.sortedArrayUsingDescriptors(self.albumSortDescriptors)
+            for (index, item) in song_array.enumerate() {
+                (item as! Track).addOrdersObject(cachedAlbumOrder)
+                self.importSortUIUpdate(index)
+            }
+            cachedAlbumOrder.order = "Album"
+            let dateAddedOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
+            song_array = song_array.sortedArrayUsingDescriptors(self.dateAddedSortDescriptors)
+            for (index, item) in song_array.enumerate() {
+                (item as! Track).addOrdersObject(dateAddedOrder)
+                self.importSortUIUpdate(index)
+            }
+            dateAddedOrder.order = "Date Added"
+            
+            song_array = song_array.sortedArrayUsingDescriptors(self.timeSortDescriptors)
+            let cachedTimeOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
+            for (index, item) in song_array.enumerate() {
+                (item as! Track).addOrdersObject(cachedTimeOrder)
+                self.importSortUIUpdate(index)
+            }
+            cachedTimeOrder.order = "Time"
+            
+            song_array = song_array.sortedArrayUsingDescriptors(self.nameSortDescriptors)
+            let cachedNameOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
+            for (index, item) in song_array.enumerate() {
+                (item as! Track).addOrdersObject(cachedNameOrder)
+                self.importSortUIUpdate(index)
+            }
+            cachedNameOrder.order = "Name"
 
-        print("done sorting")
-        
-        //create playlists
-        for playlistDict in self.XMLPlaylistArray {
-            let cd_playlist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: self.moc) as! SongCollection
-            cd_playlist.name = playlistDict.objectForKey("Name") as? String
-            let playlistItems: NSArray
-            if (playlistDict.objectForKey("Playlist Items") != nil) {
-                playlistItems = playlistDict.objectForKey("Playlist Items") as! NSArray
-                var track_list = [Int]()
-                for stupidDict in playlistItems {
-                    let trackID = stupidDict.objectForKey("Track ID") as! Int
-                    track_list.append(trackID)
-                }
-                cd_playlist.track_id_list = track_list
+            print("done sorting")
+            dispatch_async(dispatch_get_main_queue()) {
+                self.doneSorting = true
             }
+            
+            //create playlists
+            for playlistDict in self.XMLPlaylistArray {
+                let cd_playlist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: self.moc) as! SongCollection
+                cd_playlist.name = playlistDict.objectForKey("Name") as? String
+                let playlistItems: NSArray
+                if (playlistDict.objectForKey("Playlist Items") != nil) {
+                    playlistItems = playlistDict.objectForKey("Playlist Items") as! NSArray
+                    var track_list = [Int]()
+                    for stupidDict in playlistItems {
+                        let trackID = stupidDict.objectForKey("Track ID") as! Int
+                        track_list.append(trackID)
+                    }
+                    cd_playlist.track_id_list = track_list
+                }
 
-            //create source list item for playlist
-            let cd_playlist_source_list_item = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
-            cd_playlist_source_list_item.parent = cd_playlists_header
-            cd_playlist_source_list_item.name = cd_playlist.name
-            cd_playlist_source_list_item.playlist = cd_playlist
-            cd_playlist_source_list_item.library = cd_library
-            self.importPlaylistUIUpdate(self.numImportedPlaylists)
-        }
-        
-        //create shared library examples
-        let cd_shared_library = NSEntityDescription.insertNewObjectForEntityForName("SharedLibrary", inManagedObjectContext: self.moc) as! SharedLibrary
-        cd_shared_library.address = "example 1"
-        
-        let cd_shared_library_source_list_item = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
-        cd_shared_library_source_list_item.network_library = cd_shared_library
-        cd_shared_library_source_list_item.name = "Example Shared Library"
-        cd_shared_library_source_list_item.parent = cd_shared_header
-        
-        let cd_shared_library_two = NSEntityDescription.insertNewObjectForEntityForName("SharedLibrary", inManagedObjectContext: self.moc) as! SharedLibrary
-        cd_shared_library_two.address = "example 2"
-        
-        let cd_shared_library_source_list_item_two = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.self.moc) as! SourceListItem
-        cd_shared_library_source_list_item_two.network_library = cd_shared_library_two
-        cd_shared_library_source_list_item_two.name = "Example Shared Library 2"
-        cd_shared_library_source_list_item_two.parent = cd_shared_header
-        self.self.moc.undoManager?.endUndoGrouping()
-        do {
-            try self.moc.save()
+                //create source list item for playlist
+                let cd_playlist_source_list_item = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
+                cd_playlist_source_list_item.parent = cd_playlists_header
+                cd_playlist_source_list_item.name = cd_playlist.name
+                cd_playlist_source_list_item.playlist = cd_playlist
+                cd_playlist_source_list_item.library = cd_library
+                self.importPlaylistUIUpdate(self.numImportedPlaylists)
+            }
+            
+            //create shared library examples
+            let cd_shared_library = NSEntityDescription.insertNewObjectForEntityForName("SharedLibrary", inManagedObjectContext: self.moc) as! SharedLibrary
+            cd_shared_library.address = "example 1"
+            
+            let cd_shared_library_source_list_item = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
+            cd_shared_library_source_list_item.network_library = cd_shared_library
+            cd_shared_library_source_list_item.name = "Example Shared Library"
+            cd_shared_library_source_list_item.parent = cd_shared_header
+            
+            let cd_shared_library_two = NSEntityDescription.insertNewObjectForEntityForName("SharedLibrary", inManagedObjectContext: self.moc) as! SharedLibrary
+            cd_shared_library_two.address = "example 2"
+            
+            let cd_shared_library_source_list_item_two = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.self.moc) as! SourceListItem
+            cd_shared_library_source_list_item_two.network_library = cd_shared_library_two
+            cd_shared_library_source_list_item_two.name = "Example Shared Library 2"
+            cd_shared_library_source_list_item_two.parent = cd_shared_header
+            self.self.moc.undoManager?.endUndoGrouping()
+            do {
+                try self.moc.save()
+                print("done saving subcontext")
+            } catch {
+                print("error: \(error)")
+            }
             dispatch_async(dispatch_get_main_queue()) {
                 self.doneEverything = true
+                print("ituens parser done clause")
             }
-        } catch {
-            print("error: \(error)")
-        }
         }
     }
 }

@@ -11,6 +11,7 @@
 
 import Cocoa
 
+
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     
@@ -88,6 +89,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             setupWindowController?.showWindow(self)
         } else {
             initializeLibraryAndShowMainWindow()
+        }
+        let thing = sharedServer("/")
+        do {
+            /*let ipv4 = CFSocketCreate(kCFAllocatorDefault, PF_INET, SOCK_STREAM, IPPROTO_TCP, nil, kCFSocketAutomaticallyReenableAcceptCallBack,
+            let ipv4 = CFSocketCreate(*/
+            try thing.start()
+        }
+        catch {
+            print(error)
         }
     }
 

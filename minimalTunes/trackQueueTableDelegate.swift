@@ -285,7 +285,7 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
             switch object.viewType! {
             case .pastTrack:
                 let result = tableView.makeViewWithIdentifier("pastTrack", owner: nil) as! PastTrackCell
-                (result.subviews[1] as! NSTextField).stringValue = object.track!.name!
+                (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
                 var artist_aa_string = ""
                 if object.track!.artist != nil {
                     artist_aa_string += object.track!.artist!.name!
@@ -293,11 +293,21 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
                 if object.track!.album != nil {
                     artist_aa_string += " - " + object.track!.album!.name!
                 }
-                (result.subviews[2] as! NSTextField).stringValue = artist_aa_string
+                (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
+                if object.track!.album?.primary_art != nil {
+                    let art = object.track?.album?.primary_art
+                    let path = art?.artwork_location as! String
+                    let url = NSURL(fileURLWithPath: path)
+                    let image = NSImage(contentsOfURL: url)
+                    (result.subviews[0] as! NSImageView).image = image
+                }
+                else {
+                    (result.subviews[0] as! NSImageView).image = nil
+                }
                 return result
             case .currentTrack:
                 let result = tableView.makeViewWithIdentifier("futureTrack", owner: nil) as! TrackNameTableCell
-                (result.subviews[1] as! NSTextField).stringValue = object.track!.name!
+                (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
                 var artist_aa_string = ""
                 if object.track!.artist != nil {
                     artist_aa_string += object.track!.artist!.name!
@@ -305,7 +315,17 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
                 if object.track!.album != nil {
                     artist_aa_string += " - " + object.track!.album!.name!
                 }
-                (result.subviews[2] as! NSTextField).stringValue = artist_aa_string
+                (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
+                if object.track!.album?.primary_art != nil {
+                    let art = object.track?.album?.primary_art
+                    let path = art?.artwork_location as! String
+                    let url = NSURL(fileURLWithPath: path)
+                    let image = NSImage(contentsOfURL: url)
+                    (result.subviews[0] as! NSImageView).image = image
+                }
+                else {
+                    (result.subviews[0] as! NSImageView).image = nil
+                }
                 return result
             case .source:
                 let result = tableView.makeViewWithIdentifier("source", owner: nil) as! FromSourceCell
@@ -313,7 +333,7 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
                 return result
             case .futureTrack:
                 let result = tableView.makeViewWithIdentifier("futureTrack", owner: nil) as! TrackNameTableCell
-                (result.subviews[1] as! NSTextField).stringValue = object.track!.name!
+                (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
                 var artist_aa_string = ""
                 if object.track!.artist != nil {
                     artist_aa_string += object.track!.artist!.name!
@@ -321,7 +341,17 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
                 if object.track!.album != nil {
                     artist_aa_string += " - " + object.track!.album!.name!
                 }
-                (result.subviews[2] as! NSTextField).stringValue = artist_aa_string
+                (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
+                if object.track!.album?.primary_art != nil {
+                    let art = object.track?.album?.primary_art
+                    let path = art?.artwork_location as! String
+                    let url = NSURL(fileURLWithPath: path)
+                    let image = NSImage(contentsOfURL: url)
+                    (result.subviews[0] as! NSImageView).image = image
+                }
+                else {
+                    (result.subviews[0] as! NSImageView).image = nil
+                }
                 return result
             }
         }

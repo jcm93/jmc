@@ -4,3 +4,5 @@
 
 #import <CommonCrypto/CommonCrypto.h>
 #import <Foundation/Foundation.h>
+#include <sys/socket.h>
+#include <netinet/in.h>

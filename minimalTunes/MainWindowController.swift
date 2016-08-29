@@ -15,6 +15,8 @@ private var my_context = 0
 
 class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchFieldDelegate, NSTableViewDelegate {
     
+    @IBOutlet weak var albumArtBox: NSBox!
+    @IBOutlet weak var artworkToggle: NSButton!
     @IBOutlet weak var artCollectionView: NSCollectionView!
     @IBOutlet weak var noMusicView: NSView!
     @IBOutlet weak var queueScrollView: NSScrollView!
@@ -59,9 +61,11 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     var tagWindowController: TagEditorWindow?
     var importWindowController: ImportWindowController?
     var timer: NSTimer?
+    var lastTimerDate: NSDate?
+    var secsPlayed: NSTimeInterval = 0
     var queue: AudioQueue = AudioQueue()
-    var cur_view_title = "poop"
-    var cur_source_title = "poop"
+    var cur_view_title = "Music"
+    var cur_source_title = "Music"
     var duration: Double?
     var paused: Bool?
     var is_initialized = false
@@ -92,6 +96,24 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     lazy var managedContext: NSManagedObjectContext = {
         return (NSApplication.sharedApplication().delegate
             as? AppDelegate)?.managedObjectContext }()!
+    
+    lazy var sourceListHeaderNodes: [SourceListItem]? = {()-> [SourceListItem]? in
+        let fetchRequest = NSFetchRequest(entityName: "SourceListItem")
+        let fetchPredicate = NSPredicate(format: "parent == nil")
+        fetchRequest.predicate = fetchPredicate
+        do {
+            let results = try self.managedContext.executeFetchRequest(fetchRequest) as! [SourceListItem]
+            for headerNode in results {
+                if (headerNode as! SourceListItem).name == "Playlists" {
+                    self.sourceListTreeController.playlistHeaderNode = headerNode
+                }
+            }
+            return results
+        } catch {
+            print("error getting header nodes: \(error)")
+            return nil
+        }
+    }()
     
     lazy var cachedOrders: [CachedOrder] = {
         let fetch_request = NSFetchRequest(entityName: "CachedOrder")
@@ -164,6 +186,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             currentArrayController = tableViewArrayController
             currentTableView = libraryTableView
             focus = .library
+            updateInfo()
             CATransaction.commit()
             return
         }
@@ -176,6 +199,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             currentArrayController = auxPlaylistArrayController
             currentTableView = auxPlaylistTableView
             focus = .playlist
+            updateInfo()
             CATransaction.commit()
         }
         else {
@@ -193,6 +217,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             currentArrayController = auxPlaylistArrayController
             currentTableView = auxPlaylistTableView
             CATransaction.commit()
+            updateInfo()
             return
         }
     }
@@ -280,7 +305,10 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             current_source_index = 0
         }
         else {
-            current_source_index = (current_source_play_order?.indexOf(Int(currentTrack!.id!)))! + 1
+            if currentTrack != nil {
+                current_source_index = (current_source_play_order?.indexOf(Int(currentTrack!.id!)))! + 1
+            } else {
+            }
             print("current source index:" + String(current_source_index))
         }
     }
@@ -290,6 +318,16 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         libraryTableView.scrollRowToVisible(libraryTableView.selectedRow)
     }
     
+    @IBAction func addPlaylistButton(sender: AnyObject) {
+        let playlist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: managedContext) as! SongCollection
+        let playlistItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
+        playlistItem.playlist = playlist
+        playlistItem.name = "New Playlist"
+        playlistItem.parent = sourceListTreeController.playlistHeaderNode
+        sourceListView.reloadData()
+        sourceListTreeController.setSelectionIndexPath(sourceListTreeController.indexPathOfObject(playlistItem))
+        sourceListView.editColumn(0, row: sourceListView.selectedRow, withEvent: nil, select: true)
+    }
     
     //player stuff
     @IBAction func makePlaylistFromTrackQueueSelection(sender: AnyObject) {
@@ -303,6 +341,14 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         playSong(item[0] as! Track)
     }
     
+    @IBAction func toggleArtwork(sender: AnyObject) {
+        if artworkToggle.state == NSOnState {
+            albumArtBox.hidden = false
+        }
+        else {
+            albumArtBox.hidden = true
+        }
+    }
     @IBAction func togglePastTracks(sender: AnyObject) {
         trackQueueTableDelegate.togglePastTracks()
     }
@@ -314,14 +360,14 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     }
     @IBAction func addToQueueFromTableView(sender: AnyObject) {
         print(currentTableView!.selectedRow)
-        let track_to_add = currentArrayController!.arrangedObjects.objectAtIndex(currentTableView!.selectedRow) as! Track
+        let track_to_add = currentArrayController!.content!.objectAtIndex(currentTableView!.selectedRow) as! Track
         trackQueueTableDelegate.addTrackToQueue(track_to_add, context: cur_view_title, tense: 1)
         queue.addTrackToQueue(track_to_add, index: nil)
         checkQueueList(track_to_add)
     }
     @IBAction func playFromTableView(sender: AnyObject) {
         print(currentTableView!.selectedRow)
-        let track_to_play = currentArrayController!.arrangedObjects.objectAtIndex(currentTableView!.selectedRow) as! Track
+        let track_to_play = currentArrayController!.content!.objectAtIndex(currentTableView!.selectedRow) as! Track
         playSong(track_to_play)
         checkQueueList(track_to_play)
     }
@@ -334,7 +380,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         queue.playImmediately(track)
         initializePlayerBarForNewTrack()
         print("about to init album art")
-        initAlbumArt(track)
         currentTrack = track
     }
     
@@ -349,7 +394,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     func tableView(tableView: NSTableView, mouseDownInHeaderOfTableColumn tableColumn: NSTableColumn) {
         print("called")
         print("caching \(tableColumn.identifier)")
-        NSUserDefaults.standardUserDefaults().setObject(tableColumn.identifier, forKey: "lastColumn")
+        NSUserDefaults.standardUserDefaults().setObject(tableColumn.title, forKey: "lastColumn")
         if focusedColumn == tableColumn {
             tableViewArrayController.content = (tableViewArrayController.content as! [Track]).reverse()
             if asc == true {
@@ -403,19 +448,28 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         }
         print(tableViewArrayController.selectedObjects)
         print(libraryTableView.selectedRowIndexes)
+        NSUserDefaults.standardUserDefaults().setBool(asc!, forKey: "currentAsc")
         tableView.reloadData()
     }
     
+    func refreshTableView() {
+        let column = focusedColumn
+        focusedColumn = nil
+        tableView(currentTableView!, mouseDownInHeaderOfTableColumn: column!)
+    }
+    
     func pause() {
+        updateValuesUnsafe()
         timer?.invalidate()
         paused = true
         queue.pause()
     }
     
     func unpause() {
+        lastTimerDate = NSDate()
         paused = false
         queue.play()
-        timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValues), userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValuesSafe), userInfo: nil, repeats: true)
     }
     
     func seek(frac: Double) {
@@ -462,28 +516,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         }
     }
     
-    func updateValues() {
-        let nodeTime = queue.curNode.lastRenderTime
-        let playerTime = queue.curNode.playerTimeForNodeTime(nodeTime!)
-        var offset_thing: Double?
-        if queue.track_frame_offset == nil {
-            offset_thing = 0
-        }
-        else {
-            offset_thing  = queue.track_frame_offset!
-        }
-        let seconds = ((Double((playerTime?.sampleTime)!) + offset_thing!) / (playerTime?.sampleRate)!) - Double(queue.total_offset_seconds)
-        let seconds_string = queue.getTimeAsString(seconds)
-        if (timer?.valid == true) {
-            currentTimeLabel.stringValue = seconds_string
-            progressBar.doubleValue = (seconds * 100) / duration!
-        }
-        else {
-            currentTimeLabel.stringValue = ""
-            progressBar.doubleValue = 0
-        }
-    }
-    
     @IBAction func toggleFilterVisibility(sender: AnyObject) {
         if advancedFilterScrollView.hidden == true {
             advancedFilterScrollView.hidden = false
@@ -503,6 +535,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         theBox.contentView!.hidden = false
         let the_track = queue.currentTrack!
         currentTrack = the_track
+        initAlbumArt(the_track)
         if the_track.name != nil {
             songNameLabel.stringValue = the_track.name!
         }
@@ -515,8 +548,10 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         }
         artistAlbumLabel.stringValue = aa_string
         duration = queue.duration_seconds
-        durationLabel.stringValue = queue.getTimeAsString(duration!)
-        currentTimeLabel.stringValue = queue.getTimeAsString(0)
+        durationLabel.stringValue = getTimeAsString(duration!)
+        currentTimeLabel.stringValue = getTimeAsString(0)
+        lastTimerDate = NSDate()
+        secsPlayed = 0
         progressBar.hidden = false
         progressBar.doubleValue = 0
         if (paused == false || paused == nil) {
@@ -525,7 +560,50 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     }
     
     func startTimer() {
-        timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValues), userInfo: nil, repeats: true)
+        //timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValuesUnsafe), userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValuesSafe), userInfo: nil, repeats: true)
+    }
+    
+    func updateValuesUnsafe() {
+        print("unsafe called")
+        let nodeTime = queue.curNode.lastRenderTime
+        let playerTime = queue.curNode.playerTimeForNodeTime(nodeTime!)
+        var offset_thing: Double?
+        if queue.track_frame_offset == nil {
+            offset_thing = 0
+        }
+        else {
+            offset_thing  = queue.track_frame_offset!
+        }
+        let seconds = ((Double((playerTime?.sampleTime)!) + offset_thing!) / (playerTime?.sampleRate)!) - Double(queue.total_offset_seconds)
+        let seconds_string = getTimeAsString(seconds)
+        if (timer?.valid == true) {
+            currentTimeLabel.stringValue = seconds_string
+            progressBar.doubleValue = (seconds * 100) / duration!
+        }
+        else {
+            currentTimeLabel.stringValue = ""
+            progressBar.doubleValue = 0
+        }
+        secsPlayed = seconds
+    }
+    
+    func updateValuesSafe() {
+        print("safe called")
+        let lastUpdateTime = lastTimerDate
+        let currentTime = NSDate()
+        let updateQuantity = currentTime.timeIntervalSinceDate(lastUpdateTime!)
+        print(updateQuantity)
+        secsPlayed += updateQuantity
+        let seconds_string = getTimeAsString(secsPlayed)
+        if timer?.valid == true {
+            currentTimeLabel.stringValue = seconds_string
+            progressBar.doubleValue = (secsPlayed * 100) / duration!
+        } else {
+            currentTimeLabel.stringValue = ""
+            progressBar.doubleValue = 0
+        }
+        lastTimerDate = currentTime
     }
     
     func cleanUpBar() {
@@ -537,6 +615,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         currentTimeLabel.stringValue = ""
         progressBar.doubleValue = 100
     }
+    
     func expandSourceView() {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             dispatch_async(dispatch_get_main_queue()) {
@@ -616,12 +695,36 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             print("here")
             let art = track.album!.primary_art
             let path = art?.artwork_location as! String
-            let url = NSURL(string: path)
-            let image = NSImage(contentsOfURL: url!)
+            let url = NSURL(fileURLWithPath: path)
+            let image = NSImage(contentsOfURL: url)
             albumArtView.image = image
         }
         else {
-            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+                var artworkFound = false
+                if NSUserDefaults.standardUserDefaults().boolForKey("checkEmbeddedArtwork") == true {
+                    print("checking mp3 for embedded art")
+                    let artwork = (NSApplication.sharedApplication().delegate as! AppDelegate).yeOldeFileHandler?.getArtworkFromFile(track.location!)
+                    if artwork != nil {
+                        let albumDirectoryPath = NSURL(string: track.location!)?.URLByDeletingLastPathComponent
+                        addPrimaryArtForTrack(track, art: artwork!, albumDirectoryPath: albumDirectoryPath!.path!)
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.initAlbumArt(track)
+                        }
+                        artworkFound = true
+                    }
+                }
+                if NSUserDefaults.standardUserDefaults().boolForKey("findAlbumArtwork") == true && artworkFound == false {
+                    print("requesting art")
+                    let requester = artAPIRequestDelegate()
+                    requester.artAPIRequest(track)
+                }
+                if artworkFound == false {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.albumArtView.image = nil
+                    }
+                }
+            }
         }
         /*if track.album?.other_art != nil {
             artCollectionView.hidden = false
@@ -652,7 +755,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             sourceListView.hidden = true
         }
         queue.mainWindowController = self
-        shuffle = shuffleButton.state
+        //shuffle = shuffleButton.state
         progressBar.displayedWhenStopped = true
         progressBarView.progressBar = progressBar
         progressBarView.mainWindowController = self
@@ -660,11 +763,11 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         sourceListView.setDataSource(sourceListTreeController)
         sourceListScrollView.drawsBackground = false
         theBox.contentView?.hidden = true
-        theBox.boxType = .Custom
+        /*theBox.boxType = .Custom
         theBox.borderType = .BezelBorder
         theBox.borderWidth = 1.1
-        theBox.cornerRadius = 3
-        theBox.fillColor = NSColor(patternImage: NSImage(named: "Gradient")!)
+        theBox.cornerRadius = 3*/
+        //theBox.fillColor = NSColor(patternImage: NSImage(named: "Gradient")!)
         libraryTableView.doubleAction = "tableViewDoubleClick:"
         libraryTableView.setDelegate(self)
         libraryTableView.setDataSource(tableViewArrayController)
@@ -673,7 +776,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         sourceListView.mainWindowController = self
         libraryTableView.mainWindowController = self
         auxPlaylistTableView.mainWindowController = self
-        currentArrayController = tableViewArrayController
         searchField.delegate = self
         //libraryTableView.tableColumns[4].sortDescriptorPrototype = NSSortDescriptor(key: "artist_sort_order", ascending: true)
         //libraryTableView.tableColumns[5].sortDescriptorPrototype = NSSortDescriptor(key: "album_sort_order", ascending: true)
@@ -691,21 +793,47 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         trackQueueTableView.setDelegate(trackQueueTableDelegate)
         trackQueueTableDelegate.tableView = trackQueueTableView
         let currentColumn = NSUserDefaults.standardUserDefaults().objectForKey("lastColumn")
+        let currentAsc = NSUserDefaults.standardUserDefaults().boolForKey("currentAsc")
         print("retrieving \(currentColumn) from cache")
         trackQueueTableView.registerForDraggedTypes(["Track", "public.TrackQueueView"])
         trackQueueTableDelegate.mainWindowController = self
         queueScrollView.hidden = true
-        current_source_play_order = (tableViewArrayController.content as! [Track]).map( {return $0.id as! Int})
-        print(current_source_play_order!.count)
+        
+        currentTableView = libraryTableView
         volumeSlider.continuous = true
         artCollectionView.hidden = true
         //predicateEditor.rowTemplates = rowTemplates
         //predicateEditor.addRow(nil)
         self.window!.titleVisibility = NSWindowTitleVisibility.Hidden
         self.window!.titlebarAppearsTransparent = true
-        updateInfo()
         if currentColumn != nil {
-            tableView(libraryTableView, mouseDownInHeaderOfTableColumn: libraryTableView!.tableColumns[libraryTableView!.columnWithIdentifier(currentColumn as! String)])
+            let columnTest = NSTableColumn()
+            columnTest.title = currentColumn as! String
+            tableView(libraryTableView, mouseDownInHeaderOfTableColumn: columnTest)
+            if (currentAsc == false) {
+                tableView(libraryTableView, mouseDownInHeaderOfTableColumn: columnTest)
+            }
         }
+        else {
+            if hasMusic == true {
+                tableViewArrayController.content = cachedOrders[4].tracks?.array
+            }
+        }
+        current_source_play_order = (tableViewArrayController.content as! [Track]).map( {return $0.id as! Int})
+        print(current_source_play_order!.count)
+        currentArrayController = tableViewArrayController
+        updateInfo()
+        //currentArrayController?.rearrangeObjects()
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            dispatch_async(dispatch_get_main_queue()) {
+                self.sourceListView.expandItem(nil, expandChildren: true)
+            }
+        }
+        let mainLibraryIndexes = [0, 0]
+        let mainLibraryIndexPath = NSIndexPath(indexes: mainLibraryIndexes, length: 2)
+        sourceListTreeController.setSelectionIndexPath(mainLibraryIndexPath)
+        //sourceListTreeController.content = sourceListHeaderNodes
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "findAlbumArtwork")
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "checkEmbeddedArtwork")
     }
 }

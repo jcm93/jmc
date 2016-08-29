@@ -8,11 +8,37 @@
 
 import Cocoa
 
+extension NSTreeController {
+    
+    func indexPathOfObject(anObject:NSObject) -> NSIndexPath? {
+        return self.indexPathOfObject(anObject, nodes: self.arrangedObjects.childNodes)
+    }
+    
+    func indexPathOfObject(anObject:NSObject, nodes:[NSTreeNode]!) -> NSIndexPath? {
+        for node in nodes {
+            if (anObject == node.representedObject as! NSObject)  {
+                return node.indexPath
+            }
+            if (node.childNodes != nil) {
+                if let path:NSIndexPath = self.indexPathOfObject(anObject, nodes: node.childNodes)
+                {
+                    return path
+                }
+            }
+        }
+        return nil
+    }
+}
+
 class DragAndDropTreeController: NSTreeController, NSOutlineViewDataSource {
     
     lazy var managedContext: NSManagedObjectContext = {
         return (NSApplication.sharedApplication().delegate
             as? AppDelegate)?.managedObjectContext }()!
+    
+    var playlistHeaderNode: SourceListItem?
+    var libraryHeaderNode: SourceListItem?
+    var sharedHeaderNode: SourceListItem?
     
     var draggedNodes: [NSTreeNode]?
     
@@ -45,14 +71,47 @@ class DragAndDropTreeController: NSTreeController, NSOutlineViewDataSource {
                 }
             }
         }
+        else if info.draggingPasteboard().dataForType("Track") != nil {
+            if (item!.representedObject! as! SourceListItem).name == "Playlists" {
+                return .Generic
+            }
+        }
         return .Move
     }
     
+    override func objectDidEndEditing(editor: AnyObject) {
+        print("objectdidendediting called")
+        reorderChildren(editor as! NSTreeNode)
+        super.objectDidEndEditing(editor)
+    }
+    
     func outlineView(outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: AnyObject?, childIndex index: Int) -> Bool {
-        var index_offset = 0
-        let path = (item as! NSTreeNode).indexPath.indexPathByAddingIndex(index)
-        moveNodes(draggedNodes!, toIndexPath: path)
-        reorderChildren(item as! NSTreeNode)
+        if draggedNodes != nil {
+            let path = (item as! NSTreeNode).indexPath.indexPathByAddingIndex(index)
+            self.moveNodes(draggedNodes!, toIndexPath: path)
+            reorderChildren(item as! NSTreeNode)
+            return true
+        } else if info.draggingPasteboard().dataForType("Track") != nil {
+            print("doing stuff")
+            let playlistItem = (item as! NSTreeNode).representedObject! as! SourceListItem
+            let playlist = playlistItem.playlist
+            let data = info.draggingPasteboard().dataForType("Track")
+            let unCodedThing = NSKeyedUnarchiver.unarchiveObjectWithData(data!) as! NSMutableArray
+            let tracks = { () -> [Track] in
+                var result = [Track]()
+                for trackURI in unCodedThing {
+                    let id = managedContext.persistentStoreCoordinator?.managedObjectIDForURIRepresentation(trackURI as! NSURL)
+                    result.append(managedContext.objectWithID(id!) as! Track)
+                }
+                return result
+            }()
+            for track in tracks {
+                var id_list = playlist!.track_id_list as! [Int]
+                id_list.append(Int(track.id!))
+                playlist?.track_id_list = id_list
+            }
+
+        }
         return true
     }
 

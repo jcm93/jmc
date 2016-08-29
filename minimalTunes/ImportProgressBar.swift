@@ -27,6 +27,7 @@ class ImportProgressBar: NSWindowController {
         iTunesParser?.addObserver(self, forKeyPath: "numSorts", options: .New, context: &my_special_context)
         iTunesParser?.addObserver(self, forKeyPath: "numDoneSorts", options: .New, context: &my_special_context)
         iTunesParser?.addObserver(self, forKeyPath: "donePlaylists", options: .New, context: &my_special_context)
+        iTunesParser?.addObserver(self, forKeyPath: "doneEverything", options: .New, context: &my_special_context)
     }
     
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
@@ -37,14 +38,17 @@ class ImportProgressBar: NSWindowController {
             self.progressIndicator.bind("maxValue", toObject: iTunesParser!, withKeyPath: "numSorts", options: nil)
             progressString.stringValue = "Caching sorts..."
         }
-        if keyPath == "doneSorts" {
+        if keyPath == "doneSorting" {
+            print("progress bar done with sorting")
             self.progressIndicator.doubleValue = 0
             self.progressIndicator.bind("value", toObject: iTunesParser!, withKeyPath: "numImportedPlaylists", options: nil)
             self.progressIndicator.bind("maxValue", toObject: iTunesParser!, withKeyPath: "numPlaylists", options: nil)
             progressString.stringValue = "Importing playlists..."
         }
         if keyPath == "doneEverything" {
-            print("progress bar here")
+            print("progress bar finished")
+            progressIndicator.doubleValue = 0
+            progressIndicator.hidden = true
             self.window?.close()
         }
     }

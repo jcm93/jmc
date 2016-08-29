@@ -29,6 +29,43 @@
                             <tabViewItem label="Item 0" identifier="" id="5wv-L6-agV">
                                 <view key="view" ambiguous="YES" id="S9T-MJ-G6F">
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lut-X7-lQi">
+                                            <rect key="frame" x="18" y="-82" width="261" height="18"/>
+                                            <buttonCell key="cell" type="check" title="Automatically play files added to library" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="vwe-IM-fFO">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                        </button>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UO0-mS-xED">
+                                            <rect key="frame" x="18" y="-37" width="138" height="17"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Double click behavior:" id="Oe2-Nx-JbU">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YZn-1h-RXw">
+                                            <rect key="frame" x="18" y="-62" width="297" height="18"/>
+                                            <buttonCell key="cell" type="check" title="Automatically find album art for played tracks" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="hhj-oY-mIP">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                        </button>
+                                        <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rJo-vA-tht">
+                                            <rect key="frame" x="160" y="-43" width="76" height="26"/>
+                                            <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="4Vb-KX-kJD">
+                                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="menu"/>
+                                                <menu key="menu" id="P6A-gh-jiX">
+                                                    <items>
+                                                        <menuItem title="Play" id="DQb-gV-WuL"/>
+                                                        <menuItem title="Queue" id="o0m-GW-YY5"/>
+                                                    </items>
+                                                </menu>
+                                            </popUpButtonCell>
+                                        </popUpButton>
+                                    </subviews>
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="Item 1" identifier="" id="qrQ-IW-Jgv">
@@ -41,12 +78,208 @@
                                 <view key="view" id="urC-l1-HwO">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="192"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uwD-BU-QLv">
+                                            <rect key="frame" x="18" y="156" width="112" height="18"/>
+                                            <buttonCell key="cell" type="check" title="Enable sharing" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="wEY-Yk-GoT">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                        </button>
+                                        <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c10-Ik-IHE">
+                                            <rect key="frame" x="20" y="85" width="209" height="28"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="@" drawsBackground="YES" id="WdJ-ej-R4y">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UGP-KM-V6F">
+                                            <rect key="frame" x="18" y="121" width="62" height="17"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Identifier:" id="CqE-KQ-GH1">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2uh-ba-IcF">
+                                            <rect key="frame" x="18" y="26" width="213" height="51"/>
+                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Identifiers must be unique, and can contain letters, numbers and some other things." id="yGV-pQ-gsr">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VkJ-XN-oNY">
+                                            <rect key="frame" x="240" y="49" width="240" height="100"/>
+                                            <clipView key="contentView" ambiguous="YES" id="FOF-MT-gFa">
+                                                <rect key="frame" x="1" y="0.0" width="238" height="99"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="8Bh-qc-pY5" viewBased="YES" id="sD4-Qf-Q3r">
+                                                        <rect key="frame" x="0.0" y="0.0" width="238" height="76"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <size key="intercellSpacing" width="3" height="2"/>
+                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                                        <tableColumns>
+                                                            <tableColumn width="235" minWidth="40" maxWidth="1000" id="Bb8-1y-R6H">
+                                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Identifier">
+                                                                    <font key="font" metaFont="smallSystem"/>
+                                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                                    <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                                </tableHeaderCell>
+                                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="3Gw-UD-grp">
+                                                                    <font key="font" metaFont="system"/>
+                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                </textFieldCell>
+                                                                <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                                <prototypeCellViews>
+                                                                    <tableCellView id="fop-zN-G8h">
+                                                                        <rect key="frame" x="1" y="1" width="235" height="17"/>
+                                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                        <subviews>
+                                                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qQg-VR-soA">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
+                                                                                <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="6Lk-RL-Qt2">
+                                                                                    <font key="font" metaFont="cellTitle"/>
+                                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                                </textFieldCell>
+                                                                            </textField>
+                                                                        </subviews>
+                                                                        <connections>
+                                                                            <outlet property="textField" destination="qQg-VR-soA" id="1ku-BE-EJV"/>
+                                                                        </connections>
+                                                                    </tableCellView>
+                                                                </prototypeCellViews>
+                                                            </tableColumn>
+                                                        </tableColumns>
+                                                    </tableView>
+                                                </subviews>
+                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </clipView>
+                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="wIu-jo-2pi">
+                                                <rect key="frame" x="1" y="7" width="0.0" height="16"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                            </scroller>
+                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="ClF-2G-XuQ">
+                                                <rect key="frame" x="224" y="17" width="15" height="102"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                            </scroller>
+                                            <tableHeaderView key="headerView" id="8Bh-qc-pY5">
+                                                <rect key="frame" x="0.0" y="0.0" width="238" height="23"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                            </tableHeaderView>
+                                        </scrollView>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sg3-DQ-1eI">
+                                            <rect key="frame" x="238" y="157" width="53" height="17"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Friends:" id="4v9-ft-ckc">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LuQ-mS-Rdi">
+                                            <rect key="frame" x="240" y="19" width="25" height="27"/>
+                                            <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="uUt-Mx-i2A">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                        </button>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0ut-lZ-zzM">
+                                            <rect key="frame" x="276" y="19" width="25" height="27"/>
+                                            <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSRemoveTemplate" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8qK-qe-Efi">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                        </button>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xbt-yD-fFJ">
+                                            <rect key="frame" x="319" y="158" width="46" height="17"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="test ip:" id="PPg-ug-JnH">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Am-Zj-CVF">
+                                            <rect key="frame" x="371" y="155" width="96" height="22"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="mnG-HP-uvc">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                    </subviews>
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="Item 3" identifier="" id="iG8-pk-Cr0">
                                 <view key="view" id="gVW-Yu-6dW">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="192"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cr8-cb-HI1">
+                                            <rect key="frame" x="238" y="67" width="224" height="36"/>
+                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="String describing organizational behavior re: this directory" id="uQy-cn-anX">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qym-75-C73">
+                                            <rect key="frame" x="238" y="138" width="139" height="34"/>
+                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Media folder location:" id="waO-Kp-GFS">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GNj-Cg-57V">
+                                            <rect key="frame" x="240" y="109" width="220" height="36"/>
+                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="File path" drawsBackground="YES" id="29J-fU-ICV">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ngJ-f5-kBI">
+                                            <rect key="frame" x="18" y="154" width="216" height="18"/>
+                                            <buttonCell key="cell" type="check" title="Keep all files in central directory" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="NAR-fy-VHb">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                        </button>
+                                        <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lQe-xZ-Btg">
+                                            <rect key="frame" x="35" y="131" width="137" height="18"/>
+                                            <buttonCell key="cell" type="radio" title="Move added media" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="ZcI-tM-gMU">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                        </button>
+                                        <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f7p-f5-Ecv">
+                                            <rect key="frame" x="35" y="109" width="136" height="18"/>
+                                            <buttonCell key="cell" type="radio" title="Copy added media" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="GIW-ZL-3ah">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                        </button>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ifg-zv-OTv">
+                                            <rect key="frame" x="14" y="48" width="164" height="32"/>
+                                            <buttonCell key="cell" type="push" title="Consolidate library..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="bqr-5H-1zj">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                        </button>
+                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XyO-hj-ygm">
+                                            <rect key="frame" x="23" y="20" width="234" height="33"/>
+                                            <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" title="Centralize all media missing from the meTunes Media folder" id="mkG-uD-Scz">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                    </subviews>
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="Item 4" identifier="" id="5lq-Na-gwj">
@@ -77,34 +310,6 @@ Gw
 </string>
                         </buttonCell>
                     </button>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lut-X7-lQi">
-                        <rect key="frame" x="7" y="176" width="261" height="18"/>
-                        <buttonCell key="cell" type="check" title="Automatically play files added to library" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="vwe-IM-fFO">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                    </button>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UO0-mS-xED">
-                        <rect key="frame" x="7" y="203" width="138" height="17"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Double click behavior:" id="Oe2-Nx-JbU">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rJo-vA-tht">
-                        <rect key="frame" x="144" y="197" width="76" height="26"/>
-                        <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="4Vb-KX-kJD">
-                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="menu"/>
-                            <menu key="menu" id="P6A-gh-jiX">
-                                <items>
-                                    <menuItem title="Play" id="DQb-gV-WuL"/>
-                                    <menuItem title="Queue" id="o0m-GW-YY5"/>
-                                </items>
-                            </menu>
-                        </popUpButtonCell>
-                    </popUpButton>
                 </subviews>
             </view>
             <toolbar key="toolbar" implicitIdentifier="483C4042-24D6-48BF-AC68-296C8F73563D" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="oeq-An-LBY">
@@ -154,10 +359,12 @@ Gw
         </window>
     </objects>
     <resources>
+        <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSBonjour" width="32" height="32"/>
         <image name="NSEveryone" width="32" height="32"/>
         <image name="NSFolder" width="32" height="32"/>
         <image name="NSPreferencesGeneral" width="32" height="32"/>
+        <image name="NSRemoveTemplate" width="11" height="11"/>
         <image name="PlayImage" width="100" height="100"/>
     </resources>
 </document>

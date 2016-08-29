@@ -7,12 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D01AD8E1D6DF02C00F9211F /* NetworkSocketServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D01AD8D1D6DF02C00F9211F /* NetworkSocketServer.swift */; };
+		0D01AD911D7079D900F9211F /* EqualizerWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D01AD8F1D7079D900F9211F /* EqualizerWindowController.swift */; };
+		0D01AD921D7079D900F9211F /* EqualizerWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D01AD901D7079D900F9211F /* EqualizerWindowController.xib */; };
 		0D0E5FA71D38444B009E0FA3 /* CachedOrder+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FA31D38444B009E0FA3 /* CachedOrder+CoreDataProperties.swift */; };
 		0D0E5FA81D38444B009E0FA3 /* CachedOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FA41D38444B009E0FA3 /* CachedOrder.swift */; };
 		0D0E5FA91D38444B009E0FA3 /* Track+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FA51D38444B009E0FA3 /* Track+CoreDataProperties.swift */; };
 		0D0E5FAA1D38444B009E0FA3 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FA61D38444B009E0FA3 /* Track.swift */; };
 		0D0E5FAF1D3E909D009E0FA3 /* DragAndDropImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */; };
 		0D1BDFA51D0F44A70092FBA0 /* AudioQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1BDFA41D0F44A70092FBA0 /* AudioQueue.swift */; };
+		0D2410A31D6735F200F95494 /* artAPIRequestDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */; };
 		0D40A9F21D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */; };
 		0D58F7491D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */; };
 		0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */; };
@@ -55,7 +59,7 @@
 		0DAB30AF1CFBA3340028928F /* minimalTunesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30AE1CFBA3340028928F /* minimalTunesUITests.swift */; };
 		0DD274EC1D30462F0055C43B /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD274EA1D30462F0055C43B /* PreferencesWindowController.swift */; };
 		0DD274ED1D30462F0055C43B /* PreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DD274EB1D30462F0055C43B /* PreferencesWindowController.xib */; };
-		0DD274EF1D3190360055C43B /* CertainGlobalFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD274EE1D3190360055C43B /* CertainGlobalFunctions.swift */; };
+		0DD274EF1D3190360055C43B /* GlobalFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD274EE1D3190360055C43B /* GlobalFunctions.swift */; };
 		0DD7D6D61D3F3A350035BAD8 /* Album+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD7D6D01D3F3A350035BAD8 /* Album+CoreDataProperties.swift */; };
 		0DD7D6D71D3F3A350035BAD8 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD7D6D11D3F3A350035BAD8 /* Album.swift */; };
 		0DD7D6D81D3F3A350035BAD8 /* AlbumArtworkCollection+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD7D6D21D3F3A350035BAD8 /* AlbumArtworkCollection+CoreDataProperties.swift */; };
@@ -111,6 +115,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0D01AD8D1D6DF02C00F9211F /* NetworkSocketServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkSocketServer.swift; sourceTree = "<group>"; };
+		0D01AD8F1D7079D900F9211F /* EqualizerWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EqualizerWindowController.swift; sourceTree = "<group>"; };
+		0D01AD901D7079D900F9211F /* EqualizerWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EqualizerWindowController.xib; sourceTree = "<group>"; };
 		0D0E5FA31D38444B009E0FA3 /* CachedOrder+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CachedOrder+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D0E5FA41D38444B009E0FA3 /* CachedOrder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachedOrder.swift; sourceTree = "<group>"; };
 		0D0E5FA51D38444B009E0FA3 /* Track+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Track+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -118,6 +125,7 @@
 		0D0E5FAB1D3BE7EB009E0FA3 /* minimalTunes-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "minimalTunes-Bridging-Header.h"; sourceTree = "<group>"; };
 		0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragAndDropImageView.swift; sourceTree = "<group>"; };
 		0D1BDFA41D0F44A70092FBA0 /* AudioQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioQueue.swift; sourceTree = "<group>"; };
+		0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = artAPIRequestDelegate.swift; sourceTree = "<group>"; };
 		0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransformerIntegerToTimestamp.swift; sourceTree = "<group>"; };
 		0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
 		0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListThatYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
@@ -166,7 +174,7 @@
 		0DAB30B01CFBA3340028928F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0DD274EA1D30462F0055C43B /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
 		0DD274EB1D30462F0055C43B /* PreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesWindowController.xib; sourceTree = "<group>"; };
-		0DD274EE1D3190360055C43B /* CertainGlobalFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CertainGlobalFunctions.swift; sourceTree = "<group>"; };
+		0DD274EE1D3190360055C43B /* GlobalFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalFunctions.swift; sourceTree = "<group>"; };
 		0DD7D6D01D3F3A350035BAD8 /* Album+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Album+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0DD7D6D11D3F3A350035BAD8 /* Album.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		0DD7D6D21D3F3A350035BAD8 /* AlbumArtworkCollection+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AlbumArtworkCollection+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -229,29 +237,83 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0D7506711D0BD8C900C3B710 /* Sources */ = {
+		0D01AD931D707CE400F9211F /* Backend */ = {
 			isa = PBXGroup;
 			children = (
-				0D7506721D0BD8C900C3B710 /* DemoServer.swift */,
-				0D7506731D0BD8C900C3B710 /* File.swift */,
-				0D7506741D0BD8C900C3B710 /* HttpHandlers+Files.swift */,
-				0D7506751D0BD8C900C3B710 /* HttpHandlers+WebSockets.swift */,
-				0D7506761D0BD8C900C3B710 /* HttpHandlers.swift */,
-				0D7506771D0BD8C900C3B710 /* HttpParser.swift */,
-				0D7506781D0BD8C900C3B710 /* HttpRequest.swift */,
-				0D7506791D0BD8C900C3B710 /* HttpResponse.swift */,
-				0D75067A1D0BD8C900C3B710 /* HttpRouter.swift */,
-				0D75067B1D0BD8C900C3B710 /* HttpServer.swift */,
-				0D75067C1D0BD8C900C3B710 /* HttpServerIO.swift */,
-				0D75067D1D0BD8C900C3B710 /* Socket.swift */,
-				0D75067E1D0BD8C900C3B710 /* String+BASE64.swift */,
-				0D75067F1D0BD8C900C3B710 /* String+Misc.swift */,
-				0D7506801D0BD8C900C3B710 /* String+SHA1.swift */,
+				0DD274EE1D3190360055C43B /* GlobalFunctions.swift */,
+				0D1BDFA41D0F44A70092FBA0 /* AudioQueue.swift */,
+				0D76F6A71D24B9AC00C6E70F /* YeOldeFileHandler.swift */,
+				0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */,
+				0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */,
+				0DDD9D531D0B4B15009A952B /* SharedMediaServer.swift */,
+				0D01AD8D1D6DF02C00F9211F /* NetworkSocketServer.swift */,
+				0DA749C71D49EAB900F024B8 /* NSDataCompression.swift */,
+				0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */,
+				0D79409E1D13D2D5008AA167 /* stupidPlaybackObserver.swift */,
 			);
-			path = Sources;
+			name = Backend;
 			sourceTree = "<group>";
 		};
-		0DAB30841CFBA3340028928F = {
+		0D01AD941D707CFB00F9211F /* Data Controllers and Interface Subclasses */ = {
+			isa = PBXGroup;
+			children = (
+				0DDBFC2B1D1C89E300669875 /* trackQueueTableDelegate.swift */,
+				0DDBFC291D1C892B00669875 /* trackQueueView.swift */,
+				0DA8D03D1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift */,
+				0DA8D03F1D1B1128009FEC28 /* dragAndDropView.swift */,
+				0DD7D6DC1D3F3E270035BAD8 /* AlbumArtArrayController.swift */,
+				0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */,
+				0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */,
+				0D76F6A91D270EB900C6E70F /* DragAndDropArrayController.swift */,
+				0D76F6AB1D28581900C6E70F /* DragAndDropTreeController.swift */,
+				0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */,
+			);
+			name = "Data Controllers and Interface Subclasses";
+			sourceTree = "<group>";
+		};
+		0D01AD951D707D2600F9211F /* Other Windows */ = {
+			isa = PBXGroup;
+			children = (
+				0D01AD8F1D7079D900F9211F /* EqualizerWindowController.swift */,
+				0D01AD901D7079D900F9211F /* EqualizerWindowController.xib */,
+				0DD274EA1D30462F0055C43B /* PreferencesWindowController.swift */,
+				0DD274EB1D30462F0055C43B /* PreferencesWindowController.xib */,
+				0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */,
+				0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */,
+				0D9CE6791D34A7DF004FA8CB /* ImportProgressBar.swift */,
+				0D9CE67A1D34A7DF004FA8CB /* ImportProgressBar.xib */,
+				0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */,
+				0D9CE6701D334F97004FA8CB /* ImportWindowController.xib */,
+				0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */,
+				0D9CE6741D34128B004FA8CB /* InitialSetupWindowController.xib */,
+			);
+			name = "Other Windows";
+			sourceTree = "<group>";
+		};
+		0D01AD961D707DD800F9211F /* Miscellaneous */ = {
+			isa = PBXGroup;
+			children = (
+				0D0E5FAB1D3BE7EB009E0FA3 /* minimalTunes-Bridging-Header.h */,
+				0D9CE6771D3442D3004FA8CB /* Preferences.plist */,
+				0DAB30951CFBA3340028928F /* Assets.xcassets */,
+				0DAB309A1CFBA3340028928F /* Info.plist */,
+				0DAB30921CFBA3340028928F /* minimalTunes.xcdatamodeld */,
+			);
+			name = Miscellaneous;
+			sourceTree = "<group>";
+		};
+		0D01AD971D707E8700F9211F /* Core - Delegate and Main Window */ = {
+			isa = PBXGroup;
+			children = (
+				0DAB30901CFBA3340028928F /* AppDelegate.swift */,
+				0DF4BEF11CFD0D4E00AC5824 /* MainWindowController.swift */,
+				0DF4BEF21CFD0D4E00AC5824 /* MainWindowController.xib */,
+				0DAB30971CFBA3340028928F /* MainMenu.xib */,
+			);
+			name = "Core - Delegate and Main Window";
+			sourceTree = "<group>";
+		};
+		0D01AD981D707ED900F9211F /* Core Data Shit */ = {
 			isa = PBXGroup;
 			children = (
 				0DD7D6D01D3F3A350035BAD8 /* Album+CoreDataProperties.swift */,
@@ -286,7 +348,38 @@
 				0DEF66B31D383A8700EA3ADC /* Tag.swift */,
 				0DEF66B41D383A8700EA3ADC /* Genre+CoreDataProperties.swift */,
 				0DEF66B51D383A8700EA3ADC /* Genre.swift */,
-				0D7506711D0BD8C900C3B710 /* Sources */,
+			);
+			name = "Core Data Shit";
+			sourceTree = "<group>";
+		};
+		0D7506711D0BD8C900C3B710 /* 3rd party server library */ = {
+			isa = PBXGroup;
+			children = (
+				0D7506721D0BD8C900C3B710 /* DemoServer.swift */,
+				0D7506731D0BD8C900C3B710 /* File.swift */,
+				0D7506741D0BD8C900C3B710 /* HttpHandlers+Files.swift */,
+				0D7506751D0BD8C900C3B710 /* HttpHandlers+WebSockets.swift */,
+				0D7506761D0BD8C900C3B710 /* HttpHandlers.swift */,
+				0D7506771D0BD8C900C3B710 /* HttpParser.swift */,
+				0D7506781D0BD8C900C3B710 /* HttpRequest.swift */,
+				0D7506791D0BD8C900C3B710 /* HttpResponse.swift */,
+				0D75067A1D0BD8C900C3B710 /* HttpRouter.swift */,
+				0D75067B1D0BD8C900C3B710 /* HttpServer.swift */,
+				0D75067C1D0BD8C900C3B710 /* HttpServerIO.swift */,
+				0D75067D1D0BD8C900C3B710 /* Socket.swift */,
+				0D75067E1D0BD8C900C3B710 /* String+BASE64.swift */,
+				0D75067F1D0BD8C900C3B710 /* String+Misc.swift */,
+				0D7506801D0BD8C900C3B710 /* String+SHA1.swift */,
+			);
+			name = "3rd party server library";
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		0DAB30841CFBA3340028928F = {
+			isa = PBXGroup;
+			children = (
+				0D01AD981D707ED900F9211F /* Core Data Shit */,
+				0D7506711D0BD8C900C3B710 /* 3rd party server library */,
 				0DAB308F1CFBA3340028928F /* minimalTunes */,
 				0DAB30A21CFBA3340028928F /* minimalTunesTests */,
 				0DAB30AD1CFBA3340028928F /* minimalTunesUITests */,
@@ -307,43 +400,11 @@
 		0DAB308F1CFBA3340028928F /* minimalTunes */ = {
 			isa = PBXGroup;
 			children = (
-				0D76F6A71D24B9AC00C6E70F /* YeOldeFileHandler.swift */,
-				0DDD9D531D0B4B15009A952B /* SharedMediaServer.swift */,
-				0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */,
-				0DAB30901CFBA3340028928F /* AppDelegate.swift */,
-				0DA749C71D49EAB900F024B8 /* NSDataCompression.swift */,
-				0D9CE6771D3442D3004FA8CB /* Preferences.plist */,
-				0D1BDFA41D0F44A70092FBA0 /* AudioQueue.swift */,
-				0D79409E1D13D2D5008AA167 /* stupidPlaybackObserver.swift */,
-				0DAB30951CFBA3340028928F /* Assets.xcassets */,
-				0DAB30971CFBA3340028928F /* MainMenu.xib */,
-				0DAB309A1CFBA3340028928F /* Info.plist */,
-				0DAB30921CFBA3340028928F /* minimalTunes.xcdatamodeld */,
-				0DF4BEF11CFD0D4E00AC5824 /* MainWindowController.swift */,
-				0DF4BEF21CFD0D4E00AC5824 /* MainWindowController.xib */,
-				0DD274EA1D30462F0055C43B /* PreferencesWindowController.swift */,
-				0DD274EB1D30462F0055C43B /* PreferencesWindowController.xib */,
-				0DD274EE1D3190360055C43B /* CertainGlobalFunctions.swift */,
-				0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */,
-				0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */,
-				0D9CE6791D34A7DF004FA8CB /* ImportProgressBar.swift */,
-				0D9CE67A1D34A7DF004FA8CB /* ImportProgressBar.xib */,
-				0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */,
-				0D9CE6701D334F97004FA8CB /* ImportWindowController.xib */,
-				0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */,
-				0D9CE6741D34128B004FA8CB /* InitialSetupWindowController.xib */,
-				0DDBFC291D1C892B00669875 /* trackQueueView.swift */,
-				0DDBFC2B1D1C89E300669875 /* trackQueueTableDelegate.swift */,
-				0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */,
-				0DA8D03D1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift */,
-				0DA8D03F1D1B1128009FEC28 /* dragAndDropView.swift */,
-				0DD7D6DC1D3F3E270035BAD8 /* AlbumArtArrayController.swift */,
-				0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */,
-				0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */,
-				0D76F6A91D270EB900C6E70F /* DragAndDropArrayController.swift */,
-				0D76F6AB1D28581900C6E70F /* DragAndDropTreeController.swift */,
-				0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */,
-				0D0E5FAB1D3BE7EB009E0FA3 /* minimalTunes-Bridging-Header.h */,
+				0D01AD971D707E8700F9211F /* Core - Delegate and Main Window */,
+				0D01AD931D707CE400F9211F /* Backend */,
+				0D01AD941D707CFB00F9211F /* Data Controllers and Interface Subclasses */,
+				0D01AD951D707D2600F9211F /* Other Windows */,
+				0D01AD961D707DD800F9211F /* Miscellaneous */,
 			);
 			path = minimalTunes;
 			sourceTree = "<group>";
@@ -478,6 +539,7 @@
 				0D9CE6781D3442D3004FA8CB /* Preferences.plist in Resources */,
 				0D9CE67C1D34A7DF004FA8CB /* ImportProgressBar.xib in Resources */,
 				0D9CE6721D334F97004FA8CB /* ImportWindowController.xib in Resources */,
+				0D01AD921D7079D900F9211F /* EqualizerWindowController.xib in Resources */,
 				0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -503,6 +565,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D2410A31D6735F200F95494 /* artAPIRequestDelegate.swift in Sources */,
 				0DD7D6D81D3F3A350035BAD8 /* AlbumArtworkCollection+CoreDataProperties.swift in Sources */,
 				0DEF66D31D383A8700EA3ADC /* Tag.swift in Sources */,
 				0DEF66C51D383A8700EA3ADC /* Property.swift in Sources */,
@@ -526,6 +589,7 @@
 				0DEF66D01D383A8700EA3ADC /* SongCollectionFolder+CoreDataProperties.swift in Sources */,
 				0DEF66BB1D383A8700EA3ADC /* Artist.swift in Sources */,
 				0DD7D6D91D3F3A350035BAD8 /* AlbumArtworkCollection.swift in Sources */,
+				0D01AD911D7079D900F9211F /* EqualizerWindowController.swift in Sources */,
 				0D9CE67B1D34A7DF004FA8CB /* ImportProgressBar.swift in Sources */,
 				0D76F6A81D24B9AC00C6E70F /* YeOldeFileHandler.swift in Sources */,
 				0DDBFC2C1D1C89E300669875 /* trackQueueTableDelegate.swift in Sources */,
@@ -544,6 +608,7 @@
 				0DD7D6DB1D3F3A350035BAD8 /* AlbumArtwork.swift in Sources */,
 				0DF4BEEE1CFBE4CB00AC5824 /* iTunesLibraryParser.swift in Sources */,
 				0D7506821D0BD8C900C3B710 /* File.swift in Sources */,
+				0D01AD8E1D6DF02C00F9211F /* NetworkSocketServer.swift in Sources */,
 				0DEF66C41D383A8700EA3ADC /* Property+CoreDataProperties.swift in Sources */,
 				0D0E5FAA1D38444B009E0FA3 /* Track.swift in Sources */,
 				0D0E5FA91D38444B009E0FA3 /* Track+CoreDataProperties.swift in Sources */,
@@ -566,7 +631,7 @@
 				0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */,
 				0D1BDFA51D0F44A70092FBA0 /* AudioQueue.swift in Sources */,
 				0D7506881D0BD8C900C3B710 /* HttpResponse.swift in Sources */,
-				0DD274EF1D3190360055C43B /* CertainGlobalFunctions.swift in Sources */,
+				0DD274EF1D3190360055C43B /* GlobalFunctions.swift in Sources */,
 				0D9CE6751D34128B004FA8CB /* InitialSetupWindowController.swift in Sources */,
 				0DEF66B71D383A8700EA3ADC /* Library.swift in Sources */,
 				0D40A9F21D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift in Sources */,

@@ -12,6 +12,7 @@ private var my_special_context = 0
 
 class ImportWindowController: NSWindowController {
     
+    @IBOutlet weak var pathController: NSPathControl!
     @IBOutlet weak var OKButton: NSButton!
     @IBOutlet weak var keepDirectoryRadioButton: NSButton!
     @IBOutlet weak var moveFilesRadioButton: NSButton!
@@ -66,7 +67,8 @@ class ImportWindowController: NSWindowController {
     }
     
     func completionHandler() {
-        //do { try managedContext.save() } catch {print("\(error)")}
+        print("import window done clause")
+        do { try managedContext.save() } catch {print("\(error)")}
         let appDelegate = (NSApplication.sharedApplication().delegate as! AppDelegate)
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasMusic")
         self.mainWindowController?.libraryTableScrollView.hidden = false
@@ -75,22 +77,23 @@ class ImportWindowController: NSWindowController {
         self.mainWindowController?.expandSourceView()
         appDelegate.importProgressBar?.window?.close()
         self.window?.close()
+        self.mainWindowController?.hasMusic = true
+        self.mainWindowController?.sourceListTreeController.content = self.mainWindowController?.sourceListHeaderNodes
+        self.mainWindowController?.windowDidLoad()
     }
     
     func openFile() {
-        
         let myFileDialog: NSOpenPanel = NSOpenPanel()
         myFileDialog.runModal()
         
         // Get the path to the file chosen in the NSOpenPanel
         if myFileDialog.URL!.path != nil {
             path = myFileDialog.URL!.path!
-            pathField.stringValue = path!
+            pathController.URL = myFileDialog.URL
         }
         do {
             iTunesParser = try iTunesLibraryParser(path: path!)
         } catch {
-            pathField.stringValue = "Invalid iTunes Library file."
             OKButton.enabled = false
         }
         

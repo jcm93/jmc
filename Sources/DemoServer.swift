@@ -31,6 +31,14 @@ public func sharedServer(publicDir: String) -> HttpServer {
         return .OK(.Html(listPage))
     }
     
+    /*server["/library"] = { r in
+        let request = NSURLRequest(URL: <#T##NSURL#>)
+        let uploadTask = server.defaultSession.data
+    }
+    server["/song/:param1"] = {
+        
+    }*/ 
+    
     server["/magic"] = { .OK(.Html("You asked for " + $0.path)) }
     
     server["/test/:param1/:param2"] = { r in
