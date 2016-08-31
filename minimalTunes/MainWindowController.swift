@@ -707,11 +707,12 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
                     let artwork = (NSApplication.sharedApplication().delegate as! AppDelegate).yeOldeFileHandler?.getArtworkFromFile(track.location!)
                     if artwork != nil {
                         let albumDirectoryPath = NSURL(string: track.location!)?.URLByDeletingLastPathComponent
-                        addPrimaryArtForTrack(track, art: artwork!, albumDirectoryPath: albumDirectoryPath!.path!)
-                        dispatch_async(dispatch_get_main_queue()) {
-                            self.initAlbumArt(track)
+                        if addPrimaryArtForTrack(track, art: artwork!, albumDirectoryPath: albumDirectoryPath!.path!) != nil {
+                            dispatch_async(dispatch_get_main_queue()) {
+                                self.initAlbumArt(track)
+                            }
+                            artworkFound = true
                         }
-                        artworkFound = true
                     }
                 }
                 if NSUserDefaults.standardUserDefaults().boolForKey("findAlbumArtwork") == true && artworkFound == false {

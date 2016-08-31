@@ -301,8 +301,9 @@ func reorderForTracks(tracks: [Track], cachedOrder: CachedOrder) {
     cachedOrder.tracks = fuckYou.copy() as? NSOrderedSet
 }
 
-func addPrimaryArtForTrack(track: Track, art: NSData, albumDirectoryPath: String) -> Track {
+func addPrimaryArtForTrack(track: Track, art: NSData, albumDirectoryPath: String) -> Track? {
     print("adding new primary album art")
+    guard let artImage = NSImage(data: art) else {return nil}
     let artHash = art.hashValue
     let newArtwork = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtwork", inManagedObjectContext: managedContext) as! AlbumArtwork
     newArtwork.image_hash = artHash
@@ -337,8 +338,7 @@ func addPrimaryArtForTrack(track: Track, art: NSData, albumDirectoryPath: String
     let thing = "/\(artHash).png"
     let artFilename = albumDirectoryPath + thing
     newArtwork.artwork_location = artFilename
-    let artImage = NSImage(data: art)
-    let artTIFF = artImage?.TIFFRepresentation
+    let artTIFF = artImage.TIFFRepresentation
     let artRep = NSBitmapImageRep(data: artTIFF!)
     let artPNG = artRep?.representationUsingType(.NSPNGFileType, properties: [:])
     track.album?.primary_art = newArtwork

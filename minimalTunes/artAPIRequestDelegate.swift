@@ -32,11 +32,15 @@ class artAPIRequestDelegate {
                         if httpResponse.statusCode == 200 {
                             do {
                                 let jsonResult = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
-                                let releases = jsonResult["releases"] as! NSArray
-                                let firstRelease = releases[0] as! NSDictionary
-                                let firstReleaseID = firstRelease["id"] as! String
-                                self.getArtIDFromAlbumID(firstReleaseID)
-                            } catch {
+                                let releases = jsonResult["releases"] as? NSArray
+                                if releases?.count > 0 {
+                                    let firstRelease = releases?[0] as? NSDictionary
+                                    let firstReleaseID = firstRelease?["id"] as? String
+                                    if firstReleaseID != nil {
+                                        self.getArtIDFromAlbumID(firstReleaseID!)
+                                    }
+                                }
+                                } catch {
                                 print("error parsing musicbrainz response as JSON: \(error)")
                             }
                         }
@@ -53,7 +57,7 @@ class artAPIRequestDelegate {
     
     func getArtIDFromAlbumID(id: String) -> String? {
         let encodedID = id.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLPathAllowedCharacterSet())!
-        print("searching musicbrainz for \(encodedID)")
+        print("searching coverartarchive for \(encodedID)")
         let requestString = "http://coverartarchive.org/release/\(encodedID)/front"
         let requestURL = NSURL(string: requestString)
         dataTask = defaultSession.dataTaskWithURL(requestURL!) {
@@ -62,9 +66,9 @@ class artAPIRequestDelegate {
                 print("error retrieving id: \(error)")
             } else {
                 if let httpResponse = response as? NSHTTPURLResponse {
-                    if httpResponse.statusCode == 307 {
-                        let albumDirectoryPath = NSURL(string: self.requestedTrack!.location!)!.URLByDeletingLastPathComponent
-                        addPrimaryArtForTrack(self.requestedTrack!, art: data!, albumDirectoryPath: (albumDirectoryPath?.path!)!)
+                    print("307")
+                    let albumDirectoryPath = NSURL(string: self.requestedTrack!.location!)!.URLByDeletingLastPathComponent
+                    if addPrimaryArtForTrack(self.requestedTrack!, art: data!, albumDirectoryPath: (albumDirectoryPath?.path!)!) != nil {
                         dispatch_async(dispatch_get_main_queue()) {
                             (NSApplication.sharedApplication().delegate as! AppDelegate).mainWindowController?.initAlbumArt(self.requestedTrack!)
                         }

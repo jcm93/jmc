@@ -106,7 +106,12 @@ class DragAndDropTreeController: NSTreeController, NSOutlineViewDataSource {
                 return result
             }()
             for track in tracks {
-                var id_list = playlist!.track_id_list as! [Int]
+                var id_list: [Int]
+                if playlist!.track_id_list != nil {
+                    id_list = playlist!.track_id_list as! [Int]
+                } else {
+                    id_list = [Int]()
+                }
                 id_list.append(Int(track.id!))
                 playlist?.track_id_list = id_list
             }
