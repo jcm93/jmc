@@ -7,13 +7,32 @@
 //
 
 //houses functions for editing tags, re-cacheing sorts, finding album artwork
+//hopefully it will house nothing, eventually
 
 import Cocoa
+import CoreData
 
-func getTimeAsString(time: NSTimeInterval) -> String {
-    let seconds = Int(time) % 60
-    let minutes = (Int(time) / 60) % 60
-    return String(format: "%0.2d:%0.2d", minutes, seconds)
+func getTimeAsString(time: NSTimeInterval) -> String? {
+    let dongs = Int(time)
+    let hr = dongs / 3600
+    let min = (dongs - (hr * 3600)) / 60
+    let sec = (dongs - (hr * 3600) - (min * 60))
+    var stamp = ""
+    if (sec < 10) {
+        stamp = "\(min):0\(sec)"
+    }
+    else {
+        stamp = "\(min):\(sec)"
+    }
+    if hr != 0 {
+        if (min < 10) {
+            stamp = "\(hr):0\(stamp)"
+        }
+        else {
+            stamp = "\(hr):\(stamp)"
+        }
+    }
+    return stamp
 }
 
 func editArtist(tracks: [Track]?, artistName: String) {

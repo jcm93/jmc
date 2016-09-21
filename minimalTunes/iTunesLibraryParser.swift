@@ -432,6 +432,7 @@ class iTunesLibraryParser: NSObject {
             for playlistDict in self.XMLPlaylistArray {
                 let cd_playlist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: self.moc) as! SongCollection
                 cd_playlist.name = playlistDict.objectForKey("Name") as? String
+                cd_playlist.id = playlistDict.objectForKey("Playlist ID") as! Int
                 let playlistItems: NSArray
                 if (playlistDict.objectForKey("Playlist Items") != nil) {
                     playlistItems = playlistDict.objectForKey("Playlist Items") as! NSArray
@@ -457,7 +458,7 @@ class iTunesLibraryParser: NSObject {
             cd_shared_library.address = "example 1"
             
             let cd_shared_library_source_list_item = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
-            cd_shared_library_source_list_item.network_library = cd_shared_library
+            cd_shared_library_source_list_item.is_network = true
             cd_shared_library_source_list_item.name = "Example Shared Library"
             cd_shared_library_source_list_item.parent = cd_shared_header
             
@@ -465,7 +466,7 @@ class iTunesLibraryParser: NSObject {
             cd_shared_library_two.address = "example 2"
             
             let cd_shared_library_source_list_item_two = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.self.moc) as! SourceListItem
-            cd_shared_library_source_list_item_two.network_library = cd_shared_library_two
+            cd_shared_library_source_list_item_two.is_network = true
             cd_shared_library_source_list_item_two.name = "Example Shared Library 2"
             cd_shared_library_source_list_item_two.parent = cd_shared_header
             self.self.moc.undoManager?.endUndoGrouping()

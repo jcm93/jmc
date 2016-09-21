@@ -92,7 +92,8 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
             do {
                 if curNode.playing == true {
                     print("initializing playback while node is playing, resetting node")
-                    audioEngine.reset()//necessary?
+                    //audioEngine.reset()//necessary?
+                    curNode.reset()
                     curNode = AVAudioPlayerNode()
                 }
                 let location = currentTrack!.location!
@@ -116,12 +117,14 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     }
     
     func changeTrack() {
-        print("changing track")
-        if track_changed == false {
-            track_changed = true
-        }
-        else if track_changed == true {
-            track_changed = false
+        dispatch_async(dispatch_get_main_queue()) {
+            print("changing track")
+            if self.track_changed == false {
+                self.track_changed = true
+            }
+            else if self.track_changed == true {
+                self.track_changed = false
+            }
         }
     }
     
@@ -141,11 +144,12 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
         }
         else {
             currentTrack = mainWindowController?.getNextTrack()
+            mainWindowController?.currentTrack = currentTrack
         }
     }
     
     func handleCompletion() {
-        //called any time the current node is stopped, whether for a seek, skip, or natural playback operation ending
+        //called any time the playback node is stopped, whether for a seek, skip, or natural playback operation ending
         //if this is the result of a scheduleFile or scheduleSegment operation, it is called after the last segment of the buffer is scheduled, not played. this is not the case for scheduleBuffer operations
         //will require rewrite for gapless streaming media, potentially...
         //this can probably crash all over the place if the database can't be accessed for any reason

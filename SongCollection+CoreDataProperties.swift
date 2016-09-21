@@ -22,5 +22,6 @@ extension SongCollection {
     @NSManaged var if_master_list_item: SourceListItem?
     @NSManaged var list_item: SourceListItem?
     @NSManaged var tracks: NSSet?
+    @NSManaged var id: NSNumber?
 
 }

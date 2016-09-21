@@ -13,5 +13,5 @@ import CoreData
 class Library: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
-
+    
 }

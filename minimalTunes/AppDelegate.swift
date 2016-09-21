@@ -23,6 +23,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var importProgressBar: ImportProgressBar?
     var iTunesParser: iTunesLibraryParser?
     let fileManager = NSFileManager.defaultManager()
+    var mediaServer: MediaServer?
     
     @IBAction func jumpToSelection(sender: AnyObject) {
         mainWindowController!.jumpToSelection()
@@ -78,26 +79,34 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
+    func setInitialDefaults() {
+        NSUserDefaults.standardUserDefaults().setInteger(NSOnState, forKey: "shuffle")
+        NSUserDefaults.standardUserDefaults().setInteger(NSOnState, forKey: "queueVisible")
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "queueHidden")
+    }
+    
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         // Insert code here to initialize your application
         let fuckTransform = TransformerIntegerToTimestamp()
         yeOldeFileHandler = YeOldeFileHandler()
         NSValueTransformer.setValueTransformer(fuckTransform, forName: "AssTransform")
+        let thing = demoServer("/")
+        do {
+            try thing.start()
+        }
+        catch {
+            print(error)
+        }
         if NSUserDefaults.standardUserDefaults().boolForKey("hasStartedBefore") != true {
             print("has not started before")
+            setInitialDefaults()
             setupWindowController = InitialSetupWindowController(windowNibName: "InitialSetupWindowController")
             setupWindowController?.showWindow(self)
         } else {
             initializeLibraryAndShowMainWindow()
         }
-        let thing = sharedServer("/")
-        do {
-            /*let ipv4 = CFSocketCreate(kCFAllocatorDefault, PF_INET, SOCK_STREAM, IPPROTO_TCP, nil, kCFSocketAutomaticallyReenableAcceptCallBack,
-            let ipv4 = CFSocketCreate(*/
-            try thing.start()
-        }
-        catch {
-            print(error)
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            
         }
     }
 

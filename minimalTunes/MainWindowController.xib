@@ -128,7 +128,7 @@
                                         <action selector="trackListTriangleClicked:" target="-2" id="DhH-GK-6iH"/>
                                     </connections>
                                 </button>
-                                <customView autoresizesSubviews="NO" focusRingType="none" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ErT-xb-uP3" customClass="dragAndDropView" customModule="minimalTunes" customModuleProvider="target">
+                                <customView autoresizesSubviews="NO" focusRingType="none" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ErT-xb-uP3" customClass="ProgressBarView" customModule="minimalTunes" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="2" width="325" height="18"/>
                                     <subviews>
                                         <progressIndicator ambiguous="YES" misplaced="YES" maxValue="100" displayedWhenStopped="NO" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="c8A-nk-1SH">
@@ -1196,7 +1196,7 @@
                                         <rect key="frame" x="0.0" y="285" width="458" height="283"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <clipView key="contentView" placeholderIntrinsicWidth="708" placeholderIntrinsicHeight="606" id="8bL-Rp-2DJ">
-                                            <rect key="frame" x="0.0" y="23" width="458" height="260"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="458" height="268"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" rowHeight="20" headerView="x53-LD-CgV" viewBased="YES" id="AOe-qe-mll" customClass="TableViewYouCanPressSpacebarOn" customModule="minimalTunes" customModuleProvider="target">
@@ -1526,7 +1526,7 @@
                                             </subviews>
                                         </clipView>
                                         <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="9Vp-1W-M3z">
-                                            <rect key="frame" x="0.0" y="267" width="458" height="16"/>
+                                            <rect key="frame" x="0.0" y="268" width="458" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="zON-TX-K7H">
@@ -1811,6 +1811,9 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                                     <rect key="frame" x="0.0" y="0.0" width="265" height="23"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
+                                <connections>
+                                    <binding destination="BDj-hR-vOF" name="hidden" keyPath="values.queueHidden" id="V1B-4x-aAH"/>
+                                </connections>
                             </scrollView>
                         </subviews>
                         <holdingPriorities>
@@ -1871,6 +1874,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                         </buttonCell>
                         <connections>
                             <action selector="shuffleButtonPressed:" target="-2" id="7nZ-Er-Ogj"/>
+                            <binding destination="BDj-hR-vOF" name="value" keyPath="values.shuffle" id="Lbz-R6-mYV"/>
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eg4-23-xqc" userLabel="Repeat Button">
@@ -1907,6 +1911,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                         </buttonCell>
                         <connections>
                             <action selector="toggleExpandQueue:" target="-2" id="jrY-9M-Oos"/>
+                            <binding destination="BDj-hR-vOF" name="value" keyPath="values.queueVisible" id="eyW-gu-WSM"/>
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rfk-1e-A3X" userLabel="Sharing Button">
@@ -2074,6 +2079,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
             </items>
             <point key="canvasLocation" x="802.5" y="84.5"/>
         </menu>
+        <userDefaultsController representsSharedInstance="YES" id="BDj-hR-vOF"/>
     </objects>
     <resources>
         <image name="Master Library" width="15.75" height="13.5"/>

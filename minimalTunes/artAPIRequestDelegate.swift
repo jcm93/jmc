@@ -66,7 +66,6 @@ class artAPIRequestDelegate {
                 print("error retrieving id: \(error)")
             } else {
                 if let httpResponse = response as? NSHTTPURLResponse {
-                    print("307")
                     let albumDirectoryPath = NSURL(string: self.requestedTrack!.location!)!.URLByDeletingLastPathComponent
                     if addPrimaryArtForTrack(self.requestedTrack!, art: data!, albumDirectoryPath: (albumDirectoryPath?.path!)!) != nil {
                         dispatch_async(dispatch_get_main_queue()) {

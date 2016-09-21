@@ -51,6 +51,52 @@ class DragAndDropTreeController: NSTreeController, NSOutlineViewDataSource {
         }
     }
     
+    /*func outlineViewItemDidExpand(notification: NSNotification) {
+        print("called")
+        if (notification.object as! SourceListItem).network_library != nil {
+            askNetworkLibraryForSourceList(notification.object as! SourceListItem)
+        }
+    }*/
+    
+    func checkNetworkedLibrary() {
+        let networkedLibraryIP = NSUserDefaults.standardUserDefaults().stringForKey("testIP")
+        let delegate = SharedLibraryRequestDelegate()
+        delegate.onlineCheck(networkedLibraryIP!)
+    }
+    
+    func addNetworkedLibrary(name: String, address: String) {
+        let newSourceListItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
+        newSourceListItem.parent = self.sharedHeaderNode
+        newSourceListItem.name = name
+        newSourceListItem.is_network = true
+        let newNetworkLibrary = NSEntityDescription.insertNewObjectForEntityForName("NetworkLibrary", inManagedObjectContext: managedContext) as! SharedLibrary
+        newNetworkLibrary.address = address
+        askNetworkLibraryForSourceList(newSourceListItem)
+        
+    }
+    
+    func addSourcesForNetworkedLibrary(sourceData: [NSDictionary], item: SourceListItem) {
+        let masterItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
+        masterItem.name = "Music"
+        masterItem.parent = item
+        for playlist in sourceData {
+            let newItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
+            newItem.sort_order = playlist["sort_order"] as! Int
+            newItem.name = playlist["name"] as? String
+            let newPlaylist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: managedContext) as! SongCollection
+            newPlaylist.id = playlist["id"] as! Int
+            newItem.playlist = newPlaylist
+            newItem.parent = item
+        }
+    }
+    
+    func askNetworkLibraryForSourceList(item: SourceListItem) {
+        print("about to ask network library for source list")
+        let networkedLibraryIP = NSUserDefaults.standardUserDefaults().stringForKey("testIPList")
+        let delegate = SharedLibraryRequestDelegate()
+        delegate.listRequest(networkedLibraryIP!, parentItem: item)
+    }
+    
     func outlineView(outlineView: NSOutlineView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forItems draggedItems: [AnyObject]) {
         print("called")
     }
@@ -64,14 +110,18 @@ class DragAndDropTreeController: NSTreeController, NSOutlineViewDataSource {
     }
     
     func outlineView(outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: AnyObject?, proposedChildIndex index: Int) -> NSDragOperation {
+        print("validate drop called on source list")
+        print(info.draggingPasteboard().dataForType("Track"))
         if draggedNodes != nil {
             for draggedNode in draggedNodes! {
                 if item == nil || item?.parentNode == nil || ((draggedNode).parentNode?.representedObject! as! SourceListItem).name != (item?.representedObject! as! SourceListItem).name {
+                    print("weird clause reached")
                     return .None
                 }
             }
         }
-        else if info.draggingPasteboard().dataForType("Track") != nil {
+        if info.draggingPasteboard().dataForType("Track") != nil {
+            print("non nil track data")
             if (item!.representedObject! as! SourceListItem).name == "Playlists" {
                 return .Generic
             }
@@ -85,11 +135,16 @@ class DragAndDropTreeController: NSTreeController, NSOutlineViewDataSource {
         super.objectDidEndEditing(editor)
     }
     
+    func addVisibleNetworkLibrary() {
+        
+    }
+    
     func outlineView(outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: AnyObject?, childIndex index: Int) -> Bool {
         if draggedNodes != nil {
             let path = (item as! NSTreeNode).indexPath.indexPathByAddingIndex(index)
             self.moveNodes(draggedNodes!, toIndexPath: path)
             reorderChildren(item as! NSTreeNode)
+            draggedNodes = nil
             return true
         } else if info.draggingPasteboard().dataForType("Track") != nil {
             print("doing stuff")

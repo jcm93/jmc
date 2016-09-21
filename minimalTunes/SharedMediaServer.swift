@@ -1,4 +1,4 @@
-//
+ //
 //  SocketServer.swift
 //  minimalTunes
 //
@@ -17,6 +17,7 @@ public func demoServer(publicDir: String) -> HttpServer {
     
     print(publicDir)
     
+    let delegate = SharedLibraryRequestHandler()
     let server = HttpServer()
     
     server["/public/:path"] = HttpHandlers.shareFilesFromDirectory(publicDir)
@@ -101,6 +102,26 @@ public func demoServer(publicDir: String) -> HttpServer {
     
     server["/redirect"] = { r in
         return .MovedPermanently("http://www.google.com")
+    }
+    
+    server["/doingles"] = { r in
+        return .OK(.Html("<center><h2>Hello Swift</h2><img src=\"https://devimages.apple.com.edgekey.net/swift/images/swift-hero_2x.png\"/><br></center>"))
+    }
+    
+    server["/list"] = { r in
+        let data = delegate.getSourceList()!
+        return .OK(.Json(data))
+    }
+    
+    server["/playlist"] = { r in
+        let id = Int(r.path)!
+        let data = delegate.getPlaylist(id)!
+        return .OK(.Json(data))
+    }
+    
+    server["/song"] = { r in
+        let id = Int(r.path)!
+        return .OK(.Html("dongs"))
     }
     
     server["/long"] = { r in

@@ -27,7 +27,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     @IBOutlet weak var librarySplitView: NSSplitView!
     @IBOutlet weak var advancedFilterScrollView: NSScrollView!
     @IBOutlet weak var trackQueueTableView: TableViewYouCanPressSpacebarOn!
-    @IBOutlet weak var progressBarView: dragAndDropView!
+    @IBOutlet weak var progressBarView: ProgressBarView!
     @IBOutlet weak var shuffleButton: NSButton!
     @IBOutlet weak var trackListBox: NSBox!
     @IBOutlet weak var trackListTriangle: NSButton!
@@ -67,7 +67,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     var cur_view_title = "Music"
     var cur_source_title = "Music"
     var duration: Double?
-    var paused: Bool?
+    var paused: Bool? = true
     var is_initialized = false
     let trackQueueTableDelegate = TrackQueueTableViewDelegate()
     var shuffle = NSOnState
@@ -106,6 +106,8 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             for headerNode in results {
                 if (headerNode as! SourceListItem).name == "Playlists" {
                     self.sourceListTreeController.playlistHeaderNode = headerNode
+                } else if (headerNode as! SourceListItem).name == "Shared Libraries" {
+                    self.sourceListTreeController.sharedHeaderNode = headerNode
                 }
             }
             return results
@@ -162,7 +164,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         else if (item.representedObject!! as! SourceListItem).playlist != nil {
             return outlineView.makeViewWithIdentifier("PlaylistCell", owner: self)
         }
-        else if (item.representedObject!! as! SourceListItem).network_library != nil {
+        else if (item.representedObject!! as! SourceListItem).is_network == true {
             return outlineView.makeViewWithIdentifier("NetworkLibraryCell", owner: self)
         }
         else if (item.representedObject!! as! SourceListItem).playlist_folder != nil {
@@ -174,6 +176,11 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         else {
             return outlineView.makeViewWithIdentifier("PlaylistCell", owner: self)
         }
+    }
+    
+    var didExpand = false
+    
+    func outlineViewItemDidExpand(notification: NSNotification) {
     }
     
     func outlineViewSelectionDidChange(notification: NSNotification) {
@@ -226,8 +233,10 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     @IBAction func toggleExpandQueue(sender: AnyObject) {
         if queueButton.state == NSOnState {
             queueScrollView.hidden = false
+            NSUserDefaults.standardUserDefaults().setBool(false, forKey: "queueHidden")
         }
         else if queueButton.state == NSOffState {
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "queueHidden")
             queueScrollView.hidden = true
         }
 
@@ -294,6 +303,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     
     @IBAction func shuffleButtonPressed(sender: AnyObject) {
         if (shuffleButton.state == NSOnState) {
+            NSUserDefaults.standardUserDefaults().setInteger(NSOnState, forKey: "shuffle")
             print("shuffling")
             current_source_temp_shuffle = current_source_play_order
             shuffle_array(&current_source_temp_shuffle!)
@@ -310,6 +320,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             } else {
             }
             print("current source index:" + String(current_source_index))
+            NSUserDefaults.standardUserDefaults().setInteger(NSOffState, forKey: "shuffle")
         }
     }
     
@@ -380,6 +391,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         queue.playImmediately(track)
         initializePlayerBarForNewTrack()
         print("about to init album art")
+        paused = false
         currentTrack = track
     }
     
@@ -458,16 +470,41 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         tableView(currentTableView!, mouseDownInHeaderOfTableColumn: column!)
     }
     
+    func interpretSpacebarEvent() {
+        if currentTrack != nil {
+            if paused == true {
+                unpause()
+            } else if paused == false {
+                pause()
+            }
+        } else {
+            if currentTableView?.selectedRow >= 0 && currentArrayController?.selectedObjects!.count != nil {
+                playSong(currentArrayController?.selectedObjects![0] as! Track)
+            }
+            else {
+                var item: Track?
+                if shuffleButton.state == NSOffState {
+                    item = (currentArrayController?.arrangedObjects as! [Track]).first
+                } else if shuffleButton.state == NSOnState {
+                    item = (currentArrayController?.arrangedObjects as! [Track])[Int(arc4random_uniform(UInt32((currentArrayController?.arrangedObjects.count)!)))]
+                }
+                playSong(item!)
+            }
+        }
+    }
+    
     func pause() {
-        updateValuesUnsafe()
-        timer?.invalidate()
         paused = true
+        print("pause called")
+        updateValuesUnsafe()
         queue.pause()
+        timer!.invalidate()
     }
     
     func unpause() {
-        lastTimerDate = NSDate()
+        print("unpause called")
         paused = false
+        lastTimerDate = NSDate()
         queue.play()
         timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValuesSafe), userInfo: nil, repeats: true)
     }
@@ -548,15 +585,13 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         }
         artistAlbumLabel.stringValue = aa_string
         duration = queue.duration_seconds
-        durationLabel.stringValue = getTimeAsString(duration!)
-        currentTimeLabel.stringValue = getTimeAsString(0)
+        durationLabel.stringValue = getTimeAsString(duration!)!
+        currentTimeLabel.stringValue = getTimeAsString(0)!
         lastTimerDate = NSDate()
         secsPlayed = 0
         progressBar.hidden = false
         progressBar.doubleValue = 0
-        if (paused == false || paused == nil) {
-            startTimer()
-        }
+        startTimer()
     }
     
     func startTimer() {
@@ -568,6 +603,9 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         print("unsafe called")
         let nodeTime = queue.curNode.lastRenderTime
         let playerTime = queue.curNode.playerTimeForNodeTime(nodeTime!)
+        print("unsafe update times")
+        print(nodeTime)
+        print(playerTime)
         var offset_thing: Double?
         if queue.track_frame_offset == nil {
             offset_thing = 0
@@ -578,7 +616,9 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         let seconds = ((Double((playerTime?.sampleTime)!) + offset_thing!) / (playerTime?.sampleRate)!) - Double(queue.total_offset_seconds)
         let seconds_string = getTimeAsString(seconds)
         if (timer?.valid == true) {
-            currentTimeLabel.stringValue = seconds_string
+            print("within valid clause")
+            currentTimeLabel.stringValue = seconds_string!
+            print(seconds_string)
             progressBar.doubleValue = (seconds * 100) / duration!
         }
         else {
@@ -589,24 +629,26 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     }
     
     func updateValuesSafe() {
-        print("safe called")
+        print("update values safe")
         let lastUpdateTime = lastTimerDate
         let currentTime = NSDate()
         let updateQuantity = currentTime.timeIntervalSinceDate(lastUpdateTime!)
-        print(updateQuantity)
         secsPlayed += updateQuantity
         let seconds_string = getTimeAsString(secsPlayed)
         if timer?.valid == true {
-            currentTimeLabel.stringValue = seconds_string
+            currentTimeLabel.stringValue = seconds_string!
             progressBar.doubleValue = (secsPlayed * 100) / duration!
+            lastTimerDate = currentTime
         } else {
-            currentTimeLabel.stringValue = ""
-            progressBar.doubleValue = 0
+            timer?.invalidate()
+            //print("doingle")
+            //currentTimeLabel.stringValue = ""
+            //progressBar.doubleValue = 0
         }
-        lastTimerDate = currentTime
     }
     
     func cleanUpBar() {
+        print("other doingle")
         theBox.contentView!.hidden = true
         songNameLabel.stringValue = ""
         artistAlbumLabel.stringValue = ""
@@ -665,27 +707,42 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     
     func updateInfo() {
         print("called")
-        let trackArray = currentArrayController?.arrangedObjects as! [Track]
-        let numItems = trackArray.count
-        let totalSize = trackArray.map({return ($0.size!.longLongValue)}).reduce(0, combine: {$0 + $1})
-        let totalTime = trackArray.map({return $0.time!.doubleValue}).reduce(0, combine: {$0 + $1})
-        let numString = numberFormatter.stringFromNumber(numItems)
-        let sizeString = sizeFormatter.stringFromByteCount(totalSize)
-        let timeString = dateFormatter.stringFromTimeInterval(totalTime/1000)
-        infoString = "\(numString!) items; \(timeString!); \(sizeString)"
-        infoField.stringValue = infoString!
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            let trackArray = self.currentArrayController?.arrangedObjects as! [Track]
+            let numItems = trackArray.count
+            let totalSize = trackArray.map({return ($0.size!.longLongValue)}).reduce(0, combine: {$0 + $1})
+            let totalTime = trackArray.map({return $0.time!.doubleValue}).reduce(0, combine: {$0 + $1})
+            let numString = self.numberFormatter.stringFromNumber(numItems)
+            let sizeString = self.sizeFormatter.stringFromByteCount(totalSize)
+            let timeString = self.dateFormatter.stringFromTimeInterval(totalTime/1000)
+            dispatch_async(dispatch_get_main_queue()) {
+                self.infoString = "\(numString!) items; \(timeString!); \(sizeString)"
+                self.infoField.stringValue = self.self.infoString!
+            }
+        }
     }
     
     
 
     @IBAction func trackListTriangleClicked(sender: AnyObject) {
-        if trackListBox.hidden == true {
-            trackListBox.hidden = false
+        /*let test = MediaServer()
+        let dataTest = test.getSourceList()
+        var jsonResult: [NSMutableDictionary]?
+        do {
+            jsonResult = try NSJSONSerialization.JSONObjectWithData(dataTest!, options: NSJSONReadingOptions.MutableContainers) as? [NSMutableDictionary]
+        } catch {
+            print("error: \(error)")
         }
-        else if trackListBox.hidden == false {
-            trackListBox.hidden = true
+        print(jsonResult)
+        let playlistTest = test.getPlaylist(139755)
+        do {
+            jsonResult = try NSJSONSerialization.JSONObjectWithData(playlistTest!, options: NSJSONReadingOptions.MutableContainers) as? [NSMutableDictionary]
+        } catch {
+            print("error: \(error)")
         }
-        
+        print(jsonResult)*/
+        //self.sourceListTreeController.checkNetworkedLibrary()
+        sourceListView.reloadData()
     }
     
     //mark album art
@@ -693,11 +750,15 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     func initAlbumArt(track: Track) {
         if track.album != nil && track.album!.primary_art != nil {
             print("here")
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             let art = track.album!.primary_art
             let path = art?.artwork_location as! String
             let url = NSURL(fileURLWithPath: path)
             let image = NSImage(contentsOfURL: url)
-            albumArtView.image = image
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.albumArtView.image = image
+                }
+            }
         }
         else {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
@@ -798,7 +859,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         print("retrieving \(currentColumn) from cache")
         trackQueueTableView.registerForDraggedTypes(["Track", "public.TrackQueueView"])
         trackQueueTableDelegate.mainWindowController = self
-        queueScrollView.hidden = true
+        //queueScrollView.hidden = true
         
         currentTableView = libraryTableView
         volumeSlider.continuous = true
@@ -836,5 +897,8 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         //sourceListTreeController.content = sourceListHeaderNodes
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "findAlbumArtwork")
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "checkEmbeddedArtwork")
+        NSUserDefaults.standardUserDefaults().setObject("http://localhost:20012/doingles", forKey: "testIP")
+        NSUserDefaults.standardUserDefaults().setObject("http://localhost:20012/list", forKey: "testIPList")
+        //self.sourceListTreeController.checkNetworkedLibrary()
     }
 }

@@ -29,12 +29,7 @@ class TableViewYouCanPressSpacebarOn: NSTableView {
     
     override func keyDown(theEvent: NSEvent) {
         if theEvent.keyCode == 49 {
-            if mainWindowController?.paused == true {
-                mainWindowController?.unpause()
-            }
-            else {
-                mainWindowController?.pause()
-            }
+            mainWindowController?.interpretSpacebarEvent()
         }
         else {
             super.keyDown(theEvent)
