@@ -50,6 +50,11 @@ class ImportWindowController: NSWindowController {
         var pathURL = NSURL(fileURLWithPath: path!)
         pathURL = pathURL.URLByDeletingLastPathComponent!
         pathURL = pathURL.URLByAppendingPathComponent("iTunes Music", isDirectory: true)
+        let fileManager = NSFileManager.defaultManager()
+        if fileManager.fileExistsAtPath(pathURL.absoluteString, isDirectory: nil) == false {
+            pathURL = pathURL.URLByDeletingLastPathComponent!
+            pathURL = pathURL.URLByAppendingPathComponent("iTunes Media", isDirectory: true)
+        }
         NSUserDefaults.standardUserDefaults().setObject(pathURL.path, forKey: "libraryPath")
         let appDelegate = (NSApplication.sharedApplication().delegate as! AppDelegate)
         appDelegate.iTunesParser = self.iTunesParser

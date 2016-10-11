@@ -21,6 +21,7 @@ class Track: NSManagedObject {
         dict["name"] = self.name
         dict["artist_name"] = self.artist?.name
         dict["album_name"] = self.album?.name
+        dict["time"] = self.time
         return dict
     }
     /*

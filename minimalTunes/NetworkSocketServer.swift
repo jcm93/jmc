@@ -6,153 +6,171 @@
 //  Copyright © 2016 John Moody. All rights reserved.
 //
 
-import Foundation
-import CoreData
+import sReto
 
-class MediaServer: NSObject, NSStreamDelegate {
-    
-    var addr = "127.0.0.1"
-    var port = 20012
-    var inp: NSInputStream?
-    var out: NSOutputStream?
-    
-    var buffer: [UInt8]? = [0, 0, 0, 0, 0, 0, 0, 0]
-    
-    var data: NSMutableData?
-    
-    func connect(host: String, port: Int) {
-        
-        self.addr = host
-        self.port = port
-        
-        NSStream.getStreamsToHostWithName(host, port: port, inputStream: &inp, outputStream: &out)
-        
-        if inp != nil && out != nil {
-            
-            // Set delegate
-            inp!.delegate = self
-            out!.delegate = self
-            
-            // Schedule
-            inp!.scheduleInRunLoop(.mainRunLoop(), forMode: NSDefaultRunLoopMode)
-            out!.scheduleInRunLoop(.mainRunLoop(), forMode: NSDefaultRunLoopMode)
-            
-            print("Start open()")
-            
-            // Open!
-            inp!.open()
-            out!.open()
-            print("done opening")
-        }
-    }
-    
-    func stream(aStream: NSStream, handleEvent eventCode: NSStreamEvent) {
-        print(eventCode)
-        if aStream === inp {
-            switch eventCode {
-            case NSStreamEvent.ErrorOccurred:
-                print("input: ErrorOccurred: \(aStream.streamError?.description)")
-            case NSStreamEvent.OpenCompleted:
-                
-                print("input: OpenCompleted")
-                
-            case NSStreamEvent.EndEncountered:
-                decideResponse()
-                data = nil
-                buffer = nil
-            case NSStreamEvent.HasBytesAvailable:
-                print("input: HasBytesAvailable")
-                inp?.read(&buffer!, maxLength: 8)
-                data?.appendBytes(buffer!, length: 8)
-                print(data)
-            default:
-                print(eventCode)
-                break
-            }
-        }
-    }
-    
-    func decideResponse() {
-    }
 
-    
-    func getSourceList() -> NSData? {
-        let fetchRequest = NSFetchRequest(entityName: "SourceListItem")
-        let predicate = NSPredicate(format: "playlist != nil")
-        fetchRequest.predicate = predicate
-        var results: [SourceListItem]?
-        do {
-            results = try managedContext.executeFetchRequest(fetchRequest) as? [SourceListItem]
-        }catch {
-            print("error: \(error)")
-        }
-        guard results != nil else {return nil}
-        var serializedResults = [NSMutableDictionary]()
-        for item in results! {
-            serializedResults.append(item.dictRepresentation())
-        }
-        var finalObject: NSData?
-        do {
-            finalObject = try NSJSONSerialization.dataWithJSONObject(serializedResults, options: NSJSONWritingOptions.PrettyPrinted)
-        } catch {
-            print("error: \(error)")
-        }
-        return finalObject
-    }
-    
-    func getPlaylist(id: Int) -> NSData? {
-        let playlistRequest = NSFetchRequest(entityName: "SongCollection")
-        let playlistPredicate = NSPredicate(format: "id == \(id)")
-        playlistRequest.predicate = playlistPredicate
-        let result: SongCollection? = {
-            do {
-                let thing = try managedContext.executeFetchRequest(playlistRequest) as! [SongCollection]
-                if thing.count > 0 {
-                    return thing[0]
-                } else {
-                    return nil
-                }
-            } catch {
-                print("error: \(error)")
-            }
-            return nil
-        }()
-        print(result)
-        guard result != nil else {return nil}
-        let playlistSongsRequest = NSFetchRequest(entityName: "Track")
-        let id_array = result?.track_id_list
-        let playlistSongsPredicate = NSPredicate(format: "id in %@", id_array!)
-        playlistSongsRequest.predicate = playlistSongsPredicate
-        let results: [Track]? = {
-            do {
-            let thing = try managedContext.executeFetchRequest(playlistSongsRequest) as! [Track]
-            if thing.count > 0 {
-                return thing
-            } else {
-                return nil
-            }
-            } catch {
-                print("error: \(error)")
-            }
-            return nil
-        }()
-        print(results)
-        guard results != nil else {return nil}
-        var serializedTracks = [NSMutableDictionary]()
-        for track in results! {
-            serializedTracks.append(track.dictRepresentation())
-        }
-        var finalObject: NSData?
-        do {
-            finalObject = try NSJSONSerialization.dataWithJSONObject(serializedTracks, options: NSJSONWritingOptions.PrettyPrinted)
-        } catch {
-            print("error: \(error)")
-        }
-        return finalObject
-    }
 
+class MediaServer {
+    let sin_zero = (Int8(0),Int8(0),Int8(0),Int8(0),Int8(0),Int8(0),Int8(0),Int8(0))
+    let sock_stream = SOCK_STREAM
+    
+    let INADDR_ANY = in_addr_t(0)
+    
+    func htons(value: CUnsignedShort) -> CUnsignedShort {
+        return (value << 8) + (value >> 8)
+    }
+    
+    func rawPrint(socket: Int32, _ output: String) {
+        output.withCString { (bytes) in
+            send(socket, bytes, Int(strlen(bytes)), 0)
+        }
+    }
+    
+    func sockaddr_cast(p: UnsafeMutablePointer<Void>) -> UnsafeMutablePointer<sockaddr> {
+        return UnsafeMutablePointer<sockaddr>(p)
+    }
+    
+    let payload = "Hello Heroku.\n"
+    var portNumber: UInt16!
+    func start() {
+        if let arg = Process.arguments.last, value = UInt16(arg) {
+            portNumber = value
+        } else {
+            print("Usage: \(Process.arguments.first!) portNumber")
+            portNumber = 8080
+        }
+        
+        let sock = socket(AF_INET, Int32(sock_stream), 0)
+        
+        if sock < 0 { fatalError("Could not create server socket.") }
+        
+        var optval = 1
+        if setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &optval, socklen_t(sizeof(Int))) < 0 {
+            fatalError("Could not set SO_REUSEADDR")
+        }
+        
+        let socklen = UInt8(sizeof(sockaddr_in))
+        
+        var serveraddr = sockaddr_in()
+        serveraddr.sin_family = sa_family_t(AF_INET)
+        serveraddr.sin_port = in_port_t(htons(in_port_t(portNumber)))
+        serveraddr.sin_addr = in_addr(s_addr: INADDR_ANY)
+        serveraddr.sin_zero = sin_zero
+        
+        if bind(sock, sockaddr_cast(&serveraddr), socklen_t(socklen)) < 0 {
+            fatalError("Could not bind to socket")
+        }
+        
+        if listen(sock, 5) < 0 {
+            fatalError("Could not listen on socket")
+        }
+        
+        print("Listening on port \(portNumber)...")
+        
+        
+        repeat {
+            
+            let clientSocket = accept(sock, nil, nil)
+            
+            rawPrint(clientSocket, "HTTP/1.1 200 OK\n")
+            rawPrint(clientSocket, "Server: Tiny Web Server\n")
+            rawPrint(clientSocket, "Content-length: \(payload.characters.count)\n")
+            rawPrint(clientSocket, "Content-type: text-plain\n")
+            rawPrint(clientSocket, "\r\n")
+            
+            rawPrint(clientSocket, payload)
+            
+            close(clientSocket)
+        } while(sock >= 0)
+    }
 }
 
-class SocketServer {
+class MediaServer2 {
+    let sin_zero = (Int8(0),Int8(0),Int8(0),Int8(0),Int8(0),Int8(0),Int8(0),Int8(0))
+    let sock_stream = SOCK_STREAM
+    var sock: Int32?
+    
+    let INADDR_ANY = in_addr_t(0)
+    
+    func htons(value: CUnsignedShort) -> CUnsignedShort {
+        return (value << 8) + (value >> 8)
+    }
 
+    func rawPrint(socket: Int32, _ output: String) {
+        output.withCString { (bytes) in
+            send(socket, bytes, Int(strlen(bytes)), 0)
+        }
+    }
+    
+    func sockaddr_cast(p: UnsafeMutablePointer<Void>) -> UnsafeMutablePointer<sockaddr> {
+        return UnsafeMutablePointer<sockaddr>(p)
+    }
+    
+    let payload = "doingle"
+    var portNumber: UInt16!
+    
+    dynamic func receiveIncomingConnectionNotification(notification: NSNotification?) {
+        print("doingle")
+        var content = "f"
+        recv(sock!, &content, 1, 0)
+        print(content)
+        let clientSocket = accept(sock!, nil, nil)
+        
+        rawPrint(clientSocket, "HTTP/1.1 200 OK\n")
+        rawPrint(clientSocket, "Server: Tiny Web Server\n")
+        rawPrint(clientSocket, "Content-length: \(payload.characters.count)\n")
+        rawPrint(clientSocket, "Content-type: text-plain\n")
+        rawPrint(clientSocket, "\r\n")
+        
+        rawPrint(clientSocket, payload)
+        
+        close(clientSocket)
+    }
+    
+    func start() {
+        if let arg = Process.arguments.last, value = UInt16(arg) {
+            portNumber = value
+        } else {
+            print("Usage: \(Process.arguments.first!) portNumber")
+            portNumber = 8080
+        }
+        
+        let socket = CFSocketCreate(kCFAllocatorDefault, PF_INET, SOCK_STREAM, IPPROTO_TCP, 0, nil, nil)
+        
+        if socket == nil { fatalError("Could not create server socket.") }
+        
+        sock = CFSocketGetNative(socket)
+        
+        var optval = 1
+        if setsockopt(sock!, SOL_SOCKET, SO_REUSEADDR, &optval, socklen_t(sizeof(Int))) < 0 {
+            fatalError("Could not set SO_REUSEADDR")
+        }
+        
+        let socklen = UInt8(sizeof(sockaddr_in))
+        
+        var serveraddr = sockaddr_in()
+        serveraddr.sin_family = sa_family_t(AF_INET)
+        serveraddr.sin_port = in_port_t(htons(in_port_t(portNumber)))
+        serveraddr.sin_addr = in_addr(s_addr: INADDR_ANY)
+        serveraddr.sin_zero = sin_zero
+        
+        if bind(sock!, sockaddr_cast(&serveraddr), socklen_t(socklen)) < 0 {
+            fatalError("Could not bind to socket")
+        }
+        
+        if listen(sock!, 5) < 0 {
+            fatalError("Could not listen on socket")
+        }
+        
+        print("Listening on port \(portNumber)...")
+        
+        let runLoopSource = CFSocketCreateRunLoopSource(kCFAllocatorDefault, socket, 0)
+        
+        CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, kCFRunLoopCommonModes)
+        
+        repeat {
+            receiveIncomingConnectionNotification(nil)
+        } while sock > 0
+        
+    }
 }

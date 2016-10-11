@@ -1,4 +1,3 @@
-
 //
 //  MainWindowController.swift
 //  minimalTunes
@@ -9,12 +8,16 @@
 
 import Cocoa
 import CoreData
+ 
 
 private var my_context = 0
 
 
 class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchFieldDelegate, NSTableViewDelegate {
     
+    @IBOutlet weak var networkPlaylistScrollView: NSScrollView!
+    @IBOutlet weak var networkPlaylistTableView: TableViewYouCanPressSpacebarOn!
+    @IBOutlet var networkPlaylistArrayController: DragAndDropArrayController!
     @IBOutlet weak var albumArtBox: NSBox!
     @IBOutlet weak var artworkToggle: NSButton!
     @IBOutlet weak var artCollectionView: NSCollectionView!
@@ -187,7 +190,20 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         let selection = (sourceListTreeController.selectedNodes[0].representedObject! as! SourceListItem)
+        if selection.is_network == true && selection.playlist != nil {
+            (NSApplication.sharedApplication().delegate as! AppDelegate).server?.addSongsForPlaylist(selection, libraryName: "test library")
+            auxPlaylistScrollView.hidden = true
+            currentTableView = networkPlaylistTableView
+            currentArrayController = networkPlaylistArrayController
+            libraryTableScrollView.hidden = true
+            auxPlaylistScrollView.hidden = true
+            networkPlaylistScrollView.hidden = false
+            networkPlaylistArrayController.content = selection.playlist?.network_tracks
+            CATransaction.commit()
+            return
+        }
         if selection.master_playlist != nil {
+            networkPlaylistScrollView.hidden = true
             auxPlaylistScrollView.hidden = true
             libraryTableScrollView.hidden = false
             currentArrayController = tableViewArrayController
@@ -202,12 +218,14 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         print("selection name is \(selection_name)")
         if auxPlaylistTableView.windowIdentifier == selection_name {
             libraryTableScrollView.hidden = true
+            networkPlaylistScrollView.hidden = true
             auxPlaylistScrollView.hidden = false
             currentArrayController = auxPlaylistArrayController
             currentTableView = auxPlaylistTableView
             focus = .playlist
             updateInfo()
             CATransaction.commit()
+            return
         }
         else {
             if (selection.playlist?.track_id_list != nil) {
@@ -396,6 +414,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     }
     
     func shuffle_array(inout array: [Int]) {
+        guard array.count > 0 else {return}
         for i in 0..<array.count - 1 {
             let j = Int(arc4random_uniform(UInt32(array.count - i))) + i
             guard i != j else {continue}
@@ -486,7 +505,8 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
                 if shuffleButton.state == NSOffState {
                     item = (currentArrayController?.arrangedObjects as! [Track]).first
                 } else if shuffleButton.state == NSOnState {
-                    item = (currentArrayController?.arrangedObjects as! [Track])[Int(arc4random_uniform(UInt32((currentArrayController?.arrangedObjects.count)!)))]
+                    let random_index = Int(arc4random_uniform(UInt32((currentArrayController?.arrangedObjects.count)!)))
+                    item = (currentArrayController?.arrangedObjects as! [Track])[random_index]
                 }
                 playSong(item!)
             }
@@ -612,7 +632,10 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         }
         else {
             offset_thing  = queue.track_frame_offset!
+            print(offset_thing)
         }
+        print(queue.total_offset_seconds)
+        print(queue.total_offset_frames)
         let seconds = ((Double((playerTime?.sampleTime)!) + offset_thing!) / (playerTime?.sampleRate)!) - Double(queue.total_offset_seconds)
         let seconds_string = getTimeAsString(seconds)
         if (timer?.valid == true) {
@@ -626,6 +649,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             progressBar.doubleValue = 0
         }
         secsPlayed = seconds
+        lastTimerDate = NSDate()
     }
     
     func updateValuesSafe() {
@@ -770,6 +794,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
                         let albumDirectoryPath = NSURL(string: track.location!)?.URLByDeletingLastPathComponent
                         if addPrimaryArtForTrack(track, art: artwork!, albumDirectoryPath: albumDirectoryPath!.path!) != nil {
                             dispatch_async(dispatch_get_main_queue()) {
+                                do {try self.managedContext.save()}catch {print(error)}
                                 self.initAlbumArt(track)
                             }
                             artworkFound = true
@@ -783,6 +808,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
                 }
                 if artworkFound == false {
                     dispatch_async(dispatch_get_main_queue()) {
+                        do {try self.managedContext.save()}catch {print(error)}
                         self.albumArtView.image = nil
                     }
                 }
@@ -895,7 +921,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         let mainLibraryIndexPath = NSIndexPath(indexes: mainLibraryIndexes, length: 2)
         sourceListTreeController.setSelectionIndexPath(mainLibraryIndexPath)
         //sourceListTreeController.content = sourceListHeaderNodes
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "findAlbumArtwork")
+        NSUserDefaults.standardUserDefaults().setBool(false, forKey: "findAlbumArtwork")
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "checkEmbeddedArtwork")
         NSUserDefaults.standardUserDefaults().setObject("http://localhost:20012/doingles", forKey: "testIP")
         NSUserDefaults.standardUserDefaults().setObject("http://localhost:20012/list", forKey: "testIPList")

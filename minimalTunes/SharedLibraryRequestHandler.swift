@@ -13,7 +13,7 @@ class SharedLibraryRequestHandler {
     
     func getSourceList() -> [NSMutableDictionary]? {
         let fetchRequest = NSFetchRequest(entityName: "SourceListItem")
-        let predicate = NSPredicate(format: "playlist != nil")
+        let predicate = NSPredicate(format: "(playlist != nil)")
         fetchRequest.predicate = predicate
         var results: [SourceListItem]?
         do {
@@ -33,12 +33,12 @@ class SharedLibraryRequestHandler {
         } catch {
             print("error: \(error)")
         }
-        return nil
+        //return finalObject
     }
     
     func getPlaylist(id: Int) -> [NSMutableDictionary]? {
         let playlistRequest = NSFetchRequest(entityName: "SongCollection")
-        let playlistPredicate = NSPredicate(format: "id == \(id)")
+        let playlistPredicate = NSPredicate(format: "id = '\(id)'")
         playlistRequest.predicate = playlistPredicate
         let result: SongCollection? = {
             do {
@@ -85,6 +85,29 @@ class SharedLibraryRequestHandler {
         } catch {
             print("error: \(error)")
         }
-        return nil
+        //return finalObject
+    }
+    
+    func getSong(id: Int) -> NSData? {
+        let songRequest = NSFetchRequest(entityName: "Track")
+        let songPredicate = NSPredicate(format: "id = %i", id)
+        songRequest.predicate = songPredicate
+        let result: Track? = {
+            do {
+                let thing = try managedContext.executeFetchRequest(songRequest) as! [Track]
+                if thing.count > 0 {
+                    return thing[0]
+                } else {
+                    return nil
+                }
+            } catch {
+                print(error)
+            }
+            return nil
+        }()
+        guard result != nil else {return nil}
+        let trackURL = NSURL(string: result!.location!)
+        let trackData = NSData(contentsOfURL: trackURL!)
+        return trackData
     }
 }

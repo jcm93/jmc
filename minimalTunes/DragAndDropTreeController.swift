@@ -39,6 +39,11 @@ class DragAndDropTreeController: NSTreeController, NSOutlineViewDataSource {
     var playlistHeaderNode: SourceListItem?
     var libraryHeaderNode: SourceListItem?
     var sharedHeaderNode: SourceListItem?
+    var networkedLibraries: NSMutableDictionary = [:]
+    
+    func networkedLibraryWithName(name: String) -> SourceListItem? {
+        return networkedLibraries[name] as? SourceListItem
+    }
     
     var draggedNodes: [NSTreeNode]?
     
@@ -58,10 +63,8 @@ class DragAndDropTreeController: NSTreeController, NSOutlineViewDataSource {
         }
     }*/
     
-    func checkNetworkedLibrary() {
-        let networkedLibraryIP = NSUserDefaults.standardUserDefaults().stringForKey("testIP")
-        let delegate = SharedLibraryRequestDelegate()
-        delegate.onlineCheck(networkedLibraryIP!)
+    func getNetworkPlaylistWithID(id: Int) -> SourceListItem {
+        return self.selectedObjects[0] as! SourceListItem
     }
     
     func addNetworkedLibrary(name: String, address: String) {
@@ -69,16 +72,16 @@ class DragAndDropTreeController: NSTreeController, NSOutlineViewDataSource {
         newSourceListItem.parent = self.sharedHeaderNode
         newSourceListItem.name = name
         newSourceListItem.is_network = true
-        let newNetworkLibrary = NSEntityDescription.insertNewObjectForEntityForName("NetworkLibrary", inManagedObjectContext: managedContext) as! SharedLibrary
-        newNetworkLibrary.address = address
-        askNetworkLibraryForSourceList(newSourceListItem)
-        
+        //let newNetworkLibrary = NSEntityDescription.insertNewObjectForEntityForName("NetworkLibrary", inManagedObjectContext: managedContext) as! SharedLibrary
+        // newNetworkLibrary.address = address
+        networkedLibraries[name] = newSourceListItem
     }
     
     func addSourcesForNetworkedLibrary(sourceData: [NSDictionary], item: SourceListItem) {
         let masterItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
         masterItem.name = "Music"
         masterItem.parent = item
+        masterItem.is_network = true
         for playlist in sourceData {
             let newItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
             newItem.sort_order = playlist["sort_order"] as! Int
@@ -87,14 +90,27 @@ class DragAndDropTreeController: NSTreeController, NSOutlineViewDataSource {
             newPlaylist.id = playlist["id"] as! Int
             newItem.playlist = newPlaylist
             newItem.parent = item
+            newItem.is_network = true
         }
     }
     
-    func askNetworkLibraryForSourceList(item: SourceListItem) {
-        print("about to ask network library for source list")
-        let networkedLibraryIP = NSUserDefaults.standardUserDefaults().stringForKey("testIPList")
-        let delegate = SharedLibraryRequestDelegate()
-        delegate.listRequest(networkedLibraryIP!, parentItem: item)
+    func addSongsToNetworkedLibrary(item: SourceListItem, songs: [NSDictionary]) {
+        for song in songs {
+            let track = NSEntityDescription.insertNewObjectForEntityForName("NetworkTrack", inManagedObjectContext: managedContext) as! NetworkTrack
+            track.id = song["id"] as? Int
+            track.album_name = song["album_name"] as? String
+            track.artist_name = song["artist_name"] as? String
+            track.name = song["name"] as? String
+            track.time = song["time"] as? Int
+            track.addPlaylistObject(item.playlist!)
+        }
+        (NSApplication.sharedApplication().delegate as! AppDelegate).mainWindowController?.networkPlaylistArrayController.content = item.playlist?.network_tracks
+        (NSApplication.sharedApplication().delegate as! AppDelegate).mainWindowController?.networkPlaylistTableView.reloadData()
+    }
+    
+    func removeNetworkedLibrary(name: String) {
+        let item = networkedLibraries[name] as! SourceListItem
+        //remove it
     }
     
     func outlineView(outlineView: NSOutlineView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forItems draggedItems: [AnyObject]) {

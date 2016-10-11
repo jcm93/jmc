@@ -10,6 +10,7 @@
 //
 
 import Cocoa
+import sReto
 
 
 @NSApplicationMain
@@ -23,7 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var importProgressBar: ImportProgressBar?
     var iTunesParser: iTunesLibraryParser?
     let fileManager = NSFileManager.defaultManager()
-    var mediaServer: MediaServer?
+    var server: P2PServer?
     
     @IBAction func jumpToSelection(sender: AnyObject) {
         mainWindowController!.jumpToSelection()
@@ -31,6 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     
     func initializeLibraryAndShowMainWindow() {
+        NSUserDefaults.standardUserDefaults().setObject("test library", forKey: "libraryName")
         mainWindowController = MainWindowController(windowNibName: "MainWindowController")
         if NSUserDefaults.standardUserDefaults().boolForKey("hasMusic") == true {
             mainWindowController?.hasMusic = true
@@ -39,6 +41,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             mainWindowController?.hasMusic = false
         }
         mainWindowController?.showWindow(self)
+        if mainWindowController?.hasMusic == true {
+            self.server = P2PServer(_interface: (mainWindowController?.sourceListTreeController!)!)
+        }
     }
     
     @IBAction func addToLibrary(sender: AnyObject) {
@@ -86,17 +91,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
+        let fetchRequest = NSFetchRequest(entityName: "SourceListItem")
+        let predicate = NSPredicate(format: "is_network == %@", true)
+        fetchRequest.predicate = predicate
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        do {
+            try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
+        } catch {
+            print(error)
+        }
         // Insert code here to initialize your application
         let fuckTransform = TransformerIntegerToTimestamp()
         yeOldeFileHandler = YeOldeFileHandler()
         NSValueTransformer.setValueTransformer(fuckTransform, forName: "AssTransform")
-        let thing = demoServer("/")
-        do {
-            try thing.start()
-        }
-        catch {
-            print(error)
-        }
         if NSUserDefaults.standardUserDefaults().boolForKey("hasStartedBefore") != true {
             print("has not started before")
             setInitialDefaults()
@@ -104,9 +111,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             setupWindowController?.showWindow(self)
         } else {
             initializeLibraryAndShowMainWindow()
-        }
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            
         }
     }
 
@@ -231,6 +235,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationShouldTerminate(sender: NSApplication) -> NSApplicationTerminateReply {
         // Save changes in the application's managed object context before the application terminates.
+        let fetchRequest = NSFetchRequest(entityName: "SourceListItem")
+        let predicate = NSPredicate(format: "is_network == %@", true)
+        fetchRequest.predicate = predicate
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        do {
+            try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
+        } catch {
+            print(error)
+        }
         
         if !managedObjectContext.commitEditing() {
             NSLog("\(NSStringFromClass(self.dynamicType)) unable to commit editing to terminate")

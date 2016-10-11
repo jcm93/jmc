@@ -12,6 +12,8 @@
 import Cocoa
 import CoreData
 
+var managedContext = (NSApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+
 func getTimeAsString(time: NSTimeInterval) -> String? {
     let dongs = Int(time)
     let hr = dongs / 3600

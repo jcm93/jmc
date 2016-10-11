@@ -10,9 +10,9 @@ import Cocoa
 import AVFoundation
 
 enum completionHandlerType {
-    case skip
     case seek
     case natural
+    case destroy
 }
 
 class AudioQueue: NSObject, AVAudioPlayerDelegate {
@@ -22,6 +22,7 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     dynamic var auxTrackQueue = [Track]()
     
     var curNode = AVAudioPlayerNode()
+    var mixerNode = AVAudioMixerNode()
     var curFile: AVAudioFile?
     var audioEngine = AVAudioEngine()
     
@@ -42,14 +43,23 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     
     var mainWindowController: MainWindowController?
     
+    override init() {
+        audioEngine.attachNode(curNode)
+        audioEngine.connect(curNode, to: audioEngine.mainMixerNode, format: curFile?.processingFormat)
+    }
+    
     
     func playImmediately(track: Track) {
+        currentHandlerType = .destroy
         print("paused value is \(is_paused)")
         currentTrack = track
         initializePlayback()
         if (is_paused == false || is_paused == nil) {
+            print("reached play clause")
             play()
         }
+        print(audioEngine)
+        currentHandlerType = .natural
     }
     
     func addTrackToQueue(track: Track, index: Int?) {
@@ -92,17 +102,22 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
             do {
                 if curNode.playing == true {
                     print("initializing playback while node is playing, resetting node")
-                    //audioEngine.reset()//necessary?
-                    curNode.reset()
+                    audioEngine.reset()//necessary?
+                    total_offset_frames = 0
+                    total_offset_seconds = 0
+                    audioEngine.detachNode(curNode)
                     curNode = AVAudioPlayerNode()
+                    audioEngine.attachNode(curNode)
+                    audioEngine.connect(curNode, to: audioEngine.mainMixerNode, format: curFile?.processingFormat)
                 }
                 let location = currentTrack!.location!
                 let url = NSURL(string: location)
                 curFile = try AVAudioFile(forReading: url!)
                 print(location)
-                audioEngine.attachNode(curNode)
                 curNode.scheduleFile(curFile!, atTime: nil, completionHandler: handleCompletion)
-                audioEngine.connect(curNode, to: audioEngine.mainMixerNode, format: curFile?.processingFormat)
+                print(curFile?.processingFormat)
+                print(audioEngine.outputNode)
+                //audioEngine.connect(curNode, to: audioEngine.mainMixerNode, format: curFile?.processingFormat)
                 resetValues()
                 if (audioEngine.running == false) {
                     try audioEngine.start()
@@ -151,7 +166,6 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     func handleCompletion() {
         //called any time the playback node is stopped, whether for a seek, skip, or natural playback operation ending
         //if this is the result of a scheduleFile or scheduleSegment operation, it is called after the last segment of the buffer is scheduled, not played. this is not the case for scheduleBuffer operations
-        //will require rewrite for gapless streaming media, potentially...
         //this can probably crash all over the place if the database can't be accessed for any reason
         print("handle completion called")
         switch currentHandlerType {
@@ -198,52 +212,32 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
         case .seek:
             print("seek completion handler")
             //do nothing
-        case .skip:
-            tryGetMoreTracks()
-            if (currentTrack != nil) {
-                print("skipping to new track")
-                playImmediately(currentTrack!)
-                changeTrack()
-            }
-            else {
-                print("skipping, no new track")
-                //cleanly stop everything
-                self.observerDonePlaying()
-                self.total_offset_frames = 0
-                self.total_offset_seconds = 0
-                self.is_initialized = false
-                self.track_frame_offset = 0
-                self.audioEngine.reset()
-            }
+        case .destroy:
+            print("destruction")
+            self.total_offset_frames = 0
+            self.total_offset_seconds = 0
+            self.track_frame_offset = 0
+            //do nothing
         }
     }
     
     func skip() {
-        currentHandlerType = .skip
-        is_paused = !curNode.playing
-        if (trackQueue.count > 0) {
-            if (is_paused == false) {
-                curNode.stop()
-            }
-            else {
-                curNode.play()
-                curNode.stop()
-            }
+        tryGetMoreTracks()
+        currentHandlerType = .destroy
+        if (currentTrack != nil) {
+            print("skipping to new track")
+            playImmediately(currentTrack!)
+            changeTrack()
         }
         else {
-            observerDonePlaying()
-            if (is_paused == false) {
-                curNode.stop()
-            }
-            else {
-                curNode.play()
-                curNode.stop()
-            }
-        }
-        total_offset_seconds = 0
-        total_offset_frames = 0
-        if is_paused == false {
-            curNode.play()
+            print("skipping, no new track")
+            //cleanly stop everything
+            self.observerDonePlaying()
+            self.total_offset_frames = 0
+            self.total_offset_seconds = 0
+            self.is_initialized = false
+            self.track_frame_offset = 0
+            self.audioEngine.reset()
         }
         currentHandlerType = .natural
     }
@@ -276,7 +270,16 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     
     func play() {
         is_paused = false
-        curNode.play()
+        if audioEngine.running == true {
+            curNode.play()
+        } else {
+            audioEngine.prepare()
+            do {
+                try audioEngine.start()
+            } catch {
+                print(error)
+            }
+        }
 
     }
     func pause() {
