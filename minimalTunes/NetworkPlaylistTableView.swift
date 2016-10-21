@@ -32,9 +32,11 @@ class NetworkPlaylistTableView: NSTableView {
             mainWindowController?.interpretSpacebarEvent()
         }
         else if theEvent.keyCode == 36 {
-            let fuck = (NSApplication.sharedApplication().delegate as! AppDelegate)
-            let selectedNetworkTrack = fuck.mainWindowController?.networkPlaylistArrayController.selectedObjects[0] as! NetworkTrack
-            fuck.server?.getTrack(Int(selectedNetworkTrack.id!), libraryName: "test library")
+            let selectedNetworkTrack = mainWindowController?.networkPlaylistArrayController.selectedObjects[0] as! NetworkTrack
+            mainWindowController?.is_streaming = true
+            mainWindowController?.currentNetworkTrack = selectedNetworkTrack
+            mainWindowController?.initializeInterfaceForNetworkTrack()
+            mainWindowController?.delegate!.server?.getTrack(Int(selectedNetworkTrack.id!), libraryName: "test library")
         }
         else {
             super.keyDown(theEvent)

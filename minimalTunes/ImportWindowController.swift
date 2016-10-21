@@ -51,7 +51,7 @@ class ImportWindowController: NSWindowController {
         pathURL = pathURL.URLByDeletingLastPathComponent!
         pathURL = pathURL.URLByAppendingPathComponent("iTunes Music", isDirectory: true)
         let fileManager = NSFileManager.defaultManager()
-        if fileManager.fileExistsAtPath(pathURL.absoluteString, isDirectory: nil) == false {
+        if fileManager.fileExistsAtPath(pathURL.path!, isDirectory: nil) == false {
             pathURL = pathURL.URLByDeletingLastPathComponent!
             pathURL = pathURL.URLByAppendingPathComponent("iTunes Media", isDirectory: true)
         }

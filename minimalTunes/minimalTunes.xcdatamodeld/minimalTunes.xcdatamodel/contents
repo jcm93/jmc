@@ -23,6 +23,7 @@
     </entity>
     <entity name="Artist" representedClassName=".Artist" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="albums" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Album" inverseName="album_artist" inverseEntity="Album" syncable="YES"/>
         <relationship name="composers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Composer" inverseName="artists" inverseEntity="Composer" syncable="YES"/>
@@ -31,12 +32,14 @@
     </entity>
     <entity name="CachedOrder" representedClassName=".CachedOrder" syncable="YES">
         <attribute name="order" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="filtered_tracks" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Track" inverseName="filtered_orders" inverseEntity="Track" syncable="YES"/>
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Track" inverseName="orders" inverseEntity="Track" syncable="YES"/>
     </entity>
     <entity name="Composer" representedClassName=".Composer" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="artists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Artist" inverseName="composers" inverseEntity="Artist" syncable="YES"/>
+        <relationship name="properties" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Property" inverseName="composer" inverseEntity="Property" syncable="YES"/>
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="composer" inverseEntity="Track" syncable="YES"/>
     </entity>
     <entity name="Genre" representedClassName=".Genre" syncable="YES">
@@ -63,6 +66,7 @@
         <attribute name="type" optional="YES" attributeType="Transformable" syncable="YES"/>
         <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="properties" inverseEntity="Album" syncable="YES"/>
         <relationship name="artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="properties" inverseEntity="Artist" syncable="YES"/>
+        <relationship name="composer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Composer" inverseName="properties" inverseEntity="Composer" syncable="YES"/>
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="user_defined_properties" inverseEntity="Track" syncable="YES"/>
     </entity>
     <entity name="SharedLibrary" representedClassName=".SharedLibrary" syncable="YES">
@@ -98,7 +102,6 @@
         <relationship name="playlist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SongCollection" inverseName="list_item" inverseEntity="SongCollection" syncable="YES"/>
         <relationship name="playlist_folder" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SongCollectionFolder" inverseName="source_list_item" inverseEntity="SongCollectionFolder" syncable="YES"/>
     </entity>
-    <entity name="Tag" representedClassName=".Tag" syncable="YES"/>
     <entity name="Track" representedClassName=".Track" syncable="YES">
         <attribute name="bit_rate" optional="YES" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="comments" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
@@ -108,6 +111,7 @@
         <attribute name="date_modified" optional="YES" attributeType="Date" indexed="YES" syncable="YES"/>
         <attribute name="file_kind" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="misc_search_field" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
@@ -125,6 +129,7 @@
         <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="tracks" inverseEntity="Album" syncable="YES"/>
         <relationship name="artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="tracks" inverseEntity="Artist" syncable="YES"/>
         <relationship name="composer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Composer" inverseName="tracks" inverseEntity="Composer" syncable="YES"/>
+        <relationship name="filtered_orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CachedOrder" inverseName="filtered_tracks" inverseEntity="CachedOrder" syncable="YES"/>
         <relationship name="genre" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Genre" inverseName="tracks" inverseEntity="Genre" syncable="YES"/>
         <relationship name="orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CachedOrder" inverseName="tracks" inverseEntity="CachedOrder" syncable="YES"/>
         <relationship name="playlists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SongCollection" inverseName="tracks" inverseEntity="SongCollection" syncable="YES"/>
@@ -143,19 +148,18 @@
         <element name="Album" positionX="-1278" positionY="162" width="128" height="165"/>
         <element name="AlbumArtwork" positionX="-209" positionY="423" width="128" height="105"/>
         <element name="AlbumArtworkCollection" positionX="-371" positionY="423" width="128" height="90"/>
-        <element name="Artist" positionX="-1262" positionY="-0" width="128" height="135"/>
-        <element name="CachedOrder" positionX="-1071" positionY="99" width="128" height="75"/>
-        <element name="Composer" positionX="-1278" positionY="297" width="128" height="103"/>
+        <element name="Artist" positionX="-1262" positionY="-0" width="128" height="150"/>
+        <element name="CachedOrder" positionX="-1071" positionY="99" width="128" height="90"/>
+        <element name="Composer" positionX="-1278" positionY="297" width="128" height="120"/>
         <element name="Genre" positionX="-1280" positionY="405" width="128" height="88"/>
         <element name="Library" positionX="-747" positionY="-54" width="128" height="88"/>
-        <element name="Property" positionX="-1046" positionY="576" width="128" height="133"/>
+        <element name="NetworkTrack" positionX="-1071" positionY="99" width="128" height="135"/>
+        <element name="Property" positionX="-1046" positionY="576" width="128" height="150"/>
         <element name="SharedLibrary" positionX="-227" positionY="126" width="128" height="75"/>
         <element name="SongCollection" positionX="-855" positionY="101" width="128" height="195"/>
         <element name="SongCollectionFolder" positionX="-549" positionY="297" width="128" height="88"/>
         <element name="SourceListItem" positionX="-497" positionY="-40" width="128" height="195"/>
-        <element name="Tag" positionX="-1026" positionY="144" width="128" height="45"/>
-        <element name="Track" positionX="-1026" positionY="-54" width="128" height="480"/>
+        <element name="Track" positionX="-1026" positionY="-54" width="128" height="510"/>
         <element name="ViewCoordinator" positionX="-801" positionY="534" width="128" height="148"/>
-        <element name="NetworkTrack" positionX="-1071" positionY="99" width="128" height="135"/>
     </elements>
 </model>

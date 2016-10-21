@@ -2234,7 +2234,11 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
             <point key="canvasLocation" x="508.5" y="755"/>
         </window>
         <arrayController objectClassName="NetworkTrack" id="Mua-QA-afe" userLabel="Network Playlist Array Controller" customClass="DragAndDropArrayController" customModule="minimalTunes" customModuleProvider="target"/>
-        <arrayController mode="entity" entityName="Track" fetchPredicateFormat="" id="VLv-5K-zpN" customClass="DragAndDropArrayController" customModule="minimalTunes" customModuleProvider="target"/>
+        <arrayController mode="entity" entityName="Track" fetchPredicateFormat="" automaticallyPreparesContent="YES" id="VLv-5K-zpN" customClass="DragAndDropArrayController" customModule="minimalTunes" customModuleProvider="target">
+            <connections>
+                <binding destination="-2" name="managedObjectContext" keyPath="self.managedContext" id="cYj-Oc-oZy"/>
+            </connections>
+        </arrayController>
         <arrayController mode="entity" entityName="Track" fetchPredicateFormat="" automaticallyPreparesContent="YES" id="Au2-FV-L2z" customClass="DragAndDropArrayController" customModule="minimalTunes" customModuleProvider="target">
             <connections>
                 <binding destination="-2" name="managedObjectContext" keyPath="self.managedContext" id="ELy-uA-Poj"/>

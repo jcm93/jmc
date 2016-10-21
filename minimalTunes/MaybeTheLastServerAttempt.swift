@@ -13,13 +13,19 @@ class P2PServer {
     let wlanModule: WlanModule
     let remoteModule: RemoteP2PModule
     let localPeer: LocalPeer
+    let delegate: AppDelegate
     let interface: DragAndDropTreeController
     let namePeerDictionary = NSMutableDictionary()
+    var isStreaming = false
+    var isPlayingBackStream = false
     
-    init(_interface: DragAndDropTreeController) {
-        interface = _interface
-        self.wlanModule = WlanModule(type: "thisisstupidandiuseitforauthenticationandimmetunes", dispatchQueue: dispatch_get_main_queue())
-        self.remoteModule = RemoteP2PModule(baseUrl: NSURL(string: "http://moodyonline.com")!, dispatchQueue: dispatch_get_main_queue())
+    var streamingData = NSMutableData()
+    
+    init(_delegate: AppDelegate) {
+        self.delegate = _delegate
+        self.interface = delegate.mainWindowController!.sourceListTreeController!
+        self.wlanModule = WlanModule(type: "metunes", dispatchQueue: dispatch_get_main_queue())
+        self.remoteModule = RemoteP2PModule(baseUrl: NSURL(string: "ws://162.243.26.172:8080/")!, dispatchQueue: dispatch_get_main_queue())
         self.localPeer = LocalPeer(modules: [self.wlanModule], dispatchQueue: dispatch_get_main_queue())
         self.localPeer.start(
             onPeerDiscovered: { peer in
@@ -37,7 +43,11 @@ class P2PServer {
     
     func onPeerDiscovered(peer: RemotePeer) {
         let connection = peer.connect()
+        connection.onClose = { connection in print("Connection closed.") }
+        connection.onError = { error in print("error: \(error)") }
+        connection.onData = { data in print("Received data!") }
         connection.onConnect = { connection in
+            print("successfully connected")
             self.onIncomingConnection(peer, connection: connection)
             self.askPeerForLibraryName(peer, connection: connection)
         }
@@ -51,6 +61,22 @@ class P2PServer {
         connection.onTransfer = { connection, transfer in
             transfer.onProgress = {transfer in print("current progress: \(transfer.progress) of \(transfer.length)") }
             transfer.onCompleteData = {transfer, data in self.parseTransfer(peer, connection: connection, transfer: transfer, data: data) }
+        }
+    }
+    
+    func startStreaming(peer: RemotePeer, connection: Connection) {
+        connection.onTransfer = { connection, transfer in
+            transfer.onPartialData = { transfer, data in
+                self.streamingData.appendData(data)
+                if self.isPlayingBackStream == false {
+                    let newTrack = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: managedContext) as! Track
+                    let fuck = (NSApplication.sharedApplication().delegate as? AppDelegate)!.mainWindowController!
+                    let fuck2 = fuck.queue
+                    newTrack.name = (fuck.networkPlaylistArrayController.selectedObjects[0] as! NetworkTrack).name
+                    print(newTrack.location)
+                    self.isPlayingBackStream = true
+                }
+            }
         }
     }
     
@@ -117,17 +143,16 @@ class P2PServer {
                 interface.addSongsToNetworkedLibrary(item, songs: songs)
                 print("the tingler got a playlist")
             case "track":
-                let trackPayloadString = requestDict["track"] as! String
-                let trackPayloadData = NSData.init(base64EncodedString: trackPayloadString, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
-                let path = NSUserDefaults.standardUserDefaults().stringForKey("libraryPath")! + "/test.mp3"
-                print(path)
-                NSFileManager.defaultManager().createFileAtPath(path, contents: trackPayloadData, attributes: nil)
-                let newTrack = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: managedContext) as! Track
-                let fuck = (NSApplication.sharedApplication().delegate as? AppDelegate)!.mainWindowController!
-                newTrack.name = (fuck.networkPlaylistArrayController.selectedObjects[0] as! NetworkTrack).name
-                newTrack.location = NSURL(fileURLWithPath: path).absoluteString
-                print(newTrack.location)
-                fuck.playSong(newTrack)
+                guard delegate.mainWindowController?.is_streaming == true else {return}
+                let trackB64 = requestDict["track"] as! String
+                let trackData = NSData(base64EncodedString: trackB64, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
+                guard trackData != nil else {return}
+                let fileManager = NSFileManager.defaultManager()
+                let libraryPath = NSUserDefaults.standardUserDefaults().stringForKey("libraryPath")
+                let libraryURL = NSURL(fileURLWithPath: libraryPath!)
+                let trackFilePath = libraryURL.URLByAppendingPathComponent("test.mp3").path
+                fileManager.createFileAtPath(trackFilePath!, contents: trackData, attributes: nil)
+                delegate.mainWindowController!.playNetworkSong()
                 print("the tingler got a song")
         default:
             print("the tingler got an invalid payload")
@@ -225,7 +250,7 @@ class P2PServer {
             data = try NSJSONSerialization.dataWithJSONObject(requestDictionary, options: NSJSONWritingOptions.PrettyPrinted)
             connection.send(data: data)
         } catch {
-            print(error)
+            print("error asking for library name: \(error)")
         }
     }
     
@@ -238,7 +263,7 @@ class P2PServer {
             data = try NSJSONSerialization.dataWithJSONObject(requestDictionary, options: NSJSONWritingOptions.PrettyPrinted)
             connection.send(data: data)
         } catch {
-            print(error)
+            print("error asking for source list: \(error)")
         }
     }
     
@@ -252,7 +277,7 @@ class P2PServer {
             data = try NSJSONSerialization.dataWithJSONObject(requestDictionary, options: NSJSONWritingOptions.PrettyPrinted)
             connection.send(data: data)
         } catch {
-            print(error)
+            print("error asking for playlist: \(error)")
         }
     }
     
@@ -266,7 +291,7 @@ class P2PServer {
             data = try NSJSONSerialization.dataWithJSONObject(requestDictionary, options: NSJSONWritingOptions.PrettyPrinted)
             connection.send(data: data)
         } catch {
-            print(error)
+            print("error asking for song: \(error)")
         }
     }
 }

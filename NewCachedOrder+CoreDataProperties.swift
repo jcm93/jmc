@@ -1,5 +1,5 @@
 //
-//  CachedOrder+CoreDataProperties.swift
+//  NewCachedOrder+CoreDataProperties.swift
 //  
 //
 //  Created by John Moody on 10/20/16.
@@ -12,10 +12,9 @@
 import Foundation
 import CoreData
 
-extension CachedOrder {
+extension NewCachedOrder {
 
     @NSManaged var order: String?
-    @NSManaged var tracks: NSOrderedSet?
-    @NSManaged var filtered_tracks: NSOrderedSet?
+    @NSManaged var tracks: NSObject?
 
 }

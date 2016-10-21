@@ -34,6 +34,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func initializeLibraryAndShowMainWindow() {
         NSUserDefaults.standardUserDefaults().setObject("test library", forKey: "libraryName")
         mainWindowController = MainWindowController(windowNibName: "MainWindowController")
+        mainWindowController?.delegate = self
         if NSUserDefaults.standardUserDefaults().boolForKey("hasMusic") == true {
             mainWindowController?.hasMusic = true
         }
@@ -42,7 +43,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         mainWindowController?.showWindow(self)
         if mainWindowController?.hasMusic == true {
-            self.server = P2PServer(_interface: (mainWindowController?.sourceListTreeController!)!)
+            self.server = P2PServer(_delegate: self)
         }
     }
     
