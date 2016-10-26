@@ -13,11 +13,13 @@ import CoreData
 private var my_context = 0
 
 
-class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchFieldDelegate, NSTableViewDelegate {
+class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchFieldDelegate, NSTableViewDelegate, NSMenuDelegate {
     
     @IBOutlet weak var networkPlaylistScrollView: NSScrollView!
     @IBOutlet weak var networkPlaylistTableView: TableViewYouCanPressSpacebarOn!
     @IBOutlet var networkPlaylistArrayController: DragAndDropArrayController!
+    @IBOutlet var columnVisibilityMenu: NSMenu!
+    var columnVisibilityController: TableColumnVisibilityController?
     @IBOutlet weak var albumArtBox: NSBox!
     @IBOutlet weak var artworkToggle: NSButton!
     @IBOutlet weak var artCollectionView: NSCollectionView!
@@ -52,6 +54,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     @IBOutlet weak var albumArtView: DragAndDropImageView!
     @IBOutlet var artCollectionArrayController: NSArrayController!
     @IBOutlet weak var infoField: NSTextField!
+    
     
     enum windowFocus {
         case playlist
@@ -734,6 +737,32 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         progressBar.doubleValue = 0
         startTimer()
     }
+    func initializeColumnVisibilityMenu(tableView: NSTableView) {
+        let menu = tableView.headerView?.menu
+        for column in tableView.tableColumns {
+            if column.identifier == "name" {
+                continue
+            }
+            let menuItem = NSMenuItem(title: column.headerCell.title, action: #selector(toggleColumn), keyEquivalent: "")
+            menuItem.target = self
+            menuItem.representedObject = column
+            menu?.addItem(menuItem)
+        }
+    }
+    
+    func toggleColumn(sender: NSMenuItem) {
+        let column = sender.representedObject as! NSTableColumn
+        column.hidden = !column.hidden
+    }
+    
+    func menuWillOpen(menu: NSMenu) {
+        for menuItem in menu.itemArray {
+            menuItem.state = (menuItem.representedObject as! NSTableColumn).hidden ? NSOnState : NSOffState
+        }
+    }
+    
+    
+    
     
     func startTimer() {
         //timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValuesUnsafe), userInfo: nil, repeats: true)
@@ -1096,6 +1125,8 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
                 self.sourceListView.expandItem(nil, expandChildren: true)
             }
         }
+        columnVisibilityMenu.delegate = self
+        self.initializeColumnVisibilityMenu(self.libraryTableView)
         let mainLibraryIndexes = [0, 0]
         let mainLibraryIndexPath = NSIndexPath(indexes: mainLibraryIndexes, length: 2)
         sourceListTreeController.setSelectionIndexPath(mainLibraryIndexPath)
