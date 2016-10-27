@@ -2,7 +2,7 @@
 //  SongCollectionFolder+CoreDataProperties.swift
 //  minimalTunes
 //
-//  Created by John Moody on 7/14/16.
+//  Created by John Moody on 10/26/16.
 //  Copyright © 2016 John Moody. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -15,6 +15,7 @@ import CoreData
 extension SongCollectionFolder {
 
     @NSManaged var name: String?
+    @NSManaged var is_network: NSNumber?
     @NSManaged var playlists: NSSet?
     @NSManaged var source_list_item: SourceListItem?
 

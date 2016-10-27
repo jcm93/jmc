@@ -11,6 +11,8 @@ import CoreData
 
 class SharedLibraryRequestHandler {
     
+    var server: P2PServer?
+    
     func getSourceList() -> [NSMutableDictionary]? {
         let fetchRequest = NSFetchRequest(entityName: "SourceListItem")
         let predicate = NSPredicate(format: "(playlist != nil)")
@@ -36,7 +38,9 @@ class SharedLibraryRequestHandler {
         //return finalObject
     }
     
-    func getPlaylist(id: Int) -> [NSMutableDictionary]? {
+    func getPlaylist(id: Int, fields: NSDictionary) -> NSDictionary? {
+        //sends a dictionary containing JSON tracks and artists etc., and cached sort orders for the important sorts
+        let playlistDictionary = NSMutableDictionary()
         let playlistRequest = NSFetchRequest(entityName: "SongCollection")
         let playlistPredicate = NSPredicate(format: "id = '\(id)'")
         playlistRequest.predicate = playlistPredicate
@@ -74,18 +78,46 @@ class SharedLibraryRequestHandler {
         }()
         print(results)
         guard results != nil else {return nil}
-        var serializedTracks = [NSMutableDictionary]()
+        var serializedTracks = [NSDictionary]()
         for track in results! {
-            serializedTracks.append(track.dictRepresentation())
+            serializedTracks.append(track.dictRepresentation(fields))
         }
-        return serializedTracks
-        var finalObject: NSData?
-        do {
-            finalObject = try NSJSONSerialization.dataWithJSONObject(serializedTracks, options: NSJSONWritingOptions.PrettyPrinted)
-        } catch {
-            print("error: \(error)")
+        playlistDictionary["playlist"] = serializedTracks
+        playlistDictionary["orders"] = getCachedOrders(fields, id_array: id_array as! [Int])
+        return playlistDictionary
+    }
+    
+    func getCachedOrders(fields: NSDictionary, id_array: [Int]) -> [NSDictionary]? {
+        var cachedOrdersDictionary = [NSDictionary]()
+        let filterDictionary = NSMutableDictionary()
+        for id in id_array {
+            filterDictionary[id] = true
         }
-        //return finalObject
+        let cachedOrders: [CachedOrder] = {
+            let fetch_request = NSFetchRequest(entityName: "CachedOrder")
+            let result = [CachedOrder]()
+            do {
+                let thing = try managedContext.executeFetchRequest(fetch_request) as! [CachedOrder]
+                if thing.count != 0 {
+                    return thing
+                }
+            }
+            catch {
+                print("err")
+            }
+            return result
+        }()
+        
+        let filteredOrders = cachedOrders.filter({return (fields.allKeys as! [String]).contains($0.order!) == true})
+        
+        for order in filteredOrders {
+            let cachedOrderDictionary = NSMutableDictionary()
+            let array = order.tracks!.filter( {return ((filterDictionary[($0 as! Track).id!] as? Bool) == true)}) as! [Track]
+            cachedOrderDictionary["name"] = order.order
+            cachedOrderDictionary["tracks"] = array
+            cachedOrdersDictionary.append(cachedOrderDictionary)
+        }
+        return cachedOrdersDictionary
     }
     
     func getSong(id: Int) -> NSData? {

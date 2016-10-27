@@ -15,11 +15,7 @@ private var my_context = 0
 
 class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchFieldDelegate, NSTableViewDelegate, NSMenuDelegate {
     
-    @IBOutlet weak var networkPlaylistScrollView: NSScrollView!
-    @IBOutlet weak var networkPlaylistTableView: TableViewYouCanPressSpacebarOn!
-    @IBOutlet var networkPlaylistArrayController: DragAndDropArrayController!
     @IBOutlet var columnVisibilityMenu: NSMenu!
-    var columnVisibilityController: TableColumnVisibilityController?
     @IBOutlet weak var albumArtBox: NSBox!
     @IBOutlet weak var artworkToggle: NSButton!
     @IBOutlet weak var artCollectionView: NSCollectionView!
@@ -219,7 +215,13 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     }
     
     func outlineViewSelectionDidChange(notification: NSNotification) {
-        CATransaction.begin()
+        
+        let selection = sourceListTreeController.selectedNodes[0].representedObject! as! SourceListItem
+        if selection.is_network == true {
+            let server = self.delegate?.server
+            server?.getDataForPlaylist(selection)
+        }
+        /*CATransaction.begin()
         CATransaction.setDisableActions(true)
         let selection = (sourceListTreeController.selectedNodes[0].representedObject! as! SourceListItem)
         if selection.is_network == true && selection.playlist != nil {
@@ -230,7 +232,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             libraryTableScrollView.hidden = true
             auxPlaylistScrollView.hidden = true
             networkPlaylistScrollView.hidden = false
-            networkPlaylistArrayController.content = selection.playlist?.network_tracks
+            networkPlaylistArrayController.content = selection.playlist?.tracks
             CATransaction.commit()
             return
         }
@@ -284,7 +286,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             updateInfo()
             updateCachedSortsForPlaylist(id_array!)
             return
-        }
+        }*/
     }
 
     //track queue, source logic
@@ -737,22 +739,36 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         progressBar.doubleValue = 0
         startTimer()
     }
+    
     func initializeColumnVisibilityMenu(tableView: NSTableView) {
+        let savedColumns = NSUserDefaults.standardUserDefaults().dictionaryForKey(DEFAULTS_SAVED_COLUMNS_STRING)
+        
         let menu = tableView.headerView?.menu
         for column in tableView.tableColumns {
             if column.identifier == "name" {
                 continue
             }
             let menuItem = NSMenuItem(title: column.headerCell.title, action: #selector(toggleColumn), keyEquivalent: "")
+            if (savedColumns != nil) {
+                let isHidden = savedColumns![column.identifier] as! Bool
+                column.hidden = isHidden
+            }
             menuItem.target = self
             menuItem.representedObject = column
+            menuItem.state = column.hidden ? NSOffState : NSOnState
             menu?.addItem(menuItem)
         }
     }
     
-    func toggleColumn(sender: NSMenuItem) {
-        let column = sender.representedObject as! NSTableColumn
+    func toggleColumn(menuItem: NSMenuItem) {
+        let column = menuItem.representedObject as! NSTableColumn
         column.hidden = !column.hidden
+        menuItem.state = column.hidden ? NSOffState : NSOnState
+        let columnVisibilityDictionary = NSMutableDictionary()
+        for column in self.currentTableView!.tableColumns {
+            columnVisibilityDictionary[column.identifier] = column.hidden
+        }
+        NSUserDefaults.standardUserDefaults().setObject(columnVisibilityDictionary, forKey: DEFAULTS_SAVED_COLUMNS_STRING)
     }
     
     func menuWillOpen(menu: NSMenu) {
@@ -1138,5 +1154,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         networkPlaylistTableView.mainWindowController = self
         //self.sourceListTreeController.checkNetworkedLibrary()
         self.populateIsVisibleDict()
+        self.initializeColumnVisibilityMenu(self.currentTableView!)
     }
 }

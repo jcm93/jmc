@@ -236,7 +236,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationShouldTerminate(sender: NSApplication) -> NSApplicationTerminateReply {
         // Save changes in the application's managed object context before the application terminates.
-        let fetchRequest = NSFetchRequest(entityName: "SourceListItem")
+        let fetchRequest = NSFetchRequest()
         let predicate = NSPredicate(format: "is_network == %@", true)
         fetchRequest.predicate = predicate
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)

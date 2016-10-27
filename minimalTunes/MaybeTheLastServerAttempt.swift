@@ -41,6 +41,11 @@ class P2PServer {
         )
     }
     
+    func AddTracksForPlaylistData(playlistDictionary: NSDictionary) {
+        //get tracks
+        
+    }
+    
     func onPeerDiscovered(peer: RemotePeer) {
         let connection = peer.connect()
         connection.onClose = { connection in print("Connection closed.") }
@@ -109,16 +114,17 @@ class P2PServer {
         
     }
     
-    func addSongsForPlaylist(item: SourceListItem, libraryName: String) {
-        let peerDict = namePeerDictionary[libraryName] as! NSMutableDictionary
+    func getDataForPlaylist(item: SourceListItem) {
+        let libraryName = item.library?.name
+        let peerDict = namePeerDictionary[libraryName!] as! NSMutableDictionary
         let peer = peerDict["peer"] as! RemotePeer
         let connection = peer.connect()
         connection.onConnect = { connection in
             self.onIncomingConnection(peer, connection: connection)
         }
+        let visibleColumns = NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_SAVED_COLUMNS_STRING) as! NSDictionary
         let id = item.playlist!.id! as Int
-        askPeerForPlaylist(peer, connection: connection, id: id)
-        
+        askPeerForPlaylist(peer, connection: connection, id: id, visibleColumns: visibleColumns)
     }
     
     func parsePayload(peer: RemotePeer, connection: Connection, transfer: Transfer, requestDict: NSDictionary) {
@@ -169,7 +175,8 @@ class P2PServer {
                 sendPeerSourceList(peer, connection: connection)
             case "playlist":
                 let playlistID = requestDict["id"] as! Int
-                sendPeerPlaylistInfo(peer, connection: connection, playlistID: playlistID)
+                let visibleColumnsDictionary = requestDict["fields"] as! NSDictionary
+                sendPeerPlaylistInfo(peer, connection: connection, playlistID: playlistID, visibleColumns: visibleColumnsDictionary)
             case "track":
                 let id = requestDict["id"] as! Int
                 sendPeerTrack(peer, connection: connection, trackID: id)
@@ -179,8 +186,8 @@ class P2PServer {
         
     }
     
-    func sendPeerPlaylistInfo(peer: RemotePeer, connection: Connection, playlistID: Int) {
-        let playlist = metadataDelegate.getPlaylist(playlistID)
+    func sendPeerPlaylistInfo(peer: RemotePeer, connection: Connection, playlistID: Int, visibleColumns: NSDictionary) {
+        let playlist = metadataDelegate.getPlaylist(playlistID, fields: visibleColumns)
         let playlistPayloadDictionary = NSMutableDictionary()
         playlistPayloadDictionary["type"] = "payload"
         playlistPayloadDictionary["payload"] = "playlist"
@@ -267,10 +274,11 @@ class P2PServer {
         }
     }
     
-    func askPeerForPlaylist(peer: RemotePeer, connection: Connection, id: Int) {
+    func askPeerForPlaylist(peer: RemotePeer, connection: Connection, id: Int, visibleColumns: NSDictionary) {
         let requestDictionary = NSMutableDictionary()
         requestDictionary["type"] = "request"
         requestDictionary["request"] = "playlist"
+        requestDictionary["fields"] = visibleColumns
         requestDictionary["id"] = id
         var data: NSData!
         do {

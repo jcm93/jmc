@@ -14,6 +14,10 @@ import CoreData
 
 var managedContext = (NSApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 
+let DEFAULTS_SAVED_COLUMNS_STRING = "savedColumns"
+let DEFAULTS_LIBRARY_PATH_STRING = "libraryPath"
+let DEFAULTS_LIBRARY_NAME_STRING = "libraryName"
+
 
 func createTableViewCopy(table: TableViewYouCanPressSpacebarOn) -> TableViewYouCanPressSpacebarOn {
     let currentRect = table.visibleRect
@@ -31,6 +35,14 @@ func createTableViewCopy(table: TableViewYouCanPressSpacebarOn) -> TableViewYouC
     return newTableView
 }
 
+class MeTunesDate {
+    var date: NSDate
+    var is_ambiguous: Bool
+    init(date: NSDate, is_ambiguous: Bool) {
+        self.date = date
+        self.is_ambiguous = is_ambiguous
+    }
+}
 
 func getTimeAsString(time: NSTimeInterval) -> String? {
     let dongs = Int(time)
