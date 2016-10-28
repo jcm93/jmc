@@ -38,7 +38,7 @@ class SharedLibraryRequestHandler {
         //return finalObject
     }
     
-    func getPlaylist(id: Int, fields: NSDictionary) -> NSDictionary? {
+    func getPlaylist(id: Int, fields: [String]) -> NSDictionary? {
         //sends a dictionary containing JSON tracks and artists etc., and cached sort orders for the important sorts
         let playlistDictionary = NSMutableDictionary()
         let playlistRequest = NSFetchRequest(entityName: "SongCollection")
@@ -87,7 +87,7 @@ class SharedLibraryRequestHandler {
         return playlistDictionary
     }
     
-    func getCachedOrders(fields: NSDictionary, id_array: [Int]) -> [NSDictionary]? {
+    func getCachedOrders(fields: [String], id_array: [Int]) -> [NSDictionary]? {
         var cachedOrdersDictionary = [NSDictionary]()
         let filterDictionary = NSMutableDictionary()
         for id in id_array {
@@ -108,7 +108,15 @@ class SharedLibraryRequestHandler {
             return result
         }()
         
-        let filteredOrders = cachedOrders.filter({return (fields.allKeys as! [String]).contains($0.order!) == true})
+        let filteredOrderNames: [String] = {
+            var names = [String]()
+            for field in fields {
+                names.append(fieldsToCachedOrdersDictionary[field] as! String)
+            }
+            return names
+        }()
+        
+        let filteredOrders = cachedOrders.filter({return filteredOrderNames.contains($0.order!)})
         
         for order in filteredOrders {
             let cachedOrderDictionary = NSMutableDictionary()

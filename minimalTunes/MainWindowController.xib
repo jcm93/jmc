@@ -830,7 +830,7 @@
                                         <rect key="frame" x="0.0" y="1" width="1132" height="567"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <clipView key="contentView" placeholderIntrinsicWidth="708" placeholderIntrinsicHeight="606" id="giW-iJ-3o0">
-                                            <rect key="frame" x="0.0" y="23" width="1132" height="544"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="1132" height="567"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" placeholderIntrinsicWidth="833" placeholderIntrinsicHeight="583" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" rowSizeStyle="automatic" headerView="5Vq-kJ-Nlh" viewBased="YES" id="TfE-be-mF8" userLabel="Library Table View" customClass="TableViewYouCanPressSpacebarOn" customModule="minimalTunes" customModuleProvider="target">
@@ -2677,7 +2677,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <tableView verticalHuggingPriority="750" placeholderIntrinsicWidth="833" placeholderIntrinsicHeight="583" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" rowSizeStyle="automatic" headerView="LV1-Gx-i0P" viewBased="YES" id="WGf-gu-WxG" userLabel="Auxiliary Playlist Table View" customClass="TableViewYouCanPressSpacebarOn" customModule="minimalTunes" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="1858" height="1"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1858" height="0.0"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <size key="intercellSpacing" width="3" height="2"/>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -3997,7 +3997,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                 <autoresizingMask key="autoresizingMask"/>
             </scroller>
             <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="n3V-Qi-JjV">
-                <rect key="frame" x="718" y="23" width="16" height="632"/>
+                <rect key="frame" x="-16" y="0.0" width="16" height="0.0"/>
                 <autoresizingMask key="autoresizingMask"/>
             </scroller>
             <tableHeaderView key="headerView" id="LV1-Gx-i0P">

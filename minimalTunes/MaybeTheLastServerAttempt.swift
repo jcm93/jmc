@@ -43,6 +43,82 @@ class P2PServer {
     
     func AddTracksForPlaylistData(playlistDictionary: NSDictionary) {
         //get tracks
+        let tracks = playlistDictionary["playlist"] as! [NSDictionary]
+        var addedArtists = NSMutableDictionary()
+        var addedAlbums = NSMutableDictionary()
+        var addedComposers = NSMutableDictionary()
+        var addedGenres = NSMutableDictionary()
+        for track in tracks {
+            let newTrack = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: managedContext) as! Track
+            newTrack.is_network = true
+            for field in track.allKeys as! [String] {
+                switch field {
+                case "is_enabled":
+                    newTrack.status = track["is_enabled"] as? Bool
+                case "name":
+                    newTrack.name = track["name"] as? String
+                case "time":
+                    newTrack.time = track["time"] as? NSNumber
+                case "artist":
+                    let artist = checkIfArtistExists(track["artist"])
+                    
+                case "album":
+                    dict["album"] = self.album?.name
+                case "date_added":
+                    dict["date_added"] = self.date_added
+                case "date_modified":
+                    dict["date_modified"] = self.date_modified
+                case "date_released":
+                    dict["date_released"] = self.album?.release_date
+                case "comments":
+                    dict["comments"] = self.comments
+                case "composer":
+                    dict["composer"] = self.composer?.name
+                case "disc_number":
+                    dict["disc_number"] = self.disc_number
+                case "equalizer_preset":
+                    dict["equalizer_preset"] = self.equalizer_preset
+                case "genre":
+                    dict["genre"] = self.genre?.name
+                case "kind":
+                    dict["kind"] = self.file_kind
+                case "date_last_played":
+                    dict["date_last_played"] = self.date_last_played
+                case "date_last_skipped":
+                    dict["date_last_skipped"] = self.date_last_skipped
+                case "movement_name":
+                    dict["movement_name"] = self.movement_name
+                case "movement_number":
+                    dict["movement_number"] = self.movement_number
+                case "play_count":
+                    dict["play_count"] = self.play_count
+                case "rating":
+                    dict["rating"] = self.rating
+                case "bit_rate":
+                    dict["bit_rate"] = self.bit_rate
+                case "sample_rate":
+                    dict["sample_rate"] = self.sample_rate
+                case "size":
+                    dict["size"] = self.size
+                case "skip_count":
+                    dict["skip_count"] = self.skip_count
+                case "sort_album":
+                    dict["sort_album"] = self.sort_album
+                case "sort_album_artist":
+                    dict["sort_album_artist"] = self.sort_album_artist
+                case "sort_artist":
+                    dict["sort_artist"] = self.sort_artist
+                case "sort_composer":
+                    dict["sort_composer"] = self.sort_composer
+                case "sort_name":
+                    dict["sort_name"] = self.sort_name
+                case "track_number":
+                    dict["track_number"] = self.track_num
+                default:
+                    break
+                }
+            }
+        }
         
     }
     
@@ -123,8 +199,9 @@ class P2PServer {
             self.onIncomingConnection(peer, connection: connection)
         }
         let visibleColumns = NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_SAVED_COLUMNS_STRING) as! NSDictionary
+        let visibleColumnsArray = visibleColumns.allKeysForObject(true) as! [String]
         let id = item.playlist!.id! as Int
-        askPeerForPlaylist(peer, connection: connection, id: id, visibleColumns: visibleColumns)
+        askPeerForPlaylist(peer, connection: connection, id: id, visibleColumns: visibleColumnsArray)
     }
     
     func parsePayload(peer: RemotePeer, connection: Connection, transfer: Transfer, requestDict: NSDictionary) {
@@ -175,8 +252,8 @@ class P2PServer {
                 sendPeerSourceList(peer, connection: connection)
             case "playlist":
                 let playlistID = requestDict["id"] as! Int
-                let visibleColumnsDictionary = requestDict["fields"] as! NSDictionary
-                sendPeerPlaylistInfo(peer, connection: connection, playlistID: playlistID, visibleColumns: visibleColumnsDictionary)
+                let visibleColumnsArray = requestDict["fields"] as! [String]
+                sendPeerPlaylistInfo(peer, connection: connection, playlistID: playlistID, visibleColumns: visibleColumnsArray)
             case "track":
                 let id = requestDict["id"] as! Int
                 sendPeerTrack(peer, connection: connection, trackID: id)
@@ -186,7 +263,7 @@ class P2PServer {
         
     }
     
-    func sendPeerPlaylistInfo(peer: RemotePeer, connection: Connection, playlistID: Int, visibleColumns: NSDictionary) {
+    func sendPeerPlaylistInfo(peer: RemotePeer, connection: Connection, playlistID: Int, visibleColumns: [String]) {
         let playlist = metadataDelegate.getPlaylist(playlistID, fields: visibleColumns)
         let playlistPayloadDictionary = NSMutableDictionary()
         playlistPayloadDictionary["type"] = "payload"
@@ -274,7 +351,7 @@ class P2PServer {
         }
     }
     
-    func askPeerForPlaylist(peer: RemotePeer, connection: Connection, id: Int, visibleColumns: NSDictionary) {
+    func askPeerForPlaylist(peer: RemotePeer, connection: Connection, id: Int, visibleColumns: [String]) {
         let requestDictionary = NSMutableDictionary()
         requestDictionary["type"] = "request"
         requestDictionary["request"] = "playlist"

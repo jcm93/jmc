@@ -43,13 +43,6 @@ class iTunesLibraryParser: NSObject {
     let songImportConstant = 10
     let sortImportConstant = 10
     
-    var artistSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_artist", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "sort_album", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "track_num", ascending:true), NSSortDescriptor(key: "name", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:)))]
-    var albumSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_album", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "track_num", ascending: true), NSSortDescriptor(key: "sort_name", ascending:true, selector: #selector(NSString.localizedStandardCompare(_:)))]
-    //var albumSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_album", ascending: true)]
-    var dateAddedSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "date_added", ascending: true, selector: #selector(NSDate.compare(_:))), NSSortDescriptor(key: "sort_artist", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "sort_album", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "track_num", ascending:true)]
-    var nameSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_name", ascending:true, selector: #selector(NSString.localizedStandardCompare(_:)))]
-    var timeSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "time", ascending: true), NSSortDescriptor(key: "sort_name", ascending:true, selector: #selector(NSString.localizedStandardCompare(_:)))]
-    
     
     init(path: String) throws {
         libDict = NSMutableDictionary(contentsOfFile: path)!
@@ -297,11 +290,6 @@ class iTunesLibraryParser: NSObject {
                     sort_album = XMLTrackDict!.objectForKey("Sort Album") as! String
                     cd_track.sort_album = sort_album
                 }
-                else {
-                    if cd_track.album != nil {
-                        cd_track.sort_album = (cd_track.album! as Album).name
-                    }
-                }
                 if (XMLTrackDict!.objectForKey("Genre") != nil) {
                     genre = XMLTrackDict!.objectForKey("Genre") as! String
                     if self.addedGenres.objectForKey(genre) != nil {
@@ -322,9 +310,6 @@ class iTunesLibraryParser: NSObject {
                 if (XMLTrackDict!.objectForKey("Sort Name") != nil) {
                     sort_name = XMLTrackDict!.objectForKey("Sort Name") as! String
                     cd_track.sort_name = sort_name
-                }
-                else {
-                    cd_track.sort_name = cd_track.name
                 }
                 if (XMLTrackDict!.objectForKey("Release Date") != nil) {
                     date_released = XMLTrackDict!.objectForKey("Release Date") as! NSDate
@@ -365,12 +350,6 @@ class iTunesLibraryParser: NSObject {
                     sort_album_artist = XMLTrackDict!.objectForKey("Sort Album Artist") as! String
                     cd_track.sort_album_artist = sort_album_artist
                 }
-                //why was this ever here?
-                /*else {
-                    if (cd_track.artist != nil) {
-                        cd_track.sort_artist = (cd_track.artist! as Artist).name
-                    }
-                }*/
                 if (XMLTrackDict!.objectForKey("Compilation") != nil) {
                     compilation = XMLTrackDict!.objectForKey("Compilation") as! Bool
                     cd_track.album?.is_compilation = compilation
@@ -386,7 +365,7 @@ class iTunesLibraryParser: NSObject {
             print("beginning sort")
             let poop = NSFetchRequest(entityName: "Track")
             var song_array = NSArray()
-            poop.sortDescriptors = self.artistSortDescriptors
+            poop.sortDescriptors = artistSortDescriptors
             let before = NSDate()
             do {
                 try song_array = self.moc.executeFetchRequest(poop)
@@ -401,71 +380,63 @@ class iTunesLibraryParser: NSObject {
             let diff = after.timeIntervalSinceDate(before)
             print(diff)
             print(song_array.count)
+            song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareArtist))
             let cachedArtistOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
-            let newCachedArtistOrder = NSEntityDescription.insertNewObjectForEntityForName("NewCachedOrder", inManagedObjectContext: self.moc) as! NewCachedOrder
-            var newCachedArtistIDArray = [Int]()
+
             for (index, item) in song_array.enumerate() {
                 (item as! Track).addOrdersObject(cachedArtistOrder)
-                newCachedArtistIDArray.append(Int((item as! Track).id!))
                 self.importSortUIUpdate(index)
             }
-            newCachedArtistOrder.id_array = newCachedArtistIDArray
-            newCachedArtistOrder.filtered_id_array = newCachedArtistIDArray
-            newCachedArtistOrder.order = "Artist"
             cachedArtistOrder.order = "Artist"
+            
             let cachedAlbumOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
-            let newCachedAlbumOrder = NSEntityDescription.insertNewObjectForEntityForName("NewCachedOrder", inManagedObjectContext: self.moc) as! NewCachedOrder
-            var newCachedAlbumIDArray = [Int]()
-            song_array = song_array.sortedArrayUsingDescriptors(self.albumSortDescriptors)
+            song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareAlbum(_:)))
             for (index, item) in song_array.enumerate() {
                 (item as! Track).addOrdersObject(cachedAlbumOrder)
-                newCachedAlbumIDArray.append(Int((item as! Track).id!))
                 self.importSortUIUpdate(index)
             }
-            newCachedAlbumOrder.id_array = newCachedAlbumIDArray
-            newCachedAlbumOrder.filtered_id_array = newCachedAlbumIDArray
-            newCachedAlbumOrder.order = "Album"
             cachedAlbumOrder.order = "Album"
+            
             let dateAddedOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
-            let newCachedDateAddedOrder = NSEntityDescription.insertNewObjectForEntityForName("NewCachedOrder", inManagedObjectContext: self.moc) as! NewCachedOrder
-            var newCachedDateAddedIDArray = [Int]()
-            song_array = song_array.sortedArrayUsingDescriptors(self.dateAddedSortDescriptors)
+            song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareDateAdded(_:)))
             for (index, item) in song_array.enumerate() {
                 (item as! Track).addOrdersObject(dateAddedOrder)
-                newCachedDateAddedIDArray.append(Int((item as! Track).id!))
                 self.importSortUIUpdate(index)
             }
-            newCachedDateAddedOrder.id_array = newCachedDateAddedIDArray
-            newCachedDateAddedOrder.filtered_id_array = newCachedDateAddedIDArray
-            newCachedDateAddedOrder.order = "Date Added"
             dateAddedOrder.order = "Date Added"
-            song_array = song_array.sortedArrayUsingDescriptors(self.timeSortDescriptors)
-            let cachedTimeOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
-            let newCachedTimeOrder = NSEntityDescription.insertNewObjectForEntityForName("NewCachedOrder", inManagedObjectContext: self.moc) as! NewCachedOrder
-            var newCachedTimeIDArray = [Int]()
-            for (index, item) in song_array.enumerate() {
-                (item as! Track).addOrdersObject(cachedTimeOrder)
-                newCachedTimeIDArray.append(Int((item as! Track).id!))
-                self.importSortUIUpdate(index)
-            }
-            newCachedTimeOrder.id_array = newCachedTimeIDArray
-            newCachedTimeOrder.filtered_id_array = newCachedTimeIDArray
-            newCachedTimeOrder.order = "Time"
-            cachedTimeOrder.order = "Time"
             
-            song_array = song_array.sortedArrayUsingDescriptors(self.nameSortDescriptors)
-            let cachedNameOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
-            let newCachedNameOrder = NSEntityDescription.insertNewObjectForEntityForName("NewCachedOrder", inManagedObjectContext: self.moc) as! NewCachedOrder
-            var newCachedNameIDArray = [Int]()
+            song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareAlbumArtist(_:)))
+            let cachedAlbumArtistOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
             for (index, item) in song_array.enumerate() {
-                (item as! Track).addOrdersObject(cachedNameOrder)
-                newCachedNameIDArray.append(Int((item as! Track).id!))
+                (item as! Track).addOrdersObject(cachedAlbumArtistOrder)
                 self.importSortUIUpdate(index)
             }
-            newCachedNameOrder.id_array = newCachedNameIDArray
-            newCachedNameOrder.filtered_id_array = newCachedNameIDArray
-            newCachedNameOrder.order = "Name"
-            cachedNameOrder.order = "Name"
+            cachedAlbumArtistOrder.order = "Album Artist"
+            
+            song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareKind(_:)))
+            let cachedKindOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
+            for (index, item) in song_array.enumerate() {
+                (item as! Track).addOrdersObject(cachedKindOrder)
+                self.importSortUIUpdate(index)
+            }
+            cachedKindOrder.order = "Kind"
+            
+            song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareDateReleased(_:)))
+            let cachedDateReleasedOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
+            for (index, item) in song_array.enumerate() {
+                (item as! Track).addOrdersObject(cachedDateReleasedOrder)
+                self.importSortUIUpdate(index)
+            }
+            cachedDateReleasedOrder.order = "Date Released"
+            
+            song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareGenre(_:)))
+            let cachedGenreOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
+            for (index, item) in song_array.enumerate() {
+                (item as! Track).addOrdersObject(cachedGenreOrder)
+                self.importSortUIUpdate(index)
+            }
+            cachedGenreOrder.order = "Genre"
+            
 
             print("done sorting")
             dispatch_async(dispatch_get_main_queue()) {

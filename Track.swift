@@ -15,10 +15,10 @@ class Track: NSManagedObject {
 // Insert code here to add functionality to your managed object subclass
     @NSManaged func addOrdersObject(order: CachedOrder)
     
-    func dictRepresentation(fields: NSDictionary) -> NSDictionary {
+    func dictRepresentation(fields: [String]) -> NSDictionary {
         let dict = NSMutableDictionary()
         for field in fields {
-            switch field.key as! String {
+            switch field {
             case "is_enabled":
                 dict["is_enabled"] = self.status
             case "name":
