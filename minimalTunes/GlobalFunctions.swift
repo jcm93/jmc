@@ -27,6 +27,8 @@ let fieldsToCachedOrdersDictionary: NSDictionary = [
     "genre" : "Genre"
 ]
 
+let sharedLibraryNamesDictionary = NSMutableDictionary()
+
 extension Track {
     @objc func compareArtist(other: Track) -> NSComparisonResult {
         let self_artist_name = (self.sort_artist != nil) ? self.sort_artist : self.artist?.name
@@ -216,7 +218,7 @@ let DEFAULTS_LIBRARY_NAME_STRING = "libraryName"
 let DEFAULTS_DATE_SORT_GRANULARITY = 500.0
 
 
-func checkIfArtistExists(name: String) -> Artist {
+func checkIfArtistExists(name: String) -> Artist? {
     let request = NSFetchRequest(entityName: "Artist")
     let predicate = NSPredicate(format: "name == %@", name)
     request.predicate = predicate
@@ -225,13 +227,62 @@ func checkIfArtistExists(name: String) -> Artist {
         if result.count > 0 {
             return result[0]
         } else {
-            let artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: managedContext) as! Artist
-            return artist
+            return nil
         }
     } catch {
         print("error checking artist: \(error)")
-        let artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: managedContext) as! Artist
-        return artist
+        return nil
+    }
+}
+
+func checkIfAlbumExists(name: String) -> Album? {
+    let request = NSFetchRequest(entityName: "Album")
+    let predicate = NSPredicate(format: "name == %@", name)
+    request.predicate = predicate
+    do {
+        let result = try managedContext.executeFetchRequest(request) as! [Album]
+        if result.count > 0 {
+            return result[0]
+        } else {
+            return nil
+        }
+    } catch {
+        print("error checking album: \(error)")
+        return nil
+    }
+}
+
+func checkIfComposerExists(name: String) -> Composer? {
+    let request = NSFetchRequest(entityName: "Composer")
+    let predicate = NSPredicate(format: "name == %@", name)
+    request.predicate = predicate
+    do {
+        let result = try managedContext.executeFetchRequest(request) as! [Composer]
+        if result.count > 0 {
+            return result[0]
+        } else {
+            return nil
+        }
+    } catch {
+        print("error checking copmoser: \(error)")
+        return nil
+    }
+}
+
+func checkIfGenreExists(name: String) -> Genre? {
+    let request = NSFetchRequest(entityName: "Genre")
+    let predicate = NSPredicate(format: "name == %@", name)
+    request.predicate = predicate
+    do {
+        let result = try managedContext.executeFetchRequest(request) as! [Genre]
+        if result.count > 0 {
+            return result[0]
+        } else {
+            return nil
+        }
+    } catch {
+        print("error checking genre: \(error)")
+        return nil
     }
 }
 

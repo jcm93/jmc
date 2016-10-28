@@ -17,6 +17,7 @@ class Track: NSManagedObject {
     
     func dictRepresentation(fields: [String]) -> NSDictionary {
         let dict = NSMutableDictionary()
+        dict["id"] = self.id
         for field in fields {
             switch field {
             case "is_enabled":

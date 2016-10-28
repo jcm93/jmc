@@ -15,14 +15,16 @@
                 <outlet property="artCollectionArrayController" destination="k9h-re-zJR" id="uSW-VV-Amo"/>
                 <outlet property="artCollectionView" destination="fSK-A2-yIi" id="mtz-eg-tdI"/>
                 <outlet property="artistAlbumLabel" destination="WNx-p0-gWl" id="MpA-ce-7KD"/>
-                <outlet property="auxPlaylistArrayController" destination="Au2-FV-L2z" id="gBJ-DI-hIA"/>
+                <outlet property="auxPlaylistArrayController" destination="Au2-FV-L2z" id="aRt-at-QNN"/>
+                <outlet property="auxPlaylistScrollView" destination="2w4-a3-IHY" id="Gag-oc-yff"/>
+                <outlet property="auxPlaylistTableView" destination="WGf-gu-WxG" id="PPi-gd-zvD"/>
                 <outlet property="columnVisibilityMenu" destination="2aO-7k-zwO" id="ywW-bz-gDA"/>
                 <outlet property="currentTimeLabel" destination="Adc-jG-fc7" id="q4N-D3-xDy"/>
                 <outlet property="durationLabel" destination="R9m-ID-EYY" id="iGY-Vm-qjm"/>
                 <outlet property="headerCellView" destination="5tn-Lb-Jpv" id="NO1-zq-xxG"/>
                 <outlet property="infoField" destination="FOU-Bi-82q" id="Fss-pL-ynq"/>
-                <outlet property="libraryTableScrollView" destination="2w4-a3-IHY" id="6Tf-6a-Q4g"/>
-                <outlet property="libraryTableView" destination="WGf-gu-WxG" id="FMV-u5-B8H"/>
+                <outlet property="libraryTableScrollView" destination="icK-Kc-DfH" id="9PD-ng-RSX"/>
+                <outlet property="libraryTableView" destination="TfE-be-mF8" id="9fD-PI-puv"/>
                 <outlet property="networkPlaylistArrayController" destination="Mua-QA-afe" id="QAq-HE-Nz9"/>
                 <outlet property="noMusicView" destination="bwS-Hr-eJh" id="LwG-hi-p6B"/>
                 <outlet property="progressBar" destination="c8A-nk-1SH" id="ldI-h2-WZR"/>
@@ -35,7 +37,7 @@
                 <outlet property="sourceListScrollView" destination="AtS-Cz-O6o" id="QQ5-5S-sFj"/>
                 <outlet property="sourceListTreeController" destination="ED6-xw-XxN" id="puS-wA-96Z"/>
                 <outlet property="sourceListView" destination="GPh-0Q-N2I" id="uIj-e4-YMV"/>
-                <outlet property="tableViewArrayController" destination="VLv-5K-zpN" id="uDf-8Z-PHv"/>
+                <outlet property="tableViewArrayController" destination="VLv-5K-zpN" id="SNb-iK-KX7"/>
                 <outlet property="theBox" destination="rTW-GT-cjN" id="N8D-h5-oSZ"/>
                 <outlet property="trackListTriangle" destination="jr9-jB-m4F" id="PqQ-C8-1Ub"/>
                 <outlet property="trackQueueTableView" destination="CuA-a2-Jaq" id="B4o-OU-nAc"/>
@@ -2677,7 +2679,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <tableView verticalHuggingPriority="750" placeholderIntrinsicWidth="833" placeholderIntrinsicHeight="583" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" rowSizeStyle="automatic" headerView="LV1-Gx-i0P" viewBased="YES" id="WGf-gu-WxG" userLabel="Auxiliary Playlist Table View" customClass="TableViewYouCanPressSpacebarOn" customModule="minimalTunes" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="1858" height="0.0"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1858" height="1"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <size key="intercellSpacing" width="3" height="2"/>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>

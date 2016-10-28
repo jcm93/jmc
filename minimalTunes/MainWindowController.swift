@@ -15,6 +15,12 @@ private var my_context = 0
 
 class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchFieldDelegate, NSTableViewDelegate, NSMenuDelegate {
     
+    @IBOutlet weak var libraryTableView: TableViewYouCanPressSpacebarOn!
+    @IBOutlet var auxPlaylistArrayController: DragAndDropArrayController!
+    @IBOutlet weak var auxPlaylistTableView: TableViewYouCanPressSpacebarOn!
+    @IBOutlet var auxPlaylistScrollView: NSScrollView!
+    @IBOutlet var tableViewArrayController: DragAndDropArrayController!
+    @IBOutlet weak var libraryTableScrollView: NSScrollView!
     @IBOutlet var columnVisibilityMenu: NSMenu!
     @IBOutlet weak var albumArtBox: NSBox!
     @IBOutlet weak var artworkToggle: NSButton!
@@ -23,8 +29,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     @IBOutlet weak var queueScrollView: NSScrollView!
     @IBOutlet weak var queueButton: NSButton!
     @IBOutlet weak var volumeSlider: NSSlider!
-    @IBOutlet weak var auxPlaylistTableView: TableViewYouCanPressSpacebarOn!
-    @IBOutlet weak var auxPlaylistScrollView: NSScrollView!
     @IBOutlet weak var librarySplitView: NSSplitView!
     @IBOutlet weak var advancedFilterScrollView: NSScrollView!
     @IBOutlet weak var trackQueueTableView: TableViewYouCanPressSpacebarOn!
@@ -40,13 +44,9 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     @IBOutlet weak var currentTimeLabel: NSTextField!
     @IBOutlet weak var theBox: NSBox!
     @IBOutlet weak var sourceListScrollView: NSScrollView!
-    @IBOutlet weak var libraryTableScrollView: NSScrollView!
     @IBOutlet weak var searchField: NSSearchField!
     @IBOutlet var sourceListTreeController: DragAndDropTreeController!
-    @IBOutlet var tableViewArrayController: DragAndDropArrayController!
-    @IBOutlet var auxPlaylistArrayController: DragAndDropArrayController!
     @IBOutlet weak var sourceListView: SourceListThatYouCanPressSpacebarOn!
-    @IBOutlet weak var libraryTableView: TableViewYouCanPressSpacebarOn!
     @IBOutlet weak var albumArtView: DragAndDropImageView!
     @IBOutlet var artCollectionArrayController: NSArrayController!
     @IBOutlet weak var infoField: NSTextField!
@@ -89,6 +89,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     var newCurrentOrder: NewCachedOrder?
     var asc: Bool?
     var is_streaming = false
+    var currentLibrary: Library?
     
     let numberFormatter = NSNumberFormatter()
     let dateFormatter = NSDateComponentsFormatter()
@@ -209,17 +210,41 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         }
     }
     
-    var didExpand = false
-    
-    func outlineViewItemDidExpand(notification: NSNotification) {
-    }
-    
     func outlineViewSelectionDidChange(notification: NSNotification) {
         
         let selection = sourceListTreeController.selectedNodes[0].representedObject! as! SourceListItem
         if selection.is_network == true {
             let server = self.delegate?.server
             server?.getDataForPlaylist(selection)
+            librarySplitView.removeArrangedSubview(libraryTableScrollView)
+            currentTableView = auxPlaylistTableView
+            currentArrayController = auxPlaylistArrayController
+            librarySplitView.addArrangedSubview(auxPlaylistScrollView)
+            auxPlaylistArrayController.content = selection.playlist?.tracks
+            updateInfo()
+            
+        } else if selection.playlist != nil {
+            var id_array: [Int]?
+            if (selection.playlist?.track_id_list != nil) {
+                id_array = selection.playlist?.track_id_list as! [Int]
+                auxPlaylistArrayController.fetchPredicate = NSPredicate(format: "id in %@", id_array!)
+            }
+            else {
+                auxPlaylistArrayController.fetchPredicate = NSPredicate(format: "id in {}")
+            }
+            librarySplitView.removeArrangedSubview(libraryTableScrollView)
+            currentArrayController = auxPlaylistArrayController
+            currentTableView = auxPlaylistTableView
+            librarySplitView.addArrangedSubview(auxPlaylistTableView)
+            updateInfo()
+            updateCachedSortsForPlaylist(id_array!)
+        } else {
+            librarySplitView.removeArrangedSubview(auxPlaylistScrollView)
+            currentTableView = libraryTableView
+            currentArrayController = tableViewArrayController
+            librarySplitView.addArrangedSubview(libraryTableScrollView)
+            updateInfo()
+            updateCachedSorts()
         }
         /*CATransaction.begin()
         CATransaction.setDisableActions(true)
@@ -499,88 +524,20 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             if focusedColumn != nil {
                 tableView.setIndicatorImage(nil, inTableColumn: focusedColumn!)
             }
-            if tableColumn.title == "Artist" {
-                tableView.setIndicatorImage(NSImage(named: "NSAscendingSortIndicator"), inTableColumn: tableColumn)
-                print("here")
-                if currentArrayController?.filterPredicate != nil || currentArrayController?.fetchPredicate != nil {
-                    print("non nil fetch predicate or filter predicate")
-                    let cachedOrder = cachedOrders.filter( {return $0.order == "Artist"})[0]
-                    currentArrayController!.content = cachedOrder.filtered_tracks?.array as! [Track]
-                    self.currentOrder = cachedOrder
-                } else {
-                    let cachedOrder = cachedOrders.filter( {return $0.order == "Artist"})[0]
-                    currentArrayController!.content = cachedOrder.tracks?.array as! [Track]
-                    self.currentOrder = cachedOrder
-                }
-                asc = true
-                focusedColumn = tableColumn
-            }
-            else if tableColumn.title == "Album" {
-                tableView.setIndicatorImage(NSImage(named: "NSAscendingSortIndicator"), inTableColumn: tableColumn)
-                print("here")
-                if currentArrayController?.filterPredicate != nil || currentArrayController?.fetchPredicate != nil {
-                    let cachedOrder = cachedOrders.filter( {return $0.order == "Album"})[0]
-                    currentArrayController!.content = cachedOrder.filtered_tracks?.array as! [Track]
-                    self.currentOrder = cachedOrder
-                } else {
-                    let cachedOrder = cachedOrders.filter( {return $0.order == "Album"})[0]
-                    currentArrayController!.content = cachedOrder.tracks?.array as! [Track]
-                    self.currentOrder = cachedOrder
-                }
-                asc = true
-                focusedColumn = tableColumn
-            }
-            else if tableColumn.title == "Date Added" {
-                tableView.setIndicatorImage(NSImage(named: "NSAscendingSortIndicator"), inTableColumn: tableColumn)
-                print("here")
-                if currentArrayController?.filterPredicate != nil || currentArrayController?.fetchPredicate != nil {
-                    let cachedOrder = cachedOrders.filter( {return $0.order == "Date Added"})[0]
-                    currentArrayController!.content = cachedOrder.filtered_tracks?.array as! [Track]
-                    self.currentOrder = cachedOrder
-                } else {
-                    let cachedOrder = cachedOrders.filter( {return $0.order == "Date Added"})[0]
-                    currentArrayController!.content = cachedOrder.tracks?.array as! [Track]
-                    self.currentOrder = cachedOrder
-                }
-                
-                asc = true
-                focusedColumn = tableColumn
-            }
-            else if tableColumn.title == "Time" {
-                tableView.setIndicatorImage(NSImage(named: "NSAscendingSortIndicator"), inTableColumn: tableColumn)
-                print("here")
-                if currentArrayController?.filterPredicate != nil || currentArrayController?.fetchPredicate != nil {
-                    let cachedOrder = cachedOrders.filter( {return $0.order == "Time"})[0]
-                    currentArrayController!.content = cachedOrder.filtered_tracks?.array as! [Track]
-                    self.currentOrder = cachedOrder
-                } else {
-                    let cachedOrder = cachedOrders.filter( {return $0.order == "Time"})[0]
-                    currentArrayController!.content = cachedOrder.tracks?.array as! [Track]
-                    self.currentOrder = cachedOrder
-                }
-                asc = true
-                focusedColumn = tableColumn
-            }
-            else if tableColumn.title == "Name" {
-                tableView.setIndicatorImage(NSImage(named: "NSAscendingSortIndicator"), inTableColumn: tableColumn)
-                print("here")
-                if currentArrayController?.filterPredicate != nil || currentArrayController?.fetchPredicate != nil {
-                    let cachedOrder = cachedOrders.filter( {return $0.order == "Name"})[0]
-                    currentArrayController!.content = cachedOrder.filtered_tracks?.array as! [Track]
-                    self.currentOrder = cachedOrder
-                } else {
-                    let cachedOrder = cachedOrders.filter( {return $0.order == "Name"})[0]
-                    currentArrayController!.content = cachedOrder.tracks?.array as! [Track]
-                    self.currentOrder = cachedOrder
-                }
-                asc = true
-                focusedColumn = tableColumn
+            tableView.setIndicatorImage(NSImage(named: "NSAscendingSortIndicator"), inTableColumn: tableColumn)
+            focusedColumn = tableColumn
+            asc = true
+            let cachedOrderArray = cachedOrders.filter({return $0.order == tableColumn.title && $0.library == self.currentLibrary})
+            if cachedOrderArray.count > 0 {
+                let order = cachedOrderArray[0]
+                self.currentOrder = order
+                currentArrayController!.content = (currentArrayController?.filterPredicate != nil || currentArrayController?.fetchPredicate != nil) ? order.filtered_tracks!.array as! [Track] : order.tracks!.array as! [Track]
+            } else {
+                let sortDescriptor = NSSortDescriptor(key: tableColumn.identifier, ascending: true)
+                currentArrayController?.sortDescriptors = [sortDescriptor]
             }
         }
-        print(tableViewArrayController.selectedObjects)
-        print(libraryTableView.selectedRowIndexes)
-        NSUserDefaults.standardUserDefaults().setBool(asc!, forKey: "currentAsc")
-        tableView.reloadData()
+        currentTableView!.reloadData()
     }
     
     func refreshTableView() {
@@ -1151,7 +1108,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "checkEmbeddedArtwork")
         NSUserDefaults.standardUserDefaults().setObject("http://localhost:20012/doingles", forKey: "testIP")
         NSUserDefaults.standardUserDefaults().setObject("http://localhost:20012/list", forKey: "testIPList")
-        networkPlaylistTableView.mainWindowController = self
         //self.sourceListTreeController.checkNetworkedLibrary()
         self.populateIsVisibleDict()
         self.initializeColumnVisibilityMenu(self.currentTableView!)

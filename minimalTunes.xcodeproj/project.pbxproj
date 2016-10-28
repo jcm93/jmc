@@ -33,7 +33,6 @@
 		0D84EDEC1DA32ADF0057411F /* NetworkPlaylistTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D84EDEB1DA32ADF0057411F /* NetworkPlaylistTableView.swift */; };
 		0D8D4A171D90868500FA1603 /* LocationManagerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8D4A151D90868500FA1603 /* LocationManagerController.swift */; };
 		0D8D4A181D90868500FA1603 /* LocationManagerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8D4A161D90868500FA1603 /* LocationManagerController.xib */; };
-		0D9ABE171D9C4C80000064EA /* SocketServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D9ABE161D9C4C80000064EA /* SocketServer.m */; };
 		0D9CE6711D334F97004FA8CB /* ImportWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */; };
 		0D9CE6721D334F97004FA8CB /* ImportWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D9CE6701D334F97004FA8CB /* ImportWindowController.xib */; };
 		0D9CE6751D34128B004FA8CB /* InitialSetupWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */; };
@@ -137,7 +136,6 @@
 		0D84EDEB1DA32ADF0057411F /* NetworkPlaylistTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkPlaylistTableView.swift; sourceTree = "<group>"; };
 		0D8D4A151D90868500FA1603 /* LocationManagerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManagerController.swift; sourceTree = "<group>"; };
 		0D8D4A161D90868500FA1603 /* LocationManagerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationManagerController.xib; sourceTree = "<group>"; };
-		0D9ABE161D9C4C80000064EA /* SocketServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocketServer.m; sourceTree = "<group>"; };
 		0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportWindowController.swift; sourceTree = "<group>"; };
 		0D9CE6701D334F97004FA8CB /* ImportWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImportWindowController.xib; sourceTree = "<group>"; };
 		0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InitialSetupWindowController.swift; sourceTree = "<group>"; };
@@ -240,7 +238,6 @@
 				0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */,
 				0DE74A521D7D9457005211E6 /* SharedLibraryRequestHandler.swift */,
 				0DE523331DA1ABA100C6BF05 /* MaybeTheLastServerAttempt.swift */,
-				0D9ABE161D9C4C80000064EA /* SocketServer.m */,
 				0DA749C71D49EAB900F024B8 /* NSDataCompression.swift */,
 				0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */,
 				0D79409E1D13D2D5008AA167 /* stupidPlaybackObserver.swift */,
@@ -651,7 +648,6 @@
 				0DAB30911CFBA3340028928F /* AppDelegate.swift in Sources */,
 				0D76F6AA1D270EB900C6E70F /* DragAndDropArrayController.swift in Sources */,
 				0DEF66C31D383A8700EA3ADC /* ViewCoordinator.swift in Sources */,
-				0D9ABE171D9C4C80000064EA /* SocketServer.m in Sources */,
 				0DD7D6DB1D3F3A350035BAD8 /* AlbumArtwork.swift in Sources */,
 				0DF4BEEE1CFBE4CB00AC5824 /* iTunesLibraryParser.swift in Sources */,
 				0DEF66C41D383A8700EA3ADC /* Property+CoreDataProperties.swift in Sources */,

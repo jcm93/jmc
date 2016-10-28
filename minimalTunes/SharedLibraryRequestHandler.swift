@@ -88,6 +88,8 @@ class SharedLibraryRequestHandler {
     }
     
     func getCachedOrders(fields: [String], id_array: [Int]) -> [NSDictionary]? {
+        //takes an array of track IDs about to be sent over the wire, and compiles the cached orders for sorting them, filtered according to what fields are displayed in the peer's table.
+        //returns array of dictionaries, whose gots arrays of ints insides em
         var cachedOrdersDictionary = [NSDictionary]()
         let filterDictionary = NSMutableDictionary()
         for id in id_array {
@@ -120,7 +122,7 @@ class SharedLibraryRequestHandler {
         
         for order in filteredOrders {
             let cachedOrderDictionary = NSMutableDictionary()
-            let array = order.tracks!.filter( {return ((filterDictionary[($0 as! Track).id!] as? Bool) == true)}) as! [Track]
+            let array = (order.tracks?.array as! [Track]).map({return $0.id!}).filter({return filterDictionary[$0] as! Bool == true})
             cachedOrderDictionary["name"] = order.order
             cachedOrderDictionary["tracks"] = array
             cachedOrdersDictionary.append(cachedOrderDictionary)

@@ -18,8 +18,7 @@ class P2PServer {
     let namePeerDictionary = NSMutableDictionary()
     var isStreaming = false
     var isPlayingBackStream = false
-    
-    var streamingData = NSMutableData()
+
     
     init(_delegate: AppDelegate) {
         self.delegate = _delegate
@@ -41,18 +40,25 @@ class P2PServer {
         )
     }
     
-    func AddTracksForPlaylistData(playlistDictionary: NSDictionary) {
+    func addTracksForPlaylistData(playlistDictionary: NSDictionary, item: SourceListItem) {
         //get tracks
         let tracks = playlistDictionary["playlist"] as! [NSDictionary]
-        var addedArtists = NSMutableDictionary()
-        var addedAlbums = NSMutableDictionary()
-        var addedComposers = NSMutableDictionary()
-        var addedGenres = NSMutableDictionary()
+        let cachedSorts = playlistDictionary["orders"] as! [NSDictionary]
+        let addedArtists = NSMutableDictionary()
+        let addedAlbums = NSMutableDictionary()
+        let addedComposers = NSMutableDictionary()
+        let addedGenres = NSMutableDictionary()
+        let addedTracks = NSMutableDictionary()
         for track in tracks {
             let newTrack = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: managedContext) as! Track
             newTrack.is_network = true
             for field in track.allKeys as! [String] {
+                let trackArtist: Artist
                 switch field {
+                case "id":
+                    let id = track["id"] as! Int
+                    newTrack.id = track["id"] as? Int
+                    addedTracks[id] = newTrack
                 case "is_enabled":
                     newTrack.status = track["is_enabled"] as? Bool
                 case "name":
@@ -60,64 +66,162 @@ class P2PServer {
                 case "time":
                     newTrack.time = track["time"] as? NSNumber
                 case "artist":
-                    let artist = checkIfArtistExists(track["artist"])
-                    
+                    let artistName = track["artist"] as! String
+                    let artist: Artist = {
+                        if addedArtists[artistName] != nil {
+                            return addedArtists[artistName] as! Artist
+                        } else {
+                            let artistCheck = checkIfArtistExists(artistName)
+                            if artistCheck == nil {
+                                let artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: managedContext) as! Artist
+                                artist.name = artistName
+                                artist.is_network = true
+                                addedArtists[artistName] = artist
+                                return artist
+                            } else {
+                                return artistCheck!
+                            }
+                        }
+                    }()
+                    newTrack.artist = artist
+                    trackArtist = artist
                 case "album":
-                    dict["album"] = self.album?.name
+                    let albumName = track["album"] as! String
+                    let album: Album = {
+                        if addedAlbums[albumName] != nil {
+                            return addedAlbums[albumName] as! Album
+                        } else {
+                            let albumCheck = checkIfAlbumExists(albumName)
+                            if albumCheck == nil {
+                                let album = NSEntityDescription.insertNewObjectForEntityForName("Album", inManagedObjectContext: managedContext) as! Album
+                                album.name = albumName
+                                album.is_network = true
+                                addedAlbums[albumName] = album
+                                return album
+                            } else {
+                                return albumCheck!
+                            }
+                        }
+                    }()
+                    newTrack.album = album
                 case "date_added":
-                    dict["date_added"] = self.date_added
+                    newTrack.date_added = track["date_added"] as? NSDate
                 case "date_modified":
-                    dict["date_modified"] = self.date_modified
+                    newTrack.date_modified = track["date_modified"] as? NSDate
                 case "date_released":
-                    dict["date_released"] = self.album?.release_date
+                    newTrack.album?.release_date = track["date_released"] as? NSDate
                 case "comments":
-                    dict["comments"] = self.comments
+                    newTrack.comments = track["comments"] as? String
                 case "composer":
-                    dict["composer"] = self.composer?.name
+                    let composerName = track["composer"] as! String
+                    let composer: Composer = {
+                        if addedComposers[composerName] != nil {
+                            return addedComposers[composerName] as! Composer
+                        } else {
+                            let composerCheck = checkIfComposerExists(composerName)
+                            if composerCheck == nil {
+                                let composer = NSEntityDescription.insertNewObjectForEntityForName("Composer", inManagedObjectContext: managedContext) as! Composer
+                                composer.name = composerName
+                                composer.is_network = true
+                                addedComposers[composerName] = composer
+                                return composer
+                            } else {
+                                return composerCheck!
+                            }
+                        }
+                    }()
+                    newTrack.composer = composer
                 case "disc_number":
-                    dict["disc_number"] = self.disc_number
+                    newTrack.disc_number = track["disc_number"] as? Int
                 case "equalizer_preset":
-                    dict["equalizer_preset"] = self.equalizer_preset
+                    newTrack.equalizer_preset = track["equalizer_preset"] as? String
                 case "genre":
-                    dict["genre"] = self.genre?.name
+                    let genreName = track["genre"] as! String
+                    let genre: Genre = {
+                        if addedComposers[genreName] != nil {
+                            return addedGenres[genreName] as! Genre
+                        } else {
+                            let genreCheck = checkIfGenreExists(genreName)
+                            if genreCheck == nil {
+                                let genre = NSEntityDescription.insertNewObjectForEntityForName("Genre", inManagedObjectContext: managedContext) as! Genre
+                                genre.name = genreName
+                                genre.is_network = true
+                                addedGenres[genreName] = genre
+                                return genre
+                            } else {
+                                return genreCheck!
+                            }
+                        }
+                    }()
+                    newTrack.genre = genre
                 case "kind":
-                    dict["kind"] = self.file_kind
+                    newTrack.file_kind = track["kind"] as? String
                 case "date_last_played":
-                    dict["date_last_played"] = self.date_last_played
+                    newTrack.date_last_played = track["date_last_played"] as? NSDate
                 case "date_last_skipped":
-                    dict["date_last_skipped"] = self.date_last_skipped
+                    newTrack.date_last_skipped = track["date_last_skipped"] as? NSDate
                 case "movement_name":
-                    dict["movement_name"] = self.movement_name
+                    newTrack.movement_name = track["movement_name"] as? String
                 case "movement_number":
-                    dict["movement_number"] = self.movement_number
+                    newTrack.movement_number = track["movement_number"] as? Int
                 case "play_count":
-                    dict["play_count"] = self.play_count
+                    newTrack.play_count = track["play_count"] as? Int
                 case "rating":
-                    dict["rating"] = self.rating
+                    newTrack.rating = track["rating"] as? Int
                 case "bit_rate":
-                    dict["bit_rate"] = self.bit_rate
+                    newTrack.bit_rate = track["bit_rate"] as? Int
                 case "sample_rate":
-                    dict["sample_rate"] = self.sample_rate
+                    newTrack.sample_rate = track["sample_Rate"] as? Int
                 case "size":
-                    dict["size"] = self.size
+                    newTrack.size = track["size"] as? Int
                 case "skip_count":
-                    dict["skip_count"] = self.skip_count
+                    newTrack.skip_count = track["skip_count"] as? Int
                 case "sort_album":
-                    dict["sort_album"] = self.sort_album
+                    newTrack.sort_album = track["sort_album"] as? String
                 case "sort_album_artist":
-                    dict["sort_album_artist"] = self.sort_album_artist
+                    newTrack.sort_album_artist = track["sort_album_artist"] as? String
                 case "sort_artist":
-                    dict["sort_artist"] = self.sort_artist
+                    newTrack.sort_artist = track["sort_artist"] as? String
                 case "sort_composer":
-                    dict["sort_composer"] = self.sort_composer
+                    newTrack.sort_composer = track["sort_composer"] as? String
                 case "sort_name":
-                    dict["sort_name"] = self.sort_name
+                    newTrack.sort_name = track["sort_name"] as? String
                 case "track_number":
-                    dict["track_number"] = self.track_num
+                    newTrack.track_num = track["track_number"] as? Int
+                case "album_artist":
+                    let artistName = track["album_artist"] as! String
+                    let artist: Artist = {
+                        if addedArtists[artistName] != nil {
+                            return addedArtists[artistName] as! Artist
+                        } else {
+                            let artistCheck = checkIfArtistExists(artistName)
+                            if artistCheck == nil {
+                                let artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: managedContext) as! Artist
+                                artist.name = artistName
+                                artist.is_network = true
+                                addedArtists[artistName] = artist
+                                return artist
+                            } else {
+                                return artistCheck!
+                            }
+                        }
+                    }()
+                    newTrack.album?.album_artist = artist
                 default:
                     break
                 }
             }
+            item.playlist?.addTracksObject(newTrack)
+        }
+        for order in cachedSorts {
+            let id_array = order["tracks"] as! [Int]
+            let track_array = id_array.map({return addedTracks[$0]}) as! [Track]
+            let cachedOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: managedContext) as! CachedOrder
+            cachedOrder.order = order["name"] as? String
+            cachedOrder.tracks = NSOrderedSet(array: track_array)
+            let libraryName = playlistDictionary["library"] as! String
+            cachedOrder.library = sharedLibraryNamesDictionary[libraryName] as? Library
+            cachedOrder.is_network = true
         }
         
     }
@@ -142,22 +246,6 @@ class P2PServer {
         connection.onTransfer = { connection, transfer in
             transfer.onProgress = {transfer in print("current progress: \(transfer.progress) of \(transfer.length)") }
             transfer.onCompleteData = {transfer, data in self.parseTransfer(peer, connection: connection, transfer: transfer, data: data) }
-        }
-    }
-    
-    func startStreaming(peer: RemotePeer, connection: Connection) {
-        connection.onTransfer = { connection, transfer in
-            transfer.onPartialData = { transfer, data in
-                self.streamingData.appendData(data)
-                if self.isPlayingBackStream == false {
-                    let newTrack = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: managedContext) as! Track
-                    let fuck = (NSApplication.sharedApplication().delegate as? AppDelegate)!.mainWindowController!
-                    let fuck2 = fuck.queue
-                    newTrack.name = (fuck.networkPlaylistArrayController.selectedObjects[0] as! NetworkTrack).name
-                    print(newTrack.location)
-                    self.isPlayingBackStream = true
-                }
-            }
         }
     }
     
@@ -187,7 +275,6 @@ class P2PServer {
             self.onIncomingConnection(peer, connection: connection)
         }
         askPeerForSong(peer, connection: connection, id: id)
-        
     }
     
     func getDataForPlaylist(item: SourceListItem) {
@@ -222,7 +309,8 @@ class P2PServer {
             case "playlist":
                 let id = requestDict["id"] as! Int
                 let item = interface.getNetworkPlaylistWithID(id)
-                let songs = requestDict["playlist"] as! [NSDictionary]
+                let playlist = requestDict["playlist"] as! NSDictionary
+                addTracksForPlaylistData(playlist, item: item)
                 interface.addSongsToNetworkedLibrary(item, songs: songs)
                 print("the tingler got a playlist")
             case "track":
@@ -268,6 +356,7 @@ class P2PServer {
         let playlistPayloadDictionary = NSMutableDictionary()
         playlistPayloadDictionary["type"] = "payload"
         playlistPayloadDictionary["payload"] = "playlist"
+        playlistPayloadDictionary["library"] = NSUserDefaults.standardUserDefaults().stringForKey(DEFAULTS_LIBRARY_NAME_STRING)
         playlistPayloadDictionary["id"] = playlistID
         playlistPayloadDictionary["playlist"] = playlist
         var serializedDict: NSData!
