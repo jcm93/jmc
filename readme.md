@@ -11,13 +11,16 @@ Out of that simple idea comes meTunes. meTunes aims to replace iTunes for users 
 
 Why meTunes?
 
-  - Removes the massive headaches associated with migrating, transferring or otherwise modifying your music library and its underlying filesystem organization. Metadata is serialized in a sane way, and can be easily modified by the user.
-  - Lets you meaningfully curate your album artwork.
-  - Custom fields for sorting and searching.
-  - Shared libraries. 
-  - Plays albums all the way through, in the correct order. We have the technology!
-  - Fast, and un-bloated.
+  - Removes the massive headaches associated with using iTunes to migrate, transfer or otherwise modify your music library metadata and its underlying filesystem organization. Metadata is serialized in a sane way, and can be easily modified by the user. Tags are optionally written to files.
+  - Offers meaningful curation of album artwork. Keep track of covers, inserts, miscellaneous PDFs, et cetera.
+  - Users can define their own rich custom properties for media, which can be used for sorting, searching and playlist creation.
+  - Shared libraries.
+  - Better interface for playlist creation and song queue management.
+  - Plays albums all the way through, in the correct order, with gapless and bit-perfect playback. We have the technology!
+  - Un-bloated.
   - Open source!
+
+meTunes is basically an old version of iTunes with some sensible ideas and features thrown in.
 
 Installation
 ------------
