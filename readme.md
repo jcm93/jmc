@@ -7,7 +7,7 @@ About
 ![screenshot](https://i.imgur.com/UJJ1qC0.png)
 meTunes is based on the fundamental belief that a well-designed music library manager should play your albums in the correct order. And let you look at the album art while you play them!
 
-Out of that simple idea, and after several months of development, comes meTunes. meTunes aims to replace iTunes for users with large personal libraries and no interest in subscription-based streaming services.
+Out of that simple idea comes meTunes. meTunes aims to replace iTunes for users with large personal libraries and no interest in subscription-based streaming services.
 
 Why meTunes?
 
