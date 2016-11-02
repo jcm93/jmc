@@ -11,13 +11,13 @@ Out of that simple idea, and after several months of development, comes meTunes.
 
 Why meTunes?
 
-    --Removes the massive headaches associated with migrating, transferring or otherwise modifying your music library and its underlying filesystem organization. Metadata is serialized in a sane way, and can be easily modified by the user.
-    --Lets you meaningfully curate your album artwork.
-    --Custom fields for sorting and searching.
-    --Shared libraries. 
-    --Plays albums all the way through, in the correct order. We have the technology!
-    --Fast, and un-bloated.
-    --Open source!
+  - Removes the massive headaches associated with migrating, transferring or otherwise modifying your music library and its underlying filesystem organization. Metadata is serialized in a sane way, and can be easily modified by the user.
+  - Lets you meaningfully curate your album artwork.
+  - Custom fields for sorting and searching.
+  - Shared libraries. 
+  - Plays albums all the way through, in the correct order. We have the technology!
+  - Fast, and un-bloated.
+  - Open source!
 
 Installation
 ------------
