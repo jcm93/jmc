@@ -311,7 +311,6 @@ class P2PServer {
                 let item = interface.getNetworkPlaylistWithID(id)
                 let playlist = requestDict["playlist"] as! NSDictionary
                 addTracksForPlaylistData(playlist, item: item)
-                interface.addSongsToNetworkedLibrary(item, songs: songs)
                 print("the tingler got a playlist")
             case "track":
                 guard delegate.mainWindowController?.is_streaming == true else {return}

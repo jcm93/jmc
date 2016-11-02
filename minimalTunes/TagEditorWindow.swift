@@ -66,7 +66,7 @@ class TagEditorWindow: NSWindowController {
             editAlbum(selectedTracks, albumName: albumField.stringValue)
         }
         print(selectedTracks)
-        for order in mainWindowController!.cachedOrders {
+        for order in mainWindowController!.cachedOrders! {
             reorderForTracks(self.selectedTracks!, cachedOrder: order)
         }
         self.mainWindowController?.refreshTableView()

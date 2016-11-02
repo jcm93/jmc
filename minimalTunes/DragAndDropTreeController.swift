@@ -94,20 +94,6 @@ class DragAndDropTreeController: NSTreeController, NSOutlineViewDataSource {
         }
     }
     
-    func addSongsToNetworkedLibrary(item: SourceListItem, songs: [NSDictionary]) {
-        for song in songs {
-            let track = NSEntityDescription.insertNewObjectForEntityForName("NetworkTrack", inManagedObjectContext: managedContext) as! NetworkTrack
-            track.id = song["id"] as? Int
-            track.album_name = song["album_name"] as? String
-            track.artist_name = song["artist_name"] as? String
-            track.name = song["name"] as? String
-            track.time = song["time"] as? Int
-            track.addPlaylistObject(item.playlist!)
-        }
-        (NSApplication.sharedApplication().delegate as! AppDelegate).mainWindowController?.networkPlaylistArrayController.content = item.playlist?.network_tracks
-        (NSApplication.sharedApplication().delegate as! AppDelegate).mainWindowController?.networkPlaylistTableView.reloadData()
-    }
-    
     func removeNetworkedLibrary(name: String) {
         let item = networkedLibraries[name] as! SourceListItem
         //remove it

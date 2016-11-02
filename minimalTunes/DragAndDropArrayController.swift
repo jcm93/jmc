@@ -16,7 +16,6 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         print("sort des did change called")
         
     }
-
     
     func tableView(tableView: NSTableView, writeRowsWithIndexes rowIndexes: NSIndexSet, toPasteboard pboard: NSPasteboard) -> Bool {
         print("table view writerows called")

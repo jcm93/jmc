@@ -23,10 +23,10 @@
                 <outlet property="durationLabel" destination="R9m-ID-EYY" id="iGY-Vm-qjm"/>
                 <outlet property="headerCellView" destination="5tn-Lb-Jpv" id="NO1-zq-xxG"/>
                 <outlet property="infoField" destination="FOU-Bi-82q" id="Fss-pL-ynq"/>
+                <outlet property="librarySplitView" destination="wUo-rb-c1E" id="uk7-b7-jOL"/>
                 <outlet property="libraryTableScrollView" destination="icK-Kc-DfH" id="9PD-ng-RSX"/>
-                <outlet property="libraryTableView" destination="TfE-be-mF8" id="9fD-PI-puv"/>
-                <outlet property="networkPlaylistArrayController" destination="Mua-QA-afe" id="QAq-HE-Nz9"/>
-                <outlet property="noMusicView" destination="bwS-Hr-eJh" id="LwG-hi-p6B"/>
+                <outlet property="libraryTableView" destination="TfE-be-mF8" id="P2k-Ng-vWH"/>
+                <outlet property="noMusicView" destination="bwS-Hr-eJh" id="3YZ-hx-K8L"/>
                 <outlet property="progressBar" destination="c8A-nk-1SH" id="ldI-h2-WZR"/>
                 <outlet property="progressBarView" destination="ErT-xb-uP3" id="1Fd-8B-I8j"/>
                 <outlet property="queueButton" destination="gzN-xP-Utz" id="gCB-as-x4o"/>
@@ -934,7 +934,7 @@
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                             <prototypeCellViews>
-                                                                <tableCellView id="acG-GR-wAX">
+                                                                <tableCellView identifier="name" id="acG-GR-wAX">
                                                                     <rect key="frame" x="61" y="1" width="44" height="17"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
@@ -945,9 +945,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.name" id="HCm-lJ-RWt"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -955,13 +952,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.name" id="OU7-iT-6dL">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="time" width="39.64453125" minWidth="10" maxWidth="3.4028234663852886e+38" id="efI-lF-0bo" userLabel="Time">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Time">
@@ -987,13 +977,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.time" id="bHg-y5-aJW">
-                                                                                    <dictionary key="options">
-                                                                                        <string key="NSValueTransformerName">AssTransform</string>
-                                                                                    </dictionary>
-                                                                                </binding>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1001,14 +984,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.time" id="L3k-ob-rJu">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                        <string key="NSValueTransformerName">AssTransform</string>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="artist" width="40" minWidth="40" maxWidth="1000" id="aOm-8Q-Cb5">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Artist">
@@ -1034,9 +1009,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.artist.name" id="DVN-uf-wPT"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1044,13 +1016,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="content" id="rar-oU-rVR">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="album" width="44.0546875" minWidth="10" maxWidth="3.4028234663852886e+38" id="Fmv-Yp-WCh">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Album">
@@ -1076,9 +1041,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.album.name" id="GAY-rf-h96"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1086,13 +1048,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects" id="dum-k3-rKW">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="date_added" width="72.609375" minWidth="10" maxWidth="3.4028234663852886e+38" id="1La-zC-xWh">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Added">
@@ -1118,9 +1073,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.date_added" id="Mh5-Mc-O4j"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1128,13 +1080,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.date_added" id="xO1-hA-F3C">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="date_modified" width="89.54296875" minWidth="10" maxWidth="3.4028234663852886e+38" id="Lrt-35-KWl">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Modified">
@@ -1160,9 +1105,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.date_modified" id="uVR-X7-ffc"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1170,13 +1112,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.date_modified" id="Hzh-ex-7e6">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="date_released" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="hmI-vA-Q9R">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Released">
@@ -1209,13 +1144,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.release_date" id="isS-rM-asL">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="comments" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="sIZ-Nd-bW6">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Comments">
@@ -1241,9 +1169,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.comments" id="edT-YT-nTY"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1251,13 +1176,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.comments" id="a6b-xh-cde">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="composer" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="30x-O2-OCn">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Composer">
@@ -1283,9 +1201,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.composer.name" id="NLn-H4-6T0"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1293,13 +1208,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects" id="6h0-oM-C9W">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="disc_number" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="sjW-TU-RDv">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Disc Number">
@@ -1325,9 +1233,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.disc_number" id="oKH-Qp-SUW"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1335,15 +1240,8 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.disc_number" id="66a-mx-VVv">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
-                                                        <tableColumn identifier="equalizer" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="BWm-mq-mb6" userLabel="Equalizer">
+                                                        <tableColumn identifier="equalizer_preset" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="BWm-mq-mb6" userLabel="Equalizer">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Equalizer">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1367,9 +1265,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.equalizer_preset" id="Y8J-pE-5fT"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1377,13 +1272,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.equalizer_preset" id="toP-Ip-ETO">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="genre" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="XPl-iX-Rbe">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Genre">
@@ -1409,9 +1297,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.genre" id="mm7-eI-XaU"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1419,15 +1304,8 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.genre" id="9q2-iB-nqd">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
-                                                        <tableColumn identifier="kind" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="J9d-GL-gj0" userLabel="Kind">
+                                                        <tableColumn identifier="file_kind" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="J9d-GL-gj0" userLabel="Kind">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Kind">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1451,9 +1329,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.file_kind" id="TzJ-HI-4fG"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1461,15 +1336,8 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.file_kind" id="GiW-IC-D5V">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
-                                                        <tableColumn identifier="last_played" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="f5Y-9f-gsn">
+                                                        <tableColumn identifier="date_last_played" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="f5Y-9f-gsn">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Last Played">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1493,9 +1361,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.date_last_played" id="tb3-dK-oPv"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1503,15 +1368,8 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.date_last_played" id="Mth-AP-LLY">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
-                                                        <tableColumn identifier="last_skipped" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="o4b-ml-Ndb">
+                                                        <tableColumn identifier="date_last_skipped" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="o4b-ml-Ndb">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Last Skipped">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1535,9 +1393,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.date_last_skipped" id="M9X-1Q-vZD"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1545,13 +1400,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.date_last_skipped" id="4yO-8B-EwG">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="movement_name" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="fP8-DK-x0Y">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Movement Name">
@@ -1577,9 +1425,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.movement_name" id="YVp-3V-f3D"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1587,13 +1432,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.movement_name" id="UVa-4r-P1u">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="movement_number" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="HNm-FO-o1r">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Movement Number">
@@ -1619,9 +1457,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.movement_number" id="FxV-aR-kBg"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1629,13 +1464,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.movement_number" id="QxF-6F-GeM">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="play_count" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="I8U-bB-rQw">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Play Count">
@@ -1661,9 +1489,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.play_count" id="vv7-VM-iRu"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1671,13 +1496,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.play_count" id="nJl-Uj-EGR">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="rating" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="h7s-Er-Na1">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Rating">
@@ -1703,9 +1521,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.rating" id="jt7-23-rT4"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1713,13 +1528,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.rating" id="4Vg-Ex-cf4">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="bit_rate" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="gp0-nu-8MJ" userLabel="Bit Rate">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Bit Rate">
@@ -1745,9 +1553,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.bit_rate" id="crV-99-5oY"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1755,13 +1560,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.bit_rate" id="H36-Qk-jUB">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="sample_rate" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="cs6-um-D0e">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sample Rate">
@@ -1787,9 +1585,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.sample_rate" id="TE3-QM-LUE"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1797,13 +1592,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.sample_rate" id="uEN-yE-rPd">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="size" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="98j-9R-avd">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Size">
@@ -1829,9 +1617,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.size" id="RQv-7v-zj6"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1839,13 +1624,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.size" id="wK2-8x-tga">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="skip_count" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="Wsc-dm-Hv1">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Skip Count">
@@ -1871,9 +1649,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.skip_count" id="7Qa-ha-2SK"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1881,13 +1656,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.skip_count" id="fRp-EI-uGS">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="sort_album" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="FQS-Db-kln">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sort Album">
@@ -1913,9 +1681,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.sort_album" id="AJn-VU-TMg"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1923,13 +1688,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.sort_album" id="IVI-AB-zdM">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="sort_album_artist" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="IrQ-hD-jj8">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sort Album Artist">
@@ -1955,9 +1713,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.sort_album_artist" id="7TF-wF-1qh"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -1965,13 +1720,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.sort_album_artist" id="s2h-L9-0gn">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="sort_artist" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="iUp-W5-8ur">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sort Artist">
@@ -1997,9 +1745,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.sort_artist" id="dM2-hQ-HJG"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -2007,13 +1752,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.sort_artist" id="rv9-Sc-XNP">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="sort_composer" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="z3d-iX-j0G">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sort Composer">
@@ -2039,9 +1777,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.sort_composer" id="eoC-S1-P9B"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -2049,13 +1784,6 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.sort_composer" id="jE5-Wm-LGc">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="sort_name" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="BJv-Id-GxD">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sort Name">
@@ -2081,9 +1809,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.sort_name" id="pIo-uo-0ii"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -2091,15 +1816,8 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.sort_name" id="WPJ-aB-B4N">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
-                                                        <tableColumn identifier="track_number" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="w1w-FR-7yP">
+                                                        <tableColumn identifier="track_num" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="w1w-FR-7yP">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Track Number">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -2123,9 +1841,6 @@
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.track_num" id="X0y-0v-058"/>
-                                                                            </connections>
                                                                         </textField>
                                                                     </subviews>
                                                                     <connections>
@@ -2133,18 +1848,8 @@
                                                                     </connections>
                                                                 </tableCellView>
                                                             </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="VLv-5K-zpN" name="value" keyPath="arrangedObjects.track_num" id="93x-0o-8x4">
-                                                                    <dictionary key="options">
-                                                                        <bool key="NSCreatesSortDescriptor" value="NO"/>
-                                                                    </dictionary>
-                                                                </binding>
-                                                            </connections>
                                                         </tableColumn>
                                                     </tableColumns>
-                                                    <connections>
-                                                        <binding destination="Au2-FV-L2z" name="selectionIndexes" keyPath="arrangedObjects" id="Ct2-io-6Sq"/>
-                                                    </connections>
                                                 </tableView>
                                             </subviews>
                                         </clipView>
@@ -2541,7 +2246,6 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
             </connections>
             <point key="canvasLocation" x="508.5" y="755"/>
         </window>
-        <arrayController objectClassName="NetworkTrack" id="Mua-QA-afe" userLabel="Network Playlist Array Controller" customClass="DragAndDropArrayController" customModule="minimalTunes" customModuleProvider="target"/>
         <arrayController mode="entity" entityName="Track" fetchPredicateFormat="" automaticallyPreparesContent="YES" id="VLv-5K-zpN" customClass="DragAndDropArrayController" customModule="minimalTunes" customModuleProvider="target">
             <connections>
                 <binding destination="-2" name="managedObjectContext" keyPath="self.managedContext" id="cYj-Oc-oZy"/>
@@ -2626,7 +2330,6 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
             </items>
             <point key="canvasLocation" x="591.5" y="58.5"/>
         </menu>
-        <customObject id="Czk-GC-KjU" customClass="TrackNameTableCell" customModule="minimalTunes" customModuleProvider="target"/>
         <menu id="jhO-g0-6Gh">
             <items>
                 <menuItem title="Add to Queue" id="Q6x-7f-HAa">
@@ -2671,6 +2374,12 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
         </menu>
         <userDefaultsController representsSharedInstance="YES" id="BDj-hR-vOF"/>
         <menu id="2aO-7k-zwO" userLabel="Column Visibility Menu">
+            <items>
+                <menuItem isSeparatorItem="YES" id="s71-m0-ca5"/>
+                <menuItem title="Create Custom Field..." id="CcQ-l3-0fn">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+            </items>
             <point key="canvasLocation" x="-220" y="-258.5"/>
         </menu>
         <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" verticalScrollElasticity="allowed" scrollerKnobStyle="dark" id="2w4-a3-IHY" userLabel="Auxiliary Playlist Scroll View">
@@ -2679,7 +2388,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <tableView verticalHuggingPriority="750" placeholderIntrinsicWidth="833" placeholderIntrinsicHeight="583" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" rowSizeStyle="automatic" headerView="LV1-Gx-i0P" viewBased="YES" id="WGf-gu-WxG" userLabel="Auxiliary Playlist Table View" customClass="TableViewYouCanPressSpacebarOn" customModule="minimalTunes" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="1858" height="1"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1858" height="0.0"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <size key="intercellSpacing" width="3" height="2"/>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>

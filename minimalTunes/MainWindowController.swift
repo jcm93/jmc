@@ -13,9 +13,13 @@ import CoreData
 private var my_context = 0
 
 
-class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchFieldDelegate, NSTableViewDelegate, NSMenuDelegate {
+class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchFieldDelegate, NSTableViewDelegate, NSTableViewDataSource, NSMenuDelegate {
+    
+    @IBOutlet weak var librarySplitView: NSSplitView!
+    @IBOutlet var noMusicView: NSView!
     
     @IBOutlet weak var libraryTableView: TableViewYouCanPressSpacebarOn!
+    
     @IBOutlet var auxPlaylistArrayController: DragAndDropArrayController!
     @IBOutlet weak var auxPlaylistTableView: TableViewYouCanPressSpacebarOn!
     @IBOutlet var auxPlaylistScrollView: NSScrollView!
@@ -25,11 +29,9 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     @IBOutlet weak var albumArtBox: NSBox!
     @IBOutlet weak var artworkToggle: NSButton!
     @IBOutlet weak var artCollectionView: NSCollectionView!
-    @IBOutlet weak var noMusicView: NSView!
     @IBOutlet weak var queueScrollView: NSScrollView!
     @IBOutlet weak var queueButton: NSButton!
     @IBOutlet weak var volumeSlider: NSSlider!
-    @IBOutlet weak var librarySplitView: NSSplitView!
     @IBOutlet weak var advancedFilterScrollView: NSScrollView!
     @IBOutlet weak var trackQueueTableView: TableViewYouCanPressSpacebarOn!
     @IBOutlet weak var progressBarView: ProgressBarView!
@@ -95,6 +97,96 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     let dateFormatter = NSDateComponentsFormatter()
     let sizeFormatter = NSByteCountFormatter()
     let fileManager = NSFileManager.defaultManager()
+    var mainTableViewDataSource: MainTableViewDataSource?
+    var mainTableViewDelegate: MainTableViewDelegate?
+    
+    lazy var cachedOrders: [CachedOrder]? = {
+        let request = NSFetchRequest(entityName: "CachedOrder")
+        do {
+            let result = try self.managedContext.executeFetchRequest(request) as! [CachedOrder]
+            return result
+        } catch {
+            print(error)
+            return nil
+        }
+    }()
+
+    var currentArray: [Track]?
+    
+    func numberOfRowsInTableView(tableView: NSTableView) -> Int {
+        print("number rows in table view called: \(currentArray!.count)")
+        return currentArray!.count
+    }
+    
+    func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        let identifier = tableColumn!.identifier
+        let valueString: String?
+        switch identifier {
+        case "artist":
+            let result = tableView.makeViewWithIdentifier(identifier, owner: self) as! NSTableCellView
+            valueString = currentArray![row].artist?.name
+            if valueString != nil {
+                result.textField!.stringValue = valueString!
+            }
+            return result
+        case "album":
+            let result = tableView.makeViewWithIdentifier(identifier, owner: self) as! NSTableCellView
+            valueString = currentArray![row].album?.name
+            if valueString != nil {
+                result.textField!.stringValue = valueString!
+            }
+            return result
+        case "album_artist":
+            let result = tableView.makeViewWithIdentifier(identifier, owner: self) as! NSTableCellView
+            valueString = currentArray![row].album?.album_artist?.name
+            if valueString != nil {
+                result.textField!.stringValue = valueString!
+            }
+            return result
+        case "genre":
+            let result = tableView.makeViewWithIdentifier(identifier, owner: self) as! NSTableCellView
+            valueString = currentArray![row].genre?.name
+            if valueString != nil {
+                result.textField!.stringValue = valueString!
+            }
+            return result
+        case "composer":
+            let result = tableView.makeViewWithIdentifier(identifier, owner: self) as! NSTableCellView
+            valueString = currentArray![row].composer?.name
+            if valueString != nil {
+                result.textField!.stringValue = valueString!
+            }
+            return result
+        case "AutomaticTableColumnIdentifier.0":
+            let result = tableView.makeViewWithIdentifier(identifier, owner: self) as! NSTableCellView
+            return result
+        case "is_enabled":
+            let result = tableView.makeViewWithIdentifier(identifier, owner: self) as! NSButton
+            let track = currentArray![row]
+            result.state = track.status?.charValue == 1 ? NSOnState : NSOffState
+            return result
+        case "date_released":
+            let result = tableView.makeViewWithIdentifier(identifier, owner: self) as! NSTableCellView
+            let track = currentArray![row]
+            valueString = track.album?.release_date?.description
+            if valueString != nil {
+                result.textField!.stringValue = valueString!
+            }
+            return result
+        case "playlist_number":
+            let result = tableView.makeViewWithIdentifier(identifier, owner: self) as! NSTableCellView
+            return result
+        default:
+            let result = tableView.makeViewWithIdentifier(identifier, owner: self) as! NSTableCellView
+            let track = currentArray![row]
+            valueString = track.valueForKey(identifier) as? String
+            if valueString != nil {
+                result.textField!.stringValue = valueString!
+            }
+            return result
+        }
+    }
+
     
     
     //initialize managed object context
@@ -120,36 +212,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             print("error getting header nodes: \(error)")
             return nil
         }
-    }()
-    
-    lazy var cachedOrders: [CachedOrder] = {
-        let fetch_request = NSFetchRequest(entityName: "CachedOrder")
-        var result = [CachedOrder]()
-        do {
-            let thing = try self.managedContext.executeFetchRequest(fetch_request) as! [CachedOrder]
-            if thing.count != 0 {
-                return thing
-            }
-        }
-        catch {
-            print("err")
-        }
-        return result
-    }()
-    
-    lazy var newCachedOrders: [NewCachedOrder] = {
-        let fetch_request = NSFetchRequest(entityName: "NewCachedOrder")
-        var result = [NewCachedOrder]()
-        do {
-            let thing = try self.managedContext.executeFetchRequest(fetch_request) as! [NewCachedOrder]
-            if thing.count != 0 {
-                return thing
-            }
-        }
-        catch {
-            print("err")
-        }
-        return result
     }()
     
     var isVisibleDict = NSMutableDictionary()
@@ -239,7 +301,9 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             updateInfo()
             updateCachedSortsForPlaylist(id_array!)
         } else {
-            librarySplitView.removeArrangedSubview(auxPlaylistScrollView)
+            if librarySplitView.subviews.contains(auxPlaylistScrollView) {
+                librarySplitView.removeArrangedSubview(auxPlaylistScrollView)
+            }
             currentTableView = libraryTableView
             currentArrayController = tableViewArrayController
             librarySplitView.addArrangedSubview(libraryTableScrollView)
@@ -527,7 +591,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             tableView.setIndicatorImage(NSImage(named: "NSAscendingSortIndicator"), inTableColumn: tableColumn)
             focusedColumn = tableColumn
             asc = true
-            let cachedOrderArray = cachedOrders.filter({return $0.order == tableColumn.title && $0.library == self.currentLibrary})
+            let cachedOrderArray = cachedOrders!.filter({return $0.order == tableColumn.title && $0.library == self.currentLibrary})
             if cachedOrderArray.count > 0 {
                 let order = cachedOrderArray[0]
                 self.currentOrder = order
@@ -854,26 +918,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         }
     }
     
-    func updateNewCachedSorts() {
-        if currentArrayController?.filterPredicate != nil {
-            for track in (self.currentArrayController?.arrangedObjects as! [Track]) {
-                self.isVisibleDict[track.id!] = true
-            }
-            for order in newCachedOrders {
-                order.filtered_id_array = (order.id_array as! [Int]).filter( {return ((self.isVisibleDict[$0] as? Bool) == true)})
-            }
-        } else {
-            print("nil filter predicate")
-            self.isVisibleDict = NSMutableDictionary()
-            for sort in newCachedOrders {
-                sort.filtered_id_array = sort.id_array
-            }
-            currentArrayController?.fetchPredicate = nil
-            print((currentArrayController?.arrangedObjects as! [Track]).count)
-            print("done with stuff in nil filter predicate clause")
-        }
-    }
-    
     func updateCachedSortsForPlaylist(id_array: [Int]) {
         if currentArrayController?.fetchPredicate != nil {
             self.isVisibleDict = NSMutableDictionary()
@@ -882,14 +926,14 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
                 self.isVisibleDict[track] = true
             }
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                for sort in self.cachedOrders {
+                for sort in self.cachedOrders! {
                     sort.filtered_tracks = NSOrderedSet(array: sort.tracks!.filter( {return ((self.isVisibleDict[($0 as! Track).id!] as? Bool) == true)}) as! [Track])
                 }
             }
         } else {
             print("nil fetch predicate")
             self.isVisibleDict = NSMutableDictionary()
-            for sort in cachedOrders {
+            for sort in cachedOrders! {
                 sort.filtered_tracks = nil
             }
             currentArrayController!.content = self.currentOrder?.tracks?.array as! [Track]
@@ -908,16 +952,18 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             for track in (self.currentArrayController?.arrangedObjects as! [Track]) {
                 self.isVisibleDict[track.id!] = true
             }
-            for sort in cachedOrders {
+            for sort in cachedOrders! {
                 sort.filtered_tracks = NSOrderedSet(array: sort.tracks!.filter( {return ((self.isVisibleDict[($0 as! Track).id!] as? Bool) == true)}) as! [Track])
             }
         } else {
             print("nil filter predicate")
             self.isVisibleDict = NSMutableDictionary()
-            for sort in cachedOrders {
+            for sort in cachedOrders! {
                 sort.filtered_tracks = nil
             }
-            currentArrayController!.content = self.currentOrder?.tracks?.array as! [Track]
+            if currentOrder != nil {
+                currentArrayController!.content = self.currentOrder?.tracks?.array as! [Track]
+            }
             print((currentArrayController?.arrangedObjects as! [Track]).count)
             print("done with stuff in nil filter predicate clause")
         }
@@ -1030,6 +1076,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         dateFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyle.Full
         print(hasMusic)
         if (hasMusic == false) {
+            librarySplitView.addArrangedSubview(noMusicView)
             noMusicView.hidden = false
             libraryTableScrollView.hidden = true
             sourceListView.hidden = true
@@ -1050,7 +1097,12 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         //theBox.fillColor = NSColor(patternImage: NSImage(named: "Gradient")!)
         libraryTableView.doubleAction = "tableViewDoubleClick:"
         libraryTableView.setDelegate(self)
-        libraryTableView.setDataSource(tableViewArrayController)
+        
+        //mark mtvds
+        currentOrder = cachedOrders![0]
+        currentArray = currentOrder?.tracks?.array as? [Track]
+        libraryTableView.setDataSource(self)
+        libraryTableView.setDelegate(self)
         auxPlaylistTableView.setDelegate(self)
         auxPlaylistTableView.setDataSource(auxPlaylistArrayController)
         auxPlaylistTableView.doubleAction = "tableViewDoubleClick:"
@@ -1069,7 +1121,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         tableViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .New, context: &my_context)
         super.windowDidLoad()
         if (hasMusic == true) {
-            print(cachedOrders[0])
+            print(cachedOrders![0])
         }
         albumArtView.mainWindowController = self
         trackQueueTableView.setDataSource(trackQueueTableDelegate)
@@ -1111,5 +1163,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         //self.sourceListTreeController.checkNetworkedLibrary()
         self.populateIsVisibleDict()
         self.initializeColumnVisibilityMenu(self.currentTableView!)
+        libraryTableView.reloadData()
     }
 }
