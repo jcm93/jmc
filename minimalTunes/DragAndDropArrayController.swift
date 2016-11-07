@@ -20,8 +20,8 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     func tableView(tableView: NSTableView, writeRowsWithIndexes rowIndexes: NSIndexSet, toPasteboard pboard: NSPasteboard) -> Bool {
         print("table view writerows called")
         let rows = NSMutableArray()
-        for thing in (self.selectedObjects as! [Track]) {
-            rows.addObject(thing.objectID.URIRepresentation())
+        for thing in (self.selectedObjects as! [TrackView]) {
+            rows.addObject(thing.track!.objectID.URIRepresentation())
         }
         let encodedIDs = NSKeyedArchiver.archivedDataWithRootObject(rows)
         pboard.setData(encodedIDs, forType: "Track")

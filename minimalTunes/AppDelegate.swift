@@ -97,7 +97,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         fetchRequest.predicate = predicate
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         do {
-            try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
+            //try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
         } catch {
             print(error)
         }
@@ -168,6 +168,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
             } else {
                 failError = nserror
+                
             }
         }
     
@@ -239,9 +240,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let fetchRequest = NSFetchRequest()
         let predicate = NSPredicate(format: "is_network == %@", true)
         fetchRequest.predicate = predicate
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        //let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         do {
-            try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
+            //try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
         } catch {
             print(error)
         }

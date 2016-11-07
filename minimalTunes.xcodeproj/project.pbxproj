@@ -19,6 +19,11 @@
 		0D2E66471DC00B7F00CC174E /* TableColumnVisibilityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2E66461DC00B7F00CC174E /* TableColumnVisibilityController.swift */; };
 		0D2EEFB61DB97DEC0065B0B3 /* CachedOrder+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2EEFB41DB97DEC0065B0B3 /* CachedOrder+CoreDataProperties.swift */; };
 		0D2EEFB71DB97DEC0065B0B3 /* CachedOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2EEFB51DB97DEC0065B0B3 /* CachedOrder.swift */; };
+		0D3878B51DD10258004CC3C1 /* TrackView+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3878B31DD10258004CC3C1 /* TrackView+CoreDataProperties.swift */; };
+		0D3878B61DD10258004CC3C1 /* TrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3878B41DD10258004CC3C1 /* TrackView.swift */; };
+		0D3878B81DD11926004CC3C1 /* BitRateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */; };
+		0D3878BA1DD12530004CC3C1 /* SampleRateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3878B91DD12530004CC3C1 /* SampleRateFormatter.swift */; };
+		0D3878BC1DD125E9004CC3C1 /* StupidNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3878BB1DD125E9004CC3C1 /* StupidNumberFormatter.swift */; };
 		0D40A9F21D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */; };
 		0D58F7491D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */; };
 		0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */; };
@@ -125,6 +130,11 @@
 		0D2E66461DC00B7F00CC174E /* TableColumnVisibilityController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableColumnVisibilityController.swift; sourceTree = "<group>"; };
 		0D2EEFB41DB97DEC0065B0B3 /* CachedOrder+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CachedOrder+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D2EEFB51DB97DEC0065B0B3 /* CachedOrder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachedOrder.swift; sourceTree = "<group>"; };
+		0D3878B31DD10258004CC3C1 /* TrackView+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TrackView+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0D3878B41DD10258004CC3C1 /* TrackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackView.swift; sourceTree = "<group>"; };
+		0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitRateFormatter.swift; sourceTree = "<group>"; };
+		0D3878B91DD12530004CC3C1 /* SampleRateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleRateFormatter.swift; sourceTree = "<group>"; };
+		0D3878BB1DD125E9004CC3C1 /* StupidNumberFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StupidNumberFormatter.swift; sourceTree = "<group>"; };
 		0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransformerIntegerToTimestamp.swift; sourceTree = "<group>"; };
 		0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
 		0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListThatYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
@@ -254,6 +264,9 @@
 		0D01AD941D707CFB00F9211F /* Data Controllers and Interface Subclasses */ = {
 			isa = PBXGroup;
 			children = (
+				0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */,
+				0D3878BB1DD125E9004CC3C1 /* StupidNumberFormatter.swift */,
+				0D3878B91DD12530004CC3C1 /* SampleRateFormatter.swift */,
 				0D2E66461DC00B7F00CC174E /* TableColumnVisibilityController.swift */,
 				0DDBFC2B1D1C89E300669875 /* trackQueueTableDelegate.swift */,
 				0DDBFC291D1C892B00669875 /* trackQueueView.swift */,
@@ -320,6 +333,8 @@
 		0D01AD981D707ED900F9211F /* Core Data Shit */ = {
 			isa = PBXGroup;
 			children = (
+				0D3878B31DD10258004CC3C1 /* TrackView+CoreDataProperties.swift */,
+				0D3878B41DD10258004CC3C1 /* TrackView.swift */,
 				0DC84C5D1DBAD0C100E8877C /* NewCachedOrder+CoreDataProperties.swift */,
 				0DC84C5E1DBAD0C100E8877C /* NewCachedOrder.swift */,
 				0D2EEFB41DB97DEC0065B0B3 /* CachedOrder+CoreDataProperties.swift */,
@@ -638,6 +653,7 @@
 				0DA8D03E1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift in Sources */,
 				0DEF66BC1D383A8700EA3ADC /* Composer+CoreDataProperties.swift in Sources */,
 				0DEF66BF1D383A8700EA3ADC /* SharedLibrary.swift in Sources */,
+				0D3878B51DD10258004CC3C1 /* TrackView+CoreDataProperties.swift in Sources */,
 				0DEF66D11D383A8700EA3ADC /* SongCollectionFolder.swift in Sources */,
 				0DEF66D01D383A8700EA3ADC /* SongCollectionFolder+CoreDataProperties.swift in Sources */,
 				0DEF66BB1D383A8700EA3ADC /* Artist.swift in Sources */,
@@ -660,11 +676,13 @@
 				0DAB30911CFBA3340028928F /* AppDelegate.swift in Sources */,
 				0D76F6AA1D270EB900C6E70F /* DragAndDropArrayController.swift in Sources */,
 				0DEF66C31D383A8700EA3ADC /* ViewCoordinator.swift in Sources */,
+				0D3878B81DD11926004CC3C1 /* BitRateFormatter.swift in Sources */,
 				0DD7D6DB1D3F3A350035BAD8 /* AlbumArtwork.swift in Sources */,
 				0DF4BEEE1CFBE4CB00AC5824 /* iTunesLibraryParser.swift in Sources */,
 				0DEF66C41D383A8700EA3ADC /* Property+CoreDataProperties.swift in Sources */,
 				0D0E5FAA1D38444B009E0FA3 /* Track.swift in Sources */,
 				0D0E5FA91D38444B009E0FA3 /* Track+CoreDataProperties.swift in Sources */,
+				0D3878BA1DD12530004CC3C1 /* SampleRateFormatter.swift in Sources */,
 				0DF4BEF31CFD0D4E00AC5824 /* MainWindowController.swift in Sources */,
 				0DD274EC1D30462F0055C43B /* PreferencesWindowController.swift in Sources */,
 				0D2EEFB71DB97DEC0065B0B3 /* CachedOrder.swift in Sources */,
@@ -678,10 +696,12 @@
 				0DAB30941CFBA3340028928F /* minimalTunes.xcdatamodeld in Sources */,
 				0DEF66C71D383A8700EA3ADC /* SourceListItem.swift in Sources */,
 				0D0E5FAF1D3E909D009E0FA3 /* DragAndDropImageView.swift in Sources */,
+				0D3878B61DD10258004CC3C1 /* TrackView.swift in Sources */,
 				0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */,
 				0D1BDFA51D0F44A70092FBA0 /* AudioQueue.swift in Sources */,
 				0D2923021DC4272300711546 /* CustomFieldWindowController.swift in Sources */,
 				0DD274EF1D3190360055C43B /* GlobalFunctions.swift in Sources */,
+				0D3878BC1DD125E9004CC3C1 /* StupidNumberFormatter.swift in Sources */,
 				0D9CE6751D34128B004FA8CB /* InitialSetupWindowController.swift in Sources */,
 				0DEF66B71D383A8700EA3ADC /* Library.swift in Sources */,
 				0D40A9F21D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift in Sources */,
@@ -830,6 +850,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				INFOPLIST_FILE = minimalTunes/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunes;
@@ -846,7 +867,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				INFOPLIST_FILE = minimalTunes/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunes;

@@ -33,28 +33,32 @@ extension Track {
     @objc func compareArtist(other: Track) -> NSComparisonResult {
         let self_artist_name = (self.sort_artist != nil) ? self.sort_artist : self.artist?.name
         let other_artist_name = (other.sort_artist != nil) ? other.sort_artist : other.artist?.name
-        guard self_artist_name != nil && other_artist_name != nil else {
-            return (self_artist_name == other_artist_name) ? .OrderedSame : (self_artist_name != nil) ? .OrderedAscending : .OrderedDescending
+        let artist_comparison: NSComparisonResult
+        if self_artist_name == nil || other_artist_name == nil {
+            artist_comparison = (self_artist_name == other_artist_name) ? .OrderedSame : (other_artist_name != nil) ? .OrderedAscending : .OrderedDescending
+        } else {
+            artist_comparison = self_artist_name!.localizedStandardCompare(other_artist_name!)
         }
-        let artist_comparison = self_artist_name!.localizedStandardCompare(other_artist_name!)
         if artist_comparison == .OrderedSame {
             let self_album_name = self.sort_album != nil ? self.sort_album : self.album?.name
             let other_album_name = other.sort_album != nil ? other.sort_album : other.album?.name
-            guard self_album_name != nil && other_album_name != nil else {
-                return (self_album_name == other_album_name) ? .OrderedSame : (self_album_name != nil) ? .OrderedAscending : .OrderedDescending
+            let album_comparison: NSComparisonResult
+            if self_album_name == nil || other_album_name == nil {
+                album_comparison = (self_album_name == other_album_name) ? .OrderedSame : (other_album_name != nil) ? .OrderedAscending : .OrderedDescending
+            } else {
+                album_comparison = self_album_name!.localizedStandardCompare(other_album_name!)
             }
-            let album_comparison = self_album_name!.localizedStandardCompare(other_album_name!)
             if album_comparison == .OrderedSame {
                 let self_track_num = self.track_num
-                let other_track_num = self.track_num
+                let other_track_num = other.track_num
                 guard self_track_num != nil && other_track_num != nil else {
-                    return (self_track_num == other_track_num) ? .OrderedSame : (self_track_num != nil) ? .OrderedAscending : .OrderedDescending
+                    return (self_track_num == other_track_num) ? .OrderedSame : (other_track_num != nil) ? .OrderedAscending : .OrderedDescending
                 }
                 if self_track_num == other_track_num {
                     let self_name = self.sort_name != nil ? self.sort_name : self.name
                     let other_name = other.sort_name != nil ? other.sort_name : other.name
                     guard self_name != nil && other_name != nil else {
-                        return (self_name == other_name) ? .OrderedSame : (self_name != nil) ? .OrderedAscending : .OrderedDescending
+                        return (self_name == other_name) ? .OrderedSame : (other_name != nil) ? .OrderedAscending : .OrderedDescending
                     }
                     return self_name!.localizedStandardCompare(other_name!)
                 } else {
@@ -71,32 +75,40 @@ extension Track {
     @objc func compareAlbum(other: Track) -> NSComparisonResult {
         let self_album_name = self.sort_album != nil ? self.sort_album : self.album?.name
         let other_album_name = other.sort_album != nil ? other.sort_album : other.album?.name
-        guard self_album_name != nil && other_album_name != nil else {
-            return (self_album_name == other_album_name) ? .OrderedSame : (self_album_name != nil) ? .OrderedAscending : .OrderedDescending
+        let album_comparison: NSComparisonResult
+        if self_album_name == nil || other_album_name == nil {
+            album_comparison = (self_album_name == other_album_name) ? .OrderedSame : (other_album_name != nil) ? .OrderedAscending : .OrderedDescending
+        } else {
+            album_comparison = self_album_name!.localizedStandardCompare(other_album_name!)
         }
-        let album_comparison = self_album_name!.localizedStandardCompare(other_album_name!)
         if album_comparison == .OrderedSame {
             let self_artist_name = (self.sort_artist != nil) ? self.sort_artist : self.artist?.name
             let other_artist_name = (other.sort_artist != nil) ? other.sort_artist : other.artist?.name
-            guard self_artist_name != nil && other_artist_name != nil else {
-                return (self_artist_name == other_artist_name) ? .OrderedSame : (self_artist_name != nil) ? .OrderedAscending : .OrderedDescending
+            let artist_comparison: NSComparisonResult
+            if self_artist_name == nil || other_artist_name == nil {
+                artist_comparison = (self_artist_name == other_artist_name) ? .OrderedSame : (other_artist_name != nil) ? .OrderedAscending : .OrderedDescending
+            } else {
+                artist_comparison = self_artist_name!.localizedStandardCompare(other_artist_name!)
             }
-            let artist_comparison = self_artist_name!.localizedStandardCompare(other_artist_name!)
             if artist_comparison == .OrderedSame {
                 let self_track_num = self.track_num
-                let other_track_num = self.track_num
-                guard self_track_num != nil && other_track_num != nil else {
-                    return (self_track_num == other_track_num) ? .OrderedSame : (self_track_num != nil) ? .OrderedAscending : .OrderedDescending
+                let other_track_num = other.track_num
+                let track_num_comparison: NSComparisonResult
+                if self_track_num == nil || other_track_num == nil {
+                    track_num_comparison = (self_track_num == other_track_num) ? .OrderedSame : (other_track_num != nil) ? .OrderedAscending : .OrderedDescending
+                } else {
+                    track_num_comparison = self_track_num!.compare(other_track_num!)
                 }
-                if self_track_num == other_track_num {
+                if track_num_comparison == .OrderedSame {
                     let self_name = self.sort_name != nil ? self.sort_name : self.name
                     let other_name = other.sort_name != nil ? other.sort_name : other.name
-                    guard self_name != nil && other_name != nil else {
-                        return (self_name == other_name) ? .OrderedSame : (self_name != nil) ? .OrderedAscending : .OrderedDescending
+                    if self_name == nil || other_name == nil {
+                        return (self_name == other_name) ? .OrderedSame : (other_name != nil) ? .OrderedAscending : .OrderedDescending
+                    } else {
+                        return self_name!.localizedStandardCompare(other_name!)
                     }
-                    return self_name!.localizedStandardCompare(other_name!)
                 } else {
-                    return self_track_num!.compare(other_track_num!)
+                    return track_num_comparison
                 }
             } else {
                 return artist_comparison
@@ -109,32 +121,39 @@ extension Track {
     @objc func compareAlbumArtist(other: Track) -> NSComparisonResult {
         let self_album_artist_name = self.sort_album_artist != nil ? self.sort_album_artist : self.album?.album_artist?.name != nil ? self.album?.album_artist?.name : self.sort_artist != nil ? self.sort_artist : self.artist?.name
         let other_album_artist_name = other.sort_album_artist != nil ? other.sort_album_artist : other.album?.album_artist?.name != nil ? other.album?.album_artist?.name : other.sort_artist != nil ? other.sort_artist : self.artist?.name
-        guard self_album_artist_name != nil && other_album_artist_name != nil else {
-            return (self_album_artist_name == other_album_artist_name) ? .OrderedSame : (self_album_artist_name != nil) ? .OrderedAscending : .OrderedDescending
+        let album_artist_comparison: NSComparisonResult
+        if self_album_artist_name == nil || other_album_artist_name == nil {
+            album_artist_comparison = (self_album_artist_name == other_album_artist_name) ? .OrderedSame : (other_album_artist_name != nil) ? .OrderedAscending : .OrderedDescending
+        } else {
+            album_artist_comparison = self_album_artist_name!.localizedStandardCompare(other_album_artist_name!)
         }
-        let album_artist_comparison = self_album_artist_name!.localizedStandardCompare(other_album_artist_name!)
         if album_artist_comparison == .OrderedSame {
             let self_album_name = (self.sort_album != nil) ? self.sort_album : self.album?.name
             let other_album_name = (other.sort_album != nil) ? other.sort_album : other.album?.name
-            guard self_album_name != nil && other_album_name != nil else {
-                return (self_album_name == other_album_name) ? .OrderedSame : (self_album_name != nil) ? .OrderedAscending : .OrderedDescending
+            let album_comparison: NSComparisonResult
+            if self_album_name == nil || other_album_name == nil {
+                album_comparison = (self_album_name == other_album_name) ? .OrderedSame : (other_album_name != nil) ? .OrderedAscending : .OrderedDescending
+            } else {
+                album_comparison = self_album_name!.localizedStandardCompare(other_album_name!)
             }
-            let album_comparison = self_album_name!.localizedStandardCompare(other_album_name!)
             if album_comparison == .OrderedSame {
                 let self_track_num = self.track_num
-                let other_track_num = self.track_num
-                guard self_track_num != nil && other_track_num != nil else {
-                    return (self_track_num == other_track_num) ? .OrderedSame : (self_track_num != nil) ? .OrderedAscending : .OrderedDescending
+                let other_track_num = other.track_num
+                let track_num_comparison: NSComparisonResult
+                if self_track_num == nil || other_track_num == nil {
+                    track_num_comparison = (self_track_num == other_track_num) ? .OrderedSame : (other_track_num != nil) ? .OrderedAscending : .OrderedDescending
+                } else {
+                    track_num_comparison = self_track_num!.compare(other_track_num!)
                 }
-                if self_track_num == other_track_num {
+                if track_num_comparison == .OrderedSame {
                     let self_name = self.sort_name != nil ? self.sort_name : self.name
                     let other_name = other.sort_name != nil ? other.sort_name : other.name
-                    guard self_name != nil && other_name != nil else {
-                        return (self_name == other_name) ? .OrderedSame : (self_name != nil) ? .OrderedAscending : .OrderedDescending
+                    if self_name == nil || other_name == nil {
+                        return (self_name == other_name) ? .OrderedSame : (other_name != nil) ? .OrderedAscending : .OrderedDescending
                     }
                     return self_name!.localizedStandardCompare(other_name!)
                 } else {
-                    return self_track_num!.compare(other_track_num!)
+                    return track_num_comparison
                 }
             } else {
                 return album_comparison
@@ -147,10 +166,12 @@ extension Track {
     @objc func compareGenre(other: Track) -> NSComparisonResult {
         let self_genre_name = self.genre?.name
         let other_genre_name = other.genre?.name
-        guard self_genre_name != nil && other_genre_name != nil else {
-            return (self_genre_name == other_genre_name) ? .OrderedSame : (self_genre_name != nil) ? .OrderedAscending : .OrderedDescending
+        let genre_comparison: NSComparisonResult
+        if self_genre_name == nil || other_genre_name == nil {
+            genre_comparison = (self_genre_name == other_genre_name) ? .OrderedSame : (other_genre_name != nil) ? .OrderedAscending : .OrderedDescending
+        } else {
+            genre_comparison = self_genre_name!.localizedStandardCompare(other_genre_name!)
         }
-        let genre_comparison = self_genre_name!.localizedStandardCompare(other_genre_name!)
         if genre_comparison == .OrderedSame {
             return self.compareArtist(other)
         } else {
@@ -161,10 +182,12 @@ extension Track {
     @objc func compareKind(other: Track) -> NSComparisonResult {
         let self_kind_name = self.file_kind
         let other_kind_name = other.file_kind
-        guard self_kind_name != nil && other_kind_name != nil else {
-            return (self_kind_name == other_kind_name) ? .OrderedSame : (self_kind_name != nil) ? .OrderedAscending : .OrderedDescending
+        let kind_comparison: NSComparisonResult
+        if self_kind_name == nil || other_kind_name == nil {
+            kind_comparison = (self_kind_name == other_kind_name) ? .OrderedSame : (other_kind_name != nil) ? .OrderedAscending : .OrderedDescending
+        } else {
+            kind_comparison = self_kind_name!.localizedStandardCompare(other_kind_name!)
         }
-        let kind_comparison = self_kind_name!.localizedStandardCompare(other_kind_name!)
         if kind_comparison == .OrderedSame {
             return self.compareArtist(other)
         } else {
@@ -176,7 +199,7 @@ extension Track {
         let self_date_added = self.date_added
         let other_date_added = other.date_added
         guard self_date_added != nil && other_date_added != nil else {
-            return (self_date_added == other_date_added) ? .OrderedSame : (self_date_added != nil) ? .OrderedAscending : .OrderedDescending
+            return (self_date_added == other_date_added) ? .OrderedSame : (other_date_added != nil) ? .OrderedAscending : .OrderedDescending
         }
         let dateDifference = self_date_added!.timeIntervalSinceDate(other_date_added!)
         let comparison: NSComparisonResult = (abs(dateDifference) < DEFAULTS_DATE_SORT_GRANULARITY) ? .OrderedSame : (dateDifference > 0) ? .OrderedAscending : .OrderedDescending
@@ -191,7 +214,7 @@ extension Track {
         let self_date_released = self.album?.release_date
         let other_date_released = other.album?.release_date
         guard self_date_released != nil && other_date_released != nil else {
-            return (self_date_released == other_date_released) ? .OrderedSame : (self_date_released != nil) ? .OrderedAscending : .OrderedDescending
+            return (self_date_released == other_date_released) ? .OrderedSame : (other_date_released != nil) ? .OrderedAscending : .OrderedDescending
         }
         let date_released_comparison = self_date_released!.compare(other_date_released!)
         if date_released_comparison == .OrderedSame {
