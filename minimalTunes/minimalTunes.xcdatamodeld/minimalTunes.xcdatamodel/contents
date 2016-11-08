@@ -129,6 +129,7 @@
         <attribute name="file_kind" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_playing" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="misc_search_field" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="movement_name" optional="YES" attributeType="String" syncable="YES"/>
@@ -165,6 +166,7 @@
         <attribute name="genre_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="kind_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="name_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="release_date_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <relationship name="other_sort_orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SortOrder" inverseName="track_view" inverseEntity="SortOrder" syncable="YES"/>
         <relationship name="track" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Track" inverseName="view" inverseEntity="Track" syncable="YES"/>
@@ -184,7 +186,7 @@
         <element name="SongCollectionFolder" positionX="-693" positionY="380" width="128" height="103"/>
         <element name="SortOrder" positionX="-1548" positionY="108" width="128" height="75"/>
         <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="195"/>
-        <element name="Track" positionX="-1026" positionY="-54" width="128" height="630"/>
-        <element name="TrackView" positionX="-1557" positionY="99" width="128" height="195"/>
+        <element name="Track" positionX="-1026" positionY="-54" width="128" height="645"/>
+        <element name="TrackView" positionX="-1557" positionY="99" width="128" height="210"/>
     </elements>
 </model>

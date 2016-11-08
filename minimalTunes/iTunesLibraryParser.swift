@@ -446,6 +446,15 @@ class iTunesLibraryParser: NSObject {
             }
             cachedGenreOrder.order = "Genre"
             
+            song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareName(_:)))
+            let cachedNameOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
+            for (index, item) in song_array.enumerate() {
+                (item as! Track).addOrdersObject(cachedNameOrder)
+                (item as! Track).view?.name_order = index
+                self.importSortUIUpdate(index)
+            }
+            cachedGenreOrder.order = "Name"
+            
 
             print("done sorting")
             dispatch_async(dispatch_get_main_queue()) {

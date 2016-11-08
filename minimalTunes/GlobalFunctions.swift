@@ -223,6 +223,22 @@ extension Track {
             return date_released_comparison
         }
     }
+    
+    @objc func compareName(other: Track) -> NSComparisonResult {
+        let self_name = self.name
+        let other_name = other.name
+        let name_comparison: NSComparisonResult
+        if self_name == nil || other_name == nil {
+            name_comparison = (self_name == other_name) ? .OrderedSame : (other_name != nil) ? .OrderedAscending : .OrderedDescending
+        } else {
+            name_comparison = self_name!.compare(other_name!)
+        }
+        if name_comparison == .OrderedSame {
+            return self.compareArtist(other)
+        } else {
+            return name_comparison
+        }
+    }
 
 }
 

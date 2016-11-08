@@ -22,6 +22,7 @@ extension TrackView {
     @NSManaged var kind_order: NSNumber?
     @NSManaged var release_date_order: NSNumber?
     @NSManaged var is_network: NSNumber?
+    @NSManaged var name_order: NSNumber?
     @NSManaged var other_sort_orders: NSSet?
     @NSManaged var track: Track?
 

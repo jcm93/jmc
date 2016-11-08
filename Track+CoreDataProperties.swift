@@ -44,6 +44,7 @@ extension Track {
     @NSManaged var status: NSNumber?
     @NSManaged var time: NSNumber?
     @NSManaged var track_num: NSNumber?
+    @NSManaged var is_playing: NSNumber?
     @NSManaged var album: Album?
     @NSManaged var artist: Artist?
     @NSManaged var composer: Composer?

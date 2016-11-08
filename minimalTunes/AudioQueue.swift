@@ -237,6 +237,7 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     }
     
     func skip() {
+        let beforeTime = NSDate()
         tryGetMoreTracks()
         currentHandlerType = .destroy
         if (currentTrack != nil) {
@@ -255,6 +256,9 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
             self.audioEngine.reset()
         }
         currentHandlerType = .natural
+        let afterTime = NSDate()
+        let timePassed = afterTime.timeIntervalSinceDate(beforeTime)
+        print(timePassed)
     }
     
     func skip_backward() {

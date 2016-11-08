@@ -77,6 +77,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     let trackQueueTableDelegate = TrackQueueTableViewDelegate()
     var shuffle = NSOnState
     var currentTrack: Track?
+    var currentTrackView: TrackView?
     var currentNetworkTrack: NetworkTrack?
     var current_source_play_order: [Int]?
     var current_source_temp_shuffle: [Int]?
@@ -246,8 +247,8 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     var isVisibleDict = NSMutableDictionary()
     func populateIsVisibleDict() {
         if self.currentArrayController != nil {
-            for track in self.currentArrayController?.arrangedObjects as! [Track] {
-                isVisibleDict[(track).id!] = true
+            for track in self.currentArrayController?.arrangedObjects as! [TrackView] {
+                isVisibleDict[(track).track!.id!] = true
             }
         }
     }
@@ -271,13 +272,13 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     
     func searchFieldDidStartSearching(sender: NSSearchField) {
         print("search started searching called")
-        print((currentArrayController?.arrangedObjects as! [Track]).count)
+        print((currentArrayController?.arrangedObjects as! [TrackView]).count)
         viewCoordinator?.search_bar_content = searchField.stringValue
     }
     
     func searchFieldDidEndSearching(sender: NSSearchField) {
         print("search ended searching called")
-        print((currentArrayController?.arrangedObjects as! [Track]).count)
+        print((currentArrayController?.arrangedObjects as! [TrackView]).count)
         viewCoordinator?.search_bar_content = ""
     }
     
@@ -433,13 +434,17 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     
     func initializeArray(track_played: Track) {
         print("initialize array called")
+        if current_source_play_order!.count == 0 {
+            current_source_play_order = (currentArrayController!.arrangedObjects as! [TrackView]).map( { return $0.track!.id as! Int} )
+        }
         trackQueueTableDelegate.updateContext(cur_view_title)
         if cur_source_title != cur_view_title {
-            current_source_play_order = (currentArrayController!.arrangedObjects as! [Track]).map( { return $0.id as! Int} )
+            current_source_play_order = (currentArrayController!.arrangedObjects as! [TrackView]).map( { return $0.track!.id as! Int} )
         }
         
         if (shuffleButton.state == NSOnState) {
             print("shuffling")
+            print(current_source_play_order!.count)
             current_source_temp_shuffle = current_source_play_order
             shuffle_array(&current_source_temp_shuffle!)
             current_source_temp_shuffle = current_source_temp_shuffle!.filter( {
@@ -467,6 +472,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         }
         let next_track = getTrackWithID(id!)
         currentTrack = next_track
+        currentTrackView = next_track?.view
         current_source_index! += 1
         currentTableView?.reloadData()
         return next_track
@@ -535,8 +541,8 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         guard currentTableView!.selectedRow >= 0 else {
             return
         }
-        let item = (currentArrayController?.arrangedObjects as! [Track])[currentTableView!.selectedRow]
-        playSong(item)
+        let item = (currentArrayController?.arrangedObjects as! [TrackView])[currentTableView!.selectedRow].track
+        playSong(item!)
     }
     
     @IBAction func toggleArtwork(sender: AnyObject) {
@@ -561,7 +567,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     
     @IBAction func addToQueueFromTableView(sender: AnyObject) {
         print(currentTableView!.selectedRow)
-        let track_to_add = (currentArrayController?.arrangedObjects as! [Track])[currentTableView!.selectedRow]
+        let track_to_add = (currentArrayController?.arrangedObjects as! [TrackView])[currentTableView!.selectedRow].track!
         trackQueueTableDelegate.addTrackToQueue(track_to_add, context: cur_view_title, tense: 1)
         queue.addTrackToQueue(track_to_add, index: nil)
         checkQueueList(track_to_add)
@@ -569,7 +575,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     
     @IBAction func playFromTableView(sender: AnyObject) {
         print(currentTableView!.selectedRow)
-        let track_to_play = (currentArrayController?.arrangedObjects as! [Track])[currentTableView!.selectedRow]
+        let track_to_play = (currentArrayController?.arrangedObjects as! [TrackView])[currentTableView!.selectedRow].track!
         playSong(track_to_play)
         checkQueueList(track_to_play)
     }
@@ -590,6 +596,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         checkQueueList(track)
         queue.playImmediately(track)
         self.currentTrack = track
+        self.currentTrackView = track.view
         initializeInterfaceForNewTrack()
         paused = false
         currentTrack = track
@@ -663,15 +670,15 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             }
         } else {
             if currentTableView?.selectedRow >= 0 {
-                playSong((currentArrayController?.arrangedObjects as! [Track])[currentTableView!.selectedRow])
+                playSong((currentArrayController?.arrangedObjects as! [TrackView])[currentTableView!.selectedRow].track!)
             }
             else {
                 var item: Track?
                 if shuffleButton.state == NSOffState {
-                    item = (currentArrayController?.arrangedObjects as! [Track])[0]
+                    item = (currentArrayController?.arrangedObjects as! [TrackView])[0].track!
                 } else if shuffleButton.state == NSOnState {
-                    let random_index = Int(arc4random_uniform(UInt32(((currentArrayController?.arrangedObjects as! [Track]).count))))
-                    item = (currentArrayController?.arrangedObjects as! [Track])[random_index]
+                    let random_index = Int(arc4random_uniform(UInt32(((currentArrayController?.arrangedObjects as! [TrackView]).count))))
+                    item = (currentArrayController?.arrangedObjects as! [TrackView])[random_index].track!
                 }
                 playSong(item!)
             }
@@ -714,8 +721,8 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             guard currentTableView!.selectedRow >= 0 else {
                 return
             }
-            let item = (currentArrayController?.arrangedObjects as! [Track])[currentTableView!.selectedRow]
-            playSong(item as! Track)
+            let item = (currentArrayController?.arrangedObjects as! [TrackView])[currentTableView!.selectedRow].track
+            playSong(item!)
         }
         else if theEvent.keyCode == 124 {
             skip()
@@ -929,10 +936,14 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         if context == &my_context {
             if keyPath! == "track_changed" {
+                let before = NSDate()
                 print("controller detects track change")
                 timer?.invalidate()
                 initializeInterfaceForNewTrack()
                 trackQueueTableDelegate.nextTrack()
+                let after = NSDate()
+                let since = after.timeIntervalSinceDate(before)
+                print(since)
             }
             else if keyPath! == "done_playing" {
                 print("controller detects finished playing")
@@ -940,18 +951,18 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             }
             else if keyPath! == "sortDescriptors" {
                 if (cur_view_title == cur_source_title) {
-                    current_source_play_order = (currentArrayController?.arrangedObjects as! [Track]).map( {return ($0 as! Track).id as! Int} )
+                    current_source_play_order = (currentArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int} )
                     if (is_initialized == true) {
-                        current_source_index = (currentArrayController?.arrangedObjects as! [Track]).indexOf(currentTrack!)
+                        current_source_index = (currentArrayController?.arrangedObjects as! [TrackView]).indexOf(currentTrackView!)
                         print("current source index set to \(current_source_index)")
                     }
                 }
             }
             else if keyPath! == "filterPredicate" {
                 if (cur_view_title == cur_source_title) {
-                    current_source_play_order = (currentArrayController?.arrangedObjects as! [Track]).map( {return ($0 as! Track).id as! Int} )
+                    current_source_play_order = (currentArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int} )
                     if (is_initialized == true) {
-                        current_source_index = (currentArrayController?.arrangedObjects as! [Track]).indexOf(currentTrack!)
+                        current_source_index = (currentArrayController?.arrangedObjects as! [TrackView]).indexOf(currentTrackView!)
                         if current_source_index == nil {
                             current_source_index = 0
                         }
@@ -1020,10 +1031,10 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             return
         }
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            let trackArray = (self.currentArrayController?.arrangedObjects as! [Track])
+            let trackArray = (self.currentArrayController?.arrangedObjects as! [TrackView])
             let numItems = trackArray.count
-            let totalSize = trackArray.map({return (($0).size!.longLongValue)}).reduce(0, combine: {$0 + $1})
-            let totalTime = trackArray.map({return ($0).time!.doubleValue}).reduce(0, combine: {$0 + $1})
+            let totalSize = trackArray.map({return (($0.track)!.size!.longLongValue)}).reduce(0, combine: {$0 + $1})
+            let totalTime = trackArray.map({return ($0.track)!.time!.doubleValue}).reduce(0, combine: {$0 + $1})
             let numString = self.numberFormatter.stringFromNumber(numItems)
             let sizeString = self.sizeFormatter.stringFromByteCount(totalSize)
             let timeString = self.dateFormatter.stringFromTimeInterval(totalTime/1000)
@@ -1123,7 +1134,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         numberFormatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
         dateFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyle.Full
         print(hasMusic)
-        hasMusic = true
+        //hasMusic = true
         if (hasMusic == false) {
             librarySplitView.addArrangedSubview(noMusicView)
             noMusicView.hidden = false
@@ -1184,8 +1195,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         //predicateEditor.addRow(nil)
         self.window!.titleVisibility = NSWindowTitleVisibility.Hidden
         self.window!.titlebarAppearsTransparent = true
-        //current_source_play_order = (currentArrayController?.arrangedObjects as! [Track]).map( {return $0.id as! Int})
-        print(current_source_play_order?.count)
+        print("count: \(current_source_play_order?.count)")
         updateInfo()
         //currentArrayController?.rearrangeObjects()
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
@@ -1193,6 +1203,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
                 self.sourceListView.expandItem(nil, expandChildren: true)
             }
         }
+        currentTableView = libraryTableView
         columnVisibilityMenu.delegate = self
         self.initializeColumnVisibilityMenu(self.libraryTableView)
         let mainLibraryIndexes = [0, 0]
@@ -1209,5 +1220,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         /*libraryTableView.setDelegate(trackViewArrayController)
         libraryTableView.setDataSource(trackViewArrayController)*/
         libraryTableView.reloadData()
+        self.currentArrayController = trackViewArrayController
+        current_source_play_order = (currentArrayController!.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int})
     }
 }
