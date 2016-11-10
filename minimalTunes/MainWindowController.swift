@@ -98,8 +98,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     let dateFormatter = NSDateComponentsFormatter()
     let sizeFormatter = NSByteCountFormatter()
     let fileManager = NSFileManager.defaultManager()
-    var mainTableViewDataSource: MainTableViewDataSource?
-    var mainTableViewDelegate: MainTableViewDelegate?
     var currentFilterPredicate: NSPredicate?
     
     lazy var cachedOrders: [CachedOrder]? = {
@@ -474,7 +472,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         currentTrack = next_track
         currentTrackView = next_track?.view
         current_source_index! += 1
-        currentTableView?.reloadData()
         return next_track
     }
     
@@ -561,7 +558,10 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     @IBAction func getInfoFromTableView(sender: AnyObject) {
         tagWindowController = TagEditorWindow(windowNibName: "TagEditorWindow")
         tagWindowController?.mainWindowController = self
-        //todo fix
+        tagWindowController?.selectedTracks = (currentArrayController?.selectedObjects as! [TrackView]).map({return $0.track!})
+        if tagWindowController?.selectedTracks?.count == 1 {
+            tagWindowController?.currentTrack = tagWindowController!.selectedTracks![0]
+        }
         tagWindowController?.showWindow(self)
     }
     
@@ -595,7 +595,9 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         trackQueueTableDelegate.changeCurrentTrack(track, context: cur_source_title)
         checkQueueList(track)
         queue.playImmediately(track)
+        self.currentTrack?.is_playing = false
         self.currentTrack = track
+        self.currentTrack?.is_playing = true
         self.currentTrackView = track.view
         initializeInterfaceForNewTrack()
         paused = false
@@ -725,9 +727,11 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             playSong(item!)
         }
         else if theEvent.keyCode == 124 {
+            self.currentTrack?.is_playing = false
             skip()
         }
         else if theEvent.keyCode == 123 {
+            self.currentTrack?.is_playing = false
             skipBackward()
         }
     }
@@ -847,7 +851,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     func menuWillOpen(menu: NSMenu) {
         for menuItem in menu.itemArray {
             if menuItem.representedObject != nil {
-                menuItem.state = (menuItem.representedObject as! NSTableColumn).hidden ? NSOnState : NSOffState
+                menuItem.state = (menuItem.representedObject as! NSTableColumn).hidden ? NSOffState : NSOnState
             }
         }
     }
@@ -969,7 +973,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
                         print("current source index set to \(current_source_index)")
                     }
                 }
-                updateCachedSorts()
+                //updateCachedSorts()
                 //updateNewCachedSorts()
             }
             updateInfo()
@@ -1176,7 +1180,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         queue.addObserver(self, forKeyPath: "done_playing", options: .New, context: &my_context)
         super.windowDidLoad()
         if (hasMusic == true) {
-            print(cachedOrders![0])
+            //print(cachedOrders![0])
         }
         albumArtView.mainWindowController = self
         trackQueueTableView.setDataSource(trackQueueTableDelegate)

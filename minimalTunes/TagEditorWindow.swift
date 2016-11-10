@@ -28,8 +28,10 @@ class TagEditorWindow: NSWindowController {
     
     var mainWindowController: MainWindowController?
     
+    @IBOutlet weak var tabView: NSTabView!
     
     //mark tag view
+    @IBOutlet weak var releaseDateCheck: NSButton!
     @IBOutlet weak var tagsView: NSView!
     @IBOutlet weak var cancelButton: NSButton!
     @IBOutlet weak var confirmButton: NSButton!
@@ -49,11 +51,16 @@ class TagEditorWindow: NSWindowController {
     @IBOutlet weak var albumField: NSTextField!
     @IBOutlet weak var artistField: NSTextField!
     
+    //mark file info view
+    @IBOutlet weak var fileInfoTab: NSTabViewItem!
+    
+    //mark the rest
     var selectedTracks: [Track]?
+    var currentTrack: Track?
     
     func commitEdits() {
         print("committing edits")
-        //comments, composer, release date, track num, album artist, name, album, artist
+        //comments, composer, release date, track num, album artist, name, album, artist, disc number, 
         for track in selectedTracks! {
             if nameField.stringValue.isEmpty == false {
                 track.name = nameField.stringValue
@@ -65,20 +72,29 @@ class TagEditorWindow: NSWindowController {
         if albumField.stringValue.isEmpty == false {
             editAlbum(selectedTracks, albumName: albumField.stringValue)
         }
+        if albumArtistField.stringValue.isEmpty == false {
+            editAlbumArtist(selectedTracks, albumArtistName: albumArtistField.stringValue)
+        }
+        if composerField.stringValue.isEmpty == false {
+            editComposer(selectedTracks, composerName: composerField.stringValue)
+        }
         print(selectedTracks)
         for order in mainWindowController!.cachedOrders! {
             reorderForTracks(self.selectedTracks!, cachedOrder: order)
         }
-        self.mainWindowController?.refreshTableView()
-        
         
     }
     
     @IBAction func confirmPressed(sender: AnyObject) {
         commitEdits()
         self.window?.close()
+        self.mainWindowController?.currentArrayController?.rearrangeObjects()
     }
     
+    @IBAction func datePickerAction(sender: AnyObject) {
+        releaseDateCheck.state = NSOnState
+        
+    }
     func allEqual<T:Equatable>(thing: [T?]) -> Bool {
         let firstElem = thing.first!
         if thing.contains( {$0 != firstElem}) == false {
@@ -131,6 +147,9 @@ class TagEditorWindow: NSWindowController {
         if allEqual(release_dates) == true {
             if release_dates[0] != nil {
                 releaseDatePicker.dateValue = release_dates[0]!
+                releaseDateCheck.state = NSOnState
+            } else {
+                releaseDateCheck.state = NSOffState
             }
         }
     }
@@ -139,6 +158,7 @@ class TagEditorWindow: NSWindowController {
         if selectedTracks!.count > 1 {
             nextTrackButton.hidden = true
             previousTrackButton.hidden = true
+            tabView.removeTabViewItem(fileInfoTab)
         }
         populateFields()
     }

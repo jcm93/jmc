@@ -218,7 +218,7 @@ class P2PServer {
             let track_array = id_array.map({return addedTracks[$0]}) as! [Track]
             let cachedOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: managedContext) as! CachedOrder
             cachedOrder.order = order["name"] as? String
-            cachedOrder.tracks = NSOrderedSet(array: track_array)
+            cachedOrder.track_views = NSOrderedSet(array: track_array)
             let libraryName = playlistDictionary["library"] as! String
             cachedOrder.library = sharedLibraryNamesDictionary[libraryName] as? Library
             cachedOrder.is_network = true

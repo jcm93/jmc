@@ -29,7 +29,7 @@
                         <pathCell key="cell" controlSize="small" selectable="YES" editable="YES" alignment="left" id="jOZ-mb-Ur5">
                             <font key="font" metaFont="smallSystem"/>
                             <url key="url" string="file://localhost/Applications/"/>
-                            <color key="backgroundColor" red="0.8980392157" green="0.92549019610000005" blue="0.97254901959999995" alpha="1" colorSpace="deviceRGB"/>
+                            <color key="backgroundColor" red="0.89803921568627454" green="0.92549019607843142" blue="0.97254901960784312" alpha="1" colorSpace="deviceRGB"/>
                         </pathCell>
                     </pathControl>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CY8-co-OYp">

@@ -386,7 +386,7 @@ class iTunesLibraryParser: NSObject {
             let cachedArtistOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
 
             for (index, item) in song_array.enumerate() {
-                (item as! Track).addOrdersObject(cachedArtistOrder)
+                (item as! Track).view!.addOrdersObject(cachedArtistOrder)
                 (item as! Track).view?.artist_order = index
                 self.importSortUIUpdate(index)
             }
@@ -395,7 +395,7 @@ class iTunesLibraryParser: NSObject {
             let cachedAlbumOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareAlbum(_:)))
             for (index, item) in song_array.enumerate() {
-                (item as! Track).addOrdersObject(cachedAlbumOrder)
+                (item as! Track).view!.addOrdersObject(cachedAlbumOrder)
                 (item as! Track).view?.album_order = index
                 self.importSortUIUpdate(index)
             }
@@ -404,7 +404,7 @@ class iTunesLibraryParser: NSObject {
             let dateAddedOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareDateAdded(_:)))
             for (index, item) in song_array.enumerate() {
-                (item as! Track).addOrdersObject(dateAddedOrder)
+                (item as! Track).view!.addOrdersObject(dateAddedOrder)
                 (item as! Track).view?.date_added_order = index
                 self.importSortUIUpdate(index)
             }
@@ -413,7 +413,7 @@ class iTunesLibraryParser: NSObject {
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareAlbumArtist(_:)))
             let cachedAlbumArtistOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
             for (index, item) in song_array.enumerate() {
-                (item as! Track).addOrdersObject(cachedAlbumArtistOrder)
+                (item as! Track).view!.addOrdersObject(cachedAlbumArtistOrder)
                 (item as! Track).view?.album_artist_order = index
                 self.importSortUIUpdate(index)
             }
@@ -422,7 +422,7 @@ class iTunesLibraryParser: NSObject {
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareKind(_:)))
             let cachedKindOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
             for (index, item) in song_array.enumerate() {
-                (item as! Track).addOrdersObject(cachedKindOrder)
+                (item as! Track).view!.addOrdersObject(cachedKindOrder)
                 (item as! Track).view?.kind_order = index
                 self.importSortUIUpdate(index)
             }
@@ -431,7 +431,7 @@ class iTunesLibraryParser: NSObject {
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareDateReleased(_:)))
             let cachedDateReleasedOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
             for (index, item) in song_array.enumerate() {
-                (item as! Track).addOrdersObject(cachedDateReleasedOrder)
+                (item as! Track).view!.addOrdersObject(cachedDateReleasedOrder)
                 (item as! Track).view?.release_date_order = index
                 self.importSortUIUpdate(index)
             }
@@ -440,7 +440,7 @@ class iTunesLibraryParser: NSObject {
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareGenre(_:)))
             let cachedGenreOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
             for (index, item) in song_array.enumerate() {
-                (item as! Track).addOrdersObject(cachedGenreOrder)
+                (item as! Track).view!.addOrdersObject(cachedGenreOrder)
                 (item as! Track).view?.genre_order = index
                 self.importSortUIUpdate(index)
             }
@@ -449,11 +449,11 @@ class iTunesLibraryParser: NSObject {
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareName(_:)))
             let cachedNameOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
             for (index, item) in song_array.enumerate() {
-                (item as! Track).addOrdersObject(cachedNameOrder)
+                (item as! Track).view!.addOrdersObject(cachedNameOrder)
                 (item as! Track).view?.name_order = index
                 self.importSortUIUpdate(index)
             }
-            cachedGenreOrder.order = "Name"
+            cachedNameOrder.order = "Name"
             
 
             print("done sorting")

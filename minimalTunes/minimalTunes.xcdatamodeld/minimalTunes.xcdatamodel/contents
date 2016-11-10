@@ -40,9 +40,9 @@
     <entity name="CachedOrder" representedClassName=".CachedOrder" syncable="YES">
         <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="order" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="filtered_tracks" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Track" inverseName="filtered_orders" inverseEntity="Track" syncable="YES"/>
+        <relationship name="filtered_track_views" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TrackView" inverseName="filtered_orders" inverseEntity="TrackView" syncable="YES"/>
         <relationship name="library" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="cached_orders" inverseEntity="Library" syncable="YES"/>
-        <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Track" inverseName="orders" inverseEntity="Track" syncable="YES"/>
+        <relationship name="track_views" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TrackView" inverseName="orders" inverseEntity="TrackView" syncable="YES"/>
     </entity>
     <entity name="Composer" representedClassName=".Composer" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -151,23 +151,23 @@
         <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="tracks" inverseEntity="Album" syncable="YES"/>
         <relationship name="artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="tracks" inverseEntity="Artist" syncable="YES"/>
         <relationship name="composer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Composer" inverseName="tracks" inverseEntity="Composer" syncable="YES"/>
-        <relationship name="filtered_orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CachedOrder" inverseName="filtered_tracks" inverseEntity="CachedOrder" syncable="YES"/>
         <relationship name="genre" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Genre" inverseName="tracks" inverseEntity="Genre" syncable="YES"/>
-        <relationship name="orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CachedOrder" inverseName="tracks" inverseEntity="CachedOrder" syncable="YES"/>
         <relationship name="playlists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SongCollection" inverseName="tracks" inverseEntity="SongCollection" syncable="YES"/>
         <relationship name="user_defined_properties" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Property" inverseName="tracks" inverseEntity="Property" syncable="YES"/>
         <relationship name="view" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackView" inverseName="track" inverseEntity="TrackView" syncable="YES"/>
     </entity>
     <entity name="TrackView" representedClassName=".TrackView" syncable="YES">
-        <attribute name="album_artist_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="album_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="artist_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="date_added_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="genre_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="album_artist_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="album_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="artist_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="date_added_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="genre_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="kind_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="name_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="release_date_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="kind_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="name_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="release_date_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <relationship name="filtered_orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CachedOrder" inverseName="filtered_track_views" inverseEntity="CachedOrder" syncable="YES"/>
+        <relationship name="orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CachedOrder" inverseName="track_views" inverseEntity="CachedOrder" syncable="YES"/>
         <relationship name="other_sort_orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SortOrder" inverseName="track_view" inverseEntity="SortOrder" syncable="YES"/>
         <relationship name="track" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Track" inverseName="view" inverseEntity="Track" syncable="YES"/>
     </entity>
@@ -176,7 +176,7 @@
         <element name="AlbumArtwork" positionX="-1757" positionY="81" width="128" height="133"/>
         <element name="AlbumArtworkCollection" positionX="-1764" positionY="243" width="128" height="103"/>
         <element name="Artist" positionX="-1323" positionY="117" width="128" height="148"/>
-        <element name="CachedOrder" positionX="-1262" positionY="-45" width="128" height="118"/>
+        <element name="CachedOrder" positionX="-1262" positionY="-45" width="128" height="120"/>
         <element name="Composer" positionX="-1539" positionY="375" width="128" height="133"/>
         <element name="Genre" positionX="-1532" positionY="542" width="128" height="120"/>
         <element name="Library" positionX="-801" positionY="-45" width="128" height="118"/>
@@ -186,7 +186,7 @@
         <element name="SongCollectionFolder" positionX="-693" positionY="380" width="128" height="103"/>
         <element name="SortOrder" positionX="-1548" positionY="108" width="128" height="75"/>
         <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="195"/>
-        <element name="Track" positionX="-1026" positionY="-54" width="128" height="645"/>
-        <element name="TrackView" positionX="-1557" positionY="99" width="128" height="210"/>
+        <element name="Track" positionX="-1026" positionY="-54" width="128" height="615"/>
+        <element name="TrackView" positionX="-1557" positionY="99" width="128" height="240"/>
     </elements>
 </model>

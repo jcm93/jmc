@@ -26,11 +26,11 @@ class MainTableViewDataSource: NSObject, NSTableViewDataSource {
     override init() {
         super.init()
         currentOrder = cachedOrders![0]
-        currentArray = currentOrder?.tracks?.array as? [Track]
+        currentArray = currentOrder?.track_views?.array as? [TrackView]
     }
     
     var currentOrder: CachedOrder?
-    var currentArray: [Track]?
+    var currentArray: [TrackView]?
     
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
         print("number rows in table view called: \(currentArray!.count)")

@@ -13,7 +13,6 @@ import CoreData
 class Track: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
-    @NSManaged func addOrdersObject(order: CachedOrder)
     
     func dictRepresentation(fields: [String]) -> NSDictionary {
         let dict = NSMutableDictionary()

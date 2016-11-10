@@ -27,6 +27,12 @@ let fieldsToCachedOrdersDictionary: NSDictionary = [
     "genre" : "Genre"
 ]
 
+let defaultSortPrefixDictionary: NSMutableDictionary = [
+    "the " : "",
+    "a " : "",
+    "an " : "",
+]
+
 let sharedLibraryNamesDictionary = NSMutableDictionary()
 
 extension Track {
@@ -334,6 +340,21 @@ class MeTunesDate {
     }
 }
 
+func getSortName(name: String?) -> String? {
+    //todo fix for defaults
+    var sortName = name
+    if name != nil {
+        for prefix in defaultSortPrefixDictionary.allKeys {
+            if name!.lowercaseString.hasPrefix(prefix as! String) {
+                let range = name!.startIndex...name!.startIndex.advancedBy((prefix as! String).characters.count)
+                sortName!.removeRange(range)
+                return sortName
+            }
+        }
+    }
+    return sortName
+}
+
 func getTimeAsString(time: NSTimeInterval) -> String? {
     let dongs = Int(time)
     let hr = dongs / 3600
@@ -357,59 +378,86 @@ func getTimeAsString(time: NSTimeInterval) -> String? {
     return stamp
 }
 
+func editName(tracks: [Track]?, name: String) {
+    let sortName = getSortName(name)
+    for track in tracks! {
+        track.name = name
+        if sortName != name {
+            track.sort_name = sortName
+        }
+    }
+}
+
 func editArtist(tracks: [Track]?, artistName: String) {
     print(artistName)
     let managedContext: NSManagedObjectContext = {
         return (NSApplication.sharedApplication().delegate
             as? AppDelegate)?.managedObjectContext }()!
-    let artistCheck: Artist? = {
-        let fetch_req = NSFetchRequest(entityName: "Artist")
-        let predicate = NSPredicate(format: "name == %@", artistName)
-        fetch_req.predicate = predicate
-        do {
-            let results = try managedContext.executeFetchRequest(fetch_req) as! [Artist]
-            if (results.count > 0) {
-                return results[0]
-            } else {
-                return nil
-            }
-            
-        } catch {
-            print("error: \(error)")
-            return nil
-        }
-    }()
+    let artistCheck = checkIfArtistExists(artistName)
     if artistCheck != nil {
         for track in tracks! {
             track.artist = artistCheck!
             let artistName = artistCheck!.name!
-            var sortArtistName: String
-            if artistCheck!.name!.hasPrefix("The ") || artistCheck!.name!.hasPrefix("the ") {
-                let range = artistName.startIndex...artistName.startIndex.advancedBy(3)
-                sortArtistName = artistName
-                sortArtistName.removeRange(range)
+            let sortArtistName = getSortName(artistName)
+            if sortArtistName != artistName {
+                track.sort_artist = sortArtistName
             }
-            else {
-                sortArtistName = artistName
-            }
-            track.sort_artist = sortArtistName
         }
     } else {
         let new_artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: managedContext) as! Artist
         new_artist.name = artistName
-        var sortArtistName: String
-        if artistName.hasPrefix("The ") || artistName.hasPrefix("the ") {
-            let range = artistName.startIndex...artistName.startIndex.advancedBy(3)
-            sortArtistName = artistName
-            sortArtistName.removeRange(range)
-            print(sortArtistName)
-        }
-        else {
-            sortArtistName = artistName
-        }
+        let sortArtistName = getSortName(artistName)
         for track in tracks! {
             track.artist = new_artist
-            track.sort_artist = sortArtistName
+            if sortArtistName != artistName {
+                track.sort_artist = sortArtistName
+            }
+        }
+    }
+}
+
+func editComposer(tracks: [Track]?, composerName: String) {
+    print(composerName)
+    let managedContext: NSManagedObjectContext = {
+        return (NSApplication.sharedApplication().delegate
+            as? AppDelegate)?.managedObjectContext }()!
+    let composerCheck = checkIfComposerExists(composerName)
+    if composerCheck != nil {
+        for track in tracks! {
+            track.composer = composerCheck!
+            let sortComposerName = getSortName(composerName)
+            if sortComposerName != composerName {
+                track.sort_composer = sortComposerName
+            }
+        }
+    } else {
+        let new_composer = NSEntityDescription.insertNewObjectForEntityForName("Composer", inManagedObjectContext: managedContext) as! Composer
+        new_composer.name = composerName
+        let sortComposerName = getSortName(composerName)
+        for track in tracks! {
+            track.composer = new_composer
+            if sortComposerName != composerName {
+                track.sort_composer = sortComposerName
+            }
+        }
+    }
+}
+
+func editGenre(tracks: [Track]?, genreName: String) {
+    print(genreName)
+    let managedContext: NSManagedObjectContext = {
+        return (NSApplication.sharedApplication().delegate
+            as? AppDelegate)?.managedObjectContext }()!
+    let genreCheck = checkIfGenreExists(genreName)
+    if genreCheck != nil {
+        for track in tracks! {
+            track.genre = genreCheck!
+        }
+    } else {
+        let new_genre = NSEntityDescription.insertNewObjectForEntityForName("Genre", inManagedObjectContext: managedContext) as! Genre
+        new_genre.name = genreName
+        for track in tracks! {
+            track.genre = new_genre
         }
     }
 }
@@ -420,59 +468,28 @@ func editAlbum(tracks: [Track]?, albumName: String) {
             as? AppDelegate)?.managedObjectContext }()!
     print(albumName)
     var album: Album?
-    let albumCheck: Album? = {
-        let fetch_req = NSFetchRequest(entityName: "Album")
-        let predicate = NSPredicate(format: "name == %@", albumName)
-        fetch_req.predicate = predicate
-        do {
-            let results = try managedContext.executeFetchRequest(fetch_req) as! [Album]
-            if (results.count > 0) {
-                return results[0]
-            } else {
-                return nil
-            }
-            
-        } catch {
-            print("error: \(error)")
-            return nil
-        }
-    }()
+    let albumCheck = checkIfAlbumExists(albumName)
     if albumCheck != nil {
         album = albumCheck!
         for track in tracks! {
             print("old album name: \(track.sort_album)")
             track.album = albumCheck!
             let albumName = albumCheck!.name!
-            var sortAlbumName: String
-            if albumCheck!.name!.hasPrefix("The ") || albumCheck!.name!.hasPrefix("the ") {
-                let range = albumName.startIndex...albumName.startIndex.advancedBy(3)
-                sortAlbumName = albumName
-                sortAlbumName.removeRange(range)
+            let sortAlbumName = getSortName(albumName)
+            if sortAlbumName != albumName {
+                track.sort_album = sortAlbumName
             }
-            else {
-                sortAlbumName = albumName
-            }
-            track.sort_album = sortAlbumName
             print("new album name: \(track.sort_album)")
         }
     } else {
         let new_album = NSEntityDescription.insertNewObjectForEntityForName("Album", inManagedObjectContext: managedContext) as! Album
         new_album.name = albumName
-        var sort_album_name: String
-        if albumName.hasPrefix("The ") || albumName.hasPrefix("the ") {
-            let range = albumName.startIndex...albumName.startIndex.advancedBy(3)
-            sort_album_name = albumName
-            sort_album_name.removeRange(range)
-            print(sort_album_name)
-        }
-        else {
-            sort_album_name = albumName
-        }
+        let sortAlbumName = getSortName(albumName)
         for track in tracks! {
-            print("old album name: \(track.sort_album)")
             track.album = new_album
-            track.sort_album = sort_album_name
-            print("new album name: \(track.sort_album)")
+            if sortAlbumName != albumName {
+                track.sort_album = sortAlbumName
+            }
         }
         album = new_album
     }
@@ -483,127 +500,45 @@ func editAlbum(tracks: [Track]?, albumName: String) {
     }
 }
 
-func isGreaterArtist(a: Track, b: Track) -> Bool? {
-    if a.artist == nil {
-        return false
-    }
-    if b.artist == nil {
-        return true
-    }
-    let artistComp = a.sort_artist!.localizedStandardCompare(b.sort_artist!)
-    switch artistComp {
-    case .OrderedSame:
-        return isGreaterAlbum(a, b: b)
-    case .OrderedAscending:
-        return false
-    case .OrderedDescending:
-        return true
-    }
-}
-
-func isGreaterAlbum(a: Track, b: Track) -> Bool? {
-    if a.album == nil {
-        return false
-    }
-    if b.album == nil {
-        return true
-    }
-    let albumComp = a.sort_album!.localizedStandardCompare(b.sort_album!)
-    switch albumComp {
-    case .OrderedSame:
-        return isGreaterTrackNum(a, b: b)
-    case .OrderedAscending:
-        return false
-    case .OrderedDescending:
-        return true
+func editAlbumArtist(tracks: [Track]?, albumArtistName: String) {
+    print(albumArtistName)
+    let managedContext: NSManagedObjectContext = {
+        return (NSApplication.sharedApplication().delegate
+            as? AppDelegate)?.managedObjectContext }()!
+    let artistCheck = checkIfArtistExists(albumArtistName)
+    if artistCheck != nil {
+        for track in tracks! {
+            track.album?.album_artist = artistCheck!
+            let artistName = artistCheck!.name!
+            let sortArtistName = getSortName(artistName)
+            if sortArtistName != artistName {
+                track.sort_album_artist = sortArtistName
+            }
+        }
+    } else {
+        let new_artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: managedContext) as! Artist
+        new_artist.name = albumArtistName
+        let sortArtistName = getSortName(albumArtistName)
+        for track in tracks! {
+            track.album?.album_artist = new_artist
+            if sortArtistName != albumArtistName {
+                track.sort_album_artist = sortArtistName
+            }
+        }
     }
 }
 
-func isGreaterTrackNum(a: Track, b: Track) -> Bool? {
-    if a.track_num == nil {
-        return false
-    }
-    if b.track_num == nil {
-        return true
-    }
-    let trackNumComp = a.track_num!.compare(b.track_num!)
-    switch trackNumComp {
-    case .OrderedSame:
-        return isGreaterName(a, b: b)
-    case .OrderedAscending:
-        return false
-    case .OrderedDescending:
-        return true
-    }
-
-}
-
-func isGreaterName(a: Track, b: Track) -> Bool? {
-    if a.name == nil {
-        return false
-    }
-    if b.name == nil {
-        return true
-    }
-    let nameComp = a.name!.localizedStandardCompare(b.name!)
-    print(b.name!)
-    switch nameComp {
-    case .OrderedAscending:
-        return false
-    case .OrderedDescending:
-        return true
-    case .OrderedSame:
-        return nil
-    }
-}
-
-func isGreaterDateAdded(a: Track, b: Track) -> Bool? {
-    if a.date_added == nil {
-        return false
-    }
-    if b.date_added == nil {
-        return true
-    }
-    let dateComp = a.date_added!.compare(b.date_added!)
-    switch dateComp {
-    case .OrderedAscending:
-        return false
-    case .OrderedDescending:
-        return true
-    case .OrderedSame:
-        return isGreaterArtist(a, b: b)
-    }
-}
-
-func isGreaterTime(a: Track, b: Track) -> Bool? {
-    if a.time == nil {
-        return false
-    }
-    if b.time == nil {
-        return true
-    }
-    let timeComp = a.time!.compare(b.time!)
-    switch timeComp {
-    case .OrderedAscending:
-        return false
-    case .OrderedDescending:
-        return true
-    case .OrderedSame:
-        return isGreaterName(a, b: b)
-    }
-}
-
-func insert(tracks: NSOrderedSet, track: Track, isGreater: (a: Track, b: Track) -> Bool?) -> Int {
+func insert(tracks: NSOrderedSet, track: TrackView, isGreater: (Track -> Track -> NSComparisonResult)) -> Int {
     var high: Int = tracks.count - 1
     var low: Int = 0
     var index: Int
     while (low <= high) {
         index = (low + high) / 2
-        let result = isGreater(a: track, b: tracks[index] as! Track)
-        if result == true {
+        let result = isGreater(track.track!)((tracks[index] as! TrackView).track!)
+        if result == .OrderedAscending {
             low = index + 1
         }
-        else if result == false {
+        else if result == .OrderedDescending {
             high = index - 1
         }
         else {
@@ -613,33 +548,74 @@ func insert(tracks: NSOrderedSet, track: Track, isGreater: (a: Track, b: Track) 
     return low
 }
 
+func fixIndices(set: NSMutableOrderedSet, index: Int, order: String) {
+    let trackView = (set[index] as! TrackView)
+    var testIndex = index + 1
+    let key: String
+    switch order {
+    case "Artist":
+        key = "artist_order"
+    case "Album":
+        key = "album_order"
+    case "Date Added":
+        key = "date_added_order"
+    case "Name":
+        key = "name_order"
+    case "Album Artist":
+        key = "album_artist_order"
+    case "Genre":
+        key = "genre_order"
+    case "Kind":
+        key = "kind_order"
+    case "Date Released":
+        key = "release_date_order"
+    default:
+        key = "poop"
+    }
+    trackView.setValue(index, forKey: key)
+    var firstIndex = index
+    while (testIndex < set.count && (set[testIndex].valueForKey(key) as! Int) <= (set[firstIndex].valueForKey(key) as! Int)) {
+        let currentValue = set[testIndex].valueForKey(key) as! Int
+        set[testIndex].setValue(currentValue + 1, forKey: key)
+        firstIndex = firstIndex + 1
+        testIndex = testIndex + 1
+    }
+}
+
 
 func reorderForTracks(tracks: [Track], cachedOrder: CachedOrder) {
     print("reordering for tracks for cached order \(cachedOrder.order!)")
-    var comparator: ((a: Track, b: Track) -> Bool?)?
+    var comparator: (Track) -> (Track) -> NSComparisonResult
     switch cachedOrder.order! {
     case "Artist":
-        comparator = isGreaterArtist
+        comparator = Track.compareArtist
     case "Album":
-        comparator = isGreaterAlbum
+        comparator = Track.compareAlbum
     case "Date Added":
-        comparator = isGreaterDateAdded
+        comparator = Track.compareDateAdded
     case "Name":
-        comparator = isGreaterName
-    case "Time":
-        comparator = isGreaterTime
+        comparator = Track.compareName
+    case "Date Released":
+        comparator = Track.compareDateReleased
+    case "Album Artist":
+        comparator = Track.compareAlbumArtist
+    case "Genre":
+        comparator = Track.compareGenre
+    case "Kind":
+        comparator = Track.compareKind
     default:
-        comparator = isGreaterArtist
+        comparator = Track.compareArtist
     }
-    let fuckYou = cachedOrder.tracks!.mutableCopy() as! NSMutableOrderedSet
+    let fuckYou = cachedOrder.track_views!.mutableCopy() as! NSMutableOrderedSet
     for track in tracks {
-        fuckYou.removeObject(track)
+        fuckYou.removeObject(track.view!)
     }
     for track in tracks {
-        let index = insert(fuckYou, track: track, isGreater: comparator!)
-        fuckYou.insertObject(track, atIndex: index)
+        let index = insert(fuckYou, track: track.view!, isGreater: comparator)
+        fuckYou.insertObject(track.view!, atIndex: index)
+        fixIndices(fuckYou, index: index, order: cachedOrder.order!)
     }
-    cachedOrder.tracks = fuckYou.copy() as? NSOrderedSet
+    cachedOrder.track_views = fuckYou.copy() as? NSOrderedSet
 }
 
 func addPrimaryArtForTrack(track: Track, art: NSData, albumDirectoryPath: String) -> Track? {

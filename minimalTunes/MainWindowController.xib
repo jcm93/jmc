@@ -62,6 +62,14 @@
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </searchFieldCell>
+                        <connections>
+                            <binding destination="vnS-ge-OhJ" name="predicate" keyPath="filterPredicate" id="GRd-y0-FrL">
+                                <dictionary key="options">
+                                    <string key="NSDisplayName">predicate</string>
+                                    <string key="NSPredicateFormat">track.artist.name contains[cd] $value OR track.name contains[cd] $value OR track.album.name contains[cd] $value OR track.comments contains[cd] $value OR track.composer.name contains[cd] $value OR track.genre.name contains[cd] $value</string>
+                                </dictionary>
+                            </binding>
+                        </connections>
                     </searchField>
                     <slider verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ELy-ib-2qL">
                         <rect key="frame" x="226" y="1002" width="28" height="21"/>
@@ -523,7 +531,8 @@
                                                                             <rect key="frame" x="-16" y="-16" width="48" height="48"/>
                                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NowPlaying" id="KYM-i4-j4r"/>
                                                                             <connections>
-                                                                                <binding destination="0OE-hb-8Mt" name="hidden" keyPath="objectValue.track.is_playing" id="W2S-Lg-hYp">
+                                                                                <binding destination="0OE-hb-8Mt" name="enabled" keyPath="objectValue.track.is_playing" id="qCB-wp-MT2"/>
+                                                                                <binding destination="0OE-hb-8Mt" name="hidden" keyPath="objectValue.track.is_playing" previousBinding="qCB-wp-MT2" id="fqb-jk-VNU">
                                                                                     <dictionary key="options">
                                                                                         <string key="NSValueTransformerName">NSNegateBoolean</string>
                                                                                     </dictionary>
@@ -620,7 +629,7 @@
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qGW-02-wWQ">
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="qLo-HV-EVu">
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -664,7 +673,7 @@
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N4I-3I-r5z">
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="Bwt-Qt-9nI">
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -712,7 +721,7 @@
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ovd-MB-EeT">
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="u8T-LQ-AiH">
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -756,7 +765,7 @@
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eHG-1K-eNV">
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="Jr7-7T-eIp">
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -801,7 +810,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="0hC-xi-8aJ">
                                                                                 <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" id="pOi-bc-Np3"/>
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -846,7 +855,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="Gx5-aP-w00">
                                                                                 <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" id="wCB-FY-Ou1"/>
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -891,7 +900,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="d9P-YT-ncw">
                                                                                 <dateFormatter key="formatter" dateStyle="full" id="rcQ-rI-JJd"/>
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -935,7 +944,7 @@
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tR1-lV-zpu">
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="Qpf-6P-2k6">
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -979,7 +988,7 @@
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P8Y-Y4-LkT">
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="dEf-Ld-1qa">
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1024,7 +1033,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="hOJ-TI-4UN">
                                                                                 <customFormatter key="formatter" id="q44-06-ylZ" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1068,7 +1077,7 @@
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oqN-U5-4fH">
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="IiZ-fP-ilD">
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1112,7 +1121,7 @@
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qm3-K3-5Vh">
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="0ki-wA-P8u">
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1156,7 +1165,7 @@
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="U0s-g1-8nv">
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="Mdq-Pn-p3y">
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1201,7 +1210,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="hYk-UM-wvX">
                                                                                 <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" id="iNc-lQ-leL"/>
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1246,7 +1255,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="yrc-VD-7C5">
                                                                                 <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" id="Eh0-Wc-wNi"/>
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1290,7 +1299,7 @@
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="t6z-d5-WeO">
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="VQd-Hs-TV3">
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1335,7 +1344,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="h5t-hK-uTW">
                                                                                 <customFormatter key="formatter" id="iI9-lh-XTp" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1380,7 +1389,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="5fT-qh-FPC">
                                                                                 <customFormatter key="formatter" id="OTk-Zh-E8N" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1425,7 +1434,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="uXi-4m-e7k">
                                                                                 <customFormatter key="formatter" id="gqV-rN-1X4" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1470,7 +1479,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="6bv-KU-Hpp">
                                                                                 <customFormatter key="formatter" id="mNY-KL-n0f" customClass="BitRateFormatter" customModule="minimalTunes" customModuleProvider="target"/>
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1515,7 +1524,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="uzb-Hx-1bN">
                                                                                 <customFormatter key="formatter" id="fsk-ZT-iwK" customClass="SampleRateFormatter" customModule="minimalTunes" customModuleProvider="target"/>
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1560,7 +1569,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="iw2-ur-thY">
                                                                                 <byteCountFormatter key="formatter" id="Qpe-nd-o4m"/>
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1605,7 +1614,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="7yt-FG-Qff">
                                                                                 <customFormatter key="formatter" id="dgm-Ht-Ku5" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1649,7 +1658,7 @@
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8VX-Ex-kuu">
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="Wdf-Lr-Nib">
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1693,7 +1702,7 @@
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FUf-Fe-YpR">
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="Xy8-Zb-Ozr">
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1737,7 +1746,7 @@
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WPK-4R-05z">
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="go0-VC-mBb">
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1781,7 +1790,7 @@
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gld-f5-cEh">
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="hkc-qw-BTX">
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1825,7 +1834,7 @@
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6oq-hV-FGa">
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="kCf-3e-X8r">
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
@@ -1870,7 +1879,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="rhH-H2-9zH">
                                                                                 <customFormatter key="formatter" id="Cg2-xU-8M5" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
-                                                                                <font key="font" metaFont="system" size="12"/>
+                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 <connections>
