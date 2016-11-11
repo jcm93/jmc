@@ -519,11 +519,73 @@ func editAlbumArtist(tracks: [Track]?, albumArtistName: String) {
         let new_artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: managedContext) as! Artist
         new_artist.name = albumArtistName
         let sortArtistName = getSortName(albumArtistName)
+        let unique_albums = Array(Set(tracks!.map({return $0.album!})))
+        for album in unique_albums {
+            album.album_artist = new_artist
+        }
         for track in tracks! {
-            track.album?.album_artist = new_artist
             if sortArtistName != albumArtistName {
                 track.sort_album_artist = sortArtistName
             }
+        }
+    }
+}
+
+func editTrackNum(tracks: [Track]?, num: Int) {
+    if tracks != nil {
+        for track in tracks! {
+            track.track_num = num
+        }
+    }
+}
+
+func editTrackNumOf(tracks: [Track]?, num: Int) {
+    if tracks != nil {
+        let unique_albums = Array(Set(tracks!.map({return $0.album!})))
+        for album in unique_albums {
+            album.track_count = num
+        }
+    }
+}
+
+func editDiscNum(tracks: [Track]?, num: Int) {
+    if tracks != nil {
+        for track in tracks! {
+            track.disc_number = num
+        }
+    }
+}
+
+func editDiscNumOf(tracks: [Track]?, num: Int) {
+    if tracks != nil {
+        let unique_albums = Array(Set(tracks!.map({return $0.album!})))
+        for album in unique_albums {
+            album.disc_count = num
+        }
+    }
+}
+
+func editComments(tracks: [Track]?, comments: String) {
+    if tracks != nil {
+        for track in tracks! {
+            track.comments = comments
+        }
+    }
+}
+
+func editRating(tracks: [Track]?, rating: Int) {
+    if tracks != nil {
+        for track in tracks! {
+            track.rating = rating
+        }
+    }
+}
+
+func editIsComp(tracks: [Track]?, isComp: Bool) {
+    if tracks != nil {
+        let unique_albums = Array(Set(tracks!.map({return $0.album!})))
+        for album in unique_albums {
+            album.is_compilation = isComp
         }
     }
 }

@@ -63,6 +63,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     var currentArrayController: DragAndDropArrayController?
     
     var tagWindowController: TagEditorWindow?
+    var customFieldController: CustomFieldWindowController?
     var importWindowController: ImportWindowController?
     var delegate: AppDelegate?
     var timer: NSTimer?
@@ -551,8 +552,20 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         }
     }
     
+    
+    
     @IBAction func togglePastTracks(sender: AnyObject) {
         trackQueueTableDelegate.togglePastTracks()
+    }
+    
+    @IBAction func createCustomField(sender: AnyObject) {
+        self.customFieldController = CustomFieldWindowController(windowNibName: "CustomFieldWindowController")
+        self.customFieldController?.mainWindow = self
+        self.customFieldController?.showWindow(self)
+    }
+    
+    func customFieldCreated(column: NSTableColumn) {
+        let key = "arrangedObjects.user_defined_properties."
     }
     
     @IBAction func getInfoFromTableView(sender: AnyObject) {
@@ -612,51 +625,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
             swap(&array[i], &array[j])
         }
     }
-    
-    /*func tableView(tableView: NSTableView, mouseDownInHeaderOfTableColumn tableColumn: NSTableColumn) {
-        print("called")
-        print("caching \(tableColumn.identifier)")
-        let beforeSetDate = NSDate()
-        NSUserDefaults.standardUserDefaults().setObject(tableColumn.title, forKey: "lastColumn")
-        if focusedColumn == tableColumn {
-            print("reversing table content")
-            self.currentArrayController.reverse
-            if asc == true {
-                tableView.setIndicatorImage(NSImage(named: "NSDescendingSortIndicator"), inTableColumn: tableColumn)
-                asc = false
-            }
-            else {
-                tableView.setIndicatorImage(NSImage(named: "NSAscendingSortIndicator"), inTableColumn: tableColumn)
-                asc = true
-            }
-        }
-        else {
-            print("setting table content to cached order")
-            if focusedColumn != nil {
-                tableView.setIndicatorImage(nil, inTableColumn: focusedColumn!)
-            }
-            tableView.setIndicatorImage(NSImage(named: "NSAscendingSortIndicator"), inTableColumn: tableColumn)
-            focusedColumn = tableColumn
-            asc = true
-            let cachedOrderArray = cachedOrders!.filter({return $0.order == tableColumn.title && $0.library == self.currentLibrary})
-            if cachedOrderArray.count > 0 {
-                let order = cachedOrderArray[0]
-                self.currentOrder = order
-                self.currentArray = currentOrder!.tracks
-                //currentArrayController!.content = (currentArrayController?.filterPredicate != nil || currentArrayController?.fetchPredicate != nil) ? order.filtered_tracks!.array as! [Track] : order.tracks!.array as! [Track]
-            } else {
-                let sortDescriptor = NSSortDescriptor(key: tableColumn.identifier, ascending: true)
-                currentArray = NSOrderedSet(array: (currentArray?.sortedArrayUsingDescriptors([sortDescriptor]))!)
-            }
-            let afterSetDate = NSDate()
-            let timeSpent = afterSetDate.timeIntervalSinceDate(beforeSetDate)
-            print("time before reloading table: \(timeSpent)")
-        }
-        currentTableView!.reloadData()
-        let afterAfterSetDate = NSDate()
-        let timeSpent = afterAfterSetDate.timeIntervalSinceDate(beforeSetDate)
-        print("time after reloading table: \(timeSpent)")
-    }*/
     
     func refreshTableView() {
         let column = focusedColumn

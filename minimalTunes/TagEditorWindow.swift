@@ -31,6 +31,9 @@ class TagEditorWindow: NSWindowController {
     @IBOutlet weak var tabView: NSTabView!
     
     //mark tag view
+    @IBOutlet weak var discNumOfField: NSTextField!
+    @IBOutlet weak var discNumField: NSTextField!
+    @IBOutlet weak var genreField: NSTextField!
     @IBOutlet weak var releaseDateCheck: NSButton!
     @IBOutlet weak var tagsView: NSView!
     @IBOutlet weak var cancelButton: NSButton!
@@ -78,11 +81,31 @@ class TagEditorWindow: NSWindowController {
         if composerField.stringValue.isEmpty == false {
             editComposer(selectedTracks, composerName: composerField.stringValue)
         }
+        if genreField.stringValue.isEmpty == false {
+            editGenre(selectedTracks, genreName: genreField.stringValue)
+        }
+        if trackNumField.stringValue.isEmpty == false {
+            editTrackNum(selectedTracks, num: Int(trackNumField.stringValue)!)
+        }
+        if trackNumOfField.stringValue.isEmpty == false {
+            editTrackNumOf(selectedTracks, num: Int(trackNumOfField.stringValue)!)
+        }
+        if discNumField.stringValue.isEmpty == false {
+            editDiscNum(selectedTracks, num: Int(discNumField.stringValue)!)
+        }
+        if discNumOfField.stringValue.isEmpty == false {
+            editDiscNumOf(selectedTracks, num: Int(discNumOfField.stringValue)!)
+        }
+        if commentsField.stringValue.isEmpty == false {
+            editComments(selectedTracks, comments: commentsField.stringValue)
+        }
+        if ratingField.stringValue.isEmpty == false {
+            editRating(selectedTracks, rating: Int(ratingField.stringValue)!)
+        }
         print(selectedTracks)
         for order in mainWindowController!.cachedOrders! {
             reorderForTracks(self.selectedTracks!, cachedOrder: order)
         }
-        
     }
     
     @IBAction func confirmPressed(sender: AnyObject) {
@@ -152,6 +175,56 @@ class TagEditorWindow: NSWindowController {
                 releaseDateCheck.state = NSOffState
             }
         }
+        let track_nums = selectedTracks!.map({return $0.track_num})
+        if allEqual(track_nums) {
+            if track_nums[0] != nil && track_nums[0] != 0 {
+                trackNumField.stringValue = String(track_nums[0]!)
+            }
+        }
+        let track_num_ofs = selectedTracks!.map({return $0.album?.track_count})
+        if allEqual(track_num_ofs) {
+            if track_num_ofs[0] != nil && track_num_ofs[0] != 0 {
+                trackNumOfField.stringValue = String(track_num_ofs[0]!)
+            }
+        }
+        let disc_nums = selectedTracks!.map({return $0.disc_number})
+        if allEqual(disc_nums) {
+            if disc_nums[0] != nil && disc_nums[0] != 0 {
+                discNumField.stringValue = String(disc_nums[0]!)
+            }
+        }
+        let disc_counts = selectedTracks!.map({return $0.album?.disc_count})
+        if allEqual(disc_counts) {
+            if disc_counts[0] != nil && disc_counts[0] != 0 {
+                discNumOfField.stringValue = String(disc_counts[0]!)
+            }
+        }
+        let genres = selectedTracks!.map({return $0.genre?.name})
+        if allEqual(genres) {
+            if genres[0] != nil {
+                genreField.stringValue = genres[0]!
+            }
+        }
+        let is_compilations = selectedTracks!.map({return $0.album?.is_compilation})
+        if allEqual(is_compilations) {
+            if is_compilations[0] != nil {
+                compilationButton.state = is_compilations[0]! == NSNumber(bool: true) ? NSOnState : NSOffState
+            }
+        }
+        let ratings = selectedTracks!.map({return $0.rating})
+        if allEqual(ratings) {
+            if ratings[0] != nil && ratings[0] != 0 {
+                ratingField.stringValue = String(ratings[0]!)
+            }
+        }
+        let present_properties = Set(selectedTracks!.map({return $0.user_defined_properties!}).flatMap({$0}))
+        for property in present_properties {
+            
+        }
+        
+        
+        
+        
     }
     
     func initForSelection() {

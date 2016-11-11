@@ -2752,6 +2752,9 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                 <menuItem isSeparatorItem="YES" id="s71-m0-ca5"/>
                 <menuItem title="Create Custom Field..." id="CcQ-l3-0fn">
                     <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="createCustomField:" target="-2" id="JDg-Uy-Ary"/>
+                    </connections>
                 </menuItem>
             </items>
             <point key="canvasLocation" x="-220" y="-258.5"/>
@@ -2762,7 +2765,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <tableView verticalHuggingPriority="750" placeholderIntrinsicWidth="833" placeholderIntrinsicHeight="583" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" rowSizeStyle="automatic" headerView="LV1-Gx-i0P" viewBased="YES" id="WGf-gu-WxG" userLabel="Auxiliary Playlist Table View" customClass="TableViewYouCanPressSpacebarOn" customModule="minimalTunes" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="1858" height="0.0"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1858" height="1"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <size key="intercellSpacing" width="3" height="2"/>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
