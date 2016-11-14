@@ -4,7 +4,7 @@ GitHub repository for meTunes, the best music library manager for OS X (macOS).
 
 About
 -----
-![screenshot](https://i.imgur.com/UJJ1qC0.png)
+![screenshot](https://i.imgur.com/KIGIhYR.png)
 meTunes is based on the fundamental belief that a well-designed music library manager should play your albums in the correct order. And let you look at the album art while you play them!
 
 Out of that simple idea comes meTunes. meTunes aims to replace iTunes for users with large personal libraries and no interest in subscription-based streaming services.

@@ -63,6 +63,7 @@ class TagEditorWindow: NSWindowController {
     
     func commitEdits() {
         print("committing edits")
+        let fileHandler = YeOldeFileHandler()
         //comments, composer, release date, track num, album artist, name, album, artist, disc number, 
         for track in selectedTracks! {
             if nameField.stringValue.isEmpty == false {
@@ -105,6 +106,9 @@ class TagEditorWindow: NSWindowController {
         print(selectedTracks)
         for order in mainWindowController!.cachedOrders! {
             reorderForTracks(self.selectedTracks!, cachedOrder: order)
+        }
+        for track in selectedTracks! {
+            fileHandler.moveFileAfterEdit(track)
         }
     }
     

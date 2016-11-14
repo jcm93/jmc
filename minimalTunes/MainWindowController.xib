@@ -531,12 +531,12 @@
                                                                             <rect key="frame" x="-16" y="-16" width="48" height="48"/>
                                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NowPlaying" id="KYM-i4-j4r"/>
                                                                             <connections>
-                                                                                <binding destination="0OE-hb-8Mt" name="enabled" keyPath="objectValue.track.is_playing" id="qCB-wp-MT2"/>
                                                                                 <binding destination="0OE-hb-8Mt" name="hidden" keyPath="objectValue.track.is_playing" previousBinding="qCB-wp-MT2" id="fqb-jk-VNU">
                                                                                     <dictionary key="options">
                                                                                         <string key="NSValueTransformerName">NSNegateBoolean</string>
                                                                                     </dictionary>
                                                                                 </binding>
+                                                                                <binding destination="0OE-hb-8Mt" name="enabled" keyPath="objectValue.track.is_playing" id="qCB-wp-MT2"/>
                                                                             </connections>
                                                                         </imageView>
                                                                     </subviews>
@@ -2422,196 +2422,15 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
         </menu>
         <userDefaultsController representsSharedInstance="YES" id="BDj-hR-vOF"/>
         <scrollView hidden="YES" misplaced="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" id="EHb-oL-qud">
+            <rect key="frame" x="0.0" y="0.0" width="599" height="457"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <clipView key="contentView" id="XYu-Tl-xFc">
+                <rect key="frame" x="0.0" y="0.0" width="599" height="457"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <view misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DbS-3k-T5V">
-                        <rect key="frame" x="0.0" y="-147" width="1063" height="129"/>
+                        <rect key="frame" x="0.0" y="310" width="1063" height="287"/>
                         <subviews>
-                            <predicateEditor verticalHuggingPriority="750" misplaced="YES" nestingMode="compound" canRemoveAllRows="YES" rowHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="ffH-Ux-mIl">
-                                <rect key="frame" x="155" y="40" width="563" height="125"/>
-                                <rowTemplates>
-                                    <predicateEditorRowTemplate rowType="compound" id="Rhh-NL-liy">
-                                        <popUpMenus>
-                                            <menu id="6j3-oc-bdX">
-                                                <items>
-                                                    <menuItem title="Any" state="on" id="rjf-RB-HRu">
-                                                        <integer key="representedObject" value="2"/>
-                                                    </menuItem>
-                                                    <menuItem title="All" id="0gW-dk-Oo1">
-                                                        <integer key="representedObject" value="1"/>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                            <menu id="JHx-Bs-jmr">
-                                                <items>
-                                                    <menuItem title="of the following are true" state="on" id="Nr0-dU-lo9"/>
-                                                </items>
-                                            </menu>
-                                        </popUpMenus>
-                                    </predicateEditorRowTemplate>
-                                    <predicateEditorRowTemplate rowType="simple" id="bku-DT-KVI">
-                                        <array key="leftExpressionObject">
-                                            <expression type="keyPath">
-                                                <string key="keyPath">date_added</string>
-                                            </expression>
-                                        </array>
-                                        <integer key="rightExpressionObject" value="900"/>
-                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
-                                        <popUpMenus>
-                                            <menu id="WMN-t8-01B">
-                                                <items>
-                                                    <menuItem title="Date Added" state="on" id="sZN-k9-12f">
-                                                        <expression key="representedObject" type="keyPath">
-                                                            <string key="keyPath">date_added</string>
-                                                        </expression>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                            <menu id="Ake-lo-vKn">
-                                                <items>
-                                                    <menuItem title="is" state="on" id="9C5-hJ-ayg">
-                                                        <integer key="representedObject" value="4"/>
-                                                    </menuItem>
-                                                    <menuItem title="is not" id="OtK-Ya-vFD">
-                                                        <integer key="representedObject" value="5"/>
-                                                    </menuItem>
-                                                    <menuItem title="is less than" id="9nn-Ej-p5L">
-                                                        <integer key="representedObject" value="0"/>
-                                                    </menuItem>
-                                                    <menuItem title="is greater than" id="eVi-YS-dDP">
-                                                        <integer key="representedObject" value="2"/>
-                                                    </menuItem>
-                                                    <menuItem title="is less than or equal to" id="X9D-7u-zmg">
-                                                        <integer key="representedObject" value="1"/>
-                                                    </menuItem>
-                                                    <menuItem title="is greater than or equal to" id="gYc-LI-2GP">
-                                                        <integer key="representedObject" value="3"/>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </popUpMenus>
-                                    </predicateEditorRowTemplate>
-                                    <predicateEditorRowTemplate rowType="simple" id="Lp7-PX-RZ1">
-                                        <array key="leftExpressionObject">
-                                            <expression type="keyPath">
-                                                <string key="keyPath">album.name</string>
-                                            </expression>
-                                        </array>
-                                        <integer key="rightExpressionObject" value="700"/>
-                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
-                                        <popUpMenus>
-                                            <menu id="X16-q1-SUk">
-                                                <items>
-                                                    <menuItem title="Album" state="on" id="gWK-8r-lpY">
-                                                        <expression key="representedObject" type="keyPath">
-                                                            <string key="keyPath">album.name</string>
-                                                        </expression>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                            <menu id="9RB-Kg-4Jw">
-                                                <items>
-                                                    <menuItem title="contains" state="on" id="MQr-L7-VIS">
-                                                        <integer key="representedObject" value="99"/>
-                                                    </menuItem>
-                                                    <menuItem title="begins with" id="3Oa-zk-pnF">
-                                                        <integer key="representedObject" value="8"/>
-                                                    </menuItem>
-                                                    <menuItem title="ends with" id="0sM-zH-kBe">
-                                                        <integer key="representedObject" value="9"/>
-                                                    </menuItem>
-                                                    <menuItem title="is" id="KHx-Bv-8AI">
-                                                        <integer key="representedObject" value="4"/>
-                                                    </menuItem>
-                                                    <menuItem title="is not" id="1kv-jO-VLu">
-                                                        <integer key="representedObject" value="5"/>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </popUpMenus>
-                                    </predicateEditorRowTemplate>
-                                    <predicateEditorRowTemplate rowType="simple" id="vVd-Pw-HGL">
-                                        <array key="leftExpressionObject">
-                                            <expression type="keyPath">
-                                                <string key="keyPath">artist.name</string>
-                                            </expression>
-                                        </array>
-                                        <integer key="rightExpressionObject" value="700"/>
-                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
-                                        <popUpMenus>
-                                            <menu id="BLZ-SV-aEa">
-                                                <items>
-                                                    <menuItem title="Artist" state="on" id="6fH-Y3-4UW">
-                                                        <expression key="representedObject" type="keyPath">
-                                                            <string key="keyPath">artist.name</string>
-                                                        </expression>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                            <menu id="35h-lR-Hg9">
-                                                <items>
-                                                    <menuItem title="contains" state="on" id="xXE-4L-KGM">
-                                                        <integer key="representedObject" value="99"/>
-                                                    </menuItem>
-                                                    <menuItem title="begins with" id="iTb-cw-LpJ">
-                                                        <integer key="representedObject" value="8"/>
-                                                    </menuItem>
-                                                    <menuItem title="ends with" id="Hkq-J7-33H">
-                                                        <integer key="representedObject" value="9"/>
-                                                    </menuItem>
-                                                    <menuItem title="is" id="87C-2P-4D8">
-                                                        <integer key="representedObject" value="4"/>
-                                                    </menuItem>
-                                                    <menuItem title="is not" id="fHy-nR-pOI">
-                                                        <integer key="representedObject" value="5"/>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </popUpMenus>
-                                    </predicateEditorRowTemplate>
-                                    <predicateEditorRowTemplate rowType="simple" id="yvl-7N-ak6">
-                                        <array key="leftExpressionObject">
-                                            <expression type="keyPath">
-                                                <string key="keyPath">name</string>
-                                            </expression>
-                                        </array>
-                                        <integer key="rightExpressionObject" value="700"/>
-                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
-                                        <popUpMenus>
-                                            <menu id="FHd-Xu-qF3">
-                                                <items>
-                                                    <menuItem title="Name" state="on" id="Gqi-R7-Lvs">
-                                                        <expression key="representedObject" type="keyPath">
-                                                            <string key="keyPath">name</string>
-                                                        </expression>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                            <menu id="r8B-nF-hDA">
-                                                <items>
-                                                    <menuItem title="contains" state="on" id="QVT-T8-aGd">
-                                                        <integer key="representedObject" value="99"/>
-                                                    </menuItem>
-                                                    <menuItem title="begins with" id="QYh-4o-537">
-                                                        <integer key="representedObject" value="8"/>
-                                                    </menuItem>
-                                                    <menuItem title="ends with" id="z3F-OI-7im">
-                                                        <integer key="representedObject" value="9"/>
-                                                    </menuItem>
-                                                    <menuItem title="is" id="Soe-QF-6Mi">
-                                                        <integer key="representedObject" value="4"/>
-                                                    </menuItem>
-                                                    <menuItem title="is not" id="vth-Ol-baO">
-                                                        <integer key="representedObject" value="5"/>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </popUpMenus>
-                                    </predicateEditorRowTemplate>
-                                </rowTemplates>
-                            </predicateEditor>
                             <box verticalHuggingPriority="750" misplaced="YES" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="eXn-Pc-Gao">
                                 <rect key="frame" x="481" y="-2" width="34" height="5"/>
                                 <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
@@ -2623,7 +2442,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                                 <constraints>
                                     <constraint firstAttribute="height" constant="24" id="y2n-UD-GFY"/>
                                 </constraints>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="Advanced Filter" id="1sj-Ie-U8M">
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="Advanced Search" id="1sj-Ie-U8M">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -2703,6 +2522,1206 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                                     </menu>
                                 </popUpButtonCell>
                             </popUpButton>
+                            <predicateEditor verticalHuggingPriority="750" misplaced="YES" nestingMode="compound" canRemoveAllRows="YES" rowHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="ffH-Ux-mIl">
+                                <rect key="frame" x="14" y="131" width="563" height="750"/>
+                                <rowTemplates>
+                                    <predicateEditorRowTemplate rowType="compound" id="Rhh-NL-liy" userLabel="AND/OR Row Template">
+                                        <popUpMenus>
+                                            <menu id="6j3-oc-bdX">
+                                                <items>
+                                                    <menuItem title="Any" state="on" id="rjf-RB-HRu">
+                                                        <integer key="representedObject" value="2"/>
+                                                    </menuItem>
+                                                    <menuItem title="All" id="0gW-dk-Oo1">
+                                                        <integer key="representedObject" value="1"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="JHx-Bs-jmr">
+                                                <items>
+                                                    <menuItem title="of the following are true" state="on" id="Nr0-dU-lo9"/>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="Lp7-PX-RZ1" userLabel="Album Row Template">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.album.name</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="700"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="X16-q1-SUk">
+                                                <items>
+                                                    <menuItem title="Album" state="on" id="gWK-8r-lpY">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.album.name</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="9RB-Kg-4Jw">
+                                                <items>
+                                                    <menuItem title="contains" state="on" id="MQr-L7-VIS">
+                                                        <integer key="representedObject" value="99"/>
+                                                    </menuItem>
+                                                    <menuItem title="begins with" id="3Oa-zk-pnF">
+                                                        <integer key="representedObject" value="8"/>
+                                                    </menuItem>
+                                                    <menuItem title="ends with" id="0sM-zH-kBe">
+                                                        <integer key="representedObject" value="9"/>
+                                                    </menuItem>
+                                                    <menuItem title="is" id="KHx-Bv-8AI">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="1kv-jO-VLu">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="vVd-Pw-HGL" userLabel="Artist Row Template">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.artist.name</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="700"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="BLZ-SV-aEa">
+                                                <items>
+                                                    <menuItem title="Artist" state="on" id="6fH-Y3-4UW">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.artist.name</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="35h-lR-Hg9">
+                                                <items>
+                                                    <menuItem title="contains" state="on" id="xXE-4L-KGM">
+                                                        <integer key="representedObject" value="99"/>
+                                                    </menuItem>
+                                                    <menuItem title="begins with" id="iTb-cw-LpJ">
+                                                        <integer key="representedObject" value="8"/>
+                                                    </menuItem>
+                                                    <menuItem title="ends with" id="Hkq-J7-33H">
+                                                        <integer key="representedObject" value="9"/>
+                                                    </menuItem>
+                                                    <menuItem title="is" id="87C-2P-4D8">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="fHy-nR-pOI">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="LEe-TJ-kvf" userLabel="Album Artist Row Template">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.album.album_artist.name</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="700"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="D0E-Fd-pqi">
+                                                <items>
+                                                    <menuItem title="Album Artist" state="on" id="bSx-N0-i4q" userLabel="Album Artist">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.album.album_artist.name</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="BTa-EK-9B2">
+                                                <items>
+                                                    <menuItem title="contains" state="on" id="BLf-Aq-xbO">
+                                                        <integer key="representedObject" value="99"/>
+                                                    </menuItem>
+                                                    <menuItem title="begins with" id="2fa-g0-Q5P">
+                                                        <integer key="representedObject" value="8"/>
+                                                    </menuItem>
+                                                    <menuItem title="ends with" id="EgN-1o-ZTR">
+                                                        <integer key="representedObject" value="9"/>
+                                                    </menuItem>
+                                                    <menuItem title="is" id="kBs-ur-LD9">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="mot-Gi-G7j">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="mm2-2d-4IJ" userLabel="Bit Rate Row Template">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.bit_rate</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="300"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="ByB-cj-Dbg">
+                                                <items>
+                                                    <menuItem title="Bit Rate" state="on" id="GgI-cB-hgM" userLabel="Bit Rate">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.bit_rate</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="oI5-q1-JHy">
+                                                <items>
+                                                    <menuItem title="is" state="on" id="zWI-d0-O3M">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="KlY-1C-mUp">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than or equal to" id="w9p-oI-W3C">
+                                                        <integer key="representedObject" value="1"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than or equal to" id="leo-nJ-hzx">
+                                                        <integer key="representedObject" value="3"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than" id="N0B-ON-5As">
+                                                        <integer key="representedObject" value="2"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than" id="brk-ND-aD4">
+                                                        <integer key="representedObject" value="0"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="LCd-fi-z21" userLabel="Comments Row Template">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.comments</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="700"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="dLf-Rk-ygE">
+                                                <items>
+                                                    <menuItem title="Comments" state="on" id="l08-gS-d6c" userLabel="Comments">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.comments</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="o5t-IF-SKo">
+                                                <items>
+                                                    <menuItem title="contains" state="on" id="uHr-fC-uOt">
+                                                        <integer key="representedObject" value="99"/>
+                                                    </menuItem>
+                                                    <menuItem title="begins with" id="FF8-e0-Toe">
+                                                        <integer key="representedObject" value="8"/>
+                                                    </menuItem>
+                                                    <menuItem title="ends with" id="5R5-Yy-BGh">
+                                                        <integer key="representedObject" value="9"/>
+                                                    </menuItem>
+                                                    <menuItem title="is" id="cvF-Ij-bOJ">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="Rgw-S8-fSJ">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="ak8-Vg-i7k" userLabel="Composer Row Template">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.composer.name</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="700"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="X8Q-yp-cz6">
+                                                <items>
+                                                    <menuItem title="Composer" state="on" id="ZOd-Lr-9sr" userLabel="Comments">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.composer.name</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="M0R-wM-ctz">
+                                                <items>
+                                                    <menuItem title="contains" state="on" id="6Ye-TU-XQL">
+                                                        <integer key="representedObject" value="99"/>
+                                                    </menuItem>
+                                                    <menuItem title="begins with" id="FXB-na-GCD">
+                                                        <integer key="representedObject" value="8"/>
+                                                    </menuItem>
+                                                    <menuItem title="ends with" id="yEk-nh-wBO">
+                                                        <integer key="representedObject" value="9"/>
+                                                    </menuItem>
+                                                    <menuItem title="is" id="fz1-nV-Uzz">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="fHt-qr-3ti">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="bku-DT-KVI" userLabel="Date Added Row Template">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.date_added</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="900"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="pWR-rZ-sL4">
+                                                <items>
+                                                    <menuItem title="Date Added" state="on" id="lJ9-cO-x8K">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.date_added</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="Ake-lo-vKn">
+                                                <items>
+                                                    <menuItem title="is" state="on" id="9C5-hJ-ayg">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="OtK-Ya-vFD">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than" id="9nn-Ej-p5L">
+                                                        <integer key="representedObject" value="0"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than" id="eVi-YS-dDP">
+                                                        <integer key="representedObject" value="2"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than or equal to" id="X9D-7u-zmg">
+                                                        <integer key="representedObject" value="1"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than or equal to" id="gYc-LI-2GP">
+                                                        <integer key="representedObject" value="3"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="SSY-1N-VpT" userLabel="Date Modified Row Template">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.date_modified</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="900"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="LsP-kA-3uc">
+                                                <items>
+                                                    <menuItem title="Date Modified" state="on" id="7zv-ur-lTQ" userLabel="Date Modified">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.date_modified</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="59c-xq-2Wg">
+                                                <items>
+                                                    <menuItem title="is" state="on" id="Chc-oP-0Ud">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="7Ji-N4-lxl">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than" id="0PW-33-yOr">
+                                                        <integer key="representedObject" value="0"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than" id="YWz-De-oc7">
+                                                        <integer key="representedObject" value="2"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than or equal to" id="OqW-Ol-rGc">
+                                                        <integer key="representedObject" value="1"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than or equal to" id="2Wd-E8-bzn">
+                                                        <integer key="representedObject" value="3"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="IVP-20-dqc" userLabel="Date Released Row Template">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.album.release_date</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="900"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="m90-dK-bPo">
+                                                <items>
+                                                    <menuItem title="Date Released" state="on" id="2QR-3s-pKc" userLabel="Date Modified">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.album.release_date</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="iGr-gL-3F0">
+                                                <items>
+                                                    <menuItem title="is" state="on" id="Io1-Zc-vXT">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="qir-or-F9B">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than" id="fV5-jy-Fc9">
+                                                        <integer key="representedObject" value="0"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than" id="cpy-kI-r9t">
+                                                        <integer key="representedObject" value="2"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than or equal to" id="FU9-Xx-HCd">
+                                                        <integer key="representedObject" value="1"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than or equal to" id="Nnq-LQ-PbD">
+                                                        <integer key="representedObject" value="3"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="3Sl-Jh-j2H" userLabel="Disc Number Row Template">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.disc_number</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="300"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="jN6-uu-s7a">
+                                                <items>
+                                                    <menuItem title="Bit Rate" state="on" id="VWf-h8-6HB" userLabel="Disc Number">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.disc_number</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="70x-RE-mXC">
+                                                <items>
+                                                    <menuItem title="is" state="on" id="i15-NK-pP2">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="g4n-ce-9X3">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than or equal to" id="2rt-Sa-J1k">
+                                                        <integer key="representedObject" value="1"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than or equal to" id="TXQ-Pn-xvU">
+                                                        <integer key="representedObject" value="3"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than" id="nxE-P0-zUF">
+                                                        <integer key="representedObject" value="2"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than" id="Ked-Nl-fSL">
+                                                        <integer key="representedObject" value="0"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="stZ-On-nZM" userLabel="Equalizer Preset Row Template">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.equalizer_preset</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="700"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="1SZ-0J-jkt">
+                                                <items>
+                                                    <menuItem title="Equalizer Preset" state="on" id="vIf-F8-loe">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.equalizer_preset</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="4zM-TW-tzG">
+                                                <items>
+                                                    <menuItem title="contains" state="on" id="zYK-ym-HiI">
+                                                        <integer key="representedObject" value="99"/>
+                                                    </menuItem>
+                                                    <menuItem title="begins with" id="cCf-lp-YA2">
+                                                        <integer key="representedObject" value="8"/>
+                                                    </menuItem>
+                                                    <menuItem title="ends with" id="QBY-pz-6rg">
+                                                        <integer key="representedObject" value="9"/>
+                                                    </menuItem>
+                                                    <menuItem title="is" id="yja-Ms-iJq">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="Ep4-nR-hmU">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="L5q-xE-sps" userLabel="Genre Row Template">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.genre.name</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="700"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="sle-mi-xn8">
+                                                <items>
+                                                    <menuItem title="Genre" state="on" id="L3k-zv-SGr">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.genre.name</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="pzI-aG-1N2">
+                                                <items>
+                                                    <menuItem title="contains" state="on" id="lP7-no-nE4">
+                                                        <integer key="representedObject" value="99"/>
+                                                    </menuItem>
+                                                    <menuItem title="begins with" id="zV1-cW-sfZ">
+                                                        <integer key="representedObject" value="8"/>
+                                                    </menuItem>
+                                                    <menuItem title="ends with" id="ySv-Rp-o2f">
+                                                        <integer key="representedObject" value="9"/>
+                                                    </menuItem>
+                                                    <menuItem title="is" id="rlH-d8-PlB">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="GW0-wF-7xU">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="ctj-QS-gpD" userLabel="Kind Row Template">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.file_kind</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="700"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="tu4-Nv-wjG">
+                                                <items>
+                                                    <menuItem title="Kind" state="on" id="546-SM-9hh">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.file_kind</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="fih-KK-gqg">
+                                                <items>
+                                                    <menuItem title="contains" state="on" id="gsJ-Ie-42b">
+                                                        <integer key="representedObject" value="99"/>
+                                                    </menuItem>
+                                                    <menuItem title="begins with" id="ltt-Pb-Xx2">
+                                                        <integer key="representedObject" value="8"/>
+                                                    </menuItem>
+                                                    <menuItem title="ends with" id="1yz-6k-Dsg">
+                                                        <integer key="representedObject" value="9"/>
+                                                    </menuItem>
+                                                    <menuItem title="is" id="SQa-Do-L3d">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="IM8-ao-hT1">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="J7D-bZ-ayv" userLabel="Last Played Date">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.date_last_played</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="900"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="mbY-qh-eKr">
+                                                <items>
+                                                    <menuItem title="Last Played" state="on" id="QhB-Vx-hqh" userLabel="Last Played">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.date_last_played</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="sfX-hc-FIr">
+                                                <items>
+                                                    <menuItem title="is" state="on" id="Ccr-3g-OBC">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="s8k-iE-fzL">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than" id="iqm-b7-go0">
+                                                        <integer key="representedObject" value="0"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than" id="pXQ-Nf-3Zq">
+                                                        <integer key="representedObject" value="2"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than or equal to" id="MUv-mo-AAK">
+                                                        <integer key="representedObject" value="1"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than or equal to" id="P5O-G6-Rm8">
+                                                        <integer key="representedObject" value="3"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="UiB-dW-yfG" userLabel="Last Skipped Date">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.date_last_skipped</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="900"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="omC-sM-DAd">
+                                                <items>
+                                                    <menuItem title="Last Skipped" state="on" id="zBD-Pq-cPw" userLabel="Last Played">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.date_last_skipped</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="5GV-Sc-bUD">
+                                                <items>
+                                                    <menuItem title="is" state="on" id="Teg-bM-hir">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="MNs-pi-oMe">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than" id="p1T-1L-uaP">
+                                                        <integer key="representedObject" value="0"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than" id="KWz-e0-0kb">
+                                                        <integer key="representedObject" value="2"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than or equal to" id="Mqg-5U-gn0">
+                                                        <integer key="representedObject" value="1"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than or equal to" id="Qqb-uL-pOv">
+                                                        <integer key="representedObject" value="3"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="wc7-2J-CAG" userLabel="Movement Name">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.movement_name</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="700"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="UOe-5D-pfu">
+                                                <items>
+                                                    <menuItem title="Movement Name" state="on" id="sae-vf-KFa">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.movement_name</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="jRV-RC-Ayt">
+                                                <items>
+                                                    <menuItem title="contains" state="on" id="mLZ-Ax-vn7">
+                                                        <integer key="representedObject" value="99"/>
+                                                    </menuItem>
+                                                    <menuItem title="begins with" id="dhx-HF-vGb">
+                                                        <integer key="representedObject" value="8"/>
+                                                    </menuItem>
+                                                    <menuItem title="ends with" id="Sgd-v4-YFJ">
+                                                        <integer key="representedObject" value="9"/>
+                                                    </menuItem>
+                                                    <menuItem title="is" id="hTg-Sa-uuh">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="Pvw-Dc-gP3">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="gB3-Md-579" userLabel="Movement Number">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.movement_number</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="300"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="KJQ-If-HK1">
+                                                <items>
+                                                    <menuItem title="Movement Number" state="on" id="rjS-ZL-zRB" userLabel="Bit Rate">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.movement_number</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="OlG-8r-Yuz">
+                                                <items>
+                                                    <menuItem title="is" state="on" id="Qjr-Mg-Dgx">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="RqE-B6-9su">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than or equal to" id="LGW-Tw-MDB">
+                                                        <integer key="representedObject" value="1"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than or equal to" id="G8p-vy-lH6">
+                                                        <integer key="representedObject" value="3"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than" id="9Hl-fn-rCz">
+                                                        <integer key="representedObject" value="2"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than" id="YXU-v6-Jbv">
+                                                        <integer key="representedObject" value="0"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="yvl-7N-ak6" userLabel="Name Row Template">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.name</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="700"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="FHd-Xu-qF3">
+                                                <items>
+                                                    <menuItem title="Name" state="on" id="Gqi-R7-Lvs">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.name</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="r8B-nF-hDA">
+                                                <items>
+                                                    <menuItem title="contains" state="on" id="QVT-T8-aGd">
+                                                        <integer key="representedObject" value="99"/>
+                                                    </menuItem>
+                                                    <menuItem title="begins with" id="QYh-4o-537">
+                                                        <integer key="representedObject" value="8"/>
+                                                    </menuItem>
+                                                    <menuItem title="ends with" id="z3F-OI-7im">
+                                                        <integer key="representedObject" value="9"/>
+                                                    </menuItem>
+                                                    <menuItem title="is" id="Soe-QF-6Mi">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="vth-Ol-baO">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="uhg-0h-S9g" userLabel="Play Count">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.play_count</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="300"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="Qw8-cB-nc0">
+                                                <items>
+                                                    <menuItem title="Play Count" state="on" id="bFZ-90-qLr" userLabel="Bit Rate">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.play_count</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="G0k-jx-YkU">
+                                                <items>
+                                                    <menuItem title="is" state="on" id="HO5-WP-KYT">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="VqD-2n-7fB">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than or equal to" id="mzR-Ft-lKL">
+                                                        <integer key="representedObject" value="1"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than or equal to" id="UFO-q8-cLk">
+                                                        <integer key="representedObject" value="3"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than" id="LaK-Uy-QAt">
+                                                        <integer key="representedObject" value="2"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than" id="Q25-wn-8Os">
+                                                        <integer key="representedObject" value="0"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="Ux5-nj-ltP" userLabel="Rating">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.rating</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="300"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="o5Z-SO-JRj">
+                                                <items>
+                                                    <menuItem title="Rating" state="on" id="uW0-gj-St6" userLabel="Bit Rate">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.rating</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="IFD-3N-HNz">
+                                                <items>
+                                                    <menuItem title="is" state="on" id="3y0-2n-Ysm">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="P68-0V-tvr">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than or equal to" id="awP-k7-6dA">
+                                                        <integer key="representedObject" value="1"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than or equal to" id="hcK-YI-2gl">
+                                                        <integer key="representedObject" value="3"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than" id="hRj-dU-OSA">
+                                                        <integer key="representedObject" value="2"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than" id="eCH-bS-plH">
+                                                        <integer key="representedObject" value="0"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="Jze-bL-jeD" userLabel="Sample Rate">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.sample_rate</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="300"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="dyU-bl-EbW">
+                                                <items>
+                                                    <menuItem title="Sample Rate" state="on" id="0GX-Ce-twU" userLabel="Bit Rate">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.sample_rate</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="btn-MT-x7S">
+                                                <items>
+                                                    <menuItem title="is" state="on" id="sGY-LX-1bv">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="nKC-u9-mhM">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than or equal to" id="geh-iw-kmg">
+                                                        <integer key="representedObject" value="1"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than or equal to" id="D1v-MO-o1u">
+                                                        <integer key="representedObject" value="3"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than" id="Tmp-aE-IoP">
+                                                        <integer key="representedObject" value="2"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than" id="wHo-dq-cP0">
+                                                        <integer key="representedObject" value="0"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="NYe-1w-f0p" userLabel="Size">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.size</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="300"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="C1u-Ih-49q">
+                                                <items>
+                                                    <menuItem title="Size" state="on" id="5Lx-fw-gAP" userLabel="Bit Rate">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.size</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="4cP-RA-38s">
+                                                <items>
+                                                    <menuItem title="is" state="on" id="ydg-fd-7Pz">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="3Nq-Cs-2lF">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than or equal to" id="yTG-jE-K7o">
+                                                        <integer key="representedObject" value="1"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than or equal to" id="ddu-sy-xyQ">
+                                                        <integer key="representedObject" value="3"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than" id="XUJ-Uw-LQp">
+                                                        <integer key="representedObject" value="2"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than" id="54j-q9-cGH">
+                                                        <integer key="representedObject" value="0"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="Uzc-5P-TXx" userLabel="Skip Count">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.skip_count</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="300"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="Bzi-P5-cba">
+                                                <items>
+                                                    <menuItem title="Skip Count" state="on" id="6at-9s-vxt" userLabel="Skip Count">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.skip_count</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="d7C-M4-4J4">
+                                                <items>
+                                                    <menuItem title="is" state="on" id="Uuv-XN-U0L">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="sd6-2J-MEI">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than or equal to" id="wX0-Pj-wPC">
+                                                        <integer key="representedObject" value="1"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than or equal to" id="sav-nA-tb7">
+                                                        <integer key="representedObject" value="3"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than" id="uSb-ym-bZz">
+                                                        <integer key="representedObject" value="2"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than" id="GKQ-Ok-re4">
+                                                        <integer key="representedObject" value="0"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="g8o-f5-8CJ" userLabel="Sort Album">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.sort_name</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="700"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="cUT-PT-ole">
+                                                <items>
+                                                    <menuItem title="Sort Album" state="on" id="oIa-em-wh4">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.sort_name</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="R48-Fk-Ntx">
+                                                <items>
+                                                    <menuItem title="contains" state="on" id="jCx-yt-UJd">
+                                                        <integer key="representedObject" value="99"/>
+                                                    </menuItem>
+                                                    <menuItem title="begins with" id="zf8-Eq-aKe">
+                                                        <integer key="representedObject" value="8"/>
+                                                    </menuItem>
+                                                    <menuItem title="ends with" id="FZX-4p-5kI">
+                                                        <integer key="representedObject" value="9"/>
+                                                    </menuItem>
+                                                    <menuItem title="is" id="apn-ke-7VJ">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="9cZ-ZI-Z7F">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="bow-h7-j0w" userLabel="Sort Album Artist">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.sort_album_artist</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="700"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="x7z-1R-bDQ">
+                                                <items>
+                                                    <menuItem title="Sort Album Artist" state="on" id="0io-Sr-Y54">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.sort_album_artist</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="x4o-5o-DzL">
+                                                <items>
+                                                    <menuItem title="contains" state="on" id="80l-Kx-pjy">
+                                                        <integer key="representedObject" value="99"/>
+                                                    </menuItem>
+                                                    <menuItem title="begins with" id="Zmh-Db-agh">
+                                                        <integer key="representedObject" value="8"/>
+                                                    </menuItem>
+                                                    <menuItem title="ends with" id="Y3L-wa-8sk">
+                                                        <integer key="representedObject" value="9"/>
+                                                    </menuItem>
+                                                    <menuItem title="is" id="tVH-RD-kU5">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="Fac-tr-FIz">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="VXr-bW-Ab0" userLabel="Sort Artist">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.sort_artist</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="700"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="tNb-RH-Nvj">
+                                                <items>
+                                                    <menuItem title="Sort Artist" state="on" id="Epe-go-5Hd">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.sort_artist</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="fBe-fs-7Mm">
+                                                <items>
+                                                    <menuItem title="contains" state="on" id="G1R-bU-Dhk">
+                                                        <integer key="representedObject" value="99"/>
+                                                    </menuItem>
+                                                    <menuItem title="begins with" id="wP5-ap-GIi">
+                                                        <integer key="representedObject" value="8"/>
+                                                    </menuItem>
+                                                    <menuItem title="ends with" id="s2I-9h-XrC">
+                                                        <integer key="representedObject" value="9"/>
+                                                    </menuItem>
+                                                    <menuItem title="is" id="aUC-sz-R3Q">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="adR-ue-LHt">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="S19-Ke-Dp9" userLabel="Sort Composer">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.sort_composer</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="700"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="DZE-hh-4ZV">
+                                                <items>
+                                                    <menuItem title="Sort Composer" state="on" id="ynJ-JD-3oK">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.sort_composer</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="rpk-fw-gFJ">
+                                                <items>
+                                                    <menuItem title="contains" state="on" id="qlU-P8-Z7K">
+                                                        <integer key="representedObject" value="99"/>
+                                                    </menuItem>
+                                                    <menuItem title="begins with" id="zkD-RK-f68">
+                                                        <integer key="representedObject" value="8"/>
+                                                    </menuItem>
+                                                    <menuItem title="ends with" id="EhL-Jo-P63">
+                                                        <integer key="representedObject" value="9"/>
+                                                    </menuItem>
+                                                    <menuItem title="is" id="MBL-aO-aNl">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="ZVt-qj-u7O">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="DoY-W3-tGf" userLabel="Sort Name">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.sort_name</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="700"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="Tkg-Lp-V96">
+                                                <items>
+                                                    <menuItem title="Sort Name" state="on" id="4DU-vg-2gt">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.sort_name</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="WOw-TJ-zY2">
+                                                <items>
+                                                    <menuItem title="contains" state="on" id="e65-z4-sUN">
+                                                        <integer key="representedObject" value="99"/>
+                                                    </menuItem>
+                                                    <menuItem title="begins with" id="ClC-F7-GeY">
+                                                        <integer key="representedObject" value="8"/>
+                                                    </menuItem>
+                                                    <menuItem title="ends with" id="jKs-Lc-AMN">
+                                                        <integer key="representedObject" value="9"/>
+                                                    </menuItem>
+                                                    <menuItem title="is" id="FwL-qS-koi">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="8zW-74-1B0">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                    <predicateEditorRowTemplate rowType="simple" id="0Bc-hv-Wha" userLabel="Track Number">
+                                        <array key="leftExpressionObject">
+                                            <expression type="keyPath">
+                                                <string key="keyPath">track.track_num</string>
+                                            </expression>
+                                        </array>
+                                        <integer key="rightExpressionObject" value="300"/>
+                                        <comparisonPredicateOptions key="options" caseInsensitive="YES" diacriticInsensitive="YES"/>
+                                        <popUpMenus>
+                                            <menu id="GIC-ba-I6d">
+                                                <items>
+                                                    <menuItem title="Track Number" state="on" id="uNw-RZ-OJs" userLabel="Skip Count">
+                                                        <expression key="representedObject" type="keyPath">
+                                                            <string key="keyPath">track.track_num</string>
+                                                        </expression>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                            <menu id="F2U-UN-ewi">
+                                                <items>
+                                                    <menuItem title="is" state="on" id="XTM-3f-SFL">
+                                                        <integer key="representedObject" value="4"/>
+                                                    </menuItem>
+                                                    <menuItem title="is not" id="KXk-fH-UAJ">
+                                                        <integer key="representedObject" value="5"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than or equal to" id="0D4-ar-3ZA">
+                                                        <integer key="representedObject" value="1"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than or equal to" id="mtY-6c-uP1">
+                                                        <integer key="representedObject" value="3"/>
+                                                    </menuItem>
+                                                    <menuItem title="is greater than" id="apZ-lQ-lYa">
+                                                        <integer key="representedObject" value="2"/>
+                                                    </menuItem>
+                                                    <menuItem title="is less than" id="b8x-AZ-zK1">
+                                                        <integer key="representedObject" value="0"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </popUpMenus>
+                                    </predicateEditorRowTemplate>
+                                </rowTemplates>
+                                <connections>
+                                    <binding destination="vnS-ge-OhJ" name="value" keyPath="filterPredicate" id="1ru-cd-oPn"/>
+                                </connections>
+                            </predicateEditor>
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="ffH-Ux-mIl" secondAttribute="trailing" id="4Mn-lM-ZMR"/>
@@ -2746,6 +3765,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                 <rect key="frame" x="-100" y="-100" width="16" height="107"/>
                 <autoresizingMask key="autoresizingMask"/>
             </scroller>
+            <point key="canvasLocation" x="-661.5" y="310.5"/>
         </scrollView>
         <menu id="2aO-7k-zwO" userLabel="Column Visibility Menu">
             <items>
@@ -2765,7 +3785,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <tableView verticalHuggingPriority="750" placeholderIntrinsicWidth="833" placeholderIntrinsicHeight="583" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" rowSizeStyle="automatic" headerView="LV1-Gx-i0P" viewBased="YES" id="WGf-gu-WxG" userLabel="Auxiliary Playlist Table View" customClass="TableViewYouCanPressSpacebarOn" customModule="minimalTunes" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="1858" height="1"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1858" height="0.0"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <size key="intercellSpacing" width="3" height="2"/>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>

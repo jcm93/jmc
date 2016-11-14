@@ -262,6 +262,16 @@ let DEFAULTS_LIBRARY_PATH_STRING = "libraryPath"
 let DEFAULTS_LIBRARY_NAME_STRING = "libraryName"
 let DEFAULTS_DATE_SORT_GRANULARITY = 500.0
 
+//other constants
+let LIBRARY_ORGANIZATION_TYPE_STRING = "organizationType"
+let NO_ORGANIZATION_TYPE = 0
+let MOVE_ORGANIZATION_TYPE = 1
+let COPY_ORGANIZATION_TYPE = 2
+let UNKNOWN_ARTIST_STRING = "Unknown Artist"
+let UNKNOWN_ALBUM_STRING = "Unknown Album"
+
+let VALID_ARTWORK_TYPE_EXTENSIONS = [".jpg", ".png", ".tiff", ".gif", ".pdf"]
+
 
 func checkIfArtistExists(name: String) -> Artist? {
     let request = NSFetchRequest(entityName: "Artist")
@@ -519,7 +529,7 @@ func editAlbumArtist(tracks: [Track]?, albumArtistName: String) {
         let new_artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: managedContext) as! Artist
         new_artist.name = albumArtistName
         let sortArtistName = getSortName(albumArtistName)
-        let unique_albums = Array(Set(tracks!.map({return $0.album!})))
+        let unique_albums = Set(tracks!.map({return $0.album!}))
         for album in unique_albums {
             album.album_artist = new_artist
         }
@@ -541,7 +551,7 @@ func editTrackNum(tracks: [Track]?, num: Int) {
 
 func editTrackNumOf(tracks: [Track]?, num: Int) {
     if tracks != nil {
-        let unique_albums = Array(Set(tracks!.map({return $0.album!})))
+        let unique_albums = Set(tracks!.map({return $0.album!}))
         for album in unique_albums {
             album.track_count = num
         }
@@ -558,7 +568,7 @@ func editDiscNum(tracks: [Track]?, num: Int) {
 
 func editDiscNumOf(tracks: [Track]?, num: Int) {
     if tracks != nil {
-        let unique_albums = Array(Set(tracks!.map({return $0.album!})))
+        let unique_albums = Set(tracks!.map({return $0.album!}))
         for album in unique_albums {
             album.disc_count = num
         }
@@ -583,7 +593,7 @@ func editRating(tracks: [Track]?, rating: Int) {
 
 func editIsComp(tracks: [Track]?, isComp: Bool) {
     if tracks != nil {
-        let unique_albums = Array(Set(tracks!.map({return $0.album!})))
+        let unique_albums = Set(tracks!.map({return $0.album!}))
         for album in unique_albums {
             album.is_compilation = isComp
         }

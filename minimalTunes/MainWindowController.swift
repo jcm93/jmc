@@ -719,11 +719,11 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     }
     
     @IBAction func toggleFilterVisibility(sender: AnyObject) {
-        if advancedFilterScrollView.hidden == true {
-            advancedFilterScrollView.hidden = false
-        }
-        else if advancedFilterScrollView.hidden == false {
-            advancedFilterScrollView.hidden = true
+        if librarySplitView.doesContain(advancedFilterScrollView) {
+            print("library split view does indeed contain advanced filter")
+            librarySplitView.removeArrangedSubview(advancedFilterScrollView)
+        } else {
+            librarySplitView.insertArrangedSubview(advancedFilterScrollView, atIndex: 0)
         }
     }
     
@@ -1106,7 +1106,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
         numberFormatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
         dateFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyle.Full
         print(hasMusic)
-        //hasMusic = true
+        hasMusic = true
         if (hasMusic == false) {
             librarySplitView.addArrangedSubview(noMusicView)
             noMusicView.hidden = false
