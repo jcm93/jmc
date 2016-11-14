@@ -260,10 +260,11 @@ var timeSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "time", asc
 let DEFAULTS_SAVED_COLUMNS_STRING = "savedColumns"
 let DEFAULTS_LIBRARY_PATH_STRING = "libraryPath"
 let DEFAULTS_LIBRARY_NAME_STRING = "libraryName"
+let DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING = "checkForArt"
 let DEFAULTS_DATE_SORT_GRANULARITY = 500.0
+let DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING = "organizationType"
 
 //other constants
-let LIBRARY_ORGANIZATION_TYPE_STRING = "organizationType"
 let NO_ORGANIZATION_TYPE = 0
 let MOVE_ORGANIZATION_TYPE = 1
 let COPY_ORGANIZATION_TYPE = 2
@@ -690,7 +691,7 @@ func reorderForTracks(tracks: [Track], cachedOrder: CachedOrder) {
     cachedOrder.track_views = fuckYou.copy() as? NSOrderedSet
 }
 
-func addPrimaryArtForTrack(track: Track, art: NSData, albumDirectoryPath: String) -> Track? {
+func addPrimaryArtForTrack(track: Track, art: NSData, albumDirectoryURL: NSURL) -> Track? {
     print("adding new primary album art")
     guard let artImage = NSImage(data: art) else {return nil}
     let artHash = art.hashValue
@@ -724,17 +725,15 @@ func addPrimaryArtForTrack(track: Track, art: NSData, albumDirectoryPath: String
             newArtworkCollection.addArtObject(track.album!.primary_art!)
         }
     }
-    let thing = "/\(artHash).png"
-    let artFilename = albumDirectoryPath + thing
-    newArtwork.artwork_location = artFilename
+    let artURL = albumDirectoryURL.URLByAppendingPathComponent("\(artHash).png")
+    newArtwork.artwork_location = artURL.absoluteString
     let artTIFF = artImage.TIFFRepresentation
     let artRep = NSBitmapImageRep(data: artTIFF!)
     let artPNG = artRep?.representationUsingType(.NSPNGFileType, properties: [:])
     track.album?.primary_art = newArtwork
-    print("writing to \(artFilename)")
     do {
-        try artPNG?.writeToFile(artFilename, options: NSDataWritingOptions.AtomicWrite)
-    }catch {
+        try artPNG?.writeToURL(artURL, options: NSDataWritingOptions.DataWritingAtomic)
+    } catch {
         print("error writing file: \(error)")
     }
     return track

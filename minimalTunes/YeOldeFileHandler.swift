@@ -176,6 +176,23 @@ class YeOldeFileHandler: NSObject {
         }
     }
     
+    func searchAlbumDirectoryForArt(track: Track) -> NSURL? {
+        let locationURL = NSURL(string: track.location!)
+        let albumDirectoryURL = locationURL!.URLByDeletingLastPathComponent!
+        do {
+            let albumDirectoryContents = try fileManager.contentsOfDirectoryAtURL(albumDirectoryURL, includingPropertiesForKeys: nil, options: NSDirectoryEnumerationOptions.SkipsHiddenFiles)
+            let potentialImages = albumDirectoryContents.filter({VALID_ARTWORK_TYPE_EXTENSIONS.contains($0.pathExtension!.lowercaseString)})
+            if potentialImages.count > 0 {
+                return potentialImages[0]
+            } else {
+                return nil
+            }
+        } catch {
+            print("error looking in album directory for art: \(error)")
+            return nil
+        }
+    }
+    
     func moveFileAfterEdit(track: Track) {
         let organizationType = NSUserDefaults.standardUserDefaults().objectForKey(LIBRARY_ORGANIZATION_TYPE_STRING) as! Int
         guard organizationType != NO_ORGANIZATION_TYPE else {return}
@@ -277,7 +294,6 @@ class YeOldeFileHandler: NSObject {
                         newArtist.name = key.value as? String
                         track.artist = newArtist
                     }
-                    track.album?.album_artist = track.artist
                 case "creator":
                     let composerCheck = instanceCheck("Composer", name: key.value as! String) as? Composer
                     if composerCheck != nil {
@@ -291,8 +307,6 @@ class YeOldeFileHandler: NSObject {
                 case "artwork":
                     hasArt = true
                     print("has artwork")
-                    art = key.value as! NSData
-                    let artImage = NSImage(data: art!)
                 
                 case "creationDate":
                     print("date:")
@@ -312,58 +326,42 @@ class YeOldeFileHandler: NSObject {
                 track.track_num = Int((key.value?.description)!)
             }
         }
-        var albumDirectoryPath: String?
-        var filePath: String?
-        switch NSUserDefaults.standardUserDefaults().objectForKey("organizationType")! as! Int {
-        case 0:
-            track.location = url!.absoluteString.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLPathAllowedCharacterSet())
-        case 2:
-            let libraryPathString = NSUserDefaults.standardUserDefaults().objectForKey("libraryPath") as! String
-            let albumArtist = track.album?.album_artist!.name
-            let album = track.album!.name
-            albumDirectoryPath = libraryPathString + "/\(albumArtist!)/\(album!)"
+        var albumDirectoryURL: NSURL?
+        var fileURL: NSURL?
+        let orgType = NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)! as! Int
+        if orgType == NO_ORGANIZATION_TYPE {
+            track.location = url!.absoluteString
+        } else {
+            let libraryPathURL = NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_LIBRARY_PATH_STRING) as! NSURL
+            let albumArtist = track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING
+            let album = track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING
+            albumDirectoryURL = libraryPathURL.URLByAppendingPathComponent(albumArtist).URLByAppendingPathComponent(album)
             do {
-                var stupidTrue = ObjCBool(true)
-                if (fileManager.fileExistsAtPath(albumDirectoryPath!, isDirectory: &stupidTrue) == false) {
-                    print("file exists at path is false")
-                    try fileManager.createDirectoryAtPath(albumDirectoryPath!, withIntermediateDirectories: true, attributes: nil)
+                try fileManager.createDirectoryAtURL(albumDirectoryURL!, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                print("error creating album directory: \(error)")
+            }
+            if orgType == MOVE_ORGANIZATION_TYPE {
+                do {
+                    fileURL = albumDirectoryURL?.URLByAppendingPathComponent(actualFilename!)
+                    try fileManager.moveItemAtURL(url!, toURL: fileURL!)
+                } catch {
+                    print("error moving item to album directory: \(error)")
                 }
-            } catch {
-                print("error: \(error)")
-            }
-            do {
-                filePath = albumDirectoryPath! + "/\(actualFilename!)"
-                try fileManager.copyItemAtPath(url!.path!, toPath: filePath!)
-            } catch {
-                print("err: \(error)")
-            }
-            track.location = "File://" + filePath!.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLPathAllowedCharacterSet())!
-        case 1:
-            let libraryPathString = NSUserDefaults.standardUserDefaults().objectForKey("libraryPath") as! String
-            let albumArtist = track.album?.album_artist!.name
-            let album = track.album!.name
-            albumDirectoryPath = libraryPathString + "/\(albumArtist!)/\(album!)"
-            do {
-                var stupidTrue = ObjCBool(true)
-                if (fileManager.fileExistsAtPath(albumDirectoryPath!, isDirectory: &stupidTrue) == false) {
-                    print("file exists at path is false")
-                    try fileManager.createDirectoryAtPath(albumDirectoryPath!, withIntermediateDirectories: true, attributes: nil)
+                track.location = fileURL!.absoluteString
+            } else if orgType == COPY_ORGANIZATION_TYPE {
+                do {
+                    fileURL = albumDirectoryURL?.URLByAppendingPathComponent(actualFilename!)
+                    try fileManager.copyItemAtURL(url!, toURL: fileURL!)
+                } catch {
+                    print("error copying item to album directory: \(error)")
                 }
-            } catch {
-                print("error: \(error)")
+                track.location = fileURL!.absoluteString
             }
-            do {
-                filePath = albumDirectoryPath! + "/\(actualFilename!)"
-                try fileManager.moveItemAtPath(url!.path!, toPath: filePath!)
-            } catch {
-                print("err: \(error)")
-            }
-            track.location = "File://" + filePath!.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLPathAllowedCharacterSet())!
-        default: break
         }
 
         if hasArt == true {
-            addPrimaryArtForTrack(track, art: art!, albumDirectoryPath: albumDirectoryPath!)
+            addPrimaryArtForTrack(track, art: art!, albumDirectoryURL: albumDirectoryURL!)
         }
         
         for order in NSUserDefaults.standardUserDefaults().arrayForKey("cachedOrders")! {

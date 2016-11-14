@@ -1042,26 +1042,27 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
     
     func initAlbumArt(track: Track) {
         if track.album != nil && track.album!.primary_art != nil {
-            print("here")
+            print("gonna get sum album art")
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             let art = track.album!.primary_art
             let path = art?.artwork_location as! String
             let url = NSURL(fileURLWithPath: path)
             let image = NSImage(contentsOfURL: url)
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.albumArtView.image = image
-                }
+            dispatch_async(dispatch_get_main_queue()) {
+                self.albumArtView.image = image
+            }
             }
         }
         else {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+                let fileHandler = self.delegate!.yeOldeFileHandler
                 var artworkFound = false
                 if NSUserDefaults.standardUserDefaults().boolForKey("checkEmbeddedArtwork") == true {
                     print("checking mp3 for embedded art")
-                    let artwork = (NSApplication.sharedApplication().delegate as! AppDelegate).yeOldeFileHandler?.getArtworkFromFile(track.location!)
+                    let artwork = fileHandler!.getArtworkFromFile(track.location!)
                     if artwork != nil {
-                        let albumDirectoryPath = NSURL(string: track.location!)?.URLByDeletingLastPathComponent
-                        if addPrimaryArtForTrack(track, art: artwork!, albumDirectoryPath: albumDirectoryPath!.path!) != nil {
+                        let albumDirectoryURL = NSURL(string: track.location!)!.URLByDeletingLastPathComponent!
+                        if addPrimaryArtForTrack(track, art: artwork!, albumDirectoryURL: albumDirectoryURL) != nil {
                             dispatch_async(dispatch_get_main_queue()) {
                                 do {try self.managedContext.save()}catch {print(error)}
                                 self.initAlbumArt(track)
@@ -1070,15 +1071,20 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSSearchF
                         }
                     }
                 }
-                if NSUserDefaults.standardUserDefaults().boolForKey("findAlbumArtwork") == true && artworkFound == false {
-                    print("requesting art")
-                    let requester = artAPIRequestDelegate()
-                    requester.artAPIRequest(track)
-                }
-                if artworkFound == false {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        do {try self.managedContext.save()}catch {print(error)}
-                        self.albumArtView.image = nil
+                if NSUserDefaults.standardUserDefaults().boolForKey(DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING) == true {
+                    let imageURL = fileHandler!.searchAlbumDirectoryForArt(track)
+                    if imageURL != nil {
+                        let artwork = NSData(contentsOfURL: imageURL!)
+                        if artwork != nil {
+                            let albumDirectoryURL = NSURL(string: track.location!)!.URLByDeletingLastPathComponent!
+                            if addPrimaryArtForTrack(track, art: artwork!, albumDirectoryURL: albumDirectoryURL) != nil {
+                                dispatch_async(dispatch_get_main_queue()) {
+                                    do {try self.managedContext.save()}catch {print(error)}
+                                    self.initAlbumArt(track)
+                                }
+                                artworkFound = true
+                            }
+                        }
                     }
                 }
             }

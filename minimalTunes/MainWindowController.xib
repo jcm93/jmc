@@ -2422,14 +2422,14 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
         </menu>
         <userDefaultsController representsSharedInstance="YES" id="BDj-hR-vOF"/>
         <scrollView hidden="YES" misplaced="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" id="EHb-oL-qud">
-            <rect key="frame" x="0.0" y="0.0" width="599" height="457"/>
+            <rect key="frame" x="0.0" y="0.0" width="599" height="800"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <clipView key="contentView" id="XYu-Tl-xFc">
-                <rect key="frame" x="0.0" y="0.0" width="599" height="457"/>
+                <rect key="frame" x="0.0" y="0.0" width="599" height="800"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <view misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DbS-3k-T5V">
-                        <rect key="frame" x="0.0" y="310" width="1063" height="287"/>
+                        <rect key="frame" x="0.0" y="653" width="1063" height="792"/>
                         <subviews>
                             <box verticalHuggingPriority="750" misplaced="YES" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="eXn-Pc-Gao">
                                 <rect key="frame" x="481" y="-2" width="34" height="5"/>
@@ -2522,8 +2522,8 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                                     </menu>
                                 </popUpButtonCell>
                             </popUpButton>
-                            <predicateEditor verticalHuggingPriority="750" misplaced="YES" nestingMode="compound" canRemoveAllRows="YES" rowHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="ffH-Ux-mIl">
-                                <rect key="frame" x="14" y="131" width="563" height="750"/>
+                            <predicateEditor verticalHuggingPriority="750" misplaced="YES" nestingMode="compound" rowHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="ffH-Ux-mIl">
+                                <rect key="frame" x="14" y="35" width="563" height="750"/>
                                 <rowTemplates>
                                     <predicateEditorRowTemplate rowType="compound" id="Rhh-NL-liy" userLabel="AND/OR Row Template">
                                         <popUpMenus>
@@ -3765,7 +3765,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                 <rect key="frame" x="-100" y="-100" width="16" height="107"/>
                 <autoresizingMask key="autoresizingMask"/>
             </scroller>
-            <point key="canvasLocation" x="-661.5" y="310.5"/>
+            <point key="canvasLocation" x="-661.5" y="139"/>
         </scrollView>
         <menu id="2aO-7k-zwO" userLabel="Column Visibility Menu">
             <items>
@@ -3785,7 +3785,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <tableView verticalHuggingPriority="750" placeholderIntrinsicWidth="833" placeholderIntrinsicHeight="583" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" rowSizeStyle="automatic" headerView="LV1-Gx-i0P" viewBased="YES" id="WGf-gu-WxG" userLabel="Auxiliary Playlist Table View" customClass="TableViewYouCanPressSpacebarOn" customModule="minimalTunes" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="1858" height="0.0"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1858" height="1"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <size key="intercellSpacing" width="3" height="2"/>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
