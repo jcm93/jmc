@@ -296,9 +296,9 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
                 (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
                 if object.track!.album?.primary_art != nil {
                     let art = object.track?.album?.primary_art
-                    let path = art?.artwork_location as! String
-                    let url = NSURL(fileURLWithPath: path)
-                    let image = NSImage(contentsOfURL: url)
+                    let path = art?.artwork_location!
+                    let url = NSURL(string: path!)
+                    let image = NSImage(contentsOfURL: url!)
                     (result.subviews[0] as! NSImageView).image = image
                 }
                 else {
@@ -318,9 +318,9 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
                 (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
                 if object.track!.album?.primary_art != nil {
                     let art = object.track?.album?.primary_art
-                    let path = art?.artwork_location as! String
-                    let url = NSURL(fileURLWithPath: path)
-                    let image = NSImage(contentsOfURL: url)
+                    let path = art?.artwork_location!
+                    let url = NSURL(string: path!)
+                    let image = NSImage(contentsOfURL: url!)
                     (result.subviews[0] as! NSImageView).image = image
                 }
                 else {
@@ -344,9 +344,9 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
                 (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
                 if object.track!.album?.primary_art != nil {
                     let art = object.track?.album?.primary_art
-                    let path = art?.artwork_location as! String
-                    let url = NSURL(fileURLWithPath: path)
-                    let image = NSImage(contentsOfURL: url)
+                    let path = art?.artwork_location!
+                    let url = NSURL(string: path!)
+                    let image = NSImage(contentsOfURL: url!)
                     (result.subviews[0] as! NSImageView).image = image
                 }
                 else {

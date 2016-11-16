@@ -11,9 +11,18 @@ import Cocoa
 class SourceListThatYouCanPressSpacebarOn: NSOutlineView {
     
     var mainWindowController: MainWindowController?
+    var treeController: DragAndDropTreeController?
     
     override func awakeFromNib() {
         self.registerForDraggedTypes(["SourceListItem", "Track"])
+    }
+    
+    func doingle() {
+        if self.treeController?.sharedHeaderNode?.children?.count < 3 {
+            Swift.print("tree controller delort shared headernode here")
+            let sharedHeadedNodeIndexPath = NSIndexPath(forItem: 1, inSection: 0)
+            self.treeController?.removeObjectAtArrangedObjectIndexPath(sharedHeadedNodeIndexPath)
+        }
     }
 
     override func drawRect(dirtyRect: NSRect) {

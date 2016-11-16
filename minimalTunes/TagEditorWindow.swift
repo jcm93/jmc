@@ -10,7 +10,7 @@
 
 import Cocoa
 
-class TagEditorWindow: NSWindowController {
+class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectionViewDataSource {
     
     lazy var managedContext: NSManagedObjectContext = {
         return (NSApplication.sharedApplication().delegate
@@ -53,6 +53,12 @@ class TagEditorWindow: NSWindowController {
     @IBOutlet weak var nameField: NSTextField!
     @IBOutlet weak var albumField: NSTextField!
     @IBOutlet weak var artistField: NSTextField!
+    
+    
+    //mark artwork view
+    @IBOutlet weak var artworkCollectionView: NSCollectionView!
+    @IBOutlet weak var imageView: NSImageView!
+    var artImages: [NSImage]?
     
     //mark file info view
     @IBOutlet weak var fileInfoTab: NSTabViewItem!
@@ -151,6 +157,7 @@ class TagEditorWindow: NSWindowController {
             if album_names[0] != nil {
                 albumField.stringValue = album_names[0]!
             }
+            populateArtwork()
         }
         let album_artist_names = selectedTracks!.map( { return $0.album?.album_artist?.name } )
         if allEqual(album_artist_names) == true {
@@ -241,6 +248,81 @@ class TagEditorWindow: NSWindowController {
     }
     
     //mark artwork view
+    
+    func populateArtwork() {
+        let album = selectedTracks![0].album
+        guard album != nil else {return}
+        if album!.primary_art != nil {
+            let artURL = NSURL(string: album!.primary_art!.artwork_location!)
+            self.imageView.image = NSImage(contentsOfURL: artURL!)
+        }
+        if album?.other_art != nil {
+            let artURLs: [NSURL] = album!.other_art!.art!.map({return NSURL(string: ($0 as! AlbumArtwork).artwork_location!)!})
+            self.artImages = artURLs.map({return NSImage(contentsOfURL: $0)!})
+        }
+        print("registering for dragged types")
+        artworkCollectionView.registerForDraggedTypes([NSPasteboardTypePNG, NSPasteboardTypeTIFF, NSFilenamesPboardType, "public.file-url", "Apple URL pasteboard type", "com.apple.finder.node", NSURLPboardType])
+        artworkCollectionView.dataSource = self
+        artworkCollectionView.delegate = self
+        artworkCollectionView.setDraggingSourceOperationMask(NSDragOperation.Every, forLocal: true)
+        artworkCollectionView.setDraggingSourceOperationMask(NSDragOperation.Every, forLocal: false)
+    }
+    
+    func collectionView(collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
+        print("nr items in collection view called")
+        return artImages!.count
+    }
+    
+    func collectionView(collectionView: NSCollectionView, itemForRepresentedObjectAtIndexPath indexPath: NSIndexPath) -> NSCollectionViewItem {
+        print("collection view data thing called")
+        let index = indexPath.item
+        let thingy = collectionView.makeItemWithIdentifier("poop", forIndexPath: indexPath) as! NSCollectionViewItem
+        thingy.imageView?.image = artImages![index]
+        return thingy
+    }
+    
+    func collectionView(collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath?>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionViewDropOperation>) -> NSDragOperation {
+        print("validating drop on collection view")
+        print(draggingInfo.draggingPasteboard().types)
+        return .Every
+    }
+    
+    func collectionView(collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, index: Int, dropOperation: NSCollectionViewDropOperation) -> Bool {
+        print("accepting drop on collection view")
+        if let board = draggingInfo.draggingPasteboard().propertyListForType("NSFilenamesPboardType") as? NSArray, imagePath = board[0] as? String {
+            let artURL = NSURL(fileURLWithPath: imagePath)
+            let artImage = NSImage(contentsOfURL: artURL)
+            if artImage != nil {
+                let album = selectedTracks![0].album
+                guard album != nil else {return false}
+                let albumDirectoryURL = NSURL(string: selectedTracks![0].location!)?.URLByDeletingLastPathComponent
+                let albumArtwork = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtwork", inManagedObjectContext: managedContext) as! AlbumArtwork
+                albumArtwork.image_hash = artImage?.TIFFRepresentation!.hashValue
+                let filename = "\(albumArtwork.image_hash).png"
+                let artworkURL = albumDirectoryURL?.URLByAppendingPathComponent(filename)
+                let artBitmap = NSBitmapImageRep(data: artImage!.TIFFRepresentation!)
+                let artPNG = artBitmap?.representationUsingType(.NSPNGFileType, properties: [:])
+                albumArtwork.artwork_location = artworkURL?.absoluteString
+                do {
+                    try artPNG?.writeToURL(artworkURL!, options: NSDataWritingOptions.AtomicWrite)
+                } catch {
+                    print(error)
+                }
+                if album?.primary_art == nil {
+                    albumArtwork.primary_album = album
+                } else if album?.other_art == nil {
+                    let otherArtCollection = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtworkCollection", inManagedObjectContext: managedContext) as! AlbumArtworkCollection
+                    otherArtCollection.album = album
+                    otherArtCollection.addArtObject(albumArtwork)
+                } else if album?.other_art != nil {
+                    let collection = album?.other_art
+                    collection?.addArtObject(albumArtwork)
+                }
+                self.artImages?.append(artImage!)
+            }
+        }
+        return true
+    }
     //mark file info
     //mark playback
     //mark sorting

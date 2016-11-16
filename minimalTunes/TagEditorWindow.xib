@@ -11,6 +11,7 @@
                 <outlet property="albumArtistField" destination="JsS-of-p1k" id="8tD-w3-dvo"/>
                 <outlet property="albumField" destination="5HB-Hb-5nM" id="77I-EE-GBk"/>
                 <outlet property="artistField" destination="NGA-Ea-5yh" id="waT-TR-enf"/>
+                <outlet property="artworkCollectionView" destination="xmr-u4-51F" id="gb8-Ea-5mo"/>
                 <outlet property="cancelButton" destination="Bet-cv-k7u" id="iFQ-14-qMA"/>
                 <outlet property="commentsField" destination="Gmo-eJ-TPP" id="UAK-jU-C3n"/>
                 <outlet property="compilationButton" destination="etg-fz-LIs" id="kVk-2Z-Qn6"/>
@@ -20,6 +21,7 @@
                 <outlet property="discNumOfField" destination="HFV-a7-YRA" id="TTw-jO-LIc"/>
                 <outlet property="fileInfoTab" destination="Z37-fo-cZm" id="Jri-QG-UJY"/>
                 <outlet property="genreField" destination="mB6-l4-Y0p" id="tnv-v0-JdK"/>
+                <outlet property="imageView" destination="r7M-zu-ChY" id="lRN-ht-lDq"/>
                 <outlet property="nameField" destination="tpB-Cr-QPt" id="9Fm-cm-v5V"/>
                 <outlet property="nextTrackButton" destination="wUx-Ex-dpU" id="Ccl-5c-Nfk"/>
                 <outlet property="previousTrackButton" destination="BSQ-JC-pW5" id="DyF-AO-0Eg"/>
@@ -50,18 +52,18 @@
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="Tags" identifier="1" id="NJs-qq-pLg">
-                                <view key="view" ambiguous="YES" id="jWS-SJ-Vde">
-                                    <rect key="frame" x="10" y="33" width="395" height="436"/>
+                                <view key="view" misplaced="YES" id="jWS-SJ-Vde">
+                                    <rect key="frame" x="10" y="33" width="355" height="0.0"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box horizontalHuggingPriority="750" ambiguous="YES" misplaced="YES" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="yoO-7Y-8RF">
-                                            <rect key="frame" x="111" y="113" width="4" height="322"/>
+                                            <rect key="frame" x="111" y="-323" width="4" height="322"/>
                                             <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                                             <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tJE-mQ-uuQ">
-                                            <rect key="frame" x="5" y="416" width="102" height="17"/>
+                                            <rect key="frame" x="5" y="-20" width="102" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Name" id="MBk-tH-EX0">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -69,7 +71,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tpB-Cr-QPt">
-                                            <rect key="frame" x="122" y="413" width="256" height="22"/>
+                                            <rect key="frame" x="122" y="-23" width="256" height="22"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="WW4-QQ-pPM">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -77,7 +79,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RDP-8m-w6B">
-                                            <rect key="frame" x="5" y="389" width="102" height="17"/>
+                                            <rect key="frame" x="5" y="-47" width="102" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Artist" id="otY-Oq-stA">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -85,7 +87,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NGA-Ea-5yh">
-                                            <rect key="frame" x="122" y="386" width="256" height="22"/>
+                                            <rect key="frame" x="122" y="-50" width="256" height="22"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="sZt-fo-3dp">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -93,7 +95,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OOx-2R-X0V">
-                                            <rect key="frame" x="5" y="359" width="102" height="17"/>
+                                            <rect key="frame" x="5" y="-77" width="102" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Album Artist" id="QaB-uv-VaS">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -101,7 +103,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JsS-of-p1k">
-                                            <rect key="frame" x="122" y="356" width="256" height="22"/>
+                                            <rect key="frame" x="122" y="-80" width="256" height="22"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="1th-vj-T1q">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -109,7 +111,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ljc-5j-MZV">
-                                            <rect key="frame" x="5" y="329" width="102" height="17"/>
+                                            <rect key="frame" x="5" y="-107" width="102" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Album" id="mnA-Ul-S22">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -117,7 +119,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5HB-Hb-5nM">
-                                            <rect key="frame" x="122" y="326" width="256" height="22"/>
+                                            <rect key="frame" x="122" y="-110" width="256" height="22"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="732-um-616">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -125,7 +127,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LBr-fv-OZV">
-                                            <rect key="frame" x="5" y="302" width="102" height="17"/>
+                                            <rect key="frame" x="5" y="-134" width="102" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Track " id="vFN-VB-ntA">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -133,7 +135,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="v67-HA-JZ1">
-                                            <rect key="frame" x="122" y="299" width="26" height="22"/>
+                                            <rect key="frame" x="122" y="-137" width="26" height="22"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="fIR-wL-2RK">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -141,7 +143,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tfH-9F-nf4">
-                                            <rect key="frame" x="168" y="299" width="26" height="22"/>
+                                            <rect key="frame" x="168" y="-137" width="26" height="22"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Vlh-jM-xxE">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -149,7 +151,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ykv-54-XPV">
-                                            <rect key="frame" x="149" y="302" width="17" height="17"/>
+                                            <rect key="frame" x="149" y="-134" width="17" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="of" id="xf1-dM-yPB">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -157,7 +159,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5FI-V5-IDf">
-                                            <rect key="frame" x="5" y="277" width="102" height="17"/>
+                                            <rect key="frame" x="5" y="-159" width="102" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Disc" id="T1z-gH-gyf">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -165,7 +167,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="O88-Yz-wKR">
-                                            <rect key="frame" x="122" y="274" width="26" height="22"/>
+                                            <rect key="frame" x="122" y="-162" width="26" height="22"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="HBs-91-Oep">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -173,7 +175,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HFV-a7-YRA">
-                                            <rect key="frame" x="168" y="274" width="26" height="22"/>
+                                            <rect key="frame" x="168" y="-162" width="26" height="22"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="CWx-kw-pgY">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -181,7 +183,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ivg-u5-26y">
-                                            <rect key="frame" x="149" y="277" width="17" height="17"/>
+                                            <rect key="frame" x="149" y="-159" width="17" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="of" id="wkv-Ss-cq1">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -189,7 +191,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L7l-Go-lHA">
-                                            <rect key="frame" x="196" y="302" width="63" height="17"/>
+                                            <rect key="frame" x="196" y="-134" width="63" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Released:" id="Foj-xN-lls">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -197,13 +199,13 @@
                                             </textFieldCell>
                                         </textField>
                                         <box horizontalHuggingPriority="750" ambiguous="YES" misplaced="YES" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="JvW-dr-jDx">
-                                            <rect key="frame" x="273" y="299" width="56" height="5"/>
+                                            <rect key="frame" x="273" y="-137" width="56" height="5"/>
                                             <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                                             <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <datePicker verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HEH-m8-DW1">
-                                            <rect key="frame" x="284" y="299" width="97" height="27"/>
+                                            <rect key="frame" x="284" y="-137" width="97" height="27"/>
                                             <datePickerCell key="cell" borderStyle="bezel" alignment="left" id="bKg-fr-WKz">
                                                 <font key="font" metaFont="system"/>
                                                 <calendarDate key="date" timeIntervalSinceReferenceDate="-595929600" calendarFormat="%Y-%m-%d %H:%M:%S %z">
@@ -218,28 +220,28 @@
                                             </connections>
                                         </datePicker>
                                         <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z6c-es-NMf">
-                                            <rect key="frame" x="251" y="558" width="129" height="18"/>
+                                            <rect key="frame" x="251" y="122" width="129" height="18"/>
                                             <buttonCell key="cell" type="check" title="Write tags to files" bezelStyle="regularSquare" imagePosition="right" inset="2" id="BG2-2j-lCx">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                         </button>
                                         <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oo2-tY-UqV">
-                                            <rect key="frame" x="225" y="479" width="159" height="32"/>
+                                            <rect key="frame" x="225" y="43" width="159" height="32"/>
                                             <buttonCell key="cell" type="push" title="Add Custom Field..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="q62-j4-Jg7">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                         </button>
                                         <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wUz-N0-IbG">
-                                            <rect key="frame" x="225" y="512" width="159" height="32"/>
+                                            <rect key="frame" x="225" y="76" width="159" height="32"/>
                                             <buttonCell key="cell" type="push" title="Correct Tags..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="RYp-je-LRS">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                         </button>
-                                        <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wUx-Ex-dpU">
-                                            <rect key="frame" x="60" y="452" width="27" height="29"/>
+                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wUx-Ex-dpU">
+                                            <rect key="frame" x="60" y="16" width="27" height="29"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="27" id="MPB-6P-ChY"/>
                                                 <constraint firstAttribute="height" constant="27" id="iWR-PU-Nnp"/>
@@ -249,8 +251,8 @@
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                         </button>
-                                        <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BSQ-JC-pW5">
-                                            <rect key="frame" x="25" y="452" width="27" height="29"/>
+                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BSQ-JC-pW5">
+                                            <rect key="frame" x="25" y="16" width="27" height="29"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="27" id="ayd-hh-8YA"/>
                                                 <constraint firstAttribute="width" constant="27" id="idZ-9q-S73"/>
@@ -261,7 +263,7 @@
                                             </buttonCell>
                                         </button>
                                         <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3q3-kT-LGV">
-                                            <rect key="frame" x="225" y="446" width="159" height="32"/>
+                                            <rect key="frame" x="225" y="10" width="159" height="32"/>
                                             <buttonCell key="cell" type="push" title="Confirm" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Wrf-71-8HT">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -271,7 +273,7 @@
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bet-cv-k7u">
-                                            <rect key="frame" x="107" y="446" width="117" height="32"/>
+                                            <rect key="frame" x="107" y="10" width="117" height="32"/>
                                             <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="guq-g7-1KT">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -281,14 +283,14 @@ Gw
                                             </buttonCell>
                                         </button>
                                         <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N0s-RK-0dH">
-                                            <rect key="frame" x="263" y="301" width="61" height="18"/>
+                                            <rect key="frame" x="263" y="-135" width="61" height="18"/>
                                             <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="DHZ-mX-fNH">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                         </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d3w-LA-Ypr">
-                                            <rect key="frame" x="5" y="250" width="102" height="17"/>
+                                            <rect key="frame" x="5" y="-186" width="102" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Composer" id="5m1-wE-Y4J">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -296,7 +298,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Qc-jh-RiR">
-                                            <rect key="frame" x="122" y="247" width="256" height="22"/>
+                                            <rect key="frame" x="122" y="-189" width="256" height="22"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Zev-gG-HPV">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -304,7 +306,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pDb-bx-giN">
-                                            <rect key="frame" x="5" y="223" width="102" height="17"/>
+                                            <rect key="frame" x="5" y="-213" width="102" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Genre" id="UkZ-lB-K1i">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -312,7 +314,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mB6-l4-Y0p">
-                                            <rect key="frame" x="122" y="220" width="256" height="22"/>
+                                            <rect key="frame" x="122" y="-216" width="256" height="22"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="ToN-jR-9xB">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -320,7 +322,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Anb-Wj-KA1">
-                                            <rect key="frame" x="5" y="142" width="102" height="17"/>
+                                            <rect key="frame" x="5" y="-294" width="102" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Comments" id="kTF-Mx-se4">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -328,7 +330,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gmo-eJ-TPP">
-                                            <rect key="frame" x="122" y="93" width="256" height="68"/>
+                                            <rect key="frame" x="122" y="-343" width="256" height="68"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="68" id="rlz-nm-QuD"/>
                                             </constraints>
@@ -339,7 +341,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="djX-kr-b4p">
-                                            <rect key="frame" x="5" y="195" width="102" height="17"/>
+                                            <rect key="frame" x="5" y="-241" width="102" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Rating" id="YX3-MI-7UN">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -347,7 +349,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="44S-0b-8vY">
-                                            <rect key="frame" x="122" y="192" width="96" height="22"/>
+                                            <rect key="frame" x="122" y="-244" width="96" height="22"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="sB1-uE-W9Q">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -355,7 +357,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UYS-31-j8q">
-                                            <rect key="frame" x="5" y="168" width="102" height="17"/>
+                                            <rect key="frame" x="5" y="-268" width="102" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Compilation" id="wvx-J3-0Pf">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -363,7 +365,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <button ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="etg-fz-LIs">
-                                            <rect key="frame" x="120" y="167" width="176" height="18"/>
+                                            <rect key="frame" x="120" y="-269" width="176" height="18"/>
                                             <buttonCell key="cell" type="check" title="Album is a compilation" bezelStyle="regularSquare" imagePosition="left" inset="2" id="oG0-Da-bmx">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -437,17 +439,21 @@ Gw
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="Artwork" identifier="2" id="Lwz-Jp-qoM">
-                                <view key="view" id="EEb-sb-s8d">
+                                <view key="view" ambiguous="YES" id="EEb-sb-s8d">
                                     <rect key="frame" x="10" y="33" width="395" height="436"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
+                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r7M-zu-ChY">
+                                            <rect key="frame" x="14" y="96" width="367" height="316"/>
+                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="qNh-c5-MfJ"/>
+                                        </imageView>
                                         <scrollView ambiguous="YES" misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cao-TO-ZO9">
-                                            <rect key="frame" x="17" y="90" width="361" height="74"/>
+                                            <rect key="frame" x="17" y="2" width="361" height="74"/>
                                             <clipView key="contentView" ambiguous="YES" id="KGn-LR-kWU">
                                                 <rect key="frame" x="1" y="1" width="359" height="72"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <collectionView ambiguous="YES" id="xmr-u4-51F">
+                                                    <collectionView ambiguous="YES" selectable="YES" id="xmr-u4-51F">
                                                         <rect key="frame" x="0.0" y="0.0" width="359" height="72"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -463,18 +469,15 @@ Gw
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>
-                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r7M-zu-ChY">
-                                            <rect key="frame" x="91" y="199" width="213" height="213"/>
-                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="qNh-c5-MfJ"/>
-                                        </imageView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="cao-TO-ZO9" secondAttribute="trailing" constant="17" id="Ei3-fN-IuT"/>
-                                        <constraint firstAttribute="bottom" secondItem="cao-TO-ZO9" secondAttribute="bottom" constant="47" id="HhL-xd-E6A"/>
-                                        <constraint firstItem="r7M-zu-ChY" firstAttribute="leading" secondItem="EEb-sb-s8d" secondAttribute="leading" constant="94" id="WlW-d0-kU9"/>
-                                        <constraint firstItem="cao-TO-ZO9" firstAttribute="leading" secondItem="EEb-sb-s8d" secondAttribute="leading" constant="17" id="bzC-Va-EcE"/>
-                                        <constraint firstAttribute="trailing" secondItem="r7M-zu-ChY" secondAttribute="trailing" constant="94" id="cMh-Vx-Sjq"/>
-                                        <constraint firstItem="r7M-zu-ChY" firstAttribute="top" secondItem="EEb-sb-s8d" secondAttribute="top" constant="27" id="d0f-ab-tYb"/>
+                                        <constraint firstItem="cao-TO-ZO9" firstAttribute="top" secondItem="r7M-zu-ChY" secondAttribute="bottom" constant="23" id="S5O-A9-wZZ"/>
+                                        <constraint firstItem="r7M-zu-ChY" firstAttribute="top" secondItem="EEb-sb-s8d" secondAttribute="top" constant="27" id="cys-BG-sTj"/>
+                                        <constraint firstAttribute="bottom" secondItem="cao-TO-ZO9" secondAttribute="bottom" constant="2" id="mJw-nl-icC"/>
+                                        <constraint firstAttribute="trailing" secondItem="cao-TO-ZO9" secondAttribute="trailing" constant="17" id="nkn-fy-6Yr"/>
+                                        <constraint firstItem="cao-TO-ZO9" firstAttribute="leading" secondItem="EEb-sb-s8d" secondAttribute="leading" constant="17" id="rxc-K2-75V"/>
+                                        <constraint firstAttribute="trailing" secondItem="r7M-zu-ChY" secondAttribute="trailing" constant="17" id="sjq-Yt-owM"/>
+                                        <constraint firstItem="r7M-zu-ChY" firstAttribute="leading" secondItem="EEb-sb-s8d" secondAttribute="leading" constant="17" id="wji-e0-v2L"/>
                                     </constraints>
                                 </view>
                             </tabViewItem>
@@ -484,7 +487,7 @@ Gw
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box horizontalHuggingPriority="750" ambiguous="YES" misplaced="YES" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="0sM-HJ-DDg">
-                                            <rect key="frame" x="111" y="9" width="5" height="432"/>
+                                            <rect key="frame" x="111" y="9" width="190" height="432"/>
                                             <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                                             <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <font key="titleFont" metaFont="system"/>
@@ -593,7 +596,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3iU-oy-ScM">
-                                            <rect key="frame" x="120" y="416" width="32" height="17"/>
+                                            <rect key="frame" x="305" y="416" width="32" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Kind" id="Nv4-44-gfj">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -604,7 +607,7 @@ Gw
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eaZ-vH-SmY">
-                                            <rect key="frame" x="120" y="391" width="56" height="17"/>
+                                            <rect key="frame" x="305" y="391" width="56" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Duration" id="Sgf-xy-aIE">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -619,7 +622,7 @@ Gw
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eBF-gP-CgB">
-                                            <rect key="frame" x="120" y="366" width="30" height="17"/>
+                                            <rect key="frame" x="305" y="366" width="30" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Size" id="G5v-j7-nBf">
                                                 <byteCountFormatter key="formatter" id="372-Zf-Nce"/>
                                                 <font key="font" metaFont="system"/>
@@ -631,7 +634,7 @@ Gw
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ujH-hy-RAp">
-                                            <rect key="frame" x="120" y="341" width="52" height="17"/>
+                                            <rect key="frame" x="305" y="341" width="52" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" id="sqH-Cc-qkl">
                                                 <customFormatter key="formatter" id="qIq-nK-gTV" customClass="BitRateFormatter" customModule="minimalTunes" customModuleProvider="target"/>
                                                 <font key="font" metaFont="system"/>
@@ -643,7 +646,7 @@ Gw
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xdv-Cx-mm6">
-                                            <rect key="frame" x="120" y="316" width="80" height="17"/>
+                                            <rect key="frame" x="305" y="316" width="80" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" id="QN4-mz-Rew">
                                                 <customFormatter key="formatter" id="8eF-OT-76N" customClass="SampleRateFormatter" customModule="minimalTunes" customModuleProvider="target"/>
                                                 <font key="font" metaFont="system"/>
@@ -655,7 +658,7 @@ Gw
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ear-91-RCb">
-                                            <rect key="frame" x="120" y="266" width="25" height="17"/>
+                                            <rect key="frame" x="305" y="266" width="25" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="ID3" id="9w0-s8-AGh">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -663,7 +666,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eWa-dY-esF">
-                                            <rect key="frame" x="120" y="291" width="61" height="17"/>
+                                            <rect key="frame" x="305" y="291" width="61" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Channels" id="F0B-ce-vcf">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -671,7 +674,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RDU-yi-55g">
-                                            <rect key="frame" x="120" y="216" width="47" height="17"/>
+                                            <rect key="frame" x="305" y="216" width="47" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Format" id="FaO-4j-1Pq">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -679,7 +682,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T4T-02-2fK">
-                                            <rect key="frame" x="120" y="241" width="55" height="17"/>
+                                            <rect key="frame" x="305" y="241" width="55" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Encoder" id="Roo-hr-f1s">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -687,7 +690,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T3e-Wy-uId">
-                                            <rect key="frame" x="120" y="191" width="89" height="17"/>
+                                            <rect key="frame" x="305" y="191" width="89" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Date Modified" id="C3a-2F-nLM">
                                                 <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" id="Pdv-NE-82J"/>
                                                 <font key="font" metaFont="system"/>
@@ -699,7 +702,7 @@ Gw
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Jk-Sp-jUx">
-                                            <rect key="frame" x="120" y="166" width="76" height="17"/>
+                                            <rect key="frame" x="305" y="166" width="76" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Date Added" id="JgR-dJ-Dq7">
                                                 <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" id="JJt-JA-mQX"/>
                                                 <font key="font" metaFont="system"/>
@@ -715,7 +718,7 @@ Gw
                                             <pathCell key="cell" selectable="YES" editable="YES" alignment="left" id="LtK-L5-Pal">
                                                 <font key="font" metaFont="system"/>
                                                 <url key="url" string="file://localhost/Applications/"/>
-                                                <color key="backgroundColor" red="0.8980392157" green="0.92549019610000005" blue="0.97254901959999995" alpha="1" colorSpace="deviceRGB"/>
+                                                <color key="backgroundColor" red="0.89803921568627454" green="0.92549019607843142" blue="0.97254901960784312" alpha="1" colorSpace="deviceRGB"/>
                                             </pathCell>
                                         </pathControl>
                                     </subviews>

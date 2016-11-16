@@ -25,12 +25,14 @@ class ProgressBarView: NSView {
         self.mainWindowController?.timer?.invalidate()
         let frac = Double((theEvent.locationInWindow.x - self.convertRect(self.visibleRect, toView: nil).origin.x) / self.frame.width)
         progressBar?.doubleValue = frac * 100
+        progressBar?.displayIfNeeded()
         mainWindowController!.seek(frac)
     }
     
     override func mouseDragged(theEvent: NSEvent) {
         let frac = Double((theEvent.locationInWindow.x - self.convertRect(self.visibleRect, toView: nil).origin.x) / self.frame.width)
         progressBar?.doubleValue = frac * 100
+        progressBar?.displayIfNeeded()
         mainWindowController!.seek(frac)
         if (mainWindowController?.timer == nil || mainWindowController?.timer?.valid == false && mainWindowController!.paused != true) {
             Swift.print("strating timer from seek")

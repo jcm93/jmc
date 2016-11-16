@@ -14,7 +14,7 @@ class P2PServer {
     let remoteModule: RemoteP2PModule
     let localPeer: LocalPeer
     let delegate: AppDelegate
-    let interface: DragAndDropTreeController
+    //let interface: DragAndDropTreeController
     let namePeerDictionary = NSMutableDictionary()
     var isStreaming = false
     var isPlayingBackStream = false
@@ -22,7 +22,7 @@ class P2PServer {
     
     init(_delegate: AppDelegate) {
         self.delegate = _delegate
-        self.interface = delegate.mainWindowController!.sourceListTreeController!
+        //self.interface = delegate.mainWindowController!.sourceListTreeController!
         self.wlanModule = WlanModule(type: "metunes", dispatchQueue: dispatch_get_main_queue())
         self.remoteModule = RemoteP2PModule(baseUrl: NSURL(string: "ws://162.243.26.172:8080/")!, dispatchQueue: dispatch_get_main_queue())
         self.localPeer = LocalPeer(modules: [self.wlanModule], dispatchQueue: dispatch_get_main_queue())
@@ -239,7 +239,7 @@ class P2PServer {
     }
     
     func onPeerRemoved(peer: RemotePeer) {
-        interface.removeNetworkedLibrary(peer.name!)
+        //interface.removeNetworkedLibrary(peer.name!)
     }
     
     func onIncomingConnection(peer: RemotePeer, connection: Connection) {
@@ -296,21 +296,21 @@ class P2PServer {
         switch payloadType {
             case "name":
                 let name = requestDict["name"] as! String
-                interface.addNetworkedLibrary(name, address: "poophole")
+                //interface.addNetworkedLibrary(name, address: "poophole")
                 let connectionDictionary = NSMutableDictionary()
                 connectionDictionary["peer"] = peer
                 self.namePeerDictionary[name] = connectionDictionary
                 self.askPeerForSourceList(peer, connection: connection)
             case "list":
                 let name = requestDict["name"] as! String
-                let networkedLibrary = interface.networkedLibraryWithName(name)
+                //let networkedLibrary = interface.networkedLibraryWithName(name)
                 let list = requestDict["list"] as! [NSDictionary]
-                interface.addSourcesForNetworkedLibrary(list, item: networkedLibrary!)
+                //interface.addSourcesForNetworkedLibrary(list, item: networkedLibrary!)
             case "playlist":
                 let id = requestDict["id"] as! Int
-                let item = interface.getNetworkPlaylistWithID(id)
+                //let item = interface.getNetworkPlaylistWithID(id)
                 let playlist = requestDict["playlist"] as! NSDictionary
-                addTracksForPlaylistData(playlist, item: item)
+                //addTracksForPlaylistData(playlist, item: item)
                 print("the tingler got a playlist")
             case "track":
                 guard delegate.mainWindowController?.is_streaming == true else {return}

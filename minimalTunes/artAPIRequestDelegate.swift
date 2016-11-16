@@ -67,7 +67,7 @@ class artAPIRequestDelegate {
             } else {
                 if let httpResponse = response as? NSHTTPURLResponse {
                     let albumDirectoryPath = NSURL(string: self.requestedTrack!.location!)!.URLByDeletingLastPathComponent
-                    if addPrimaryArtForTrack(self.requestedTrack!, art: data!, albumDirectoryPath: (albumDirectoryPath?.path!)!) != nil {
+                    if addPrimaryArtForTrack(self.requestedTrack!, art: data!, albumDirectoryURL: albumDirectoryPath!) != nil {
                         dispatch_async(dispatch_get_main_queue()) {
                             (NSApplication.sharedApplication().delegate as! AppDelegate).mainWindowController?.initAlbumArt(self.requestedTrack!)
                         }

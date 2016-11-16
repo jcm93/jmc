@@ -83,7 +83,7 @@ class ImportWindowController: NSWindowController {
         appDelegate.importProgressBar?.window?.close()
         self.window?.close()
         self.mainWindowController?.hasMusic = true
-        self.mainWindowController?.sourceListTreeController.content = self.mainWindowController?.sourceListHeaderNodes
+        //self.mainWindowController?.sourceListTreeController.content = self.mainWindowController?.sourceListHeaderNodes
         self.mainWindowController?.windowDidLoad()
     }
     

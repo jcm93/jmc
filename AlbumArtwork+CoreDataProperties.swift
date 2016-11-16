@@ -14,7 +14,7 @@ import CoreData
 
 extension AlbumArtwork {
 
-    @NSManaged var artwork_location: NSObject?
+    @NSManaged var artwork_location: String?
     @NSManaged var image_hash: NSNumber?
     @NSManaged var id: NSNumber?
     @NSManaged var is_network: NSNumber?

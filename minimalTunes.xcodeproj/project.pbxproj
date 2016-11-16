@@ -27,6 +27,8 @@
 		0D40A9F21D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */; };
 		0D58F7491D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */; };
 		0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */; };
+		0D5A55E71DDAA80F00E46F08 /* sourceListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5A55E61DDAA80F00E46F08 /* sourceListDataSource.swift */; };
+		0D5A55E91DDBE16600E46F08 /* SourceListCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */; };
 		0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */; };
 		0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */; };
 		0D76F6A81D24B9AC00C6E70F /* YeOldeFileHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6A71D24B9AC00C6E70F /* YeOldeFileHandler.swift */; };
@@ -138,6 +140,8 @@
 		0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransformerIntegerToTimestamp.swift; sourceTree = "<group>"; };
 		0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
 		0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListThatYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
+		0D5A55E61DDAA80F00E46F08 /* sourceListDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sourceListDataSource.swift; sourceTree = "<group>"; };
+		0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListCellView.swift; sourceTree = "<group>"; };
 		0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagEditorWindow.swift; sourceTree = "<group>"; };
 		0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagEditorWindow.xib; sourceTree = "<group>"; };
 		0D76F6A71D24B9AC00C6E70F /* YeOldeFileHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YeOldeFileHandler.swift; sourceTree = "<group>"; };
@@ -264,6 +268,7 @@
 		0D01AD941D707CFB00F9211F /* Data Controllers and Interface Subclasses */ = {
 			isa = PBXGroup;
 			children = (
+				0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */,
 				0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */,
 				0D3878BB1DD125E9004CC3C1 /* StupidNumberFormatter.swift */,
 				0D3878B91DD12530004CC3C1 /* SampleRateFormatter.swift */,
@@ -277,6 +282,7 @@
 				0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */,
 				0D76F6A91D270EB900C6E70F /* DragAndDropArrayController.swift */,
 				0D76F6AB1D28581900C6E70F /* DragAndDropTreeController.swift */,
+				0D5A55E61DDAA80F00E46F08 /* sourceListDataSource.swift */,
 				0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */,
 				0DB8EFE91DC4FC4D00009900 /* MainTableViewDataSource.swift */,
 				0DCB81711DCAA45C006FBA9D /* MainTableViewDelegate.swift */,
@@ -649,6 +655,7 @@
 				0DDBFC2A1D1C892B00669875 /* trackQueueView.swift in Sources */,
 				0DEF66D21D383A8700EA3ADC /* Tag+CoreDataProperties.swift in Sources */,
 				0DD7D6DD1D3F3E270035BAD8 /* AlbumArtArrayController.swift in Sources */,
+				0D5A55E71DDAA80F00E46F08 /* sourceListDataSource.swift in Sources */,
 				0DC84C601DBAD0C100E8877C /* NewCachedOrder.swift in Sources */,
 				0DA8D03E1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift in Sources */,
 				0DEF66BC1D383A8700EA3ADC /* Composer+CoreDataProperties.swift in Sources */,
@@ -702,6 +709,7 @@
 				0D2923021DC4272300711546 /* CustomFieldWindowController.swift in Sources */,
 				0DD274EF1D3190360055C43B /* GlobalFunctions.swift in Sources */,
 				0D3878BC1DD125E9004CC3C1 /* StupidNumberFormatter.swift in Sources */,
+				0D5A55E91DDBE16600E46F08 /* SourceListCellView.swift in Sources */,
 				0D9CE6751D34128B004FA8CB /* InitialSetupWindowController.swift in Sources */,
 				0DEF66B71D383A8700EA3ADC /* Library.swift in Sources */,
 				0D40A9F21D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift in Sources */,

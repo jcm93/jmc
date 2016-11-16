@@ -194,7 +194,7 @@ class YeOldeFileHandler: NSObject {
     }
     
     func moveFileAfterEdit(track: Track) {
-        let organizationType = NSUserDefaults.standardUserDefaults().objectForKey(LIBRARY_ORGANIZATION_TYPE_STRING) as! Int
+        let organizationType = NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING) as! Int
         guard organizationType != NO_ORGANIZATION_TYPE else {return}
         let artistFolderName = track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING
         let albumFolderName = track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING

@@ -18,11 +18,11 @@ enum completionHandlerType {
 class AudioQueue: NSObject, AVAudioPlayerDelegate {
     //todo consistent naming
     dynamic var trackQueue = [Track]()
-    dynamic var currentTrack: Track?
-    dynamic var auxTrackQueue = [Track]()
+    dynamic var currentTrackLocation: String?
     
     var curNode = AVAudioPlayerNode()
     var mixerNode = AVAudioMixerNode()
+    var equalizerNode = AVAudioUnitEQ(numberOfBands: 10)
     var curFile: AVAudioFile?
     var audioEngine = AVAudioEngine()
     var streamer = AVAudioPlayer()
@@ -38,7 +38,6 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     var duration_frames: Int64?
     var track_frame_offset: Double?
     var is_paused: Bool?
-    var current_track_location: String?
     
     var total_offset_frames: Int64 = 0
     var total_offset_seconds: Int64 = 0
@@ -48,12 +47,13 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     override init() {
         audioEngine.attachNode(curNode)
         audioEngine.connect(curNode, to: audioEngine.mainMixerNode, format: curFile?.processingFormat)
+        audioEngine.attachNode(equalizerNode)
     }
     
     func playNetworkImmediately(track: NetworkTrack) {
         currentHandlerType = .destroy
         let networkPath = NSUserDefaults.standardUserDefaults().stringForKey("libraryPath")! + "/test.mp3"
-        current_track_location = NSURL(fileURLWithPath: networkPath).absoluteString
+        currentTrackLocation = NSURL(fileURLWithPath: networkPath).absoluteString
         print("paused value is \(is_paused)")
         initializePlayback()
         if (is_paused == false || is_paused == nil) {
@@ -64,10 +64,10 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
         currentHandlerType = .natural
     }
     
-    func playImmediately(track: Track) {
+    func playImmediately(trackLocation: String) {
         currentHandlerType = .destroy
         print("paused value is \(is_paused)")
-        current_track_location = track.location!
+        currentTrackLocation = trackLocation
         initializePlayback()
         if (is_paused == false || is_paused == nil) {
             print("reached play clause")
@@ -81,8 +81,8 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
         print("adding track to audio queue")
         print(index)
         print(trackQueue.count)
-        if (currentTrack == nil) {
-            playImmediately(track)
+        if (currentTrackLocation == nil) {
+            playImmediately(track.location!)
         }
         else if (trackQueue.count == 0) {
             trackQueue.append(track)
@@ -110,7 +110,7 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     }
     
     func initializePlayback() {
-        if current_track_location == nil {
+        if currentTrackLocation == nil {
             return
         }
         else {
@@ -125,7 +125,7 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
                     audioEngine.attachNode(curNode)
                     audioEngine.connect(curNode, to: audioEngine.mainMixerNode, format: curFile?.processingFormat)
                 }
-                let location = current_track_location!
+                let location = currentTrackLocation!
                 let url = NSURL(string: location)
                 curFile = try AVAudioFile(forReading: url!)
                 print(location)
@@ -170,11 +170,12 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     
     func tryGetMoreTracks() {
         if trackQueue.count > 0 {
-            currentTrack = trackQueue.removeFirst()
+            currentTrackLocation = trackQueue.removeFirst().location!
         }
         else {
-            currentTrack = mainWindowController?.getNextTrack()
-            mainWindowController?.currentTrack = currentTrack
+            let nextTrack = mainWindowController?.getNextTrack()
+            currentTrackLocation = nextTrack?.location
+            mainWindowController?.currentTrack = nextTrack
         }
     }
     
@@ -186,11 +187,11 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
         switch currentHandlerType {
         case .natural:
             tryGetMoreTracks()
-            if (currentTrack != nil) {
+            if (currentTrackLocation != nil) {
                 print("natural next track")
                 var delay: Double = 0
                 do {
-                    let location = current_track_location!
+                    let location = currentTrackLocation!
                     let url = NSURL(string: location)
                     let gapless_duration = AVAudioTime(sampleTime: curFile!.length - Int64(track_frame_offset!), atRate: curFile!.processingFormat.sampleRate)
                     total_offset_frames += gapless_duration.sampleTime
@@ -240,9 +241,9 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
         let beforeTime = NSDate()
         tryGetMoreTracks()
         currentHandlerType = .destroy
-        if (currentTrack != nil) {
+        if (currentTrackLocation != nil) {
             print("skipping to new track")
-            playImmediately(currentTrack!)
+            playImmediately(currentTrackLocation!)
             changeTrack()
         }
         else {
