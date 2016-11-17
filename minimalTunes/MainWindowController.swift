@@ -66,6 +66,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
     var currentArrayController: DragAndDropArrayController?
     var currentAudioSource: SourceListItem?
     var sourceListDataSource: SourceListDataSource?
+    var trackQueue = [Track]()
     
     var tagWindowController: TagEditorWindow?
     var customFieldController: CustomFieldWindowController?
@@ -133,7 +134,70 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
             return nil
         }
     }()
+    
+    //initialize managed object context
+    lazy var managedContext: NSManagedObjectContext = {
+        return (NSApplication.sharedApplication().delegate
+            as? AppDelegate)?.managedObjectContext }()!
+    
+    lazy var sourceListHeaderNodes: [SourceListItem]? = {()-> [SourceListItem]? in
+        let fetchRequest = NSFetchRequest(entityName: "SourceListItem")
+        let fetchPredicate = NSPredicate(format: "parent == nil")
+        fetchRequest.predicate = fetchPredicate
+        do {
+            let results = try self.managedContext.executeFetchRequest(fetchRequest) as! [SourceListItem]
+            for headerNode in results {
+                if (headerNode as! SourceListItem).name == "Playlists" {
+                    self.sourceListTreeController.playlistHeaderNode = headerNode
+                } else if (headerNode as! SourceListItem).name == "Shared Libraries" {
+                    self.sourceListTreeController.sharedHeaderNode = headerNode
+                }
+            }
+            return results
+        } catch {
+            print("error getting header nodes: \(error)")
+            return nil
+        }
+    }()
+    
+    var isVisibleDict = NSMutableDictionary()
+    func populateIsVisibleDict() {
+        if self.currentArrayController != nil {
+            for track in self.currentArrayController?.arrangedObjects as! [TrackView] {
+                isVisibleDict[(track).track!.id!] = true
+            }
+        }
+    }
 
+    
+    
+    
+    //sort descriptors for source list
+    var sourceListSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_order", ascending: true), NSSortDescriptor(key: "name", ascending: true)]
+    
+    var librarySortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "artist_sort_order", ascending: true)]
+    
+    @IBAction func importButtonPressed(sender: AnyObject) {
+        importWindowController = ImportWindowController(windowNibName: "ImportWindowController")
+        importWindowController?.mainWindowController = self
+        importWindowController?.showWindow(self)
+    }
+    //the view coordinator
+    var viewCoordinator: ViewCoordinator?
+    var currentSourceListItem: SourceListItem?
+    
+    func searchFieldDidStartSearching(sender: NSSearchField) {
+        print("search started searching called")
+        print((currentArrayController?.arrangedObjects as! [TrackView]).count)
+        viewCoordinator?.search_bar_content = searchField.stringValue
+    }
+    
+    func searchFieldDidEndSearching(sender: NSSearchField) {
+        print("search ended searching called")
+        print((currentArrayController?.arrangedObjects as! [TrackView]).count)
+        viewCoordinator?.search_bar_content = ""
+    }
+    
     
     var rootNode: SourceListNode?
     
@@ -232,70 +296,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
             view.textField?.stringValue = source.item.name!
             return view
         }
-    }
-    
-    
-    //initialize managed object context
-    lazy var managedContext: NSManagedObjectContext = {
-        return (NSApplication.sharedApplication().delegate
-            as? AppDelegate)?.managedObjectContext }()!
-    
-    lazy var sourceListHeaderNodes: [SourceListItem]? = {()-> [SourceListItem]? in
-        let fetchRequest = NSFetchRequest(entityName: "SourceListItem")
-        let fetchPredicate = NSPredicate(format: "parent == nil")
-        fetchRequest.predicate = fetchPredicate
-        do {
-            let results = try self.managedContext.executeFetchRequest(fetchRequest) as! [SourceListItem]
-            for headerNode in results {
-                if (headerNode as! SourceListItem).name == "Playlists" {
-                    self.sourceListTreeController.playlistHeaderNode = headerNode
-                } else if (headerNode as! SourceListItem).name == "Shared Libraries" {
-                    self.sourceListTreeController.sharedHeaderNode = headerNode
-                }
-            }
-            return results
-        } catch {
-            print("error getting header nodes: \(error)")
-            return nil
-        }
-    }()
-    
-    var isVisibleDict = NSMutableDictionary()
-    func populateIsVisibleDict() {
-        if self.currentArrayController != nil {
-            for track in self.currentArrayController?.arrangedObjects as! [TrackView] {
-                isVisibleDict[(track).track!.id!] = true
-            }
-        }
-    }
-
-    
-    
-    
-    //sort descriptors for source list
-    var sourceListSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_order", ascending: true), NSSortDescriptor(key: "name", ascending: true)]
-    
-    var librarySortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "artist_sort_order", ascending: true)]
-    
-    @IBAction func importButtonPressed(sender: AnyObject) {
-        importWindowController = ImportWindowController(windowNibName: "ImportWindowController")
-        importWindowController?.mainWindowController = self
-        importWindowController?.showWindow(self)
-    }
-    //the view coordinator
-    var viewCoordinator: ViewCoordinator?
-    var currentSourceListItem: SourceListItem?
-    
-    func searchFieldDidStartSearching(sender: NSSearchField) {
-        print("search started searching called")
-        print((currentArrayController?.arrangedObjects as! [TrackView]).count)
-        viewCoordinator?.search_bar_content = searchField.stringValue
-    }
-    
-    func searchFieldDidEndSearching(sender: NSSearchField) {
-        print("search ended searching called")
-        print((currentArrayController?.arrangedObjects as! [TrackView]).count)
-        viewCoordinator?.search_bar_content = ""
     }
     
     func outlineViewSelectionDidChange(notification: NSNotification) {
@@ -402,7 +402,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
             id = current_source_play_order![current_source_index!]
         }
         let next_track = getTrackWithID(id!)
-        currentTrack = next_track
+        self.currentTrack = next_track
         currentTrackView = next_track?.view
         current_source_index! += 1
         return next_track
@@ -515,6 +515,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         let track_to_add = (currentArrayController?.arrangedObjects as! [TrackView])[currentTableView!.selectedRow].track!
         trackQueueTableDelegate.addTrackToQueue(track_to_add, context: cur_view_title, tense: 1)
         queue.addTrackToQueue(track_to_add, index: nil)
+        trackQueue.append(track_to_add)
         checkQueueList(track_to_add)
     }
     
@@ -544,7 +545,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         self.currentTrack = track
         self.currentTrack?.is_playing = true
         self.currentTrackView = track.view
-        initializeInterfaceForNewTrack()
         paused = false
         currentTrack = track
     }
@@ -844,6 +844,10 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
             if keyPath! == "track_changed" {
                 let before = NSDate()
                 print("controller detects track change")
+                currentTrack?.is_playing = false
+                if trackQueue.count > 0 {
+                    self.currentTrack = trackQueue.removeFirst()
+                }
                 timer?.invalidate()
                 initializeInterfaceForNewTrack()
                 currentTrack?.is_playing = true

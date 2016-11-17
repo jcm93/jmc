@@ -15,7 +15,7 @@ enum completionHandlerType {
     case destroy
 }
 
-class AudioQueue: NSObject, AVAudioPlayerDelegate {
+class AudioQueue: NSObject {
     //todo consistent naming
     dynamic var trackQueue = [Track]()
     dynamic var currentTrackLocation: String?
@@ -25,7 +25,6 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     var equalizerNode = AVAudioUnitEQ(numberOfBands: 10)
     var curFile: AVAudioFile?
     var audioEngine = AVAudioEngine()
-    var streamer = AVAudioPlayer()
     
     dynamic var is_initialized = false
     dynamic var track_changed = false
@@ -75,6 +74,7 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
         }
         print(audioEngine)
         currentHandlerType = .natural
+        changeTrack()
     }
     
     func addTrackToQueue(track: Track, index: Int?) {
@@ -175,7 +175,6 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
         else {
             let nextTrack = mainWindowController?.getNextTrack()
             currentTrackLocation = nextTrack?.location
-            mainWindowController?.currentTrack = nextTrack
         }
     }
     
@@ -238,13 +237,11 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
     }
     
     func skip() {
-        let beforeTime = NSDate()
         tryGetMoreTracks()
         currentHandlerType = .destroy
         if (currentTrackLocation != nil) {
             print("skipping to new track")
             playImmediately(currentTrackLocation!)
-            changeTrack()
         }
         else {
             print("skipping, no new track")
@@ -257,9 +254,6 @@ class AudioQueue: NSObject, AVAudioPlayerDelegate {
             self.audioEngine.reset()
         }
         currentHandlerType = .natural
-        let afterTime = NSDate()
-        let timePassed = afterTime.timeIntervalSinceDate(beforeTime)
-        print(timePassed)
     }
     
     func skip_backward() {
