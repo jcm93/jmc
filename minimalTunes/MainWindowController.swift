@@ -67,6 +67,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
     var currentAudioSource: SourceListItem?
     var sourceListDataSource: SourceListDataSource?
     var trackQueue = [Track]()
+    var saved_search_bar_content: String?
     
     var tagWindowController: TagEditorWindow?
     var equalizerWindowController: EqualizerWindowController?
@@ -302,6 +303,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
     func outlineViewSelectionDidChange(notification: NSNotification) {
         print("fuck")
         let selection = (sourceListView.itemAtRow(sourceListView.selectedRow) as! SourceListNode).item
+        self.currentSourceListItem = selection
         if selection.is_network == true {
             currentArrayController = auxTrackViewArrayController
             let server = self.delegate?.server
@@ -336,6 +338,12 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
             librarySplitView.addArrangedSubview(libraryTableScrollView)
             updateCachedSorts()
             updateInfo()
+        }
+        if currentArrayController?.filterPredicate == nil {
+            saved_search_bar_content = searchField.stringValue
+            searchField.stringValue = ""
+        } else {
+            searchField.stringValue = saved_search_bar_content!
         }
     }
 
@@ -868,7 +876,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
                 cleanUpBar()
             }
             else if keyPath! == "sortDescriptors" {
-                if (cur_view_title == cur_source_title) {
+                if (currentSourceListItem == currentAudioSource) {
                     current_source_play_order = (currentArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int} )
                     if (is_initialized == true) {
                         current_source_index = (currentArrayController?.arrangedObjects as! [TrackView]).indexOf(currentTrackView!)
@@ -877,16 +885,32 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
                 }
             }
             else if keyPath! == "filterPredicate" {
-                if (cur_view_title == cur_source_title) {
+                print("filter predicate changed")
+                if (currentSourceListItem == currentAudioSource) {
                     current_source_play_order = (currentArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int} )
-                    if (is_initialized == true) {
-                        current_source_index = (currentArrayController?.arrangedObjects as! [TrackView]).indexOf(currentTrackView!)
-                        if current_source_index == nil {
-                            current_source_index = 0
+                    if shuffleButton.state == NSOnState {
+                        if currentArrayController?.filterPredicate != nil {
+                            for track_id in current_source_play_order! {
+                                self.isVisibleDict[track_id] = true
+                            }
+                            current_source_temp_shuffle = current_source_temp_shuffle?.filter({return (isVisibleDict[$0] as? Bool) == true})
+                            isVisibleDict = [:]
+                        } else {
+                            current_source_temp_shuffle = current_source_play_order
+                            shuffle_array(&current_source_temp_shuffle!)
                         }
-                        print("current source index set to \(current_source_index)")
+                    } else {
+                        if (is_initialized == true) {
+                            current_source_index = (currentArrayController?.arrangedObjects as! [TrackView]).indexOf(currentTrackView!)
+                            if current_source_index == nil {
+                                current_source_index = 0
+                            }
+                            print("current source index set to \(current_source_index)")
+                        }
                     }
                 }
+                print(current_source_play_order?.count)
+                print(current_source_temp_shuffle?.count)
                 //updateCachedSorts()
                 //updateNewCachedSorts()
             } else if keyPath! == "arrangedObjects" {
@@ -1109,6 +1133,8 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         queue.addObserver(self, forKeyPath: "done_playing", options: .New, context: &my_context)
         trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .New, context: &my_context)
         auxTrackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .New, context: &my_context)
+        trackViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .New, context: &my_context)
+        auxTrackViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .New, context: &my_context)
         super.windowDidLoad()
         if (hasMusic == true) {
             //print(cachedOrders![0])

@@ -63,7 +63,7 @@
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </searchFieldCell>
                         <connections>
-                            <binding destination="vnS-ge-OhJ" name="predicate" keyPath="filterPredicate" id="GRd-y0-FrL">
+                            <binding destination="-2" name="predicate" keyPath="self.currentArrayController.filterPredicate" id="J6O-x4-JXh">
                                 <dictionary key="options">
                                     <string key="NSDisplayName">predicate</string>
                                     <string key="NSPredicateFormat">track.artist.name contains[cd] $value OR track.name contains[cd] $value OR track.album.name contains[cd] $value OR track.comments contains[cd] $value OR track.composer.name contains[cd] $value OR track.genre.name contains[cd] $value</string>
@@ -2295,7 +2295,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
             <rect key="frame" x="0.0" y="0.0" width="0.0" height="23"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <clipView key="contentView" autoresizesSubviews="NO" placeholderIntrinsicWidth="708" placeholderIntrinsicHeight="606" id="OFI-zl-YN3">
-                <rect key="frame" x="0.0" y="23" width="0.0" height="0.0"/>
+                <rect key="frame" x="0.0" y="0.0" width="0.0" height="23"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <tableView verticalHuggingPriority="750" placeholderIntrinsicWidth="833" placeholderIntrinsicHeight="583" allowsExpansionToolTips="YES" columnAutoresizingStyle="none" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveName="poop" rowHeight="20" headerView="JzU-Ox-x9Y" viewBased="YES" id="LNQ-lG-Fg2" userLabel="Library Table View" customClass="TableViewYouCanPressSpacebarOn" customModule="minimalTunes" customModuleProvider="target">
@@ -5243,7 +5243,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
     <resources>
         <image name="Master Library" width="15.75" height="13.5"/>
         <image name="NSAddTemplate" width="11" height="11"/>
-        <image name="NSAudioOutputVolumeMedTemplate" width="128" height="128"/>
+        <image name="NSAudioOutputVolumeMedTemplate" width="21" height="16"/>
         <image name="NSFolder" width="32" height="32"/>
         <image name="NSUser" width="32" height="32"/>
         <image name="NowPlaying" width="186" height="159"/>

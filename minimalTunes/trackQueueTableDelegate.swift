@@ -212,14 +212,15 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
             let tracks = { () -> [Track] in
                 var result = [Track]()
                 for trackURI in unCodedThing {
-                    let id = self.mainWindowController?.managedContext.persistentStoreCoordinator?.managedObjectIDForURIRepresentation(trackURI as! NSURL)
-                    result.append(mainWindowController?.managedContext.objectWithID(id!) as! Track)
+                    let id = managedContext.persistentStoreCoordinator?.managedObjectIDForURIRepresentation(trackURI as! NSURL)
+                    result.append(managedContext.objectWithID(id!) as! Track)
                 }
                 return result
             }()
             for track in tracks {
                 insertTrackInQueue(track, index: actualRow, context: "djlkqe")
                 mainWindowController?.queue.addTrackToQueue(track, index: actualRow - currentTrackIndex! - 1)
+                mainWindowController?.trackQueue.append(track)
             }
         }
         if (info.draggingPasteboard().types!.contains("public.TrackQueueView")) {

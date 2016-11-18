@@ -251,6 +251,7 @@ class AudioQueue: NSObject {
                     let time = AVAudioTime(sampleTime: total_offset_frames, atRate: curFile!.processingFormat.sampleRate)
                     curNode.scheduleFile(curFile!, atTime: time, completionHandler: handleCompletion)
                     delay = ((Double(gapless_duration.sampleTime) / gapless_duration.sampleRate) - (Double(curNode.lastRenderTime!.sampleTime - Int64(track_frame_offset!))/(curNode.lastRenderTime?.sampleRate)!))
+                    print("delay set to \(delay)")
                     self.track_frame_offset = 0
                     resetValues()
                 } catch {
