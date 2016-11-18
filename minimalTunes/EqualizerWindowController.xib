@@ -7,6 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="EqualizerWindowController" customModule="minimalTunes" customModuleProvider="target">
             <connections>
+                <outlet property="eqToggle" destination="rSk-LZ-rJU" id="9FI-dc-6fZ"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -233,49 +234,82 @@
                         <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <font key="titleFont" metaFont="system"/>
                     </box>
-                    <slider horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sEY-UG-7LR">
+                    <slider identifier="0" horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sEY-UG-7LR">
                         <rect key="frame" x="98" y="28" width="21" height="143"/>
-                        <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="right" sliderType="linear" id="xS4-4g-ckg"/>
+                        <sliderCell key="cell" alignment="left" minValue="-12" maxValue="12" tickMarkPosition="right" sliderType="linear" id="xS4-4g-ckg"/>
+                        <connections>
+                            <action selector="eqSliderDidChange:" target="-2" id="YMz-7H-HnR"/>
+                        </connections>
                     </slider>
                     <slider horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ymP-fR-Kf3">
                         <rect key="frame" x="18" y="28" width="21" height="143"/>
-                        <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="right" sliderType="linear" id="Eaw-Cr-bFi"/>
+                        <sliderCell key="cell" alignment="left" minValue="-12" maxValue="12" tickMarkPosition="right" sliderType="linear" id="Eaw-Cr-bFi"/>
+                        <connections>
+                            <action selector="gainSliderDidChange:" target="-2" id="RYJ-5w-thd"/>
+                        </connections>
                     </slider>
-                    <slider horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T9y-8B-wJ0">
+                    <slider identifier="1" horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T9y-8B-wJ0">
                         <rect key="frame" x="133" y="28" width="21" height="143"/>
-                        <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="right" sliderType="linear" id="S3Y-7A-7VK"/>
+                        <sliderCell key="cell" alignment="left" minValue="-12" maxValue="12" tickMarkPosition="right" sliderType="linear" id="S3Y-7A-7VK"/>
+                        <connections>
+                            <action selector="eqSliderDidChange:" target="-2" id="CGb-mq-je6"/>
+                        </connections>
                     </slider>
-                    <slider horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="okE-yh-VxO">
+                    <slider identifier="2" horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="okE-yh-VxO">
                         <rect key="frame" x="168" y="28" width="21" height="143"/>
-                        <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="right" sliderType="linear" id="Th3-LB-f9d"/>
+                        <sliderCell key="cell" alignment="left" minValue="-12" maxValue="12" tickMarkPosition="right" sliderType="linear" id="Th3-LB-f9d"/>
+                        <connections>
+                            <action selector="eqSliderDidChange:" target="-2" id="YxP-mp-Peo"/>
+                        </connections>
                     </slider>
-                    <slider horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="10V-zh-jxT">
+                    <slider identifier="9" horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="10V-zh-jxT">
                         <rect key="frame" x="413" y="28" width="21" height="143"/>
-                        <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="right" sliderType="linear" id="99N-p8-97z"/>
+                        <sliderCell key="cell" alignment="left" minValue="-12" maxValue="12" tickMarkPosition="right" sliderType="linear" id="99N-p8-97z"/>
+                        <connections>
+                            <action selector="eqSliderDidChange:" target="-2" id="Fbk-1W-YfR"/>
+                        </connections>
                     </slider>
-                    <slider horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F7h-Zo-88O">
+                    <slider identifier="3" horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F7h-Zo-88O">
                         <rect key="frame" x="203" y="28" width="21" height="143"/>
-                        <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="right" sliderType="linear" id="EyA-kY-4Ay"/>
+                        <sliderCell key="cell" alignment="left" minValue="-12" maxValue="12" tickMarkPosition="right" sliderType="linear" id="EyA-kY-4Ay"/>
+                        <connections>
+                            <action selector="eqSliderDidChange:" target="-2" id="63f-EJ-c99"/>
+                        </connections>
                     </slider>
-                    <slider horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5cJ-rf-931">
+                    <slider identifier="4" horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5cJ-rf-931">
                         <rect key="frame" x="238" y="28" width="21" height="143"/>
-                        <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="right" sliderType="linear" id="byZ-mv-ae7"/>
+                        <sliderCell key="cell" alignment="left" minValue="-12" maxValue="12" tickMarkPosition="right" sliderType="linear" id="byZ-mv-ae7"/>
+                        <connections>
+                            <action selector="eqSliderDidChange:" target="-2" id="qt0-Rw-1rU"/>
+                        </connections>
                     </slider>
-                    <slider horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VVp-tg-Vkr">
+                    <slider identifier="5" horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VVp-tg-Vkr">
                         <rect key="frame" x="273" y="28" width="21" height="143"/>
-                        <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="right" sliderType="linear" id="tdo-mn-kbv"/>
+                        <sliderCell key="cell" alignment="left" minValue="-12" maxValue="12" tickMarkPosition="right" sliderType="linear" id="tdo-mn-kbv"/>
+                        <connections>
+                            <action selector="eqSliderDidChange:" target="-2" id="khg-mm-R4y"/>
+                        </connections>
                     </slider>
-                    <slider horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PtR-pz-wbt">
+                    <slider identifier="6" horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PtR-pz-wbt">
                         <rect key="frame" x="308" y="28" width="21" height="143"/>
-                        <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="right" sliderType="linear" id="JBS-fh-5s5"/>
+                        <sliderCell key="cell" alignment="left" minValue="-12" maxValue="12" tickMarkPosition="right" sliderType="linear" id="JBS-fh-5s5"/>
+                        <connections>
+                            <action selector="eqSliderDidChange:" target="-2" id="WaI-jd-vTW"/>
+                        </connections>
                     </slider>
-                    <slider horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nnC-W6-vb0">
+                    <slider identifier="7" horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nnC-W6-vb0">
                         <rect key="frame" x="343" y="28" width="21" height="143"/>
-                        <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="right" sliderType="linear" id="2uy-8H-d2Z"/>
+                        <sliderCell key="cell" alignment="left" minValue="-12" maxValue="12" tickMarkPosition="right" sliderType="linear" id="2uy-8H-d2Z"/>
+                        <connections>
+                            <action selector="eqSliderDidChange:" target="-2" id="sti-f2-IjM"/>
+                        </connections>
                     </slider>
-                    <slider horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="j6n-PF-UmH">
+                    <slider identifier="8" horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="j6n-PF-UmH">
                         <rect key="frame" x="378" y="28" width="21" height="143"/>
-                        <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="right" sliderType="linear" id="qTd-MP-zHp"/>
+                        <sliderCell key="cell" alignment="left" minValue="-12" maxValue="12" tickMarkPosition="right" sliderType="linear" id="qTd-MP-zHp"/>
+                        <connections>
+                            <action selector="eqSliderDidChange:" target="-2" id="v07-aT-p1C"/>
+                        </connections>
                     </slider>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rSk-LZ-rJU">
                         <rect key="frame" x="18" y="187" width="40" height="18"/>
@@ -283,6 +317,9 @@
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="equalizerToggled:" target="-2" id="JcC-XS-5eF"/>
+                        </connections>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GAz-Z4-WUU">
                         <rect key="frame" x="13" y="6" width="45" height="17"/>
@@ -313,5 +350,6 @@
             </connections>
             <point key="canvasLocation" x="320" y="391.5"/>
         </window>
+        <userDefaultsController representsSharedInstance="YES" id="Vdf-Hv-kg9"/>
     </objects>
 </document>

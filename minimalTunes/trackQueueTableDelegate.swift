@@ -126,21 +126,23 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
     
     func nextTrack() {
         print("next track in track queue called")
-        (trackQueue[currentTrackIndex!]).viewType = .pastTrack
-        currentTrackIndex! += 1
-        numPastTracks += 1
-        if numPastTracks >= numPastTracksToShow {
-            globalOffset += 1
-        }
-        if (trackQueue.count > currentTrackIndex! + 1) {
-            print("detected queued tracks")
-            trackQueue[currentTrackIndex!].viewType = .currentTrack
+        if currentTrackIndex != nil && trackQueue.count > 0 && (trackQueue[currentTrackIndex! + 1]).viewType == .futureTrack {
+            (trackQueue[currentTrackIndex!]).viewType = .pastTrack
+            currentTrackIndex! += 1
+            numPastTracks += 1
+            if numPastTracks >= numPastTracksToShow {
+                globalOffset += 1
+            }
+            if (trackQueue.count > currentTrackIndex! + 1) {
+                print("detected queued tracks")
+                trackQueue[currentTrackIndex!].viewType = .currentTrack
+            }
         }
         else {
-            print("getting next track from MWC")
+            print("callin change current track")
             let track = mainWindowController?.currentTrack
-            let context = mainWindowController?.cur_source_title
-            addTrackToQueue(track!, context: context!, tense: 0)
+            let context = mainWindowController?.currentAudioSource?.name
+            changeCurrentTrack(track!, context: context!)
         }
         tableView?.reloadData()
     }
@@ -247,8 +249,9 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
     
     
     func updateContext(name: String) {
-        
-        trackQueue.removeLast()
+        if trackQueue.count > 1 {
+            trackQueue.removeLast()
+        }
         let newSourceView = TrackQueueView()
         newSourceView.source = name
         newSourceView.viewType = .source

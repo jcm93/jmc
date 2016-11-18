@@ -77,12 +77,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     //probably dumb and bad.
     @IBAction func testyThing(sender: AnyObject) {
-        if mainWindowController?.advancedFilterScrollView.hidden == true {
-            mainWindowController?.advancedFilterScrollView.hidden = false
-        }
-        else {
-            mainWindowController?.advancedFilterScrollView.hidden = true
-        }
+        mainWindowController!.showEqualizer()
     }
     
     func setInitialDefaults() {

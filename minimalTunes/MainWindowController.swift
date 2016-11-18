@@ -69,6 +69,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
     var trackQueue = [Track]()
     
     var tagWindowController: TagEditorWindow?
+    var equalizerWindowController: EqualizerWindowController?
     var customFieldController: CustomFieldWindowController?
     var importWindowController: ImportWindowController?
     var delegate: AppDelegate?
@@ -361,7 +362,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         /*if current_source_play_order!.count == 0 {
             current_source_play_order = (currentArrayController!.arrangedObjects as! [TrackView]).map( { return $0.track!.id as! Int} )
         }*/
-        trackQueueTableDelegate.updateContext(cur_view_title)
+        //trackQueueTableDelegate.updateContext(cur_view_title)
         let selectionItem = (sourceListView.itemAtRow(sourceListView.selectedRow) as! SourceListNode).item
         if selectionItem != currentAudioSource {
             current_source_play_order = (currentArrayController!.arrangedObjects as! [TrackView]).map( { return $0.track!.id as! Int} )
@@ -402,9 +403,12 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
             id = current_source_play_order![current_source_index!]
         }
         let next_track = getTrackWithID(id!)
-        self.currentTrack = next_track
-        currentTrackView = next_track?.view
-        current_source_index! += 1
+        dispatch_async(dispatch_get_main_queue()) {
+            self.currentTrack?.is_playing = false
+            self.currentTrack = next_track
+            self.self.currentTrackView = next_track?.view
+            self.self.current_source_index! += 1
+        }
         return next_track
     }
     
@@ -500,6 +504,13 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         let key = "arrangedObjects.user_defined_properties."
     }
     
+    func showEqualizer() {
+        print("show equalizer called")
+        self.equalizerWindowController = EqualizerWindowController(windowNibName: "EqualizerWindowController")
+        self.equalizerWindowController?.mainWindowController = self
+        self.equalizerWindowController?.showWindow(self)
+    }
+    
     @IBAction func getInfoFromTableView(sender: AnyObject) {
         tagWindowController = TagEditorWindow(windowNibName: "TagEditorWindow")
         tagWindowController?.mainWindowController = self
@@ -538,7 +549,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         if (paused == true && queue.is_initialized == true) {
             unpause()
         }
-        trackQueueTableDelegate.changeCurrentTrack(track, context: cur_source_title)
+        //trackQueueTableDelegate.changeCurrentTrack(track, context: cur_source_title)
         checkQueueList(track)
         queue.playImmediately(track.location!)
         self.currentTrack?.is_playing = false
@@ -755,10 +766,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
             }
         }
     }
-    
-    
-    
-    
+
     func startTimer() {
         //timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValuesUnsafe), userInfo: nil, repeats: true)
         timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValuesSafe), userInfo: nil, repeats: true)
@@ -799,7 +807,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
     }
     
     func updateValuesSafe() {
-        print("update values safe")
         let lastUpdateTime = lastTimerDate
         let currentTime = NSDate()
         let updateQuantity = currentTime.timeIntervalSinceDate(lastUpdateTime!)
@@ -1153,6 +1160,8 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         self.currentArrayController = trackViewArrayController
         current_source_play_order = (currentArrayController!.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int})
         sourceListView.expandItem(nil, expandChildren: true)
+        let indexSet = NSIndexSet(index: 1)
+        sourceListView.selectRowIndexes(indexSet, byExtendingSelection: false)
         print("fuck")
     }
 }

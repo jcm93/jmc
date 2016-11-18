@@ -22,7 +22,31 @@ class AudioQueue: NSObject {
     
     var curNode = AVAudioPlayerNode()
     var mixerNode = AVAudioMixerNode()
-    var equalizerNode = AVAudioUnitEQ(numberOfBands: 10)
+    var equalizer: AVAudioUnitEQ = {
+        let doingle = AVAudioUnitEQ(numberOfBands: 10)
+        let bands = doingle.bands
+        bands[0].frequency = 32
+        bands[0].bypass = false
+        bands[1].frequency = 64
+        bands[1].bypass = false
+        bands[2].frequency = 128
+        bands[2].bypass = false
+        bands[3].frequency = 256
+        bands[3].bypass = false
+        bands[4].frequency = 512
+        bands[4].bypass = false
+        bands[5].frequency = 1024
+        bands[5].bypass = false
+        bands[6].frequency = 2048
+        bands[6].bypass = false
+        bands[7].frequency = 4096
+        bands[7].bypass = false
+        bands[8].frequency = 8192
+        bands[8].bypass = false
+        bands[9].frequency = 16384
+        bands[9].bypass = false
+        return doingle
+    }()
     var curFile: AVAudioFile?
     var audioEngine = AVAudioEngine()
     
@@ -45,8 +69,36 @@ class AudioQueue: NSObject {
     
     override init() {
         audioEngine.attachNode(curNode)
-        audioEngine.connect(curNode, to: audioEngine.mainMixerNode, format: curFile?.processingFormat)
-        audioEngine.attachNode(equalizerNode)
+        //audioEngine.connect(curNode, to: audioEngine.mainMixerNode, format: curFile?.processingFormat)
+        audioEngine.attachNode(equalizer)
+        /*audioEngine.connect(curNode, to: equalizer, format: nil)
+        audioEngine.connect(equalizer, to: audioEngine.outputNode, format: nil)*/
+        audioEngine.connect(curNode, to: equalizer, format: nil)
+        audioEngine.connect(equalizer, to: audioEngine.outputNode, format: nil)
+    }
+    
+    func adjustEqualizer(band: Int, value: Float) {
+        print("adjust band called")
+        guard -12 <= value && value <= 12 else {return}
+        print("adjusting a band")
+        let band = equalizer.bands[band]
+        band.gain = value
+    }
+    
+    func toggleEqualizer(state: Int) {
+        if state == NSOnState {
+            print("using eq")
+            equalizer.bypass = false
+            
+        } else {
+            print("no eq")
+            equalizer.bypass = true
+        }
+    }
+    
+    func adjustGain(value: Float) {
+        guard -12 <= value && value <= 12 else {return}
+        equalizer.globalGain = value
     }
     
     func playNetworkImmediately(track: NetworkTrack) {
@@ -117,13 +169,13 @@ class AudioQueue: NSObject {
             do {
                 if curNode.playing == true {
                     print("initializing playback while node is playing, resetting node")
-                    audioEngine.reset()//necessary?
                     total_offset_frames = 0
                     total_offset_seconds = 0
+                    audioEngine.stop()
                     audioEngine.detachNode(curNode)
                     curNode = AVAudioPlayerNode()
                     audioEngine.attachNode(curNode)
-                    audioEngine.connect(curNode, to: audioEngine.mainMixerNode, format: curFile?.processingFormat)
+                    audioEngine.connect(curNode, to: equalizer, format: nil)
                 }
                 let location = currentTrackLocation!
                 let url = NSURL(string: location)
