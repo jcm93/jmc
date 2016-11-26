@@ -7,6 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PreferencesWindowController" customModule="minimalTunes" customModuleProvider="target">
             <connections>
+                <outlet property="identifierTextField" destination="c10-Ik-IHE" id="0pM-KJ-90v"/>
                 <outlet property="tabView" destination="Wri-Sy-6dx" id="gPp-MV-XEE"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
@@ -75,7 +76,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="Item 2" identifier="" id="rTh-ia-5Tn">
-                                <view key="view" id="urC-l1-HwO">
+                                <view key="view" ambiguous="YES" id="urC-l1-HwO">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="192"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -93,6 +94,9 @@
                                                 <color key="textColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <connections>
+                                                <action selector="identifierChanged:" target="-2" id="kP9-aQ-wt0"/>
+                                            </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UGP-KM-V6F">
                                             <rect key="frame" x="18" y="121" width="62" height="17"/>
@@ -283,7 +287,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="Item 4" identifier="" id="5lq-Na-gwj">
-                                <view key="view" ambiguous="YES" id="VkB-49-Rj6">
+                                <view key="view" id="VkB-49-Rj6">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="192"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>

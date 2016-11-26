@@ -10,6 +10,7 @@ import Cocoa
 
 class PreferencesWindowController: NSWindowController {
     
+    @IBOutlet weak var identifierTextField: NSTextField!
     @IBOutlet weak var tabView: NSTabView!
 
     @IBAction func generalPressed(sender: AnyObject) {
@@ -32,6 +33,12 @@ class PreferencesWindowController: NSWindowController {
         tabView.selectTabViewItemAtIndex(4)
     }
     
+    @IBAction func identifierChanged(sender: AnyObject) {
+        print("identifier changed called")
+        if identifierTextField.stringValue != "" {
+            NSUserDefaults.standardUserDefaults().setObject(identifierTextField.stringValue, forKey: DEFAULTS_LIBRARY_NAME_STRING)
+        }
+    }
     override func windowDidLoad() {
         super.windowDidLoad()
 

@@ -19,13 +19,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "minimalTunes/MainWindowController.swift"
-            timestampString = "501200401.833235"
+            filePath = "minimalTunes/trackQueueTableDelegate.swift"
+            timestampString = "501199786.057928"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1010"
-            endingLineNumber = "1010"
-            landmarkName = "trackListTriangleClicked(_:)"
+            startingLineNumber = "253"
+            endingLineNumber = "253"
+            landmarkName = "updateContext(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -35,13 +35,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "minimalTunes/trackQueueTableDelegate.swift"
-            timestampString = "501199786.057928"
+            filePath = "minimalTunes/MainWindowController.swift"
+            timestampString = "501818023.161595"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "253"
-            endingLineNumber = "253"
-            landmarkName = "updateContext(_:)"
+            startingLineNumber = "1019"
+            endingLineNumber = "1019"
+            landmarkName = "trackListTriangleClicked(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

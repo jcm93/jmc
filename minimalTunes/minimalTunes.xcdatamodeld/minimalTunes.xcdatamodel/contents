@@ -62,6 +62,7 @@
     <entity name="Library" representedClassName=".Library" syncable="YES">
         <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="cached_orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CachedOrder" inverseName="library" inverseEntity="CachedOrder" syncable="YES"/>
         <relationship name="local_items" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SourceListItem" inverseName="library" inverseEntity="SourceListItem" syncable="YES"/>
         <relationship name="master_playlist" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SongCollection" inverseName="if_master_library" inverseEntity="SongCollection" syncable="YES"/>
@@ -91,7 +92,7 @@
         <relationship name="if_master_library" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="master_playlist" inverseEntity="Library" syncable="YES"/>
         <relationship name="if_master_list_item" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SourceListItem" inverseName="master_playlist" inverseEntity="SourceListItem" syncable="YES"/>
         <relationship name="list_item" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SourceListItem" inverseName="playlist" inverseEntity="SourceListItem" syncable="YES"/>
-        <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="playlists" inverseEntity="Track" syncable="YES"/>
+        <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrackView" inverseName="playlists" inverseEntity="TrackView" syncable="YES"/>
     </entity>
     <entity name="SongCollectionFolder" representedClassName=".SongCollectionFolder" syncable="YES">
         <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -151,7 +152,6 @@
         <relationship name="artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="tracks" inverseEntity="Artist" syncable="YES"/>
         <relationship name="composer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Composer" inverseName="tracks" inverseEntity="Composer" syncable="YES"/>
         <relationship name="genre" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Genre" inverseName="tracks" inverseEntity="Genre" syncable="YES"/>
-        <relationship name="playlists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SongCollection" inverseName="tracks" inverseEntity="SongCollection" syncable="YES"/>
         <relationship name="user_defined_properties" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Property" inverseName="tracks" inverseEntity="Property" syncable="YES"/>
         <relationship name="view" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackView" inverseName="track" inverseEntity="TrackView" syncable="YES"/>
     </entity>
@@ -168,6 +168,7 @@
         <relationship name="filtered_orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CachedOrder" inverseName="filtered_track_views" inverseEntity="CachedOrder" syncable="YES"/>
         <relationship name="orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CachedOrder" inverseName="track_views" inverseEntity="CachedOrder" syncable="YES"/>
         <relationship name="other_sort_orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SortOrder" inverseName="track_view" inverseEntity="SortOrder" syncable="YES"/>
+        <relationship name="playlists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SongCollection" inverseName="tracks" inverseEntity="SongCollection" syncable="YES"/>
         <relationship name="track" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Track" inverseName="view" inverseEntity="Track" syncable="YES"/>
     </entity>
     <elements>
@@ -178,14 +179,14 @@
         <element name="CachedOrder" positionX="-1262" positionY="-45" width="128" height="120"/>
         <element name="Composer" positionX="-1539" positionY="375" width="128" height="133"/>
         <element name="Genre" positionX="-1532" positionY="542" width="128" height="120"/>
-        <element name="Library" positionX="-801" positionY="-45" width="128" height="120"/>
+        <element name="Library" positionX="-801" positionY="-45" width="128" height="135"/>
         <element name="Property" positionX="-1251" positionY="660" width="128" height="193"/>
-        <element name="SongCollection" positionX="-864" positionY="174" width="128" height="193"/>
+        <element name="SharedLibrary" positionX="-1557" positionY="99" width="128" height="60"/>
+        <element name="SongCollection" positionX="-864" positionY="174" width="128" height="195"/>
         <element name="SongCollectionFolder" positionX="-693" positionY="380" width="128" height="103"/>
         <element name="SortOrder" positionX="-1548" positionY="108" width="128" height="75"/>
         <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="195"/>
-        <element name="Track" positionX="-1026" positionY="-54" width="128" height="615"/>
-        <element name="TrackView" positionX="-1557" positionY="99" width="128" height="240"/>
-        <element name="SharedLibrary" positionX="-1557" positionY="99" width="128" height="60"/>
+        <element name="Track" positionX="-1026" positionY="-54" width="128" height="600"/>
+        <element name="TrackView" positionX="-1557" positionY="99" width="128" height="255"/>
     </elements>
 </model>

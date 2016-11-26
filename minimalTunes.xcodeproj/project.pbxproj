@@ -48,7 +48,6 @@
 		0D9CE6781D3442D3004FA8CB /* Preferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D9CE6771D3442D3004FA8CB /* Preferences.plist */; };
 		0D9CE67B1D34A7DF004FA8CB /* ImportProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9CE6791D34A7DF004FA8CB /* ImportProgressBar.swift */; };
 		0D9CE67C1D34A7DF004FA8CB /* ImportProgressBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D9CE67A1D34A7DF004FA8CB /* ImportProgressBar.xib */; };
-		0DA749C81D49EAB900F024B8 /* NSDataCompression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA749C71D49EAB900F024B8 /* NSDataCompression.swift */; };
 		0DA8D03E1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA8D03D1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift */; };
 		0DA8D0401D1B1128009FEC28 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */; };
 		0DAB30911CFBA3340028928F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30901CFBA3340028928F /* AppDelegate.swift */; };
@@ -161,7 +160,6 @@
 		0D9CE6771D3442D3004FA8CB /* Preferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Preferences.plist; sourceTree = "<group>"; };
 		0D9CE6791D34A7DF004FA8CB /* ImportProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportProgressBar.swift; sourceTree = "<group>"; };
 		0D9CE67A1D34A7DF004FA8CB /* ImportProgressBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImportProgressBar.xib; sourceTree = "<group>"; };
-		0DA749C71D49EAB900F024B8 /* NSDataCompression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDataCompression.swift; sourceTree = "<group>"; };
 		0DA8D03D1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnBrowserTableViewDelegate.swift; sourceTree = "<group>"; };
 		0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		0DAB308D1CFBA3340028928F /* minimalTunes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = minimalTunes.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -258,7 +256,6 @@
 				0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */,
 				0DE74A521D7D9457005211E6 /* SharedLibraryRequestHandler.swift */,
 				0DE523331DA1ABA100C6BF05 /* MaybeTheLastServerAttempt.swift */,
-				0DA749C71D49EAB900F024B8 /* NSDataCompression.swift */,
 				0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */,
 				0D79409E1D13D2D5008AA167 /* stupidPlaybackObserver.swift */,
 			);
@@ -675,7 +672,6 @@
 				0DA8D0401D1B1128009FEC28 /* ProgressBarView.swift in Sources */,
 				0DB8EFEA1DC4FC4D00009900 /* MainTableViewDataSource.swift in Sources */,
 				0D9CE6711D334F97004FA8CB /* ImportWindowController.swift in Sources */,
-				0DA749C81D49EAB900F024B8 /* NSDataCompression.swift in Sources */,
 				0DEF66C61D383A8700EA3ADC /* SourceListItem+CoreDataProperties.swift in Sources */,
 				0DCB81721DCAA45C006FBA9D /* MainTableViewDelegate.swift in Sources */,
 				0DE523341DA1ABA100C6BF05 /* MaybeTheLastServerAttempt.swift in Sources */,
@@ -881,7 +877,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "minimalTunes/minimalTunes-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Release;
 		};

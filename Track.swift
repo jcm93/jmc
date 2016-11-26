@@ -16,6 +16,9 @@ class Track: NSManagedObject {
     
     func dictRepresentation(fields: [String]) -> NSDictionary {
         let dict = NSMutableDictionary()
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        self.view?.album_artist_order
         dict["id"] = self.id
         for field in fields {
             switch field {
@@ -23,18 +26,29 @@ class Track: NSManagedObject {
                 dict["is_enabled"] = self.status
             case "name":
                 dict["name"] = self.name
+                dict["name_order"] = self.view?.name_order
             case "time":
                 dict["time"] = self.time
             case "artist":
                 dict["artist"] = self.artist?.name
+                dict["artist_order"] = self.view?.artist_order
             case "album":
                 dict["album"] = self.album?.name
+                dict["album_order"] = self.view?.album_order
             case "date_added":
-                dict["date_added"] = self.date_added
+                if self.date_added != nil {
+                    dict["date_added"] = dateFormatter.stringFromDate(self.date_added!)
+                    dict["date_added_order"] = self.view?.date_added_order
+                }
             case "date_modified":
-                dict["date_modified"] = self.date_modified
+                if self.date_modified != nil {
+                    dict["date_modified"] = dateFormatter.stringFromDate(self.date_modified!)
+                }
             case "date_released":
-                dict["date_released"] = self.album?.release_date
+                if self.album?.release_date != nil {
+                    dict["date_released"] = dateFormatter.stringFromDate(self.album!.release_date!)
+                    dict["release_date_order"] = self.view?.release_date_order
+                }
             case "comments":
                 dict["comments"] = self.comments
             case "composer":
@@ -45,12 +59,18 @@ class Track: NSManagedObject {
                 dict["equalizer_preset"] = self.equalizer_preset
             case "genre":
                 dict["genre"] = self.genre?.name
+                dict["genre_order"] = self.view?.genre_order
             case "kind":
                 dict["kind"] = self.file_kind
+                dict["kind_order"] = self.view?.kind_order
             case "date_last_played":
-                dict["date_last_played"] = self.date_last_played
+                if self.date_last_played != nil {
+                    dict["date_last_played"] = dateFormatter.stringFromDate(self.date_last_played!)
+                }
             case "date_last_skipped":
-                dict["date_last_skipped"] = self.date_last_skipped
+                if self.date_last_skipped != nil {
+                    dict["date_last_skipped"] = dateFormatter.stringFromDate(self.date_last_skipped!)
+                }
             case "movement_name":
                 dict["movement_name"] = self.movement_name
             case "movement_number":
@@ -71,6 +91,7 @@ class Track: NSManagedObject {
                 dict["sort_album"] = self.sort_album
             case "sort_album_artist":
                 dict["sort_album_artist"] = self.sort_album_artist
+                dict["album_artist_order"] = self.view?.album_artist_order
             case "sort_artist":
                 dict["sort_artist"] = self.sort_artist
             case "sort_composer":

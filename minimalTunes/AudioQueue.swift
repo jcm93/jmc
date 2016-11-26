@@ -101,18 +101,16 @@ class AudioQueue: NSObject {
         equalizer.globalGain = value
     }
     
-    func playNetworkImmediately(track: NetworkTrack) {
+    func playNetworkImmediately(track: Track) {
         currentHandlerType = .destroy
         let networkPath = NSUserDefaults.standardUserDefaults().stringForKey("libraryPath")! + "/test.mp3"
         currentTrackLocation = NSURL(fileURLWithPath: networkPath).absoluteString
         print("paused value is \(is_paused)")
         initializePlayback()
-        if (is_paused == false || is_paused == nil) {
-            print("reached play clause")
-            play()
-        }
+        play()
         print(audioEngine)
         currentHandlerType = .natural
+        changeTrack()
     }
     
     func playImmediately(trackLocation: String) {
@@ -214,17 +212,23 @@ class AudioQueue: NSObject {
         print("setting done playing")
         if done_playing == true {
             done_playing = false
-        }
-        else if done_playing == false {
+        } else if done_playing == false {
             done_playing = true
+        }
+    }
+    
+    func getTrackLocation(track: Track) -> String {
+        if track.is_network == false {
+            return track.location!
+        } else {
+            return track.location!
         }
     }
     
     func tryGetMoreTracks() {
         if trackQueue.count > 0 {
             currentTrackLocation = trackQueue.removeFirst().location!
-        }
-        else {
+        } else {
             let nextTrack = mainWindowController?.getNextTrack()
             currentTrackLocation = nextTrack?.location
         }

@@ -273,7 +273,6 @@ let UNKNOWN_ALBUM_STRING = "Unknown Album"
 
 let VALID_ARTWORK_TYPE_EXTENSIONS = [".jpg", ".png", ".tiff", ".gif", ".pdf"]
 
-
 func checkIfArtistExists(name: String) -> Artist? {
     let request = NSFetchRequest(entityName: "Artist")
     let predicate = NSPredicate(format: "name == %@", name)

@@ -2,7 +2,7 @@
 //  TrackView+CoreDataProperties.swift
 //  minimalTunes
 //
-//  Created by John Moody on 11/9/16.
+//  Created by John Moody on 11/25/16.
 //  Copyright © 2016 John Moody. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -23,9 +23,10 @@ extension TrackView {
     @NSManaged var kind_order: NSNumber?
     @NSManaged var name_order: NSNumber?
     @NSManaged var release_date_order: NSNumber?
+    @NSManaged var filtered_orders: NSSet?
+    @NSManaged var orders: NSSet?
     @NSManaged var other_sort_orders: NSSet?
     @NSManaged var track: Track?
-    @NSManaged var orders: NSSet?
-    @NSManaged var filtered_orders: NSSet?
+    @NSManaged var playlists: NSSet?
 
 }

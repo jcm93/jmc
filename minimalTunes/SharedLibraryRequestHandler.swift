@@ -113,7 +113,9 @@ class SharedLibraryRequestHandler {
         let filteredOrderNames: [String] = {
             var names = [String]()
             for field in fields {
-                names.append(fieldsToCachedOrdersDictionary[field] as! String)
+                if let cachedName = fieldsToCachedOrdersDictionary[field] as? String {
+                    names.append(cachedName)
+                }
             }
             return names
         }()
@@ -122,7 +124,7 @@ class SharedLibraryRequestHandler {
         
         for order in filteredOrders {
             let cachedOrderDictionary = NSMutableDictionary()
-            let array = (order.track_views?.array as! [TrackView]).map({return $0.track!.id!}).filter({return filterDictionary[$0] as! Bool == true})
+            let array = (order.track_views?.array as! [TrackView]).map({return $0.track!.id!}).filter({return filterDictionary[$0] as? Bool == true})
             cachedOrderDictionary["name"] = order.order
             cachedOrderDictionary["tracks"] = array
             cachedOrdersDictionary.append(cachedOrderDictionary)

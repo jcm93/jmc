@@ -2,7 +2,7 @@
 //  Track+CoreDataProperties.swift
 //  minimalTunes
 //
-//  Created by John Moody on 11/9/16.
+//  Created by John Moody on 11/25/16.
 //  Copyright © 2016 John Moody. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -49,7 +49,6 @@ extension Track {
     @NSManaged var artist: Artist?
     @NSManaged var composer: Composer?
     @NSManaged var genre: Genre?
-    @NSManaged var playlists: NSSet?
     @NSManaged var user_defined_properties: NSSet?
     @NSManaged var view: TrackView?
 

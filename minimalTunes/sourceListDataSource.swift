@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class SourceListNode {
+class SourceListNode: NSObject {
     var item: SourceListItem
     var children = [SourceListNode]()
     init(item: SourceListItem) {

@@ -32,7 +32,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     
     func initializeLibraryAndShowMainWindow() {
-        NSUserDefaults.standardUserDefaults().setObject("test library", forKey: "libraryName")
         mainWindowController = MainWindowController(windowNibName: "MainWindowController")
         mainWindowController?.delegate = self
         if NSUserDefaults.standardUserDefaults().boolForKey("hasMusic") == true {
@@ -92,7 +91,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         fetchRequest.predicate = predicate
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         do {
-            //try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
+            try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
         } catch {
             print(error)
         }
