@@ -118,9 +118,10 @@ class P2PServer {
                 let name = requestDict["name"] as! String
                 interface.addSourcesForNetworkedLibrary(list, peer: name)
             case "playlist":
-                let item = interface.getNetworkPlaylist()
+                let requestedID = requestDict["id"] as! Int
+                let item = interface.getNetworkPlaylist(requestedID)
                 let playlist = requestDict["playlist"] as! NSDictionary
-                addTracksForPlaylistData(playlist, item: item)
+                addTracksForPlaylistData(playlist, item: item!)
                 print("the tingler got a playlist")
             case "track":
                 guard delegate.mainWindowController?.is_streaming == true else {return}
@@ -174,6 +175,9 @@ class P2PServer {
         } catch {
             print(error)
         }
+        if !connection.isConnected {
+            onIncomingConnection(peer, connection: connection)
+        }
         connection.send(serializedDict)
     }
     
@@ -189,6 +193,9 @@ class P2PServer {
         } catch {
             print(error)
         }
+        if !connection.isConnected {
+            onIncomingConnection(peer, connection: connection)
+        }
         connection.send(serializedDict)
     }
     
@@ -203,6 +210,9 @@ class P2PServer {
             serializedDict = try NSJSONSerialization.dataWithJSONObject(libraryNameDictionary, options: NSJSONWritingOptions.PrettyPrinted)
         } catch {
             print(error)
+        }
+        if !connection.isConnected {
+            onIncomingConnection(peer, connection: connection)
         }
         connection.send(serializedDict)
     }
@@ -220,6 +230,9 @@ class P2PServer {
         } catch {
             print(error)
         }
+        if !connection.isConnected {
+            onIncomingConnection(peer, connection: connection)
+        }
         connection.send(serializedDict)
     }
     
@@ -230,6 +243,9 @@ class P2PServer {
         var data: NSData!
         do {
             data = try NSJSONSerialization.dataWithJSONObject(requestDictionary, options: NSJSONWritingOptions.PrettyPrinted)
+            if !connection.isConnected {
+                onIncomingConnection(peer, connection: connection)
+            }
             connection.send(data: data)
         } catch {
             print("error asking for library name: \(error)")
@@ -243,6 +259,9 @@ class P2PServer {
         var data: NSData!
         do {
             data = try NSJSONSerialization.dataWithJSONObject(requestDictionary, options: NSJSONWritingOptions.PrettyPrinted)
+            if !connection.isConnected {
+                onIncomingConnection(peer, connection: connection)
+            }
             connection.send(data: data)
         } catch {
             print("error asking for source list: \(error)")
@@ -258,6 +277,9 @@ class P2PServer {
         var data: NSData!
         do {
             data = try NSJSONSerialization.dataWithJSONObject(requestDictionary, options: NSJSONWritingOptions.PrettyPrinted)
+            if !connection.isConnected {
+                onIncomingConnection(peer, connection: connection)
+            }
             connection.send(data: data)
         } catch {
             print("error asking for playlist: \(error)")
@@ -272,6 +294,9 @@ class P2PServer {
         var data: NSData!
         do {
             data = try NSJSONSerialization.dataWithJSONObject(requestDictionary, options: NSJSONWritingOptions.PrettyPrinted)
+            if !connection.isConnected {
+                onIncomingConnection(peer, connection: connection)
+            }
             connection.send(data: data)
         } catch {
             print("error asking for song: \(error)")
@@ -286,6 +311,7 @@ class P2PServer {
         let addedComposers = NSMutableDictionary()
         let addedGenres = NSMutableDictionary()
         let addedTracks = NSMutableDictionary()
+        var addedTrackViews = [TrackView]()
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         for track in tracks {
@@ -462,8 +488,11 @@ class P2PServer {
                     break
                 }
             }
-            item.playlist?.mutableSetValueForKey("tracks").addObject(newTrackView)
+            addedTrackViews.append(newTrackView)
         }
+        let track_id_list = addedTrackViews.map({return Int($0.track!.id!)})
+        item.playlist?.track_id_list = track_id_list
+        delegate.mainWindowController!.doneAddingNetworkPlaylistCallback(item)
         
     }
 }

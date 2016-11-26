@@ -263,6 +263,7 @@ let DEFAULTS_LIBRARY_NAME_STRING = "libraryName"
 let DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING = "checkForArt"
 let DEFAULTS_DATE_SORT_GRANULARITY = 500.0
 let DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING = "organizationType"
+let DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING = "checkEmbeddedArtwork"
 
 //other constants
 let NO_ORGANIZATION_TYPE = 0
@@ -270,6 +271,20 @@ let MOVE_ORGANIZATION_TYPE = 1
 let COPY_ORGANIZATION_TYPE = 2
 let UNKNOWN_ARTIST_STRING = "Unknown Artist"
 let UNKNOWN_ALBUM_STRING = "Unknown Album"
+
+let SOURCE_FETCH_REQUEST = NSFetchRequest(entityName: "SourceListItem")
+let TRACK_FETCH_REQUEST = NSFetchRequest(entityName: "Track")
+let TRACK_VIEW_FETCH_REQUEST = NSFetchRequest(entityName: "TrackView")
+let ALBUM_FETCH_REQUEST = NSFetchRequest(entityName: "Album")
+let ARTIST_FETCH_REQUEST = NSFetchRequest(entityName: "Artist")
+let COMPOSER_FETCH_REQUEST = NSFetchRequest(entityName: "Composer")
+let GENRE_FETCH_REQUEST = NSFetchRequest(entityName: "Genre")
+let SONG_COLLECTION_FETCH_REQUEST = NSFetchRequest(entityName: "SongCollection")
+let SONG_COLLECTION_FOLDER_FETCH_REQUEST = NSFetchRequest(entityName: "SongCollectionFolder")
+
+let IS_NETWORK_PREDICATE = NSPredicate(format: "is_network == %@", NSNumber(booleanLiteral: true))
+
+let BATCH_PURGE_NETWORK_FETCH_REQUESTS: [NSFetchRequest] = [GENRE_FETCH_REQUEST, COMPOSER_FETCH_REQUEST, ARTIST_FETCH_REQUEST, ALBUM_FETCH_REQUEST, TRACK_VIEW_FETCH_REQUEST, TRACK_FETCH_REQUEST, SOURCE_FETCH_REQUEST, SONG_COLLECTION_FETCH_REQUEST, SONG_COLLECTION_FOLDER_FETCH_REQUEST]
 
 let VALID_ARTWORK_TYPE_EXTENSIONS = [".jpg", ".png", ".tiff", ".gif", ".pdf"]
 

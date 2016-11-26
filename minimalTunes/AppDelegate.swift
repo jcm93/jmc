@@ -86,14 +86,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
-        let fetchRequest = NSFetchRequest(entityName: "SourceListItem")
-        let predicate = NSPredicate(format: "is_network == %@", true)
-        fetchRequest.predicate = predicate
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-        do {
-            try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
-        } catch {
-            print(error)
+        for fetchRequest in BATCH_PURGE_NETWORK_FETCH_REQUESTS {
+            do {
+                fetchRequest.predicate = IS_NETWORK_PREDICATE
+                let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+                try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
+            } catch {
+                print(error)
+            }
         }
         // Insert code here to initialize your application
         let fuckTransform = TransformerIntegerToTimestamp()
@@ -231,14 +231,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationShouldTerminate(sender: NSApplication) -> NSApplicationTerminateReply {
         // Save changes in the application's managed object context before the application terminates.
-        let fetchRequest = NSFetchRequest()
-        let predicate = NSPredicate(format: "is_network == %@", true)
-        fetchRequest.predicate = predicate
-        //let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-        do {
-            //try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
-        } catch {
-            print(error)
+        for fetchRequest in BATCH_PURGE_NETWORK_FETCH_REQUESTS {
+            do {
+                fetchRequest.predicate = IS_NETWORK_PREDICATE
+                let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+                try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
+            } catch {
+                print(error)
+            }
         }
         
         if !managedObjectContext.commitEditing() {

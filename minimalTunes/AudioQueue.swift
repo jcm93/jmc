@@ -26,24 +26,34 @@ class AudioQueue: NSObject {
         let doingle = AVAudioUnitEQ(numberOfBands: 10)
         let bands = doingle.bands
         bands[0].frequency = 32
+        bands[0].bandwidth = 1
         bands[0].bypass = false
         bands[1].frequency = 64
+        bands[1].bandwidth = 1
         bands[1].bypass = false
         bands[2].frequency = 128
+        bands[2].bandwidth = 1
         bands[2].bypass = false
         bands[3].frequency = 256
+        bands[3].bandwidth = 1
         bands[3].bypass = false
         bands[4].frequency = 512
+        bands[4].bandwidth = 1
         bands[4].bypass = false
         bands[5].frequency = 1024
+        bands[5].bandwidth = 1
         bands[5].bypass = false
         bands[6].frequency = 2048
+        bands[6].bandwidth = 1
         bands[6].bypass = false
         bands[7].frequency = 4096
+        bands[7].bandwidth = 1
         bands[7].bypass = false
         bands[8].frequency = 8192
+        bands[8].bandwidth = 1
         bands[8].bypass = false
         bands[9].frequency = 16384
+        bands[9].bandwidth = 1
         bands[9].bypass = false
         return doingle
     }()

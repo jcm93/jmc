@@ -70,6 +70,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
     var saved_search_bar_content: String?
     var networkedLibraries = NSMutableDictionary()
     var sharedLibraryIdentifierDictionary = NSMutableDictionary()
+    var requestedSharedPlaylists = NSMutableDictionary()
     
     var tagWindowController: TagEditorWindow?
     var equalizerWindowController: EqualizerWindowController?
@@ -373,8 +374,19 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         }
     }
     
-    func getNetworkPlaylist() -> SourceListItem {
-        return (sourceListView.itemAtRow(sourceListView.selectedRow) as! SourceListNode).item
+    func getNetworkPlaylist(id: Int) -> SourceListItem? {
+        let item = requestedSharedPlaylists[id] as? SourceListItem
+        return item
+    }
+    
+    func doneAddingNetworkPlaylistCallback(item: SourceListItem) {
+        guard currentSourceListItem == item else {return}
+        let track_id_list = item.playlist?.track_id_list as? [Int]
+        if track_id_list != nil {
+            currentArrayController?.fetchPredicate = NSPredicate(format: "track.id in %@ AND track.is_network == %@", track_id_list!, NSNumber(booleanLiteral: true))
+        } else {
+            currentArrayController?.fetchPredicate = NSPredicate(format: "track.id in {}")
+        }
     }
     
     func outlineViewSelectionDidChange(notification: NSNotification) {
@@ -383,16 +395,25 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         self.currentSourceListItem = selection
         if selection.is_network == true {
             currentArrayController = auxTrackViewArrayController
-            let server = self.delegate?.server
-            //server?.getDataForP
-            server?.getDataForPlaylist(selectionNode)
+            if selection.playlist?.track_id_list == nil {
+                let id = selection.playlist!.id!
+                requestedSharedPlaylists[Int(id)] = selection
+                let server = self.delegate?.server
+                server?.getDataForPlaylist(selectionNode)
+            } else {
+                let track_id_list = selection.playlist?.track_id_list as? [Int]
+                if track_id_list != nil {
+                    currentArrayController?.fetchPredicate = NSPredicate(format: "track.id in %@ AND track.is_network == %@", track_id_list!, NSNumber(booleanLiteral: true))
+                } else {
+                    currentArrayController?.fetchPredicate = NSPredicate(format: "track.id in {}")
+                }
+
+            }
             if librarySplitView.arrangedSubviews.contains(libraryTableScrollView) {
                 librarySplitView.removeArrangedSubview(libraryTableScrollView)
             }
             currentTableView = auxTableView
             librarySplitView.addArrangedSubview(auxTableScrollView)
-            currentArrayController?.content = Array(selection.playlist!.tracks!) as! [TrackView]
-            
         } else if selection.playlist != nil {
             currentArrayController = auxTrackViewArrayController
             var id_array: [Int]?
@@ -1038,7 +1059,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
                 let fileHandler = self.delegate!.yeOldeFileHandler
                 var artworkFound = false
-                if NSUserDefaults.standardUserDefaults().boolForKey("checkEmbeddedArtw ork") == true {
+                if NSUserDefaults.standardUserDefaults().boolForKey(DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING) == true {
                     print("checking mp3 for embedded art")
                     let artwork = fileHandler!.getArtworkFromFile(track.location!)
                     if artwork != nil {
@@ -1083,16 +1104,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         }*/
     }
     
-    override func awakeFromNib() {
-        /*sourceListView.expandItem(nil, expandChildren: true)
-        sourceListView.selectRowIndexes(NSIndexSet.init(index: 1), byExtendingSelection: false)
-        dispatch_async(dispatch_get_main_queue()) {
-            self.sourceListView.expandItem(nil, expandChildren: exptrue)
-            self.sourceListView.selectRowIndexes(NSIndexSet.init(index: 1), byExtendingSelection: false)
-            print("executed this block")
-        }*/
-    }
-    
     
     override func windowDidLoad() {
         numberFormatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
@@ -1116,21 +1127,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         progressBarView.mainWindowController = self
         sourceListScrollView.drawsBackground = false
         theBox.contentView?.hidden = true
-        /*theBox.boxType = .Custom
-        theBox.borderType = .BezelBorder
-        theBox.borderWidth = 1.1
-        theBox.cornerRadius = 3*/
-        //theBox.fillColor = NSColor(patternImage: NSImage(named: "Gradient")!)
         libraryTableView.doubleAction = "tableViewDoubleClick:"
-        
-        //mark mtvds
-        /*if hasMusic == true {
-            currentOrder = cachedOrders?[0]
-            currentArray = currentOrder?.tracks
-            libraryTableView.setDataSource(self)
-            libraryTableView.setDelegate(self)
-        }*/
-        //auxPlaylistTableView.doubleAction = "tableViewDoubleClick:"
         print(libraryTableView.registeredDraggedTypes)
         sourceListView.mainWindowController = self
         libraryTableView.mainWindowController = self
@@ -1195,7 +1192,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         self.currentArrayController = trackViewArrayController
         current_source_play_order = (currentArrayController!.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int})
         sourceListView.expandItem(nil, expandChildren: true)
-        let indexSet = NSIndexSet(index: 1)
-        sourceListView.selectRowIndexes(indexSet, byExtendingSelection: false)
+        libraryTableScrollView.layerContentsRedrawPolicy = NSViewLayerContentsRedrawPolicy.Never
+        libraryTableScrollView.contentView.layerContentsRedrawPolicy = NSViewLayerContentsRedrawPolicy.Never
     }
 }
