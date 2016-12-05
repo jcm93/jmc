@@ -14,7 +14,7 @@ class P2PServer {
     let remoteModule: RemoteP2PModule
     let localPeer: LocalPeer
     let delegate: AppDelegate
-    let interface: MainWindowController
+    let interface: SourceListViewController
     let peerConnectionDictionary = NSMutableDictionary()
     let namePeerDictionary = NSMutableDictionary()
     var isStreaming = false
@@ -23,7 +23,7 @@ class P2PServer {
     
     init(_delegate: AppDelegate) {
         self.delegate = _delegate
-        self.interface = delegate.mainWindowController!
+        self.interface = delegate.mainWindowController!.sourceListViewController!
         self.wlanModule = WlanModule(type: "metunes", dispatchQueue: dispatch_get_main_queue())
         self.remoteModule = RemoteP2PModule(baseUrl: NSURL(string: "ws://162.243.26.172:8080/")!, dispatchQueue: dispatch_get_main_queue())
         self.localPeer = LocalPeer(modules: [self.wlanModule], dispatchQueue: dispatch_get_main_queue())
@@ -492,7 +492,7 @@ class P2PServer {
         }
         let track_id_list = addedTrackViews.map({return Int($0.track!.id!)})
         item.playlist?.track_id_list = track_id_list
-        delegate.mainWindowController!.doneAddingNetworkPlaylistCallback(item)
+        interface.doneAddingNetworkPlaylistCallback(item)
         
     }
 }

@@ -13,80 +13,62 @@ import CoreData
 private var my_context = 0
 
 
-class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutlineViewDataSource, NSSearchFieldDelegate, NSTableViewDelegate, NSTableViewDataSource, NSMenuDelegate {
+class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     
+    
+    //interface elements
+    @IBOutlet weak var trackQueueTargetView: NSView!
     @IBOutlet weak var librarySplitView: NSSplitView!
     @IBOutlet var noMusicView: NSView!
-    
-    
-    @IBOutlet weak var auxTableView: TableViewYouCanPressSpacebarOn!
-    @IBOutlet var auxTableScrollView: NSScrollView!
-    @IBOutlet var auxTrackViewArrayController: DragAndDropArrayController!
+    @IBOutlet weak var artworkTargetView: NSView!
+    @IBOutlet weak var sourceListTargetView: NSView!
     @IBOutlet weak var bitRateFormatter: BitRateFormatter!
-    @IBOutlet var trackViewArrayController: DragAndDropArrayController!
-    @IBOutlet weak var libraryTableView: TableViewYouCanPressSpacebarOn!
-    @IBOutlet weak var auxPlaylistTableView: TableViewYouCanPressSpacebarOn!
-    @IBOutlet weak var libraryTableScrollView: NSScrollView!
-    @IBOutlet var columnVisibilityMenu: NSMenu!
-    @IBOutlet weak var albumArtBox: NSBox!
-    @IBOutlet weak var artworkToggle: NSButton!
-    @IBOutlet weak var artCollectionView: NSCollectionView!
-    @IBOutlet weak var queueScrollView: NSScrollView!
     @IBOutlet weak var queueButton: NSButton!
     @IBOutlet weak var volumeSlider: NSSlider!
-    @IBOutlet weak var advancedFilterScrollView: NSScrollView!
-    @IBOutlet weak var trackQueueTableView: TableViewYouCanPressSpacebarOn!
     @IBOutlet weak var progressBarView: ProgressBarView!
     @IBOutlet weak var shuffleButton: NSButton!
-    @IBOutlet weak var trackListBox: NSBox!
     @IBOutlet weak var trackListTriangle: NSButton!
-    @IBOutlet weak var headerCellView: NSTableCellView!
     @IBOutlet weak var progressBar: NSProgressIndicator!
     @IBOutlet weak var songNameLabel: NSTextField!
     @IBOutlet weak var artistAlbumLabel: NSTextField!
     @IBOutlet weak var durationLabel: NSTextField!
     @IBOutlet weak var currentTimeLabel: NSTextField!
     @IBOutlet weak var theBox: NSBox!
-    @IBOutlet weak var sourceListScrollView: NSScrollView!
     @IBOutlet weak var searchField: NSSearchField!
-    @IBOutlet var sourceListTreeController: DragAndDropTreeController!
-    @IBOutlet weak var sourceListView: SourceListThatYouCanPressSpacebarOn!
-    @IBOutlet weak var albumArtView: DragAndDropImageView!
     @IBOutlet var artCollectionArrayController: NSArrayController!
     @IBOutlet weak var infoField: NSTextField!
     
+    //subview controllers
+    var sourceListViewController: SourceListViewController?
+    var trackQueueViewController: TrackQueueViewController?
+    var otherTableViewControllers = NSMutableDictionary()
+    var otherSharedTableViewControllers = NSMutableDictionary()
+    var currentTableViewController: LibraryTableViewController?
+    var libraryTableViewController: LibraryTableViewController?
+    var albumArtViewController: AlbumArtViewController?
+    var advancedFilterViewController: AdvancedFilterViewController?
     
-    enum windowFocus {
-        case playlist
-        case library
-    }
-    
-    var currentScrollView: NSScrollView?
-    var currentTableView: TableViewYouCanPressSpacebarOn?
-    var currentArrayController: DragAndDropArrayController?
-    var currentAudioSource: SourceListItem?
-    var sourceListDataSource: SourceListDataSource?
-    var trackQueue = [Track]()
-    var saved_search_bar_content: String?
-    var networkedLibraries = NSMutableDictionary()
-    var sharedLibraryIdentifierDictionary = NSMutableDictionary()
-    var requestedSharedPlaylists = NSMutableDictionary()
-    
+    //subordinate window controllers
     var tagWindowController: TagEditorWindow?
     var equalizerWindowController: EqualizerWindowController?
     var customFieldController: CustomFieldWindowController?
     var importWindowController: ImportWindowController?
+    
+    //other variables
+    var trackQueue = [Track]()
+    var saved_search_bar_content: String?
+    var networkedLibraries = NSMutableDictionary()
+    var currentAudioSource: SourceListItem?
+    var currentSourceListItem: SourceListItem?
     var delegate: AppDelegate?
     var timer: NSTimer?
     var lastTimerDate: NSDate?
     var secsPlayed: NSTimeInterval = 0
-    var queue: AudioQueue = AudioQueue()
     var cur_view_title = "Music"
     var cur_source_title = "Music"
     var duration: Double?
     var paused: Bool? = true
     var is_initialized = false
-    let trackQueueTableDelegate = TrackQueueTableViewDelegate()
     var shuffle = NSOnState
     var currentTrack: Track?
     var currentTrackView: TrackView?
@@ -98,7 +80,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
     var current_source_index_temp: Int?
     var infoString: String?
     var auxArrayController: NSArrayController?
-    var focus: windowFocus = windowFocus.library
     var hasMusic: Bool = false
     var focusedColumn: NSTableColumn?
     var currentOrder: CachedOrder?
@@ -106,7 +87,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
     var asc: Bool?
     var is_streaming = false
     var currentLibrary: Library?
-    
     let numberFormatter = NSNumberFormatter()
     let dateFormatter = NSDateComponentsFormatter()
     let sizeFormatter = NSByteCountFormatter()
@@ -116,7 +96,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
     lazy var cachedOrders: [CachedOrder]? = {
         let request = NSFetchRequest(entityName: "CachedOrder")
         do {
-            let result = try self.managedContext.executeFetchRequest(request) as! [CachedOrder]
+            let result = try managedContext.executeFetchRequest(request) as! [CachedOrder]
             return result
         } catch {
             print(error)
@@ -124,59 +104,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         }
     }()
     
-    lazy var rootSourceListItem: SourceListItem? = {
-        let request = NSFetchRequest(entityName: "SourceListItem")
-        do {
-            let predicate = NSPredicate(format: "name == 'root'")
-            request.predicate = predicate
-            let result = try self.managedContext.executeFetchRequest(request) as! [SourceListItem]
-            if result.count > 0 {
-                return result[0]
-            } else {
-                return nil
-            }
-        } catch {
-            print("error getting library: \(error)")
-            return nil
-        }
-    }()
-    
     //initialize managed object context
-    lazy var managedContext: NSManagedObjectContext = {
-        return (NSApplication.sharedApplication().delegate
-            as? AppDelegate)?.managedObjectContext }()!
-    
-    lazy var sourceListHeaderNodes: [SourceListItem]? = {()-> [SourceListItem]? in
-        let fetchRequest = NSFetchRequest(entityName: "SourceListItem")
-        let fetchPredicate = NSPredicate(format: "parent == nil")
-        fetchRequest.predicate = fetchPredicate
-        do {
-            let results = try self.managedContext.executeFetchRequest(fetchRequest) as! [SourceListItem]
-            for headerNode in results {
-                if (headerNode as! SourceListItem).name == "Playlists" {
-                    self.sourceListTreeController.playlistHeaderNode = headerNode
-                } else if (headerNode as! SourceListItem).name == "Shared Libraries" {
-                    self.sourceListTreeController.sharedHeaderNode = headerNode
-                }
-            }
-            return results
-        } catch {
-            print("error getting header nodes: \(error)")
-            return nil
-        }
-    }()
-    
-    var isVisibleDict = NSMutableDictionary()
-    func populateIsVisibleDict() {
-        if self.currentArrayController != nil {
-            for track in self.currentArrayController?.arrangedObjects as! [TrackView] {
-                isVisibleDict[(track).track!.id!] = true
-            }
-        }
-    }
-
-    
-    
     
     //sort descriptors for source list
     var sourceListSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_order", ascending: true), NSSortDescriptor(key: "name", ascending: true)]
@@ -190,333 +118,123 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
     }
     //the view coordinator
     var viewCoordinator: ViewCoordinator?
-    var currentSourceListItem: SourceListItem?
     
     func searchFieldDidStartSearching(sender: NSSearchField) {
         print("search started searching called")
-        print((currentArrayController?.arrangedObjects as! [TrackView]).count)
         viewCoordinator?.search_bar_content = searchField.stringValue
     }
     
     func searchFieldDidEndSearching(sender: NSSearchField) {
         print("search ended searching called")
-        print((currentArrayController?.arrangedObjects as! [TrackView]).count)
         viewCoordinator?.search_bar_content = ""
     }
     
+    func networkPlaylistCallback(id: Int, idList: [Int]) {
+        guard self.otherSharedTableViewControllers.objectForKey(id) != nil else {return}
+        let playlistViewController = otherSharedTableViewControllers.objectForKey(id) as! LibraryTableViewController
+        playlistViewController.trackViewArrayController.fetchPredicate = NSPredicate(format: "track.id in %@ AND track.is_network == %@", idList, NSNumber(booleanLiteral: true))
+        playlistViewController.tableView.reloadData()
+    }
     
-    var rootNode: SourceListNode?
+    func createPlaylistViewController(tracks: [Int], is_network: Bool) -> LibraryTableViewController {
+        let newPlaylistViewController = LibraryTableViewController(nibName: "LibraryTableViewController", bundle: nil)
+        newPlaylistViewController?.trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .New, context: &my_context)
+        newPlaylistViewController?.trackViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .New, context: &my_context)
+        newPlaylistViewController?.trackViewArrayController.fetchPredicate = NSPredicate(format: "track.id in %@ AND track.is_network == %@", tracks, NSNumber(booleanLiteral: is_network))
+        return newPlaylistViewController!
+    }
     
-    func createTree() {
-        rootNode = SourceListNode(item: rootSourceListItem!)
-        var nodesNotVisited = [SourceListItem]()
-        var nodesAlreadyVisited = [SourceListNode]()
-        var currentNode = rootNode
-        for item in rootNode!.item.children! {
-            nodesNotVisited.append(item as! SourceListItem)
+    func switchToPlaylist(tracks: [Int], id: Int, is_network: Bool) {
+        guard self.currentTableViewController?.item?.playlist!.id != id else {return}
+        if librarySplitView.arrangedSubviews.contains(libraryTableViewController!.view) {
+            librarySplitView.removeArrangedSubview(libraryTableViewController!.view)
         }
-        while nodesNotVisited.isEmpty == false {
-            let item = nodesNotVisited.removeFirst()
-            let newNode = SourceListNode(item: item)
-            if item.children != nil {
-                for item in item.children! {
-                    nodesNotVisited.append(item as! SourceListItem)
-                }
-            }
-            nodesAlreadyVisited.append(newNode)
-            if newNode.item.parent == currentNode?.item {
-                currentNode?.children.append(newNode)
+        if otherTableViewControllers.objectForKey(id) != nil {
+            let playlistViewController = otherTableViewControllers.objectForKey(id) as! LibraryTableViewController
+            librarySplitView.addArrangedSubview(playlistViewController.view)
+            currentTableViewController = playlistViewController
+        } else if otherSharedTableViewControllers.objectForKey(id) != nil {
+            let playlistViewController = otherTableViewControllers.objectForKey(id) as! LibraryTableViewController
+            librarySplitView.addArrangedSubview(playlistViewController.view)
+            currentTableViewController = playlistViewController
+        } else {
+            let newPlaylistViewController = createPlaylistViewController(tracks, is_network: is_network)
+            if is_network {
+                self.otherSharedTableViewControllers[id] = newPlaylistViewController
             } else {
-                currentNode = nodesAlreadyVisited.removeFirst()
-                if newNode.item.parent == currentNode!.item {
-                    currentNode?.children.append(newNode)
-                }
+                self.otherTableViewControllers[id] = newPlaylistViewController
             }
+            librarySplitView.addArrangedSubview(newPlaylistViewController.view)
+            currentTableViewController = newPlaylistViewController
         }
     }
     
-    func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
-        if item == nil {
-            var count = 0
-            for item in rootNode!.children {
-                if item.children.count > 0 {
-                    count += 1
-                }
-            }
-            return count
-        }
-        let source = item as! SourceListNode
-        return source.children.count
-    }
-    func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool {
-        let source = item as! SourceListNode
-        if source.children.count > 0 {
-            return true
-        } else {
-            return false
-        }
-    }
-    func outlineView(outlineView: NSOutlineView, child index: Int, ofItem item: AnyObject?) -> AnyObject {
-        if item == nil {
-            if rootNode!.children[index].children.count > 0 {
-                return rootNode!.children[index]
-            } else {
-                return rootNode!.children[index+1]
-            }
-        }
-        let source = item as! SourceListNode
-        let child = source.children[index]
-        return child
+    func switchToLibrary() {
+        librarySplitView.removeArrangedSubview(currentTableViewController!.view)
+        librarySplitView.addArrangedSubview(libraryTableViewController!.view)
     }
     
-    func addNetworkedLibrary(name: String) {
-        let newSourceListItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
-        newSourceListItem.parent = self.rootNode?.children[1].item
-        newSourceListItem.name = name
-        newSourceListItem.is_network = true
-        let newLibrary = NSEntityDescription.insertNewObjectForEntityForName("Library", inManagedObjectContext: managedContext) as! Library
-        newLibrary.is_network = true
-        newLibrary.name = name
-        newSourceListItem.library = newLibrary
-        let newSourceListNode = SourceListNode(item: newSourceListItem)
-        self.rootNode?.children[1].children.append(newSourceListNode)
-        sharedLibraryIdentifierDictionary[name] = newSourceListNode
-        sourceListView.reloadData()
-        print("wrote \(name) to shared library identifier dictionary")
-    }
-    
-    func addSourcesForNetworkedLibrary(sourceData: [NSDictionary], peer: String) {
-        print("looking up \(peer) in shared library identifier dictionary")
-        let item = self.sharedLibraryIdentifierDictionary[peer] as! SourceListNode
-        //create sourcelistitem
-        let masterItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
-        masterItem.name = "Music"
-        
-        masterItem.parent = item.item
-        masterItem.is_network = true
-        masterItem.library = item.item.library
-        //create node for source list tree controller
-        let newSourceListNode = SourceListNode(item: masterItem)
-        item.children.append(newSourceListNode)
-        //create expandable sourcelistitem for playlists
-        let playlistsItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
-        playlistsItem.name = "Playlists"
-        playlistsItem.parent = item.item
-        playlistsItem.is_network = true
-        playlistsItem.library = item.item.library
-        //create node for source list tree controller
-        let playlistsItemNode = SourceListNode(item: playlistsItem)
-        item.children.append(playlistsItemNode)
-        for playlist in sourceData {
-            //create sourcelistitem
-            let newItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
-            newItem.sort_order = playlist["sort_order"] as! Int
-            newItem.name = playlist["name"] as? String
-            newItem.parent = playlistsItem
-            newItem.library = item.item.library
-            //create playlist object
-            let newPlaylist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: managedContext) as! SongCollection
-            newPlaylist.id = playlist["id"] as! Int
-            newItem.playlist = newPlaylist
-            newItem.parent = playlistsItem
-            newItem.is_network = true
-            //create source list node
-            let sourceNode = SourceListNode(item: newItem)
-            sourceNode.item = newItem
-            playlistsItemNode.children.append(sourceNode)
-        }
-        sourceListView.reloadData()
-    }
-    
-    func outlineView(outlineView: NSOutlineView, shouldSelectItem item: AnyObject) -> Bool {
-        let source = (item as! SourceListNode).item
-        if source.is_header == true {
-            return false
-        } else if source.children?.count > 0 {
-            return false
-        } else {
-            return true
-        }
-    }
-    
-    func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
-        let source = item as! SourceListNode
-        if (source.item.is_header == true) {
-            let view = outlineView.makeViewWithIdentifier("HeaderCell", owner: self) as! SourceListCellView
-            view.node = source
-            view.textField?.stringValue = source.item.name!
-            return view
-        } else if source.item.playlist != nil {
-            let view = outlineView.makeViewWithIdentifier("PlaylistCell", owner: self) as! SourceListCellView
-            view.node = source
-            view.textField?.stringValue = source.item.name!
-            return view
-        } else if source.item.is_network == true {
-            let view = outlineView.makeViewWithIdentifier("NetworkLibraryCell", owner: self) as! SourceListCellView
-            view.node = source
-            view.textField?.stringValue = source.item.name!
-            return view
-        } else if source.item.playlist_folder != nil {
-            let view = outlineView.makeViewWithIdentifier("SongCollectionFolder", owner: self) as! SourceListCellView
-            view.node = source
-            view.textField?.stringValue = source.item.name!
-            return view
-        } else if source.item.master_playlist != nil {
-            let view = outlineView.makeViewWithIdentifier("MasterPlaylistCell", owner: self) as! SourceListCellView
-            view.node = source
-            view.textField?.stringValue = source.item.name!
-            return view
-        } else {
-            let view = outlineView.makeViewWithIdentifier("PlaylistCell", owner: self) as! SourceListCellView
-            view.node = source
-            view.textField?.stringValue = source.item.name!
-            return view
-        }
-    }
-    
-    func getNetworkPlaylist(id: Int) -> SourceListItem? {
-        let item = requestedSharedPlaylists[id] as? SourceListItem
-        return item
-    }
-    
-    func doneAddingNetworkPlaylistCallback(item: SourceListItem) {
-        guard currentSourceListItem == item else {return}
-        let track_id_list = item.playlist?.track_id_list as? [Int]
-        if track_id_list != nil {
-            currentArrayController?.fetchPredicate = NSPredicate(format: "track.id in %@ AND track.is_network == %@", track_id_list!, NSNumber(booleanLiteral: true))
-        } else {
-            currentArrayController?.fetchPredicate = NSPredicate(format: "track.id in {}")
-        }
-    }
-    
-    func outlineViewSelectionDidChange(notification: NSNotification) {
-        let selectionNode = (sourceListView.itemAtRow(sourceListView.selectedRow) as! SourceListNode)
-        let selection = selectionNode.item
-        self.currentSourceListItem = selection
-        if selection.is_network == true {
-            currentArrayController = auxTrackViewArrayController
-            if selection.playlist?.track_id_list == nil {
-                let id = selection.playlist!.id!
-                requestedSharedPlaylists[Int(id)] = selection
-                let server = self.delegate?.server
-                server?.getDataForPlaylist(selectionNode)
-            } else {
-                let track_id_list = selection.playlist?.track_id_list as? [Int]
-                if track_id_list != nil {
-                    currentArrayController?.fetchPredicate = NSPredicate(format: "track.id in %@ AND track.is_network == %@", track_id_list!, NSNumber(booleanLiteral: true))
-                } else {
-                    currentArrayController?.fetchPredicate = NSPredicate(format: "track.id in {}")
-                }
-
-            }
-            if librarySplitView.arrangedSubviews.contains(libraryTableScrollView) {
-                librarySplitView.removeArrangedSubview(libraryTableScrollView)
-            }
-            currentTableView = auxTableView
-            librarySplitView.addArrangedSubview(auxTableScrollView)
-        } else if selection.playlist != nil {
-            currentArrayController = auxTrackViewArrayController
-            var id_array: [Int]?
-            if (selection.playlist?.track_id_list != nil) {
-                id_array = selection.playlist?.track_id_list as! [Int]
-                auxTrackViewArrayController.fetchPredicate = NSPredicate(format: "track.id in %@", id_array!)
-            }
-            else {
-                auxTrackViewArrayController.fetchPredicate = NSPredicate(format: "track.id in {}")
-            }
-            if librarySplitView.arrangedSubviews.contains(libraryTableScrollView) {
-                librarySplitView.removeArrangedSubview(libraryTableScrollView)
-            }
-            currentTableView = auxTableView
-            librarySplitView.addArrangedSubview(auxTableScrollView)
-        } else {
-            currentArrayController = trackViewArrayController
-            if librarySplitView.subviews.contains(auxTableScrollView) {
-                librarySplitView.removeArrangedSubview(auxTableScrollView)
-            }
-            currentTableView = libraryTableView
-            librarySplitView.addArrangedSubview(libraryTableScrollView)
-            updateInfo()
-        }
-        if currentArrayController?.filterPredicate == nil {
-            saved_search_bar_content = searchField.stringValue
-            searchField.stringValue = ""
-        } else {
-            searchField.stringValue = saved_search_bar_content!
-        }
-    }
-
     //track queue, source logic
     @IBAction func toggleExpandQueue(sender: AnyObject) {
-        if queueButton.state == NSOnState {
-            queueScrollView.hidden = false
+        trackQueueViewController!.toggleHidden(queueButton.state)
+        switch queueButton.state {
+        case NSOnState:
             NSUserDefaults.standardUserDefaults().setBool(false, forKey: "queueHidden")
-        }
-        else if queueButton.state == NSOffState {
+        default:
             NSUserDefaults.standardUserDefaults().setBool(true, forKey: "queueHidden")
-            queueScrollView.hidden = true
         }
-
     }
     
-    func checkQueueList(track_played: Track) {
-        initializeArray(track_played)
+    func launchGetInfo(tracks: [Track]) {
+        self.tagWindowController = TagEditorWindow(windowNibName: "TagEditorWindow")
+        self.tagWindowController?.mainWindowController = self
+        self.tagWindowController?.selectedTracks = tracks
+        tagWindowController?.showWindow(self)
     }
     
-    func initializeArray(track_played: Track) {
+    
+    func addTracksToQueue(tracks: [Track]) {
+        //todo test for whatever case means you need to start playing immediately
+        
+        //else
+        for track in tracks {
+            self.trackQueueViewController!.addTrackToQueue(track, context: cur_view_title, tense: 1)
+            delegate?.audioModule.addTrackToQueue(track, index: nil)
+            trackQueue.append(track)
+        }
+        self.trackQueueViewController?.reloadData()
+    }
+    
+    func createPlayOrderArray(track_played: Track) {
         print("initialize array called")
-        let selectionItem = (sourceListView.itemAtRow(sourceListView.selectedRow) as! SourceListNode).item
-        if current_source_play_order!.count == 0 {
-            current_source_play_order = (currentArrayController!.arrangedObjects as! [TrackView]).map( { return $0.track!.id as! Int} )
-        }
-        //trackQueueTableDelegate.updateContext(cur_view_title)
-        if selectionItem != currentAudioSource {
-            current_source_play_order = (currentArrayController!.arrangedObjects as! [TrackView]).map( { return $0.track!.id as! Int} )
-        }
-        currentAudioSource = selectionItem
-        if (shuffleButton.state == NSOnState) {
-            print("shuffling")
-            print(current_source_play_order!.count)
-            current_source_temp_shuffle = current_source_play_order
-            shuffle_array(&current_source_temp_shuffle!)
-            current_source_temp_shuffle = current_source_temp_shuffle!.filter( {
-                $0 != track_played.id
-            })
-            current_source_index = 0
-        }
-        else {
-            current_source_index = (current_source_play_order?.indexOf(Int(track_played.id!)))! + 1
-            print("current source index:" + String(current_source_index))
-        }
+        let selectionItem = sourceListViewController!.getCurrentSelection()
+        self.current_source_play_order = libraryTableViewController?.getUpcomingIDsForPlayEvent(self.shuffleButton.state, id: Int(track_played.id!))
+        self.current_source_index = 0
         is_initialized = true
-        currentAudioSource = currentSourceListItem
+        currentAudioSource = selectionItem.item
+    }
+    
+    func modifyPlayOrderForSortDescriptorChange() {
+        if currentAudioSource == currentSourceListItem && shuffleButton.state == NSOffState && currentTrack != nil {
+            self.current_source_play_order = libraryTableViewController?.getUpcomingIDsForPlayEvent(NSOffState, id: Int(currentTrack!.id!))
+        }
     }
     
     func getNextTrack() -> Track? {
         var id: Int?
-        if current_source_play_order!.count == current_source_index {
+        if current_source_play_order!.count == current_source_index! + 1 {
             return nil
-        }
-        if (shuffleButton.state == NSOnState) {
-            if current_source_index < current_source_temp_shuffle?.count {
-                id = current_source_temp_shuffle![current_source_index!]
-            } else {
-                currentTrack = nil
-                currentTrackView = nil
-                return nil
+        } else {
+            id = current_source_play_order![current_source_index! + 1]
+            current_source_index! += 1
+            let next_track = getTrackWithID(id!)
+            dispatch_async(dispatch_get_main_queue()) {
+                self.currentTrack?.is_playing = false
             }
-        }
-        else {
-            id = current_source_play_order![current_source_index!]
-        }
-        let next_track = getTrackWithID(id!)
-        dispatch_async(dispatch_get_main_queue()) {
-            self.currentTrack?.is_playing = false
             self.currentTrack = next_track
-            self.self.currentTrackView = next_track?.view
-            self.self.current_source_index! += 1
+            self.currentTrackView = next_track?.view
+            return next_track
         }
-        return next_track
     }
     
     func getTrackWithID(id: Int) -> Track? {
@@ -557,96 +275,24 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         }
     }
     
-    
-    func jumpToSelection() {
-        libraryTableView.scrollRowToVisible(libraryTableView.selectedRow)
+    @IBAction func addPlaylistButton(sender: AnyObject) {
+        sourceListViewController!.createPlaylist(nil)
     }
     
-    @IBAction func addPlaylistButton(sender: AnyObject) {
-        let playlist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: managedContext) as! SongCollection
-        let playlistItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
-        playlistItem.playlist = playlist
-        playlistItem.name = "New Playlist"
-        playlistItem.parent = sourceListTreeController.playlistHeaderNode
-        sourceListView.reloadData()
-        sourceListTreeController.setSelectionIndexPath(sourceListTreeController.indexPathOfObject(playlistItem))
-        sourceListView.editColumn(0, row: sourceListView.selectedRow, withEvent: nil, select: true)
+    func createPlaylistFromTracks(idList: [Int]) {
+        sourceListViewController?.createPlaylist(idList)
     }
     
     //player stuff
-    @IBAction func makePlaylistFromTrackQueueSelection(sender: AnyObject) {
-        trackQueueTableDelegate.makePlaylistFromSelection()
-    }
     
-    func tableViewDoubleClick(sender: AnyObject) {
-        guard currentTableView!.selectedRow >= 0 else {
-            return
-        }
-        let item = (currentArrayController?.arrangedObjects as! [TrackView])[currentTableView!.selectedRow].track
-        playSong(item!)
-    }
-    
+    var artworkToggle: NSButton?
     @IBAction func toggleArtwork(sender: AnyObject) {
-        if artworkToggle.state == NSOnState {
-            albumArtBox.hidden = false
-        }
-        else {
-            albumArtBox.hidden = true
-        }
+        albumArtViewController!.toggleHidden(artworkToggle!.state)
     }
-    
-    
-    
-    @IBAction func togglePastTracks(sender: AnyObject) {
-        trackQueueTableDelegate.togglePastTracks()
-    }
-    
-    @IBAction func createCustomField(sender: AnyObject) {
-        self.customFieldController = CustomFieldWindowController(windowNibName: "CustomFieldWindowController")
-        self.customFieldController?.mainWindow = self
-        self.customFieldController?.showWindow(self)
-    }
-    
-    func customFieldCreated(column: NSTableColumn) {
-        let key = "arrangedObjects.user_defined_properties."
-    }
-    
-    func showEqualizer() {
-        print("show equalizer called")
-        self.equalizerWindowController = EqualizerWindowController(windowNibName: "EqualizerWindowController")
-        self.equalizerWindowController?.mainWindowController = self
-        self.equalizerWindowController?.showWindow(self)
-    }
-    
-    @IBAction func getInfoFromTableView(sender: AnyObject) {
-        tagWindowController = TagEditorWindow(windowNibName: "TagEditorWindow")
-        tagWindowController?.mainWindowController = self
-        tagWindowController?.selectedTracks = (currentArrayController?.selectedObjects as! [TrackView]).map({return $0.track!})
-        if tagWindowController?.selectedTracks?.count == 1 {
-            tagWindowController?.currentTrack = tagWindowController!.selectedTracks![0]
-        }
-        tagWindowController?.showWindow(self)
-    }
-    
-    @IBAction func addToQueueFromTableView(sender: AnyObject) {
-        print(currentTableView!.selectedRow)
-        let track_to_add = (currentArrayController?.arrangedObjects as! [TrackView])[currentTableView!.selectedRow].track!
-        trackQueueTableDelegate.addTrackToQueue(track_to_add, context: cur_view_title, tense: 1)
-        queue.addTrackToQueue(track_to_add, index: nil)
-        trackQueue.append(track_to_add)
-        checkQueueList(track_to_add)
-    }
-    
-    @IBAction func playFromTableView(sender: AnyObject) {
-        print(currentTableView!.selectedRow)
-        let track_to_play = (currentArrayController?.arrangedObjects as! [TrackView])[currentTableView!.selectedRow].track!
-        playSong(track_to_play)
-        checkQueueList(track_to_play)
-    }
-    
+
     func playNetworkSongCallback() {
         guard self.is_streaming == true else {return}
-        queue.playNetworkImmediately(self.currentTrack!)
+        delegate?.audioModule.playNetworkImmediately(self.currentTrack!)
         //initializeInterfaceForNewTrack()
         paused = false
     }
@@ -655,20 +301,19 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         if track.is_network == true {
             self.is_streaming = true
             initializeInterfaceForNetworkTrack()
-            let sharedName = (sourceListView.itemAtRow(sourceListView.selectedRow) as! SourceListNode).item.library!.name!
+            let sharedName = sourceListViewController!.getCurrentSelectionSharedLibraryName()
             delegate?.server?.getTrack(Int(track.id!), libraryName: sharedName)
             currentTrack = track
-            checkQueueList(track)
+            createPlayOrderArray(track)
             return
         } else {
             self.is_streaming = false
         }
-        if (paused == true && queue.is_initialized == true) {
+        if (paused == true && delegate?.audioModule.is_initialized == true) {
             unpause()
         }
-        //trackQueueTableDelegate.changeCurrentTrack(track, context: cur_source_title)
-        checkQueueList(track)
-        queue.playImmediately(track.location!)
+        createPlayOrderArray(track)
+        delegate?.audioModule.playImmediately(track.location!)
         self.currentTrack?.is_playing = false
         self.currentTrack = track
         self.currentTrack?.is_playing = true
@@ -686,9 +331,11 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         }
     }
     
-    func refreshTableView() {
-        let column = focusedColumn
-        focusedColumn = nil
+    func playAnything() {
+        let trackToPlay = currentTableViewController!.getTrackWithNoContext(shuffleButton.state)
+        if trackToPlay != nil {
+            playSong(trackToPlay!)
+        }
     }
     
     func interpretSpacebarEvent() {
@@ -699,19 +346,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
                 pause()
             }
         } else {
-            if currentTableView?.selectedRow >= 0 {
-                playSong((currentArrayController?.arrangedObjects as! [TrackView])[currentTableView!.selectedRow].track!)
-            }
-            else {
-                var item: Track?
-                if shuffleButton.state == NSOffState {
-                    item = (currentArrayController?.arrangedObjects as! [TrackView])[0].track!
-                } else if shuffleButton.state == NSOnState {
-                    let random_index = Int(arc4random_uniform(UInt32(((currentArrayController?.arrangedObjects as! [TrackView]).count))))
-                    item = (currentArrayController?.arrangedObjects as! [TrackView])[random_index].track!
-                }
-                playSong(item!)
-            }
+            playAnything()
         }
     }
     
@@ -719,7 +354,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         paused = true
         print("pause called")
         updateValuesUnsafe()
-        queue.pause()
+        delegate?.audioModule.pause()
         timer!.invalidate()
     }
     
@@ -727,41 +362,24 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         print("unpause called")
         paused = false
         lastTimerDate = NSDate()
-        queue.play()
+        delegate?.audioModule.play()
         timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValuesSafe), userInfo: nil, repeats: true)
     }
     
     func seek(frac: Double) {
-        queue.seek(frac)
+        delegate?.audioModule.seek(frac)
     }
     
     func skip() {
+        self.currentTrack?.is_playing = false
         timer?.invalidate()
-        queue.skip()
+        delegate?.audioModule.skip()
     }
     
     func skipBackward() {
+        self.currentTrack?.is_playing = false
         timer?.invalidate()
-        queue.skip_backward()
-    }
-    
-    override func keyDown(theEvent: NSEvent) {
-        print(theEvent.keyCode)
-        if (theEvent.keyCode == 36) {
-            guard currentTableView!.selectedRow >= 0 else {
-                return
-            }
-            let item = (currentArrayController?.arrangedObjects as! [TrackView])[currentTableView!.selectedRow].track
-            playSong(item!)
-        }
-        else if theEvent.keyCode == 124 {
-            self.currentTrack?.is_playing = false
-            skip()
-        }
-        else if theEvent.keyCode == 123 {
-            self.currentTrack?.is_playing = false
-            skipBackward()
-        }
+        delegate?.audioModule.skip_backward()
     }
     
     
@@ -779,16 +397,12 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
     }
     
     @IBAction func toggleFilterVisibility(sender: AnyObject) {
-        if librarySplitView.arrangedSubviews.contains(advancedFilterScrollView) {
+        if librarySplitView.arrangedSubviews.contains(advancedFilterViewController!.view) {
             print("library split view does indeed contain advanced filter")
-            librarySplitView.removeArrangedSubview(advancedFilterScrollView)
+            librarySplitView.removeArrangedSubview(advancedFilterViewController!.view)
         } else {
-            librarySplitView.insertArrangedSubview(advancedFilterScrollView, atIndex: 0)
+            librarySplitView.insertArrangedSubview(advancedFilterViewController!.view, atIndex: 0)
         }
-    }
-    
-    @IBAction func testyThing(sender: AnyObject) {
-        advancedFilterScrollView.hidden = false
     }
     
     func initializeInterfaceForNetworkTrack() {
@@ -811,7 +425,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         var aa_string = ""
         var name_string = ""
         let the_track = self.currentTrack!
-        initAlbumArt(the_track)
+        albumArtViewController?.initAlbumArt(the_track)
         name_string = the_track.name!
         if the_track.artist != nil {
             aa_string += (the_track.artist! as Artist).name!
@@ -823,7 +437,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         theBox.contentView!.hidden = false
         songNameLabel.stringValue = name_string
         artistAlbumLabel.stringValue = aa_string
-        duration = queue.duration_seconds
+        duration = delegate?.audioModule.duration_seconds
         durationLabel.stringValue = getTimeAsString(duration!)!
         currentTimeLabel.stringValue = getTimeAsString(0)!
         lastTimerDate = NSDate()
@@ -831,45 +445,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         progressBar.hidden = false
         progressBar.doubleValue = 0
         startTimer()
-    }
-    
-    func initializeColumnVisibilityMenu(tableView: NSTableView) {
-        let savedColumns = NSUserDefaults.standardUserDefaults().dictionaryForKey(DEFAULTS_SAVED_COLUMNS_STRING)
-        
-        let menu = tableView.headerView?.menu
-        for column in tableView.tableColumns {
-            if column.identifier == "name" {
-                continue
-            }
-            let menuItem = NSMenuItem(title: column.headerCell.title, action: #selector(toggleColumn), keyEquivalent: "")
-            if (savedColumns != nil) {
-                let isHidden = savedColumns![column.identifier] as! Bool
-                column.hidden = isHidden
-            }
-            menuItem.target = self
-            menuItem.representedObject = column
-            menuItem.state = column.hidden ? NSOffState : NSOnState
-            menu?.addItem(menuItem)
-        }
-    }
-    
-    func toggleColumn(menuItem: NSMenuItem) {
-        let column = menuItem.representedObject as! NSTableColumn
-        column.hidden = !column.hidden
-        menuItem.state = column.hidden ? NSOffState : NSOnState
-        let columnVisibilityDictionary = NSMutableDictionary()
-        for column in self.currentTableView!.tableColumns {
-            columnVisibilityDictionary[column.identifier] = column.hidden
-        }
-        NSUserDefaults.standardUserDefaults().setObject(columnVisibilityDictionary, forKey: DEFAULTS_SAVED_COLUMNS_STRING)
-    }
-    
-    func menuWillOpen(menu: NSMenu) {
-        for menuItem in menu.itemArray {
-            if menuItem.representedObject != nil {
-                menuItem.state = (menuItem.representedObject as! NSTableColumn).hidden ? NSOffState : NSOnState
-            }
-        }
     }
 
     func startTimer() {
@@ -880,22 +455,22 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
     
     func updateValuesUnsafe() {
         print("unsafe called")
-        let nodeTime = queue.curNode.lastRenderTime
-        let playerTime = queue.curNode.playerTimeForNodeTime(nodeTime!)
+        let nodeTime = delegate?.audioModule.curNode.lastRenderTime
+        let playerTime = delegate?.audioModule.curNode.playerTimeForNodeTime(nodeTime!)
         print("unsafe update times")
         print(nodeTime)
         print(playerTime)
         var offset_thing: Double?
-        if queue.track_frame_offset == nil {
+        if delegate?.audioModule.track_frame_offset == nil {
             offset_thing = 0
         }
         else {
-            offset_thing  = queue.track_frame_offset!
+            offset_thing  = delegate?.audioModule.track_frame_offset!
             print(offset_thing)
         }
-        print(queue.total_offset_seconds)
-        print(queue.total_offset_frames)
-        let seconds = ((Double((playerTime?.sampleTime)!) + offset_thing!) / (playerTime?.sampleRate)!) - Double(queue.total_offset_seconds)
+        print(delegate?.audioModule.total_offset_seconds)
+        print(delegate?.audioModule.total_offset_frames)
+        let seconds = ((Double((playerTime?.sampleTime)!) + offset_thing!) / (playerTime?.sampleRate)!) - Double(delegate!.audioModule.total_offset_seconds)
         let seconds_string = getTimeAsString(seconds)
         if (timer?.valid == true) {
             print("within valid clause")
@@ -941,16 +516,6 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
         progressBar.doubleValue = 100
     }
     
-    func expandSourceView() {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            dispatch_async(dispatch_get_main_queue()) {
-            self.sourceListView.expandItem(nil, expandChildren: true)
-            self.sourceListView.selectRowIndexes(NSIndexSet.init(index: 1),byExtendingSelection: false)
-            print("executed this block")
-            }
-        }
-    }
-    
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         if context == &my_context {
             if keyPath! == "track_changed" {
@@ -963,7 +528,7 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
                 timer?.invalidate()
                 initializeInterfaceForNewTrack()
                 currentTrack?.is_playing = true
-                trackQueueTableDelegate.nextTrack()
+                trackQueueViewController!.nextTrack()
                 let after = NSDate()
                 let since = after.timeIntervalSinceDate(before)
                 print(since)
@@ -974,37 +539,13 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
             }
             else if keyPath! == "sortDescriptors" {
                 if (currentSourceListItem == currentAudioSource) {
-                    current_source_play_order = (currentArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int} )
-                    if (is_initialized == true) {
-                        current_source_index = (currentArrayController?.arrangedObjects as! [TrackView]).indexOf(currentTrackView!)
-                        print("current source index set to \(current_source_index)")
-                    }
+                    self.modifyPlayOrderForSortDescriptorChange()
                 }
             }
             else if keyPath! == "filterPredicate" {
                 print("filter predicate changed")
-                if (currentSourceListItem == currentAudioSource) {
-                    current_source_play_order = (currentArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int} )
-                    if shuffleButton.state == NSOnState {
-                        if currentArrayController?.filterPredicate != nil {
-                            for track_id in current_source_play_order! {
-                                self.isVisibleDict[track_id] = true
-                            }
-                            current_source_temp_shuffle = current_source_temp_shuffle?.filter({return (isVisibleDict[$0] as? Bool) == true})
-                            isVisibleDict = [:]
-                        } else {
-                            current_source_temp_shuffle = current_source_play_order
-                            shuffle_array(&current_source_temp_shuffle!)
-                        }
-                    } else {
-                        if (is_initialized == true) {
-                            current_source_index = (currentArrayController?.arrangedObjects as! [TrackView]).indexOf(currentTrackView!)
-                            if current_source_index == nil {
-                                current_source_index = 0
-                            }
-                            print("current source index set to \(current_source_index)")
-                        }
-                    }
+                if (currentSourceListItem == currentAudioSource) && current_source_play_order != nil {
+                    self.current_source_play_order = currentTableViewController!.fixPlayOrderForChangedFilterPredicate(current_source_play_order!, shuffleState: shuffleButton.state)
                 }
                 print(current_source_play_order?.count)
                 print(current_source_temp_shuffle?.count)
@@ -1018,11 +559,11 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
     
     func updateInfo() {
         print("updateinfo called")
-        if self.currentArrayController == nil {
+        if self.currentTableViewController == nil {
             return
         }
         dispatch_async(dispatch_get_main_queue()) {
-            let trackArray = (self.currentArrayController?.arrangedObjects as! [TrackView])
+            let trackArray = (self.currentTableViewController?.trackViewArrayController?.arrangedObjects as! [TrackView])
             let numItems = trackArray.count
             let totalSize = trackArray.map({return (($0.track)!.size!.longLongValue)}).reduce(0, combine: {$0 + $1})
             let totalTime = trackArray.map({return ($0.track)!.time!.doubleValue}).reduce(0, combine: {$0 + $1})
@@ -1037,162 +578,34 @@ class MainWindowController: NSWindowController, NSOutlineViewDelegate, NSOutline
     }
     
     @IBAction func trackListTriangleClicked(sender: AnyObject) {
-        sourceListView.reloadData()
+        print("break")
     }
     
     //mark album art
     
-    func initAlbumArt(track: Track) {
-        if track.album != nil && track.album!.primary_art != nil {
-            print("gonna get sum album art")
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            let art = track.album!.primary_art
-            let path = art?.artwork_location!
-            let url = NSURL(string: path!)
-            let image = NSImage(contentsOfURL: url!)
-            dispatch_async(dispatch_get_main_queue()) {
-                self.albumArtView.image = image
-            }
-            }
-        }
-        else {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                let fileHandler = self.delegate!.yeOldeFileHandler
-                var artworkFound = false
-                if NSUserDefaults.standardUserDefaults().boolForKey(DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING) == true {
-                    print("checking mp3 for embedded art")
-                    let artwork = fileHandler!.getArtworkFromFile(track.location!)
-                    if artwork != nil {
-                        let albumDirectoryURL = NSURL(string: track.location!)!.URLByDeletingLastPathComponent!
-                        if addPrimaryArtForTrack(track, art: artwork!, albumDirectoryURL: albumDirectoryURL) != nil {
-                            dispatch_async(dispatch_get_main_queue()) {
-                                do {try self.managedContext.save()}catch {print(error)}
-                                self.initAlbumArt(track)
-                            }
-                            artworkFound = true
-                        }
-                    }
-                }
-                if NSUserDefaults.standardUserDefaults().boolForKey(DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING) == true {
-                    let imageURL = fileHandler!.searchAlbumDirectoryForArt(track)
-                    if imageURL != nil {
-                        let artwork = NSData(contentsOfURL: imageURL!)
-                        if artwork != nil {
-                            let albumDirectoryURL = NSURL(string: track.location!)!.URLByDeletingLastPathComponent!
-                            if addPrimaryArtForTrack(track, art: artwork!, albumDirectoryURL: albumDirectoryURL) != nil {
-                                dispatch_async(dispatch_get_main_queue()) {
-                                    do {try self.managedContext.save()}catch {print(error)}
-                                    self.initAlbumArt(track)
-                                }
-                                artworkFound = true
-                            }
-                        }
-                    }
-                }
-                if artworkFound == false {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.albumArtView.image = nil
-                    }
-                }
-            }
-        }
-        /*if track.album?.other_art != nil {
-            artCollectionView.hidden = false
-            artCollectionView.dataSource = artCollectionArrayController
-            artCollectionArrayController.content = track.album!.other_art!.art!.mutableCopy().array
-            
-        }*/
-    }
-    
-    
     override func windowDidLoad() {
+        let sourceListView = SourceListViewController(nibName: "SourceListViewController", bundle: nil)
+        sourceListTargetView.addSubview(sourceListView!.view)
         numberFormatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
         dateFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyle.Full
         print(hasMusic)
-        //hasMusic = true
-        if (hasMusic == false) {
-            librarySplitView.addArrangedSubview(noMusicView)
-            noMusicView.hidden = false
-            libraryTableScrollView.hidden = true
-            sourceListView.hidden = true
-        } else {
-            self.createTree()
-            sourceListView.setDelegate(self)
-            sourceListView.setDataSource(self)
-        }
-        queue.mainWindowController = self
-        //shuffle = shuffleButton.state
+        self.delegate!.audioModule.mainWindowController = self
         progressBar.displayedWhenStopped = true
         progressBarView.progressBar = progressBar
         progressBarView.mainWindowController = self
-        sourceListScrollView.drawsBackground = false
         theBox.contentView?.hidden = true
-        libraryTableView.doubleAction = "tableViewDoubleClick:"
-        print(libraryTableView.registeredDraggedTypes)
-        sourceListView.mainWindowController = self
-        libraryTableView.mainWindowController = self
-        //auxPlaylistTableView.mainWindowController = self
         searchField.delegate = self
-        //libraryTableView.tableColumns[4].sortDescriptorPrototype = NSSortDescriptor(key: "artist_sort_order", ascending: true)
-        //libraryTableView.tableColumns[5].sortDescriptorPrototype = NSSortDescriptor(key: "album_sort_order", ascending: true)
-        queue.addObserver(self, forKeyPath: "track_changed", options: .New, context: &my_context)
-        queue.addObserver(self, forKeyPath: "done_playing", options: .New, context: &my_context)
-        trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .New, context: &my_context)
-        auxTrackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .New, context: &my_context)
-        trackViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .New, context: &my_context)
-        auxTrackViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .New, context: &my_context)
-        super.windowDidLoad()
-        if (hasMusic == true) {
-            //print(cachedOrders![0])
-        }
-        albumArtView.mainWindowController = self
-        trackQueueTableView.setDataSource(trackQueueTableDelegate)
-        trackQueueTableView.setDelegate(trackQueueTableDelegate)
-        trackQueueTableDelegate.tableView = trackQueueTableView
-        let currentColumn = NSUserDefaults.standardUserDefaults().objectForKey("lastColumn")
-        let currentAsc = NSUserDefaults.standardUserDefaults().boolForKey("currentAsc")
-        print("retrieving \(currentColumn) from cache")
-        trackQueueTableView.registerForDraggedTypes(["Track", "public.TrackQueueView"])
-        trackQueueTableDelegate.mainWindowController = self
-        //queueScrollView.hidden = true
-        currentTableView = libraryTableView
+                self.currentTableViewController = libraryTableViewController
+        self.delegate?.audioModule.addObserver(self, forKeyPath: "track_changed", options: .New, context: &my_context)
+        self.delegate?.audioModule.addObserver(self, forKeyPath: "done_playing", options: .New, context: &my_context)
+        self.libraryTableViewController?.trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .New, context: &my_context)
+        self.libraryTableViewController?.trackViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .New, context: &my_context)
+        trackQueueViewController?.mainWindowController = self
         volumeSlider.continuous = true
-        artCollectionView.hidden = true
-        //predicateEditor.rowTemplates = rowTemplates
-        //predicateEditor.addRow(nil)
         self.window!.titleVisibility = NSWindowTitleVisibility.Hidden
         self.window!.titlebarAppearsTransparent = true
-        print("count: \(current_source_play_order?.count)")
-        //currentArrayController?.rearrangeObjects()
-        /*dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            dispatch_async(dispatch_get_main_queue()) {
-                self.sourceListView.expandItem(nil, expandChildren: true)
-            }
-        }*/
-        currentTableView = libraryTableView
-        libraryTableView.setDelegate(trackViewArrayController)
-        libraryTableView.setDataSource(trackViewArrayController)
-        columnVisibilityMenu.delegate = self
-        self.initializeColumnVisibilityMenu(self.libraryTableView)
-        let mainLibraryIndexes = [0, 0]
-        let mainLibraryIndexPath = NSIndexPath(indexes: mainLibraryIndexes, length: 2)
-        //sourceListTreeController.content = sourceListHeaderNodes
-        NSUserDefaults.standardUserDefaults().setBool(false, forKey: "findAlbumArtwork")
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "checkEmbeddedArtwork")
-        NSUserDefaults.standardUserDefaults().setObject("http://localhost:20012/doingles", forKey: "testIP")
-        NSUserDefaults.standardUserDefaults().setObject("http://localhost:20012/list", forKey: "testIPList")
-        //self.sourceListTreeController.checkNetworkedLibrary()
-        self.populateIsVisibleDict()
-        self.initializeColumnVisibilityMenu(self.currentTableView!)
-        /*libraryTableView.setDelegate(trackViewArrayController)
-        libraryTableView.setDataSource(trackViewArrayController)*/
-        auxTableView.mainWindowController = self
-        auxTrackViewArrayController.mainWindow = self
-        libraryTableView.reloadData()
-        self.currentArrayController = trackViewArrayController
-        current_source_play_order = (currentArrayController!.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int})
-        sourceListView.expandItem(nil, expandChildren: true)
-        libraryTableScrollView.layerContentsRedrawPolicy = NSViewLayerContentsRedrawPolicy.Never
-        libraryTableScrollView.contentView.layerContentsRedrawPolicy = NSViewLayerContentsRedrawPolicy.Never
+        current_source_play_order = (libraryTableViewController!.trackViewArrayController.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int})
+        super.windowDidLoad()
     }
 }

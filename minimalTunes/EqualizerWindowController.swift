@@ -10,25 +10,25 @@ import Cocoa
 
 class EqualizerWindowController: NSWindowController {
     
-    var mainWindowController: MainWindowController?
+    var audioModule: AudioModule?
     
     @IBOutlet weak var eqToggle: NSButton!
     
     @IBAction func equalizerToggled(sender: AnyObject) {
         let state = eqToggle.state
-        self.mainWindowController?.queue.toggleEqualizer(state)
+        self.audioModule!.toggleEqualizer(state)
     }
     
     @IBAction func gainSliderDidChange(sender: AnyObject) {
         let slider = sender as! NSSlider
         let value = slider.floatValue
-        self.mainWindowController?.queue.adjustGain(value)
+        self.audioModule!.adjustGain(value)
     }
     @IBAction func eqSliderDidChange(sender: AnyObject) {
         let slider = sender as! NSSlider
         let band = Int(slider.identifier!)!
         let value = slider.floatValue
-        self.mainWindowController?.queue.adjustEqualizer(band, value: value)
+        self.audioModule!.adjustEqualizer(band, value: value)
     }
 
     override func windowDidLoad() {

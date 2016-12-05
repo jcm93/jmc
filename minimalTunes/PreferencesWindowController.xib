@@ -28,7 +28,7 @@
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="Item 0" identifier="" id="5wv-L6-agV">
-                                <view key="view" id="S9T-MJ-G6F">
+                                <view key="view" ambiguous="YES" id="S9T-MJ-G6F">
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lut-X7-lQi">
@@ -76,7 +76,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="Item 2" identifier="" id="rTh-ia-5Tn">
-                                <view key="view" ambiguous="YES" id="urC-l1-HwO">
+                                <view key="view" id="urC-l1-HwO">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="192"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>

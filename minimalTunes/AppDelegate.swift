@@ -20,14 +20,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var yeOldeFileHandler: YeOldeFileHandler?
     var preferencesWindowController: PreferencesWindowController?
     var setupWindowController: InitialSetupWindowController?
+    var equalizerWindowController: EqualizerWindowController?
     var importWindow: ImportWindowController?
     var importProgressBar: ImportProgressBar?
     var iTunesParser: iTunesLibraryParser?
+    var audioModule: AudioModule = AudioModule()
     let fileManager = NSFileManager.defaultManager()
     var server: P2PServer?
     
     @IBAction func jumpToSelection(sender: AnyObject) {
-        mainWindowController!.jumpToSelection()
+        //mainWindowController!.jumpToSelection()
     }
     
     
@@ -75,6 +77,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     //probably dumb and bad.
+    
+    
+    func showEqualizer() {
+        print("show equalizer called")
+        self.equalizerWindowController = EqualizerWindowController(windowNibName: "EqualizerWindowController")
+        self.equalizerWindowController?.audioModule = self.audioModule
+        self.equalizerWindowController?.showWindow(self)
+    }
     @IBAction func testyThing(sender: AnyObject) {
         mainWindowController!.showEqualizer()
     }

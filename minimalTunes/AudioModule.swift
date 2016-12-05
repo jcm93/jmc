@@ -1,5 +1,5 @@
  //
-//  AudioQueue.swift
+//  AudioModule.swift
 //  minimalTunes
 //
 //  Created by John Moody on 6/13/16.
@@ -15,7 +15,7 @@ enum completionHandlerType {
     case destroy
 }
 
-class AudioQueue: NSObject {
+class AudioModule: NSObject {
     //todo consistent naming
     dynamic var trackQueue = [Track]()
     dynamic var currentTrackLocation: String?

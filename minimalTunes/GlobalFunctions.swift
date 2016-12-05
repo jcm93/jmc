@@ -288,6 +288,15 @@ let BATCH_PURGE_NETWORK_FETCH_REQUESTS: [NSFetchRequest] = [GENRE_FETCH_REQUEST,
 
 let VALID_ARTWORK_TYPE_EXTENSIONS = [".jpg", ".png", ".tiff", ".gif", ".pdf"]
 
+func shuffle_array(inout array: [Int]) {
+    guard array.count > 0 else {return}
+    for i in 0..<array.count - 1 {
+        let j = Int(arc4random_uniform(UInt32(array.count - i))) + i
+        guard i != j else {continue}
+        swap(&array[i], &array[j])
+    }
+}
+
 func checkIfArtistExists(name: String) -> Artist? {
     let request = NSFetchRequest(entityName: "Artist")
     let predicate = NSPredicate(format: "name == %@", name)

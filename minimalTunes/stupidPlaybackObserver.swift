@@ -11,9 +11,9 @@ import Cocoa
 class stupidPlaybackObserver: NSObject {
     private var kvocontext = 0
     
-    private let queue: AudioQueue
+    private let queue: AudioModule
     
-    init(the_queue: AudioQueue) {
+    init(the_queue: AudioModule) {
         self.queue = the_queue
         super.init()
         queue.addObserver(self, forKeyPath: "is_initialized", options: .New, context: &kvocontext)

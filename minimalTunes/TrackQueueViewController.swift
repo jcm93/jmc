@@ -1,13 +1,27 @@
 //
-//  trackQueueTableDelegate.swift
+//  TrackQueueViewController.swift
 //  minimalTunes
 //
-//  Created by John Moody on 6/23/16.
+//  Created by John Moody on 12/1/16.
 //  Copyright © 2016 John Moody. All rights reserved.
 //
 
-import Foundation
 import Cocoa
+
+enum TrackQueueViewType {
+    case pastTrack
+    case currentTrack
+    case futureTrack
+    case source
+}
+
+class TrackQueueView: NSObject {
+    
+    var track: Track?
+    var source: String?
+    var viewType: TrackQueueViewType?
+    
+}
 
 class TrackNameTableCell: NSTableCellView {}
 
@@ -21,7 +35,7 @@ class FromSourceDividerCell: NSTableCellView {}
 
 class FromSourceCell: NSTableCellView {}
 
-class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDataSource {
+class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource {
     
     var trackQueue: [TrackQueueView] = [TrackQueueView]()
     var mainWindowController: MainWindowController?
@@ -34,6 +48,19 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
     var numPastTracksToShow = 3
     var globalOffset = 0
     var showAllTracks = false
+    
+    func reloadData() {
+        tableView?.reloadData()
+    }
+    
+    func toggleHidden(state: Int) {
+        switch state {
+        case NSOnState:
+            tableView?.hidden = false
+        default:
+            tableView?.hidden = true
+        }
+    }
     
     func tableView(tableView: NSTableView, writeRowsWithIndexes rowIndexes: NSIndexSet, toPasteboard pboard: NSPasteboard) -> Bool {
         print(rowIndexes)
@@ -97,10 +124,9 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
         newSourceView.source = context
         newSourceView.viewType = .source
         trackQueue.append(newSourceView)
-        tableView?.reloadData()
     }
     
-    func togglePastTracks() {
+    @IBAction func togglePastTracks(sender: AnyObject) {
         if showAllTracks == true {
             showAllTracks = false
         }
@@ -108,6 +134,9 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
             showAllTracks = true
         }
         tableView?.reloadData()
+    }
+    @IBAction func makePlaylistFromTrackQueueSelection(sender: AnyObject) {
+        makePlaylistFromSelection()
     }
     
     func insertTrackInQueue(track: Track, index: Int, context: String) {
@@ -164,18 +193,6 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
     }
     
     func makePlaylistFromSelection() {
-        let fetch_req = NSFetchRequest(entityName: "SourceListItem")
-        let pred = NSPredicate(format: "is_header == %@", NSNumber(bool: true))
-        fetch_req.predicate = pred
-        var result: [SourceListItem]?
-        do {
-            result = try mainWindowController?.managedContext.executeFetchRequest(fetch_req) as! [SourceListItem]
-        } catch {
-            print("error: \(error)")
-        }
-        result = result?.filter( { $0.name == "Playlists" })
-        let newPlaylist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: (self.mainWindowController?.managedContext)!) as! SongCollection
-        let newPlaylistSourceListItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: (self.mainWindowController?.managedContext)!) as! SourceListItem
         var track_id_list = [Int]()
         let select_offset: Int
         switch showAllTracks {
@@ -187,14 +204,8 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
         tableView?.selectedRowIndexes.enumerateIndexesUsingBlock({(index, stop) -> Void in
             let id = self.trackQueue[index + select_offset].track!.id
             track_id_list.append(Int(id!))
-            
         })
-        newPlaylist.track_id_list = track_id_list
-        newPlaylist.list_item = newPlaylistSourceListItem
-        newPlaylist.name = "dogie"
-        newPlaylistSourceListItem.name = "dogie2"
-        newPlaylistSourceListItem.parent = result![0]
-        mainWindowController?.sourceListView.reloadData()
+        mainWindowController?.createPlaylistFromTracks(track_id_list)
     }
     
     func tableView(tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
@@ -219,7 +230,7 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
             }()
             for track in tracks {
                 insertTrackInQueue(track, index: actualRow, context: "djlkqe")
-                mainWindowController?.queue.addTrackToQueue(track, index: actualRow - currentTrackIndex! - 1)
+                mainWindowController?.delegate?.audioModule.addTrackToQueue(track, index: actualRow - currentTrackIndex! - 1)
                 mainWindowController?.trackQueue.append(track)
             }
         }
@@ -239,10 +250,10 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
                     actualIndex = index + self.globalOffset
                 }
                 swap(&self.trackQueue[actualIndex], &self.trackQueue[actualRow + row_offset])
-                self.mainWindowController?.queue.swapTracks(actualIndex - self.currentTrackIndex! - 1, second_index: actualRow + row_offset - self.currentTrackIndex! - 1)
+                self.mainWindowController?.delegate?.audioModule.swapTracks(actualIndex - self.currentTrackIndex! - 1, second_index: actualRow + row_offset - self.currentTrackIndex! - 1)
                 row_offset += 1
             })
-
+            
         }
         tableView.reloadData()
         return true
@@ -360,4 +371,14 @@ class TrackQueueTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDat
             }
         }
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView!.setDataSource(self)
+        tableView!.setDelegate(self)
+        tableView!.registerForDraggedTypes(["Track", "public.TrackQueueView"])
+        // Do view setup here.
+    }
+
+    
 }

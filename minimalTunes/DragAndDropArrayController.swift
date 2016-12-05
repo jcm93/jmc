@@ -12,9 +12,10 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     
     var mainWindow: MainWindowController?
     
+    
+    
     func tableView(tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
         print("sort des did change called")
-        
     }
     
     func tableView(tableView: NSTableView, writeRowsWithIndexes rowIndexes: NSIndexSet, toPasteboard pboard: NSPasteboard) -> Bool {

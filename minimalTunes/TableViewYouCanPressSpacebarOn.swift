@@ -11,6 +11,7 @@ import Cocoa
 class TableViewYouCanPressSpacebarOn: NSTableView {
     
     var mainWindowController: MainWindowController?
+    var libraryTableViewController: LibraryTableViewController?
     var windowIdentifier: String?
     
     let types = ["Track"]
@@ -27,6 +28,16 @@ class TableViewYouCanPressSpacebarOn: NSTableView {
     }
     
     
+    override func rightMouseDown(theEvent: NSEvent) {
+        let globalLocation = theEvent.locationInWindow
+        let localLocation = self.convertPoint(globalLocation, fromView: nil)
+        let clickedRow = self.rowAtPoint(localLocation)
+        if clickedRow != -1 {
+            libraryTableViewController?.determineRightMouseDownTarget(clickedRow)
+        }
+        super.rightMouseDown(theEvent)
+    }
+    
     override func keyDown(theEvent: NSEvent) {
         if theEvent.keyCode == 49 {
             mainWindowController?.interpretSpacebarEvent()
@@ -35,19 +46,4 @@ class TableViewYouCanPressSpacebarOn: NSTableView {
             super.keyDown(theEvent)
         }
     }
-    
-    
-    override func menuForEvent(event: NSEvent) -> NSMenu? {
-        //try to draw a fuckign highlight for this row. impossible
-        /*let row = self.rowAtPoint(self.convertPoint(event.locationInWindow, fromView: nil))
-        let rect = rectOfRow(row)
-        let view = rowViewAtRow(row, makeIfNecessary: false)
-        view?.setNeedsDisplayInRect(rect)
-        let path = NSBezierPath(rect: rect)
-        
-        NSColor(calibratedRed: 100, green: 200, blue: 100, alpha: 0).set()
-        path.stroke()*/
-        return self.menu
-    }
-    
 }

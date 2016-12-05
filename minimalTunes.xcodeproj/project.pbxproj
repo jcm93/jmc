@@ -12,10 +12,20 @@
 		0D0E5FA91D38444B009E0FA3 /* Track+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FA51D38444B009E0FA3 /* Track+CoreDataProperties.swift */; };
 		0D0E5FAA1D38444B009E0FA3 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FA61D38444B009E0FA3 /* Track.swift */; };
 		0D0E5FAF1D3E909D009E0FA3 /* DragAndDropImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */; };
-		0D1BDFA51D0F44A70092FBA0 /* AudioQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1BDFA41D0F44A70092FBA0 /* AudioQueue.swift */; };
+		0D1BDFA51D0F44A70092FBA0 /* AudioModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1BDFA41D0F44A70092FBA0 /* AudioModule.swift */; };
 		0D2410A31D6735F200F95494 /* artAPIRequestDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */; };
 		0D2923021DC4272300711546 /* CustomFieldWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2923001DC4272300711546 /* CustomFieldWindowController.swift */; };
 		0D2923031DC4272300711546 /* CustomFieldWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D2923011DC4272300711546 /* CustomFieldWindowController.xib */; };
+		0D299B131DF10FFF0009CF7A /* SourceListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D299B111DF10FFF0009CF7A /* SourceListViewController.swift */; };
+		0D299B141DF10FFF0009CF7A /* SourceListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D299B121DF10FFF0009CF7A /* SourceListViewController.xib */; };
+		0D299B171DF111490009CF7A /* AlbumArtViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D299B151DF111490009CF7A /* AlbumArtViewController.swift */; };
+		0D299B181DF111490009CF7A /* AlbumArtViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D299B161DF111490009CF7A /* AlbumArtViewController.xib */; };
+		0D299B1B1DF11F140009CF7A /* TrackQueueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D299B191DF11F140009CF7A /* TrackQueueViewController.swift */; };
+		0D299B1C1DF11F140009CF7A /* TrackQueueViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D299B1A1DF11F140009CF7A /* TrackQueueViewController.xib */; };
+		0D299B1F1DF151220009CF7A /* LibraryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D299B1D1DF151220009CF7A /* LibraryTableViewController.swift */; };
+		0D299B201DF151220009CF7A /* LibraryTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D299B1E1DF151220009CF7A /* LibraryTableViewController.xib */; };
+		0D299B231DF158A60009CF7A /* AdvancedFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D299B211DF158A60009CF7A /* AdvancedFilterViewController.swift */; };
+		0D299B241DF158A60009CF7A /* AdvancedFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D299B221DF158A60009CF7A /* AdvancedFilterViewController.xib */; };
 		0D2E66471DC00B7F00CC174E /* TableColumnVisibilityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2E66461DC00B7F00CC174E /* TableColumnVisibilityController.swift */; };
 		0D2EEFB61DB97DEC0065B0B3 /* CachedOrder+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2EEFB41DB97DEC0065B0B3 /* CachedOrder+CoreDataProperties.swift */; };
 		0D2EEFB71DB97DEC0065B0B3 /* CachedOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2EEFB51DB97DEC0065B0B3 /* CachedOrder.swift */; };
@@ -70,8 +80,6 @@
 		0DD7D6DA1D3F3A350035BAD8 /* AlbumArtwork+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD7D6D41D3F3A350035BAD8 /* AlbumArtwork+CoreDataProperties.swift */; };
 		0DD7D6DB1D3F3A350035BAD8 /* AlbumArtwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD7D6D51D3F3A350035BAD8 /* AlbumArtwork.swift */; };
 		0DD7D6DD1D3F3E270035BAD8 /* AlbumArtArrayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD7D6DC1D3F3E270035BAD8 /* AlbumArtArrayController.swift */; };
-		0DDBFC2A1D1C892B00669875 /* trackQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDBFC291D1C892B00669875 /* trackQueueView.swift */; };
-		0DDBFC2C1D1C89E300669875 /* trackQueueTableDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDBFC2B1D1C89E300669875 /* trackQueueTableDelegate.swift */; };
 		0DE523341DA1ABA100C6BF05 /* MaybeTheLastServerAttempt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE523331DA1ABA100C6BF05 /* MaybeTheLastServerAttempt.swift */; };
 		0DE74A531D7D9457005211E6 /* SharedLibraryRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE74A521D7D9457005211E6 /* SharedLibraryRequestHandler.swift */; };
 		0DEF66B61D383A8700EA3ADC /* Library+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEF66961D383A8700EA3ADC /* Library+CoreDataProperties.swift */; };
@@ -124,10 +132,20 @@
 		0D0E5FA61D38444B009E0FA3 /* Track.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		0D0E5FAB1D3BE7EB009E0FA3 /* minimalTunes-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "minimalTunes-Bridging-Header.h"; sourceTree = "<group>"; };
 		0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragAndDropImageView.swift; sourceTree = "<group>"; };
-		0D1BDFA41D0F44A70092FBA0 /* AudioQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioQueue.swift; sourceTree = "<group>"; };
+		0D1BDFA41D0F44A70092FBA0 /* AudioModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioModule.swift; sourceTree = "<group>"; };
 		0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = artAPIRequestDelegate.swift; sourceTree = "<group>"; };
 		0D2923001DC4272300711546 /* CustomFieldWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomFieldWindowController.swift; sourceTree = "<group>"; };
 		0D2923011DC4272300711546 /* CustomFieldWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomFieldWindowController.xib; sourceTree = "<group>"; };
+		0D299B111DF10FFF0009CF7A /* SourceListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListViewController.swift; sourceTree = "<group>"; };
+		0D299B121DF10FFF0009CF7A /* SourceListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SourceListViewController.xib; sourceTree = "<group>"; };
+		0D299B151DF111490009CF7A /* AlbumArtViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumArtViewController.swift; sourceTree = "<group>"; };
+		0D299B161DF111490009CF7A /* AlbumArtViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumArtViewController.xib; sourceTree = "<group>"; };
+		0D299B191DF11F140009CF7A /* TrackQueueViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackQueueViewController.swift; sourceTree = "<group>"; };
+		0D299B1A1DF11F140009CF7A /* TrackQueueViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackQueueViewController.xib; sourceTree = "<group>"; };
+		0D299B1D1DF151220009CF7A /* LibraryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTableViewController.swift; sourceTree = "<group>"; };
+		0D299B1E1DF151220009CF7A /* LibraryTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LibraryTableViewController.xib; sourceTree = "<group>"; };
+		0D299B211DF158A60009CF7A /* AdvancedFilterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedFilterViewController.swift; sourceTree = "<group>"; };
+		0D299B221DF158A60009CF7A /* AdvancedFilterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdvancedFilterViewController.xib; sourceTree = "<group>"; };
 		0D2E66461DC00B7F00CC174E /* TableColumnVisibilityController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableColumnVisibilityController.swift; sourceTree = "<group>"; };
 		0D2EEFB41DB97DEC0065B0B3 /* CachedOrder+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CachedOrder+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D2EEFB51DB97DEC0065B0B3 /* CachedOrder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachedOrder.swift; sourceTree = "<group>"; };
@@ -188,8 +206,6 @@
 		0DD7D6D41D3F3A350035BAD8 /* AlbumArtwork+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AlbumArtwork+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0DD7D6D51D3F3A350035BAD8 /* AlbumArtwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumArtwork.swift; sourceTree = "<group>"; };
 		0DD7D6DC1D3F3E270035BAD8 /* AlbumArtArrayController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumArtArrayController.swift; sourceTree = "<group>"; };
-		0DDBFC291D1C892B00669875 /* trackQueueView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = trackQueueView.swift; sourceTree = "<group>"; };
-		0DDBFC2B1D1C89E300669875 /* trackQueueTableDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = trackQueueTableDelegate.swift; sourceTree = "<group>"; };
 		0DE523331DA1ABA100C6BF05 /* MaybeTheLastServerAttempt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaybeTheLastServerAttempt.swift; sourceTree = "<group>"; };
 		0DE74A521D7D9457005211E6 /* SharedLibraryRequestHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedLibraryRequestHandler.swift; sourceTree = "<group>"; };
 		0DEF66961D383A8700EA3ADC /* Library+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Library+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -250,7 +266,7 @@
 			isa = PBXGroup;
 			children = (
 				0DD274EE1D3190360055C43B /* GlobalFunctions.swift */,
-				0D1BDFA41D0F44A70092FBA0 /* AudioQueue.swift */,
+				0D1BDFA41D0F44A70092FBA0 /* AudioModule.swift */,
 				0D76F6A71D24B9AC00C6E70F /* YeOldeFileHandler.swift */,
 				0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */,
 				0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */,
@@ -265,13 +281,21 @@
 		0D01AD941D707CFB00F9211F /* Data Controllers and Interface Subclasses */ = {
 			isa = PBXGroup;
 			children = (
+				0D299B211DF158A60009CF7A /* AdvancedFilterViewController.swift */,
+				0D299B221DF158A60009CF7A /* AdvancedFilterViewController.xib */,
+				0D299B1D1DF151220009CF7A /* LibraryTableViewController.swift */,
+				0D299B1E1DF151220009CF7A /* LibraryTableViewController.xib */,
+				0D299B191DF11F140009CF7A /* TrackQueueViewController.swift */,
+				0D299B1A1DF11F140009CF7A /* TrackQueueViewController.xib */,
+				0D299B151DF111490009CF7A /* AlbumArtViewController.swift */,
+				0D299B161DF111490009CF7A /* AlbumArtViewController.xib */,
+				0D299B111DF10FFF0009CF7A /* SourceListViewController.swift */,
+				0D299B121DF10FFF0009CF7A /* SourceListViewController.xib */,
 				0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */,
 				0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */,
 				0D3878BB1DD125E9004CC3C1 /* StupidNumberFormatter.swift */,
 				0D3878B91DD12530004CC3C1 /* SampleRateFormatter.swift */,
 				0D2E66461DC00B7F00CC174E /* TableColumnVisibilityController.swift */,
-				0DDBFC2B1D1C89E300669875 /* trackQueueTableDelegate.swift */,
-				0DDBFC291D1C892B00669875 /* trackQueueView.swift */,
 				0DA8D03D1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift */,
 				0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */,
 				0DD7D6DC1D3F3E270035BAD8 /* AlbumArtArrayController.swift */,
@@ -556,16 +580,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				0D9CE6761D34128B004FA8CB /* InitialSetupWindowController.xib in Resources */,
+				0D299B241DF158A60009CF7A /* AdvancedFilterViewController.xib in Resources */,
+				0D299B1C1DF11F140009CF7A /* TrackQueueViewController.xib in Resources */,
 				0DAB30961CFBA3340028928F /* Assets.xcassets in Resources */,
 				0DF4BEF41CFD0D4E00AC5824 /* MainWindowController.xib in Resources */,
 				0DAB30991CFBA3340028928F /* MainMenu.xib in Resources */,
 				0D8D4A181D90868500FA1603 /* LocationManagerController.xib in Resources */,
 				0DD274ED1D30462F0055C43B /* PreferencesWindowController.xib in Resources */,
 				0D9CE6781D3442D3004FA8CB /* Preferences.plist in Resources */,
+				0D299B141DF10FFF0009CF7A /* SourceListViewController.xib in Resources */,
 				0D9CE67C1D34A7DF004FA8CB /* ImportProgressBar.xib in Resources */,
 				0D9CE6721D334F97004FA8CB /* ImportWindowController.xib in Resources */,
+				0D299B201DF151220009CF7A /* LibraryTableViewController.xib in Resources */,
 				0D01AD921D7079D900F9211F /* EqualizerWindowController.xib in Resources */,
 				0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */,
+				0D299B181DF111490009CF7A /* AlbumArtViewController.xib in Resources */,
 				0D2923031DC4272300711546 /* CustomFieldWindowController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -649,8 +678,8 @@
 				0DD7D6D61D3F3A350035BAD8 /* Album+CoreDataProperties.swift in Sources */,
 				0DEF66BE1D383A8700EA3ADC /* SharedLibrary+CoreDataProperties.swift in Sources */,
 				0D79409F1D13D2D5008AA167 /* stupidPlaybackObserver.swift in Sources */,
-				0DDBFC2A1D1C892B00669875 /* trackQueueView.swift in Sources */,
 				0DEF66D21D383A8700EA3ADC /* Tag+CoreDataProperties.swift in Sources */,
+				0D299B131DF10FFF0009CF7A /* SourceListViewController.swift in Sources */,
 				0DD7D6DD1D3F3E270035BAD8 /* AlbumArtArrayController.swift in Sources */,
 				0D5A55E71DDAA80F00E46F08 /* sourceListDataSource.swift in Sources */,
 				0DC84C601DBAD0C100E8877C /* NewCachedOrder.swift in Sources */,
@@ -666,7 +695,6 @@
 				0D01AD911D7079D900F9211F /* EqualizerWindowController.swift in Sources */,
 				0D9CE67B1D34A7DF004FA8CB /* ImportProgressBar.swift in Sources */,
 				0D76F6A81D24B9AC00C6E70F /* YeOldeFileHandler.swift in Sources */,
-				0DDBFC2C1D1C89E300669875 /* trackQueueTableDelegate.swift in Sources */,
 				0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */,
 				0D2E66471DC00B7F00CC174E /* TableColumnVisibilityController.swift in Sources */,
 				0DA8D0401D1B1128009FEC28 /* ProgressBarView.swift in Sources */,
@@ -677,10 +705,13 @@
 				0DE523341DA1ABA100C6BF05 /* MaybeTheLastServerAttempt.swift in Sources */,
 				0DEF66C21D383A8700EA3ADC /* ViewCoordinator+CoreDataProperties.swift in Sources */,
 				0DAB30911CFBA3340028928F /* AppDelegate.swift in Sources */,
+				0D299B1B1DF11F140009CF7A /* TrackQueueViewController.swift in Sources */,
 				0D76F6AA1D270EB900C6E70F /* DragAndDropArrayController.swift in Sources */,
+				0D299B171DF111490009CF7A /* AlbumArtViewController.swift in Sources */,
 				0DEF66C31D383A8700EA3ADC /* ViewCoordinator.swift in Sources */,
 				0D3878B81DD11926004CC3C1 /* BitRateFormatter.swift in Sources */,
 				0DD7D6DB1D3F3A350035BAD8 /* AlbumArtwork.swift in Sources */,
+				0D299B231DF158A60009CF7A /* AdvancedFilterViewController.swift in Sources */,
 				0DF4BEEE1CFBE4CB00AC5824 /* iTunesLibraryParser.swift in Sources */,
 				0DEF66C41D383A8700EA3ADC /* Property+CoreDataProperties.swift in Sources */,
 				0D0E5FAA1D38444B009E0FA3 /* Track.swift in Sources */,
@@ -701,9 +732,10 @@
 				0D0E5FAF1D3E909D009E0FA3 /* DragAndDropImageView.swift in Sources */,
 				0D3878B61DD10258004CC3C1 /* TrackView.swift in Sources */,
 				0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */,
-				0D1BDFA51D0F44A70092FBA0 /* AudioQueue.swift in Sources */,
+				0D1BDFA51D0F44A70092FBA0 /* AudioModule.swift in Sources */,
 				0D2923021DC4272300711546 /* CustomFieldWindowController.swift in Sources */,
 				0DD274EF1D3190360055C43B /* GlobalFunctions.swift in Sources */,
+				0D299B1F1DF151220009CF7A /* LibraryTableViewController.swift in Sources */,
 				0D3878BC1DD125E9004CC3C1 /* StupidNumberFormatter.swift in Sources */,
 				0D5A55E91DDBE16600E46F08 /* SourceListCellView.swift in Sources */,
 				0D9CE6751D34128B004FA8CB /* InitialSetupWindowController.swift in Sources */,

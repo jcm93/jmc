@@ -76,10 +76,6 @@ class ImportWindowController: NSWindowController {
         do { try managedContext.save() } catch {print("\(error)")}
         let appDelegate = (NSApplication.sharedApplication().delegate as! AppDelegate)
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasMusic")
-        self.mainWindowController?.libraryTableScrollView.hidden = false
-        self.mainWindowController?.noMusicView.hidden = true
-        self.mainWindowController?.sourceListView.hidden = false
-        self.mainWindowController?.expandSourceView()
         appDelegate.importProgressBar?.window?.close()
         self.window?.close()
         self.mainWindowController?.hasMusic = true
