@@ -8,7 +8,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="InitialSetupWindowController" customModule="minimalTunes" customModuleProvider="target">
             <connections>
                 <outlet property="copyRadioButton" destination="3aj-dF-ngb" id="BWG-bc-Sic"/>
-                <outlet property="libraryPathField" destination="RTg-dp-ukK" id="6ac-4C-eD4"/>
+                <outlet property="libraryPathControl" destination="ii7-ve-GXO" id="wpZ-TB-aKf"/>
                 <outlet property="modifyMetadataCheckBox" destination="iou-oN-wgD" id="gZN-fL-em3"/>
                 <outlet property="moveRadioButton" destination="mio-6K-wiF" id="glA-If-047"/>
                 <outlet property="noOrganizeRadioButton" destination="e1x-W7-CEu" id="Cvd-n6-tGb"/>
@@ -20,16 +20,16 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="Setup" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <rect key="contentRect" x="604" y="289" width="480" height="269"/>
+            <rect key="contentRect" x="604" y="289" width="480" height="185"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <value key="minSize" type="size" width="480" height="412"/>
             <value key="maxSize" type="size" width="480" height="412"/>
             <view key="contentView" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="269"/>
+                <rect key="frame" x="0.0" y="0.0" width="480" height="185"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s88-9E-tU5">
-                        <rect key="frame" x="238" y="143" width="224" height="36"/>
+                        <rect key="frame" x="238" y="73" width="224" height="36"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="String describing organizational behavior re: this directory" id="kd2-mj-nm3">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -37,24 +37,16 @@
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="li4-gb-EI0">
-                        <rect key="frame" x="238" y="231" width="132" height="17"/>
+                        <rect key="frame" x="238" y="147" width="132" height="17"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Media folder location" id="9Wa-PB-xSN">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RTg-dp-ukK">
-                        <rect key="frame" x="240" y="185" width="220" height="36"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="File path" drawsBackground="YES" id="0Lt-tR-dZR">
-                            <font key="font" metaFont="smallSystem"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="gridColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iou-oN-wgD">
-                        <rect key="frame" x="13" y="119" width="147" height="18"/>
-                        <buttonCell key="cell" type="check" title="Modify file metadata" bezelStyle="regularSquare" imagePosition="left" inset="2" id="5zV-xx-Re3">
+                        <rect key="frame" x="13" y="55" width="147" height="18"/>
+                        <buttonCell key="cell" type="check" title="Rename files" bezelStyle="regularSquare" imagePosition="left" inset="2" id="5zV-xx-Re3">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -63,15 +55,15 @@
                         </connections>
                     </button>
                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rVH-bi-TfG">
-                        <rect key="frame" x="13" y="57" width="225" height="56"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="If checked, file metadata will be modified when tags are changed, and files will be renamed when added to the library" id="e0H-pi-7M6">
+                        <rect key="frame" x="13" y="12" width="225" height="37"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="If checked, files will be renamed when added to the library, if necessary" id="e0H-pi-7M6">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tXO-iP-WLY">
-                        <rect key="frame" x="370" y="221" width="96" height="32"/>
+                        <rect key="frame" x="370" y="137" width="96" height="32"/>
                         <buttonCell key="cell" type="push" title="Browse..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="obX-0Y-Fsc">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -81,8 +73,8 @@
                         </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mio-6K-wiF">
-                        <rect key="frame" x="14" y="228" width="213" height="18"/>
-                        <buttonCell key="cell" type="radio" title="Organize library by moving files" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="NLD-9v-UXe">
+                        <rect key="frame" x="14" y="144" width="213" height="18"/>
+                        <buttonCell key="cell" type="radio" title="Organize library by moving files" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="NLD-9v-UXe">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -91,7 +83,7 @@
                         </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3aj-dF-ngb">
-                        <rect key="frame" x="14" y="206" width="217" height="18"/>
+                        <rect key="frame" x="14" y="122" width="217" height="18"/>
                         <buttonCell key="cell" type="radio" title="Organize library by copying files" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="pTf-me-c0R">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -101,7 +93,7 @@
                         </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e1x-W7-CEu">
-                        <rect key="frame" x="14" y="184" width="160" height="18"/>
+                        <rect key="frame" x="14" y="100" width="160" height="18"/>
                         <buttonCell key="cell" type="radio" title="Do not organize library" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="sSB-I9-vLy">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -110,6 +102,14 @@
                             <action selector="moveRadioAction:" target="-2" id="Qcc-UR-1kc"/>
                         </connections>
                     </button>
+                    <pathControl verticalHuggingPriority="750" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ii7-ve-GXO">
+                        <rect key="frame" x="240" y="117" width="207" height="22"/>
+                        <pathCell key="cell" selectable="YES" editable="YES" alignment="left" id="RNo-7w-CGU">
+                            <font key="font" metaFont="system"/>
+                            <url key="url" string="file:///"/>
+                            <color key="backgroundColor" red="0.8980392157" green="0.92549019610000005" blue="0.97254901959999995" alpha="1" colorSpace="deviceRGB"/>
+                        </pathCell>
+                    </pathControl>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xVd-Dw-PwO">
                         <rect key="frame" x="348" y="13" width="118" height="32"/>
                         <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="sZJ-Dj-TXs">
@@ -128,7 +128,7 @@ DQ
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="419" y="253.5"/>
+            <point key="canvasLocation" x="419" y="211.5"/>
         </window>
     </objects>
 </document>

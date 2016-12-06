@@ -61,6 +61,7 @@
     </entity>
     <entity name="Library" representedClassName=".Library" syncable="YES">
         <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="library_location" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="cached_orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CachedOrder" inverseName="library" inverseEntity="CachedOrder" syncable="YES"/>
@@ -87,6 +88,7 @@
         <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="is_smart" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="smart_criteria" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="track_id_list" optional="YES" attributeType="Transformable" syncable="YES"/>
         <relationship name="folder" optional="YES" maxCount="1" deletionRule="Nullify" ordered="YES" destinationEntity="SongCollectionFolder" inverseName="playlists" inverseEntity="SongCollectionFolder" syncable="YES"/>
         <relationship name="if_master_library" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="master_playlist" inverseEntity="Library" syncable="YES"/>
@@ -107,6 +109,7 @@
     <entity name="SourceListItem" representedClassName=".SourceListItem" syncable="YES">
         <attribute name="is_header" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_root" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sort_order" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SourceListItem" inverseName="parent" inverseEntity="SourceListItem" syncable="YES"/>
@@ -128,7 +131,7 @@
         <attribute name="equalizer_preset" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="file_kind" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
-        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_network" attributeType="Boolean" syncable="YES"/>
         <attribute name="is_playing" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="misc_search_field" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
@@ -161,7 +164,7 @@
         <attribute name="artist_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="date_added_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="genre_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
-        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_network" attributeType="Boolean" syncable="YES"/>
         <attribute name="kind_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="name_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="release_date_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
@@ -179,13 +182,13 @@
         <element name="CachedOrder" positionX="-1262" positionY="-45" width="128" height="120"/>
         <element name="Composer" positionX="-1539" positionY="375" width="128" height="133"/>
         <element name="Genre" positionX="-1532" positionY="542" width="128" height="120"/>
-        <element name="Library" positionX="-801" positionY="-45" width="128" height="135"/>
+        <element name="Library" positionX="-801" positionY="-45" width="128" height="150"/>
         <element name="Property" positionX="-1251" positionY="660" width="128" height="193"/>
         <element name="SharedLibrary" positionX="-1557" positionY="99" width="128" height="60"/>
-        <element name="SongCollection" positionX="-864" positionY="174" width="128" height="195"/>
+        <element name="SongCollection" positionX="-864" positionY="174" width="128" height="210"/>
         <element name="SongCollectionFolder" positionX="-693" positionY="380" width="128" height="103"/>
         <element name="SortOrder" positionX="-1548" positionY="108" width="128" height="75"/>
-        <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="195"/>
+        <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="210"/>
         <element name="Track" positionX="-1026" positionY="-54" width="128" height="600"/>
         <element name="TrackView" positionX="-1557" positionY="99" width="128" height="255"/>
     </elements>

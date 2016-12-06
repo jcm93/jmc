@@ -29,18 +29,10 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     var sharedHeaderNode: SourceListNode?
     
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        libraryHeaderNode = rootNode?.children[0]
-        sharedHeaderNode = rootNode?.children[1]
-        playlistHeaderNode = rootNode?.children[2]
-        // Do view setup here.
-    }
-    
     lazy var rootSourceListItem: SourceListItem? = {
         let request = NSFetchRequest(entityName: "SourceListItem")
         do {
-            let predicate = NSPredicate(format: "name == 'root'")
+            let predicate = NSPredicate(format: "is_root == true")
             request.predicate = predicate
             let result = try self.managedContext.executeFetchRequest(request) as! [SourceListItem]
             if result.count > 0 {
@@ -107,6 +99,9 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     
     func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
         if item == nil {
+            if rootNode == nil {
+                return 0
+            }
             var count = 0
             for item in rootNode!.children {
                 if item.children.count > 0 {
@@ -256,10 +251,17 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             view.textField?.stringValue = source.item.name!
             return view
         } else if source.item.playlist != nil {
-            let view = outlineView.makeViewWithIdentifier("PlaylistCell", owner: self) as! SourceListCellView
-            view.node = source
-            view.textField?.stringValue = source.item.name!
-            return view
+            if source.item.playlist?.smart_criteria != nil {
+                let view = outlineView.makeViewWithIdentifier("SmartPlaylistCell", owner: self) as! SourceListCellView
+                view.node = source
+                view.textField?.stringValue = source.item.name!
+                return view
+            } else {
+                let view = outlineView.makeViewWithIdentifier("PlaylistCell", owner: self) as! SourceListCellView
+                view.node = source
+                view.textField?.stringValue = source.item.name!
+                return view
+            }
         } else if source.item.is_network == true {
             let view = outlineView.makeViewWithIdentifier("NetworkLibraryCell", owner: self) as! SourceListCellView
             view.node = source
@@ -270,7 +272,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             view.node = source
             view.textField?.stringValue = source.item.name!
             return view
-        } else if source.item.master_playlist != nil {
+        } else if source.item.library != nil {
             let view = outlineView.makeViewWithIdentifier("MasterPlaylistCell", owner: self) as! SourceListCellView
             view.node = source
             view.textField?.stringValue = source.item.name!
@@ -302,18 +304,26 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         let selectionNode = (sourceList.itemAtRow(sourceList.selectedRow) as! SourceListNode)
         let selection = selectionNode.item
         self.currentSourceListItem = selection
-        let is_network = selection.is_network
-        let id = Int(selection.playlist!.id!)
         let track_id_list = selection.playlist?.track_id_list as? [Int]
-        if track_id_list == nil {
-            if is_network == true {
-                requestedSharedPlaylists[id] = selection
-                self.server?.getDataForPlaylist(selectionNode)
-            }
-            mainWindowController?.switchToPlaylist([], id: id, is_network: Bool(is_network!))
-        } else {
-            mainWindowController?.switchToPlaylist(track_id_list!, id: id, is_network: Bool(is_network!))
+        if track_id_list == nil && selection.is_network == true && selection.playlist?.id != nil {
+            requestedSharedPlaylists[selection.playlist!.id!] = selection
+            self.server?.getDataForPlaylist(selectionNode)
         }
+        mainWindowController?.switchToPlaylist(selection)
+    }
+    
+    override func viewDidLoad() {
+        self.createTree()
+        libraryHeaderNode = rootNode?.children[0]
+        sharedHeaderNode = rootNode?.children[1]
+        playlistHeaderNode = rootNode?.children[2]
+        sourceList.setDelegate(self)
+        sourceList.setDataSource(self)
+        sourceList.autosaveExpandedItems = true
+        sourceList.expandItem(nil, expandChildren: true)
+        sourceList.reloadData()
+        // Do view setup here.
+        super.viewDidLoad()
     }
 
 }

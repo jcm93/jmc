@@ -17,6 +17,40 @@ var managedContext = (NSApplication.sharedApplication().delegate as! AppDelegate
 //mark sort descriptors
 var artistSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_artist", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "sort_album", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "track_num", ascending:true), NSSortDescriptor(key: "name", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:)))]
 
+//mark user defaults
+let DEFAULTS_SAVED_COLUMNS_STRING = "savedColumns"
+let DEFAULTS_LIBRARY_PATH_STRING = "libraryPath"
+let DEFAULTS_LIBRARY_NAME_STRING = "libraryName"
+let DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING = "checkForArt"
+let DEFAULTS_DATE_SORT_GRANULARITY = 500.0
+let DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING = "organizationType"
+let DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING = "checkEmbeddedArtwork"
+let DEFAULTS_ARE_INITIALIZED_STRING = "importantDefaultsAreInitialized"
+let DEFAULTS_RENAMES_FILES_STRING = "renamesFiles"
+
+//other constants
+let NO_ORGANIZATION_TYPE = 0
+let MOVE_ORGANIZATION_TYPE = 1
+let COPY_ORGANIZATION_TYPE = 2
+let UNKNOWN_ARTIST_STRING = "Unknown Artist"
+let UNKNOWN_ALBUM_STRING = "Unknown Album"
+
+let SOURCE_FETCH_REQUEST = NSFetchRequest(entityName: "SourceListItem")
+let TRACK_FETCH_REQUEST = NSFetchRequest(entityName: "Track")
+let TRACK_VIEW_FETCH_REQUEST = NSFetchRequest(entityName: "TrackView")
+let ALBUM_FETCH_REQUEST = NSFetchRequest(entityName: "Album")
+let ARTIST_FETCH_REQUEST = NSFetchRequest(entityName: "Artist")
+let COMPOSER_FETCH_REQUEST = NSFetchRequest(entityName: "Composer")
+let GENRE_FETCH_REQUEST = NSFetchRequest(entityName: "Genre")
+let SONG_COLLECTION_FETCH_REQUEST = NSFetchRequest(entityName: "SongCollection")
+let SONG_COLLECTION_FOLDER_FETCH_REQUEST = NSFetchRequest(entityName: "SongCollectionFolder")
+
+let IS_NETWORK_PREDICATE = NSPredicate(format: "is_network == %@", NSNumber(booleanLiteral: true))
+
+let BATCH_PURGE_NETWORK_FETCH_REQUESTS: [NSFetchRequest] = [GENRE_FETCH_REQUEST, COMPOSER_FETCH_REQUEST, ARTIST_FETCH_REQUEST, ALBUM_FETCH_REQUEST, TRACK_VIEW_FETCH_REQUEST, TRACK_FETCH_REQUEST, SOURCE_FETCH_REQUEST, SONG_COLLECTION_FETCH_REQUEST, SONG_COLLECTION_FOLDER_FETCH_REQUEST]
+
+let VALID_ARTWORK_TYPE_EXTENSIONS = [".jpg", ".png", ".tiff", ".gif", ".pdf"]
+
 let fieldsToCachedOrdersDictionary: NSDictionary = [
     "date_added" : "Date Added",
     "date_released" : "Date Released",
@@ -31,6 +65,41 @@ let defaultSortPrefixDictionary: NSMutableDictionary = [
     "the " : "",
     "a " : "",
     "an " : "",
+]
+
+let DEFAULT_COLUMN_VISIBILITY_DICTIONARY: [String : AnyObject] = [
+    "album" : 0,
+    "artist" : 0,
+    "bit_rate" : 0,
+    "comments" : 0,
+    "composer" : 1,
+    "date_added" : 0,
+    "date_last_played" : 0,
+    "date_last_skipped" : 0,
+    "date_modified" : 0,
+    "date_released" : 0,
+    "disc_number" : 1,
+    "equalizer_preset" : 1,
+    "file_kind" : 0,
+    "genre" : 0,
+    "is_enabled" : 0,
+    "is_playing" : 0,
+    "movement_name" : 1,
+    "movement_number" : 1,
+    "name" : 0,
+    "play_count" : 0,
+    "playlist_number" : 1,
+    "rating" : 1,
+    "sample_rate" : 0,
+    "size" : 0,
+    "skip_count" : 1,
+    "sort_album" : 1,
+    "sort_album_artist" : 1,
+    "sort_artist" : 1,
+    "sort_composer" : 1,
+    "sort_name" : 1,
+    "time" : 0,
+    "track_num" : 0,
 ]
 
 let sharedLibraryNamesDictionary = NSMutableDictionary()
@@ -254,39 +323,6 @@ extension Track {
 var dateAddedSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "date_added", ascending: true, selector: #selector(NSDate.compare(_:))), NSSortDescriptor(key: "sort_artist", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "sort_album", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "track_num", ascending:true)]
 var nameSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_name", ascending:true, selector: #selector(NSString.localizedStandardCompare(_:)))]
 var timeSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "time", ascending: true), NSSortDescriptor(key: "sort_name", ascending:true, selector: #selector(NSString.localizedStandardCompare(_:)))]*/
-
-
-//mark user defaults
-let DEFAULTS_SAVED_COLUMNS_STRING = "savedColumns"
-let DEFAULTS_LIBRARY_PATH_STRING = "libraryPath"
-let DEFAULTS_LIBRARY_NAME_STRING = "libraryName"
-let DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING = "checkForArt"
-let DEFAULTS_DATE_SORT_GRANULARITY = 500.0
-let DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING = "organizationType"
-let DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING = "checkEmbeddedArtwork"
-
-//other constants
-let NO_ORGANIZATION_TYPE = 0
-let MOVE_ORGANIZATION_TYPE = 1
-let COPY_ORGANIZATION_TYPE = 2
-let UNKNOWN_ARTIST_STRING = "Unknown Artist"
-let UNKNOWN_ALBUM_STRING = "Unknown Album"
-
-let SOURCE_FETCH_REQUEST = NSFetchRequest(entityName: "SourceListItem")
-let TRACK_FETCH_REQUEST = NSFetchRequest(entityName: "Track")
-let TRACK_VIEW_FETCH_REQUEST = NSFetchRequest(entityName: "TrackView")
-let ALBUM_FETCH_REQUEST = NSFetchRequest(entityName: "Album")
-let ARTIST_FETCH_REQUEST = NSFetchRequest(entityName: "Artist")
-let COMPOSER_FETCH_REQUEST = NSFetchRequest(entityName: "Composer")
-let GENRE_FETCH_REQUEST = NSFetchRequest(entityName: "Genre")
-let SONG_COLLECTION_FETCH_REQUEST = NSFetchRequest(entityName: "SongCollection")
-let SONG_COLLECTION_FOLDER_FETCH_REQUEST = NSFetchRequest(entityName: "SongCollectionFolder")
-
-let IS_NETWORK_PREDICATE = NSPredicate(format: "is_network == %@", NSNumber(booleanLiteral: true))
-
-let BATCH_PURGE_NETWORK_FETCH_REQUESTS: [NSFetchRequest] = [GENRE_FETCH_REQUEST, COMPOSER_FETCH_REQUEST, ARTIST_FETCH_REQUEST, ALBUM_FETCH_REQUEST, TRACK_VIEW_FETCH_REQUEST, TRACK_FETCH_REQUEST, SOURCE_FETCH_REQUEST, SONG_COLLECTION_FETCH_REQUEST, SONG_COLLECTION_FOLDER_FETCH_REQUEST]
-
-let VALID_ARTWORK_TYPE_EXTENSIONS = [".jpg", ".png", ".tiff", ".gif", ".pdf"]
 
 func shuffle_array(inout array: [Int]) {
     guard array.count > 0 else {return}

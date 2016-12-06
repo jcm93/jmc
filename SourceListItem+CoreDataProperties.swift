@@ -24,5 +24,6 @@ extension SourceListItem {
     @NSManaged var parent: SourceListItem?
     @NSManaged var playlist: SongCollection?
     @NSManaged var playlist_folder: SongCollectionFolder?
+    @NSManaged var is_root: NSNumber?
 
 }

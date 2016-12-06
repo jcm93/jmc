@@ -105,48 +105,6 @@ class iTunesLibraryParser: NSObject {
         
         moc.undoManager?.beginUndoGrouping()
         moc.performBlock() {
-         
-            //create the library entity
-            //let cd_library = NSEntityDescription.insertNewObjectForEntityForName("Library", inManagedObjectContext: self.moc) as! Library
-            //print("1")
-            
-            //create dummy source list item as root of source list
-            let source_list_root = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
-            source_list_root.name = "root"
-            
-            //create source list headers
-            let cd_library_header = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
-            cd_library_header.is_header = true
-            cd_library_header.name = "Library"
-            cd_library_header.sort_order = 0
-            cd_library_header.parent = source_list_root
-            let cd_shared_header = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
-            cd_shared_header.is_header = true
-            cd_shared_header.name = "Shared Libraries"
-            cd_shared_header.sort_order = 1
-            cd_shared_header.parent = source_list_root
-            let cd_playlists_header = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
-            cd_playlists_header.is_header = true
-            cd_playlists_header.name = "Playlists"
-            cd_playlists_header.sort_order = 2
-            cd_playlists_header.parent = source_list_root
-            print("2")
-            
-            //create column browser headers
-            
-            //create master playlist source list item
-            let cd_library_master_playlist_source_item = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
-            cd_library_master_playlist_source_item.parent = cd_library_header
-            cd_library_master_playlist_source_item.name = "Music"
-            //cd_library_master_playlist_source_item.library = cd_library
-            
-            //create the master playlist
-            //let cd_library_master_playlist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: self.moc) as! SongCollection
-            //cd_library_master_playlist.name = "Master Playlist"
-            
-            //attach the master playlist to the master playlist source list entity
-            //cd_library_master_playlist.if_master_list_item = cd_library_master_playlist_source_item
-            //cd_library_master_playlist.if_master_library = cd_library
             print("3")
             for item in self.XMLMasterPlaylistTrackArray {
                 let cd_track = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: self.moc) as! Track
@@ -483,27 +441,28 @@ class iTunesLibraryParser: NSObject {
                     }
                     cd_playlist.track_id_list = track_list
                 }
+                
+                let playlistsHeader: SourceListItem? = {
+                    let fr = NSFetchRequest(entityName: "SourceListItem")
+                    let pr = NSPredicate(format: "name == 'Playlists' AND is_header == true")
+                    fr.predicate = pr
+                    do {
+                        let res = try managedContext.executeFetchRequest(fr) as! [SourceListItem]
+                        return res[0]
+                    } catch {
+                        print(error)
+                    }
+                    return nil
+                }()
 
                 //create source list item for playlist
                 let cd_playlist_source_list_item = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
-                cd_playlist_source_list_item.parent = cd_playlists_header
+                cd_playlist_source_list_item.parent = playlistsHeader!
                 cd_playlist_source_list_item.name = cd_playlist.name
                 cd_playlist_source_list_item.playlist = cd_playlist
                 //cd_playlist_source_list_item.library = cd_library
                 self.importPlaylistUIUpdate(self.numImportedPlaylists)
             }
-            
-            //create shared library examples
-            
-            /*let cd_shared_library_source_list_item = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.moc) as! SourceListItem
-            cd_shared_library_source_list_item.is_network = true
-            cd_shared_library_source_list_item.name = "Example Shared Library"
-            cd_shared_library_source_list_item.parent = cd_shared_header
-            
-            let cd_shared_library_source_list_item_two = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: self.self.moc) as! SourceListItem
-            cd_shared_library_source_list_item_two.is_network = true
-            cd_shared_library_source_list_item_two.name = "Example Shared Library 2"
-            cd_shared_library_source_list_item_two.parent = cd_shared_header*/
             self.self.moc.undoManager?.endUndoGrouping()
             do {
                 try self.moc.save()

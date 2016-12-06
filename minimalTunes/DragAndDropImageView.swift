@@ -53,7 +53,7 @@ class DragAndDropImageView: NSImageView {
                         Swift.print("error writing file: \(error)")
                         return false
                     }
-                    let newArt = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtwork", inManagedObjectContext: mainWindowController!.managedContext) as! AlbumArtwork
+                    let newArt = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtwork", inManagedObjectContext: managedContext) as! AlbumArtwork
                     newArt.image_hash = artImage!.TIFFRepresentation?.hashValue
                     newArt.artwork_location = newURL?.absoluteString
                     if track!.album!.primary_art == nil {
@@ -61,7 +61,7 @@ class DragAndDropImageView: NSImageView {
                     }
                     else if track!.album!.other_art == nil {
                         let oldPrimaryArt = track!.album!.primary_art
-                        let newCollection = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtworkCollection", inManagedObjectContext: mainWindowController!.managedContext) as! AlbumArtworkCollection
+                        let newCollection = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtworkCollection", inManagedObjectContext: managedContext) as! AlbumArtworkCollection
                         newCollection.album = track!.album!
                         oldPrimaryArt!.collection = newCollection
                         oldPrimaryArt?.primary_album = nil

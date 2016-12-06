@@ -1,6 +1,4 @@
 
-
-
 //
 //  AppDelegate.swift
 //  minimalTunes
@@ -86,13 +84,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.equalizerWindowController?.showWindow(self)
     }
     @IBAction func testyThing(sender: AnyObject) {
-        mainWindowController!.showEqualizer()
+        showEqualizer()
     }
     
     func setInitialDefaults() {
-        NSUserDefaults.standardUserDefaults().setInteger(NSOnState, forKey: "shuffle")
+        NSUserDefaults.standardUserDefaults().setInteger(NSOffState, forKey: "shuffle")
         NSUserDefaults.standardUserDefaults().setInteger(NSOnState, forKey: "queueVisible")
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "queueHidden")
     }
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
@@ -109,7 +106,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let fuckTransform = TransformerIntegerToTimestamp()
         yeOldeFileHandler = YeOldeFileHandler()
         NSValueTransformer.setValueTransformer(fuckTransform, forName: "AssTransform")
-        if NSUserDefaults.standardUserDefaults().boolForKey("hasStartedBefore") != true {
+        if NSUserDefaults.standardUserDefaults().boolForKey(DEFAULTS_ARE_INITIALIZED_STRING) != true {
             print("has not started before")
             setInitialDefaults()
             setupWindowController = InitialSetupWindowController(windowNibName: "InitialSetupWindowController")

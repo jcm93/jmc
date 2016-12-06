@@ -20,5 +20,6 @@ extension Library {
     @NSManaged var cached_orders: NSSet?
     @NSManaged var local_items: NSOrderedSet?
     @NSManaged var master_playlist: NSSet?
+    @NSManaged var library_location: String?
 
 }

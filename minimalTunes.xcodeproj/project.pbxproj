@@ -14,8 +14,6 @@
 		0D0E5FAF1D3E909D009E0FA3 /* DragAndDropImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */; };
 		0D1BDFA51D0F44A70092FBA0 /* AudioModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1BDFA41D0F44A70092FBA0 /* AudioModule.swift */; };
 		0D2410A31D6735F200F95494 /* artAPIRequestDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */; };
-		0D2923021DC4272300711546 /* CustomFieldWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2923001DC4272300711546 /* CustomFieldWindowController.swift */; };
-		0D2923031DC4272300711546 /* CustomFieldWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D2923011DC4272300711546 /* CustomFieldWindowController.xib */; };
 		0D299B131DF10FFF0009CF7A /* SourceListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D299B111DF10FFF0009CF7A /* SourceListViewController.swift */; };
 		0D299B141DF10FFF0009CF7A /* SourceListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D299B121DF10FFF0009CF7A /* SourceListViewController.xib */; };
 		0D299B171DF111490009CF7A /* AlbumArtViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D299B151DF111490009CF7A /* AlbumArtViewController.swift */; };
@@ -134,8 +132,6 @@
 		0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragAndDropImageView.swift; sourceTree = "<group>"; };
 		0D1BDFA41D0F44A70092FBA0 /* AudioModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioModule.swift; sourceTree = "<group>"; };
 		0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = artAPIRequestDelegate.swift; sourceTree = "<group>"; };
-		0D2923001DC4272300711546 /* CustomFieldWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomFieldWindowController.swift; sourceTree = "<group>"; };
-		0D2923011DC4272300711546 /* CustomFieldWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomFieldWindowController.xib; sourceTree = "<group>"; };
 		0D299B111DF10FFF0009CF7A /* SourceListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListViewController.swift; sourceTree = "<group>"; };
 		0D299B121DF10FFF0009CF7A /* SourceListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SourceListViewController.xib; sourceTree = "<group>"; };
 		0D299B151DF111490009CF7A /* AlbumArtViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumArtViewController.swift; sourceTree = "<group>"; };
@@ -328,8 +324,6 @@
 				0D8D4A161D90868500FA1603 /* LocationManagerController.xib */,
 				0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */,
 				0D9CE6741D34128B004FA8CB /* InitialSetupWindowController.xib */,
-				0D2923001DC4272300711546 /* CustomFieldWindowController.swift */,
-				0D2923011DC4272300711546 /* CustomFieldWindowController.xib */,
 			);
 			name = "Other Windows";
 			sourceTree = "<group>";
@@ -595,7 +589,6 @@
 				0D01AD921D7079D900F9211F /* EqualizerWindowController.xib in Resources */,
 				0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */,
 				0D299B181DF111490009CF7A /* AlbumArtViewController.xib in Resources */,
-				0D2923031DC4272300711546 /* CustomFieldWindowController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -733,7 +726,6 @@
 				0D3878B61DD10258004CC3C1 /* TrackView.swift in Sources */,
 				0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */,
 				0D1BDFA51D0F44A70092FBA0 /* AudioModule.swift in Sources */,
-				0D2923021DC4272300711546 /* CustomFieldWindowController.swift in Sources */,
 				0DD274EF1D3190360055C43B /* GlobalFunctions.swift in Sources */,
 				0D299B1F1DF151220009CF7A /* LibraryTableViewController.swift in Sources */,
 				0D3878BC1DD125E9004CC3C1 /* StupidNumberFormatter.swift in Sources */,

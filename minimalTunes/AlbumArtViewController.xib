@@ -3,65 +3,31 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="box content view" minToolsVersion="7.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="AlbumArtViewController" customModule="minimalTunes" customModuleProvider="target">
             <connections>
-                <outlet property="albumArtBox" destination="UBq-wX-T2B" id="J4u-aC-hbN"/>
                 <outlet property="albumArtView" destination="fza-Cc-QKb" id="CtQ-0K-kJh"/>
+                <outlet property="view" destination="qj4-Jr-AdX" id="gz2-PY-sEB"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <box autoresizesSubviews="NO" focusRingType="none" horizontalCompressionResistancePriority="900" misplaced="YES" title="Album Artwork" borderType="line" id="UBq-wX-T2B">
-            <rect key="frame" x="0.0" y="0.0" width="100" height="18"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <view key="contentView" id="NYV-M9-Zx2">
-                <rect key="frame" x="1" y="1" width="98" height="2"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                <subviews>
-                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fza-Cc-QKb" customClass="DragAndDropImageView" customModule="minimalTunes" customModuleProvider="target">
-                        <rect key="frame" x="27" y="-165" width="198" height="156"/>
-                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="TBg-Wb-zkx"/>
-                    </imageView>
-                    <scrollView hidden="YES" fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1cO-54-IQJ">
-                        <rect key="frame" x="4" y="-55" width="250" height="57"/>
-                        <clipView key="contentView" ambiguous="YES" id="h0K-Nx-lKz">
-                            <rect key="frame" x="1" y="1" width="248" height="55"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <subviews>
-                                <collectionView ambiguous="YES" id="EgG-O7-v5A">
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <collectionViewGridLayout key="collectionViewLayout" id="XuQ-U1-Gh1"/>
-                                    <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </collectionView>
-                            </subviews>
-                        </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Yrc-4D-1NR">
-                            <rect key="frame" x="1" y="144" width="233" height="15"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="7Pf-Fl-SRK">
-                            <rect key="frame" x="234" y="1" width="15" height="143"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                    </scrollView>
-                </subviews>
-                <constraints>
-                    <constraint firstAttribute="bottom" secondItem="fza-Cc-QKb" secondAttribute="bottom" id="GQR-GT-4kW"/>
-                    <constraint firstItem="fza-Cc-QKb" firstAttribute="top" secondItem="NYV-M9-Zx2" secondAttribute="top" id="RpF-2x-DXf"/>
-                    <constraint firstItem="fza-Cc-QKb" firstAttribute="leading" secondItem="NYV-M9-Zx2" secondAttribute="leading" id="jyx-sH-mtJ"/>
-                    <constraint firstAttribute="trailing" secondItem="fza-Cc-QKb" secondAttribute="trailing" id="q1G-G1-frS"/>
-                </constraints>
-            </view>
+        <customView translatesAutoresizingMaskIntoConstraints="NO" id="qj4-Jr-AdX">
+            <rect key="frame" x="0.0" y="0.0" width="667" height="511"/>
+            <subviews>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fza-Cc-QKb" customClass="DragAndDropImageView" customModule="minimalTunes" customModuleProvider="target">
+                    <rect key="frame" x="234" y="177" width="198" height="156"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="TBg-Wb-zkx"/>
+                </imageView>
+            </subviews>
             <constraints>
-                <constraint firstAttribute="width" secondItem="UBq-wX-T2B" secondAttribute="height" multiplier="1:1" id="idN-40-FoE"/>
+                <constraint firstItem="fza-Cc-QKb" firstAttribute="top" secondItem="qj4-Jr-AdX" secondAttribute="top" id="5Mr-54-thg"/>
+                <constraint firstItem="fza-Cc-QKb" firstAttribute="leading" secondItem="qj4-Jr-AdX" secondAttribute="leading" id="kly-K6-6r8"/>
+                <constraint firstAttribute="trailing" secondItem="fza-Cc-QKb" secondAttribute="trailing" id="ncj-TI-se2"/>
+                <constraint firstAttribute="bottom" secondItem="fza-Cc-QKb" secondAttribute="bottom" id="xPZ-ts-rPy"/>
             </constraints>
-            <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-            <color key="fillColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-            <point key="canvasLocation" x="450" y="411.5"/>
-        </box>
+            <point key="canvasLocation" x="361.5" y="507.5"/>
+        </customView>
     </objects>
 </document>

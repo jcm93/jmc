@@ -20,15 +20,16 @@ class InitialSetupWindowController: NSWindowController {
     @IBOutlet weak var copyRadioButton: NSButton!
     @IBOutlet weak var noOrganizeRadioButton: NSButton!
     @IBOutlet weak var modifyMetadataCheckBox: NSButton!
-    @IBOutlet weak var libraryPathField: NSTextField!
     @IBOutlet weak var organizationDescField: NSTextField!
+    @IBOutlet weak var libraryPathControl: NSPathControl!
     
-    var organizationType: LibraryOrganizationType = .none
+    var organizationType: LibraryOrganizationType = .move
     var modifyMetadata: Bool = false
-    var directoryPath: String?
+    var directoryURL: NSURL?
     var moveString = "Added media will be moved into a subdirectory of this directory"
     var copyString = "Added media will be copied into a subdirectory of this directory"
     var noString = "Added media will not be organized"
+    var library: Library?
     
     @IBAction func moveRadioAction(sender: AnyObject) {
         if moveRadioButton.state == NSOnState {
@@ -66,29 +67,93 @@ class InitialSetupWindowController: NSWindowController {
         
         // Get the path to the file chosen in the NSOpenPanel
         if myFileDialog.URL!.path != nil {
-            directoryPath = myFileDialog.URL!.path!
-            libraryPathField.stringValue = directoryPath!
+            directoryURL = myFileDialog.URL!
+            libraryPathControl.URL = directoryURL
         }
         
         // Make sure that a path was chosen
-        if (directoryPath != nil) {
+        if (directoryURL != nil) {
             let err = NSError?()
         }
     }
     
-    override func windowDidLoad() {
-        super.windowDidLoad()
-
-        // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+    func setupForNilLibrary() {
+        print("nil library")
+        let newLibrary = NSEntityDescription.insertNewObjectForEntityForName("Library", inManagedObjectContext: managedContext) as! Library
+        newLibrary.library_location = libraryPathControl.URL!.absoluteString
+        newLibrary.name = NSUserName() + "'s library"
+        //create dummy source list item as root of source list
+        let source_list_root = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
+        source_list_root.is_root = true
+        
+        //create source list headers
+        let cd_library_header = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
+        cd_library_header.is_header = true
+        cd_library_header.name = "Library"
+        cd_library_header.sort_order = 0
+        cd_library_header.parent = source_list_root
+        let cd_shared_header = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
+        cd_shared_header.is_header = true
+        cd_shared_header.name = "Shared Libraries"
+        cd_shared_header.sort_order = 1
+        cd_shared_header.parent = source_list_root
+        let cd_playlists_header = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
+        cd_playlists_header.is_header = true
+        cd_playlists_header.name = "Playlists"
+        cd_playlists_header.sort_order = 2
+        cd_playlists_header.parent = source_list_root
+        
+        //create master playlist source list item
+        let cd_library_master_playlist_source_item = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
+        cd_library_master_playlist_source_item.parent = cd_library_header
+        cd_library_master_playlist_source_item.name = "Music"
+        cd_library_master_playlist_source_item.library = newLibrary
+        do {
+            try managedContext.save()
+        } catch {
+            print(error)
+        }
     }
     
     @IBAction func OKPressed(sender: AnyObject) {
         self.window?.close()
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasStartedBefore")
-        NSUserDefaults.standardUserDefaults().setBool(modifyMetadata, forKey: "modifyMetadata")
-        NSUserDefaults.standardUserDefaults().setObject(organizationType.rawValue, forKey: "organizationType")
-        NSUserDefaults.standardUserDefaults().setObject(directoryPath, forKey: "libraryPath")
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: DEFAULTS_ARE_INITIALIZED_STRING)
+        NSUserDefaults.standardUserDefaults().setBool(modifyMetadata, forKey: DEFAULTS_RENAMES_FILES_STRING)
+        NSUserDefaults.standardUserDefaults().setObject(organizationType.rawValue, forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
+        NSUserDefaults.standardUserDefaults().setObject(directoryURL?.absoluteString, forKey: DEFAULTS_LIBRARY_PATH_STRING)
+        if self.library == nil {
+            setupForNilLibrary()
+        }
         (NSApplication.sharedApplication().delegate as! AppDelegate).initializeLibraryAndShowMainWindow()
+    }
+    
+    override func windowDidLoad() {
+        // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+        moveRadioAction(self)
+        let libraryFetchRequest = NSFetchRequest(entityName: "Library")
+        let predicate = NSPredicate(format: "is_network == false")
+        libraryFetchRequest.predicate = predicate
+        var result: Library?
+        do {
+            let libraryResult = try managedContext.executeFetchRequest(libraryFetchRequest) as? [Library]
+            if libraryResult?.count > 0 {
+                result = libraryResult![0]
+            }
+        } catch {
+            print(error)
+        }
+        if result != nil {
+            library = result!
+            let libraryPath = result!.library_location
+            if libraryPath != nil {
+                let libraryURL = NSURL(string: libraryPath!)
+                if libraryURL != nil {
+                    directoryURL = libraryURL
+                    libraryPathControl.URL = libraryURL
+                }
+            }
+        }
+        super.windowDidLoad()
     }
     
 }

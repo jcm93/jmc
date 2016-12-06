@@ -39,7 +39,9 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     
     var trackQueue: [TrackQueueView] = [TrackQueueView]()
     var mainWindowController: MainWindowController?
-    var tableView: TableViewYouCanPressSpacebarOn?
+    
+    @IBOutlet weak var tableView: TableViewYouCanPressSpacebarOn!
+    
     var dragTypes = ["Track", "public.TrackQueueView"]
     
     var currentContext: String?

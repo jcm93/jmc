@@ -14,13 +14,16 @@
                 <outlet property="durationLabel" destination="R9m-ID-EYY" id="iGY-Vm-qjm"/>
                 <outlet property="infoField" destination="FOU-Bi-82q" id="Fss-pL-ynq"/>
                 <outlet property="librarySplitView" destination="wUo-rb-c1E" id="uk7-b7-jOL"/>
+                <outlet property="libraryTableTargetView" destination="KvQ-Ys-eb9" id="c5K-G9-UvR"/>
                 <outlet property="noMusicView" destination="bwS-Hr-eJh" id="3YZ-hx-K8L"/>
+                <outlet property="parentSplitView" destination="r3P-eO-TmU" id="Ehh-Zs-Dp3"/>
                 <outlet property="progressBar" destination="c8A-nk-1SH" id="ldI-h2-WZR"/>
                 <outlet property="progressBarView" destination="ErT-xb-uP3" id="1Fd-8B-I8j"/>
                 <outlet property="queueButton" destination="gzN-xP-Utz" id="gCB-as-x4o"/>
                 <outlet property="searchField" destination="S7Y-RM-UHH" id="MDZ-7b-g2d"/>
                 <outlet property="shuffleButton" destination="qNB-cP-szA" id="3Hr-cO-IEi"/>
                 <outlet property="songNameLabel" destination="WDF-BI-DbQ" id="vlZ-zr-rUJ"/>
+                <outlet property="sourceAreaSplitView" destination="cpq-tS-fYo" id="zaf-Dz-wFo"/>
                 <outlet property="sourceListTargetView" destination="NBm-y3-IWU" id="WH9-F7-xQT"/>
                 <outlet property="theBox" destination="rTW-GT-cjN" id="N8D-h5-oSZ"/>
                 <outlet property="trackListTriangle" destination="jr9-jB-m4F" id="PqQ-C8-1Ub"/>
@@ -34,21 +37,21 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" unifiedTitleAndToolbar="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="0.0" y="341" width="1681" height="690"/>
+            <rect key="contentRect" x="0.0" y="341" width="1680" height="1050"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <view key="contentView" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="1681" height="690"/>
+                <rect key="frame" x="0.0" y="0.0" width="1680" height="1050"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <searchField wantsLayer="YES" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="S7Y-RM-UHH">
-                        <rect key="frame" x="914" y="642" width="190" height="22"/>
+                    <searchField wantsLayer="YES" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="S7Y-RM-UHH">
+                        <rect key="frame" x="914" y="1002" width="190" height="22"/>
                         <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsWholeSearchString="YES" id="ggp-Qz-zgo">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </searchFieldCell>
                         <connections>
-                            <binding destination="-2" name="predicate" keyPath="self.currentArrayController.filterPredicate" id="J6O-x4-JXh">
+                            <binding destination="-2" name="predicate" keyPath="self.currentTableViewController.trackViewArrayController.filterPredicate" id="pzY-aX-krL">
                                 <dictionary key="options">
                                     <string key="NSDisplayName">predicate</string>
                                     <string key="NSPredicateFormat">track.artist.name contains[cd] $value OR track.name contains[cd] $value OR track.album.name contains[cd] $value OR track.comments contains[cd] $value OR track.composer.name contains[cd] $value OR track.genre.name contains[cd] $value</string>
@@ -57,14 +60,14 @@
                         </connections>
                     </searchField>
                     <slider verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ELy-ib-2qL">
-                        <rect key="frame" x="226" y="642" width="28" height="21"/>
+                        <rect key="frame" x="226" y="1002" width="28" height="21"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="150" id="tJo-7r-r3K"/>
                         </constraints>
                         <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="ogb-69-MQS"/>
                     </slider>
                     <box wantsLayer="YES" misplaced="YES" boxType="secondary" borderType="bezel" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="rTW-GT-cjN">
-                        <rect key="frame" x="371" y="626" width="333" height="59"/>
+                        <rect key="frame" x="371" y="986" width="333" height="59"/>
                         <view key="contentView" wantsLayer="YES" id="7Pq-FN-rew" userLabel="Box View">
                             <rect key="frame" x="3" y="3" width="327" height="53"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -135,18 +138,21 @@
                                 <constraint firstAttribute="trailing" secondItem="R9m-ID-EYY" secondAttribute="trailing" constant="3" id="yWf-y1-cKv"/>
                             </constraints>
                         </view>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="53" id="l4d-Ta-OMo"/>
+                        </constraints>
                         <color key="borderColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="fillColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                     </box>
-                    <splitView misplaced="YES" arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r3P-eO-TmU">
-                        <rect key="frame" x="0.0" y="42" width="1682" height="568"/>
+                    <splitView misplaced="YES" arrangesAllSubviews="NO" autosaveName="Parent Split View" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r3P-eO-TmU">
+                        <rect key="frame" x="0.0" y="36" width="1680" height="934"/>
                         <subviews>
-                            <splitView fixedFrame="YES" arrangesAllSubviews="NO" dividerStyle="thin" id="cpq-tS-fYo" userLabel="Source Area Split View">
-                                <rect key="frame" x="0.0" y="0.0" width="171" height="568"/>
+                            <splitView fixedFrame="YES" arrangesAllSubviews="NO" autosaveName="Source Area Split View" dividerStyle="thin" id="cpq-tS-fYo" userLabel="Source Area Split View">
+                                <rect key="frame" x="0.0" y="0.0" width="250" height="934"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="NCt-3z-jDe">
-                                        <rect key="frame" x="0.0" y="-2" width="171" height="5"/>
+                                        <rect key="frame" x="0.0" y="-2" width="250" height="5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" id="Cl8-AN-f4P"/>
@@ -156,26 +162,26 @@
                                         <font key="titleFont" metaFont="system"/>
                                     </box>
                                     <customView fixedFrame="YES" id="NBm-y3-IWU" userLabel="Source List Target View">
-                                        <rect key="frame" x="0.0" y="2" width="171" height="96"/>
+                                        <rect key="frame" x="0.0" y="2" width="250" height="686"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     </customView>
                                     <customView fixedFrame="YES" id="M4o-nI-Oef" userLabel="Artwork Target View">
-                                        <rect key="frame" x="0.0" y="99" width="171" height="469"/>
+                                        <rect key="frame" x="0.0" y="689" width="250" height="245"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     </customView>
                                 </subviews>
                                 <holdingPriorities>
+                                    <real value="228"/>
                                     <real value="250"/>
-                                    <real value="250"/>
-                                    <real value="250"/>
+                                    <real value="287"/>
                                 </holdingPriorities>
                             </splitView>
-                            <splitView fixedFrame="YES" placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="568" arrangesAllSubviews="NO" dividerStyle="thin" id="wUo-rb-c1E" userLabel="Library Split View">
-                                <rect key="frame" x="172" y="0.0" width="1407" height="568"/>
+                            <splitView fixedFrame="YES" placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="568" arrangesAllSubviews="NO" autosaveName="Library Split View" dividerStyle="thin" id="wUo-rb-c1E" userLabel="Library Split View">
+                                <rect key="frame" x="251" y="0.0" width="1176" height="934"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <customView fixedFrame="YES" placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="568" id="KvQ-Ys-eb9">
-                                        <rect key="frame" x="0.0" y="0.0" width="1407" height="568"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="1176" height="934"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     </customView>
                                 </subviews>
@@ -184,7 +190,7 @@
                                 </holdingPriorities>
                             </splitView>
                             <customView fixedFrame="YES" id="267-Gg-sLE">
-                                <rect key="frame" x="1580" y="0.0" width="102" height="568"/>
+                                <rect key="frame" x="1428" y="0.0" width="252" height="934"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </customView>
                         </subviews>
@@ -195,13 +201,13 @@
                         </holdingPriorities>
                     </splitView>
                     <box verticalHuggingPriority="750" misplaced="YES" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="wxs-uU-bSr">
-                        <rect key="frame" x="353" y="18" width="96" height="5"/>
+                        <rect key="frame" x="353" y="378" width="96" height="5"/>
                         <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                         <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <font key="titleFont" metaFont="system"/>
                     </box>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jia-N3-aQf">
-                        <rect key="frame" x="127" y="629" width="58" height="61"/>
+                        <rect key="frame" x="127" y="989" width="58" height="61"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="PlayImage" imagePosition="only" alignment="center" imageScaling="axesIndependently" inset="2" id="x4w-yj-sDV">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -211,21 +217,21 @@
                         </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vko-jh-7ju">
-                        <rect key="frame" x="184" y="637" width="42" height="45"/>
+                        <rect key="frame" x="184" y="997" width="42" height="45"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="SkipButton" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Wvq-R4-63K">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="izV-NM-16c">
-                        <rect key="frame" x="85" y="637" width="43" height="45"/>
+                        <rect key="frame" x="85" y="997" width="43" height="45"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="SkipBackButton" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="UB4-or-mJw">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FOU-Bi-82q">
-                        <rect key="frame" x="822" y="4" width="37" height="17"/>
+                        <rect key="frame" x="822" y="364" width="37" height="17"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="0RK-jx-N7Q">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -236,7 +242,7 @@
                         </connections>
                     </textField>
                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qNB-cP-szA">
-                        <rect key="frame" x="20" y="-356" width="44" height="25"/>
+                        <rect key="frame" x="20" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="CmQ-IH-Ozt"/>
                         </constraints>
@@ -249,7 +255,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eg4-23-xqc" userLabel="Repeat Button">
-                        <rect key="frame" x="72" y="-356" width="44" height="25"/>
+                        <rect key="frame" x="72" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="Y6E-k5-wbL"/>
                         </constraints>
@@ -259,7 +265,7 @@
                         </buttonCell>
                     </button>
                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xsI-Kf-ANO" userLabel="Add Playlist Button">
-                        <rect key="frame" x="124" y="-356" width="44" height="25"/>
+                        <rect key="frame" x="124" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="pRF-hx-WWu"/>
                         </constraints>
@@ -272,7 +278,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gzN-xP-Utz" userLabel="Queue Button">
-                        <rect key="frame" x="1617" y="-356" width="44" height="25"/>
+                        <rect key="frame" x="1617" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="hy6-BX-4Jm"/>
                         </constraints>
@@ -285,7 +291,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rfk-1e-A3X" userLabel="Sharing Button">
-                        <rect key="frame" x="176" y="-356" width="44" height="25"/>
+                        <rect key="frame" x="176" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="JnY-Ra-xjN"/>
                         </constraints>
@@ -299,7 +305,6 @@
                     <constraint firstItem="S7Y-RM-UHH" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="20" id="0dv-Un-7eR"/>
                     <constraint firstItem="rTW-GT-cjN" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="7eL-mh-G3m"/>
                     <constraint firstItem="r3P-eO-TmU" firstAttribute="top" secondItem="rTW-GT-cjN" secondAttribute="bottom" constant="5" id="CtE-XC-ZPD"/>
-                    <constraint firstItem="S7Y-RM-UHH" firstAttribute="leading" secondItem="rTW-GT-cjN" secondAttribute="trailing" constant="25" id="DJa-Kc-7vZ"/>
                     <constraint firstItem="rTW-GT-cjN" firstAttribute="leading" secondItem="ELy-ib-2qL" secondAttribute="trailing" constant="60" id="Fkk-ZB-eEy"/>
                     <constraint firstAttribute="trailing" secondItem="rTW-GT-cjN" secondAttribute="trailing" constant="500" id="Grr-bN-YWQ"/>
                     <constraint firstAttribute="trailing" secondItem="wxs-uU-bSr" secondAttribute="trailing" id="Hgn-uz-KPD"/>
@@ -324,116 +329,8 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="508.5" y="575"/>
+            <point key="canvasLocation" x="268" y="575"/>
         </window>
-        <menu id="74T-MR-9TA" userLabel="Table View Menu">
-            <items>
-                <menuItem title="Add to Queue" id="ebN-60-eRO">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="addToQueueFromTableView:" target="-2" id="se1-MG-xKG"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Play" id="fkt-2B-Fgj">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="playFromTableView:" target="-2" id="RPX-0a-IZp"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Show Advanced Filter" id="mE0-AZ-8Fj">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="toggleFilterVisibility:" target="-2" id="68f-Au-wPN"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Show in Finder" id="CzL-Fk-HAB">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem title="Get Info" id="qmS-xc-hok">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="getInfoFromTableView:" target="-2" id="lff-fo-KtL"/>
-                    </connections>
-                </menuItem>
-            </items>
-            <point key="canvasLocation" x="391" y="74.5"/>
-        </menu>
-        <menu id="J3R-hl-Ny1">
-            <items>
-                <menuItem title="Show Selected" id="cRy-E6-bKN">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem title="Show Currently Playing" id="FYE-5q-OEp">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem title="Add Album Art..." id="4SX-dX-yz3">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem title="Show in Finder" id="jAS-Fo-uAA">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem title="Show Artwork Browser" id="Bpd-ty-QSL">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-            </items>
-            <point key="canvasLocation" x="169.5" y="74.5"/>
-        </menu>
-        <menu id="625-OV-Lwe">
-            <items>
-                <menuItem title="Play/Pause" keyEquivalent=" " id="Ikm-Ra-qOC">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem title="Item 2" id="9BH-un-Ee5">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem title="Item 3" id="6SZ-MA-gFg">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-            </items>
-            <point key="canvasLocation" x="591.5" y="58.5"/>
-        </menu>
-        <menu id="jhO-g0-6Gh">
-            <items>
-                <menuItem title="Add to Queue" id="Q6x-7f-HAa">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem title="Export..." id="8vB-um-CyI">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-            </items>
-            <point key="canvasLocation" x="-157.5" y="47.5"/>
-        </menu>
-        <menu id="NVS-Vk-BBB" userLabel="Source List Menu">
-            <items>
-                <menuItem title="Sort Alphabetically" id="QwP-Pe-8KX">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem title="Export..." id="agj-cR-jiU">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-            </items>
-            <point key="canvasLocation" x="-77" y="157.5"/>
-        </menu>
-        <menu id="rwV-lQ-lBb" userLabel="Track Queue Menu">
-            <items>
-                <menuItem title="Show All Past Tracks" id="Cke-A1-sUm">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="togglePastTracks:" target="-2" id="Zg1-CA-h6z"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Make Playlist from Selection" id="MLy-j4-uZ5">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="makePlaylistFromTrackQueueSelection:" target="-2" id="J6u-1M-BkG"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Item 3" id="MwO-e8-gBM">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-            </items>
-            <point key="canvasLocation" x="802.5" y="84.5"/>
-        </menu>
         <customView hidden="YES" id="bwS-Hr-eJh">
             <rect key="frame" x="0.0" y="0.0" width="239" height="207"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>

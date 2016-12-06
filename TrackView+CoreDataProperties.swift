@@ -19,7 +19,7 @@ extension TrackView {
     @NSManaged var artist_order: NSNumber?
     @NSManaged var date_added_order: NSNumber?
     @NSManaged var genre_order: NSNumber?
-    @NSManaged var is_network: NSNumber?
+    @NSManaged var is_network: NSNumber
     @NSManaged var kind_order: NSNumber?
     @NSManaged var name_order: NSNumber?
     @NSManaged var release_date_order: NSNumber?

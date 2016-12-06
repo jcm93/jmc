@@ -17,6 +17,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     var mainWindowController: MainWindowController?
     var rightMouseDownTarget: [TrackView]?
     var item: SourceListItem?
+    var managedContext = (NSApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
     
     var isVisibleDict = NSMutableDictionary()
     func populateIsVisibleDict() {
@@ -134,14 +135,22 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
 
     
     func initializeColumnVisibilityMenu(tableView: NSTableView) {
-        let savedColumns = NSUserDefaults.standardUserDefaults().dictionaryForKey(DEFAULTS_SAVED_COLUMNS_STRING)
+        var savedColumns = NSUserDefaults.standardUserDefaults().dictionaryForKey(DEFAULTS_SAVED_COLUMNS_STRING)
+        if savedColumns == nil {
+            savedColumns = DEFAULT_COLUMN_VISIBILITY_DICTIONARY
+        }
         
         let menu = tableView.headerView?.menu
         for column in tableView.tableColumns {
-            if column.identifier == "name" {
+            if column.identifier == "name" || column.identifier == "is_playing" || column.identifier == "playlist_number" {
                 continue
             }
-            let menuItem = NSMenuItem(title: column.headerCell.title, action: #selector(toggleColumn), keyEquivalent: "")
+            let menuItem: NSMenuItem
+            if column.identifier == "is_enabled" {
+                menuItem = NSMenuItem(title: "Enabled", action: #selector(toggleColumn), keyEquivalent: "")
+            } else {
+                menuItem = NSMenuItem(title: column.headerCell.title, action: #selector(toggleColumn), keyEquivalent: "")
+            }
             if (savedColumns != nil) {
                 let isHidden = savedColumns![column.identifier] as! Bool
                 column.hidden = isHidden
@@ -173,12 +182,13 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     }
     
     override func viewDidLoad() {
-        super.viewDidLoad()
         tableView.doubleAction = #selector(tableViewDoubleClick)
-        tableView.setDelegate(trackViewArrayController)
-        tableView.setDataSource(trackViewArrayController)
         columnVisibilityMenu.delegate = self
         self.initializeColumnVisibilityMenu(self.tableView)
+        tableView.setDelegate(trackViewArrayController)
+        tableView.setDataSource(trackViewArrayController)
+        tableView.reloadData()
+        super.viewDidLoad()
         // Do view setup here.
     }
     

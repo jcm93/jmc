@@ -16,12 +16,17 @@ private var my_context = 0
 class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     
     
-    //interface elements
+    //target views
+    @IBOutlet weak var libraryTableTargetView: NSView!
     @IBOutlet weak var trackQueueTargetView: NSView!
     @IBOutlet weak var librarySplitView: NSSplitView!
     @IBOutlet var noMusicView: NSView!
     @IBOutlet weak var artworkTargetView: NSView!
     @IBOutlet weak var sourceListTargetView: NSView!
+    
+    //interface elements
+    @IBOutlet weak var parentSplitView: NSSplitView!
+    @IBOutlet weak var sourceAreaSplitView: NSSplitView!
     @IBOutlet weak var bitRateFormatter: BitRateFormatter!
     @IBOutlet weak var queueButton: NSButton!
     @IBOutlet weak var volumeSlider: NSSlider!
@@ -41,7 +46,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     //subview controllers
     var sourceListViewController: SourceListViewController?
     var trackQueueViewController: TrackQueueViewController?
-    var otherTableViewControllers = NSMutableDictionary()
+    var otherLocalTableViewControllers = NSMutableDictionary()
     var otherSharedTableViewControllers = NSMutableDictionary()
     var currentTableViewController: LibraryTableViewController?
     var libraryTableViewController: LibraryTableViewController?
@@ -51,7 +56,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     //subordinate window controllers
     var tagWindowController: TagEditorWindow?
     var equalizerWindowController: EqualizerWindowController?
-    var customFieldController: CustomFieldWindowController?
     var importWindowController: ImportWindowController?
     
     //other variables
@@ -136,37 +140,64 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         playlistViewController.tableView.reloadData()
     }
     
-    func createPlaylistViewController(tracks: [Int], is_network: Bool) -> LibraryTableViewController {
+    func createPlaylistViewController(item: SourceListItem) -> LibraryTableViewController {
         let newPlaylistViewController = LibraryTableViewController(nibName: "LibraryTableViewController", bundle: nil)
-        newPlaylistViewController?.trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .New, context: &my_context)
-        newPlaylistViewController?.trackViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .New, context: &my_context)
-        newPlaylistViewController?.trackViewArrayController.fetchPredicate = NSPredicate(format: "track.id in %@ AND track.is_network == %@", tracks, NSNumber(booleanLiteral: is_network))
         return newPlaylistViewController!
     }
     
-    func switchToPlaylist(tracks: [Int], id: Int, is_network: Bool) {
-        guard self.currentTableViewController?.item?.playlist!.id != id else {return}
-        if librarySplitView.arrangedSubviews.contains(libraryTableViewController!.view) {
-            librarySplitView.removeArrangedSubview(libraryTableViewController!.view)
+    func addObserversAndInitializeNewTableView(table: LibraryTableViewController, item: SourceListItem) {
+        table.trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .New, context: &my_context)
+        table.trackViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .New, context: &my_context)
+        var track_id_list: [Int] = []
+        var smart_predicate: NSPredicate
+        var predicates = [NSPredicate]()
+        if item.playlist?.track_id_list != nil {
+            track_id_list = item.playlist!.track_id_list as! [Int]
+            predicates.append(NSPredicate(format: "track.id in %@", track_id_list))
         }
-        if otherTableViewControllers.objectForKey(id) != nil {
-            let playlistViewController = otherTableViewControllers.objectForKey(id) as! LibraryTableViewController
-            librarySplitView.addArrangedSubview(playlistViewController.view)
-            currentTableViewController = playlistViewController
-        } else if otherSharedTableViewControllers.objectForKey(id) != nil {
-            let playlistViewController = otherTableViewControllers.objectForKey(id) as! LibraryTableViewController
-            librarySplitView.addArrangedSubview(playlistViewController.view)
-            currentTableViewController = playlistViewController
+        if item.is_network == true {
+            predicates.append(NSPredicate(format: "track.is_network == true"))
         } else {
-            let newPlaylistViewController = createPlaylistViewController(tracks, is_network: is_network)
-            if is_network {
-                self.otherSharedTableViewControllers[id] = newPlaylistViewController
+            predicates.append(NSPredicate(format: "track.is_network != true"))
+        }
+        if item.playlist?.smart_criteria != nil {
+            smart_predicate = item.playlist?.smart_criteria as! NSPredicate
+            predicates.append(smart_predicate)
+        }
+        table.trackViewArrayController.fetchPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        table.mainWindowController = self
+    }
+    
+    func switchToPlaylist(item: SourceListItem) {
+        if item == currentSourceListItem {return}
+        let id = item.playlist?.id
+        if id != nil {
+            librarySplitView.removeArrangedSubview(librarySplitView.arrangedSubviews.last!)
+        } else {
+            return
+        }
+        if otherLocalTableViewControllers.objectForKey(id!) != nil {
+            let playlistViewController = otherLocalTableViewControllers.objectForKey(id!) as! LibraryTableViewController
+            librarySplitView.addArrangedSubview(playlistViewController.view)
+            currentTableViewController = playlistViewController
+        }
+        else if otherSharedTableViewControllers.objectForKey(id!) != nil {
+            let playlistViewController = otherLocalTableViewControllers.objectForKey(id!) as! LibraryTableViewController
+            librarySplitView.addArrangedSubview(playlistViewController.view)
+            currentTableViewController = playlistViewController
+        }
+        else {
+            let newPlaylistViewController = createPlaylistViewController(item)
+            if item.is_network == true {
+                self.otherSharedTableViewControllers[id!] = newPlaylistViewController
             } else {
-                self.otherTableViewControllers[id] = newPlaylistViewController
+                self.otherLocalTableViewControllers[id!] = newPlaylistViewController
             }
             librarySplitView.addArrangedSubview(newPlaylistViewController.view)
+            addObserversAndInitializeNewTableView(newPlaylistViewController, item: item)
             currentTableViewController = newPlaylistViewController
         }
+        currentTableViewController?.tableView.reloadData()
     }
     
     func switchToLibrary() {
@@ -558,7 +589,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     func updateInfo() {
-        print("updateinfo called")
+        /*print("updateinfo called")
         if self.currentTableViewController == nil {
             return
         }
@@ -574,7 +605,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
                 self.infoString = "\(numString!) items; \(timeString!); \(sizeString)"
                 self.infoField.stringValue = self.self.infoString!
             }
-        }
+        }*/
     }
     
     @IBAction func trackListTriangleClicked(sender: AnyObject) {
@@ -584,8 +615,29 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     //mark album art
     
     override func windowDidLoad() {
-        let sourceListView = SourceListViewController(nibName: "SourceListViewController", bundle: nil)
-        sourceListTargetView.addSubview(sourceListView!.view)
+        self.sourceListViewController = SourceListViewController(nibName: "SourceListViewController", bundle: nil)
+        sourceListTargetView.addSubview(sourceListViewController!.view)
+        self.sourceListViewController!.view.frame = sourceListTargetView.bounds
+        let sourceListLayoutConstraints = [NSLayoutConstraint(item: sourceListViewController!.view, attribute: .Left, relatedBy: .Equal, toItem: sourceListTargetView, attribute: .Left, multiplier: 1, constant: 0), NSLayoutConstraint(item: sourceListViewController!.view, attribute: .Right, relatedBy: .Equal, toItem: sourceListTargetView, attribute: .Right, multiplier: 1, constant: 0), NSLayoutConstraint(item: sourceListViewController!.view, attribute: .Top, relatedBy: .Equal, toItem: sourceListTargetView, attribute: .Top, multiplier: 1, constant: 0), NSLayoutConstraint(item: sourceListViewController!.view, attribute: .Bottom, relatedBy: .Equal, toItem: sourceListTargetView, attribute: .Bottom, multiplier: 1, constant: 0)]
+        NSLayoutConstraint.activateConstraints(sourceListLayoutConstraints)
+        self.sourceListViewController?.mainWindowController = self
+        self.albumArtViewController = AlbumArtViewController(nibName: "AlbumArtViewController", bundle: nil)
+        artworkTargetView.addSubview(albumArtViewController!.view)
+        let artworkLayoutConstraints = [NSLayoutConstraint(item: albumArtViewController!.view, attribute: .Left, relatedBy: .Equal, toItem: artworkTargetView, attribute: .Left, multiplier: 1, constant: 0), NSLayoutConstraint(item: albumArtViewController!.view, attribute: .Right, relatedBy: .Equal, toItem: artworkTargetView, attribute: .Right, multiplier: 1, constant: 0), NSLayoutConstraint(item: albumArtViewController!.view, attribute: .Top, relatedBy: .Equal, toItem: artworkTargetView, attribute: .Top, multiplier: 1, constant: 0), NSLayoutConstraint(item: albumArtViewController!.view, attribute: .Bottom, relatedBy: .Equal, toItem: artworkTargetView, attribute: .Bottom, multiplier: 1, constant: 0)]
+        NSLayoutConstraint.activateConstraints(artworkLayoutConstraints)
+        self.albumArtViewController!.view.frame = artworkTargetView.bounds
+        self.trackQueueViewController = TrackQueueViewController(nibName: "TrackQueueViewController", bundle: nil)
+        trackQueueTargetView.addSubview(trackQueueViewController!.view)
+        self.trackQueueViewController!.view.frame = trackQueueTargetView.bounds
+        let trackQueueLayoutConstraints = [NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .Left, relatedBy: .Equal, toItem: trackQueueTargetView, attribute: .Left, multiplier: 1, constant: 0), NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .Right, relatedBy: .Equal, toItem: trackQueueTargetView, attribute: .Right, multiplier: 1, constant: 0), NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .Top, relatedBy: .Equal, toItem: trackQueueTargetView, attribute: .Top, multiplier: 1, constant: 0), NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .Bottom, relatedBy: .Equal, toItem: trackQueueTargetView, attribute: .Bottom, multiplier: 1, constant: 0)]
+        NSLayoutConstraint.activateConstraints(trackQueueLayoutConstraints)
+        self.trackQueueViewController?.mainWindowController = self
+        self.libraryTableViewController = LibraryTableViewController(nibName: "LibraryTableViewController", bundle: nil)
+        self.libraryTableTargetView.addSubview(self.libraryTableViewController!.view)
+        self.libraryTableViewController!.view.frame = self.libraryTableTargetView.bounds
+        let libraryTableLayoutConstraints = [NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Left, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Left, multiplier: 1, constant: 0), NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Right, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Right, multiplier: 1, constant: 0), NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Top, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Top, multiplier: 1, constant: 0), NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Bottom, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Bottom, multiplier: 1, constant: 0)]
+        NSLayoutConstraint.activateConstraints(libraryTableLayoutConstraints)
+        self.libraryTableViewController?.mainWindowController = self
         numberFormatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
         dateFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyle.Full
         print(hasMusic)
@@ -605,7 +657,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         self.window!.titleVisibility = NSWindowTitleVisibility.Hidden
         self.window!.titlebarAppearsTransparent = true
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "checkEmbeddedArtwork")
-        current_source_play_order = (libraryTableViewController!.trackViewArrayController.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int})
+        //current_source_play_order = (libraryTableViewController!.trackViewArrayController.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int})
         super.windowDidLoad()
     }
 }

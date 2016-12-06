@@ -121,7 +121,7 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
     @IBAction func confirmPressed(sender: AnyObject) {
         commitEdits()
         self.window?.close()
-        self.mainWindowController?.currentArrayController?.rearrangeObjects()
+        self.mainWindowController?.currentTableViewController?.trackViewArrayController.rearrangeObjects()
     }
     
     @IBAction func datePickerAction(sender: AnyObject) {
