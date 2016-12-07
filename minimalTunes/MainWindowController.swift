@@ -25,6 +25,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     @IBOutlet weak var sourceListTargetView: NSView!
     
     //interface elements
+    @IBOutlet weak var repeatButton: NSButton!
     @IBOutlet weak var parentSplitView: NSSplitView!
     @IBOutlet weak var sourceAreaSplitView: NSSplitView!
     @IBOutlet weak var bitRateFormatter: BitRateFormatter!
@@ -73,7 +74,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     var duration: Double?
     var paused: Bool? = true
     var is_initialized = false
-    var shuffle = NSOnState
+    var shuffle: Bool = NSUserDefaults.standardUserDefaults().boolForKey(DEFAULTS_SHUFFLE_STRING)
+    var will_repeat: Bool = NSUserDefaults.standardUserDefaults().boolForKey(DEFAULTS_REPEAT_STRING)
     var currentTrack: Track?
     var currentTrackView: TrackView?
     var currentNetworkTrack: Track?
@@ -158,7 +160,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         if item.is_network == true {
             predicates.append(NSPredicate(format: "track.is_network == true"))
         } else {
-            predicates.append(NSPredicate(format: "track.is_network != true"))
+            predicates.append(NSPredicate(format: "track.is_network == nil or track.is_network == false"))
         }
         if item.playlist?.smart_criteria != nil {
             smart_predicate = item.playlist?.smart_criteria as! NSPredicate
@@ -210,8 +212,10 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         trackQueueViewController!.toggleHidden(queueButton.state)
         switch queueButton.state {
         case NSOnState:
+            trackQueueTargetView.hidden = false
             NSUserDefaults.standardUserDefaults().setBool(false, forKey: "queueHidden")
         default:
+            trackQueueTargetView.hidden = true
             NSUserDefaults.standardUserDefaults().setBool(true, forKey: "queueHidden")
         }
     }
@@ -252,6 +256,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     func getNextTrack() -> Track? {
+        if repeatButton.state == NSOnState {
+            return currentTrack
+        }
         var id: Int?
         if current_source_play_order!.count == current_source_index! + 1 {
             return nil
@@ -282,30 +289,46 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         }()
         return result
     }
+    @IBAction func repeatButtonPressed(sender: AnyObject) {
+        if repeatButton.state == NSOnState {
+            self.will_repeat = true
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: DEFAULTS_REPEAT_STRING)
+        } else {
+            self.will_repeat = true
+            NSUserDefaults.standardUserDefaults().setBool(false, forKey: DEFAULTS_REPEAT_STRING)
+        }
+    }
     
     @IBAction func shuffleButtonPressed(sender: AnyObject) {
         if (shuffleButton.state == NSOnState) {
-            NSUserDefaults.standardUserDefaults().setInteger(NSOnState, forKey: "shuffle")
+            self.shuffle = true
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: DEFAULTS_SHUFFLE_STRING)
             print("shuffling")
             current_source_temp_shuffle = current_source_play_order
+            if current_source_temp_shuffle != nil {
             shuffle_array(&current_source_temp_shuffle!)
-            if (currentTrack != nil) {
-                current_source_temp_shuffle = current_source_temp_shuffle!.filter( {
-                    $0 != currentTrack!.id
-                })
+                if (currentTrack != nil) {
+                    current_source_temp_shuffle = current_source_temp_shuffle!.filter( {
+                        $0 != currentTrack!.id
+                    })
+                }
+                current_source_index = 0
             }
-            current_source_index = 0
         }
         else {
+            self.shuffle = false
             if currentTrack != nil {
                 current_source_index = (current_source_play_order?.indexOf(Int(currentTrack!.id!)))! + 1
             } else {
             }
             print("current source index:" + String(current_source_index))
-            NSUserDefaults.standardUserDefaults().setInteger(NSOffState, forKey: "shuffle")
+            NSUserDefaults.standardUserDefaults().setBool(false, forKey: "shuffle")
         }
     }
     
+    @IBAction func tempBreak(sender: AnyObject) {
+        print("dongels")
+    }
     @IBAction func addPlaylistButton(sender: AnyObject) {
         sourceListViewController!.createPlaylist(nil)
     }

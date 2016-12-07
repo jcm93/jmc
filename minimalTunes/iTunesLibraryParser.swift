@@ -348,77 +348,68 @@ class iTunesLibraryParser: NSObject {
             print(diff)
             print(song_array.count)
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareArtist))
-            let cachedArtistOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
-
+            let cachedArtistOrder = checkIfCachedOrderExists("Artist")
             for (index, item) in song_array.enumerate() {
-                (item as! Track).view!.addOrdersObject(cachedArtistOrder)
+                (item as! Track).view!.addOrdersObject(cachedArtistOrder!)
                 (item as! Track).view?.artist_order = index
                 self.importSortUIUpdate(index)
             }
-            cachedArtistOrder.order = "Artist"
             
-            let cachedAlbumOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
+            let cachedAlbumOrder = checkIfCachedOrderExists("Album")
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareAlbum(_:)))
             for (index, item) in song_array.enumerate() {
-                (item as! Track).view!.addOrdersObject(cachedAlbumOrder)
+                (item as! Track).view!.addOrdersObject(cachedAlbumOrder!)
                 (item as! Track).view?.album_order = index
                 self.importSortUIUpdate(index)
             }
-            cachedAlbumOrder.order = "Album"
             
-            let dateAddedOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
+            let dateAddedOrder = checkIfCachedOrderExists("Date Added")
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareDateAdded(_:)))
             for (index, item) in song_array.enumerate() {
-                (item as! Track).view!.addOrdersObject(dateAddedOrder)
+                (item as! Track).view!.addOrdersObject(dateAddedOrder!)
                 (item as! Track).view?.date_added_order = index
                 self.importSortUIUpdate(index)
             }
-            dateAddedOrder.order = "Date Added"
             
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareAlbumArtist(_:)))
-            let cachedAlbumArtistOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
+            let cachedAlbumArtistOrder = checkIfCachedOrderExists("Album Artist")
             for (index, item) in song_array.enumerate() {
-                (item as! Track).view!.addOrdersObject(cachedAlbumArtistOrder)
+                (item as! Track).view!.addOrdersObject(cachedAlbumArtistOrder!)
                 (item as! Track).view?.album_artist_order = index
                 self.importSortUIUpdate(index)
             }
-            cachedAlbumArtistOrder.order = "Album Artist"
             
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareKind(_:)))
-            let cachedKindOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
+            let cachedKindOrder = checkIfCachedOrderExists("Kind")
             for (index, item) in song_array.enumerate() {
-                (item as! Track).view!.addOrdersObject(cachedKindOrder)
+                (item as! Track).view!.addOrdersObject(cachedKindOrder!)
                 (item as! Track).view?.kind_order = index
                 self.importSortUIUpdate(index)
             }
-            cachedKindOrder.order = "Kind"
             
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareDateReleased(_:)))
-            let cachedDateReleasedOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
+            let cachedDateReleasedOrder = checkIfCachedOrderExists("Date Released")
             for (index, item) in song_array.enumerate() {
-                (item as! Track).view!.addOrdersObject(cachedDateReleasedOrder)
+                (item as! Track).view!.addOrdersObject(cachedDateReleasedOrder!)
                 (item as! Track).view?.release_date_order = index
                 self.importSortUIUpdate(index)
             }
-            cachedDateReleasedOrder.order = "Date Released"
             
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareGenre(_:)))
-            let cachedGenreOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
+            let cachedGenreOrder = checkIfCachedOrderExists("Genre")
             for (index, item) in song_array.enumerate() {
-                (item as! Track).view!.addOrdersObject(cachedGenreOrder)
+                (item as! Track).view!.addOrdersObject(cachedGenreOrder!)
                 (item as! Track).view?.genre_order = index
                 self.importSortUIUpdate(index)
             }
-            cachedGenreOrder.order = "Genre"
             
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareName(_:)))
-            let cachedNameOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: self.moc) as! CachedOrder
+            let cachedNameOrder = checkIfCachedOrderExists("Name")
             for (index, item) in song_array.enumerate() {
-                (item as! Track).view!.addOrdersObject(cachedNameOrder)
+                (item as! Track).view!.addOrdersObject(cachedNameOrder!)
                 (item as! Track).view?.name_order = index
                 self.importSortUIUpdate(index)
             }
-            cachedNameOrder.order = "Name"
             
 
             print("done sorting")

@@ -19,7 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var preferencesWindowController: PreferencesWindowController?
     var setupWindowController: InitialSetupWindowController?
     var equalizerWindowController: EqualizerWindowController?
-    var importWindow: ImportWindowController?
+    var importWindowController: ImportWindowController?
     var importProgressBar: ImportProgressBar?
     var iTunesParser: iTunesLibraryParser?
     var audioModule: AudioModule = AudioModule()
@@ -46,6 +46,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
+    @IBAction func openImportWindow(sender: AnyObject) {
+        importWindowController = ImportWindowController(windowNibName: "ImportWindowController")
+        importWindowController?.mainWindowController = mainWindowController
+        importWindowController?.showWindow(self)
+    }
     @IBAction func addToLibrary(sender: AnyObject) {
         openFiles()
     }

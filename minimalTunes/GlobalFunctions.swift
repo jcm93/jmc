@@ -27,6 +27,8 @@ let DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING = "organizationType"
 let DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING = "checkEmbeddedArtwork"
 let DEFAULTS_ARE_INITIALIZED_STRING = "importantDefaultsAreInitialized"
 let DEFAULTS_RENAMES_FILES_STRING = "renamesFiles"
+let DEFAULTS_SHUFFLE_STRING = "shuffle"
+let DEFAULTS_REPEAT_STRING = "willRepeat"
 
 //other constants
 let NO_ORGANIZATION_TYPE = 0
@@ -101,6 +103,8 @@ let DEFAULT_COLUMN_VISIBILITY_DICTIONARY: [String : AnyObject] = [
     "time" : 0,
     "track_num" : 0,
 ]
+
+
 
 let sharedLibraryNamesDictionary = NSMutableDictionary()
 
@@ -397,6 +401,23 @@ func checkIfGenreExists(name: String) -> Genre? {
         }
     } catch {
         print("error checking genre: \(error)")
+        return nil
+    }
+}
+
+func checkIfCachedOrderExists(name: String) -> CachedOrder? {
+    let request = NSFetchRequest(entityName: "CachedOrder")
+    let predicate = NSPredicate(format: "name == %@", name)
+    request.predicate = predicate
+    do {
+        let result = try managedContext.executeFetchRequest(request) as! [CachedOrder]
+        if result.count > 0 {
+            return result[0]
+        } else {
+            return nil
+        }
+    } catch {
+        print("error checking cached order: \(error)")
         return nil
     }
 }

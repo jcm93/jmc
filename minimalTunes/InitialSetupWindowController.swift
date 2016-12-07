@@ -108,6 +108,33 @@ class InitialSetupWindowController: NSWindowController {
         cd_library_master_playlist_source_item.parent = cd_library_header
         cd_library_master_playlist_source_item.name = "Music"
         cd_library_master_playlist_source_item.library = newLibrary
+        
+        //create cached orders
+        let cachedArtistOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: managedContext) as! CachedOrder
+        cachedArtistOrder.order = "Artist"
+        
+        let cachedAlbumOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: managedContext) as! CachedOrder
+        cachedAlbumOrder.order = "Album"
+        
+        let dateAddedOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: managedContext) as! CachedOrder
+        dateAddedOrder.order = "Date Added"
+        
+        let cachedAlbumArtistOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: managedContext) as! CachedOrder
+        cachedAlbumArtistOrder.order = "Album Artist"
+
+        let cachedKindOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: managedContext) as! CachedOrder
+        cachedKindOrder.order = "Kind"
+        
+        let cachedDateReleasedOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: managedContext) as! CachedOrder
+        cachedDateReleasedOrder.order = "Date Released"
+        
+        let cachedGenreOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: managedContext) as! CachedOrder
+        cachedGenreOrder.order = "Genre"
+        
+        let cachedNameOrder = NSEntityDescription.insertNewObjectForEntityForName("CachedOrder", inManagedObjectContext: managedContext) as! CachedOrder
+        cachedNameOrder.order = "Name"
+        
+        
         do {
             try managedContext.save()
         } catch {
@@ -121,6 +148,7 @@ class InitialSetupWindowController: NSWindowController {
         NSUserDefaults.standardUserDefaults().setBool(modifyMetadata, forKey: DEFAULTS_RENAMES_FILES_STRING)
         NSUserDefaults.standardUserDefaults().setObject(organizationType.rawValue, forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
         NSUserDefaults.standardUserDefaults().setObject(directoryURL?.absoluteString, forKey: DEFAULTS_LIBRARY_PATH_STRING)
+        NSUserDefaults.standardUserDefaults().setBool(false, forKey: DEFAULTS_SHUFFLE_STRING)
         if self.library == nil {
             setupForNilLibrary()
         }
@@ -131,12 +159,13 @@ class InitialSetupWindowController: NSWindowController {
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
         moveRadioAction(self)
         let libraryFetchRequest = NSFetchRequest(entityName: "Library")
-        let predicate = NSPredicate(format: "is_network == false")
+        let predicate = NSPredicate(format: "is_network == false or is_network == nil")
         libraryFetchRequest.predicate = predicate
         var result: Library?
         do {
             let libraryResult = try managedContext.executeFetchRequest(libraryFetchRequest) as? [Library]
             if libraryResult?.count > 0 {
+                print("has library")
                 result = libraryResult![0]
             }
         } catch {

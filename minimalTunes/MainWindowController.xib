@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="box content view" minToolsVersion="7.0"/>
     </dependencies>
     <objects>
@@ -20,6 +21,7 @@
                 <outlet property="progressBar" destination="c8A-nk-1SH" id="ldI-h2-WZR"/>
                 <outlet property="progressBarView" destination="ErT-xb-uP3" id="1Fd-8B-I8j"/>
                 <outlet property="queueButton" destination="gzN-xP-Utz" id="gCB-as-x4o"/>
+                <outlet property="repeatButton" destination="eg4-23-xqc" id="I4L-h1-J9g"/>
                 <outlet property="searchField" destination="S7Y-RM-UHH" id="MDZ-7b-g2d"/>
                 <outlet property="shuffleButton" destination="qNB-cP-szA" id="3Hr-cO-IEi"/>
                 <outlet property="songNameLabel" destination="WDF-BI-DbQ" id="vlZ-zr-rUJ"/>
@@ -43,24 +45,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="1680" height="1050"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <searchField wantsLayer="YES" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="S7Y-RM-UHH">
-                        <rect key="frame" x="914" y="1002" width="190" height="22"/>
-                        <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsWholeSearchString="YES" id="ggp-Qz-zgo">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </searchFieldCell>
-                        <connections>
-                            <binding destination="-2" name="predicate" keyPath="self.currentTableViewController.trackViewArrayController.filterPredicate" id="pzY-aX-krL">
-                                <dictionary key="options">
-                                    <string key="NSDisplayName">predicate</string>
-                                    <string key="NSPredicateFormat">track.artist.name contains[cd] $value OR track.name contains[cd] $value OR track.album.name contains[cd] $value OR track.comments contains[cd] $value OR track.composer.name contains[cd] $value OR track.genre.name contains[cd] $value</string>
-                                </dictionary>
-                            </binding>
-                        </connections>
-                    </searchField>
                     <slider verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ELy-ib-2qL">
-                        <rect key="frame" x="226" y="1002" width="28" height="21"/>
+                        <rect key="frame" x="277" y="1002" width="28" height="21"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="150" id="tJo-7r-r3K"/>
                         </constraints>
@@ -145,10 +131,10 @@
                         <color key="fillColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                     </box>
                     <splitView misplaced="YES" arrangesAllSubviews="NO" autosaveName="Parent Split View" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r3P-eO-TmU">
-                        <rect key="frame" x="0.0" y="36" width="1680" height="934"/>
+                        <rect key="frame" x="0.0" y="36" width="1680" height="949"/>
                         <subviews>
                             <splitView fixedFrame="YES" arrangesAllSubviews="NO" autosaveName="Source Area Split View" dividerStyle="thin" id="cpq-tS-fYo" userLabel="Source Area Split View">
-                                <rect key="frame" x="0.0" y="0.0" width="250" height="934"/>
+                                <rect key="frame" x="0.0" y="0.0" width="250" height="949"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="NCt-3z-jDe">
@@ -162,12 +148,15 @@
                                         <font key="titleFont" metaFont="system"/>
                                     </box>
                                     <customView fixedFrame="YES" id="NBm-y3-IWU" userLabel="Source List Target View">
-                                        <rect key="frame" x="0.0" y="2" width="250" height="686"/>
+                                        <rect key="frame" x="0.0" y="2" width="250" height="696"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     </customView>
-                                    <customView fixedFrame="YES" id="M4o-nI-Oef" userLabel="Artwork Target View">
-                                        <rect key="frame" x="0.0" y="689" width="250" height="245"/>
+                                    <customView id="M4o-nI-Oef" userLabel="Artwork Target View">
+                                        <rect key="frame" x="0.0" y="699" width="250" height="250"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="M4o-nI-Oef" secondAttribute="height" multiplier="1:1" id="MEG-4N-o0r"/>
+                                        </constraints>
                                     </customView>
                                 </subviews>
                                 <holdingPriorities>
@@ -177,11 +166,11 @@
                                 </holdingPriorities>
                             </splitView>
                             <splitView fixedFrame="YES" placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="568" arrangesAllSubviews="NO" autosaveName="Library Split View" dividerStyle="thin" id="wUo-rb-c1E" userLabel="Library Split View">
-                                <rect key="frame" x="251" y="0.0" width="1176" height="934"/>
+                                <rect key="frame" x="251" y="0.0" width="1176" height="949"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <customView fixedFrame="YES" placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="568" id="KvQ-Ys-eb9">
-                                        <rect key="frame" x="0.0" y="0.0" width="1176" height="934"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="1176" height="949"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     </customView>
                                 </subviews>
@@ -190,7 +179,7 @@
                                 </holdingPriorities>
                             </splitView>
                             <customView fixedFrame="YES" id="267-Gg-sLE">
-                                <rect key="frame" x="1428" y="0.0" width="252" height="934"/>
+                                <rect key="frame" x="1428" y="0.0" width="252" height="949"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </customView>
                         </subviews>
@@ -207,8 +196,8 @@
                         <font key="titleFont" metaFont="system"/>
                     </box>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jia-N3-aQf">
-                        <rect key="frame" x="127" y="989" width="58" height="61"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="PlayImage" imagePosition="only" alignment="center" imageScaling="axesIndependently" inset="2" id="x4w-yj-sDV">
+                        <rect key="frame" x="156" y="1005" width="33" height="26"/>
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSPlayTemplate" imagePosition="only" alignment="center" imageScaling="axesIndependently" inset="2" id="x4w-yj-sDV">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -217,15 +206,18 @@
                         </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vko-jh-7ju">
-                        <rect key="frame" x="184" y="997" width="42" height="45"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="SkipButton" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Wvq-R4-63K">
+                        <rect key="frame" x="214" y="1004" width="28" height="28"/>
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSSkipAheadTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Wvq-R4-63K">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="tempBreak:" target="-2" id="hgo-BV-mQE"/>
+                        </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="izV-NM-16c">
-                        <rect key="frame" x="85" y="997" width="43" height="45"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="SkipBackButton" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="UB4-or-mJw">
+                        <rect key="frame" x="98" y="1004" width="28" height="28"/>
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSSkipBackTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="UB4-or-mJw">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -252,6 +244,7 @@
                         </buttonCell>
                         <connections>
                             <action selector="shuffleButtonPressed:" target="-2" id="7nZ-Er-Ogj"/>
+                            <binding destination="-2" name="value" keyPath="self.shuffle" id="bQc-Re-Dbd"/>
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eg4-23-xqc" userLabel="Repeat Button">
@@ -263,6 +256,10 @@
                             <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="repeatButtonPressed:" target="-2" id="SED-vp-nb0"/>
+                            <binding destination="-2" name="value" keyPath="self.will_repeat" id="U9i-xR-yCM"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xsI-Kf-ANO" userLabel="Add Playlist Button">
                         <rect key="frame" x="124" y="4" width="44" height="25"/>
@@ -288,6 +285,11 @@
                         </buttonCell>
                         <connections>
                             <action selector="toggleExpandQueue:" target="-2" id="jrY-9M-Oos"/>
+                            <binding destination="-2" name="value" keyPath="self.trackQueueTargetView.hidden" id="DTu-qt-9O0">
+                                <dictionary key="options">
+                                    <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                </dictionary>
+                            </binding>
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rfk-1e-A3X" userLabel="Sharing Button">
@@ -300,23 +302,40 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
+                    <searchField wantsLayer="YES" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="S7Y-RM-UHH">
+                        <rect key="frame" x="914" y="1002" width="190" height="22"/>
+                        <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsWholeSearchString="YES" id="ggp-Qz-zgo">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </searchFieldCell>
+                        <connections>
+                            <binding destination="-2" name="predicate" keyPath="self.currentTableViewController.trackViewArrayController.filterPredicate" id="pzY-aX-krL">
+                                <dictionary key="options">
+                                    <string key="NSDisplayName">predicate</string>
+                                    <string key="NSPredicateFormat">track.artist.name contains[cd] $value OR track.name contains[cd] $value OR track.album.name contains[cd] $value OR track.comments contains[cd] $value OR track.composer.name contains[cd] $value OR track.genre.name contains[cd] $value</string>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </searchField>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="S7Y-RM-UHH" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="20" id="0dv-Un-7eR"/>
                     <constraint firstItem="rTW-GT-cjN" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="7eL-mh-G3m"/>
                     <constraint firstItem="r3P-eO-TmU" firstAttribute="top" secondItem="rTW-GT-cjN" secondAttribute="bottom" constant="5" id="CtE-XC-ZPD"/>
                     <constraint firstItem="rTW-GT-cjN" firstAttribute="leading" secondItem="ELy-ib-2qL" secondAttribute="trailing" constant="60" id="Fkk-ZB-eEy"/>
                     <constraint firstAttribute="trailing" secondItem="rTW-GT-cjN" secondAttribute="trailing" constant="500" id="Grr-bN-YWQ"/>
                     <constraint firstAttribute="trailing" secondItem="wxs-uU-bSr" secondAttribute="trailing" id="Hgn-uz-KPD"/>
                     <constraint firstItem="wxs-uU-bSr" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="JFe-fa-ed3"/>
+                    <constraint firstItem="S7Y-RM-UHH" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="21" id="Rjd-e7-RyH"/>
                     <constraint firstItem="r3P-eO-TmU" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="U90-gJ-aXX"/>
                     <constraint firstAttribute="bottom" secondItem="qNB-cP-szA" secondAttribute="bottom" constant="6" id="Ws8-am-zPh"/>
-                    <constraint firstAttribute="trailing" secondItem="S7Y-RM-UHH" secondAttribute="trailing" constant="25" id="f28-ww-vL2"/>
+                    <constraint firstItem="S7Y-RM-UHH" firstAttribute="leading" secondItem="rTW-GT-cjN" secondAttribute="trailing" constant="75" id="f4S-XA-XMa"/>
                     <constraint firstAttribute="bottom" secondItem="FOU-Bi-82q" secondAttribute="bottom" constant="10" id="gP9-zO-Tke"/>
                     <constraint firstAttribute="trailing" secondItem="r3P-eO-TmU" secondAttribute="trailing" id="hj8-Hy-9at"/>
                     <constraint firstAttribute="bottom" secondItem="rfk-1e-A3X" secondAttribute="bottom" constant="6" id="iY8-FC-3Ai"/>
                     <constraint firstItem="rTW-GT-cjN" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="500" id="k4H-lc-Svd"/>
                     <constraint firstItem="wxs-uU-bSr" firstAttribute="top" secondItem="r3P-eO-TmU" secondAttribute="bottom" id="lLX-1l-4Ka"/>
+                    <constraint firstAttribute="trailing" secondItem="S7Y-RM-UHH" secondAttribute="trailing" constant="75" id="mZS-S0-7dM"/>
                     <constraint firstItem="FOU-Bi-82q" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="mfK-fT-Eft"/>
                     <constraint firstAttribute="bottom" secondItem="xsI-Kf-ANO" secondAttribute="bottom" constant="6" id="qFv-ly-g9v"/>
                     <constraint firstItem="eg4-23-xqc" firstAttribute="top" secondItem="r3P-eO-TmU" secondAttribute="bottom" constant="6" id="qpU-t1-OEz"/>
@@ -375,18 +394,19 @@
             <size key="contentSize" width="100" height="100"/>
             <size key="maxContentSize" width="10000" height="10000"/>
         </drawer>
+        <userDefaultsController representsSharedInstance="YES" id="z1J-gJ-m1D"/>
     </objects>
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>
+        <image name="NSPlayTemplate" width="128" height="128"/>
+        <image name="NSSkipAheadTemplate" width="128" height="128"/>
+        <image name="NSSkipBackTemplate" width="128" height="128"/>
         <image name="NSUser" width="32" height="32"/>
-        <image name="PlayImage" width="100" height="100"/>
         <image name="Queue" width="200" height="231"/>
         <image name="Queue Alternate" width="200" height="231"/>
         <image name="Repeat" width="176" height="214"/>
         <image name="RepeatAlternate" width="176" height="214"/>
         <image name="Shuffle" width="202" height="219"/>
         <image name="ShuffleAlternate" width="202" height="219"/>
-        <image name="SkipBackButton" width="100" height="100"/>
-        <image name="SkipButton" width="100" height="100"/>
     </resources>
 </document>

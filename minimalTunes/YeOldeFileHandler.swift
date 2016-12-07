@@ -68,9 +68,16 @@ class YeOldeFileHandler: NSObject {
     var organizesMedia: Bool = true
     let fileManager = NSFileManager.defaultManager()
     
-    lazy var managedContext: NSManagedObjectContext = {
-        return (NSApplication.sharedApplication().delegate
-            as? AppDelegate)?.managedObjectContext }()!
+    lazy var cachedOrders: [CachedOrder]? = {
+        let fr = NSFetchRequest(entityName: "CachedOrder")
+        do {
+            let res = try managedContext.executeFetchRequest(fr) as! [CachedOrder]
+            return res
+        } catch {
+            print(error)
+            return nil
+        }
+    }()
     
     /*func getTrackFromFile(url: NSURL) -> [String] {
         var mediaObject = AVAsset(URL: url)
@@ -307,11 +314,10 @@ class YeOldeFileHandler: NSObject {
                 case "artwork":
                     hasArt = true
                     print("has artwork")
-                
+                    art = key.value as! NSData
                 case "creationDate":
                     print("date:")
                     print(key.value)
-                
                 case "description":
                     track.comments = key.value as? String
                 
@@ -332,7 +338,7 @@ class YeOldeFileHandler: NSObject {
         if orgType == NO_ORGANIZATION_TYPE {
             track.location = url!.absoluteString
         } else {
-            let libraryPathURL = NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_LIBRARY_PATH_STRING) as! NSURL
+            let libraryPathURL = NSURL(string: NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_LIBRARY_PATH_STRING) as! String)!
             let albumArtist = track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING
             let album = track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING
             albumDirectoryURL = libraryPathURL.URLByAppendingPathComponent(albumArtist).URLByAppendingPathComponent(album)
@@ -364,10 +370,8 @@ class YeOldeFileHandler: NSObject {
             addPrimaryArtForTrack(track, art: art!, albumDirectoryURL: albumDirectoryURL!)
         }
         
-        for order in NSUserDefaults.standardUserDefaults().arrayForKey("cachedOrders")! {
-            let managedID = managedContext.persistentStoreCoordinator?.managedObjectIDForURIRepresentation(order as! NSURL)
-            let cachedOrder = managedContext.objectWithID(managedID!) as! CachedOrder
-            reorderForTracks([track], cachedOrder: cachedOrder)
+        for order in cachedOrders! {
+            reorderForTracks([track], cachedOrder: order)
         }
         return track
     }

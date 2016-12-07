@@ -92,11 +92,11 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
-                            <menuItem title="Show in Finder" id="9hK-gw-H4F">
+                            <menuItem title="Import iTunes Library..." id="T9K-M0-CcC">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                            <menuItem title="Export Playlist..." id="OlF-gA-QAy">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="openImportWindow:" target="Voe-Tx-rLC" id="Z3F-f1-zAZ"/>
+                                </connections>
                             </menuItem>
                         </items>
                     </menu>
@@ -371,23 +371,6 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Library" id="dyF-gE-Y0a">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Library" id="fOC-YV-Slg">
-                        <items>
-                            <menuItem title="Manage Library..." id="PBE-HV-XWd">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                            <menuItem title="Export Library..." id="2bh-dg-gvw">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="idI-cB-Usg"/>
-                            <menuItem title="Import iTunes Library..." id="yPn-oJ-YBm">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
                 <menuItem title="Window" id="aUF-d1-5bR">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Window" systemMenu="window" id="Td7-aD-5lo">
@@ -413,14 +396,7 @@
                                     <action selector="testyThing:" target="Voe-Tx-rLC" id="edV-gV-vdN"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="MiniPlayer" id="nNd-Re-cxn">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="l6d-n2-K0h"/>
-                            <menuItem title="Switch to MiniPlayer" id="H3G-aZ-WF3">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="eu3-7i-yIM"/>
                             <menuItem title="Bring All to Front" id="LE2-aR-0XJ">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

@@ -23,8 +23,7 @@ class TableViewYouCanPressSpacebarOn: NSTableView {
     }
     
     override func awakeFromNib() {
-        Swift.print("im a fukn table view")
-        //self.registerForDraggedTypes(types)
+        self.registerForDraggedTypes(types)
     }
     
     
