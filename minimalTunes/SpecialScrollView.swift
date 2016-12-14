@@ -9,7 +9,10 @@
 import Cocoa
 
 class SpecialScrollView: NSScrollView {
-
+    
+    static override func isCompatibleWithResponsiveScrolling() -> Bool {
+        return false
+    }
 
     override func drawRect(dirtyRect: NSRect) {
         super.drawRect(dirtyRect)

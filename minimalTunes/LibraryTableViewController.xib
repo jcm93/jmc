@@ -19,7 +19,7 @@
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Hz6-mo-xeY">
             <rect key="frame" x="0.0" y="0.0" width="3922" height="512"/>
             <subviews>
-                <scrollView canDrawConcurrently="YES" focusRingType="none" placeholderIntrinsicWidth="436" placeholderIntrinsicHeight="512" borderType="none" autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" horizontalScrollElasticity="none" verticalScrollElasticity="allowed" scrollerKnobStyle="dark" translatesAutoresizingMaskIntoConstraints="NO" id="LLt-nN-be2" userLabel="Library Table Scroll View">
+                <scrollView canDrawConcurrently="YES" focusRingType="none" placeholderIntrinsicWidth="436" placeholderIntrinsicHeight="512" borderType="none" autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" horizontalScrollElasticity="none" verticalScrollElasticity="allowed" scrollerKnobStyle="dark" translatesAutoresizingMaskIntoConstraints="NO" id="LLt-nN-be2" userLabel="Library Table Scroll View" customClass="SpecialScrollView" customModule="minimalTunes" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="3922" height="512"/>
                     <clipView key="contentView" autoresizesSubviews="NO" canDrawConcurrently="YES" placeholderIntrinsicWidth="708" placeholderIntrinsicHeight="606" drawsBackground="NO" copiesOnScroll="NO" id="WYy-aH-0Ud">
                         <rect key="frame" x="0.0" y="0.0" width="3922" height="512"/>

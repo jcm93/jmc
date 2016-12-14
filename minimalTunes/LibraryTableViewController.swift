@@ -10,7 +10,7 @@ import Cocoa
 
 class LibraryTableViewController: NSViewController, NSMenuDelegate {
 
-    @IBOutlet weak var libraryTableScrollView: NSScrollView!
+    @IBOutlet weak var libraryTableScrollView: SpecialScrollView!
     @IBOutlet var columnVisibilityMenu: NSMenu!
     @IBOutlet var trackViewArrayController: DragAndDropArrayController!
     @IBOutlet weak var tableView: TableViewYouCanPressSpacebarOn!
@@ -186,18 +186,6 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         NSUserDefaults.standardUserDefaults().setObject(columnVisibilityDictionary, forKey: DEFAULTS_SAVED_COLUMNS_STRING)
     }
     
-    func artistCompare() {
-        
-    }
-    
-    func albumCompare() {
-        
-    }
-    
-    func albumArtistCompare() {
-        
-    }
-    
     func menuWillOpen(menu: NSMenu) {
         for menuItem in menu.itemArray {
             if menuItem.representedObject != nil {
@@ -207,6 +195,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     }
     
     override func viewDidLoad() {
+        //tableView.canDrawSubviewsIntoLayer = true
         tableView.doubleAction = #selector(tableViewDoubleClick)
         columnVisibilityMenu.delegate = self
         self.initializeColumnVisibilityMenu(self.tableView)

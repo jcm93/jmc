@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "minimalTunes/MainWindowController.swift"
-            timestampString = "502761398.69249"
+            timestampString = "503442110.879031"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1108"
-            endingLineNumber = "1108">
+            startingLineNumber = "1109"
+            endingLineNumber = "1109">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -88,22 +88,6 @@
             startingLineNumber = "635"
             endingLineNumber = "635"
             landmarkName = "trackListTriangleClicked(_:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "minimalTunes/LibraryTableViewController.swift"
-            timestampString = "503440022.084327"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "210"
-            endingLineNumber = "210"
-            landmarkName = "viewDidLoad()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
