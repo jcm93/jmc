@@ -16,6 +16,7 @@ class TableViewYouCanPressSpacebarOn: NSTableView {
     
     let types = ["Track"]
 
+
     override func drawRect(dirtyRect: NSRect) {
         super.drawRect(dirtyRect)
 

@@ -70,6 +70,7 @@
 		0DAB30AF1CFBA3340028928F /* minimalTunesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30AE1CFBA3340028928F /* minimalTunesUITests.swift */; };
 		0DB8EFEA1DC4FC4D00009900 /* MainTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB8EFE91DC4FC4D00009900 /* MainTableViewDataSource.swift */; };
 		0DC2E8F51E0110D200671D83 /* MTTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC2E8F41E0110D200671D83 /* MTTextFieldCell.swift */; };
+		0DC2E8F71E01E47900671D83 /* SpecialScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC2E8F61E01E47900671D83 /* SpecialScrollView.swift */; };
 		0DC84C5F1DBAD0C100E8877C /* NewCachedOrder+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC84C5D1DBAD0C100E8877C /* NewCachedOrder+CoreDataProperties.swift */; };
 		0DC84C601DBAD0C100E8877C /* NewCachedOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC84C5E1DBAD0C100E8877C /* NewCachedOrder.swift */; };
 		0DCB81721DCAA45C006FBA9D /* MainTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DCB81711DCAA45C006FBA9D /* MainTableViewDelegate.swift */; };
@@ -199,6 +200,7 @@
 		0DAB30B01CFBA3340028928F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0DB8EFE91DC4FC4D00009900 /* MainTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTableViewDataSource.swift; sourceTree = "<group>"; };
 		0DC2E8F41E0110D200671D83 /* MTTextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTTextFieldCell.swift; sourceTree = "<group>"; };
+		0DC2E8F61E01E47900671D83 /* SpecialScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecialScrollView.swift; sourceTree = "<group>"; };
 		0DC84C5D1DBAD0C100E8877C /* NewCachedOrder+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NewCachedOrder+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0DC84C5E1DBAD0C100E8877C /* NewCachedOrder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewCachedOrder.swift; sourceTree = "<group>"; };
 		0DCB81711DCAA45C006FBA9D /* MainTableViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTableViewDelegate.swift; sourceTree = "<group>"; };
@@ -310,6 +312,7 @@
 				0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */,
 				0DD7D6DC1D3F3E270035BAD8 /* AlbumArtArrayController.swift */,
 				0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */,
+				0DC2E8F61E01E47900671D83 /* SpecialScrollView.swift */,
 				0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */,
 				0D76F6A91D270EB900C6E70F /* DragAndDropArrayController.swift */,
 				0D76F6AB1D28581900C6E70F /* DragAndDropTreeController.swift */,
@@ -739,6 +742,7 @@
 				0DD7D6DA1D3F3A350035BAD8 /* AlbumArtwork+CoreDataProperties.swift in Sources */,
 				0DEF66B61D383A8700EA3ADC /* Library+CoreDataProperties.swift in Sources */,
 				0D84EDE81DA326BD0057411F /* NetworkTrack.swift in Sources */,
+				0DC2E8F71E01E47900671D83 /* SpecialScrollView.swift in Sources */,
 				0DC84C5F1DBAD0C100E8877C /* NewCachedOrder+CoreDataProperties.swift in Sources */,
 				0DAB30941CFBA3340028928F /* minimalTunes.xcdatamodeld in Sources */,
 				0DEF66C71D383A8700EA3ADC /* SourceListItem.swift in Sources */,
