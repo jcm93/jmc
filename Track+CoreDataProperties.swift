@@ -25,7 +25,7 @@ extension Track {
     @NSManaged var equalizer_preset: String?
     @NSManaged var file_kind: String?
     @NSManaged var id: NSNumber?
-    @NSManaged var is_network: NSNumber
+    @NSManaged var is_network: NSNumber?
     @NSManaged var is_playing: NSNumber?
     @NSManaged var location: String?
     @NSManaged var misc_search_field: String?

@@ -17,6 +17,9 @@ var managedContext = (NSApplication.sharedApplication().delegate as! AppDelegate
 //mark sort descriptors
 var artistSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_artist", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "sort_album", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "track_num", ascending:true), NSSortDescriptor(key: "name", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:)))]
 
+var artistSortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "artist_order", ascending: true)
+var artistDescendingSortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "artist_descending_order", ascending: true)
+
 //mark user defaults
 let DEFAULTS_SAVED_COLUMNS_STRING = "savedColumns"
 let DEFAULTS_LIBRARY_PATH_STRING = "libraryPath"
@@ -52,6 +55,8 @@ let IS_NETWORK_PREDICATE = NSPredicate(format: "is_network == %@", NSNumber(bool
 let BATCH_PURGE_NETWORK_FETCH_REQUESTS: [NSFetchRequest] = [GENRE_FETCH_REQUEST, COMPOSER_FETCH_REQUEST, ARTIST_FETCH_REQUEST, ALBUM_FETCH_REQUEST, TRACK_VIEW_FETCH_REQUEST, TRACK_FETCH_REQUEST, SOURCE_FETCH_REQUEST, SONG_COLLECTION_FETCH_REQUEST, SONG_COLLECTION_FOLDER_FETCH_REQUEST]
 
 let VALID_ARTWORK_TYPE_EXTENSIONS = [".jpg", ".png", ".tiff", ".gif", ".pdf"]
+
+let verbotenFileTypes = [".m4v", ".m4p"]
 
 let fieldsToCachedOrdersDictionary: NSDictionary = [
     "date_added" : "Date Added",
@@ -151,6 +156,48 @@ extension Track {
         }
     }
     
+    @objc func compareArtistDescending(other: Track) -> NSComparisonResult {
+        let self_artist_name = (self.sort_artist != nil) ? self.sort_artist : self.artist?.name
+        let other_artist_name = (other.sort_artist != nil) ? other.sort_artist : other.artist?.name
+        let artist_comparison: NSComparisonResult
+        if self_artist_name == nil || other_artist_name == nil {
+            artist_comparison = (self_artist_name == other_artist_name) ? .OrderedSame : (other_artist_name != nil) ? .OrderedDescending : .OrderedAscending
+        } else {
+            artist_comparison = self_artist_name!.localizedStandardCompare(other_artist_name!)
+        }
+        if artist_comparison == .OrderedSame {
+            let self_album_name = self.sort_album != nil ? self.sort_album : self.album?.name
+            let other_album_name = other.sort_album != nil ? other.sort_album : other.album?.name
+            let album_comparison: NSComparisonResult
+            if self_album_name == nil || other_album_name == nil {
+                album_comparison = (self_album_name == other_album_name) ? .OrderedSame : (other_album_name != nil) ? .OrderedDescending : .OrderedAscending
+            } else {
+                album_comparison = self_album_name!.localizedStandardCompare(other_album_name!)
+            }
+            if album_comparison == .OrderedSame {
+                let self_track_num = self.track_num
+                let other_track_num = other.track_num
+                guard self_track_num != nil && other_track_num != nil else {
+                    return (self_track_num == other_track_num) ? .OrderedSame : (other_track_num != nil) ? .OrderedAscending : .OrderedDescending
+                }
+                if self_track_num == other_track_num {
+                    let self_name = self.sort_name != nil ? self.sort_name : self.name
+                    let other_name = other.sort_name != nil ? other.sort_name : other.name
+                    guard self_name != nil && other_name != nil else {
+                        return (self_name == other_name) ? .OrderedSame : (other_name != nil) ? .OrderedAscending : .OrderedDescending
+                    }
+                    return self_name!.localizedStandardCompare(other_name!)
+                } else {
+                    return self_track_num!.compare(other_track_num!)
+                }
+            } else {
+                return album_comparison == .OrderedAscending ? .OrderedDescending : .OrderedAscending
+            }
+        } else {
+            return artist_comparison == .OrderedAscending ? .OrderedDescending : .OrderedAscending
+        }
+    }
+    
     @objc func compareAlbum(other: Track) -> NSComparisonResult {
         let self_album_name = self.sort_album != nil ? self.sort_album : self.album?.name
         let other_album_name = other.sort_album != nil ? other.sort_album : other.album?.name
@@ -197,6 +244,52 @@ extension Track {
         }
     }
     
+    @objc func compareAlbumDescending(other: Track) -> NSComparisonResult {
+        let self_album_name = self.sort_album != nil ? self.sort_album : self.album?.name
+        let other_album_name = other.sort_album != nil ? other.sort_album : other.album?.name
+        let album_comparison: NSComparisonResult
+        if self_album_name == nil || other_album_name == nil {
+            album_comparison = (self_album_name == other_album_name) ? .OrderedSame : (other_album_name != nil) ? .OrderedDescending : .OrderedAscending
+        } else {
+            album_comparison = self_album_name!.localizedStandardCompare(other_album_name!)
+        }
+        if album_comparison == .OrderedSame {
+            let self_artist_name = (self.sort_artist != nil) ? self.sort_artist : self.artist?.name
+            let other_artist_name = (other.sort_artist != nil) ? other.sort_artist : other.artist?.name
+            let artist_comparison: NSComparisonResult
+            if self_artist_name == nil || other_artist_name == nil {
+                artist_comparison = (self_artist_name == other_artist_name) ? .OrderedSame : (other_artist_name != nil) ? .OrderedDescending : .OrderedAscending
+            } else {
+                artist_comparison = self_artist_name!.localizedStandardCompare(other_artist_name!)
+            }
+            if artist_comparison == .OrderedSame {
+                let self_track_num = self.track_num
+                let other_track_num = other.track_num
+                let track_num_comparison: NSComparisonResult
+                if self_track_num == nil || other_track_num == nil {
+                    track_num_comparison = (self_track_num == other_track_num) ? .OrderedSame : (other_track_num != nil) ? .OrderedAscending : .OrderedDescending
+                } else {
+                    track_num_comparison = self_track_num!.compare(other_track_num!)
+                }
+                if track_num_comparison == .OrderedSame {
+                    let self_name = self.sort_name != nil ? self.sort_name : self.name
+                    let other_name = other.sort_name != nil ? other.sort_name : other.name
+                    if self_name == nil || other_name == nil {
+                        return (self_name == other_name) ? .OrderedSame : (other_name != nil) ? .OrderedAscending : .OrderedDescending
+                    } else {
+                        return self_name!.localizedStandardCompare(other_name!)
+                    }
+                } else {
+                    return track_num_comparison
+                }
+            } else {
+                return artist_comparison == .OrderedAscending ? .OrderedDescending : .OrderedAscending
+            }
+        } else {
+            return album_comparison == .OrderedAscending ? .OrderedDescending : .OrderedAscending
+        }
+    }
+    
     @objc func compareAlbumArtist(other: Track) -> NSComparisonResult {
         let self_album_artist_name = self.sort_album_artist != nil ? self.sort_album_artist : self.album?.album_artist?.name != nil ? self.album?.album_artist?.name : self.sort_artist != nil ? self.sort_artist : self.artist?.name
         let other_album_artist_name = other.sort_album_artist != nil ? other.sort_album_artist : other.album?.album_artist?.name != nil ? other.album?.album_artist?.name : other.sort_artist != nil ? other.sort_artist : self.artist?.name
@@ -239,6 +332,51 @@ extension Track {
             }
         } else {
             return album_artist_comparison
+        }
+    }
+    
+    @objc func compareAlbumArtistDescending(other: Track) -> NSComparisonResult {
+        let self_album_artist_name = self.sort_album_artist != nil ? self.sort_album_artist : self.album?.album_artist?.name != nil ? self.album?.album_artist?.name : self.sort_artist != nil ? self.sort_artist : self.artist?.name
+        let other_album_artist_name = other.sort_album_artist != nil ? other.sort_album_artist : other.album?.album_artist?.name != nil ? other.album?.album_artist?.name : other.sort_artist != nil ? other.sort_artist : self.artist?.name
+        let album_artist_comparison: NSComparisonResult
+        if self_album_artist_name == nil || other_album_artist_name == nil {
+            album_artist_comparison = (self_album_artist_name == other_album_artist_name) ? .OrderedSame : (other_album_artist_name != nil) ? .OrderedDescending : .OrderedAscending
+        } else {
+            album_artist_comparison = self_album_artist_name!.localizedStandardCompare(other_album_artist_name!)
+        }
+        if album_artist_comparison == .OrderedSame {
+            let self_album_name = (self.sort_album != nil) ? self.sort_album : self.album?.name
+            let other_album_name = (other.sort_album != nil) ? other.sort_album : other.album?.name
+            let album_comparison: NSComparisonResult
+            if self_album_name == nil || other_album_name == nil {
+                album_comparison = (self_album_name == other_album_name) ? .OrderedSame : (other_album_name != nil) ? .OrderedDescending : .OrderedAscending
+            } else {
+                album_comparison = self_album_name!.localizedStandardCompare(other_album_name!)
+            }
+            if album_comparison == .OrderedSame {
+                let self_track_num = self.track_num
+                let other_track_num = other.track_num
+                let track_num_comparison: NSComparisonResult
+                if self_track_num == nil || other_track_num == nil {
+                    track_num_comparison = (self_track_num == other_track_num) ? .OrderedSame : (other_track_num != nil) ? .OrderedAscending : .OrderedDescending
+                } else {
+                    track_num_comparison = self_track_num!.compare(other_track_num!)
+                }
+                if track_num_comparison == .OrderedSame {
+                    let self_name = self.sort_name != nil ? self.sort_name : self.name
+                    let other_name = other.sort_name != nil ? other.sort_name : other.name
+                    if self_name == nil || other_name == nil {
+                        return (self_name == other_name) ? .OrderedSame : (other_name != nil) ? .OrderedAscending : .OrderedDescending
+                    }
+                    return self_name!.localizedStandardCompare(other_name!)
+                } else {
+                    return track_num_comparison
+                }
+            } else {
+                return album_comparison == .OrderedAscending ? .OrderedDescending : .OrderedAscending
+            }
+        } else {
+            return album_artist_comparison == .OrderedAscending ? .OrderedDescending : .OrderedAscending
         }
     }
     
@@ -407,7 +545,7 @@ func checkIfGenreExists(name: String) -> Genre? {
 
 func checkIfCachedOrderExists(name: String) -> CachedOrder? {
     let request = NSFetchRequest(entityName: "CachedOrder")
-    let predicate = NSPredicate(format: "name == %@", name)
+    let predicate = NSPredicate(format: "order == %@", name)
     request.predicate = predicate
     do {
         let result = try managedContext.executeFetchRequest(request) as! [CachedOrder]

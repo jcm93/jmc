@@ -10,6 +10,7 @@ import Cocoa
 
 class LibraryTableViewController: NSViewController, NSMenuDelegate {
 
+    @IBOutlet weak var libraryTableScrollView: NSScrollView!
     @IBOutlet var columnVisibilityMenu: NSMenu!
     @IBOutlet var trackViewArrayController: DragAndDropArrayController!
     @IBOutlet weak var tableView: TableViewYouCanPressSpacebarOn!
@@ -45,6 +46,14 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         }
     }
     
+    func interpretEnterEvent() {
+        guard tableView!.selectedRow >= 0 else {
+            return
+        }
+        let item = (trackViewArrayController?.arrangedObjects as! [TrackView])[tableView!.selectedRow].track
+        mainWindowController!.playSong(item!)
+    }
+    
     @IBAction func getInfoFromTableView(sender: AnyObject) {
         let selectedTracks = rightMouseDownTarget!.map({return $0.track!})
         self.mainWindowController?.launchGetInfo(selectedTracks)
@@ -62,6 +71,10 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             let tracks = Array(tracksToPlay[1...tracksToPlay.count])
             self.mainWindowController!.addTracksToQueue(tracks)
         }
+    }
+    
+    func interpretSpacebarEvent() {
+        mainWindowController?.interpretSpacebarEvent()
     }
     
     func tableViewDoubleClick(sender: AnyObject) {
@@ -173,6 +186,18 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         NSUserDefaults.standardUserDefaults().setObject(columnVisibilityDictionary, forKey: DEFAULTS_SAVED_COLUMNS_STRING)
     }
     
+    func artistCompare() {
+        
+    }
+    
+    func albumCompare() {
+        
+    }
+    
+    func albumArtistCompare() {
+        
+    }
+    
     func menuWillOpen(menu: NSMenu) {
         for menuItem in menu.itemArray {
             if menuItem.representedObject != nil {
@@ -187,6 +212,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         self.initializeColumnVisibilityMenu(self.tableView)
         tableView.setDelegate(trackViewArrayController)
         tableView.setDataSource(trackViewArrayController)
+        tableView.libraryTableViewController = self
         tableView.reloadData()
         super.viewDidLoad()
         // Do view setup here.

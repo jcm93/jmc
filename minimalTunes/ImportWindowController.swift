@@ -71,6 +71,12 @@ class ImportWindowController: NSWindowController {
         }
     }
     
+    func subContextDidSave(notification: NSNotification) {
+        print("main context merging changes, supposedly")
+        let selector = #selector(NSManagedObjectContext.mergeChangesFromContextDidSaveNotification)
+        managedContext.performSelectorOnMainThread(selector, withObject: notification, waitUntilDone: true)
+    }
+    
     func completionHandler() {
         print("import window done clause")
         do { try managedContext.save() } catch {print("\(error)")}
@@ -94,6 +100,7 @@ class ImportWindowController: NSWindowController {
         }
         do {
             iTunesParser = try iTunesLibraryParser(path: path!)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(subContextDidSave), name: NSManagedObjectContextDidSaveNotification, object: nil)
         } catch {
             OKButton.enabled = false
         }

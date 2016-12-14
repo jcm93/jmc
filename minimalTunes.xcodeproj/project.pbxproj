@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D015AC41E00A30900EBAB6E /* LibraryTableViewControllerCellBased.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D015AC31E00A30900EBAB6E /* LibraryTableViewControllerCellBased.xib */; };
+		0D015AC61E00A31C00EBAB6E /* LibraryTableViewControllerCellBased.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D015AC51E00A31C00EBAB6E /* LibraryTableViewControllerCellBased.swift */; };
 		0D01AD911D7079D900F9211F /* EqualizerWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D01AD8F1D7079D900F9211F /* EqualizerWindowController.swift */; };
 		0D01AD921D7079D900F9211F /* EqualizerWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D01AD901D7079D900F9211F /* EqualizerWindowController.xib */; };
 		0D0E5FA91D38444B009E0FA3 /* Track+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FA51D38444B009E0FA3 /* Track+CoreDataProperties.swift */; };
@@ -47,6 +49,8 @@
 		0D84EDE61DA326BD0057411F /* SongCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D84EDE21DA326BD0057411F /* SongCollection.swift */; };
 		0D84EDE71DA326BD0057411F /* NetworkTrack+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D84EDE31DA326BD0057411F /* NetworkTrack+CoreDataProperties.swift */; };
 		0D84EDE81DA326BD0057411F /* NetworkTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D84EDE41DA326BD0057411F /* NetworkTrack.swift */; };
+		0D8B7E2C1DF8C9240018E242 /* IntermediateTrackRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8B7E2B1DF8C9240018E242 /* IntermediateTrackRepresentation.swift */; };
+		0D8B7E2E1DFDE2CA0018E242 /* MTSortDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8B7E2D1DFDE2CA0018E242 /* MTSortDescriptor.swift */; };
 		0D8D4A171D90868500FA1603 /* LocationManagerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8D4A151D90868500FA1603 /* LocationManagerController.swift */; };
 		0D8D4A181D90868500FA1603 /* LocationManagerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8D4A161D90868500FA1603 /* LocationManagerController.xib */; };
 		0D9CE6711D334F97004FA8CB /* ImportWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */; };
@@ -65,6 +69,7 @@
 		0DAB30A41CFBA3340028928F /* minimalTunesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30A31CFBA3340028928F /* minimalTunesTests.swift */; };
 		0DAB30AF1CFBA3340028928F /* minimalTunesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30AE1CFBA3340028928F /* minimalTunesUITests.swift */; };
 		0DB8EFEA1DC4FC4D00009900 /* MainTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB8EFE91DC4FC4D00009900 /* MainTableViewDataSource.swift */; };
+		0DC2E8F51E0110D200671D83 /* MTTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC2E8F41E0110D200671D83 /* MTTextFieldCell.swift */; };
 		0DC84C5F1DBAD0C100E8877C /* NewCachedOrder+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC84C5D1DBAD0C100E8877C /* NewCachedOrder+CoreDataProperties.swift */; };
 		0DC84C601DBAD0C100E8877C /* NewCachedOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC84C5E1DBAD0C100E8877C /* NewCachedOrder.swift */; };
 		0DCB81721DCAA45C006FBA9D /* MainTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DCB81711DCAA45C006FBA9D /* MainTableViewDelegate.swift */; };
@@ -124,6 +129,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0D015AC31E00A30900EBAB6E /* LibraryTableViewControllerCellBased.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LibraryTableViewControllerCellBased.xib; sourceTree = "<group>"; };
+		0D015AC51E00A31C00EBAB6E /* LibraryTableViewControllerCellBased.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTableViewControllerCellBased.swift; sourceTree = "<group>"; };
 		0D01AD8F1D7079D900F9211F /* EqualizerWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EqualizerWindowController.swift; sourceTree = "<group>"; };
 		0D01AD901D7079D900F9211F /* EqualizerWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EqualizerWindowController.xib; sourceTree = "<group>"; };
 		0D0E5FA51D38444B009E0FA3 /* Track+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Track+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -165,6 +172,8 @@
 		0D84EDE21DA326BD0057411F /* SongCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongCollection.swift; sourceTree = "<group>"; };
 		0D84EDE31DA326BD0057411F /* NetworkTrack+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NetworkTrack+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D84EDE41DA326BD0057411F /* NetworkTrack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkTrack.swift; sourceTree = "<group>"; };
+		0D8B7E2B1DF8C9240018E242 /* IntermediateTrackRepresentation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntermediateTrackRepresentation.swift; sourceTree = "<group>"; };
+		0D8B7E2D1DFDE2CA0018E242 /* MTSortDescriptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTSortDescriptor.swift; sourceTree = "<group>"; };
 		0D8D4A151D90868500FA1603 /* LocationManagerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManagerController.swift; sourceTree = "<group>"; };
 		0D8D4A161D90868500FA1603 /* LocationManagerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationManagerController.xib; sourceTree = "<group>"; };
 		0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportWindowController.swift; sourceTree = "<group>"; };
@@ -189,6 +198,7 @@
 		0DAB30AE1CFBA3340028928F /* minimalTunesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = minimalTunesUITests.swift; sourceTree = "<group>"; };
 		0DAB30B01CFBA3340028928F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0DB8EFE91DC4FC4D00009900 /* MainTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTableViewDataSource.swift; sourceTree = "<group>"; };
+		0DC2E8F41E0110D200671D83 /* MTTextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTTextFieldCell.swift; sourceTree = "<group>"; };
 		0DC84C5D1DBAD0C100E8877C /* NewCachedOrder+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NewCachedOrder+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0DC84C5E1DBAD0C100E8877C /* NewCachedOrder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewCachedOrder.swift; sourceTree = "<group>"; };
 		0DCB81711DCAA45C006FBA9D /* MainTableViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTableViewDelegate.swift; sourceTree = "<group>"; };
@@ -262,6 +272,7 @@
 			isa = PBXGroup;
 			children = (
 				0DD274EE1D3190360055C43B /* GlobalFunctions.swift */,
+				0D8B7E2D1DFDE2CA0018E242 /* MTSortDescriptor.swift */,
 				0D1BDFA41D0F44A70092FBA0 /* AudioModule.swift */,
 				0D76F6A71D24B9AC00C6E70F /* YeOldeFileHandler.swift */,
 				0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */,
@@ -281,6 +292,9 @@
 				0D299B221DF158A60009CF7A /* AdvancedFilterViewController.xib */,
 				0D299B1D1DF151220009CF7A /* LibraryTableViewController.swift */,
 				0D299B1E1DF151220009CF7A /* LibraryTableViewController.xib */,
+				0D015AC51E00A31C00EBAB6E /* LibraryTableViewControllerCellBased.swift */,
+				0D015AC31E00A30900EBAB6E /* LibraryTableViewControllerCellBased.xib */,
+				0DC2E8F41E0110D200671D83 /* MTTextFieldCell.swift */,
 				0D299B191DF11F140009CF7A /* TrackQueueViewController.swift */,
 				0D299B1A1DF11F140009CF7A /* TrackQueueViewController.xib */,
 				0D299B151DF111490009CF7A /* AlbumArtViewController.swift */,
@@ -303,6 +317,7 @@
 				0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */,
 				0DB8EFE91DC4FC4D00009900 /* MainTableViewDataSource.swift */,
 				0DCB81711DCAA45C006FBA9D /* MainTableViewDelegate.swift */,
+				0D8B7E2B1DF8C9240018E242 /* IntermediateTrackRepresentation.swift */,
 			);
 			name = "Data Controllers and Interface Subclasses";
 			sourceTree = "<group>";
@@ -573,6 +588,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D015AC41E00A30900EBAB6E /* LibraryTableViewControllerCellBased.xib in Resources */,
 				0D9CE6761D34128B004FA8CB /* InitialSetupWindowController.xib in Resources */,
 				0D299B241DF158A60009CF7A /* AdvancedFilterViewController.xib in Resources */,
 				0D299B1C1DF11F140009CF7A /* TrackQueueViewController.xib in Resources */,
@@ -664,9 +680,11 @@
 				0D2410A31D6735F200F95494 /* artAPIRequestDelegate.swift in Sources */,
 				0D84EDE51DA326BD0057411F /* SongCollection+CoreDataProperties.swift in Sources */,
 				0DD7D6D81D3F3A350035BAD8 /* AlbumArtworkCollection+CoreDataProperties.swift in Sources */,
+				0D015AC61E00A31C00EBAB6E /* LibraryTableViewControllerCellBased.swift in Sources */,
 				0DEF66D31D383A8700EA3ADC /* Tag.swift in Sources */,
 				0DEF66C51D383A8700EA3ADC /* Property.swift in Sources */,
 				0D58F7491D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift in Sources */,
+				0D8B7E2C1DF8C9240018E242 /* IntermediateTrackRepresentation.swift in Sources */,
 				0DE74A531D7D9457005211E6 /* SharedLibraryRequestHandler.swift in Sources */,
 				0DD7D6D61D3F3A350035BAD8 /* Album+CoreDataProperties.swift in Sources */,
 				0DEF66BE1D383A8700EA3ADC /* SharedLibrary+CoreDataProperties.swift in Sources */,
@@ -685,6 +703,7 @@
 				0DEF66BB1D383A8700EA3ADC /* Artist.swift in Sources */,
 				0DD7D6D91D3F3A350035BAD8 /* AlbumArtworkCollection.swift in Sources */,
 				0D84EDE71DA326BD0057411F /* NetworkTrack+CoreDataProperties.swift in Sources */,
+				0D8B7E2E1DFDE2CA0018E242 /* MTSortDescriptor.swift in Sources */,
 				0D01AD911D7079D900F9211F /* EqualizerWindowController.swift in Sources */,
 				0D9CE67B1D34A7DF004FA8CB /* ImportProgressBar.swift in Sources */,
 				0D76F6A81D24B9AC00C6E70F /* YeOldeFileHandler.swift in Sources */,
@@ -700,6 +719,7 @@
 				0DAB30911CFBA3340028928F /* AppDelegate.swift in Sources */,
 				0D299B1B1DF11F140009CF7A /* TrackQueueViewController.swift in Sources */,
 				0D76F6AA1D270EB900C6E70F /* DragAndDropArrayController.swift in Sources */,
+				0DC2E8F51E0110D200671D83 /* MTTextFieldCell.swift in Sources */,
 				0D299B171DF111490009CF7A /* AlbumArtViewController.swift in Sources */,
 				0DEF66C31D383A8700EA3ADC /* ViewCoordinator.swift in Sources */,
 				0D3878B81DD11926004CC3C1 /* BitRateFormatter.swift in Sources */,

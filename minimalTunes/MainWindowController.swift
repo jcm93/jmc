@@ -612,7 +612,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     func updateInfo() {
-        /*print("updateinfo called")
+        print("updateinfo called")
         if self.currentTableViewController == nil {
             return
         }
@@ -628,7 +628,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
                 self.infoString = "\(numString!) items; \(timeString!); \(sizeString)"
                 self.infoField.stringValue = self.self.infoString!
             }
-        }*/
+        }
     }
     
     @IBAction func trackListTriangleClicked(sender: AnyObject) {
@@ -655,7 +655,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         let trackQueueLayoutConstraints = [NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .Left, relatedBy: .Equal, toItem: trackQueueTargetView, attribute: .Left, multiplier: 1, constant: 0), NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .Right, relatedBy: .Equal, toItem: trackQueueTargetView, attribute: .Right, multiplier: 1, constant: 0), NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .Top, relatedBy: .Equal, toItem: trackQueueTargetView, attribute: .Top, multiplier: 1, constant: 0), NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .Bottom, relatedBy: .Equal, toItem: trackQueueTargetView, attribute: .Bottom, multiplier: 1, constant: 0)]
         NSLayoutConstraint.activateConstraints(trackQueueLayoutConstraints)
         self.trackQueueViewController?.mainWindowController = self
-        self.libraryTableViewController = LibraryTableViewController(nibName: "LibraryTableViewController", bundle: nil)
+        self.libraryTableViewController = LibraryTableViewControllerCellBased(nibName: "LibraryTableViewControllerCellBased", bundle: nil)
         self.libraryTableTargetView.addSubview(self.libraryTableViewController!.view)
         self.libraryTableViewController!.view.frame = self.libraryTableTargetView.bounds
         let libraryTableLayoutConstraints = [NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Left, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Left, multiplier: 1, constant: 0), NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Right, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Right, multiplier: 1, constant: 0), NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Top, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Top, multiplier: 1, constant: 0), NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Bottom, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Bottom, multiplier: 1, constant: 0)]

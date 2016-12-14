@@ -123,18 +123,18 @@
         <attribute name="bit_rate" optional="YES" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="bpm" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="comments" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <attribute name="date_added" optional="YES" attributeType="Date" indexed="YES" syncable="YES"/>
-        <attribute name="date_last_played" optional="YES" attributeType="Date" indexed="YES" syncable="YES"/>
+        <attribute name="date_added" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="date_last_played" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="date_last_skipped" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="date_modified" optional="YES" attributeType="Date" indexed="YES" syncable="YES"/>
+        <attribute name="date_modified" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="disc_number" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="equalizer_preset" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="file_kind" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
-        <attribute name="is_network" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="is_playing" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="misc_search_field" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="misc_search_field" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="movement_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="movement_number" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
@@ -144,9 +144,9 @@
         <attribute name="size" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="skip_count" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="sort_album" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <attribute name="sort_album_artist" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sort_album_artist" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="sort_artist" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <attribute name="sort_composer" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sort_composer" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="sort_name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="status" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="time" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
@@ -159,12 +159,15 @@
         <relationship name="view" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackView" inverseName="track" inverseEntity="TrackView" syncable="YES"/>
     </entity>
     <entity name="TrackView" representedClassName=".TrackView" syncable="YES">
+        <attribute name="album_artist_descending_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="album_artist_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="album_descending_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="album_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="artist_descending_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="artist_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="date_added_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="genre_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
-        <attribute name="is_network" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="kind_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="name_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="release_date_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
@@ -190,6 +193,6 @@
         <element name="SortOrder" positionX="-1548" positionY="108" width="128" height="75"/>
         <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="210"/>
         <element name="Track" positionX="-1026" positionY="-54" width="128" height="600"/>
-        <element name="TrackView" positionX="-1557" positionY="99" width="128" height="255"/>
+        <element name="TrackView" positionX="-1557" positionY="99" width="128" height="300"/>
     </elements>
 </model>

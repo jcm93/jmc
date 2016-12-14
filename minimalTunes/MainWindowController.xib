@@ -162,7 +162,7 @@
                                 <holdingPriorities>
                                     <real value="228"/>
                                     <real value="250"/>
-                                    <real value="287"/>
+                                    <real value="242"/>
                                 </holdingPriorities>
                             </splitView>
                             <splitView fixedFrame="YES" placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="568" arrangesAllSubviews="NO" autosaveName="Library Split View" dividerStyle="thin" id="wUo-rb-c1E" userLabel="Library Split View">
@@ -398,9 +398,9 @@
     </objects>
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>
-        <image name="NSPlayTemplate" width="128" height="128"/>
-        <image name="NSSkipAheadTemplate" width="128" height="128"/>
-        <image name="NSSkipBackTemplate" width="128" height="128"/>
+        <image name="NSPlayTemplate" width="25" height="23"/>
+        <image name="NSSkipAheadTemplate" width="27" height="15"/>
+        <image name="NSSkipBackTemplate" width="27" height="15"/>
         <image name="NSUser" width="32" height="32"/>
         <image name="Queue" width="200" height="231"/>
         <image name="Queue Alternate" width="200" height="231"/>

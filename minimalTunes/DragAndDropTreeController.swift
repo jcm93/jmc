@@ -45,8 +45,6 @@ class DragAndDropTreeController: NSTreeController, NSOutlineViewDataSource {
         return networkedLibraries[name] as? SourceListItem
     }
     
-    var draggedNodes: [NSTreeNode]?
-    
     func reorderChildren(item: NSTreeNode) {
         if item.childNodes != nil {
             var poop = item.childNodes!
@@ -99,82 +97,6 @@ class DragAndDropTreeController: NSTreeController, NSOutlineViewDataSource {
         //remove it
     }
     
-    func outlineView(outlineView: NSOutlineView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forItems draggedItems: [AnyObject]) {
-        print("called")
-    }
-    
-    
-    func outlineView(outlineView: NSOutlineView, writeItems items: [AnyObject], toPasteboard pasteboard: NSPasteboard) -> Bool {
-        print(items)
-        draggedNodes = items as? [NSTreeNode]
-        pasteboard.setData(nil, forType: "SourceListItem")
-        return true
-    }
-    
-    func outlineView(outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: AnyObject?, proposedChildIndex index: Int) -> NSDragOperation {
-        print("validate drop called on source list")
-        print(info.draggingPasteboard().dataForType("Track"))
-        if draggedNodes != nil {
-            for draggedNode in draggedNodes! {
-                if item == nil || item?.parentNode == nil || ((draggedNode).parentNode?.representedObject! as! SourceListItem).name != (item?.representedObject! as! SourceListItem).name {
-                    print("weird clause reached")
-                    return .None
-                }
-            }
-        }
-        if info.draggingPasteboard().dataForType("Track") != nil {
-            print("non nil track data")
-            if (item!.representedObject! as! SourceListItem).name == "Playlists" {
-                return .Generic
-            }
-        }
-        return .Move
-    }
-    
-    override func objectDidEndEditing(editor: AnyObject) {
-        print("objectdidendediting called")
-        reorderChildren(editor as! NSTreeNode)
-        super.objectDidEndEditing(editor)
-    }
-    
-    func addVisibleNetworkLibrary() {
-        
-    }
-    
-    func outlineView(outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: AnyObject?, childIndex index: Int) -> Bool {
-        if draggedNodes != nil {
-            let path = (item as! NSTreeNode).indexPath.indexPathByAddingIndex(index)
-            self.moveNodes(draggedNodes!, toIndexPath: path)
-            reorderChildren(item as! NSTreeNode)
-            draggedNodes = nil
-            return true
-        } else if info.draggingPasteboard().dataForType("Track") != nil {
-            print("doing stuff")
-            let playlistItem = (item as! NSTreeNode).representedObject! as! SourceListItem
-            let playlist = playlistItem.playlist
-            let data = info.draggingPasteboard().dataForType("Track")
-            let unCodedThing = NSKeyedUnarchiver.unarchiveObjectWithData(data!) as! NSMutableArray
-            let tracks = { () -> [Track] in
-                var result = [Track]()
-                for trackURI in unCodedThing {
-                    let id = managedContext.persistentStoreCoordinator?.managedObjectIDForURIRepresentation(trackURI as! NSURL)
-                    result.append(managedContext.objectWithID(id!) as! Track)
-                }
-                return result
-            }()
-            for track in tracks {
-                var id_list: [Int]
-                if playlist!.track_id_list != nil {
-                    id_list = playlist!.track_id_list as! [Int]
-                } else {
-                    id_list = [Int]()
-                }
-                id_list.append(Int(track.id!))
-                playlist?.track_id_list = id_list
-            }
 
-        }
-        return true
-    }
 
 }

@@ -13,7 +13,7 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView translatesAutoresizingMaskIntoConstraints="NO" id="kqx-LL-MdM">
+        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kqx-LL-MdM">
             <rect key="frame" x="0.0" y="0.0" width="341" height="457"/>
             <subviews>
                 <scrollView focusRingType="none" misplaced="YES" placeholderIntrinsicWidth="267" placeholderIntrinsicHeight="389" borderType="none" autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="allowed" translatesAutoresizingMaskIntoConstraints="NO" id="TcG-wM-LGT">
@@ -22,7 +22,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="267" height="389"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" emptySelection="NO" autosaveColumns="NO" rowHeight="20" viewBased="YES" indentationPerLevel="5" autosaveExpandedItems="YES" autoresizesOutlineColumn="YES" outlineTableColumn="egr-Q3-P5d" id="Brh-x7-enW" customClass="SourceListThatYouCanPressSpacebarOn" customModule="minimalTunes" customModuleProvider="target">
+                            <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" autosaveColumns="NO" rowHeight="20" viewBased="YES" indentationPerLevel="5" autosaveExpandedItems="YES" autoresizesOutlineColumn="YES" outlineTableColumn="egr-Q3-P5d" id="Brh-x7-enW" customClass="SourceListThatYouCanPressSpacebarOn" customModule="minimalTunes" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="267" height="389"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>

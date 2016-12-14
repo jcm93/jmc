@@ -187,6 +187,9 @@ class AudioModule: NSObject {
                 }
                 let location = currentTrackLocation!
                 let url = NSURL(string: location)
+                if verbotenFileTypes.contains(url!.pathExtension!) {
+                    return
+                }
                 curFile = try AVAudioFile(forReading: url!)
                 print(location)
                 curNode.scheduleFile(curFile!, atTime: nil, completionHandler: handleCompletion)
