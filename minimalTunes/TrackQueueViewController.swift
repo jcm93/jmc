@@ -240,10 +240,16 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             }()
             for track in tracks {
                 insertTrackInQueue(track, index: actualRow, context: context!)
-                let queueIndex = currentTrackIndex == nil ? actualRow - 1 : actualRow - currentTrackIndex! - 1
+                let queueIndex = currentTrackIndex == nil ? actualRow : actualRow - currentTrackIndex! - 1
                 print("queue index \(queueIndex), actualRow \(actualRow), currentIndex \(currentTrackIndex)")
                 mainWindowController?.delegate?.audioModule.addTrackToQueue(track, index: queueIndex)
-                mainWindowController?.trackQueue.append(track)
+                if queueIndex >= mainWindowController?.trackQueue.count || queueIndex == -1 {
+                    print("putting \(track.name) at index \(mainWindowController!.trackQueue.count - 1)")
+                    mainWindowController?.trackQueue.append(track)
+                } else {
+                    print("putting \(track.name) at index \(queueIndex)")
+                    mainWindowController?.trackQueue.insert(track, atIndex: queueIndex)
+                }
                 actualRow += 1
             }
         }
@@ -306,7 +312,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             if self.currentTrackIndex != nil {
                 newIndex -= self.currentTrackIndex!
             }
-            self.mainWindowController?.trackQueue.removeAtIndex(newIndex - 1)
+            print(self.mainWindowController?.trackQueue.removeAtIndex(newIndex - 1))
             self.mainWindowController?.delegate?.audioModule.trackQueue.removeAtIndex(newIndex - 1)
         }
         //print(self.trackQueue)
