@@ -238,7 +238,6 @@
 		0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesLibraryParser.swift; sourceTree = "<group>"; };
 		0DF4BEF11CFD0D4E00AC5824 /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
 		0DF4BEF21CFD0D4E00AC5824 /* MainWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindowController.xib; sourceTree = "<group>"; };
-		764E7A8AE3AF6AF9E58490EB /* Pods_minimalTunes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_minimalTunes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -411,7 +410,6 @@
 				0DAB30A21CFBA3340028928F /* minimalTunesTests */,
 				0DAB30AD1CFBA3340028928F /* minimalTunesUITests */,
 				0DAB308E1CFBA3340028928F /* Products */,
-				66B2CF8DC9717C2244F4388D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -453,14 +451,6 @@
 				0DAB30B01CFBA3340028928F /* Info.plist */,
 			);
 			path = minimalTunesUITests;
-			sourceTree = "<group>";
-		};
-		66B2CF8DC9717C2244F4388D /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				764E7A8AE3AF6AF9E58490EB /* Pods_minimalTunes.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

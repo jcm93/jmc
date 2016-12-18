@@ -97,16 +97,21 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             currentTrackIndex = 0
         }
         else {
-            (trackQueue[currentTrackIndex!]).viewType = .pastTrack
-            currentTrackIndex! += 1
-            numPastTracks += 1
-            if numPastTracks >= numPastTracksToShow {
-                globalOffset += 1
+            if currentTrackIndex != nil {
+                (trackQueue[currentTrackIndex!]).viewType = .pastTrack
+                currentTrackIndex! += 1
+                numPastTracks += 1
+                if numPastTracks >= numPastTracksToShow {
+                    globalOffset += 1
+                }
+                let newCurrentTrackView = TrackQueueView()
+                newCurrentTrackView.viewType = .currentTrack
+                newCurrentTrackView.track = track
+                trackQueue.insert(newCurrentTrackView, atIndex: currentTrackIndex!)
+            } else {
+                currentTrackIndex = 0
+                (trackQueue[currentTrackIndex!]).viewType = .currentTrack
             }
-            let newCurrentTrackView = TrackQueueView()
-            newCurrentTrackView.viewType = .currentTrack
-            newCurrentTrackView.track = track
-            trackQueue.insert(newCurrentTrackView, atIndex: currentTrackIndex!)
         }
         tableView?.reloadData()
     }
@@ -120,7 +125,9 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             newFutureTrackView.viewType = .futureTrack
         }
         newFutureTrackView.track = track
-        trackQueue.removeLast()
+        if trackQueue.count > 0 {
+            trackQueue.removeLast()
+        }
         trackQueue.append(newFutureTrackView)
         let newSourceView = TrackQueueView()
         newSourceView.source = context
@@ -149,10 +156,8 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             newTrackView.viewType = .futureTrack
             trackQueue.insert(newTrackView, atIndex: index)
         }
-        else if trackQueue.count != 0 {
+        else {
             addTrackToQueue(track, context: context, tense: 1)
-        } else {
-            mainWindowController?.playSong(track)
         }
         tableView?.reloadData()
     }
@@ -174,7 +179,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         else {
             print("callin change current track")
             let track = mainWindowController?.currentTrack
-            let context = mainWindowController?.currentAudioSource?.name
+            let context = mainWindowController?.currentAudioSource?.name != nil ? mainWindowController?.currentAudioSource?.name : mainWindowController?.currentSourceListItem?.name
             changeCurrentTrack(track!, context: context!)
         }
         tableView?.reloadData()
@@ -214,7 +219,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     
     func tableView(tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
         print("accept drop")
-        let actualRow: Int
+        var actualRow: Int
         switch showAllTracks {
         case true:
             actualRow = row
@@ -233,15 +238,13 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 }
                 return result
             }()
-            if trackQueue.count == 0 {
-                insertTrackInQueue(tracks[0], index: 0, context: context!)
-                tracks.removeFirst()
-            }
             for track in tracks {
                 insertTrackInQueue(track, index: actualRow, context: context!)
-                let queueIndex = currentTrackIndex == nil ? 0 : actualRow - currentTrackIndex! - 1
+                let queueIndex = currentTrackIndex == nil ? actualRow - 1 : actualRow - currentTrackIndex! - 1
+                print("queue index \(queueIndex), actualRow \(actualRow), currentIndex \(currentTrackIndex)")
                 mainWindowController?.delegate?.audioModule.addTrackToQueue(track, index: queueIndex)
                 mainWindowController?.trackQueue.append(track)
+                actualRow += 1
             }
         }
         if (info.draggingPasteboard().types!.contains("public.TrackQueueView")) {
@@ -261,9 +264,9 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 }
                 swap(&self.trackQueue[actualIndex], &self.trackQueue[actualRow + row_offset])
                 self.mainWindowController?.delegate?.audioModule.swapTracks(actualIndex - self.currentTrackIndex! - 1, second_index: actualRow + row_offset - self.currentTrackIndex! - 1)
+                swap(&self.mainWindowController!.trackQueue[actualIndex - self.currentTrackIndex! - 1], &self.mainWindowController!.trackQueue[actualRow + row_offset - self.currentTrackIndex! - 1])
                 row_offset += 1
             })
-            
         }
         tableView.reloadData()
         return true
@@ -281,7 +284,34 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     }
     
     func interpretDeleteEvent() {
-        
+        guard tableView.selectedRow > -1 else {return}
+        let select_offset: Int
+        switch showAllTracks {
+        case true:
+            select_offset = 0
+        default:
+            select_offset = globalOffset
+        }
+        //slow as hell, but whatever
+        var indices = [Int]()
+        for index in tableView.selectedRowIndexes {
+            indices.append(index)
+        }
+        indices.sortInPlace()
+        indices = indices.reverse()
+        for index in indices {
+            print("index is \(index), glos is \(select_offset)")
+            self.trackQueue.removeAtIndex(index + select_offset)
+            var newIndex: Int = index + select_offset
+            if self.currentTrackIndex != nil {
+                newIndex -= self.currentTrackIndex!
+            }
+            self.mainWindowController?.trackQueue.removeAtIndex(newIndex - 1)
+            self.mainWindowController?.delegate?.audioModule.trackQueue.removeAtIndex(newIndex - 1)
+        }
+        //print(self.trackQueue)
+        //print(self.mainWindowController?.trackQueue)
+        tableView.reloadData()
     }
     
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
@@ -391,6 +421,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         tableView!.setDataSource(self)
         tableView!.setDelegate(self)
         tableView!.registerForDraggedTypes(["Track", "public.TrackQueueView"])
+        tableView.trackQueueViewController = self
         // Do view setup here.
     }
 

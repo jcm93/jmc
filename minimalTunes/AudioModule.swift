@@ -137,6 +137,9 @@ class AudioModule: NSObject {
         changeTrack()
     }
     
+    func removeTracksFromQueue(indexes: [Int]) {
+    }
+    
     func addTrackToQueue(track: Track, index: Int?) {
         print("adding track to audio queue")
         print(index)
@@ -150,6 +153,7 @@ class AudioModule: NSObject {
         else {
             if (index != nil && index < trackQueue.count) {
                 trackQueue.insert(track, atIndex: index!)
+                print("inserted \(track.name) at \(index)")
             }
             else {
                 trackQueue.append(track)

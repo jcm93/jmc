@@ -440,6 +440,11 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         return true
     }
     
+    func selectStuff() {
+        let indexSet = NSIndexSet(index: 1)
+        sourceList.selectRowIndexes(indexSet, byExtendingSelection: false)
+    }
+    
     override func viewDidLoad() {
         self.createTree()
         libraryHeaderNode = rootNode?.children[0]

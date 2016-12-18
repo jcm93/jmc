@@ -597,6 +597,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
                 if trackQueue.count > 0 {
                     self.currentTrack = trackQueue.removeFirst()
                 }
+                if is_initialized == false {
+                    createPlayOrderArray(self.currentTrack!)
+                    paused = false
+                    is_initialized = true
+                }
                 timer?.invalidate()
                 initializeInterfaceForNewTrack()
                 currentTrack?.is_playing = true
@@ -706,5 +711,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "checkEmbeddedArtwork")
         //current_source_play_order = (libraryTableViewController!.trackViewArrayController.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int})
         super.windowDidLoad()
+        sourceListViewController?.selectStuff()
     }
 }

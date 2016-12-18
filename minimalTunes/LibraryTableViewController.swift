@@ -95,6 +95,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             mainWindowController!.playSong(item!)
         }
         else if theEvent.keyCode == 124 {
+            print("skipping")
             mainWindowController!.skip()
         }
         else if theEvent.keyCode == 123 {
