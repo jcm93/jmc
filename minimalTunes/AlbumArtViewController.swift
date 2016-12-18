@@ -14,11 +14,20 @@ class AlbumArtViewController: NSViewController {
     @IBOutlet weak var albumArtView: DragAndDropImageView!
     
     var fileHandler = YeOldeFileHandler()
+    dynamic var albumArtworkAdded = false
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
+    }
+    
+    func doStupidTogglingForObservers() {
+        if albumArtworkAdded == true {
+            albumArtworkAdded = false
+        } else {
+            albumArtworkAdded = true
+        }
     }
     
     
@@ -34,7 +43,6 @@ class AlbumArtViewController: NSViewController {
     func initAlbumArt(track: Track) {
         if track.is_network == true {
             //todo: implement this
-            return
         }
         if track.album != nil && track.album!.primary_art != nil {
             print("gonna get sum album art")
@@ -47,6 +55,7 @@ class AlbumArtViewController: NSViewController {
                     self.albumArtView.image = image
                 }
             }
+            doStupidTogglingForObservers()
         }
         else {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
@@ -60,6 +69,7 @@ class AlbumArtViewController: NSViewController {
                             dispatch_async(dispatch_get_main_queue()) {
                                 do {try managedContext.save()}catch {print(error)}
                                 self.initAlbumArt(track)
+                                self.doStupidTogglingForObservers()
                             }
                             artworkFound = true
                         }
@@ -75,6 +85,7 @@ class AlbumArtViewController: NSViewController {
                                 dispatch_async(dispatch_get_main_queue()) {
                                     do {try managedContext.save()}catch {print(error)}
                                     self.initAlbumArt(track)
+                                    self.doStupidTogglingForObservers()
                                 }
                                 artworkFound = true
                             }

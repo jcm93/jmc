@@ -8,7 +8,7 @@
 //
 
 import Cocoa
-import sReto
+//import sReto
 
 
 @NSApplicationMain
@@ -24,7 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var iTunesParser: iTunesLibraryParser?
     var audioModule: AudioModule = AudioModule()
     let fileManager = NSFileManager.defaultManager()
-    var server: P2PServer?
+    var serviceBrowser: ConnectivityManager?
     
     @IBAction func jumpToSelection(sender: AnyObject) {
         //mainWindowController!.jumpToSelection()
@@ -42,7 +42,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         mainWindowController?.showWindow(self)
         if mainWindowController?.hasMusic == true {
-            self.server = P2PServer(_delegate: self)
+            self.serviceBrowser = ConnectivityManager(delegate: self, slvc: mainWindowController!.sourceListViewController!)
         }
     }
     

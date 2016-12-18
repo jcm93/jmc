@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import MultipeerConnectivity
 
 class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutlineViewDataSource, NSTextFieldDelegate {
     
@@ -20,7 +21,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     var sharedLibraryIdentifierDictionary = NSMutableDictionary()
     var requestedSharedPlaylists = NSMutableDictionary()
     var mainWindowController: MainWindowController?
-    var server: P2PServer?
+    var server: ConnectivityManager?
     
     var rootNode: SourceListNode?
     
@@ -186,23 +187,42 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         sourceList.editColumn(0, row: sourceList.selectedRow, withEvent: nil, select: true)
     }
     
-    func addNetworkedLibrary(name: String) {
+    func addNetworkedLibrary(peer: MCPeerID) {
         let newSourceListItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
         newSourceListItem.parent = self.rootNode?.children[1].item
-        newSourceListItem.name = name
+        newSourceListItem.name = peer.displayName
         newSourceListItem.is_network = true
         let newLibrary = NSEntityDescription.insertNewObjectForEntityForName("Library", inManagedObjectContext: managedContext) as! Library
         newLibrary.is_network = true
-        newLibrary.name = name
+        newLibrary.name = peer.displayName
+        newLibrary.peer = peer
         newSourceListItem.library = newLibrary
         let newSourceListNode = SourceListNode(item: newSourceListItem)
         self.rootNode?.children[1].children.append(newSourceListNode)
-        sharedLibraryIdentifierDictionary[name] = newSourceListNode
-        sourceList.reloadData()
-        print("wrote \(name) to shared library identifier dictionary")
+        sharedLibraryIdentifierDictionary[peer] = newSourceListNode
+        dispatch_async(dispatch_get_main_queue()) {
+            self.sourceList.reloadData()
+        }
+        print("wrote \(peer) to shared library identifier dictionary")
     }
     
-    func addSourcesForNetworkedLibrary(sourceData: [NSDictionary], peer: String) {
+    func removeNetworkedLibrary(peer: MCPeerID) {
+        let node = self.sharedLibraryIdentifierDictionary[peer] as! SourceListNode
+        //needed? or garbage collected? or leaked?
+        sharedHeaderNode!.children.removeAtIndex(sharedHeaderNode!.children.indexOf(node)!)
+        let deleteFetch = NSFetchRequest(entityName: "SourceListItem")
+        let deletePredicate = NSPredicate(format: "is_network == true AND library.peer == %@", peer)
+        deleteFetch.predicate = deletePredicate
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+        do {
+            try managedContext.persistentStoreCoordinator?.executeRequest(deleteRequest, withContext: managedContext)
+        } catch {
+            print(error)
+        }
+        sourceList.reloadData()
+    }
+    
+    func addSourcesForNetworkedLibrary(sourceData: [NSDictionary], peer: MCPeerID) {
         print("looking up \(peer) in shared library identifier dictionary")
         let item = self.sharedLibraryIdentifierDictionary[peer] as! SourceListNode
         //create sourcelistitem
@@ -242,7 +262,9 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             sourceNode.item = newItem
             playlistsItemNode.children.append(sourceNode)
         }
-        sourceList.reloadData()
+        dispatch_async(dispatch_get_main_queue()) {
+            self.sourceList.reloadData()
+        }
     }
     
     func outlineView(outlineView: NSOutlineView, shouldSelectItem item: AnyObject) -> Bool {
@@ -310,8 +332,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         return item
     }
     
-    func getCurrentSelectionSharedLibraryName() -> String {
-        return (sourceList.itemAtRow(sourceList.selectedRow) as! SourceListNode).item.library!.name!
+    func getCurrentSelectionSharedLibraryPeer() -> MCPeerID {
+        return (sourceList.itemAtRow(sourceList.selectedRow) as! SourceListNode).item.library!.peer as! MCPeerID
     }
     
     func doneAddingNetworkPlaylistCallback(item: SourceListItem) {
@@ -326,8 +348,9 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         self.currentSourceListItem = selection
         let track_id_list = selection.playlist?.track_id_list as? [Int]
         if track_id_list == nil && selection.is_network == true && selection.playlist?.id != nil {
+            print("outline view detected network playlist")
             requestedSharedPlaylists[selection.playlist!.id!] = selection
-            self.server?.getDataForPlaylist(selectionNode)
+            self.server!.getDataForPlaylist(selectionNode)
         }
         mainWindowController?.switchToPlaylist(selection)
     }
@@ -335,7 +358,6 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     func outlineView(outlineView: NSOutlineView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forItems draggedItems: [AnyObject]) {
         print("called")
     }
-    
     
     func outlineView(outlineView: NSOutlineView, writeItems items: [AnyObject], toPasteboard pasteboard: NSPasteboard) -> Bool {
         print(items)
@@ -361,7 +383,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         }
         if info.draggingPasteboard().dataForType("Track") != nil {
             print("non nil track data")
-            if (item!.representedObject! as! SourceListItem).name == "Playlists" {
+            if item != nil && (item as! SourceListNode).item.parent?.name == "Playlists" {
                 return .Generic
             }
         }

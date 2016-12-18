@@ -1,70 +1,77 @@
 //
-//  MaybeTheLastServerAttempt.swift
+//  PeerBrowser.swift
 //  minimalTunes
 //
-//  Created by John Moody on 10/2/16.
+//  Created by John Moody on 12/15/16.
 //  Copyright © 2016 John Moody. All rights reserved.
 //
 
-/*import sReto
+import Cocoa
+import MultipeerConnectivity
 
-class P2PServer {
-    let metadataDelegate = SharedLibraryRequestHandler()
-    let wlanModule: WlanModule
-    let remoteModule: RemoteP2PModule
-    let localPeer: LocalPeer
-    let delegate: AppDelegate
-    let interface: SourceListViewController
-    let peerConnectionDictionary = NSMutableDictionary()
-    let namePeerDictionary = NSMutableDictionary()
-    var isStreaming = false
-    var isPlayingBackStream = false
-
+class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate, MCSessionDelegate {
     
-    init(_delegate: AppDelegate) {
-        self.delegate = _delegate
-        self.interface = delegate.mainWindowController!.sourceListViewController!
-        self.wlanModule = WlanModule(type: "metunes", dispatchQueue: dispatch_get_main_queue())
-        self.remoteModule = RemoteP2PModule(baseUrl: NSURL(string: "ws://162.243.26.172:8080/")!, dispatchQueue: dispatch_get_main_queue())
-        self.localPeer = LocalPeer(modules: [self.wlanModule], dispatchQueue: dispatch_get_main_queue())
-        self.localPeer.start(
-            onPeerDiscovered: { peer in
-                print("discovered peer")
-                self.onPeerDiscovered(peer)
-            },
-            onPeerRemoved: { peer in print("Removed peer: \(peer)") },
-            onIncomingConnection: { peer, connection in
-                print("Received incoming connection: \(connection) from peer: \(peer.identifier)")
-                self.onIncomingConnection(peer, connection: connection)
-            },
-            displayName: "MyLocalPeer"
-        )
+    let serviceIdentifier = "j-tunes"
+    let thisPeerID = MCPeerID(displayName: NSHost.currentHost().localizedName!)
+    let serviceAdvertiser: MCNearbyServiceAdvertiser
+    let serviceBrowser: MCNearbyServiceBrowser
+    let interface: SourceListViewController?
+    let metadataDelegate: SharedLibraryRequestHandler?
+    var delegate: AppDelegate?
+    
+    lazy var session : MCSession = {
+        let session = MCSession(peer: self.thisPeerID, securityIdentity: nil, encryptionPreference: MCEncryptionPreference.None)
+        session.delegate = self
+        return session
+    }()
+    
+    init(delegate: AppDelegate, slvc: SourceListViewController) {
+        self.interface = slvc
+        self.delegate = delegate
+        self.metadataDelegate = SharedLibraryRequestHandler()
+        self.serviceAdvertiser = MCNearbyServiceAdvertiser(peer: thisPeerID, discoveryInfo: nil, serviceType: serviceIdentifier)
+        self.serviceBrowser = MCNearbyServiceBrowser(peer: thisPeerID, serviceType: serviceIdentifier)
+        super.init()
+        self.serviceAdvertiser.delegate = self
+        self.serviceAdvertiser.startAdvertisingPeer()
+        self.serviceBrowser.delegate = self
+        self.serviceBrowser.startBrowsingForPeers()
+        slvc.server = self
     }
     
-    func onPeerDiscovered(peer: RemotePeer) {
-        let connection = peer.connect()
-        connection.onClose = { connection in print("Connection closed.") }
-        connection.onError = { error in print("error: \(error)") }
-        connection.onData = { data in print("Received data!") }
-        connection.onConnect = { connection in
-            print("successfully connected")
-            self.onIncomingConnection(peer, connection: connection)
-            self.askPeerForLibraryName(peer, connection: connection)
-        }
+    deinit {
+        self.serviceAdvertiser.stopAdvertisingPeer()
+        self.serviceBrowser.stopBrowsingForPeers()
     }
     
-    func onPeerRemoved(peer: RemotePeer) {
-        //interface.removeNetworkedLibrary(peer.name!)
+    //mark advertiser
+    func advertiser(advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: NSError) {
+        print(error)
     }
     
-    func onIncomingConnection(peer: RemotePeer, connection: Connection) {
-        connection.onTransfer = { connection, transfer in
-            transfer.onProgress = {transfer in print("current progress: \(transfer.progress) of \(transfer.length)") }
-            transfer.onCompleteData = {transfer, data in self.parseTransfer(peer, connection: connection, transfer: transfer, data: data) }
-        }
+    func advertiser(advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: NSData?, invitationHandler: (Bool, MCSession) -> Void) {
+        print("got invitation from \(peerID)")
+        invitationHandler(true, self.session)
     }
     
-    func parseTransfer(peer: RemotePeer, connection: Connection, transfer: Transfer, data: NSData) {
+    //mark browser
+    func browser(browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
+        print("lost peer: \(peerID)")
+        interface!.removeNetworkedLibrary(peerID)
+    }
+    
+    func browser(browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: NSError) {
+        print("error starting browsering: \(error)")
+    }
+    
+    func browser(browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
+        print("found peer: \(peerID) with info \(info)")
+        browser.invitePeer(peerID, toSession: self.session, withContext: nil, timeout: 10)
+    }
+    
+    //mark session
+    func session(session: MCSession, didReceiveData data: NSData, fromPeer peerID: MCPeerID) {
+        print("received data from peer \(peerID)")
         var requestDict: NSDictionary!
         do {
             requestDict = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary
@@ -74,95 +81,111 @@ class P2PServer {
         let dataType = requestDict["type"] as! String
         switch dataType {
         case "request":
-            parseRequest(peer, connection: connection, transfer: transfer, requestDict: requestDict)
+            print("data was a request")
+            parseRequest(peerID, requestDict: requestDict)
         case "payload":
-            parsePayload(peer, connection: connection, transfer: transfer, requestDict: requestDict)
+            parsePayload(peerID, requestDict: requestDict)
         default:
             print("the tingler detects an invalid transfer")
         }
     }
-    
-    func getTrack(id: Int, libraryName: String) {
-        let peer = namePeerDictionary[libraryName] as! RemotePeer
-        let connection = peer.connect()
-        connection.onConnect = { connection in
-            self.onIncomingConnection(peer, connection: connection)
+    func session(session: MCSession, peer peerID: MCPeerID, didChangeState state: MCSessionState) {
+        print("peer \(peerID) session \(session) changed state to \(state.rawValue)")
+        if state == MCSessionState.Connected {
+            sendPeerLibraryName(peerID)
         }
-        askPeerForSong(peer, connection: connection, id: id)
+    }
+    func session(session: MCSession, didReceiveStream stream: NSInputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
+        print("got \(stream) with name \(streamName) from peer \(peerID)")
+    }
+    func session(session: MCSession, didReceiveCertificate certificate: [AnyObject]?, fromPeer peerID: MCPeerID, certificateHandler: (Bool) -> Void) {
+        print("got a certificate \(certificate) from \(peerID)")
+        certificateHandler(true)
+    }
+    func session(session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, withProgress progress: NSProgress) {
+        print("started getting resource \(resourceName) from peer \(peerID) with progress \(progress)")
+    }
+    func session(session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, atURL localURL: NSURL, withError error: NSError?) {
+        print("finished getting resource \(resourceName) from peer \(peerID) at url \(localURL) with error \(error)")
+    }
+    
+    func getTrack(id: Int, peer: MCPeerID) {
+        askPeerForSong(peer, id: id)
     }
     
     func getDataForPlaylist(item: SourceListNode) {
-        let peer = self.namePeerDictionary[item.item.library!.name!] as! RemotePeer
-        let connection = peer.connect()
-        connection.onConnect = { connection in
-            self.onIncomingConnection(peer, connection: connection)
-        }
+        print("about to ask peer for playlist")
+        let peer = item.item.library!.peer as! MCPeerID
         let visibleColumns = NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_SAVED_COLUMNS_STRING) as! NSDictionary
         let visibleColumnsArray = visibleColumns.allKeysForObject(false) as! [String]
         let id = item.item.playlist!.id! as Int
-        askPeerForPlaylist(peer, connection: connection, id: id, visibleColumns: visibleColumnsArray)
+        askPeerForPlaylist(peer, id: id, visibleColumns: visibleColumnsArray)
     }
     
-    func parsePayload(peer: RemotePeer, connection: Connection, transfer: Transfer, requestDict: NSDictionary) {
+    func parsePayload(peer: MCPeerID, requestDict: NSDictionary) {
         let payloadType = requestDict["payload"] as! String
         switch payloadType {
-            case "name":
-                let name = requestDict["name"] as! String
-                interface.addNetworkedLibrary(name)
-                let connectionDictionary = NSMutableDictionary()
-                connectionDictionary["peer"] = peer
-                self.namePeerDictionary[name] = peer
-                self.askPeerForSourceList(peer, connection: connection)
-            case "list":
-                let list = requestDict["list"] as! [NSDictionary]
-                let name = requestDict["name"] as! String
-                interface.addSourcesForNetworkedLibrary(list, peer: name)
-            case "playlist":
-                let requestedID = requestDict["id"] as! Int
-                let item = interface.getNetworkPlaylist(requestedID)
-                let playlist = requestDict["playlist"] as! NSDictionary
-                addTracksForPlaylistData(playlist, item: item!)
-                print("the tingler got a playlist")
-            case "track":
-                guard delegate.mainWindowController?.is_streaming == true else {return}
-                let trackB64 = requestDict["track"] as! String
-                let trackData = NSData(base64EncodedString: trackB64, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
-                guard trackData != nil else {return}
-                let fileManager = NSFileManager.defaultManager()
-                let libraryPath = NSUserDefaults.standardUserDefaults().stringForKey(DEFAULTS_LIBRARY_PATH_STRING)
-                let libraryURL = NSURL(fileURLWithPath: libraryPath!)
-                let trackFilePath = libraryURL.URLByAppendingPathComponent("test.mp3").path
-                fileManager.createFileAtPath(trackFilePath!, contents: trackData, attributes: nil)
-                delegate.mainWindowController!.playNetworkSongCallback()
-                print("the tingler got a song")
+        case "name":
+            dispatch_async(dispatch_get_main_queue()) {
+                self.interface!.addNetworkedLibrary(peer)
+            }
+            self.askPeerForSourceList(peer)
+        case "list":
+            let list = requestDict["list"] as! [NSDictionary]
+            dispatch_async(dispatch_get_main_queue()) {
+                self.interface!.addSourcesForNetworkedLibrary(list, peer: peer)
+            }
+        case "playlist":
+            let requestedID = requestDict["id"] as! Int
+            let item = interface!.getNetworkPlaylist(requestedID)
+            let playlist = requestDict["playlist"] as! NSDictionary
+            dispatch_async(dispatch_get_main_queue()) {
+                self.addTracksForPlaylistData(playlist, item: item!)
+            }
+            print("the tingler got a playlist")
+        case "track":
+            guard delegate!.mainWindowController?.is_streaming == true else {return}
+            let trackB64 = requestDict["track"] as! String
+            let trackData = NSData(base64EncodedString: trackB64, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
+            guard trackData != nil else {return}
+            let fileManager = NSFileManager.defaultManager()
+            let libraryPath = NSUserDefaults.standardUserDefaults().stringForKey(DEFAULTS_LIBRARY_PATH_STRING)
+            let libraryURL = NSURL(fileURLWithPath: libraryPath!)
+            let trackFilePath = libraryURL.URLByAppendingPathComponent("test.mp3").path
+            fileManager.createFileAtPath(trackFilePath!, contents: trackData, attributes: nil)
+            dispatch_async(dispatch_get_main_queue()) {
+                self.delegate!.mainWindowController!.playNetworkSongCallback()
+            }
+            print("the tingler got a song")
         default:
             print("the tingler got an invalid payload")
         }
     }
     
-    func parseRequest(peer: RemotePeer, connection: Connection, transfer: Transfer, requestDict: NSDictionary) {
+    func parseRequest(peer: MCPeerID, requestDict: NSDictionary) {
         guard (requestDict["type"] as! String) == "request" else {return}
         let request = requestDict["request"] as! String
         switch request {
-            case "name":
-                sendPeerLibraryName(peer, connection: connection)
-            case "list":
-                sendPeerSourceList(peer, connection: connection)
-            case "playlist":
-                let playlistID = requestDict["id"] as! Int
-                let visibleColumnsArray = requestDict["fields"] as! [String]
-                sendPeerPlaylistInfo(peer, connection: connection, playlistID: playlistID, visibleColumns: visibleColumnsArray)
-            case "track":
-                let id = requestDict["id"] as! Int
-                sendPeerTrack(peer, connection: connection, trackID: id)
+        case "name":
+            sendPeerLibraryName(peer)
+        case "list":
+            sendPeerSourceList(peer)
+        case "playlist":
+            print("got request for playlist")
+            let playlistID = requestDict["id"] as! Int
+            let visibleColumnsArray = requestDict["fields"] as! [String]
+            sendPeerPlaylistInfo(peer, playlistID: playlistID, visibleColumns: visibleColumnsArray)
+        case "track":
+            let id = requestDict["id"] as! Int
+            sendPeerTrack(peer, trackID: id)
         default:
             print("the tingler detects an invalid request")
         }
         
     }
     
-    func sendPeerPlaylistInfo(peer: RemotePeer, connection: Connection, playlistID: Int, visibleColumns: [String]) {
-        let playlist = metadataDelegate.getPlaylist(playlistID, fields: visibleColumns)
+    func sendPeerPlaylistInfo(peer: MCPeerID, playlistID: Int, visibleColumns: [String]) {
+        let playlist = metadataDelegate!.getPlaylist(playlistID, fields: visibleColumns)
         let playlistPayloadDictionary = NSMutableDictionary()
         playlistPayloadDictionary["type"] = "payload"
         playlistPayloadDictionary["payload"] = "playlist"
@@ -172,17 +195,14 @@ class P2PServer {
         var serializedDict: NSData!
         do {
             serializedDict = try NSJSONSerialization.dataWithJSONObject(playlistPayloadDictionary, options: NSJSONWritingOptions.PrettyPrinted)
+            try self.session.sendData(serializedDict, toPeers: [peer], withMode: .Reliable)
         } catch {
             print(error)
         }
-        if !connection.isConnected {
-            onIncomingConnection(peer, connection: connection)
-        }
-        connection.send(serializedDict)
     }
     
-    func sendPeerTrack(peer: RemotePeer, connection: Connection, trackID: Int) {
-        let trackData = metadataDelegate.getSong(trackID)
+    func sendPeerTrack(peer: MCPeerID, trackID: Int) {
+        let trackData = metadataDelegate!.getSong(trackID)
         let trackPayloadDictionary = NSMutableDictionary()
         trackPayloadDictionary["type"] = "payload"
         trackPayloadDictionary["payload"] = "track"
@@ -190,16 +210,13 @@ class P2PServer {
         var serializedDict: NSData!
         do {
             serializedDict = try NSJSONSerialization.dataWithJSONObject(trackPayloadDictionary, options: NSJSONWritingOptions.PrettyPrinted)
+            try session.sendData(serializedDict, toPeers: [peer], withMode: .Reliable)
         } catch {
             print(error)
         }
-        if !connection.isConnected {
-            onIncomingConnection(peer, connection: connection)
-        }
-        connection.send(serializedDict)
     }
     
-    func sendPeerLibraryName(peer: RemotePeer, connection: Connection) {
+    func sendPeerLibraryName(peer: MCPeerID) {
         let libraryName = NSUserDefaults.standardUserDefaults().stringForKey("libraryName")
         let libraryNameDictionary = NSMutableDictionary()
         libraryNameDictionary["type"] = "payload"
@@ -208,17 +225,14 @@ class P2PServer {
         var serializedDict: NSData!
         do {
             serializedDict = try NSJSONSerialization.dataWithJSONObject(libraryNameDictionary, options: NSJSONWritingOptions.PrettyPrinted)
+            try session.sendData(serializedDict, toPeers: [peer], withMode: .Reliable)
         } catch {
             print(error)
         }
-        if !connection.isConnected {
-            onIncomingConnection(peer, connection: connection)
-        }
-        connection.send(serializedDict)
     }
     
-    func sendPeerSourceList(peer: RemotePeer, connection: Connection) {
-        let sourceList = metadataDelegate.getSourceList()
+    func sendPeerSourceList(peer: MCPeerID) {
+        let sourceList = metadataDelegate!.getSourceList()
         let sourceListPayloadDictionary = NSMutableDictionary()
         sourceListPayloadDictionary["name"] = NSUserDefaults.standardUserDefaults().stringForKey("libraryName")
         sourceListPayloadDictionary["type"] = "payload"
@@ -227,48 +241,39 @@ class P2PServer {
         var serializedDict: NSData!
         do {
             serializedDict = try NSJSONSerialization.dataWithJSONObject(sourceListPayloadDictionary, options: NSJSONWritingOptions.PrettyPrinted)
+            try session.sendData(serializedDict, toPeers: [peer], withMode: .Reliable)
         } catch {
             print(error)
         }
-        if !connection.isConnected {
-            onIncomingConnection(peer, connection: connection)
-        }
-        connection.send(serializedDict)
     }
     
-    func askPeerForLibraryName(peer: RemotePeer, connection: Connection) {
+    func askPeerForLibraryName(peer: MCPeerID) {
         let requestDictionary = NSMutableDictionary()
         requestDictionary["type"] = "request"
         requestDictionary["request"] = "name"
         var data: NSData!
         do {
             data = try NSJSONSerialization.dataWithJSONObject(requestDictionary, options: NSJSONWritingOptions.PrettyPrinted)
-            if !connection.isConnected {
-                onIncomingConnection(peer, connection: connection)
-            }
-            connection.send(data: data)
+            try session.sendData(data, toPeers: [peer], withMode: .Reliable)
         } catch {
             print("error asking for library name: \(error)")
         }
     }
     
-    func askPeerForSourceList(peer: RemotePeer, connection: Connection) {
+    func askPeerForSourceList(peer: MCPeerID) {
         let requestDictionary = NSMutableDictionary()
         requestDictionary["type"] = "request"
         requestDictionary["request"] = "list"
         var data: NSData!
         do {
             data = try NSJSONSerialization.dataWithJSONObject(requestDictionary, options: NSJSONWritingOptions.PrettyPrinted)
-            if !connection.isConnected {
-                onIncomingConnection(peer, connection: connection)
-            }
-            connection.send(data: data)
+            try session.sendData(data, toPeers: [peer], withMode: .Reliable)
         } catch {
             print("error asking for source list: \(error)")
         }
     }
     
-    func askPeerForPlaylist(peer: RemotePeer, connection: Connection, id: Int, visibleColumns: [String]) {
+    func askPeerForPlaylist(peer: MCPeerID, id: Int, visibleColumns: [String]) {
         let requestDictionary = NSMutableDictionary()
         requestDictionary["type"] = "request"
         requestDictionary["request"] = "playlist"
@@ -277,16 +282,14 @@ class P2PServer {
         var data: NSData!
         do {
             data = try NSJSONSerialization.dataWithJSONObject(requestDictionary, options: NSJSONWritingOptions.PrettyPrinted)
-            if !connection.isConnected {
-                onIncomingConnection(peer, connection: connection)
-            }
-            connection.send(data: data)
+            print("sending playlist request to peer")
+            try session.sendData(data, toPeers: [peer], withMode: .Reliable)
         } catch {
             print("error asking for playlist: \(error)")
         }
     }
     
-    func askPeerForSong(peer: RemotePeer, connection: Connection, id: Int) {
+    func askPeerForSong(peer: MCPeerID, id: Int) {
         let requestDictionary = NSMutableDictionary()
         requestDictionary["type"] = "request"
         requestDictionary["request"] = "track"
@@ -294,10 +297,7 @@ class P2PServer {
         var data: NSData!
         do {
             data = try NSJSONSerialization.dataWithJSONObject(requestDictionary, options: NSJSONWritingOptions.PrettyPrinted)
-            if !connection.isConnected {
-                onIncomingConnection(peer, connection: connection)
-            }
-            connection.send(data: data)
+            try session.sendData(data, toPeers: [peer], withMode: MCSessionSendDataMode.Reliable)
         } catch {
             print("error asking for song: \(error)")
         }
@@ -492,7 +492,7 @@ class P2PServer {
         }
         let track_id_list = addedTrackViews.map({return Int($0.track!.id!)})
         item.playlist?.track_id_list = track_id_list
-        interface.doneAddingNetworkPlaylistCallback(item)
+        interface!.doneAddingNetworkPlaylistCallback(item)
         
     }
-}*/
+}

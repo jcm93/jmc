@@ -11,8 +11,6 @@ import CoreData
 
 class SharedLibraryRequestHandler {
     
-    var server: P2PServer?
-    
     func getSourceList() -> [NSMutableDictionary]? {
         let fetchRequest = NSFetchRequest(entityName: "SourceListItem")
         let predicate = NSPredicate(format: "(playlist != nil)")

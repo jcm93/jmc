@@ -347,13 +347,13 @@ class iTunesLibraryParser: NSObject {
                 self.importSortUIUpdate(index)
             }
             
-            song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareArtistDescending))
+            /*song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareArtistDescending))
             let cachedArtistDescendingOrder = checkIfCachedOrderExists("Artist Descending")
             for (index, item) in song_array.enumerate() {
                 (item as! Track).view!.addOrdersObject(cachedArtistDescendingOrder!)
                 (item as! Track).view?.artist_descending_order = index
                 self.importSortUIUpdate(index)
-            }
+            }*/
             
             let cachedAlbumOrder = checkIfCachedOrderExists("Album")
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareAlbum))
@@ -363,13 +363,13 @@ class iTunesLibraryParser: NSObject {
                 self.importSortUIUpdate(index)
             }
             
-            let cachedAlbumDescendingOrder = checkIfCachedOrderExists("Album Descending")
+            /*let cachedAlbumDescendingOrder = checkIfCachedOrderExists("Album Descending")
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareAlbumDescending))
             for (index, item) in song_array.enumerate() {
                 (item as! Track).view!.addOrdersObject(cachedAlbumDescendingOrder!)
                 (item as! Track).view?.album_descending_order = index
                 self.importSortUIUpdate(index)
-            }
+            }*/
             
             let dateAddedOrder = checkIfCachedOrderExists("Date Added")
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareDateAdded))
@@ -387,13 +387,13 @@ class iTunesLibraryParser: NSObject {
                 self.importSortUIUpdate(index)
             }
             
-            song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareAlbumArtistDescending))
+            /*song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareAlbumArtistDescending))
             let cachedAlbumArtistDescendingOrder = checkIfCachedOrderExists("Album Artist Descending")
             for (index, item) in song_array.enumerate() {
                 (item as! Track).view!.addOrdersObject(cachedAlbumArtistDescendingOrder!)
                 (item as! Track).view?.album_artist_descending_order = index
                 self.importSortUIUpdate(index)
-            }
+            }*/
             
             song_array = song_array.sortedArrayUsingSelector(#selector(Track.compareKind))
             let cachedKindOrder = checkIfCachedOrderExists("Kind")

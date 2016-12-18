@@ -21,15 +21,23 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     func tableView(tableView: NSTableView, writeRowsWithIndexes rowIndexes: NSIndexSet, toPasteboard pboard: NSPasteboard) -> Bool {
         print("table view writerows called")
         let rows = NSMutableArray()
-        for thing in (self.selectedObjects as! [TrackView]) {
-            rows.addObject(thing.track!.objectID.URIRepresentation())
+        
+        for index in rowIndexes {
+            let trackView = (self.arrangedObjects as! [TrackView])[index]
+            rows.addObject(trackView.track!.objectID.URIRepresentation())
         }
         let encodedIDs = NSKeyedArchiver.archivedDataWithRootObject(rows)
+        let context = mainWindow?.currentSourceListItem?.name
+        print("context is \(context)")
+        if context != nil {
+            pboard.setString(context!, forType: "context")
+        }
         pboard.setData(encodedIDs, forType: "Track")
         return true
     }
     
     func tableView(tableView: NSTableView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forRowIndexes rowIndexes: NSIndexSet) {
+        
         print("dragypoo called")
     }
     

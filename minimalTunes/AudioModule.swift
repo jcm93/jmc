@@ -175,16 +175,14 @@ class AudioModule: NSObject {
         }
         else {
             do {
-                if curNode.playing == true {
-                    print("initializing playback while node is playing, resetting node")
-                    total_offset_frames = 0
-                    total_offset_seconds = 0
-                    audioEngine.stop()
-                    audioEngine.detachNode(curNode)
-                    curNode = AVAudioPlayerNode()
-                    audioEngine.attachNode(curNode)
-                    audioEngine.connect(curNode, to: equalizer, format: nil)
-                }
+                print("initializing playback for new thing, resetting node")
+                total_offset_frames = 0
+                total_offset_seconds = 0
+                audioEngine.stop()
+                audioEngine.detachNode(curNode)
+                curNode = AVAudioPlayerNode()
+                audioEngine.attachNode(curNode)
+                audioEngine.connect(curNode, to: equalizer, format: nil)
                 let location = currentTrackLocation!
                 let url = NSURL(string: location)
                 if verbotenFileTypes.contains(url!.pathExtension!) {

@@ -17,7 +17,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     
     
     //target views
-    @IBOutlet weak var libraryTableTargetView: NSView!
+    //@IBOutlet weak var libraryTableTargetView: NSView!
     @IBOutlet weak var trackQueueTargetView: NSView!
     @IBOutlet weak var librarySplitView: NSSplitView!
     @IBOutlet var noMusicView: NSView!
@@ -25,6 +25,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     @IBOutlet weak var sourceListTargetView: NSView!
     
     //interface elements
+    @IBOutlet weak var playButton: NSButton!
     @IBOutlet weak var repeatButton: NSButton!
     @IBOutlet weak var parentSplitView: NSSplitView!
     @IBOutlet weak var sourceAreaSplitView: NSSplitView!
@@ -136,14 +137,16 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     func networkPlaylistCallback(id: Int, idList: [Int]) {
+        print("made it to network playlist callback")
         guard self.otherSharedTableViewControllers.objectForKey(id) != nil else {return}
-        let playlistViewController = otherSharedTableViewControllers.objectForKey(id) as! LibraryTableViewController
+        let playlistViewController = otherSharedTableViewControllers.objectForKey(id) as! LibraryTableViewControllerCellBased
         playlistViewController.trackViewArrayController.fetchPredicate = NSPredicate(format: "track.id in %@ AND track.is_network == %@", idList, NSNumber(booleanLiteral: true))
         playlistViewController.tableView.reloadData()
     }
     
     func createPlaylistViewController(item: SourceListItem) -> LibraryTableViewController {
-        let newPlaylistViewController = LibraryTableViewController(nibName: "LibraryTableViewController", bundle: nil)
+        let newPlaylistViewController = LibraryTableViewControllerCellBased(nibName: "LibraryTableViewControllerCellBased", bundle: nil)
+        newPlaylistViewController?.mainWindowController = self
         return newPlaylistViewController!
     }
     
@@ -172,21 +175,25 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     
     func switchToPlaylist(item: SourceListItem) {
         if item == currentSourceListItem {return}
+        currentSourceListItem = item
         let id = item.playlist?.id
         if id != nil {
-            librarySplitView.removeArrangedSubview(librarySplitView.arrangedSubviews.last!)
+            librarySplitView.removeArrangedSubview(currentTableViewController!.view)
         } else {
+            switchToLibrary()
             return
         }
         if otherLocalTableViewControllers.objectForKey(id!) != nil {
             let playlistViewController = otherLocalTableViewControllers.objectForKey(id!) as! LibraryTableViewController
             librarySplitView.addArrangedSubview(playlistViewController.view)
             currentTableViewController = playlistViewController
+            updateInfo()
         }
         else if otherSharedTableViewControllers.objectForKey(id!) != nil {
             let playlistViewController = otherLocalTableViewControllers.objectForKey(id!) as! LibraryTableViewController
             librarySplitView.addArrangedSubview(playlistViewController.view)
             currentTableViewController = playlistViewController
+            updateInfo()
         }
         else {
             let newPlaylistViewController = createPlaylistViewController(item)
@@ -203,8 +210,14 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     func switchToLibrary() {
-        librarySplitView.removeArrangedSubview(currentTableViewController!.view)
-        librarySplitView.addArrangedSubview(libraryTableViewController!.view)
+        if !librarySplitView.arrangedSubviews.contains(libraryTableViewController!.view) {
+            print("adding library view to split view")
+            librarySplitView.removeArrangedSubview(currentTableViewController!.view)
+            librarySplitView.addArrangedSubview(libraryTableViewController!.view)
+            currentTableViewController = libraryTableViewController
+            currentTableViewController?.tableView.reloadData()
+            updateInfo()
+        }
     }
     
     //track queue, source logic
@@ -243,7 +256,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     func createPlayOrderArray(track_played: Track) {
         print("initialize array called")
         let selectionItem = sourceListViewController!.getCurrentSelection()
-        self.current_source_play_order = libraryTableViewController?.getUpcomingIDsForPlayEvent(self.shuffleButton.state, id: Int(track_played.id!))
+        self.current_source_play_order = currentTableViewController?.getUpcomingIDsForPlayEvent(self.shuffleButton.state, id: Int(track_played.id!))
         self.current_source_index = 0
         is_initialized = true
         currentAudioSource = selectionItem.item
@@ -355,8 +368,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         if track.is_network == true {
             self.is_streaming = true
             initializeInterfaceForNetworkTrack()
-            let sharedName = sourceListViewController!.getCurrentSelectionSharedLibraryName()
-            delegate?.server?.getTrack(Int(track.id!), libraryName: sharedName)
+            let peer = sourceListViewController!.getCurrentSelectionSharedLibraryPeer()
+            delegate?.serviceBrowser?.getTrack(Int(track.id!), peer: peer)
             currentTrack = track
             createPlayOrderArray(track)
             return
@@ -410,6 +423,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         updateValuesUnsafe()
         delegate?.audioModule.pause()
         timer!.invalidate()
+        playButton.image = NSImage(named: "NSPlayTemplate")
     }
     
     func unpause() {
@@ -418,6 +432,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         lastTimerDate = NSDate()
         delegate?.audioModule.play()
         timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValuesSafe), userInfo: nil, repeats: true)
+        NSRunLoop.currentRunLoop().addTimer(timer!, forMode: NSRunLoopCommonModes)
+        playButton.image = NSImage(named: "NSPauseTemplate")
     }
     
     func seek(frac: Double) {
@@ -498,13 +514,15 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         secsPlayed = 0
         progressBar.hidden = false
         progressBar.doubleValue = 0
-        startTimer()
+        if paused != true {
+            startTimer()
+        }
     }
 
     func startTimer() {
         //timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValuesUnsafe), userInfo: nil, repeats: true)
         timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValuesSafe), userInfo: nil, repeats: true)
-        NSRunLoop.currentRunLoop().addTimer(timer!, forMode: NSRunLoopCommonModes)
+        playButton.image = NSImage(named: "NSPauseTemplate")
     }
     
     func updateValuesUnsafe() {
@@ -607,6 +625,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
                 //updateNewCachedSorts()
             } else if keyPath! == "arrangedObjects" {
                 updateInfo()
+            } else if keyPath! == "albumArtworkAdded" {
+                self.trackQueueViewController?.reloadData()
+                print("reloaded data")
             }
         }
     }
@@ -655,13 +676,14 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         let trackQueueLayoutConstraints = [NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .Left, relatedBy: .Equal, toItem: trackQueueTargetView, attribute: .Left, multiplier: 1, constant: 0), NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .Right, relatedBy: .Equal, toItem: trackQueueTargetView, attribute: .Right, multiplier: 1, constant: 0), NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .Top, relatedBy: .Equal, toItem: trackQueueTargetView, attribute: .Top, multiplier: 1, constant: 0), NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .Bottom, relatedBy: .Equal, toItem: trackQueueTargetView, attribute: .Bottom, multiplier: 1, constant: 0)]
         NSLayoutConstraint.activateConstraints(trackQueueLayoutConstraints)
         self.trackQueueViewController?.mainWindowController = self
-        self.libraryTableViewController = LibraryTableViewController(nibName: "LibraryTableViewController", bundle: nil)
-        //self.libraryTableViewController = LibraryTableViewControllerCellBased(nibName: "LibraryTableViewControllerCellBased", bundle: nil)
-        self.libraryTableTargetView.addSubview(self.libraryTableViewController!.view)
-        self.libraryTableViewController!.view.frame = self.libraryTableTargetView.bounds
-        let libraryTableLayoutConstraints = [NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Left, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Left, multiplier: 1, constant: 0), NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Right, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Right, multiplier: 1, constant: 0), NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Top, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Top, multiplier: 1, constant: 0), NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Bottom, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Bottom, multiplier: 1, constant: 0)]
-        NSLayoutConstraint.activateConstraints(libraryTableLayoutConstraints)
+        //self.libraryTableViewController = LibraryTableViewController(nibName: "LibraryTableViewController", bundle: nil)
+        self.libraryTableViewController = LibraryTableViewControllerCellBased(nibName: "LibraryTableViewControllerCellBased", bundle: nil)
         self.libraryTableViewController?.mainWindowController = self
+        self.librarySplitView.addArrangedSubview(libraryTableViewController!.view)
+        //self.libraryTableTargetView.addSubview(self.libraryTableViewController!.view)
+        //self.libraryTableViewController!.view.frame = self.libraryTableTargetView.bounds
+        //let libraryTableLayoutConstraints = [NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Left, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Left, multiplier: 1, constant: 0), NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Right, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Right, multiplier: 1, constant: 0), NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Top, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Top, multiplier: 1, constant: 0), NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Bottom, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Bottom, multiplier: 1, constant: 0)]
+        //NSLayoutConstraint.activateConstraints(libraryTableLayoutConstraints)
         numberFormatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
         dateFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyle.Full
         print(hasMusic)
@@ -676,6 +698,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         self.delegate?.audioModule.addObserver(self, forKeyPath: "done_playing", options: .New, context: &my_context)
         self.libraryTableViewController?.trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .New, context: &my_context)
         self.libraryTableViewController?.trackViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .New, context: &my_context)
+        self.albumArtViewController?.addObserver(self, forKeyPath: "albumArtworkAdded", options: .New, context: &my_context)
         trackQueueViewController?.mainWindowController = self
         volumeSlider.continuous = true
         self.window!.titleVisibility = NSWindowTitleVisibility.Hidden

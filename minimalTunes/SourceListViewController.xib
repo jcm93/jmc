@@ -255,6 +255,49 @@
                                                     <outlet property="textField" destination="ylO-vh-KiI" id="ab1-in-Zhv"/>
                                                 </connections>
                                             </tableCellView>
+                                            <tableCellView identifier="UnconfirmedNetworkLibraryCell" id="7FF-he-Du6" customClass="SourceListCellView" customModule="minimalTunes" customModuleProvider="target">
+                                                <rect key="frame" x="1" y="115" width="264" height="17"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <imageView translatesAutoresizingMaskIntoConstraints="NO" id="MOd-A0-xgb">
+                                                        <rect key="frame" x="3" y="0.0" width="17" height="17"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="17" id="K5Y-Qd-Nd9"/>
+                                                            <constraint firstAttribute="height" constant="17" id="QZ6-qE-fiw"/>
+                                                        </constraints>
+                                                        <imageCell key="cell" refusesFirstResponder="YES" imageScaling="proportionallyDown" image="Shared Library" id="MKh-Ck-elu"/>
+                                                    </imageView>
+                                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kFB-4X-MY6">
+                                                        <rect key="frame" x="25" y="0.0" width="120" height="17"/>
+                                                        <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Shared Library Cell" id="2qU-5V-9dc">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                        <connections>
+                                                            <binding destination="7FF-he-Du6" name="value" keyPath="objectValue.item.name" id="SHB-mJ-r7l"/>
+                                                        </connections>
+                                                    </textField>
+                                                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xcr-IT-sKL">
+                                                        <rect key="frame" x="182" y="-1" width="79" height="17"/>
+                                                        <buttonCell key="cell" type="roundRect" title="Connect" bezelStyle="roundedRect" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="OQf-RG-laG">
+                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="system" size="12"/>
+                                                        </buttonCell>
+                                                    </button>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="MOd-A0-xgb" firstAttribute="leading" secondItem="7FF-he-Du6" secondAttribute="leading" constant="3" id="LTI-f7-5yK"/>
+                                                    <constraint firstItem="MOd-A0-xgb" firstAttribute="top" secondItem="kFB-4X-MY6" secondAttribute="top" id="PaF-II-mcb"/>
+                                                    <constraint firstItem="Xcr-IT-sKL" firstAttribute="leading" secondItem="kFB-4X-MY6" secondAttribute="trailing" constant="3" id="Swg-n8-lgc"/>
+                                                    <constraint firstItem="kFB-4X-MY6" firstAttribute="leading" secondItem="MOd-A0-xgb" secondAttribute="trailing" constant="7" id="b59-oP-lve"/>
+                                                    <constraint firstItem="MOd-A0-xgb" firstAttribute="centerY" secondItem="7FF-he-Du6" secondAttribute="centerY" id="j3v-JZ-IwD"/>
+                                                </constraints>
+                                                <connections>
+                                                    <outlet property="imageView" destination="MOd-A0-xgb" id="Qlr-xj-UqA"/>
+                                                    <outlet property="textField" destination="kFB-4X-MY6" id="2RW-WR-QRV"/>
+                                                </connections>
+                                            </tableCellView>
                                         </prototypeCellViews>
                                     </tableColumn>
                                 </tableColumns>

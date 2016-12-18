@@ -117,6 +117,10 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         }
     }
     
+    func interpretDeleteEvent() {
+        
+    }
+    
     func getUpcomingIDsForPlayEvent(shuffleState: Int, id: Int) -> [Int] {
         var idArray = (self.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
         if shuffleState == NSOnState {
@@ -151,6 +155,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         var savedColumns = NSUserDefaults.standardUserDefaults().dictionaryForKey(DEFAULTS_SAVED_COLUMNS_STRING)
         if savedColumns == nil {
             savedColumns = DEFAULT_COLUMN_VISIBILITY_DICTIONARY
+            NSUserDefaults.standardUserDefaults().setObject(savedColumns, forKey: DEFAULTS_SAVED_COLUMNS_STRING)
         }
         
         let menu = tableView.headerView?.menu
@@ -203,6 +208,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         tableView.setDataSource(trackViewArrayController)
         tableView.libraryTableViewController = self
         tableView.reloadData()
+        trackViewArrayController.mainWindow = self.mainWindowController
         super.viewDidLoad()
         // Do view setup here.
     }

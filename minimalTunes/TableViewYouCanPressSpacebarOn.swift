@@ -12,6 +12,7 @@ class TableViewYouCanPressSpacebarOn: NSTableView {
     
     var mainWindowController: MainWindowController?
     var libraryTableViewController: LibraryTableViewController?
+    var trackQueueViewController: TrackQueueViewController?
     var windowIdentifier: String?
     
     let types = ["Track"]
@@ -24,7 +25,7 @@ class TableViewYouCanPressSpacebarOn: NSTableView {
     }
     
     override func awakeFromNib() {
-        self.registerForDraggedTypes(types)
+        //self.registerForDraggedTypes(types)
     }
     
     
@@ -42,7 +43,10 @@ class TableViewYouCanPressSpacebarOn: NSTableView {
         if theEvent.keyCode == 49 {
             libraryTableViewController?.interpretSpacebarEvent()
         } else if theEvent.keyCode == 36 {
-            libraryTableViewController!.interpretEnterEvent()
+            libraryTableViewController?.interpretEnterEvent()
+        } else if theEvent.keyCode == 46 {
+            libraryTableViewController?.interpretDeleteEvent()
+            trackQueueViewController?.interpretDeleteEvent()
         }
         else {
             super.keyDown(theEvent)

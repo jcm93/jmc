@@ -15,9 +15,9 @@
                 <outlet property="durationLabel" destination="R9m-ID-EYY" id="iGY-Vm-qjm"/>
                 <outlet property="infoField" destination="FOU-Bi-82q" id="Fss-pL-ynq"/>
                 <outlet property="librarySplitView" destination="wUo-rb-c1E" id="uk7-b7-jOL"/>
-                <outlet property="libraryTableTargetView" destination="KvQ-Ys-eb9" id="c5K-G9-UvR"/>
                 <outlet property="noMusicView" destination="bwS-Hr-eJh" id="3YZ-hx-K8L"/>
                 <outlet property="parentSplitView" destination="r3P-eO-TmU" id="Ehh-Zs-Dp3"/>
+                <outlet property="playButton" destination="jia-N3-aQf" id="twd-Oj-cbR"/>
                 <outlet property="progressBar" destination="c8A-nk-1SH" id="ldI-h2-WZR"/>
                 <outlet property="progressBarView" destination="ErT-xb-uP3" id="1Fd-8B-I8j"/>
                 <outlet property="queueButton" destination="gzN-xP-Utz" id="gCB-as-x4o"/>
@@ -168,15 +168,6 @@
                             <splitView fixedFrame="YES" placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="568" arrangesAllSubviews="NO" autosaveName="Library Split View" dividerStyle="thin" id="wUo-rb-c1E" userLabel="Library Split View">
                                 <rect key="frame" x="251" y="0.0" width="1176" height="949"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <subviews>
-                                    <customView fixedFrame="YES" placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="568" id="KvQ-Ys-eb9">
-                                        <rect key="frame" x="0.0" y="0.0" width="1176" height="949"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    </customView>
-                                </subviews>
-                                <holdingPriorities>
-                                    <real value="250"/>
-                                </holdingPriorities>
                             </splitView>
                             <customView fixedFrame="YES" id="267-Gg-sLE">
                                 <rect key="frame" x="1428" y="0.0" width="252" height="949"/>
@@ -196,7 +187,7 @@
                         <font key="titleFont" metaFont="system"/>
                     </box>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jia-N3-aQf">
-                        <rect key="frame" x="156" y="1005" width="33" height="26"/>
+                        <rect key="frame" x="156" y="1005" width="26" height="26"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSPlayTemplate" imagePosition="only" alignment="center" imageScaling="axesIndependently" inset="2" id="x4w-yj-sDV">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>

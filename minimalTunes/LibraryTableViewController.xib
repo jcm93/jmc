@@ -19,14 +19,14 @@
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Hz6-mo-xeY">
             <rect key="frame" x="0.0" y="0.0" width="3922" height="512"/>
             <subviews>
-                <scrollView canDrawConcurrently="YES" focusRingType="none" placeholderIntrinsicWidth="436" placeholderIntrinsicHeight="512" borderType="none" autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" horizontalScrollElasticity="none" verticalScrollElasticity="allowed" scrollerKnobStyle="dark" translatesAutoresizingMaskIntoConstraints="NO" id="LLt-nN-be2" userLabel="Library Table Scroll View" customClass="SpecialScrollView" customModule="minimalTunes" customModuleProvider="target">
+                <scrollView wantsLayer="YES" canDrawConcurrently="YES" focusRingType="none" placeholderIntrinsicWidth="436" placeholderIntrinsicHeight="512" borderType="none" autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" horizontalScrollElasticity="none" verticalScrollElasticity="allowed" scrollerKnobStyle="dark" translatesAutoresizingMaskIntoConstraints="NO" id="LLt-nN-be2" userLabel="Library Table Scroll View" customClass="SpecialScrollView" customModule="minimalTunes" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="3922" height="512"/>
                     <clipView key="contentView" autoresizesSubviews="NO" canDrawConcurrently="YES" placeholderIntrinsicWidth="708" placeholderIntrinsicHeight="606" drawsBackground="NO" copiesOnScroll="NO" id="WYy-aH-0Ud">
                         <rect key="frame" x="0.0" y="0.0" width="3922" height="512"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView canDrawConcurrently="YES" verticalHuggingPriority="750" placeholderIntrinsicWidth="833" placeholderIntrinsicHeight="583" allowsExpansionToolTips="YES" columnAutoresizingStyle="none" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveName="poop" rowHeight="20" headerView="x7Z-Ii-Jp5" viewBased="YES" id="bX0-m9-9Ad" userLabel="Library Table View" customClass="TableViewYouCanPressSpacebarOn" customModule="minimalTunes" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="3922" height="489"/>
+                                <rect key="frame" x="0.0" y="0.0" width="3755" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1427,6 +1427,7 @@
                                     <binding destination="6rv-dK-iy8" name="content" keyPath="arrangedObjects" id="H3j-EW-nJB"/>
                                     <binding destination="6rv-dK-iy8" name="selectionIndexes" keyPath="selectionIndexes" previousBinding="H3j-EW-nJB" id="tqC-TW-sJD"/>
                                     <binding destination="6rv-dK-iy8" name="sortDescriptors" keyPath="sortDescriptors" previousBinding="tqC-TW-sJD" id="eqZ-3L-RqL"/>
+                                    <outlet property="menu" destination="vQe-ef-xLx" id="sRF-en-nP5"/>
                                 </connections>
                             </tableView>
                         </subviews>
@@ -1463,6 +1464,28 @@
         </arrayController>
         <menu id="H0B-Bf-KKf">
             <point key="canvasLocation" x="-70.5" y="-189.5"/>
+        </menu>
+        <menu id="vQe-ef-xLx">
+            <items>
+                <menuItem title="Add to Queue" id="cm0-xq-aaa">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="addToQueueFromTableView:" target="-2" id="u8y-Tw-Q3D"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Play" id="pJV-rx-3fJ">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="playFromTableView:" target="-2" id="UWY-JE-6NA"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Get Info..." id="Psa-Ue-KSj">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="getInfoFromTableView:" target="-2" id="9dD-YY-Jjt"/>
+                    </connections>
+                </menuItem>
+            </items>
         </menu>
     </objects>
     <resources>
