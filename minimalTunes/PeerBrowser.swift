@@ -17,6 +17,8 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
     let serviceBrowser: MCNearbyServiceBrowser
     let interface: SourceListViewController?
     let metadataDelegate: SharedLibraryRequestHandler?
+    var requestedTrackDatas = [Int : Track]()
+    
     var delegate: AppDelegate?
     
     lazy var session : MCSession = {
@@ -138,9 +140,11 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
         case "playlist":
             let requestedID = requestDict["id"] as! Int
             let item = interface!.getNetworkPlaylist(requestedID)
-            let playlist = requestDict["playlist"] as! NSDictionary
+            let playlist = requestDict["playlist"] as? NSDictionary
             dispatch_async(dispatch_get_main_queue()) {
-                self.addTracksForPlaylistData(playlist, item: item!)
+                if playlist != nil {
+                    self.addTracksForPlaylistData(playlist! , item: item!)
+                }
             }
             print("the tingler got a playlist")
         case "track":
@@ -157,6 +161,14 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
                 self.delegate!.mainWindowController!.playNetworkSongCallback()
             }
             print("the tingler got a song")
+        case "track download":
+            guard let track = (self.requestedTrackDatas[requestDict["id"] as! Int]) else {return}
+            self.requestedTrackDatas.removeValueForKey(requestDict["id"] as! Int)
+            let trackB64 = requestDict["track"] as! String
+            guard let trackData = NSData(base64EncodedString: trackB64, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters) else {return}
+            let fileHandler = YeOldeFileHandler()
+            fileHandler.createFileForNetworkTrack(track, data: trackData)
+            print("the tingler got a song download")
         default:
             print("the tingler got an invalid payload")
         }
@@ -178,6 +190,9 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
         case "track":
             let id = requestDict["id"] as! Int
             sendPeerTrack(peer, trackID: id)
+        case "track download":
+            let id = requestDict["id"] as! Int
+            sendPeerTrackDownload(peer, trackID: id)
         default:
             print("the tingler detects an invalid request")
         }
@@ -206,6 +221,22 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
         let trackPayloadDictionary = NSMutableDictionary()
         trackPayloadDictionary["type"] = "payload"
         trackPayloadDictionary["payload"] = "track"
+        trackPayloadDictionary["track"] = trackData?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
+        var serializedDict: NSData!
+        do {
+            serializedDict = try NSJSONSerialization.dataWithJSONObject(trackPayloadDictionary, options: NSJSONWritingOptions.PrettyPrinted)
+            try session.sendData(serializedDict, toPeers: [peer], withMode: .Reliable)
+        } catch {
+            print(error)
+        }
+    }
+    
+    func sendPeerTrackDownload(peer: MCPeerID, trackID: Int) {
+        let trackData = metadataDelegate!.getSong(trackID)
+        let trackPayloadDictionary = NSMutableDictionary()
+        trackPayloadDictionary["type"] = "payload"
+        trackPayloadDictionary["payload"] = "track download"
+        trackPayloadDictionary["id"] = trackID
         trackPayloadDictionary["track"] = trackData?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
         var serializedDict: NSData!
         do {
@@ -303,7 +334,34 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
         }
     }
     
+    func askPeerForSongDownload(peer: MCPeerID, track: Track) {
+        let requestDictionary = NSMutableDictionary()
+        requestDictionary["type"] = "request"
+        requestDictionary["request"] = "track download"
+        requestDictionary["id"] = track.id!
+        self.requestedTrackDatas[Int(track.id!)] = track
+        var data: NSData!
+        do {
+            data = try NSJSONSerialization.dataWithJSONObject(requestDictionary, options: NSJSONWritingOptions.PrettyPrinted)
+            try session.sendData(data, toPeers: [peer], withMode: MCSessionSendDataMode.Reliable)
+        } catch {
+            print("error asking for song download: \(error)")
+        }
+        
+    }
+    
     func addTracksForPlaylistData(playlistDictionary: NSDictionary, item: SourceListItem) {
+        let library = {() -> Library? in
+            let fetchReq = NSFetchRequest(entityName: "Library")
+            let predicate = NSPredicate(format: "is_network == nil OR is_network == false")
+            fetchReq.predicate = predicate
+            do {
+                let result = try managedContext.executeFetchRequest(fetchReq)[0] as! Library
+                return result
+            } catch {
+                return nil
+            }
+        }()
         //get tracks
         let tracks = playlistDictionary["playlist"] as! [NSDictionary]
         let addedArtists = NSMutableDictionary()
@@ -345,6 +403,8 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
                             if artistCheck == nil {
                                 let artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: managedContext) as! Artist
                                 artist.name = artistName
+                                artist.id = library?.next_artist_id
+                                library?.next_artist_id = Int(library!.next_artist_id!) + 1
                                 artist.is_network = true
                                 addedArtists[artistName] = artist
                                 return artist
@@ -366,6 +426,8 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
                             if albumCheck == nil {
                                 let album = NSEntityDescription.insertNewObjectForEntityForName("Album", inManagedObjectContext: managedContext) as! Album
                                 album.name = albumName
+                                album.id = library?.next_album_id
+                                library?.next_album_id = Int(library!.next_album_id!) + 1
                                 album.is_network = true
                                 addedAlbums[albumName] = album
                                 return album
@@ -396,6 +458,8 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
                             if composerCheck == nil {
                                 let composer = NSEntityDescription.insertNewObjectForEntityForName("Composer", inManagedObjectContext: managedContext) as! Composer
                                 composer.name = composerName
+                                composer.id = library?.next_composer_id
+                                library?.next_composer_id = Int(library!.next_composer_id!) + 1
                                 composer.is_network = true
                                 addedComposers[composerName] = composer
                                 return composer
@@ -419,6 +483,8 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
                             if genreCheck == nil {
                                 let genre = NSEntityDescription.insertNewObjectForEntityForName("Genre", inManagedObjectContext: managedContext) as! Genre
                                 genre.name = genreName
+                                genre.id = library?.next_genre_id
+                                library?.next_genre_id = Int(library!.next_genre_id!) + 1
                                 genre.is_network = true
                                 addedGenres[genreName] = genre
                                 return genre
@@ -465,6 +531,8 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
                     newTrack.sort_name = track["sort_name"] as? String
                 case "track_number":
                     newTrack.track_num = track["track_number"] as? Int
+                case "location":
+                    newTrack.location = track["location"] as? String
                 case "album_artist":
                     let artistName = track["album_artist"] as! String
                     let artist: Artist = {

@@ -43,6 +43,7 @@ class AlbumArtViewController: NSViewController {
     func initAlbumArt(track: Track) {
         if track.is_network == true {
             //todo: implement this
+            return
         }
         if track.album != nil && track.album!.primary_art != nil {
             print("gonna get sum album art")

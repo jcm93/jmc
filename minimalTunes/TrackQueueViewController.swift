@@ -98,16 +98,10 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         }
         else {
             if currentTrackIndex != nil {
-                (trackQueue[currentTrackIndex!]).viewType = .pastTrack
-                currentTrackIndex! += 1
-                numPastTracks += 1
-                if numPastTracks >= numPastTracksToShow {
-                    globalOffset += 1
-                }
                 let newCurrentTrackView = TrackQueueView()
-                newCurrentTrackView.viewType = .currentTrack
+                newCurrentTrackView.viewType = .futureTrack
                 newCurrentTrackView.track = track
-                trackQueue.insert(newCurrentTrackView, atIndex: currentTrackIndex!)
+                trackQueue.insert(newCurrentTrackView, atIndex: currentTrackIndex! + 1)
             } else {
                 currentTrackIndex = 0
                 (trackQueue[currentTrackIndex!]).viewType = .currentTrack

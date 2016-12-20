@@ -159,6 +159,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         if item.playlist?.track_id_list != nil {
             track_id_list = item.playlist!.track_id_list as! [Int]
             predicates.append(NSPredicate(format: "track.id in %@", track_id_list))
+        } else {
+            predicates.append(NSPredicate(format: "track.id in {}"))
         }
         if item.is_network == true {
             predicates.append(NSPredicate(format: "track.is_network == true"))
@@ -183,14 +185,14 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             switchToLibrary()
             return
         }
-        if otherLocalTableViewControllers.objectForKey(id!) != nil {
+        if otherLocalTableViewControllers.objectForKey(id!) != nil && item.is_network != true {
             let playlistViewController = otherLocalTableViewControllers.objectForKey(id!) as! LibraryTableViewController
             librarySplitView.addArrangedSubview(playlistViewController.view)
             currentTableViewController = playlistViewController
             updateInfo()
         }
-        else if otherSharedTableViewControllers.objectForKey(id!) != nil {
-            let playlistViewController = otherLocalTableViewControllers.objectForKey(id!) as! LibraryTableViewController
+        else if otherSharedTableViewControllers.objectForKey(id!) != nil && item.is_network == true {
+            let playlistViewController = otherSharedTableViewControllers.objectForKey(id!) as! LibraryTableViewController
             librarySplitView.addArrangedSubview(playlistViewController.view)
             currentTableViewController = playlistViewController
             updateInfo()
@@ -278,12 +280,15 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         } else {
             id = current_source_play_order![current_source_index! + 1]
             current_source_index! += 1
+            if currentAudioSource?.is_network == true {
+                
+            }
             let next_track = getTrackWithID(id!)
             dispatch_async(dispatch_get_main_queue()) {
                 self.currentTrack?.is_playing = false
             }
-            self.currentTrack = next_track
-            self.currentTrackView = next_track?.view
+            trackQueue.insert(next_track!, atIndex: 0)
+            trackQueueViewController?.addTrackToQueue(next_track!, context: currentSourceListItem!.name!, tense: 2)
             return next_track
         }
     }
@@ -331,7 +336,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         else {
             self.shuffle = false
             if currentTrack != nil {
-                current_source_index = (current_source_play_order?.indexOf(Int(currentTrack!.id!)))! + 1
+                current_source_index = (current_source_play_order!.indexOf(Int(currentTrack!.id!))! + 1)
             } else {
             }
             print("current source index:" + String(current_source_index))
@@ -380,11 +385,10 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             unpause()
         }
         createPlayOrderArray(track)
+        trackQueue.insert(track, atIndex: 0)
+        trackQueueViewController?.addTrackToQueue(track, context: currentSourceListItem!.name!, tense: 2)
+        //trackQueueViewController?.changeCurrentTrack(track, context: currentSourceListItem!.name!)
         delegate?.audioModule.playImmediately(track.location!)
-        self.currentTrack?.is_playing = false
-        self.currentTrack = track
-        self.currentTrack?.is_playing = true
-        self.currentTrackView = track.view
         paused = false
         currentTrack = track
     }
@@ -698,11 +702,12 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         progressBarView.mainWindowController = self
         theBox.contentView?.hidden = true
         searchField.delegate = self
-                self.currentTableViewController = libraryTableViewController
+        self.currentTableViewController = libraryTableViewController
         self.delegate?.audioModule.addObserver(self, forKeyPath: "track_changed", options: .New, context: &my_context)
         self.delegate?.audioModule.addObserver(self, forKeyPath: "done_playing", options: .New, context: &my_context)
         self.libraryTableViewController?.trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .New, context: &my_context)
         self.libraryTableViewController?.trackViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .New, context: &my_context)
+        self.libraryTableViewController?.trackViewArrayController.fetchPredicate = NSPredicate(format: "is_network == nil or is_network == false")
         self.albumArtViewController?.addObserver(self, forKeyPath: "albumArtworkAdded", options: .New, context: &my_context)
         trackQueueViewController?.mainWindowController = self
         volumeSlider.continuous = true

@@ -32,7 +32,12 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         if context != nil {
             pboard.setString(context!, forType: "context")
         }
-        pboard.setData(encodedIDs, forType: "Track")
+        if mainWindow?.currentSourceListItem?.is_network == true {
+            print("settin network pboard data")
+            pboard.setData(encodedIDs, forType: "NetworkTrack")
+        } else {
+            pboard.setData(encodedIDs, forType: "Track")
+        }
         return true
     }
     

@@ -14,7 +14,7 @@ class SourceListThatYouCanPressSpacebarOn: NSOutlineView {
     var treeController: DragAndDropTreeController?
     
     override func awakeFromNib() {
-        self.registerForDraggedTypes(["SourceListItem", "Track"])
+        self.registerForDraggedTypes(["SourceListItem", "Track", "NetworkTrack"])
     }
 
     override func drawRect(dirtyRect: NSRect) {

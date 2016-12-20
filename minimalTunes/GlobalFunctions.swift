@@ -39,6 +39,7 @@ let MOVE_ORGANIZATION_TYPE = 1
 let COPY_ORGANIZATION_TYPE = 2
 let UNKNOWN_ARTIST_STRING = "Unknown Artist"
 let UNKNOWN_ALBUM_STRING = "Unknown Album"
+let NO_FILENAME_STRING = "_"
 
 let SOURCE_FETCH_REQUEST = NSFetchRequest(entityName: "SourceListItem")
 let TRACK_FETCH_REQUEST = NSFetchRequest(entityName: "Track")
@@ -56,7 +57,7 @@ let BATCH_PURGE_NETWORK_FETCH_REQUESTS: [NSFetchRequest] = [GENRE_FETCH_REQUEST,
 
 let VALID_ARTWORK_TYPE_EXTENSIONS = [".jpg", ".png", ".tiff", ".gif", ".pdf"]
 
-let verbotenFileTypes = [".m4v", ".m4p"]
+let verbotenFileTypes = ["m4v", "m4p"]
 
 let fieldsToCachedOrdersDictionary: NSDictionary = [
     "date_added" : "Date Added",
@@ -614,6 +615,42 @@ func editName(tracks: [Track]?, name: String) {
         if sortName != name {
             track.sort_name = sortName
         }
+    }
+}
+
+func addIDsAndMakeNonNetwork(track: Track) {
+    let library = {() -> Library? in
+        let fetchReq = NSFetchRequest(entityName: "Library")
+        let predicate = NSPredicate(format: "is_network == nil OR is_network == false")
+        fetchReq.predicate = predicate
+        do {
+            let result = try managedContext.executeFetchRequest(fetchReq)[0] as! Library
+            return result
+        } catch {
+            return nil
+        }
+    }()
+    track.id = Int(library!.next_track_id!)
+    library!.next_track_id = Int(library!.next_track_id!) + 1
+    if track.album?.is_network == true {
+        track.album?.is_network = false
+        track.album?.id = library?.next_album_id
+        library!.next_album_id = Int(library!.next_album_id!) + 1
+    }
+    if track.artist?.is_network == true {
+        track.artist?.is_network = false
+        track.artist?.id = library?.next_artist_id
+        library!.next_artist_id = Int(library!.next_artist_id!) + 1
+    }
+    if track.composer?.is_network == true {
+        track.composer?.is_network = false
+        track.composer?.id = library?.next_composer_id
+        library!.next_composer_id = Int(library!.next_composer_id!) + 1
+    }
+    if track.genre?.is_network == true {
+        track.genre?.is_network = false
+        track.genre?.id = library?.next_genre_id
+        library!.next_genre_id = Int(library!.next_genre_id!) + 1
     }
 }
 

@@ -211,11 +211,16 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         //needed? or garbage collected? or leaked?
         sharedHeaderNode!.children.removeAtIndex(sharedHeaderNode!.children.indexOf(node)!)
         let deleteFetch = NSFetchRequest(entityName: "SourceListItem")
-        let deletePredicate = NSPredicate(format: "is_network == true AND library.peer == %@", peer)
+        let deletePredicate = NSPredicate(format: "is_network == true")
         deleteFetch.predicate = deletePredicate
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
         do {
-            try managedContext.persistentStoreCoordinator?.executeRequest(deleteRequest, withContext: managedContext)
+            let results = try managedContext.executeFetchRequest(deleteFetch) as! [SourceListItem]
+            for result in results {
+                if result.library?.peer == peer {
+                    managedContext.deleteObject(result)
+                }
+            }
+            try managedContext.save()
         } catch {
             print(error)
         }
@@ -380,14 +385,22 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
                 print("returning none")
                 return .None
             }
-        }
-        if info.draggingPasteboard().dataForType("Track") != nil {
+        } else if info.draggingPasteboard().dataForType("Track") != nil {
             print("non nil track data")
             if item != nil && (item as! SourceListNode).item.parent?.name == "Playlists" {
                 return .Generic
             }
+        } else if info.draggingPasteboard().dataForType("NetworkTrack") != nil {
+            print("non nil networktrack data")
+            if item != nil {
+                let itemParentName = (item as! SourceListNode).item.parent?.name
+                print(itemParentName)
+                if item != nil && (itemParentName == "Playlists" || itemParentName == "Library") {
+                    return .Generic
+                }
+            }
         }
-        print("returning move")
+        print("returning none")
         return .None
     }
     
@@ -435,6 +448,23 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
                 id_list.append(Int(track.id!))
                 playlist?.track_id_list = id_list
             }
+        } else if info.draggingPasteboard().dataForType("NetworkTrack") != nil {
+            print("processing network track transfers")
+            let playlistItem = (item as! SourceListNode).item
+            let playlist = playlistItem.playlist
+            let data = info.draggingPasteboard().dataForType("NetworkTrack")
+            let unCodedThing = NSKeyedUnarchiver.unarchiveObjectWithData(data!) as! NSMutableArray
+            let tracks = { () -> [Track] in
+                var result = [Track]()
+                for trackURI in unCodedThing {
+                    let id = managedContext.persistentStoreCoordinator?.managedObjectIDForURIRepresentation(trackURI as! NSURL)
+                    result.append(managedContext.objectWithID(id!) as! Track)
+                }
+                return result
+            }()
+            for track in tracks {
+                self.server?.askPeerForSongDownload(currentSourceListItem!.library?.peer as! MCPeerID, track: track)
+            }
             
         }
         return true
@@ -455,6 +485,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         sourceList.autosaveExpandedItems = true
         sourceList.expandItem(nil, expandChildren: true)
         sourceList.reloadData()
+        sourceList.allowsEmptySelection = false
         // Do view setup here.
         super.viewDidLoad()
     }

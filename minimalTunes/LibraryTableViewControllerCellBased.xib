@@ -153,7 +153,7 @@
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
-                                        <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="kind_order:"/>
+                                        <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="kind_order"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <connections>
                                             <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.file_kind" id="QgF-tf-jWX"/>

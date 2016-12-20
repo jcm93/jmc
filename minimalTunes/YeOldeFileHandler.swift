@@ -375,4 +375,59 @@ class YeOldeFileHandler: NSObject {
         }
         return track
     }
+    
+    func createFileForNetworkTrack(track: Track, data: NSData) -> Bool {
+        let library = {() -> Library? in
+            let fetchReq = NSFetchRequest(entityName: "Library")
+            let predicate = NSPredicate(format: "is_network == nil OR is_network == false")
+            fetchReq.predicate = predicate
+            do {
+                let result = try managedContext.executeFetchRequest(fetchReq)[0] as! Library
+                return result
+            } catch {
+                return nil
+            }
+        }()
+        var albumDirectoryURL: NSURL?
+        let libraryPathURL = NSURL(fileURLWithPath: NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_LIBRARY_PATH_STRING) as! String)
+        let albumArtist = track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING
+        let album = track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING
+        //form filename
+        let trackNumberStringRepresentation: String
+        if track.track_num != nil {
+            let trackNumber = Int(track.track_num!)
+            if trackNumber < 10 {
+                trackNumberStringRepresentation = "0\(trackNumber)"
+            } else {
+                trackNumberStringRepresentation = String(trackNumber)
+            }
+        } else {
+            trackNumberStringRepresentation = ""
+        }
+        let trackNameString = track.name != nil ? track.name! : ""
+        let trackExtension = NSURL(string: track.location!)!.pathExtension!
+        var filenameString = "\(trackNumberStringRepresentation) \(trackNameString).\(trackExtension)"
+        if filenameString == " " {
+            filenameString = NO_FILENAME_STRING
+        }
+        albumDirectoryURL = libraryPathURL.URLByAppendingPathComponent(albumArtist).URLByAppendingPathComponent(album)
+        let trackLocation = albumDirectoryURL!.URLByAppendingPathComponent(filenameString, isDirectory: false).path
+        do {
+            try fileManager.createDirectoryAtURL(albumDirectoryURL!, withIntermediateDirectories: true, attributes: nil)
+            try data.writeToFile(trackLocation!, options: NSDataWritingOptions.DataWritingAtomic)
+            data.writeToFile(trackLocation!, atomically: true)
+        } catch {
+            print("error creating album directory: \(error)")
+            return false
+        }
+        track.location = NSURL(fileURLWithPath: trackLocation!).absoluteString
+        track.is_network = nil
+        addIDsAndMakeNonNetwork(track)
+        track.view?.is_network = nil
+        print("reached end of adding network track to main library")
+        for order in cachedOrders! {
+            reorderForTracks([track], cachedOrder: order)
+        }
+        return true
+    }
 }
