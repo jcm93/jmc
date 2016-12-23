@@ -42,7 +42,7 @@
 		0D5A55E91DDBE16600E46F08 /* SourceListCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */; };
 		0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */; };
 		0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */; };
-		0D76F6A81D24B9AC00C6E70F /* YeOldeFileHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6A71D24B9AC00C6E70F /* YeOldeFileHandler.swift */; };
+		0D76F6A81D24B9AC00C6E70F /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */; };
 		0D76F6AA1D270EB900C6E70F /* DragAndDropArrayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6A91D270EB900C6E70F /* DragAndDropArrayController.swift */; };
 		0D76F6AC1D28581900C6E70F /* DragAndDropTreeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6AB1D28581900C6E70F /* DragAndDropTreeController.swift */; };
 		0D79409F1D13D2D5008AA167 /* stupidPlaybackObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D79409E1D13D2D5008AA167 /* stupidPlaybackObserver.swift */; };
@@ -165,7 +165,7 @@
 		0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListCellView.swift; sourceTree = "<group>"; };
 		0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagEditorWindow.swift; sourceTree = "<group>"; };
 		0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagEditorWindow.xib; sourceTree = "<group>"; };
-		0D76F6A71D24B9AC00C6E70F /* YeOldeFileHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YeOldeFileHandler.swift; sourceTree = "<group>"; };
+		0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		0D76F6A91D270EB900C6E70F /* DragAndDropArrayController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragAndDropArrayController.swift; sourceTree = "<group>"; };
 		0D76F6AB1D28581900C6E70F /* DragAndDropTreeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragAndDropTreeController.swift; sourceTree = "<group>"; };
 		0D79409E1D13D2D5008AA167 /* stupidPlaybackObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = stupidPlaybackObserver.swift; sourceTree = "<group>"; };
@@ -265,7 +265,7 @@
 				0DD274EE1D3190360055C43B /* GlobalFunctions.swift */,
 				0D8B7E2D1DFDE2CA0018E242 /* MTSortDescriptor.swift */,
 				0D1BDFA41D0F44A70092FBA0 /* AudioModule.swift */,
-				0D76F6A71D24B9AC00C6E70F /* YeOldeFileHandler.swift */,
+				0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */,
 				0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */,
 				0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */,
 				0DE74A521D7D9457005211E6 /* SharedLibraryRequestHandler.swift */,
@@ -626,7 +626,7 @@
 				0D8B7E2E1DFDE2CA0018E242 /* MTSortDescriptor.swift in Sources */,
 				0D01AD911D7079D900F9211F /* EqualizerWindowController.swift in Sources */,
 				0D9CE67B1D34A7DF004FA8CB /* ImportProgressBar.swift in Sources */,
-				0D76F6A81D24B9AC00C6E70F /* YeOldeFileHandler.swift in Sources */,
+				0D76F6A81D24B9AC00C6E70F /* DatabaseManager.swift in Sources */,
 				0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */,
 				0D2E66471DC00B7F00CC174E /* TableColumnVisibilityController.swift in Sources */,
 				0DA8D0401D1B1128009FEC28 /* ProgressBarView.swift in Sources */,

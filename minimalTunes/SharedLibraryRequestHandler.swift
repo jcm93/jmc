@@ -86,6 +86,23 @@ class SharedLibraryRequestHandler {
         return playlistDictionary
     }
     
+    func getAllMetadataForTrack(trackID: Int) -> NSDictionary? {
+        let trackFetchRequest = NSFetchRequest(entityName: "Track")
+        let trackFetchPredicate = NSPredicate(format: "id == %@", trackID)
+        trackFetchRequest.predicate = trackFetchPredicate
+        let track: Track? = {() -> Track? in
+            do {
+                let result = try managedContext.executeFetchRequest(trackFetchRequest) as! [Track]
+                return result[0]
+            } catch {
+                print("error: \(error)")
+            }
+        }()!
+        let fields = Array(DEFAULT_COLUMN_VISIBILITY_DICTIONARY.keys)
+        let metadata = track?.dictRepresentation(fields)
+        return metadata
+    }
+    
     func getCachedOrders(fields: [String], id_array: [Int]) -> [NSDictionary]? {
         //takes an array of track IDs about to be sent over the wire, and compiles the cached orders for sorting them, filtered according to what fields are displayed in the peer's table.
         //returns array of dictionaries, whose gots arrays of ints insides em

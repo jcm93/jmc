@@ -13,7 +13,7 @@ class AlbumArtViewController: NSViewController {
     @IBOutlet var albumArtBox: NSBox!
     @IBOutlet weak var albumArtView: DragAndDropImageView!
     
-    var fileHandler = YeOldeFileHandler()
+    var fileHandler = DatabaseManager()
     dynamic var albumArtworkAdded = false
 
     

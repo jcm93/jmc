@@ -69,7 +69,7 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
     
     func commitEdits() {
         print("committing edits")
-        let fileHandler = YeOldeFileHandler()
+        let fileHandler = DatabaseManager()
         //comments, composer, release date, track num, album artist, name, album, artist, disc number, 
         for track in selectedTracks! {
             if nameField.stringValue.isEmpty == false {

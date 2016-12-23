@@ -95,6 +95,9 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
         print("peer \(peerID) session \(session) changed state to \(state.rawValue)")
         if state == MCSessionState.Connected {
             sendPeerLibraryName(peerID)
+        } else if state == MCSessionState.NotConnected {
+            interface?.removeNetworkedLibrary(peerID)
+            serviceBrowser.invitePeer(peerID, toSession: self.session, withContext: nil, timeout: 10)
         }
     }
     func session(session: MCSession, didReceiveStream stream: NSInputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
@@ -166,8 +169,9 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
             self.requestedTrackDatas.removeValueForKey(requestDict["id"] as! Int)
             let trackB64 = requestDict["track"] as! String
             guard let trackData = NSData(base64EncodedString: trackB64, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters) else {return}
-            let fileHandler = YeOldeFileHandler()
-            fileHandler.createFileForNetworkTrack(track, data: trackData)
+            guard let trackMetadata = requestDict["metadata"] as? NSDictionary else {return}
+            let databaseManager = DatabaseManager()
+            databaseManager.createFileForNetworkTrack(track, data: trackData, trackMetadata: trackMetadata)
             print("the tingler got a song download")
         default:
             print("the tingler got an invalid payload")
@@ -238,6 +242,7 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
         trackPayloadDictionary["payload"] = "track download"
         trackPayloadDictionary["id"] = trackID
         trackPayloadDictionary["track"] = trackData?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
+        trackPayloadDictionary["metadata"] = metadataDelegate!.getAllMetadataForTrack(trackID)
         var serializedDict: NSData!
         do {
             serializedDict = try NSJSONSerialization.dataWithJSONObject(trackPayloadDictionary, options: NSJSONWritingOptions.PrettyPrinted)

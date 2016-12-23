@@ -14,6 +14,18 @@ import CoreData
 
 var managedContext = (NSApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 
+var library = {() -> Library? in
+    let fetchReq = NSFetchRequest(entityName: "Library")
+    let predicate = NSPredicate(format: "is_network == nil OR is_network == false")
+    fetchReq.predicate = predicate
+    do {
+        let result = try managedContext.executeFetchRequest(fetchReq)[0] as! Library
+        return result
+    } catch {
+        return nil
+    }
+}()
+
 //mark sort descriptors
 var artistSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_artist", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "sort_album", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "track_num", ascending:true), NSSortDescriptor(key: "name", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:)))]
 
@@ -654,6 +666,20 @@ func addIDsAndMakeNonNetwork(track: Track) {
     }
 }
 
+func getInstanceWithHighestIDForEntity(entityName: String) -> NSManagedObject? {
+    let fetchRequest = NSFetchRequest(entityName: entityName)
+    fetchRequest.fetchLimit = 1
+    let sortDescriptor = NSSortDescriptor(key: "id", ascending: false)
+    fetchRequest.sortDescriptors = [sortDescriptor]
+    do {
+        let result = try managedContext.executeFetchRequest(fetchRequest) as! [NSManagedObject]
+        return result[0]
+    } catch {
+        print("error getting instance with highest id: \(error)")
+    }
+    return nil
+}
+
 func editArtist(tracks: [Track]?, artistName: String) {
     print(artistName)
     let managedContext: NSManagedObjectContext = {
@@ -863,10 +889,10 @@ func insert(tracks: NSOrderedSet, track: TrackView, isGreater: (Track -> Track -
     while (low <= high) {
         index = (low + high) / 2
         let result = isGreater(track.track!)((tracks[index] as! TrackView).track!)
-        if result == .OrderedAscending {
+        if result == .OrderedDescending {
             low = index + 1
         }
-        else if result == .OrderedDescending {
+        else if result == .OrderedAscending {
             high = index - 1
         }
         else {
@@ -940,13 +966,14 @@ func reorderForTracks(tracks: [Track], cachedOrder: CachedOrder) {
     }
     for track in tracks {
         let index = insert(fuckYou, track: track.view!, isGreater: comparator)
+        print("index is \(index)")
         fuckYou.insertObject(track.view!, atIndex: index)
         fixIndices(fuckYou, index: index, order: cachedOrder.order!)
     }
     cachedOrder.track_views = fuckYou.copy() as? NSOrderedSet
 }
 
-func addPrimaryArtForTrack(track: Track, art: NSData, albumDirectoryURL: NSURL) -> Track? {
+func addPrimaryArtForTrack(track: Track, art: NSData, trackURL: NSURL) -> Track? {
     print("adding new primary album art")
     guard let artImage = NSImage(data: art) else {return nil}
     let artHash = art.hashValue
