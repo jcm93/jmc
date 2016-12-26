@@ -17,6 +17,7 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
     let serviceBrowser: MCNearbyServiceBrowser
     let interface: SourceListViewController?
     let metadataDelegate: SharedLibraryRequestHandler?
+    let databaseManager: DatabaseManager
     var requestedTrackDatas = [Int : Track]()
     
     var delegate: AppDelegate?
@@ -30,6 +31,7 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
     init(delegate: AppDelegate, slvc: SourceListViewController) {
         self.interface = slvc
         self.delegate = delegate
+        self.databaseManager = DatabaseManager()
         self.metadataDelegate = SharedLibraryRequestHandler()
         self.serviceAdvertiser = MCNearbyServiceAdvertiser(peer: thisPeerID, discoveryInfo: nil, serviceType: serviceIdentifier)
         self.serviceBrowser = MCNearbyServiceBrowser(peer: thisPeerID, serviceType: serviceIdentifier)
@@ -59,7 +61,7 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
     //mark browser
     func browser(browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
         print("lost peer: \(peerID)")
-        interface!.removeNetworkedLibrary(peerID)
+        //interface!.removeNetworkedLibrary(peerID)
     }
     
     func browser(browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: NSError) {
@@ -96,7 +98,9 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
         if state == MCSessionState.Connected {
             sendPeerLibraryName(peerID)
         } else if state == MCSessionState.NotConnected {
-            interface?.removeNetworkedLibrary(peerID)
+            dispatch_async(dispatch_get_main_queue()) {
+                self.interface?.removeNetworkedLibrary(peerID)
+            }
             serviceBrowser.invitePeer(peerID, toSession: self.session, withContext: nil, timeout: 10)
         }
     }
@@ -146,7 +150,8 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
             let playlist = requestDict["playlist"] as? NSDictionary
             dispatch_async(dispatch_get_main_queue()) {
                 if playlist != nil {
-                    self.addTracksForPlaylistData(playlist! , item: item!)
+                    self.databaseManager.addTracksForPlaylistData(playlist!, item: item!)
+                    self.interface!.doneAddingNetworkPlaylistCallback(item!)
                 }
             }
             print("the tingler got a playlist")
@@ -171,7 +176,9 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
             guard let trackData = NSData(base64EncodedString: trackB64, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters) else {return}
             guard let trackMetadata = requestDict["metadata"] as? NSDictionary else {return}
             let databaseManager = DatabaseManager()
-            databaseManager.createFileForNetworkTrack(track, data: trackData, trackMetadata: trackMetadata)
+            dispatch_async(dispatch_get_main_queue()) {
+                databaseManager.createFileForNetworkTrack(track, data: trackData, trackMetadata: trackMetadata)
+            }
             print("the tingler got a song download")
         default:
             print("the tingler got an invalid payload")
@@ -200,7 +207,6 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
         default:
             print("the tingler detects an invalid request")
         }
-        
     }
     
     func sendPeerPlaylistInfo(peer: MCPeerID, playlistID: Int, visibleColumns: [String]) {
@@ -246,6 +252,7 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
         var serializedDict: NSData!
         do {
             serializedDict = try NSJSONSerialization.dataWithJSONObject(trackPayloadDictionary, options: NSJSONWritingOptions.PrettyPrinted)
+            print("sending song")
             try session.sendData(serializedDict, toPeers: [peer], withMode: .Reliable)
         } catch {
             print(error)
@@ -352,220 +359,6 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
         } catch {
             print("error asking for song download: \(error)")
         }
-        
-    }
-    
-    func addTracksForPlaylistData(playlistDictionary: NSDictionary, item: SourceListItem) {
-        let library = {() -> Library? in
-            let fetchReq = NSFetchRequest(entityName: "Library")
-            let predicate = NSPredicate(format: "is_network == nil OR is_network == false")
-            fetchReq.predicate = predicate
-            do {
-                let result = try managedContext.executeFetchRequest(fetchReq)[0] as! Library
-                return result
-            } catch {
-                return nil
-            }
-        }()
-        //get tracks
-        let tracks = playlistDictionary["playlist"] as! [NSDictionary]
-        let addedArtists = NSMutableDictionary()
-        let addedAlbums = NSMutableDictionary()
-        let addedComposers = NSMutableDictionary()
-        let addedGenres = NSMutableDictionary()
-        let addedTracks = NSMutableDictionary()
-        var addedTrackViews = [TrackView]()
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        for track in tracks {
-            let newTrack = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: managedContext) as! Track
-            let newTrackView = NSEntityDescription.insertNewObjectForEntityForName("TrackView", inManagedObjectContext: managedContext) as! TrackView
-            newTrackView.is_network = true
-            newTrackView.track = newTrack
-            newTrack.is_network = true
-            newTrack.is_playing = false
-            for field in track.allKeys as! [String] {
-                let trackArtist: Artist
-                switch field {
-                case "id":
-                    let id = track["id"] as! Int
-                    newTrack.id = track["id"] as? Int
-                    addedTracks[id] = newTrack
-                case "is_enabled":
-                    newTrack.status = track["is_enabled"] as? Bool
-                case "name":
-                    newTrack.name = track["name"] as? String
-                    newTrackView.name_order = track["name_order"] as? Int
-                case "time":
-                    newTrack.time = track["time"] as? NSNumber
-                case "artist":
-                    let artistName = track["artist"] as! String
-                    let artist: Artist = {
-                        if addedArtists[artistName] != nil {
-                            return addedArtists[artistName] as! Artist
-                        } else {
-                            let artistCheck = checkIfArtistExists(artistName)
-                            if artistCheck == nil {
-                                let artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: managedContext) as! Artist
-                                artist.name = artistName
-                                artist.id = library?.next_artist_id
-                                library?.next_artist_id = Int(library!.next_artist_id!) + 1
-                                artist.is_network = true
-                                addedArtists[artistName] = artist
-                                return artist
-                            } else {
-                                return artistCheck!
-                            }
-                        }
-                    }()
-                    newTrack.artist = artist
-                    newTrackView.artist_order = track["artist_order"] as? Int
-                    trackArtist = artist
-                case "album":
-                    let albumName = track["album"] as! String
-                    let album: Album = {
-                        if addedAlbums[albumName] != nil {
-                            return addedAlbums[albumName] as! Album
-                        } else {
-                            let albumCheck = checkIfAlbumExists(albumName)
-                            if albumCheck == nil {
-                                let album = NSEntityDescription.insertNewObjectForEntityForName("Album", inManagedObjectContext: managedContext) as! Album
-                                album.name = albumName
-                                album.id = library?.next_album_id
-                                library?.next_album_id = Int(library!.next_album_id!) + 1
-                                album.is_network = true
-                                addedAlbums[albumName] = album
-                                return album
-                            } else {
-                                return albumCheck!
-                            }
-                        }
-                    }()
-                    newTrack.album = album
-                    newTrackView.album_order = track["album_order"] as? Int
-                case "date_added":
-                    newTrack.date_added = dateFormatter.dateFromString(track["date_added"] as! String)
-                    newTrackView.date_added_order = track["date_added_order"] as? Int
-                case "date_modified":
-                    newTrack.date_modified = dateFormatter.dateFromString(track["date_modified"] as! String)
-                case "date_released":
-                    newTrack.album?.release_date = dateFormatter.dateFromString(track["date_released"] as! String)
-                    newTrackView.release_date_order = track["release_date_order"] as? Int
-                case "comments":
-                    newTrack.comments = track["comments"] as? String
-                case "composer":
-                    let composerName = track["composer"] as! String
-                    let composer: Composer = {
-                        if addedComposers[composerName] != nil {
-                            return addedComposers[composerName] as! Composer
-                        } else {
-                            let composerCheck = checkIfComposerExists(composerName)
-                            if composerCheck == nil {
-                                let composer = NSEntityDescription.insertNewObjectForEntityForName("Composer", inManagedObjectContext: managedContext) as! Composer
-                                composer.name = composerName
-                                composer.id = library?.next_composer_id
-                                library?.next_composer_id = Int(library!.next_composer_id!) + 1
-                                composer.is_network = true
-                                addedComposers[composerName] = composer
-                                return composer
-                            } else {
-                                return composerCheck!
-                            }
-                        }
-                    }()
-                    newTrack.composer = composer
-                case "disc_number":
-                    newTrack.disc_number = track["disc_number"] as? Int
-                case "equalizer_preset":
-                    newTrack.equalizer_preset = track["equalizer_preset"] as? String
-                case "genre":
-                    let genreName = track["genre"] as! String
-                    let genre: Genre = {
-                        if addedComposers[genreName] != nil {
-                            return addedGenres[genreName] as! Genre
-                        } else {
-                            let genreCheck = checkIfGenreExists(genreName)
-                            if genreCheck == nil {
-                                let genre = NSEntityDescription.insertNewObjectForEntityForName("Genre", inManagedObjectContext: managedContext) as! Genre
-                                genre.name = genreName
-                                genre.id = library?.next_genre_id
-                                library?.next_genre_id = Int(library!.next_genre_id!) + 1
-                                genre.is_network = true
-                                addedGenres[genreName] = genre
-                                return genre
-                            } else {
-                                return genreCheck!
-                            }
-                        }
-                    }()
-                    newTrack.genre = genre
-                    newTrackView.genre_order = track["genre_order"] as? Int
-                case "kind":
-                    newTrack.file_kind = track["kind"] as? String
-                    newTrackView.kind_order = track["kind_order"] as? Int
-                case "date_last_played":
-                    newTrack.date_last_played = dateFormatter.dateFromString(track["date_last_played"] as! String)
-                case "date_last_skipped":
-                    newTrack.date_last_skipped = dateFormatter.dateFromString(track["date_last_skipped"] as! String)
-                case "movement_name":
-                    newTrack.movement_name = track["movement_name"] as? String
-                case "movement_number":
-                    newTrack.movement_number = track["movement_number"] as? Int
-                case "play_count":
-                    newTrack.play_count = track["play_count"] as? Int
-                case "rating":
-                    newTrack.rating = track["rating"] as? Int
-                case "bit_rate":
-                    newTrack.bit_rate = track["bit_rate"] as? Int
-                case "sample_rate":
-                    newTrack.sample_rate = track["sample_Rate"] as? Int
-                case "size":
-                    newTrack.size = track["size"] as? Int
-                case "skip_count":
-                    newTrack.skip_count = track["skip_count"] as? Int
-                case "sort_album":
-                    newTrack.sort_album = track["sort_album"] as? String
-                case "sort_album_artist":
-                    newTrack.sort_album_artist = track["sort_album_artist"] as? String
-                    newTrackView.album_artist_order = track["album_artist_order"] as? Int
-                case "sort_artist":
-                    newTrack.sort_artist = track["sort_artist"] as? String
-                case "sort_composer":
-                    newTrack.sort_composer = track["sort_composer"] as? String
-                case "sort_name":
-                    newTrack.sort_name = track["sort_name"] as? String
-                case "track_number":
-                    newTrack.track_num = track["track_number"] as? Int
-                case "location":
-                    newTrack.location = track["location"] as? String
-                case "album_artist":
-                    let artistName = track["album_artist"] as! String
-                    let artist: Artist = {
-                        if addedArtists[artistName] != nil {
-                            return addedArtists[artistName] as! Artist
-                        } else {
-                            let artistCheck = checkIfArtistExists(artistName)
-                            if artistCheck == nil {
-                                let artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: managedContext) as! Artist
-                                artist.name = artistName
-                                artist.is_network = true
-                                addedArtists[artistName] = artist
-                                return artist
-                            } else {
-                                return artistCheck!
-                            }
-                        }
-                    }()
-                    newTrack.album?.album_artist = artist
-                default:
-                    break
-                }
-            }
-            addedTrackViews.append(newTrackView)
-        }
-        let track_id_list = addedTrackViews.map({return Int($0.track!.id!)})
-        item.playlist?.track_id_list = track_id_list
-        interface!.doneAddingNetworkPlaylistCallback(item)
         
     }
 }

@@ -207,8 +207,30 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     func removeNetworkedLibrary(peer: MCPeerID) {
-        let node = self.sharedLibraryIdentifierDictionary[peer] as! SourceListNode
-        //needed? or garbage collected? or leaked?
+        guard let node = self.sharedLibraryIdentifierDictionary[peer] as? SourceListNode else {return}
+        var nodesNotVisited = [SourceListNode]()
+        nodesNotVisited.append(node)
+        while !nodesNotVisited.isEmpty {
+            let theNode = nodesNotVisited.removeFirst()
+            if theNode.item.playlist?.track_id_list != nil {
+                //delete network tracks, track views, artist, albums, composers, genres
+                let trackViewFetchRequest = NSFetchRequest(entityName: "TrackView")
+                let trackViewFetchPredicate = NSPredicate(format: "is_network == true AND track.id in %@", theNode.item.playlist?.track_id_list as! [Int])
+                trackViewFetchRequest.predicate = trackViewFetchPredicate
+                do {
+                    let results = try managedContext.executeFetchRequest(trackViewFetchRequest) as! [TrackView]
+                    for thing in results {
+                        managedContext.deleteObject(thing.track!)
+                        managedContext.deleteObject(thing)
+                    }
+                } catch {
+                    print(error)
+                }
+            }
+            if theNode.children.count > 0 {
+                nodesNotVisited.appendContentsOf(theNode.children)
+            }
+        }
         sharedHeaderNode!.children.removeAtIndex(sharedHeaderNode!.children.indexOf(node)!)
         let deleteFetch = NSFetchRequest(entityName: "SourceListItem")
         let deletePredicate = NSPredicate(format: "is_network == true")

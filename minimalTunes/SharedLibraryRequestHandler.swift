@@ -13,7 +13,7 @@ class SharedLibraryRequestHandler {
     
     func getSourceList() -> [NSMutableDictionary]? {
         let fetchRequest = NSFetchRequest(entityName: "SourceListItem")
-        let predicate = NSPredicate(format: "(playlist != nil)")
+        let predicate = NSPredicate(format: "(playlist != nil) AND (is_network == nil OR is_network == false)")
         fetchRequest.predicate = predicate
         var results: [SourceListItem]?
         do {
@@ -88,7 +88,7 @@ class SharedLibraryRequestHandler {
     
     func getAllMetadataForTrack(trackID: Int) -> NSDictionary? {
         let trackFetchRequest = NSFetchRequest(entityName: "Track")
-        let trackFetchPredicate = NSPredicate(format: "id == %@", trackID)
+        let trackFetchPredicate = NSPredicate(format: "id == \(trackID)")
         trackFetchRequest.predicate = trackFetchPredicate
         let track: Track? = {() -> Track? in
             do {
@@ -96,6 +96,7 @@ class SharedLibraryRequestHandler {
                 return result[0]
             } catch {
                 print("error: \(error)")
+                return nil
             }
         }()!
         let fields = Array(DEFAULT_COLUMN_VISIBILITY_DICTIONARY.keys)

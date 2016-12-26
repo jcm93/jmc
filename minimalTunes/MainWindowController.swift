@@ -324,9 +324,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             print("shuffling")
             current_source_temp_shuffle = current_source_play_order
             if current_source_temp_shuffle != nil {
-            shuffle_array(&current_source_temp_shuffle!)
+            shuffle_array(&current_source_play_order!)
                 if (currentTrack != nil) {
-                    current_source_temp_shuffle = current_source_temp_shuffle!.filter( {
+                    current_source_play_order = current_source_play_order!.filter( {
                         $0 != currentTrack!.id
                     })
                 }
@@ -334,6 +334,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             }
         }
         else {
+            current_source_play_order = (currentTableViewController?.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
             self.shuffle = false
             if currentTrack != nil {
                 current_source_index = (current_source_play_order!.indexOf(Int(currentTrack!.id!))! + 1)

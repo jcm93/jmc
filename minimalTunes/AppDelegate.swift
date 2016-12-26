@@ -15,7 +15,7 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
     
     var mainWindowController: MainWindowController?
-    var DatabaseManager: DatabaseManager?
+    var databaseManager: DatabaseManager?
     var preferencesWindowController: PreferencesWindowController?
     var setupWindowController: InitialSetupWindowController?
     var equalizerWindowController: EqualizerWindowController?
@@ -55,15 +55,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         openFiles()
     }
     func openFiles() {
-        
         let myFileDialog: NSOpenPanel = NSOpenPanel()
         let handler = DatabaseManager()
         myFileDialog.allowsMultipleSelection = true
         myFileDialog.canChooseDirectories = false
         myFileDialog.runModal()
-        
-        for url in myFileDialog.URLs {
-            handler.addTrackFromURLString(url.absoluteString)
+        let urlStrings = myFileDialog.URLs.map({return $0.absoluteString})
+        do {
+            try handler.addTracksFromURLStrings(urlStrings)
+        } catch {
+            print(error)
         }
     }
     
@@ -106,7 +107,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         // Insert code here to initialize your application
         let fuckTransform = TransformerIntegerToTimestamp()
-        DatabaseManager = DatabaseManager()
+        databaseManager = DatabaseManager()
         NSValueTransformer.setValueTransformer(fuckTransform, forName: "AssTransform")
         if NSUserDefaults.standardUserDefaults().boolForKey(DEFAULTS_ARE_INITIALIZED_STRING) != true {
             print("has not started before")

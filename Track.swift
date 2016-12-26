@@ -61,8 +61,8 @@ class Track: NSManagedObject {
             case "genre":
                 dict["genre"] = self.genre?.name
                 dict["genre_order"] = self.view?.genre_order
-            case "kind":
-                dict["kind"] = self.file_kind
+            case "file_kind":
+                dict["file_kind"] = self.file_kind
                 dict["kind_order"] = self.view?.kind_order
             case "date_last_played":
                 if self.date_last_played != nil {
@@ -99,8 +99,8 @@ class Track: NSManagedObject {
                 dict["sort_composer"] = self.sort_composer
             case "sort_name":
                 dict["sort_name"] = self.sort_name
-            case "track_number":
-                dict["track_number"] = self.track_num
+            case "track_num":
+                dict["track_num"] = self.track_num
             default:
                 break
             }

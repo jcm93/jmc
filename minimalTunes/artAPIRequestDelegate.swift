@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class artAPIRequestDelegate {
+/*class artAPIRequestDelegate {
     
     var dataTask: NSURLSessionDataTask?
     let defaultSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
@@ -67,7 +67,7 @@ class artAPIRequestDelegate {
             } else {
                 if let httpResponse = response as? NSHTTPURLResponse {
                     let albumDirectoryPath = NSURL(string: self.requestedTrack!.location!)!.URLByDeletingLastPathComponent
-                    if addPrimaryArtForTrack(self.requestedTrack!, art: data!, albumDirectoryURL: albumDirectoryPath!) != nil {
+                    if addPrimaryArtForTrack(self.requestedTrack!, art: data!) != nil {
                         dispatch_async(dispatch_get_main_queue()) {
                             (NSApplication.sharedApplication().delegate as! AppDelegate).mainWindowController?.albumArtViewController?.initAlbumArt(self.requestedTrack!)
                         }
@@ -80,4 +80,4 @@ class artAPIRequestDelegate {
         return nil
         
     }
-}
+}*/

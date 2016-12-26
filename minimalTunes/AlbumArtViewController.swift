@@ -66,7 +66,7 @@ class AlbumArtViewController: NSViewController {
                     let artwork = self.fileHandler.getArtworkFromFile(track.location!)
                     if artwork != nil {
                         let albumDirectoryURL = NSURL(string: track.location!)!.URLByDeletingLastPathComponent!
-                        if addPrimaryArtForTrack(track, art: artwork!, albumDirectoryURL: albumDirectoryURL) != nil {
+                        if self.fileHandler.addPrimaryArtForTrack(track, art: artwork!) != nil {
                             dispatch_async(dispatch_get_main_queue()) {
                                 do {try managedContext.save()}catch {print(error)}
                                 self.initAlbumArt(track)
@@ -82,7 +82,7 @@ class AlbumArtViewController: NSViewController {
                         let artwork = NSData(contentsOfURL: imageURL!)
                         if artwork != nil {
                             let albumDirectoryURL = NSURL(string: track.location!)!.URLByDeletingLastPathComponent!
-                            if addPrimaryArtForTrack(track, art: artwork!, albumDirectoryURL: albumDirectoryURL) != nil {
+                            if self.fileHandler.addPrimaryArtForTrack(track, art: artwork!) != nil {
                                 dispatch_async(dispatch_get_main_queue()) {
                                     do {try managedContext.save()}catch {print(error)}
                                     self.initAlbumArt(track)

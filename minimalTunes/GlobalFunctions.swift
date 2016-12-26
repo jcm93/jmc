@@ -44,6 +44,7 @@ let DEFAULTS_ARE_INITIALIZED_STRING = "importantDefaultsAreInitialized"
 let DEFAULTS_RENAMES_FILES_STRING = "renamesFiles"
 let DEFAULTS_SHUFFLE_STRING = "shuffle"
 let DEFAULTS_REPEAT_STRING = "willRepeat"
+let DEFAULTS_NEW_NETWORK_TRACK = "newNetworkTrack"
 
 //other constants
 let NO_ORGANIZATION_TYPE = 0
@@ -971,54 +972,6 @@ func reorderForTracks(tracks: [Track], cachedOrder: CachedOrder) {
         fixIndices(fuckYou, index: index, order: cachedOrder.order!)
     }
     cachedOrder.track_views = fuckYou.copy() as? NSOrderedSet
-}
-
-func addPrimaryArtForTrack(track: Track, art: NSData, trackURL: NSURL) -> Track? {
-    print("adding new primary album art")
-    guard let artImage = NSImage(data: art) else {return nil}
-    let artHash = art.hashValue
-    let newArtwork = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtwork", inManagedObjectContext: managedContext) as! AlbumArtwork
-    newArtwork.image_hash = artHash
-    if track.album!.primary_art != nil {
-        let contains: Bool = {
-            if track.album?.primary_art?.image_hash == artHash {
-                return true
-            }
-            else {
-                return false
-            }
-        }()
-        guard contains != true else {return track}
-        if track.album!.other_art != nil {
-            let contains: Bool = {
-                for album in track.album!.other_art!.art! {
-                    if (album as! AlbumArtwork).image_hash == artHash {
-                        return true
-                    }
-                }
-                return false
-            }()
-            guard contains != true else {return track}
-            track.album!.other_art!.addArtObject(track.album!.primary_art!)
-        }
-        else if track.album!.other_art == nil {
-            let newArtworkCollection = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtworkCollection", inManagedObjectContext: managedContext) as! AlbumArtworkCollection
-            newArtworkCollection.album = track.album!
-            newArtworkCollection.addArtObject(track.album!.primary_art!)
-        }
-    }
-    let artURL = albumDirectoryURL.URLByAppendingPathComponent("\(artHash).png")
-    newArtwork.artwork_location = artURL.absoluteString
-    let artTIFF = artImage.TIFFRepresentation
-    let artRep = NSBitmapImageRep(data: artTIFF!)
-    let artPNG = artRep?.representationUsingType(.NSPNGFileType, properties: [:])
-    track.album?.primary_art = newArtwork
-    do {
-        try artPNG?.writeToURL(artURL, options: NSDataWritingOptions.DataWritingAtomic)
-    } catch {
-        print("error writing file: \(error)")
-    }
-    return track
 }
 
 func addSecondaryArtForTrack(track: Track, art: NSData, albumDirectoryPath: String) -> Track {
