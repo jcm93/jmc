@@ -125,8 +125,11 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     func getUpcomingIDsForPlayEvent(shuffleState: Int, id: Int) -> [Int] {
         var idArray = (self.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
         if shuffleState == NSOnState {
-            idArray.removeAtIndex(idArray.indexOf(id)!)
             shuffle_array(&idArray)
+            let indexOfPlayedTrack = idArray.indexOf(id)!
+            if indexOfPlayedTrack != 0 {
+                swap(&idArray[idArray.indexOf(id)!], &idArray[0])
+            }
             return idArray
         } else {
             let result = Array(idArray.suffix(idArray.count - idArray.indexOf(id)!))
@@ -136,13 +139,13 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     func fixPlayOrderForChangedFilterPredicate(current_source_play_order: [Int], shuffleState: Int) -> [Int] {
         let current_track_ids = (trackViewArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int} )
-        var new_play_order = current_source_play_order
+        var new_play_order = current_track_ids
         if shuffleState == NSOnState {
             if trackViewArrayController?.filterPredicate != nil {
                 for track_id in current_track_ids {
                     self.isVisibleDict[track_id] = true
                 }
-                new_play_order = current_source_play_order.filter({return (isVisibleDict[$0] as? Bool) == true})
+                new_play_order = current_track_ids.filter({return (isVisibleDict[$0] as? Bool) == true})
                 isVisibleDict = [:]
             } else {
                 shuffle_array(&new_play_order)

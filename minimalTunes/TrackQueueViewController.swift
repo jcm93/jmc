@@ -98,10 +98,11 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         }
         else {
             if currentTrackIndex != nil {
-                let newCurrentTrackView = TrackQueueView()
+                insertTrackInQueue(track, index: currentTrackIndex! + 1, context: context)
+                /*let newCurrentTrackView = TrackQueueView()
                 newCurrentTrackView.viewType = .futureTrack
                 newCurrentTrackView.track = track
-                trackQueue.insert(newCurrentTrackView, atIndex: currentTrackIndex! + 1)
+                trackQueue.insert(newCurrentTrackView, atIndex: currentTrackIndex! + 1)*/
             } else {
                 currentTrackIndex = 0
                 (trackQueue[currentTrackIndex!]).viewType = .currentTrack
@@ -170,12 +171,6 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 trackQueue[currentTrackIndex!].viewType = .currentTrack
             }
         }
-        else {
-            print("callin change current track")
-            let track = mainWindowController?.currentTrack
-            let context = mainWindowController?.currentAudioSource?.name != nil ? mainWindowController?.currentAudioSource?.name : mainWindowController?.currentSourceListItem?.name
-            changeCurrentTrack(track!, context: context!)
-        }
         tableView?.reloadData()
     }
     
@@ -211,8 +206,34 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         mainWindowController?.createPlaylistFromTracks(track_id_list)
     }
     
+    func addTracksToQueue(row: Int?, context: String?, tracks: [Track]) {
+        var actualRow: Int
+        let theRow = row == nil ? self.tableView.numberOfRows : row!
+        switch showAllTracks {
+        case true:
+            actualRow = theRow
+        default:
+            actualRow = theRow + globalOffset
+        }
+        for track in tracks {
+            insertTrackInQueue(track, index: actualRow, context: context!)
+            let queueIndex = currentTrackIndex == nil ? actualRow : actualRow - currentTrackIndex! - 1
+            print("queue index \(queueIndex), actualRow \(actualRow), currentIndex \(currentTrackIndex)")
+            mainWindowController?.delegate?.audioModule.addTrackToQueue(track, index: queueIndex)
+            if queueIndex >= mainWindowController?.trackQueue.count || queueIndex == -1 {
+                print("putting \(track.name) at index \(mainWindowController!.trackQueue.count - 1)")
+                mainWindowController?.trackQueue.append(track)
+            } else {
+                print("putting \(track.name) at index \(queueIndex)")
+                mainWindowController?.trackQueue.insert(track, atIndex: queueIndex)
+            }
+            actualRow += 1
+        }
+        mainWindowController?.makePlayOrderChangesIfNecessaryForQueuedTracks(tracks)
+        tableView.reloadData()
+    }
+    
     func tableView(tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
-        print("accept drop")
         var actualRow: Int
         switch showAllTracks {
         case true:
@@ -220,11 +241,12 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         default:
             actualRow = row + globalOffset
         }
+        print("accept drop")
         if (info.draggingPasteboard().types!.contains("Track")) {
             let thing = info.draggingPasteboard().dataForType("Track")
             let context = info.draggingPasteboard().stringForType("context")
             let unCodedThing = NSKeyedUnarchiver.unarchiveObjectWithData(thing!) as! NSMutableArray
-            var tracks = { () -> [Track] in
+            let tracks = { () -> [Track] in
                 var result = [Track]()
                 for trackURI in unCodedThing {
                     let id = managedContext.persistentStoreCoordinator?.managedObjectIDForURIRepresentation(trackURI as! NSURL)
@@ -232,20 +254,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 }
                 return result
             }()
-            for track in tracks {
-                insertTrackInQueue(track, index: actualRow, context: context!)
-                let queueIndex = currentTrackIndex == nil ? actualRow : actualRow - currentTrackIndex! - 1
-                print("queue index \(queueIndex), actualRow \(actualRow), currentIndex \(currentTrackIndex)")
-                mainWindowController?.delegate?.audioModule.addTrackToQueue(track, index: queueIndex)
-                if queueIndex >= mainWindowController?.trackQueue.count || queueIndex == -1 {
-                    print("putting \(track.name) at index \(mainWindowController!.trackQueue.count - 1)")
-                    mainWindowController?.trackQueue.append(track)
-                } else {
-                    print("putting \(track.name) at index \(queueIndex)")
-                    mainWindowController?.trackQueue.insert(track, atIndex: queueIndex)
-                }
-                actualRow += 1
-            }
+            addTracksToQueue(row, context: context, tracks: tracks)
         }
         if (info.draggingPasteboard().types!.contains("public.TrackQueueView")) {
             let codedViews = info.draggingPasteboard().dataForType("public.TrackQueueView")

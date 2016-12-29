@@ -83,6 +83,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     var currentNetworkTrackView: TrackView?
     var current_source_play_order: [Int]?
     var current_source_temp_shuffle: [Int]?
+    var current_source_unshuffled_play_order: [Int]?
     var current_source_index: Int?
     var current_source_index_temp: Int?
     var infoString: String?
@@ -244,15 +245,24 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     
     
     func addTracksToQueue(tracks: [Track]) {
-        //todo test for whatever case means you need to start playing immediately
-        
-        //else
+        trackQueueViewController?.addTracksToQueue(nil, context: currentSourceListItem!.name!, tracks: tracks)
+        //self.trackQueueViewController?.reloadData()
+    }
+    
+    func makePlayOrderChangesIfNecessaryForQueuedTracks(tracks: [Track]) {
         for track in tracks {
-            self.trackQueueViewController!.addTrackToQueue(track, context: cur_view_title, tense: 1)
-            delegate?.audioModule.addTrackToQueue(track, index: nil)
-            trackQueue.append(track)
+            if currentSourceListItem != currentAudioSource {
+                createPlayOrderArray(track)
+            } else {
+                modifyPlayOrderArrayForQueuedTracks([track])
+            }
         }
-        self.trackQueueViewController?.reloadData()
+    }
+    
+    func modifyPlayOrderArrayForQueuedTracks(tracks: [Track]) {
+        for track in tracks {
+            self.current_source_play_order = self.current_source_play_order?.filter({$0 != track.id})
+        }
     }
     
     func createPlayOrderArray(track_played: Track) {
@@ -275,7 +285,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             return currentTrack
         }
         var id: Int?
-        if current_source_play_order!.count == current_source_index! + 1 {
+        if current_source_play_order!.count <= current_source_index! + 1 {
             return nil
         } else {
             id = current_source_play_order![current_source_index! + 1]
@@ -322,8 +332,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             self.shuffle = true
             NSUserDefaults.standardUserDefaults().setBool(true, forKey: DEFAULTS_SHUFFLE_STRING)
             print("shuffling")
-            current_source_temp_shuffle = current_source_play_order
-            if current_source_temp_shuffle != nil {
+            current_source_unshuffled_play_order = current_source_play_order
+            if current_source_unshuffled_play_order != nil {
             shuffle_array(&current_source_play_order!)
                 if (currentTrack != nil) {
                     current_source_play_order = current_source_play_order!.filter( {
@@ -334,7 +344,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             }
         }
         else {
-            current_source_play_order = (currentTableViewController?.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
+            current_source_play_order = current_source_unshuffled_play_order
             self.shuffle = false
             if currentTrack != nil {
                 current_source_index = (current_source_play_order!.indexOf(Int(currentTrack!.id!))! + 1)
@@ -387,8 +397,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         }
         createPlayOrderArray(track)
         trackQueue.insert(track, atIndex: 0)
-        trackQueueViewController?.addTrackToQueue(track, context: currentSourceListItem!.name!, tense: 2)
-        //trackQueueViewController?.changeCurrentTrack(track, context: currentSourceListItem!.name!)
+        //trackQueueViewController?.addTrackToQueue(track, context: currentSourceListItem!.name!, tense: 2)
+        trackQueueViewController?.changeCurrentTrack(track, context: currentSourceListItem!.name!)
         delegate?.audioModule.playImmediately(track.location!)
         paused = false
         currentTrack = track
@@ -527,6 +537,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     func startTimer() {
         //timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValuesUnsafe), userInfo: nil, repeats: true)
         timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValuesSafe), userInfo: nil, repeats: true)
+        NSRunLoop.currentRunLoop().addTimer(timer!, forMode: NSRunLoopCommonModes)
         playButton.image = NSImage(named: "NSPauseTemplate")
     }
     
@@ -716,6 +727,13 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         self.window!.titlebarAppearsTransparent = true
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "checkEmbeddedArtwork")
         //current_source_play_order = (libraryTableViewController!.trackViewArrayController.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int})
+        let userScreenSize = NSScreen.mainScreen()?.frame.width
+        let songBarMinimumWidthConstraint = NSLayoutConstraint(item: theBox, attribute: .Width, relatedBy: .GreaterThanOrEqual, toItem: nil, attribute: .NotAnAttribute, multiplier: MIN_SONG_BAR_WIDTH_FRACTION, constant: userScreenSize! * MIN_SONG_BAR_WIDTH_FRACTION)
+        let volumeBarMinimumWidthConstraint = NSLayoutConstraint(item: volumeSlider, attribute: .Width, relatedBy: .GreaterThanOrEqual, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: userScreenSize! * MIN_VOLUME_BAR_WIDTH_FRACTION)
+        let searchBarMinimumWidthConstraint = NSLayoutConstraint(item: searchField, attribute: .Width, relatedBy: .GreaterThanOrEqual, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: userScreenSize! * MIN_SEARCH_BAR_WIDTH_FRACTION)
+        let volumeSliderMaxWidthConstraint = NSLayoutConstraint(item: volumeSlider, attribute: .Width, relatedBy: .LessThanOrEqual, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: userScreenSize! * MAX_VOLUME_BAR_WIDTH_FRACTION)
+        //let volumeSongBarDistanceConstraint = NSLayoutConstraint(item: volumeSlider, attribute: .Trailing, relatedBy: .GreaterThanOrEqual, toItem: theBox, attribute: .Leading, multiplier: 1.0, constant: userScreenSize! * MIN_DISTANCE_BETWEEN_VOLUME_AND_SONG_BAR_FRACTION)
+        NSLayoutConstraint.activateConstraints([songBarMinimumWidthConstraint, volumeBarMinimumWidthConstraint, searchBarMinimumWidthConstraint, volumeSliderMaxWidthConstraint])
         super.windowDidLoad()
         sourceListViewController?.selectStuff()
     }

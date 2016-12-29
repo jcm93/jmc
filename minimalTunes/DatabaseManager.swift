@@ -222,16 +222,18 @@ class DatabaseManager: NSObject {
         var tracks = [Track]()
         for urlString in urlStrings {
             var hasArt = false
-            let track = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: managedContext) as! Track
-            tracks.append(track)
             guard let url = NSURL(string: urlString) else {continue}
             guard let mediaFileObject = getMDItemFromURL(url) else {continue}
+            let track = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: managedContext) as! Track
+            tracks.append(track)
+            let trackView = NSEntityDescription.insertNewObjectForEntityForName("TrackView", inManagedObjectContext: managedContext) as! TrackView
+            trackView.track = track
             var art: NSData?
             track.sample_rate = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioSampleRate" as CFString) as? Int
             track.date_added = NSDate()
             track.date_modified = MDItemCopyAttribute(mediaFileObject, "kMDItemContentModificationDate") as? NSDate
             track.file_kind = MDItemCopyAttribute(mediaFileObject, "kMDItemKind") as? String
-            track.bit_rate = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioBitRate") as? Int
+            track.bit_rate = (MDItemCopyAttribute(mediaFileObject, "kMDItemAudioBitRate") as! Int)/1000
             track.id = library?.next_track_id
             library?.next_track_id = Int(library!.next_track_id!) + 1
             track.status = 1
@@ -309,7 +311,7 @@ class DatabaseManager: NSObject {
         for order in cachedOrders! {
             reorderForTracks(tracks, cachedOrder: order)
         }
-        return .couldNotUpdateFileSystem
+        return .couldntEVenOpenTheFile
     }
     
     func moveFileToAppropriateLocationForTrack(track: Track, currentURL: NSURL) -> NSURL? {
@@ -351,7 +353,7 @@ class DatabaseManager: NSObject {
         return fileURL
     }
     
-    func moveFileForNetworkTrackToAppropriateLocationWithData(track: Track, data: NSData) -> NSURL? {
+    func moveFileForNetworkTrackToAppropriateLocationWithData(track: Track, data: NSData) -> Bool {
         let fileName = {() -> String in
             switch NSUserDefaults.standardUserDefaults().boolForKey(DEFAULTS_RENAMES_FILES_STRING) {
             case true:
@@ -370,6 +372,7 @@ class DatabaseManager: NSObject {
             try fileManager.createDirectoryAtURL(albumDirectoryURL!, withIntermediateDirectories: true, attributes: nil)
         } catch {
             print("error creating album directory: \(error)")
+            return false
         }
         do {
             fileURL = albumDirectoryURL?.URLByAppendingPathComponent(fileName)
@@ -377,8 +380,9 @@ class DatabaseManager: NSObject {
             track.location = fileURL?.absoluteString
         } catch {
             print("error while moving/copying files: \(error)")
+            return false
         }
-        return fileURL
+        return true
     }
     
     func formFilenameForTrack(track: Track) -> String {
@@ -408,12 +412,16 @@ class DatabaseManager: NSObject {
         newTrackView.track = newTrack
         newTrack.id = library?.next_track_id
         library?.next_track_id = Int(library!.next_track_id!) + 1
+        newTrack.status = 1
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        var addedArtist: Artist?
+        var addedAlbum: Album?
+        var addedComposer: Composer?
+        var addedGenre: Genre?
+        var addedAlbumArtist: Artist?
         for field in trackMetadata.allKeys as! [String] {
             switch field {
-            case "is_enabled":
-                newTrack.status = trackMetadata["is_enabled"] as? Bool
             case "name":
                 newTrack.name = trackMetadata["name"] as? String
                 newTrackView.name_order = trackMetadata["name_order"] as? Int
@@ -425,6 +433,7 @@ class DatabaseManager: NSObject {
                     let artistCheck = checkIfArtistExists(artistName)
                     if artistCheck == nil {
                         let artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: managedContext) as! Artist
+                        addedArtist = artist
                         artist.name = artistName
                         artist.id = library?.next_artist_id
                         library?.next_artist_id = Int(library!.next_artist_id!) + 1
@@ -442,6 +451,7 @@ class DatabaseManager: NSObject {
                     let albumCheck = checkIfAlbumExists(albumName)
                     if albumCheck == nil {
                         let album = NSEntityDescription.insertNewObjectForEntityForName("Album", inManagedObjectContext: managedContext) as! Album
+                        addedAlbum = album
                         album.name = albumName
                         album.id = library?.next_album_id
                         library?.next_album_id = Int(library!.next_album_id!) + 1
@@ -468,6 +478,7 @@ class DatabaseManager: NSObject {
                     let composerCheck = checkIfComposerExists(composerName)
                     if composerCheck == nil {
                         let composer = NSEntityDescription.insertNewObjectForEntityForName("Composer", inManagedObjectContext: managedContext) as! Composer
+                        addedComposer = composer
                         composer.name = composerName
                         composer.id = library?.next_composer_id
                         library?.next_composer_id = Int(library!.next_composer_id!) + 1
@@ -480,14 +491,13 @@ class DatabaseManager: NSObject {
                 newTrack.composer = composer
             case "disc_number":
                 newTrack.disc_number = trackMetadata["disc_number"] as? Int
-            case "equalizer_preset":
-                newTrack.equalizer_preset = trackMetadata["equalizer_preset"] as? String
             case "genre":
                 let genreName = trackMetadata["genre"] as! String
                 let genre: Genre = {
                     let genreCheck = checkIfGenreExists(genreName)
                     if genreCheck == nil {
                         let genre = NSEntityDescription.insertNewObjectForEntityForName("Genre", inManagedObjectContext: managedContext) as! Genre
+                        addedGenre = genre
                         genre.name = genreName
                         genre.id = library?.next_genre_id
                         library?.next_genre_id = Int(library!.next_genre_id!) + 1
@@ -543,6 +553,7 @@ class DatabaseManager: NSObject {
                     let artistCheck = checkIfArtistExists(artistName)
                     if artistCheck == nil {
                         let artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: managedContext) as! Artist
+                        addedAlbumArtist = artist
                         artist.name = artistName
                         return artist
                     } else {
@@ -555,9 +566,28 @@ class DatabaseManager: NSObject {
                 break
             }
         }
-        moveFileForNetworkTrackToAppropriateLocationWithData(newTrack, data: data)
-        for order in cachedOrders! {
-            reorderForTracks([newTrack], cachedOrder: order)
+        if moveFileForNetworkTrackToAppropriateLocationWithData(newTrack, data: data) == true {
+            for order in cachedOrders! {
+                reorderForTracks([newTrack], cachedOrder: order)
+            }
+        } else {
+            managedContext.deleteObject(newTrack)
+            managedContext.deleteObject(newTrackView)
+            if addedArtist != nil {
+                managedContext.deleteObject(addedArtist!)
+            }
+            if addedGenre != nil {
+                managedContext.deleteObject(addedGenre!)
+            }
+            if addedComposer != nil {
+                managedContext.deleteObject(addedComposer!)
+            }
+            if addedAlbum != nil {
+                managedContext.deleteObject(addedAlbum!)
+            }
+            if addedAlbumArtist != nil {
+                managedContext.deleteObject(addedAlbumArtist!)
+            }
         }
         return true
     }
