@@ -8,6 +8,6 @@
 
 import Cocoa
 
-class MTTextFieldCell: NSTextFieldCell {
+class IsPlayingImageCell: NSImageCell {
     
 }

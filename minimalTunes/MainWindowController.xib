@@ -47,6 +47,9 @@
                     <slider verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ELy-ib-2qL">
                         <rect key="frame" x="360" y="1003" width="192" height="21"/>
                         <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="ogb-69-MQS"/>
+                        <connections>
+                            <action selector="volumeDidChange:" target="-2" id="ezm-wM-qIt"/>
+                        </connections>
                     </slider>
                     <box wantsLayer="YES" ambiguous="YES" misplaced="YES" boxType="secondary" borderType="bezel" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="rTW-GT-cjN">
                         <rect key="frame" x="674" y="989" width="333" height="59"/>
@@ -306,12 +309,7 @@
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </searchFieldCell>
                         <connections>
-                            <binding destination="-2" name="predicate" keyPath="self.currentTableViewController.trackViewArrayController.filterPredicate" id="pzY-aX-krL">
-                                <dictionary key="options">
-                                    <string key="NSDisplayName">predicate</string>
-                                    <string key="NSPredicateFormat">track.artist.name contains[cd] $value OR track.name contains[cd] $value OR track.album.name contains[cd] $value OR track.comments contains[cd] $value OR track.composer.name contains[cd] $value OR track.genre.name contains[cd] $value</string>
-                                </dictionary>
-                            </binding>
+                            <action selector="searchFieldAction:" target="-2" id="9Ue-Gx-ySp"/>
                         </connections>
                     </searchField>
                 </subviews>

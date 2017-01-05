@@ -166,6 +166,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         return index
     }
     
+    
+    
     func createPlaylist(tracks: [Int]?) {
         //create playlist
         let playlist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: managedContext) as! SongCollection

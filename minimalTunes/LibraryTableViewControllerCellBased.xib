@@ -37,7 +37,7 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <imageCell key="dataCell" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="RTO-Nm-faK"/>
+                                        <imageCell key="dataCell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="2JN-sp-G6r"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
                                     <tableColumn identifier="playlist_number" width="17.07421875" minWidth="10" maxWidth="3.4028234663852886e+38" hidden="YES" id="6iL-fo-xZs" userLabel="PlaylistNumber">
@@ -623,7 +623,4 @@
             </items>
         </menu>
     </objects>
-    <resources>
-        <image name="NSActionTemplate" width="14" height="14"/>
-    </resources>
 </document>

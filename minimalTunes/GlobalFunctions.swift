@@ -6,8 +6,7 @@
 //  Copyright © 2016 John Moody. All rights reserved.
 //
 
-//houses functions for editing tags, re-cacheing sorts, finding album artwork
-//hopefully it will house nothing, eventually
+//houses functions for editing tags, re-cacheing sorts
 
 import Cocoa
 import CoreData
@@ -45,6 +44,8 @@ let DEFAULTS_RENAMES_FILES_STRING = "renamesFiles"
 let DEFAULTS_SHUFFLE_STRING = "shuffle"
 let DEFAULTS_REPEAT_STRING = "willRepeat"
 let DEFAULTS_NEW_NETWORK_TRACK = "newNetworkTrack"
+let DEFAULTS_CURRENT_EQ_STRING = "currentEQ"
+let DEFAULTS_VOLUME_STRING = "currentVolume"
 
 //other constants
 let NO_ORGANIZATION_TYPE = 0
@@ -73,9 +74,21 @@ let IS_NETWORK_PREDICATE = NSPredicate(format: "is_network == %@", NSNumber(bool
 
 let BATCH_PURGE_NETWORK_FETCH_REQUESTS: [NSFetchRequest] = [GENRE_FETCH_REQUEST, COMPOSER_FETCH_REQUEST, ARTIST_FETCH_REQUEST, ALBUM_FETCH_REQUEST, TRACK_VIEW_FETCH_REQUEST, TRACK_FETCH_REQUEST, SOURCE_FETCH_REQUEST, SONG_COLLECTION_FETCH_REQUEST, SONG_COLLECTION_FOLDER_FETCH_REQUEST]
 
-let VALID_ARTWORK_TYPE_EXTENSIONS = [".jpg", ".png", ".tiff", ".gif", ".pdf"]
+func purgeCurrentlyPlaying() {
+    let fetchRequest = NSFetchRequest(entityName: "Track")
+    let predicate = NSPredicate(format: "is_playing == true")
+    fetchRequest.predicate = predicate
+    do {
+        let results = try managedContext.executeFetchRequest(fetchRequest) as! [Track]
+        for result in results {
+            result.is_playing = nil
+        }
+    } catch {
+        print("error retrieving currently playing tracks: \(error)")
+    }
+}
 
-let verbotenFileTypes = ["m4v", "m4p"]
+let VALID_ARTWORK_TYPE_EXTENSIONS = [".jpg", ".png", ".tiff", ".gif", ".pdf"]
 
 let fieldsToCachedOrdersDictionary: NSDictionary = [
     "date_added" : "Date Added",
@@ -85,6 +98,10 @@ let fieldsToCachedOrdersDictionary: NSDictionary = [
     "album_artist" : "Album Artist",
     "kind" : "Kind",
     "genre" : "Genre"
+]
+
+let equalizerDefaultsDictionary: NSDictionary = [
+    "Flat" : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
 
 let defaultSortPrefixDictionary: NSMutableDictionary = [

@@ -86,6 +86,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.equalizerWindowController?.audioModule = self.audioModule
         self.equalizerWindowController?.showWindow(self)
     }
+    
+    @IBAction func showAdvancedFilter(sender: AnyObject) {
+        if let item = sender as? NSMenuItem {
+            item.state = item.state == NSOnState ? NSOffState : NSOnState
+        }
+        mainWindowController?.toggleFilterVisibility(self)
+    }
+    
     @IBAction func testyThing(sender: AnyObject) {
         showEqualizer()
     }
@@ -105,6 +113,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 print(error)
             }
         }
+        purgeCurrentlyPlaying()
         // Insert code here to initialize your application
         let fuckTransform = TransformerIntegerToTimestamp()
         databaseManager = DatabaseManager()
@@ -250,7 +259,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 print(error)
             }
         }
-        
+        purgeCurrentlyPlaying()
         if !managedObjectContext.commitEditing() {
             NSLog("\(NSStringFromClass(self.dynamicType)) unable to commit editing to terminate")
             return .TerminateCancel

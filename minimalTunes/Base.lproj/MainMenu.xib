@@ -321,7 +321,7 @@
                             <menuItem title="Advanced Filter" id="JJs-Z9-CEf">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="testyThing:" target="Voe-Tx-rLC" id="use-XP-xNm"/>
+                                    <action selector="showAdvancedFilter:" target="Voe-Tx-rLC" id="HtO-ub-jp0"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Album Art" id="hYx-vO-dOM">

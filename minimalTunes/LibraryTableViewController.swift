@@ -19,6 +19,8 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     var rightMouseDownTarget: [TrackView]?
     var item: SourceListItem?
     var managedContext = (NSApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+    var searchString: String?
+    var playlist: SongCollection?
     
     var isVisibleDict = NSMutableDictionary()
     func populateIsVisibleDict() {
@@ -26,6 +28,14 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             for track in self.trackViewArrayController.arrangedObjects as! [TrackView] {
                 isVisibleDict[(track).track!.id!] = true
             }
+        }
+    }
+    
+    func reloadNowPlayingForTrack(track: Track) {
+        if let row = (trackViewArrayController.arrangedObjects as! [TrackView]).indexOf(track.view!) {
+            let tableRowIndexSet = NSIndexSet(index: row)
+            let tableColumnIndexSet = NSIndexSet(index: 0)
+            tableView.reloadDataForRowIndexes(tableRowIndexSet, columnIndexes: tableColumnIndexSet)
         }
     }
     
@@ -78,7 +88,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     }
     
     func tableViewDoubleClick(sender: AnyObject) {
-        guard tableView!.selectedRow >= 0 else {
+        guard tableView!.selectedRow >= 0 && tableView!.clickedRow >= 0 else {
             return
         }
         let item = (trackViewArrayController?.arrangedObjects as! [TrackView])[tableView!.selectedRow].track
@@ -122,18 +132,19 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         
     }
     
-    func getUpcomingIDsForPlayEvent(shuffleState: Int, id: Int) -> [Int] {
+    func getUpcomingIDsForPlayEvent(shuffleState: Int, id: Int) -> ([Int], [Int]?) {
         var idArray = (self.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
         if shuffleState == NSOnState {
+            let unshuffled_array = idArray
             shuffle_array(&idArray)
             let indexOfPlayedTrack = idArray.indexOf(id)!
             if indexOfPlayedTrack != 0 {
                 swap(&idArray[idArray.indexOf(id)!], &idArray[0])
             }
-            return idArray
+            return (idArray, unshuffled_array)
         } else {
             let result = Array(idArray.suffix(idArray.count - idArray.indexOf(id)!))
-            return result
+            return (result, nil)
         }
     }
     
@@ -152,6 +163,91 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             }
         }
         return new_play_order
+    }
+    
+    func initializeSmartPlaylist() {
+        let smart_criteria = playlist!.smart_criteria
+        let smart_predicate = smart_criteria?.predicate as! NSPredicate
+        let fetchRequest = NSFetchRequest(entityName: "Track")
+        fetchRequest.predicate = smart_predicate
+        do {
+            var results = try managedContext.executeFetchRequest(fetchRequest) as? NSArray
+            if results != nil {
+                if smart_criteria?.ordering_criterion != nil {
+                    switch smart_criteria!.ordering_criterion! {
+                    case "random":
+                        
+                    case "name":
+                        results = results?.sortedArrayUsingSelector(#selector(Track.compareName))
+                    case "artist":
+                        results = results?.sortedArrayUsingSelector(#selector(Track.compareArtist))
+                    case "album":
+                        results = results?.sortedArrayUsingSelector(#selector(Track.compareAlbum))
+                    case "composer":
+                        let sortDescriptor = NSSortDescriptor(key: "composer.name", ascending: true)
+                        results = results?.sortedArrayUsingDescriptors([sortDescriptor])
+                    case "genre":
+                        results = results?.sortedArrayUsingSelector(#selector(Track.compareGenre))
+                    case "most recently added":
+                        results = results?.sortedArrayUsingSelector(#selector(Track.compareDateAdded))
+                    case "least recently added":
+                        results = results?.sortedArrayUsingSelector(#selector(Track.compareDateAdded)).reverse()
+                    case "most played":
+                        let sortDescriptor = NSSortDescriptor(key: "play_count", ascending: true)
+                        results = results?.sortedArrayUsingDescriptors([sortDescriptor])
+                    case "least played":
+                        let sortDescriptor = NSSortDescriptor(key: "play_count", ascending: false)
+                        results = results?.sortedArrayUsingDescriptors([sortDescriptor])
+                    case "most skipped":
+                        let sortDescriptor = NSSortDescriptor(key: "skip_count", ascending: true)
+                        results = results?.sortedArrayUsingDescriptors([sortDescriptor])
+                    case "least skipped":
+                        let sortDescriptor = NSSortDescriptor(key: "skip_count", ascending: false)
+                        results = results?.sortedArrayUsingDescriptors([sortDescriptor])
+                    case "most recently played":
+                        let sortDescriptor = NSSortDescriptor(key: "date_last_played", ascending: true)
+                        results = results?.sortedArrayUsingDescriptors([sortDescriptor])
+                    case "least recently played":
+                        let sortDescriptor = NSSortDescriptor(key: "date_last_played", ascending: false)
+                        results = results?.sortedArrayUsingDescriptors([sortDescriptor])
+                    default:
+                        print("fuck")
+                    }
+                }
+                var limit: Float = 0.0
+                var prunedResults = [Track]()
+                if smart_criteria?.fetch_limit != nil {
+                    let fetchType = smart_criteria!.fetch_limit_type!
+                    let fetchLimit = Float(smart_criteria!.fetch_limit!)
+                    for thing in results! {
+                        prunedResults.append(thing as! Track)
+                        switch fetchType {
+                        case "hours":
+                            limit += (Float((thing as! Track).time!) / 1000)/60/60
+                        case "minutes":
+                            limit += (Float((thing as! Track).time!) / 1000)/60
+                        case "GB":
+                            limit += (Float((thing as! Track).size!)/1000000000)
+                        case "MB":
+                            limit += (Float((thing as! Track).size!)/1000000)
+                        case "items":
+                            limit += 1
+                        default:
+                            limit += 1
+                        }
+                        if limit >= fetchLimit {
+                            break
+                        }
+                    }
+                } else {
+                    prunedResults = results as! [Track]
+                }
+                let track_id_list = prunedResults.map({return $0.id as! Int})
+                playlist?.track_id_list = track_id_list
+            }
+        } catch {
+            print(error)
+        }
     }
 
     
@@ -205,6 +301,11 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     override func viewDidLoad() {
         //tableView.canDrawSubviewsIntoLayer = true
+        if playlist != nil {
+            if playlist?.smart_criteria != nil {
+                initializeSmartPlaylist()
+            }
+        }
         tableView.doubleAction = #selector(tableViewDoubleClick)
         columnVisibilityMenu.delegate = self
         self.initializeColumnVisibilityMenu(self.tableView)

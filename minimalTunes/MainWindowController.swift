@@ -132,6 +132,29 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         viewCoordinator?.search_bar_content = searchField.stringValue
     }
     
+
+    @IBAction func searchFieldAction(sender: AnyObject) {
+        print("search field action called")
+        let searchFieldContent = searchField.stringValue
+        let searchTokens = searchFieldContent.componentsSeparatedByString(" ").filter({return $0 != ""})
+        var subPredicates = [NSPredicate]()
+        for token in searchTokens {
+            //not accepted by NSPredicateEditor
+            //let newPredicate = NSPredicate(format: "ANY {track.name, track.artist.name, track.album.name, track.composer.name, track.comments, track.genre.name} contains[cd] %@", token)
+            //accepted by NSPredicateEditor
+            let newPredicate = NSPredicate(format: "track.name contains[cd] %@ OR track.artist.name contains[cd] %@ OR track.album.name contains[cd] %@ OR track.composer.name contains[cd] %@ OR track.comments contains[cd] %@ OR track.genre.name contains[cd] %@", token, token, token, token, token, token)
+            subPredicates.append(newPredicate)
+        }
+        if subPredicates.count > 0 {
+            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: subPredicates)
+            currentTableViewController?.trackViewArrayController.filterPredicate = predicate
+            currentTableViewController?.searchString = searchFieldContent
+        } else {
+            currentTableViewController?.trackViewArrayController.filterPredicate = nil
+            currentTableViewController?.searchString = nil
+        }
+    }
+    
     func searchFieldDidEndSearching(sender: NSSearchField) {
         print("search ended searching called")
         viewCoordinator?.search_bar_content = ""
@@ -148,6 +171,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     func createPlaylistViewController(item: SourceListItem) -> LibraryTableViewController {
         let newPlaylistViewController = LibraryTableViewControllerCellBased(nibName: "LibraryTableViewControllerCellBased", bundle: nil)
         newPlaylistViewController?.mainWindowController = self
+        newPlaylistViewController?.playlist = item.playlist
         return newPlaylistViewController!
     }
     
@@ -155,7 +179,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         table.trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .New, context: &my_context)
         table.trackViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .New, context: &my_context)
         var track_id_list: [Int] = []
-        var smart_predicate: NSPredicate
         var predicates = [NSPredicate]()
         if item.playlist?.track_id_list != nil {
             track_id_list = item.playlist!.track_id_list as! [Int]
@@ -167,10 +190,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             predicates.append(NSPredicate(format: "track.is_network == true"))
         } else {
             predicates.append(NSPredicate(format: "track.is_network == nil or track.is_network == false"))
-        }
-        if item.playlist?.smart_criteria != nil {
-            smart_predicate = item.playlist?.smart_criteria as! NSPredicate
-            predicates.append(smart_predicate)
         }
         table.trackViewArrayController.fetchPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         table.mainWindowController = self
@@ -209,7 +228,16 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             addObserversAndInitializeNewTableView(newPlaylistViewController, item: item)
             currentTableViewController = newPlaylistViewController
         }
+        populateSearchBar()
         currentTableViewController?.tableView.reloadData()
+    }
+    
+    func populateSearchBar() {
+        if currentTableViewController?.searchString != nil {
+            searchField.stringValue = currentTableViewController!.searchString!
+        } else {
+            searchField.stringValue = ""
+        }
     }
     
     func switchToLibrary() {
@@ -218,11 +246,17 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             librarySplitView.removeArrangedSubview(currentTableViewController!.view)
             librarySplitView.addArrangedSubview(libraryTableViewController!.view)
             currentTableViewController = libraryTableViewController
+            populateSearchBar()
             currentTableViewController?.tableView.reloadData()
             updateInfo()
         }
     }
     
+    @IBAction func volumeDidChange(sender: AnyObject) {
+        print("volume did change called")
+        let newVolume = (sender as! NSSlider).floatValue
+        delegate?.audioModule.changeVolume(newVolume)
+    }
     //track queue, source logic
     @IBAction func toggleExpandQueue(sender: AnyObject) {
         trackQueueViewController!.toggleHidden(queueButton.state)
@@ -268,7 +302,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     func createPlayOrderArray(track_played: Track) {
         print("initialize array called")
         let selectionItem = sourceListViewController!.getCurrentSelection()
-        self.current_source_play_order = currentTableViewController?.getUpcomingIDsForPlayEvent(self.shuffleButton.state, id: Int(track_played.id!))
+        let result = currentTableViewController?.getUpcomingIDsForPlayEvent(self.shuffleButton.state, id: Int(track_played.id!))
+        self.current_source_play_order = result!.0
+        if result!.1 != nil {
+            self.current_source_unshuffled_play_order = result!.1
+        }
         self.current_source_index = 0
         is_initialized = true
         currentAudioSource = selectionItem.item
@@ -276,7 +314,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     
     func modifyPlayOrderForSortDescriptorChange() {
         if currentAudioSource == currentSourceListItem && shuffleButton.state == NSOffState && currentTrack != nil {
-            self.current_source_play_order = libraryTableViewController?.getUpcomingIDsForPlayEvent(NSOffState, id: Int(currentTrack!.id!))
+            self.current_source_play_order = libraryTableViewController?.getUpcomingIDsForPlayEvent(NSOffState, id: Int(currentTrack!.id!)).0
         }
     }
     
@@ -294,9 +332,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
                 
             }
             let next_track = getTrackWithID(id!)
-            dispatch_async(dispatch_get_main_queue()) {
-                self.currentTrack?.is_playing = false
-            }
             trackQueue.insert(next_track!, atIndex: 0)
             trackQueueViewController?.addTrackToQueue(next_track!, context: currentSourceListItem!.name!, tense: 2)
             return next_track
@@ -401,7 +436,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         trackQueueViewController?.changeCurrentTrack(track, context: currentSourceListItem!.name!)
         delegate?.audioModule.playImmediately(track.location!)
         paused = false
-        currentTrack = track
+        //currentTrack = track
     }
     
     func shuffle_array(inout array: [Int]) {
@@ -464,7 +499,24 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     func skipBackward() {
         self.currentTrack?.is_playing = false
         timer?.invalidate()
-        delegate?.audioModule.skip_backward()
+        let nodeTime = delegate?.audioModule.curNode.lastRenderTime
+        let playerTime = delegate?.audioModule.curNode.playerTimeForNodeTime(nodeTime!)
+        var offset_thing: Double?
+        if delegate?.audioModule.track_frame_offset == nil {
+            offset_thing = 0
+        }
+        else {
+            offset_thing  = delegate?.audioModule.track_frame_offset!
+            print(offset_thing)
+        }
+        let seconds = ((Double((playerTime?.sampleTime)!) + offset_thing!) / (playerTime?.sampleRate)!) - Double(delegate!.audioModule.total_offset_seconds)
+        if seconds > 3 {
+            delegate?.audioModule.skip_backward()
+        } else {
+            if let track = trackQueueViewController?.getLastTrack() {
+                playSong(track)
+            }
+        }
     }
     
     
@@ -482,11 +534,17 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     @IBAction func toggleFilterVisibility(sender: AnyObject) {
-        if librarySplitView.arrangedSubviews.contains(advancedFilterViewController!.view) {
-            print("library split view does indeed contain advanced filter")
-            librarySplitView.removeArrangedSubview(advancedFilterViewController!.view)
+        if advancedFilterViewController?.view != nil {
+            advancedFilterViewController!.view.removeFromSuperview()
+            currentTableViewController?.trackViewArrayController.filterPredicate = nil
+            //librarySplitView.removeArrangedSubview(advancedFilterViewController!.view)
+            advancedFilterViewController = nil
         } else {
+            self.advancedFilterViewController = AdvancedFilterViewController(nibName: "AdvancedFilterViewController", bundle: nil)
+            advancedFilterViewController.mainWindowController = self
             librarySplitView.insertArrangedSubview(advancedFilterViewController!.view, atIndex: 0)
+            advancedFilterViewController?.predicateEditor!.bind("value", toObject: currentTableViewController!.trackViewArrayController, withKeyPath: "filterPredicate", options: nil)
+            advancedFilterViewController?.initializePredicateEditor()
         }
     }
     
@@ -610,8 +668,12 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
                 let before = NSDate()
                 print("controller detects track change")
                 currentTrack?.is_playing = false
+                if currentTrack != nil {
+                    currentTableViewController?.reloadNowPlayingForTrack(currentTrack!)
+                }
                 if trackQueue.count > 0 {
                     self.currentTrack = trackQueue.removeFirst()
+                    
                 }
                 if is_initialized == false {
                     createPlayOrderArray(self.currentTrack!)
@@ -621,6 +683,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
                 timer?.invalidate()
                 initializeInterfaceForNewTrack()
                 currentTrack?.is_playing = true
+                currentTableViewController?.reloadNowPlayingForTrack(currentTrack!)
                 trackQueueViewController!.nextTrack()
                 let after = NSDate()
                 let since = after.timeIntervalSinceDate(before)
@@ -734,6 +797,13 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         let volumeSliderMaxWidthConstraint = NSLayoutConstraint(item: volumeSlider, attribute: .Width, relatedBy: .LessThanOrEqual, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: userScreenSize! * MAX_VOLUME_BAR_WIDTH_FRACTION)
         //let volumeSongBarDistanceConstraint = NSLayoutConstraint(item: volumeSlider, attribute: .Trailing, relatedBy: .GreaterThanOrEqual, toItem: theBox, attribute: .Leading, multiplier: 1.0, constant: userScreenSize! * MIN_DISTANCE_BETWEEN_VOLUME_AND_SONG_BAR_FRACTION)
         NSLayoutConstraint.activateConstraints([songBarMinimumWidthConstraint, volumeBarMinimumWidthConstraint, searchBarMinimumWidthConstraint, volumeSliderMaxWidthConstraint])
+        let volume = NSUserDefaults.standardUserDefaults().floatForKey(DEFAULTS_VOLUME_STRING)
+        if volume != 0 {
+            volumeSlider.floatValue = volume
+        } else {
+            volumeSlider.floatValue = 1.0
+        }
+        volumeDidChange(volumeSlider)
         super.windowDidLoad()
         sourceListViewController?.selectStuff()
     }

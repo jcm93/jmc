@@ -12,6 +12,15 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     
     var mainWindow: MainWindowController?
     
+    func tableView(tableView: NSTableView, willDisplayCell cell: AnyObject, forTableColumn tableColumn: NSTableColumn?, row: Int) {
+        if tableColumn?.identifier == "is_playing" {
+            if (self.arrangedObjects as! [TrackView])[row].track?.is_playing == true {
+                (cell as! NSImageCell).image = NSImage(named: "NSAudioOutputVolumeMedTemplate")
+            } else {
+                (cell as! NSImageCell).image = nil
+            }
+        }
+    }
     
     
     func tableView(tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {

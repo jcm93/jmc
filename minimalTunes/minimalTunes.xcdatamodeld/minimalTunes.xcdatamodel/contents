@@ -92,17 +92,24 @@
     <entity name="SharedLibrary" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="SmartCriteria" representedClassName=".SmartCriteria" syncable="YES">
+        <attribute name="fetch_limit" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="fetch_limit_type" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ordering_criterion" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="predicate" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <relationship name="playlist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SongCollection" inverseName="smart_criteria" inverseEntity="SongCollection" syncable="YES"/>
+    </entity>
     <entity name="SongCollection" representedClassName=".SongCollection" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="is_smart" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="smart_criteria" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="track_id_list" optional="YES" attributeType="Transformable" syncable="YES"/>
         <relationship name="folder" optional="YES" maxCount="1" deletionRule="Nullify" ordered="YES" destinationEntity="SongCollectionFolder" inverseName="playlists" inverseEntity="SongCollectionFolder" syncable="YES"/>
         <relationship name="if_master_library" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="master_playlist" inverseEntity="Library" syncable="YES"/>
         <relationship name="if_master_list_item" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SourceListItem" inverseName="master_playlist" inverseEntity="SourceListItem" syncable="YES"/>
         <relationship name="list_item" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SourceListItem" inverseName="playlist" inverseEntity="SourceListItem" syncable="YES"/>
+        <relationship name="smart_criteria" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SmartCriteria" inverseName="playlist" inverseEntity="SmartCriteria" syncable="YES"/>
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrackView" inverseName="playlists" inverseEntity="TrackView" syncable="YES"/>
     </entity>
     <entity name="SongCollectionFolder" representedClassName=".SongCollectionFolder" syncable="YES">
@@ -179,6 +186,7 @@
         <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="kind_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="name_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="playlist_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="release_date_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
         <relationship name="filtered_orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CachedOrder" inverseName="filtered_track_views" inverseEntity="CachedOrder" syncable="YES"/>
         <relationship name="orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CachedOrder" inverseName="track_views" inverseEntity="CachedOrder" syncable="YES"/>
@@ -202,6 +210,7 @@
         <element name="SortOrder" positionX="-1548" positionY="108" width="128" height="75"/>
         <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="210"/>
         <element name="Track" positionX="-1026" positionY="-54" width="128" height="600"/>
-        <element name="TrackView" positionX="-1557" positionY="99" width="128" height="300"/>
+        <element name="TrackView" positionX="-1557" positionY="99" width="128" height="315"/>
+        <element name="SmartCriteria" positionX="-1557" positionY="99" width="128" height="120"/>
     </elements>
 </model>

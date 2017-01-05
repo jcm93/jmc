@@ -118,7 +118,7 @@ class DatabaseManager: NSObject {
         let artHash = art.hashValue
         let newArtwork = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtwork", inManagedObjectContext: managedContext) as! AlbumArtwork
         newArtwork.image_hash = artHash
-        if track.album!.primary_art != nil {
+        if track.album?.primary_art != nil {
             let contains: Bool = {
                 if track.album?.primary_art?.image_hash == artHash {
                     return true

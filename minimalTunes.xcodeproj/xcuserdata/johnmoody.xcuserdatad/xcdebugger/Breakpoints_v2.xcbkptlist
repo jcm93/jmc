@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "minimalTunes/MainWindowController.swift"
-            timestampString = "504573552.461539"
+            timestampString = "505259057.217653"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "359"
-            endingLineNumber = "359"
+            startingLineNumber = "398"
+            endingLineNumber = "398"
             landmarkName = "tempBreak(_:)"
             landmarkType = "5">
          </BreakpointContent>

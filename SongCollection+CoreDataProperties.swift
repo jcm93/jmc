@@ -2,8 +2,8 @@
 //  SongCollection+CoreDataProperties.swift
 //  minimalTunes
 //
-//  Created by John Moody on 11/25/16.
-//  Copyright © 2016 John Moody. All rights reserved.
+//  Created by John Moody on 1/4/17.
+//  Copyright © 2017 John Moody. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
 //  to delete and recreate this implementation file for your updated model.
@@ -24,5 +24,6 @@ extension SongCollection {
     @NSManaged var if_master_list_item: SourceListItem?
     @NSManaged var list_item: SourceListItem?
     @NSManaged var tracks: NSSet?
-    @NSManaged var smart_criteria: NSObject?
+    @NSManaged var smart_criteria: SmartCriteria?
+
 }

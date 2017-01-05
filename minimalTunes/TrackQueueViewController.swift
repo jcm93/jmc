@@ -20,6 +20,7 @@ class TrackQueueView: NSObject {
     var track: Track?
     var source: String?
     var viewType: TrackQueueViewType?
+    var wasQueuedManually: Bool?
     
 }
 
@@ -172,6 +173,20 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             }
         }
         tableView?.reloadData()
+    }
+    
+    func skipBackward() {
+        if currentTrackIndex != nil {
+            if trackQueue.count >= currentTrackIndex! + 1 {
+                trackQueue.removeAtIndex(currentTrackIndex! + 1)
+            }
+        }
+    }
+    
+    func getLastTrack() -> Track? {
+        guard currentTrackIndex != nil && trackQueue.count > 2 else {return nil}
+        let row = currentTrackIndex! - 1
+        return trackQueue[row].track
     }
     
     func tableView(tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {

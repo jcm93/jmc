@@ -35,6 +35,8 @@
 		0D3878B81DD11926004CC3C1 /* BitRateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */; };
 		0D3878BA1DD12530004CC3C1 /* SampleRateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3878B91DD12530004CC3C1 /* SampleRateFormatter.swift */; };
 		0D3878BC1DD125E9004CC3C1 /* StupidNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3878BB1DD125E9004CC3C1 /* StupidNumberFormatter.swift */; };
+		0D388AAA1E1DBB4800D25A7D /* SmartCriteria+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D388AA81E1DBB4800D25A7D /* SmartCriteria+CoreDataProperties.swift */; };
+		0D388AAB1E1DBB4800D25A7D /* SmartCriteria.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D388AA91E1DBB4800D25A7D /* SmartCriteria.swift */; };
 		0D40A9F21D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */; };
 		0D58F7491D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */; };
 		0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */; };
@@ -158,6 +160,8 @@
 		0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitRateFormatter.swift; sourceTree = "<group>"; };
 		0D3878B91DD12530004CC3C1 /* SampleRateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleRateFormatter.swift; sourceTree = "<group>"; };
 		0D3878BB1DD125E9004CC3C1 /* StupidNumberFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StupidNumberFormatter.swift; sourceTree = "<group>"; };
+		0D388AA81E1DBB4800D25A7D /* SmartCriteria+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SmartCriteria+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0D388AA91E1DBB4800D25A7D /* SmartCriteria.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmartCriteria.swift; sourceTree = "<group>"; };
 		0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransformerIntegerToTimestamp.swift; sourceTree = "<group>"; };
 		0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
 		0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListThatYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
@@ -360,6 +364,8 @@
 		0D01AD981D707ED900F9211F /* Core Data Shit */ = {
 			isa = PBXGroup;
 			children = (
+				0D388AA81E1DBB4800D25A7D /* SmartCriteria+CoreDataProperties.swift */,
+				0D388AA91E1DBB4800D25A7D /* SmartCriteria.swift */,
 				0D3878B31DD10258004CC3C1 /* TrackView+CoreDataProperties.swift */,
 				0D3878B41DD10258004CC3C1 /* TrackView.swift */,
 				0DC84C5D1DBAD0C100E8877C /* NewCachedOrder+CoreDataProperties.swift */,
@@ -653,6 +659,7 @@
 				0DD274EC1D30462F0055C43B /* PreferencesWindowController.swift in Sources */,
 				0D2EEFB71DB97DEC0065B0B3 /* CachedOrder.swift in Sources */,
 				0D84EDE61DA326BD0057411F /* SongCollection.swift in Sources */,
+				0D388AAB1E1DBB4800D25A7D /* SmartCriteria.swift in Sources */,
 				0D76F6AC1D28581900C6E70F /* DragAndDropTreeController.swift in Sources */,
 				0DD7D6D71D3F3A350035BAD8 /* Album.swift in Sources */,
 				0DD7D6DA1D3F3A350035BAD8 /* AlbumArtwork+CoreDataProperties.swift in Sources */,
@@ -663,6 +670,7 @@
 				0DAB30941CFBA3340028928F /* minimalTunes.xcdatamodeld in Sources */,
 				0DEF66C71D383A8700EA3ADC /* SourceListItem.swift in Sources */,
 				0D0E5FAF1D3E909D009E0FA3 /* DragAndDropImageView.swift in Sources */,
+				0D388AAA1E1DBB4800D25A7D /* SmartCriteria+CoreDataProperties.swift in Sources */,
 				0D3878B61DD10258004CC3C1 /* TrackView.swift in Sources */,
 				0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */,
 				0D1BDFA51D0F44A70092FBA0 /* AudioModule.swift in Sources */,

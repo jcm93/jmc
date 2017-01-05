@@ -14,48 +14,56 @@ enum completionHandlerType {
     case natural
     case destroy
 }
+ 
+ 
 
 class AudioModule: NSObject {
     //todo consistent naming
     dynamic var trackQueue = [Track]()
     dynamic var currentTrackLocation: String?
     
+    let verbotenFileTypes = ["m4v", "m4p"]
+    
     var curNode = AVAudioPlayerNode()
     var mixerNode = AVAudioMixerNode()
     var equalizer: AVAudioUnitEQ = {
-        let doingle = AVAudioUnitEQ(numberOfBands: 10)
-        let bands = doingle.bands
-        bands[0].frequency = 32
-        bands[0].bandwidth = 1
-        bands[0].bypass = false
-        bands[1].frequency = 64
-        bands[1].bandwidth = 1
-        bands[1].bypass = false
-        bands[2].frequency = 128
-        bands[2].bandwidth = 1
-        bands[2].bypass = false
-        bands[3].frequency = 256
-        bands[3].bandwidth = 1
-        bands[3].bypass = false
-        bands[4].frequency = 512
-        bands[4].bandwidth = 1
-        bands[4].bypass = false
-        bands[5].frequency = 1024
-        bands[5].bandwidth = 1
-        bands[5].bypass = false
-        bands[6].frequency = 2048
-        bands[6].bandwidth = 1
-        bands[6].bypass = false
-        bands[7].frequency = 4096
-        bands[7].bandwidth = 1
-        bands[7].bypass = false
-        bands[8].frequency = 8192
-        bands[8].bandwidth = 1
-        bands[8].bypass = false
-        bands[9].frequency = 16384
-        bands[9].bandwidth = 1
-        bands[9].bypass = false
-        return doingle
+        if let defaultsEQ = NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_CURRENT_EQ_STRING) as? AVAudioUnitEQ {
+            return defaultsEQ
+        } else {
+            let doingle = AVAudioUnitEQ(numberOfBands: 10)
+            let bands = doingle.bands
+            bands[0].frequency = 32
+            bands[0].bandwidth = 1
+            bands[0].bypass = false
+            bands[1].frequency = 64
+            bands[1].bandwidth = 1
+            bands[1].bypass = false
+            bands[2].frequency = 128
+            bands[2].bandwidth = 1
+            bands[2].bypass = false
+            bands[3].frequency = 256
+            bands[3].bandwidth = 1
+            bands[3].bypass = false
+            bands[4].frequency = 512
+            bands[4].bandwidth = 1
+            bands[4].bypass = false
+            bands[5].frequency = 1024
+            bands[5].bandwidth = 1
+            bands[5].bypass = false
+            bands[6].frequency = 2048
+            bands[6].bandwidth = 1
+            bands[6].bypass = false
+            bands[7].frequency = 4096
+            bands[7].bandwidth = 1
+            bands[7].bypass = false
+            bands[8].frequency = 8192
+            bands[8].bandwidth = 1
+            bands[8].bypass = false
+            bands[9].frequency = 16384
+            bands[9].bandwidth = 1
+            bands[9].bypass = false
+            return doingle
+        }
     }()
     var curFile: AVAudioFile?
     var audioEngine = AVAudioEngine()
@@ -77,14 +85,64 @@ class AudioModule: NSObject {
     
     var mainWindowController: MainWindowController?
     
+    func addListenerBlock( listenerBlock: AudioObjectPropertyListenerBlock, onAudioObjectID: AudioObjectID, var forPropertyAddress: AudioObjectPropertyAddress) {
+        if (kAudioHardwareNoError != AudioObjectAddPropertyListenerBlock(onAudioObjectID, &forPropertyAddress, nil, listenerBlock)) {
+            print("Error calling: AudioObjectAddPropertyListenerBlock") }
+    }
+    
     override init() {
+        super.init()
+        addListenerBlock(audioObjectPropertyListenerBlock,
+                         onAudioObjectID: AudioObjectID(bitPattern: kAudioObjectSystemObject),
+                         forPropertyAddress: AudioObjectPropertyAddress(
+                            mSelector: kAudioHardwarePropertyDefaultOutputDevice,
+                            mScope: kAudioObjectPropertyScopeGlobal,
+                            mElement: kAudioObjectPropertyElementMaster))
+        
         audioEngine.attachNode(curNode)
         //audioEngine.connect(curNode, to: audioEngine.mainMixerNode, format: curFile?.processingFormat)
         audioEngine.attachNode(equalizer)
         /*audioEngine.connect(curNode, to: equalizer, format: nil)
-        audioEngine.connect(equalizer, to: audioEngine.outputNode, format: nil)*/
+         audioEngine.connect(equalizer, to: audioEngine.outputNode, format: nil)*/
         audioEngine.connect(curNode, to: equalizer, format: nil)
-        audioEngine.connect(equalizer, to: audioEngine.outputNode, format: nil)
+        audioEngine.connect(equalizer, to: audioEngine.mainMixerNode, format: nil)
+    }
+    
+    func getDefaultAudioOutputDevice () -> AudioObjectID {
+        
+        var devicePropertyAddress = AudioObjectPropertyAddress(mSelector: kAudioHardwarePropertyDefaultOutputDevice, mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMaster)
+        var deviceID: AudioObjectID = 0
+        var dataSize = UInt32(truncatingBitPattern: sizeof(AudioDeviceID))
+        let systemObjectID = AudioObjectID(bitPattern: kAudioObjectSystemObject)
+        if (kAudioHardwareNoError != AudioObjectGetPropertyData(systemObjectID, &devicePropertyAddress, 0, nil, &dataSize, &deviceID)) { return 0 }
+        return deviceID
+    }
+ 
+    func audioObjectPropertyListenerBlock (numberAddresses: UInt32, addresses: UnsafePointer<AudioObjectPropertyAddress>) {
+        var index: UInt32 = 0
+        while index < numberAddresses {
+            let address: AudioObjectPropertyAddress = addresses[0]
+            switch address.mSelector {
+            case kAudioHardwarePropertyDefaultOutputDevice:
+                var deviceID = getDefaultAudioOutputDevice()
+                AudioUnitSetProperty(audioEngine.outputNode.audioUnit, kAudioOutputUnitProperty_CurrentDevice, kAudioUnitScope_Global, 0, &deviceID, UInt32(sizeof(AudioObjectID)))
+                print(audioEngine.running)
+                print(curNode.playing)
+                if audioEngine.running == false {
+                    do {
+                        try print("audio engine start was \(audioEngine.start())")
+                    } catch {
+                        print("starting failed")
+                        print(error)
+                    }
+                }
+                print(audioEngine.running)
+                print("kAudioHardwarePropertyDefaultOutputDevice: \(deviceID)")
+            default:
+                print("uhh")
+            }
+            index += 1
+        }
     }
     
     func adjustEqualizer(band: Int, value: Float) {
@@ -93,6 +151,13 @@ class AudioModule: NSObject {
         print("adjusting a band")
         let band = equalizer.bands[band]
         band.gain = value
+    }
+    
+    func changeVolume(newVolume: Float) {
+        //todo figure out why this doesnt work
+        guard newVolume <= 1 && newVolume >= 0 else {return}
+        audioEngine.mainMixerNode.outputVolume = newVolume
+        NSUserDefaults.standardUserDefaults().setFloat(newVolume, forKey: DEFAULTS_VOLUME_STRING)
     }
     
     func toggleEqualizer(state: Int) {
@@ -329,7 +394,22 @@ class AudioModule: NSObject {
     }
     
     func skip_backward() {
-        
+        if (currentTrackLocation != nil) {
+            print("skipping to new track")
+            playImmediately(currentTrackLocation!)
+        }
+        else {
+            print("skipping, no new track")
+            //cleanly stop everything
+            self.observerDonePlaying()
+            self.total_offset_frames = 0
+            self.total_offset_seconds = 0
+            self.is_initialized = false
+            self.track_frame_offset = 0
+            self.audioEngine.reset()
+        }
+        currentHandlerType = .natural
+
     }
     
     func seek(frac: Double) {
@@ -362,6 +442,7 @@ class AudioModule: NSObject {
             audioEngine.prepare()
             do {
                 try audioEngine.start()
+                curNode.play()
             } catch {
                 print(error)
             }
