@@ -74,7 +74,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     }
     
     func tableView(tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
-        if draggedRowIndexes != nil && dropOperation == .Above && tableView.sortDescriptors == [tableView.tableColumns[1].sortDescriptorPrototype!] {
+        if draggedRowIndexes != nil && dropOperation == .Above && tableView.sortDescriptors == [tableView.tableColumns[1].sortDescriptorPrototype!] && tableViewController?.playlist?.smart_criteria == nil {
             return .Move
         } else {
             return .None

@@ -99,7 +99,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         }
         else {
             if currentTrackIndex != nil {
-                insertTrackInQueue(track, index: currentTrackIndex! + 1, context: context)
+                insertTrackInQueue(track, index: currentTrackIndex! + 1, context: context, manually: false)
                 /*let newCurrentTrackView = TrackQueueView()
                 newCurrentTrackView.viewType = .futureTrack
                 newCurrentTrackView.track = track
@@ -112,7 +112,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         tableView?.reloadData()
     }
     
-    func addTrackToQueue(track: Track, context: String, tense: Int) {
+    func addTrackToQueue(track: Track, context: String, tense: Int, manually: Bool) {
         let newFutureTrackView = TrackQueueView()
         if (tense == 0) {
             newFutureTrackView.viewType = .currentTrack
@@ -121,6 +121,9 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             newFutureTrackView.viewType = .futureTrack
         }
         newFutureTrackView.track = track
+        if manually == true {
+            newFutureTrackView.wasQueuedManually = true
+        }
         if trackQueue.count > 0 {
             trackQueue.removeLast()
         }
@@ -144,16 +147,19 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         makePlaylistFromSelection()
     }
     
-    func insertTrackInQueue(track: Track, index: Int, context: String) {
+    func insertTrackInQueue(track: Track, index: Int, context: String, manually: Bool) {
         if index < trackQueue.count {
             let newTrackView = TrackQueueView()
             newTrackView.track = track
             newTrackView.source = context
             newTrackView.viewType = .futureTrack
+            if manually == true {
+                newTrackView.wasQueuedManually = true
+            }
             trackQueue.insert(newTrackView, atIndex: index)
         }
         else {
-            addTrackToQueue(track, context: context, tense: 1)
+            addTrackToQueue(track, context: context, tense: 1, manually: manually)
         }
         tableView?.reloadData()
     }
@@ -175,12 +181,76 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         tableView?.reloadData()
     }
     
-    func skipBackward() {
+    func uninitializeTrackQueue() {
+        trackQueue.removeAtIndex(0)
+        currentTrackIndex = nil
+    }
+    
+    func skipToPreviousTrack() {
+        print("skip to previous track called")
+        //currently micromanages the MWC queue and the audio module, in spite of better judgement
         if currentTrackIndex != nil {
-            if trackQueue.count >= currentTrackIndex! + 1 {
-                trackQueue.removeAtIndex(currentTrackIndex! + 1)
+            if trackQueue[currentTrackIndex!].wasQueuedManually != true {
+                trackQueue.removeAtIndex(currentTrackIndex!)
+                if trackQueue.count > 1 {
+                    let track = trackQueue[currentTrackIndex! - 1]
+                    trackQueue[currentTrackIndex! - 1].viewType = .currentTrack
+                    currentTrackIndex! -= 1
+                    numPastTracks -= 1
+                    if numPastTracks >= numPastTracksToShow - 1 {
+                        globalOffset -= 1
+                    }
+                    mainWindowController?.delegate?.audioModule.currentTrackLocation = track.track?.location
+                    mainWindowController?.delegate?.audioModule.skip_backward()
+                    mainWindowController?.current_source_index! -= 1
+                    mainWindowController?.currentTrack?.is_playing = false
+                    mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                    mainWindowController?.currentTrack = track.track
+                    mainWindowController?.timer?.invalidate()
+                    mainWindowController?.initializeInterfaceForNewTrack()
+                    mainWindowController?.currentTrack?.is_playing = true
+                    mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                } else {
+                    uninitializeTrackQueue()
+                    mainWindowController?.currentTrack?.is_playing = false
+                    mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                    mainWindowController?.currentTrack = nil
+                    mainWindowController?.delegate?.audioModule.currentTrackLocation = nil
+                    mainWindowController?.delegate?.audioModule.skip_backward()
+                }
+            } else {
+                if trackQueue.count > 1 {
+                    trackQueue[currentTrackIndex!].viewType = .futureTrack
+                    let track = trackQueue[currentTrackIndex! - 1]
+                    let newFutureTrack = trackQueue[currentTrackIndex!]
+                    newFutureTrack.viewType = .futureTrack
+                    trackQueue[currentTrackIndex! - 1].viewType = .currentTrack
+                    currentTrackIndex! -= 1
+                    numPastTracks -= 1
+                    if numPastTracks >= numPastTracksToShow - 1 {
+                        globalOffset -= 1
+                    }
+                    mainWindowController?.delegate?.audioModule.currentTrackLocation = track.track?.location
+                    mainWindowController?.delegate?.audioModule.skip_backward()
+                    mainWindowController?.currentTrack?.is_playing = false
+                    mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                    mainWindowController?.currentTrack = track.track
+                    mainWindowController?.timer?.invalidate()
+                    mainWindowController?.initializeInterfaceForNewTrack()
+                    mainWindowController?.currentTrack?.is_playing = true
+                    mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                    mainWindowController?.delegate?.audioModule.trackQueue.insert(newFutureTrack.track!, atIndex: 0)
+                    mainWindowController?.trackQueue.insert(newFutureTrack.track!, atIndex: 0)
+                } else {
+                    mainWindowController?.currentTrack?.is_playing = false
+                    mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                    mainWindowController?.currentTrack = nil
+                    mainWindowController?.delegate?.audioModule.currentTrackLocation = nil
+                    mainWindowController?.delegate?.audioModule.skip_backward()
+                }
             }
         }
+        tableView.reloadData()
     }
     
     func getLastTrack() -> Track? {
@@ -231,7 +301,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             actualRow = theRow + globalOffset
         }
         for track in tracks {
-            insertTrackInQueue(track, index: actualRow, context: context!)
+            insertTrackInQueue(track, index: actualRow, context: context!, manually: true)
             let queueIndex = currentTrackIndex == nil ? actualRow : actualRow - currentTrackIndex! - 1
             print("queue index \(queueIndex), actualRow \(actualRow), currentIndex \(currentTrackIndex)")
             mainWindowController?.delegate?.audioModule.addTrackToQueue(track, index: queueIndex)
@@ -316,7 +386,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         default:
             select_offset = globalOffset
         }
-        //slow as hell, but whatever
+        //terrible/slow implementation
         var indices = [Int]()
         for index in tableView.selectedRowIndexes {
             indices.append(index)

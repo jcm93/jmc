@@ -44,6 +44,9 @@ class AdvancedFilterViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if mainWindowController?.currentTableViewController?.playlist != nil {
+            createSmartPlaylistButton.enabled = false
+        }
         // Do view setup here.
     }
     

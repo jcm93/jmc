@@ -335,7 +335,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             }
             let next_track = getTrackWithID(id!)
             trackQueue.insert(next_track!, atIndex: 0)
-            trackQueueViewController?.addTrackToQueue(next_track!, context: currentSourceListItem!.name!, tense: 2)
+            trackQueueViewController?.addTrackToQueue(next_track!, context: currentSourceListItem!.name!, tense: 2, manually: false)
             return next_track
         }
     }
@@ -524,9 +524,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         if seconds > 3 {
             delegate?.audioModule.skip_backward()
         } else {
-            if let track = trackQueueViewController?.getLastTrack() {
-                playSong(track)
-            }
+            trackQueueViewController?.skipToPreviousTrack()
         }
     }
     
@@ -718,7 +716,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
                 }
                 if trackQueue.count > 0 {
                     self.currentTrack = trackQueue.removeFirst()
-                    
                 }
                 if is_initialized == false {
                     createPlayOrderArray(self.currentTrack!)

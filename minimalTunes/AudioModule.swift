@@ -202,6 +202,19 @@ class AudioModule: NSObject {
         changeTrack()
     }
     
+    func playImmediatelyNoObservers(trackLocation: String) {
+        currentHandlerType = .destroy
+        print("paused value is \(is_paused)")
+        currentTrackLocation = trackLocation
+        initializePlayback()
+        if (is_paused == false || is_paused == nil) {
+            print("reached play clause")
+            play()
+        }
+        print(audioEngine)
+        currentHandlerType = .natural
+    }
+    
     func removeTracksFromQueue(indexes: [Int]) {
     }
     
@@ -396,7 +409,7 @@ class AudioModule: NSObject {
     func skip_backward() {
         if (currentTrackLocation != nil) {
             print("skipping to new track")
-            playImmediately(currentTrackLocation!)
+            playImmediatelyNoObservers(currentTrackLocation!)
         }
         else {
             print("skipping, no new track")
