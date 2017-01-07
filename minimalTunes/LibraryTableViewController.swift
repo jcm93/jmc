@@ -348,6 +348,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     override func viewDidLoad() {
         if playlist != nil {
+            tableView.registerForDraggedTypes(["Track"]) //to enable d&d reordering
             tableView.tableColumns[1].hidden = false
             tableView.sortDescriptors = [tableView.tableColumns[1].sortDescriptorPrototype!]
             if playlist?.smart_criteria != nil {
@@ -359,6 +360,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         } else {
             tableView.tableColumns[1].hidden = true
         }
+        trackViewArrayController.tableViewController = self
         tableView.doubleAction = #selector(tableViewDoubleClick)
         columnVisibilityMenu.delegate = self
         self.initializeColumnVisibilityMenu(self.tableView)

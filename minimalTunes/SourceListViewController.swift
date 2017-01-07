@@ -179,6 +179,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         let newItemChildren: NSMutableOrderedSet = parentItem.children?.count > 0 ? parentItem.children?.mutableCopy() as! NSMutableOrderedSet : NSMutableOrderedSet()
         var mutableIndex = index
         for item in itemsToBeAdded {
+            guard item != parentNode.item else {continue}
             let currentParentNode = item.node!.parent!
             let currentParentItem = item.node!.parent!.item
             //remove from sibling sets for both items and nodes, then reset parents
@@ -341,7 +342,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         let source = (item as! SourceListNode).item
         if source.is_header == true {
             return false
-        } else if source.children?.count > 0 {
+        } else if source.children?.count > 0 && source.is_folder != true {
             return false
         } else {
             return true
@@ -381,6 +382,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             view.node = source
             view.textField?.stringValue = source.item.name!
             view.textField?.delegate = self
+            view.textField?.editable = true
             return view
         } else if source.item.library != nil {
             let view = outlineView.makeViewWithIdentifier("MasterPlaylistCell", owner: self) as! SourceListCellView
