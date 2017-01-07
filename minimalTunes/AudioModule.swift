@@ -179,8 +179,7 @@ class AudioModule: NSObject {
     
     func playNetworkImmediately(track: Track) {
         currentHandlerType = .destroy
-        let networkPath = NSUserDefaults.standardUserDefaults().stringForKey("libraryPath")! + "/test.mp3"
-        currentTrackLocation = NSURL(fileURLWithPath: networkPath).absoluteString
+        currentTrackLocation = track.location
         print("paused value is \(is_paused)")
         initializePlayback()
         play()
@@ -339,7 +338,7 @@ class AudioModule: NSObject {
         switch currentHandlerType {
         case .natural:
             tryGetMoreTracks()
-            if networkFlag = true {
+            if networkFlag == true {
                 networkFlag = false
                 return
             }

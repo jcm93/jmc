@@ -168,6 +168,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         guard self.otherSharedTableViewControllers.objectForKey(id) != nil else {return}
         let playlistViewController = otherSharedTableViewControllers.objectForKey(id) as! LibraryTableViewControllerCellBased
         playlistViewController.trackViewArrayController.fetchPredicate = NSPredicate(format: "track.id in %@ AND track.is_network == %@", idList, NSNumber(booleanLiteral: true))
+        playlistViewController.initializeForPlaylist()
         playlistViewController.tableView.reloadData()
     }
     
@@ -339,13 +340,18 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             var next_track: Track?
             if currentAudioSource?.is_network == true {
                 delegate?.serviceBrowser?.askPeerForSong(currentAudioSource!.library!.peer as! MCPeerID, id: id!)
-                initializeInterfaceForNetworkTrack()
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.initializeInterfaceForNetworkTrack()
+                    self.timer?.invalidate()
+                }
                 next_track = getNetworkTrackWithID(id!)
             } else {
                 next_track = getTrackWithID(id!)
             }
             trackQueue.insert(next_track!, atIndex: 0)
-            trackQueueViewController?.addTrackToQueue(next_track!, context: currentSourceListItem!.name!, tense: 2, manually: false)
+            dispatch_async(dispatch_get_main_queue()) {
+                self.trackQueueViewController?.addTrackToQueue(next_track!, context: self.currentSourceListItem!.name!, tense: 2, manually: false)
+            }
             return next_track
         }
     }
