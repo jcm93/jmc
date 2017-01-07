@@ -68,11 +68,10 @@ let ARTIST_FETCH_REQUEST = NSFetchRequest(entityName: "Artist")
 let COMPOSER_FETCH_REQUEST = NSFetchRequest(entityName: "Composer")
 let GENRE_FETCH_REQUEST = NSFetchRequest(entityName: "Genre")
 let SONG_COLLECTION_FETCH_REQUEST = NSFetchRequest(entityName: "SongCollection")
-let SONG_COLLECTION_FOLDER_FETCH_REQUEST = NSFetchRequest(entityName: "SongCollectionFolder")
 
 let IS_NETWORK_PREDICATE = NSPredicate(format: "is_network == %@", NSNumber(booleanLiteral: true))
 
-let BATCH_PURGE_NETWORK_FETCH_REQUESTS: [NSFetchRequest] = [GENRE_FETCH_REQUEST, COMPOSER_FETCH_REQUEST, ARTIST_FETCH_REQUEST, ALBUM_FETCH_REQUEST, TRACK_VIEW_FETCH_REQUEST, TRACK_FETCH_REQUEST, SOURCE_FETCH_REQUEST, SONG_COLLECTION_FETCH_REQUEST, SONG_COLLECTION_FOLDER_FETCH_REQUEST]
+let BATCH_PURGE_NETWORK_FETCH_REQUESTS: [NSFetchRequest] = [GENRE_FETCH_REQUEST, COMPOSER_FETCH_REQUEST, ARTIST_FETCH_REQUEST, ALBUM_FETCH_REQUEST, TRACK_VIEW_FETCH_REQUEST, TRACK_FETCH_REQUEST, SOURCE_FETCH_REQUEST, SONG_COLLECTION_FETCH_REQUEST]
 
 func purgeCurrentlyPlaying() {
     let fetchRequest = NSFetchRequest(entityName: "Track")
@@ -145,6 +144,17 @@ let DEFAULT_COLUMN_VISIBILITY_DICTIONARY: [String : AnyObject] = [
     "track_num" : 0,
 ]
 
+
+func shuffleArray(array: [AnyObject]) -> [AnyObject]? {
+    guard array.count > 0 else {return nil}
+    var newArray = array
+    for i in 0..<array.count - 1 {
+        let j = Int(arc4random_uniform(UInt32(array.count - i))) + i
+        guard i != j else {continue}
+        swap(&newArray[i], &newArray[j])
+    }
+    return newArray
+}
 
 
 let sharedLibraryNamesDictionary = NSMutableDictionary()

@@ -28,18 +28,20 @@ class AdvancedFilterViewController: NSViewController {
     }
     
     func initializePredicateEditor() {
-        predicateEditor.addRow(nil)
+        if predicateEditor.predicate == nil {
+            predicateEditor.addRow(nil)
+        }
     }
     
     @IBAction func createSmartPlaylistButtonPressed(sender: AnyObject) {
         let newSmartCriteria = NSEntityDescription.insertNewObjectForEntityForName("SmartCriteria", inManagedObjectContext: managedContext) as! SmartCriteria
         newSmartCriteria.fetch_limit = itemLimitField.integerValue
-        newSmartCriteria.fetch_limit_type = playlistLengthDeterminantSelector.stringValue
-        newSmartCriteria.ordering_criterion = playlistSelectionCriteriaSelector.stringValue
+        newSmartCriteria.fetch_limit_type = playlistLengthDeterminantSelector.titleOfSelectedItem
+        newSmartCriteria.ordering_criterion = playlistSelectionCriteriaSelector.titleOfSelectedItem
         newSmartCriteria.predicate = predicateEditor.predicate
-        let newPlaylist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: managedContext) as! SongCollection
-        newPlaylist.smart_criteria = newSmartCriteria
+        mainWindowController?.createPlaylistFromSmartCriteria(newSmartCriteria)
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.

@@ -11,8 +11,11 @@ import Cocoa
 class SourceListNode: NSObject {
     var item: SourceListItem
     var children = [SourceListNode]()
+    var parent: SourceListNode?
     init(item: SourceListItem) {
         self.item = item
+        super.init()
+        item.node = self
     }
 }
 
@@ -42,6 +45,7 @@ class SourceListDataSource: NSObject, NSOutlineViewDataSource, NSOutlineViewDele
             }
             if newNode.item.parent == currentNode?.item {
                 currentNode?.children.append(newNode)
+                newNode.parent = currentNode
             } else {
                 currentNode = newNode
             }
@@ -79,7 +83,7 @@ class SourceListDataSource: NSObject, NSOutlineViewDataSource, NSOutlineViewDele
             return outlineView.makeViewWithIdentifier("PlaylistCell", owner: self)
         } else if source.item.is_network == true {
             return outlineView.makeViewWithIdentifier("NetworkLibraryCell", owner: self)
-        } else if source.item.playlist_folder != nil {
+        } else if source.item.is_folder == true {
             return outlineView.makeViewWithIdentifier("SongCollectionFolder'", owner: self)
         } else if source.item.master_playlist != nil {
             return outlineView.makeViewWithIdentifier("MasterPlaylistCell", owner: self)

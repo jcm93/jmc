@@ -9,6 +9,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MainWindowController" customModule="minimalTunes" customModuleProvider="target">
             <connections>
+                <outlet property="advancedSearchToggle" destination="0eg-hu-JdK" id="a8b-oC-Ej5"/>
                 <outlet property="artistAlbumLabel" destination="WNx-p0-gWl" id="MpA-ce-7KD"/>
                 <outlet property="artworkTargetView" destination="M4o-nI-Oef" id="yz5-8p-vw5"/>
                 <outlet property="currentTimeLabel" destination="Adc-jG-fc7" id="q4N-D3-xDy"/>
@@ -260,20 +261,7 @@
                             <binding destination="-2" name="value" keyPath="self.will_repeat" id="U9i-xR-yCM"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xsI-Kf-ANO" userLabel="Add Playlist Button">
-                        <rect key="frame" x="124" y="4" width="44" height="25"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="44" id="pRF-hx-WWu"/>
-                        </constraints>
-                        <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSAddTemplate" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Lc4-wv-t7N">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="addPlaylistButton:" target="-2" id="yTu-FT-sQH"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gzN-xP-Utz" userLabel="Queue Button">
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gzN-xP-Utz" userLabel="Queue Button">
                         <rect key="frame" x="1617" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="hy6-BX-4Jm"/>
@@ -301,6 +289,19 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
+                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0eg-hu-JdK" userLabel="Sharing Button">
+                        <rect key="frame" x="228" y="4" width="44" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="44" id="ZOb-CT-5a5"/>
+                        </constraints>
+                        <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSRevealFreestandingTemplate" imagePosition="above" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Mo2-P1-nJZ">
+                            <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="advancedFilterButtonPressed:" target="-2" id="Pii-Re-dda"/>
+                        </connections>
+                    </button>
                     <searchField wantsLayer="YES" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="S7Y-RM-UHH">
                         <rect key="frame" x="1421" y="1003" width="190" height="22"/>
                         <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsWholeSearchString="YES" id="ggp-Qz-zgo">
@@ -312,6 +313,19 @@
                             <action selector="searchFieldAction:" target="-2" id="9Ue-Gx-ySp"/>
                         </connections>
                     </searchField>
+                    <segmentedControl verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mb6-nw-TjG" customClass="AddPlaylistButton" customModule="minimalTunes" customModuleProvider="target">
+                        <rect key="frame" x="124" y="4" width="44" height="25"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="momentary" id="yAI-sF-vf6">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment image="NSAddTemplate" width="37"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="addPlaylistButton:" target="-2" id="yEY-nS-OH5"/>
+                            <outlet property="menu" destination="WAr-lr-0sM" id="tZk-Ww-b2z"/>
+                        </connections>
+                    </segmentedControl>
                 </subviews>
                 <constraints>
                     <constraint firstItem="rTW-GT-cjN" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ELy-ib-2qL" secondAttribute="trailing" constant="30" id="3sf-WN-KqY"/>
@@ -319,21 +333,25 @@
                     <constraint firstItem="vko-jh-7ju" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="18" id="ALI-q0-qAb"/>
                     <constraint firstAttribute="trailing" secondItem="wxs-uU-bSr" secondAttribute="trailing" id="Hgn-uz-KPD"/>
                     <constraint firstItem="wxs-uU-bSr" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="JFe-fa-ed3"/>
+                    <constraint firstItem="mb6-nw-TjG" firstAttribute="leading" secondItem="eg4-23-xqc" secondAttribute="trailing" constant="8" id="KqT-vl-Awh"/>
+                    <constraint firstAttribute="bottom" secondItem="mb6-nw-TjG" secondAttribute="bottom" constant="6" id="Mat-o4-b8L"/>
+                    <constraint firstItem="0eg-hu-JdK" firstAttribute="leading" secondItem="rfk-1e-A3X" secondAttribute="trailing" constant="8" id="Nze-HV-lcT"/>
                     <constraint firstItem="izV-NM-16c" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="18" id="S7c-aX-L1t"/>
                     <constraint firstItem="rTW-GT-cjN" firstAttribute="leading" secondItem="ELy-ib-2qL" secondAttribute="trailing" priority="400" constant="50" id="SLe-dU-L0X"/>
                     <constraint firstItem="r3P-eO-TmU" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="U90-gJ-aXX"/>
                     <constraint firstItem="jia-N3-aQf" firstAttribute="leading" secondItem="izV-NM-16c" secondAttribute="trailing" constant="30" id="W8b-Pj-8IV"/>
                     <constraint firstItem="vko-jh-7ju" firstAttribute="leading" secondItem="jia-N3-aQf" secondAttribute="trailing" constant="32" id="WPF-26-Fj6"/>
+                    <constraint firstAttribute="bottom" secondItem="0eg-hu-JdK" secondAttribute="bottom" constant="6" id="Wbh-jH-zym"/>
                     <constraint firstAttribute="bottom" secondItem="qNB-cP-szA" secondAttribute="bottom" constant="6" id="Ws8-am-zPh"/>
                     <constraint firstAttribute="bottom" secondItem="FOU-Bi-82q" secondAttribute="bottom" constant="10" id="gP9-zO-Tke"/>
                     <constraint firstItem="jia-N3-aQf" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="19" id="gpH-Wp-piW"/>
                     <constraint firstAttribute="trailing" secondItem="r3P-eO-TmU" secondAttribute="trailing" id="hj8-Hy-9at"/>
                     <constraint firstItem="ELy-ib-2qL" firstAttribute="leading" secondItem="vko-jh-7ju" secondAttribute="trailing" constant="50" id="i0M-vJ-p0P"/>
                     <constraint firstAttribute="bottom" secondItem="rfk-1e-A3X" secondAttribute="bottom" constant="6" id="iY8-FC-3Ai"/>
+                    <constraint firstAttribute="trailing" secondItem="gzN-xP-Utz" secondAttribute="trailing" constant="19" id="kdg-jL-mMW"/>
                     <constraint firstItem="wxs-uU-bSr" firstAttribute="top" secondItem="r3P-eO-TmU" secondAttribute="bottom" id="lLX-1l-4Ka"/>
                     <constraint firstItem="izV-NM-16c" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="98" id="lyK-Qo-Ril"/>
                     <constraint firstItem="FOU-Bi-82q" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="mfK-fT-Eft"/>
-                    <constraint firstAttribute="bottom" secondItem="xsI-Kf-ANO" secondAttribute="bottom" constant="6" id="qFv-ly-g9v"/>
                     <constraint firstItem="eg4-23-xqc" firstAttribute="top" secondItem="r3P-eO-TmU" secondAttribute="bottom" constant="6" id="qpU-t1-OEz"/>
                     <constraint firstAttribute="trailing" secondItem="S7Y-RM-UHH" secondAttribute="trailing" constant="69" id="s45-mW-cBO"/>
                     <constraint firstAttribute="bottom" secondItem="eg4-23-xqc" secondAttribute="bottom" constant="6" id="sd9-Vy-rms"/>
@@ -352,10 +370,28 @@
             <size key="maxContentSize" width="10000" height="10000"/>
         </drawer>
         <userDefaultsController representsSharedInstance="YES" id="z1J-gJ-m1D"/>
+        <menu id="WAr-lr-0sM">
+            <items>
+                <menuItem title="Add Playlist Folder" id="1BO-cr-oZk">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="addPlaylistFolderButton:" target="-2" id="dMI-yp-eUv"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Add Smart Playlist..." id="cHP-nj-BCt" userLabel="Add Smart Playlist...">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="addSmartPlaylistButton:" target="-2" id="lcm-oe-Y15"/>
+                    </connections>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="-395" y="1184.5"/>
+        </menu>
     </objects>
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSPlayTemplate" width="25" height="23"/>
+        <image name="NSRevealFreestandingTemplate" width="14" height="14"/>
         <image name="NSSkipAheadTemplate" width="27" height="15"/>
         <image name="NSSkipBackTemplate" width="27" height="15"/>
         <image name="NSUser" width="32" height="32"/>

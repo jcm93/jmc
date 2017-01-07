@@ -26,7 +26,6 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     var rootNode: SourceListNode?
     
     var draggedNodes: [SourceListNode]?
-    
     var libraryHeaderNode: SourceListNode?
     var playlistHeaderNode: SourceListNode?
     var sharedHeaderNode: SourceListNode?
@@ -54,31 +53,23 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             as? AppDelegate)?.managedObjectContext }()!
     
     func createTree() {
-        rootNode = SourceListNode(item: rootSourceListItem!)
         var nodesNotVisited = [SourceListItem]()
-        var nodesAlreadyVisited = [SourceListNode]()
-        var currentNode = rootNode
-        for item in rootNode!.item.children! {
-            nodesNotVisited.append(item as! SourceListItem)
-        }
-        while nodesNotVisited.isEmpty == false {
+        nodesNotVisited.append(rootSourceListItem!)
+        while !nodesNotVisited.isEmpty {
             let item = nodesNotVisited.removeFirst()
-            let newNode = SourceListNode(item: item)
-            if item.children != nil {
-                for item in item.children! {
-                    nodesNotVisited.append(item as! SourceListItem)
-                }
+            let node = SourceListNode(item: item)
+            if item == rootSourceListItem {
+                rootNode = node
             }
-            nodesAlreadyVisited.append(newNode)
-            if newNode.item.parent == currentNode?.item {
-                currentNode?.children.append(newNode)
-            } else {
-                currentNode = nodesAlreadyVisited.removeFirst()
-                if newNode.item.parent == currentNode!.item {
-                    currentNode?.children.append(newNode)
-                }
+            if item.parent != nil {
+                node.parent = item.parent?.node
+                node.parent?.children.append(node)
+            }
+            for child in item.children! {
+                nodesNotVisited.append(child as! SourceListItem)
             }
         }
+        print("done making tree")
     }
     
     func sortTree() {
@@ -166,9 +157,54 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         return index
     }
     
+    func createPlaylistFolder(nodes: [SourceListNode]?) {
+        let playlistFolderItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
+        playlistFolderItem.is_folder = true
+        let playlistFolderNode = SourceListNode(item: playlistFolderItem)
+        playlistFolderItem.name = "New Playlist Folder"
+        playlistFolderItem.parent = rootNode?.children[2].item
+        if nodes != nil {
+            makeNodesSubnodesOfNode(nodes!, parentNode: playlistFolderNode, index: 0)
+        }
+        playlistHeaderNode?.children.insert(playlistFolderNode, atIndex: 0)
+        sourceList.reloadData()
+        let newPlaylistIndex = NSIndexSet(index: getNodesBeforePlaylists())
+        sourceList.selectRowIndexes(newPlaylistIndex, byExtendingSelection: false)
+        sourceList.editColumn(0, row: sourceList.selectedRow, withEvent: nil, select: true)
+    }
     
+    func makeNodesSubnodesOfNode(nodes: [SourceListNode], parentNode: SourceListNode, index: Int) {
+        let parentItem = parentNode.item
+        let itemsToBeAdded = nodes.map({return $0.item})
+        let newItemChildren: NSMutableOrderedSet = parentItem.children?.count > 0 ? parentItem.children?.mutableCopy() as! NSMutableOrderedSet : NSMutableOrderedSet()
+        var mutableIndex = index
+        for item in itemsToBeAdded {
+            let currentParentNode = item.node!.parent!
+            let currentParentItem = item.node!.parent!.item
+            //remove from sibling sets for both items and nodes, then reset parents
+            let currentNodeSiblingIndex = currentParentNode.children.indexOf(item.node!)
+            currentParentNode.children.removeAtIndex(currentNodeSiblingIndex!)
+            let currentItemSiblingsMutableCopy = currentParentItem.children!.mutableCopy() as! NSMutableOrderedSet
+            currentItemSiblingsMutableCopy.removeObject(item)
+            currentParentItem.children = currentItemSiblingsMutableCopy as NSOrderedSet
+            item.node?.parent = parentNode
+            item.parent = parentItem
+            //insert into new sibling sets at appropriate index
+            newItemChildren.insertObject(item, atIndex: mutableIndex)
+            parentNode.children.insert(item.node!, atIndex: mutableIndex)
+            mutableIndex += 1
+        }
+        parentItem.children = newItemChildren as NSOrderedSet
+        var index = 0
+        for node in parentNode.children {
+            node.item.sort_order = index
+            index += 1
+        }
+        sortTree()
+        sourceList.reloadData()
+    }
     
-    func createPlaylist(tracks: [Int]?) {
+    func createPlaylist(tracks: [Int]?, smart_criteria: SmartCriteria?) {
         //create playlist
         let playlist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: managedContext) as! SongCollection
         let playlistItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
@@ -178,7 +214,12 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         if tracks != nil {
             playlist.track_id_list = tracks!
         }
+        if smart_criteria != nil {
+            playlist.smart_criteria = smart_criteria
+        }
         //todo ID
+        playlist.id = library?.next_playlist_id
+        library?.next_playlist_id = Int(library!.next_playlist_id!) + 1
         //create node
         let newSourceListNode = SourceListNode(item: playlistItem)
         playlistHeaderNode?.children.insert(newSourceListNode, atIndex: 0)
@@ -335,8 +376,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             view.textField?.stringValue = source.item.name!
             view.textField?.editable = false
             return view
-        } else if source.item.playlist_folder != nil {
-            let view = outlineView.makeViewWithIdentifier("SongCollectionFolder", owner: self) as! SourceListCellView
+        } else if source.item.is_folder == true {
+            let view = outlineView.makeViewWithIdentifier("PlaylistFolderCell", owner: self) as! SourceListCellView
             view.node = source
             view.textField?.stringValue = source.item.name!
             view.textField?.delegate = self
@@ -402,8 +443,11 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         if draggedNodes != nil {
             let node = item as? SourceListNode
             print(index)
-            if node == playlistHeaderNode && index != -1 {
-                print("i'm here")
+            if node?.item.is_folder == true {
+                print("returning generic")
+                return .Every
+            } else if node == playlistHeaderNode && index != -1 {
+                print("returning move")
                 return .Move
             } else {
                 print("returning none")
@@ -430,21 +474,11 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     
     func outlineView(outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: AnyObject?, childIndex index: Int) -> Bool {
         if draggedNodes != nil {
-            //fix source list nodes
-            let node = item as! SourceListNode
-            for draggedNode in draggedNodes! {
-                node.children.removeAtIndex(node.children.indexOf(draggedNode)!)
+            var fixedIndex = index
+            if index == -1 {
+                fixedIndex = 0
             }
-            node.children.insertContentsOf(draggedNodes!, at: index)
-            //fix source list items
-            let sourceItem = node.item
-            let children: NSMutableOrderedSet = sourceItem.children!.mutableCopy() as! NSMutableOrderedSet
-            var adder = 0
-            for draggedNode in draggedNodes! {
-                children.exchangeObjectAtIndex(children.indexOfObject(draggedNode.item), withObjectAtIndex: index + adder)
-                adder += 1
-            }
-            sourceItem.children = children
+            makeNodesSubnodesOfNode(draggedNodes!, parentNode: item as! SourceListNode, index: fixedIndex)
             draggedNodes = nil
             sourceList.reloadData()
             return true
@@ -501,6 +535,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     
     override func viewDidLoad() {
         self.createTree()
+        self.sortTree()
         libraryHeaderNode = rootNode?.children[0]
         sharedHeaderNode = rootNode?.children[1]
         playlistHeaderNode = rootNode?.children[2]

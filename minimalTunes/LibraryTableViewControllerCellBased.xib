@@ -52,6 +52,9 @@
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <connections>
+                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.playlist_order" id="Mrr-eM-oPr"/>
+                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="is_enabled" width="17.07421875" minWidth="10" maxWidth="3.4028234663852886e+38" id="iUR-0q-5H7" userLabel="isEnabled">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="✓">

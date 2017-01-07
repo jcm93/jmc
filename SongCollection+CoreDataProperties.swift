@@ -19,7 +19,6 @@ extension SongCollection {
     @NSManaged var is_smart: NSNumber?
     @NSManaged var name: String?
     @NSManaged var track_id_list: NSObject?
-    @NSManaged var folder: SongCollectionFolder?
     @NSManaged var if_master_library: Library?
     @NSManaged var if_master_list_item: SourceListItem?
     @NSManaged var list_item: SourceListItem?

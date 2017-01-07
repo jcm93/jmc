@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+private var my_context = 0
 
 class LibraryTableViewController: NSViewController, NSMenuDelegate {
 
@@ -21,6 +22,9 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     var managedContext = (NSApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
     var searchString: String?
     var playlist: SongCollection?
+    var advancedFilterVisible: Bool = false
+    var hasInitialized = false
+    var needsPlaylistRefresh = false
     
     var isVisibleDict = NSMutableDictionary()
     func populateIsVisibleDict() {
@@ -168,15 +172,16 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     func initializeSmartPlaylist() {
         let smart_criteria = playlist!.smart_criteria
         let smart_predicate = smart_criteria?.predicate as! NSPredicate
-        let fetchRequest = NSFetchRequest(entityName: "Track")
+        let fetchRequest = NSFetchRequest(entityName: "TrackView")
         fetchRequest.predicate = smart_predicate
         do {
             var results = try managedContext.executeFetchRequest(fetchRequest) as? NSArray
             if results != nil {
+                results = (results as! [TrackView]).map({return $0.track!})
                 if smart_criteria?.ordering_criterion != nil {
                     switch smart_criteria!.ordering_criterion! {
                     case "random":
-                        
+                        results = shuffleArray(results as! [Track])
                     case "name":
                         results = results?.sortedArrayUsingSelector(#selector(Track.compareName))
                     case "artist":
@@ -193,16 +198,16 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                     case "least recently added":
                         results = results?.sortedArrayUsingSelector(#selector(Track.compareDateAdded)).reverse()
                     case "most played":
-                        let sortDescriptor = NSSortDescriptor(key: "play_count", ascending: true)
-                        results = results?.sortedArrayUsingDescriptors([sortDescriptor])
-                    case "least played":
                         let sortDescriptor = NSSortDescriptor(key: "play_count", ascending: false)
                         results = results?.sortedArrayUsingDescriptors([sortDescriptor])
+                    case "least played":
+                        let sortDescriptor = NSSortDescriptor(key: "play_count", ascending: true)
+                        results = results?.sortedArrayUsingDescriptors([sortDescriptor])
                     case "most skipped":
-                        let sortDescriptor = NSSortDescriptor(key: "skip_count", ascending: true)
+                        let sortDescriptor = NSSortDescriptor(key: "skip_count", ascending: false)
                         results = results?.sortedArrayUsingDescriptors([sortDescriptor])
                     case "least skipped":
-                        let sortDescriptor = NSSortDescriptor(key: "skip_count", ascending: false)
+                        let sortDescriptor = NSSortDescriptor(key: "skip_count", ascending: true)
                         results = results?.sortedArrayUsingDescriptors([sortDescriptor])
                     case "most recently played":
                         let sortDescriptor = NSSortDescriptor(key: "date_last_played", ascending: true)
@@ -220,7 +225,6 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                     let fetchType = smart_criteria!.fetch_limit_type!
                     let fetchLimit = Float(smart_criteria!.fetch_limit!)
                     for thing in results! {
-                        prunedResults.append(thing as! Track)
                         switch fetchType {
                         case "hours":
                             limit += (Float((thing as! Track).time!) / 1000)/60/60
@@ -235,8 +239,10 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                         default:
                             limit += 1
                         }
-                        if limit >= fetchLimit {
+                        if limit > fetchLimit {
                             break
+                        } else {
+                            prunedResults.append(thing as! Track)
                         }
                     }
                 } else {
@@ -245,6 +251,11 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                 let track_id_list = prunedResults.map({return $0.id as! Int})
                 playlist?.track_id_list = track_id_list
             }
+        } catch {
+            print(error)
+        }
+        do {
+            try managedContext.save()
         } catch {
             print(error)
         }
@@ -299,12 +310,54 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         }
     }
     
+    func initializeForPlaylist() {
+        print("initializing for playlist")
+        var track_id_list: [Int] = []
+        var predicates = [NSPredicate]()
+        if item!.playlist?.track_id_list != nil {
+            track_id_list = item!.playlist!.track_id_list as! [Int]
+            let predicate = NSPredicate(format: "track.id in %@", track_id_list)
+            predicates.append(predicate)
+            
+            let fetchReq = NSFetchRequest(entityName: "TrackView")
+            fetchReq.predicate = predicate
+            do {
+                let results = try managedContext.executeFetchRequest(fetchReq) as! [TrackView]
+                let trackViewIDDictionary = NSMutableDictionary()
+                for result in results {
+                    trackViewIDDictionary[result.track!.id!] = result
+                }
+                var index = 1
+                for id in track_id_list {
+                    (trackViewIDDictionary[id] as! TrackView).playlist_order = index
+                    index += 1
+                }
+            } catch {
+                print(error)
+            }
+        } else {
+            predicates.append(NSPredicate(format: "track.id in {}"))
+        }
+        if item!.is_network == true {
+            predicates.append(NSPredicate(format: "track.is_network == true"))
+        } else {
+            predicates.append(NSPredicate(format: "track.is_network == nil or track.is_network == false"))
+        }
+        trackViewArrayController.fetchPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+    }
+    
     override func viewDidLoad() {
-        //tableView.canDrawSubviewsIntoLayer = true
         if playlist != nil {
+            tableView.tableColumns[1].hidden = false
+            tableView.sortDescriptors = [tableView.tableColumns[1].sortDescriptorPrototype!]
             if playlist?.smart_criteria != nil {
                 initializeSmartPlaylist()
+            } else if playlist?.track_id_list != nil && self.needsPlaylistRefresh == true {
+                trackViewArrayController.fetchPredicate = NSPredicate(format: "track.id in %@", playlist?.track_id_list as! [Int])
             }
+            initializeForPlaylist()
+        } else {
+            tableView.tableColumns[1].hidden = true
         }
         tableView.doubleAction = #selector(tableViewDoubleClick)
         columnVisibilityMenu.delegate = self

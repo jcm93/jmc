@@ -25,6 +25,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     @IBOutlet weak var sourceListTargetView: NSView!
     
     //interface elements
+    @IBOutlet weak var advancedSearchToggle: NSButton!
     @IBOutlet weak var playButton: NSButton!
     @IBOutlet weak var repeatButton: NSButton!
     @IBOutlet weak var parentSplitView: NSSplitView!
@@ -172,35 +173,24 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         let newPlaylistViewController = LibraryTableViewControllerCellBased(nibName: "LibraryTableViewControllerCellBased", bundle: nil)
         newPlaylistViewController?.mainWindowController = self
         newPlaylistViewController?.playlist = item.playlist
+        newPlaylistViewController?.item = item
         return newPlaylistViewController!
     }
     
     func addObserversAndInitializeNewTableView(table: LibraryTableViewController, item: SourceListItem) {
         table.trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .New, context: &my_context)
         table.trackViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .New, context: &my_context)
-        var track_id_list: [Int] = []
-        var predicates = [NSPredicate]()
-        if item.playlist?.track_id_list != nil {
-            track_id_list = item.playlist!.track_id_list as! [Int]
-            predicates.append(NSPredicate(format: "track.id in %@", track_id_list))
-        } else {
-            predicates.append(NSPredicate(format: "track.id in {}"))
-        }
-        if item.is_network == true {
-            predicates.append(NSPredicate(format: "track.is_network == true"))
-        } else {
-            predicates.append(NSPredicate(format: "track.is_network == nil or track.is_network == false"))
-        }
-        table.trackViewArrayController.fetchPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        table.item = item
         table.mainWindowController = self
     }
     
     func switchToPlaylist(item: SourceListItem) {
         if item == currentSourceListItem {return}
+        currentTableViewController?.hasInitialized = false
         currentSourceListItem = item
         let id = item.playlist?.id
         if id != nil {
-            librarySplitView.removeArrangedSubview(currentTableViewController!.view)
+            currentTableViewController?.view.removeFromSuperview()
         } else {
             switchToLibrary()
             return
@@ -209,12 +199,14 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             let playlistViewController = otherLocalTableViewControllers.objectForKey(id!) as! LibraryTableViewController
             librarySplitView.addArrangedSubview(playlistViewController.view)
             currentTableViewController = playlistViewController
+            currentTableViewController?.initializeForPlaylist()
             updateInfo()
         }
         else if otherSharedTableViewControllers.objectForKey(id!) != nil && item.is_network == true {
             let playlistViewController = otherSharedTableViewControllers.objectForKey(id!) as! LibraryTableViewController
             librarySplitView.addArrangedSubview(playlistViewController.view)
             currentTableViewController = playlistViewController
+            currentTableViewController?.initializeForPlaylist()
             updateInfo()
         }
         else {
@@ -227,6 +219,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             librarySplitView.addArrangedSubview(newPlaylistViewController.view)
             addObserversAndInitializeNewTableView(newPlaylistViewController, item: item)
             currentTableViewController = newPlaylistViewController
+        }
+        if currentTableViewController?.advancedFilterVisible == true {
+            showAdvancedFilter()
+        } else {
+            hideAdvancedFilter()
         }
         populateSearchBar()
         currentTableViewController?.tableView.reloadData()
@@ -243,9 +240,14 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     func switchToLibrary() {
         if !librarySplitView.arrangedSubviews.contains(libraryTableViewController!.view) {
             print("adding library view to split view")
-            librarySplitView.removeArrangedSubview(currentTableViewController!.view)
+            currentTableViewController?.view.removeFromSuperview()
             librarySplitView.addArrangedSubview(libraryTableViewController!.view)
             currentTableViewController = libraryTableViewController
+            if currentTableViewController?.advancedFilterVisible == true {
+                showAdvancedFilter()
+            } else {
+                hideAdvancedFilter()
+            }
             populateSearchBar()
             currentTableViewController?.tableView.reloadData()
             updateInfo()
@@ -394,11 +396,20 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         print("dongels")
     }
     @IBAction func addPlaylistButton(sender: AnyObject) {
-        sourceListViewController!.createPlaylist(nil)
+        sourceListViewController!.createPlaylist(nil, smart_criteria: nil)
+    }
+    @IBAction func addPlaylistFolderButton(sender: AnyObject) {
+        sourceListViewController!.createPlaylistFolder(nil)
+    }
+    @IBAction func addSmartPlaylistButton(sender: AnyObject) {
+        showAdvancedFilter()
     }
     
     func createPlaylistFromTracks(idList: [Int]) {
-        sourceListViewController?.createPlaylist(idList)
+        sourceListViewController?.createPlaylist(idList, smart_criteria: nil)
+    }
+    func createPlaylistFromSmartCriteria(c: SmartCriteria) {
+        sourceListViewController?.createPlaylist(nil, smart_criteria: c)
     }
     
     //player stuff
@@ -532,19 +543,53 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             paused = true
         }
     }
+    @IBAction func advancedFilterButtonPressed(sender: AnyObject) {
+        if advancedSearchToggle.state == NSOnState {
+            showAdvancedFilter()
+        } else {
+            hideAdvancedFilter()
+        }
+    }
     
     @IBAction func toggleFilterVisibility(sender: AnyObject) {
         if advancedFilterViewController?.view != nil {
+            advancedSearchToggle.state = NSOffState
             advancedFilterViewController!.view.removeFromSuperview()
             currentTableViewController?.trackViewArrayController.filterPredicate = nil
             //librarySplitView.removeArrangedSubview(advancedFilterViewController!.view)
             advancedFilterViewController = nil
+            currentTableViewController?.advancedFilterVisible = false
         } else {
+            advancedSearchToggle.state = NSOnState
             self.advancedFilterViewController = AdvancedFilterViewController(nibName: "AdvancedFilterViewController", bundle: nil)
-            advancedFilterViewController.mainWindowController = self
+            advancedFilterViewController!.mainWindowController = self
             librarySplitView.insertArrangedSubview(advancedFilterViewController!.view, atIndex: 0)
             advancedFilterViewController?.predicateEditor!.bind("value", toObject: currentTableViewController!.trackViewArrayController, withKeyPath: "filterPredicate", options: nil)
+            currentTableViewController?.advancedFilterVisible = true
             advancedFilterViewController?.initializePredicateEditor()
+        }
+    }
+    
+    func showAdvancedFilter() {
+        if advancedFilterViewController?.view == nil {
+            self.advancedFilterViewController = AdvancedFilterViewController(nibName: "AdvancedFilterViewController", bundle: nil)
+            advancedFilterViewController!.mainWindowController = self
+            librarySplitView.insertArrangedSubview(advancedFilterViewController!.view, atIndex: 0)
+            advancedFilterViewController?.predicateEditor!.bind("value", toObject: currentTableViewController!.trackViewArrayController, withKeyPath: "filterPredicate", options: nil)
+            currentTableViewController?.advancedFilterVisible = true
+            advancedFilterViewController?.initializePredicateEditor()
+            advancedSearchToggle.state = NSOnState
+        }
+    }
+    
+    func hideAdvancedFilter() {
+        if advancedFilterViewController != nil {
+            advancedFilterViewController!.view.removeFromSuperview()
+            currentTableViewController?.trackViewArrayController.filterPredicate = nil
+            //librarySplitView.removeArrangedSubview(advancedFilterViewController!.view)
+            advancedFilterViewController = nil
+            currentTableViewController?.advancedFilterVisible = false
+            advancedSearchToggle.state = NSOffState
         }
     }
     
