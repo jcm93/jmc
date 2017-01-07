@@ -177,6 +177,11 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 print("detected queued tracks")
                 trackQueue[currentTrackIndex!].viewType = .currentTrack
             }
+        } else {
+            if trackQueue.count > 0 {
+                currentTrackIndex = 0
+                trackQueue[currentTrackIndex!].viewType = .currentTrack
+            }
         }
         tableView?.reloadData()
     }
@@ -193,23 +198,32 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             if trackQueue[currentTrackIndex!].wasQueuedManually != true {
                 trackQueue.removeAtIndex(currentTrackIndex!)
                 if trackQueue.count > 1 {
-                    let track = trackQueue[currentTrackIndex! - 1]
-                    trackQueue[currentTrackIndex! - 1].viewType = .currentTrack
-                    currentTrackIndex! -= 1
-                    numPastTracks -= 1
-                    if numPastTracks >= numPastTracksToShow - 1 {
-                        globalOffset -= 1
+                    if currentTrackIndex! != 0 {
+                        let track = trackQueue[currentTrackIndex! - 1]
+                        trackQueue[currentTrackIndex! - 1].viewType = .currentTrack
+                        currentTrackIndex! -= 1
+                        numPastTracks -= 1
+                        if numPastTracks >= numPastTracksToShow - 1 {
+                            globalOffset -= 1
+                        }
+                        mainWindowController?.delegate?.audioModule.currentTrackLocation = track.track?.location
+                        mainWindowController?.delegate?.audioModule.skip_backward()
+                        mainWindowController?.current_source_index! -= 1
+                        mainWindowController?.currentTrack?.is_playing = false
+                        mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                        mainWindowController?.currentTrack = track.track
+                        mainWindowController?.timer?.invalidate()
+                        mainWindowController?.initializeInterfaceForNewTrack()
+                        mainWindowController?.currentTrack?.is_playing = true
+                        mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                    } else {
+                        mainWindowController?.currentTrack?.is_playing = false
+                        mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                        mainWindowController?.currentTrack = nil
+                        mainWindowController?.delegate?.audioModule.currentTrackLocation = nil
+                        mainWindowController?.delegate?.audioModule.skip_backward()
+                        currentTrackIndex = nil
                     }
-                    mainWindowController?.delegate?.audioModule.currentTrackLocation = track.track?.location
-                    mainWindowController?.delegate?.audioModule.skip_backward()
-                    mainWindowController?.current_source_index! -= 1
-                    mainWindowController?.currentTrack?.is_playing = false
-                    mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
-                    mainWindowController?.currentTrack = track.track
-                    mainWindowController?.timer?.invalidate()
-                    mainWindowController?.initializeInterfaceForNewTrack()
-                    mainWindowController?.currentTrack?.is_playing = true
-                    mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                 } else {
                     uninitializeTrackQueue()
                     mainWindowController?.currentTrack?.is_playing = false
@@ -220,28 +234,38 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 }
             } else {
                 if trackQueue.count > 1 {
-                    trackQueue[currentTrackIndex!].viewType = .futureTrack
-                    let track = trackQueue[currentTrackIndex! - 1]
-                    let newFutureTrack = trackQueue[currentTrackIndex!]
-                    newFutureTrack.viewType = .futureTrack
-                    trackQueue[currentTrackIndex! - 1].viewType = .currentTrack
-                    currentTrackIndex! -= 1
-                    numPastTracks -= 1
-                    if numPastTracks >= numPastTracksToShow - 1 {
-                        globalOffset -= 1
+                    if currentTrackIndex! != 0 {
+                        trackQueue[currentTrackIndex!].viewType = .futureTrack
+                        let track = trackQueue[currentTrackIndex! - 1]
+                        let newFutureTrack = trackQueue[currentTrackIndex!]
+                        newFutureTrack.viewType = .futureTrack
+                        trackQueue[currentTrackIndex! - 1].viewType = .currentTrack
+                        currentTrackIndex! -= 1
+                        numPastTracks -= 1
+                        if numPastTracks >= numPastTracksToShow - 1 {
+                            globalOffset -= 1
+                        }
+                        mainWindowController?.delegate?.audioModule.currentTrackLocation = track.track?.location
+                        mainWindowController?.delegate?.audioModule.skip_backward()
+                        mainWindowController?.currentTrack?.is_playing = false
+                        mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                        mainWindowController?.currentTrack = track.track
+                        mainWindowController?.timer?.invalidate()
+                        mainWindowController?.initializeInterfaceForNewTrack()
+                        mainWindowController?.currentTrack?.is_playing = true
+                        mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                        mainWindowController?.delegate?.audioModule.trackQueue.insert(newFutureTrack.track!, atIndex: 0)
+                        mainWindowController?.trackQueue.insert(newFutureTrack.track!, atIndex: 0)
+                    } else {
+                        mainWindowController?.currentTrack?.is_playing = false
+                        mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                        mainWindowController?.currentTrack = nil
+                        mainWindowController?.delegate?.audioModule.currentTrackLocation = nil
+                        mainWindowController?.delegate?.audioModule.skip_backward()
+                        currentTrackIndex = nil
                     }
-                    mainWindowController?.delegate?.audioModule.currentTrackLocation = track.track?.location
-                    mainWindowController?.delegate?.audioModule.skip_backward()
-                    mainWindowController?.currentTrack?.is_playing = false
-                    mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
-                    mainWindowController?.currentTrack = track.track
-                    mainWindowController?.timer?.invalidate()
-                    mainWindowController?.initializeInterfaceForNewTrack()
-                    mainWindowController?.currentTrack?.is_playing = true
-                    mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
-                    mainWindowController?.delegate?.audioModule.trackQueue.insert(newFutureTrack.track!, atIndex: 0)
-                    mainWindowController?.trackQueue.insert(newFutureTrack.track!, atIndex: 0)
                 } else {
+                    uninitializeTrackQueue()
                     mainWindowController?.currentTrack?.is_playing = false
                     mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                     mainWindowController?.currentTrack = nil
@@ -250,6 +274,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 }
             }
         }
+        print("current track index is \(currentTrackIndex)")
         tableView.reloadData()
     }
     

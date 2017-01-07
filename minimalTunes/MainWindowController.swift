@@ -460,9 +460,13 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     func playAnything() {
-        let trackToPlay = currentTableViewController!.getTrackWithNoContext(shuffleButton.state)
-        if trackToPlay != nil {
-            playSong(trackToPlay!)
+        if trackQueue.isEmpty {
+            let trackToPlay = currentTableViewController!.getTrackWithNoContext(shuffleButton.state)
+            if trackToPlay != nil {
+                playSong(trackToPlay!)
+            }
+        } else {
+            delegate?.audioModule.skip()
         }
     }
     
