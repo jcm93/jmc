@@ -26,8 +26,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let fileManager = NSFileManager.defaultManager()
     var serviceBrowser: ConnectivityManager?
     
-    @IBAction func jumpToSelection(sender: AnyObject) {
-        //mainWindowController!.jumpToSelection()
+    @IBAction func jumpToCurrentSong(sender: AnyObject) {
+        mainWindowController!.jumpToCurrentSong()
     }
     
     

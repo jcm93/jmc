@@ -87,6 +87,15 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         }
     }
     
+    func jumpToCurrentSong(track: Track?) {
+        if track != nil {
+            let index = (trackViewArrayController.arrangedObjects as! [TrackView]).indexOf(track!.view!)
+            if index != nil {
+                tableView.scrollRowToVisible(index!)
+            }
+        }
+    }
+    
     func interpretSpacebarEvent() {
         mainWindowController?.interpretSpacebarEvent()
     }

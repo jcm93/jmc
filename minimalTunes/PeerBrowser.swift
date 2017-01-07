@@ -160,11 +160,7 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
             let trackB64 = requestDict["track"] as! String
             let trackData = NSData(base64EncodedString: trackB64, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
             guard trackData != nil else {return}
-            let fileManager = NSFileManager.defaultManager()
-            let libraryPath = NSUserDefaults.standardUserDefaults().stringForKey(DEFAULTS_LIBRARY_PATH_STRING)
-            let libraryURL = NSURL(fileURLWithPath: libraryPath!)
-            let trackFilePath = libraryURL.URLByAppendingPathComponent("test.mp3").path
-            fileManager.createFileAtPath(trackFilePath!, contents: trackData, attributes: nil)
+            databaseManager.saveStreamingNetworkTrack(delegate!.mainWindowController!.currentTrack!, data: trackData!)
             dispatch_async(dispatch_get_main_queue()) {
                 self.delegate!.mainWindowController!.playNetworkSongCallback()
             }

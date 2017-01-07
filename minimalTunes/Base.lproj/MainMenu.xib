@@ -324,6 +324,11 @@
                                     <action selector="showAdvancedFilter:" target="Voe-Tx-rLC" id="HtO-ub-jp0"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Jump to Current Song" keyEquivalent="l" id="5Oc-Sz-LBf" userLabel="Jump to Current Song">
+                                <connections>
+                                    <action selector="jumpToCurrentSong:" target="Voe-Tx-rLC" id="jbc-N3-Rgx"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Album Art" id="hYx-vO-dOM">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>

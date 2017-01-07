@@ -21,6 +21,7 @@ class AudioModule: NSObject {
     //todo consistent naming
     dynamic var trackQueue = [Track]()
     dynamic var currentTrackLocation: String?
+    var networkFlag = false
     
     let verbotenFileTypes = ["m4v", "m4p"]
     
@@ -323,6 +324,9 @@ class AudioModule: NSObject {
             currentTrackLocation = trackQueue.removeFirst().location!
         } else {
             let nextTrack = mainWindowController?.getNextTrack()
+            if nextTrack?.is_network == true {
+                networkFlag = true
+            }
             currentTrackLocation = nextTrack?.location
         }
     }
@@ -335,6 +339,10 @@ class AudioModule: NSObject {
         switch currentHandlerType {
         case .natural:
             tryGetMoreTracks()
+            if networkFlag = true {
+                networkFlag = false
+                return
+            }
             if (currentTrackLocation != nil) {
                 print("natural next track")
                 var delay: Double = 0

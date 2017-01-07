@@ -12,6 +12,8 @@ import CoreData
 
 private var my_context = 0
 
+import MultipeerConnectivity
+
 
 class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     
@@ -237,6 +239,10 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         }
     }
     
+    func jumpToCurrentSong() {
+        currentTableViewController?.jumpToCurrentSong(currentTrack)
+    }
+    
     func switchToLibrary() {
         if !librarySplitView.arrangedSubviews.contains(libraryTableViewController!.view) {
             print("adding library view to split view")
@@ -330,10 +336,14 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         } else {
             id = current_source_play_order![current_source_index! + 1]
             current_source_index! += 1
+            var next_track: Track?
             if currentAudioSource?.is_network == true {
-                
+                delegate?.serviceBrowser?.askPeerForSong(currentAudioSource!.library!.peer as! MCPeerID, id: id!)
+                initializeInterfaceForNetworkTrack()
+                next_track = getNetworkTrackWithID(id!)
+            } else {
+                next_track = getTrackWithID(id!)
             }
-            let next_track = getTrackWithID(id!)
             trackQueue.insert(next_track!, atIndex: 0)
             trackQueueViewController?.addTrackToQueue(next_track!, context: currentSourceListItem!.name!, tense: 2, manually: false)
             return next_track
@@ -354,6 +364,22 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         }()
         return result
     }
+    
+    func getNetworkTrackWithID(id: Int) -> Track? {
+        let fetch_req = NSFetchRequest(entityName: "Track")
+        let pred = NSPredicate(format: "id == \(id) && is_network == true")
+        fetch_req.predicate = pred
+        let result: Track? = {() -> Track? in
+            do {
+                return try (managedContext.executeFetchRequest(fetch_req) as! [Track])[0]
+            }
+            catch {
+                return nil
+            }
+        }()
+        return result
+    }
+    
     @IBAction func repeatButtonPressed(sender: AnyObject) {
         if repeatButton.state == NSOnState {
             self.will_repeat = true

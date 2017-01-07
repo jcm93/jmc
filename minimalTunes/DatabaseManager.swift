@@ -611,6 +611,35 @@ class DatabaseManager: NSObject {
         }
         return true
     }
+    
+    func saveStreamingNetworkTrack(track: Track, data: NSData) {
+        let fileName = {() -> String in
+            switch NSUserDefaults.standardUserDefaults().boolForKey(DEFAULTS_RENAMES_FILES_STRING) {
+            case true:
+                return self.formFilenameForTrack(track)
+            default:
+                return NSURL(string: track.location!)!.lastPathComponent!
+            }
+        }()
+        var albumDirectoryURL: NSURL?
+        var fileURL: NSURL?
+        let libraryPathURL = NSURL(fileURLWithPath: NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_LIBRARY_PATH_STRING) as! String)
+        let albumArtist = track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING
+        let album = track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING
+        albumDirectoryURL = libraryPathURL.URLByAppendingPathComponent("tmp").URLByAppendingPathComponent(albumArtist).URLByAppendingPathComponent(album)
+        do {
+            try fileManager.createDirectoryAtURL(albumDirectoryURL!, withIntermediateDirectories: true, attributes: nil)
+        } catch {
+            print("error creating album directory: \(error)")
+        }
+        do {
+            fileURL = albumDirectoryURL?.URLByAppendingPathComponent(fileName)
+            try data.writeToURL(fileURL!, options: NSDataWritingOptions.DataWritingAtomic)
+            track.location = fileURL?.absoluteString
+        } catch {
+            print("error while moving/copying files: \(error)")
+        }
+    }
 
     func addTracksForPlaylistData(playlistDictionary: NSDictionary, item: SourceListItem) {
         let library = {() -> Library? in
