@@ -54,7 +54,6 @@
 		0D84EDE71DA326BD0057411F /* NetworkTrack+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D84EDE31DA326BD0057411F /* NetworkTrack+CoreDataProperties.swift */; };
 		0D84EDE81DA326BD0057411F /* NetworkTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D84EDE41DA326BD0057411F /* NetworkTrack.swift */; };
 		0D8B7E2C1DF8C9240018E242 /* IntermediateTrackRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8B7E2B1DF8C9240018E242 /* IntermediateTrackRepresentation.swift */; };
-		0D8B7E2E1DFDE2CA0018E242 /* MTSortDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8B7E2D1DFDE2CA0018E242 /* MTSortDescriptor.swift */; };
 		0D8D4A171D90868500FA1603 /* LocationManagerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8D4A151D90868500FA1603 /* LocationManagerController.swift */; };
 		0D8D4A181D90868500FA1603 /* LocationManagerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8D4A161D90868500FA1603 /* LocationManagerController.xib */; };
 		0D9CE6711D334F97004FA8CB /* ImportWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */; };
@@ -178,7 +177,6 @@
 		0D84EDE31DA326BD0057411F /* NetworkTrack+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NetworkTrack+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D84EDE41DA326BD0057411F /* NetworkTrack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkTrack.swift; sourceTree = "<group>"; };
 		0D8B7E2B1DF8C9240018E242 /* IntermediateTrackRepresentation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntermediateTrackRepresentation.swift; sourceTree = "<group>"; };
-		0D8B7E2D1DFDE2CA0018E242 /* MTSortDescriptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTSortDescriptor.swift; sourceTree = "<group>"; };
 		0D8D4A151D90868500FA1603 /* LocationManagerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManagerController.swift; sourceTree = "<group>"; };
 		0D8D4A161D90868500FA1603 /* LocationManagerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationManagerController.xib; sourceTree = "<group>"; };
 		0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportWindowController.swift; sourceTree = "<group>"; };
@@ -265,7 +263,6 @@
 			children = (
 				0D23CA6C1E03242400CAF529 /* PeerBrowser.swift */,
 				0DD274EE1D3190360055C43B /* GlobalFunctions.swift */,
-				0D8B7E2D1DFDE2CA0018E242 /* MTSortDescriptor.swift */,
 				0D1BDFA41D0F44A70092FBA0 /* AudioModule.swift */,
 				0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */,
 				0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */,
@@ -282,8 +279,8 @@
 			children = (
 				0D299B211DF158A60009CF7A /* AdvancedFilterViewController.swift */,
 				0D299B221DF158A60009CF7A /* AdvancedFilterViewController.xib */,
-				0D299B1D1DF151220009CF7A /* LibraryTableViewController.swift */,
 				0D388AAC1E1F2C8800D25A7D /* AddPlaylistButton.swift */,
+				0D299B1D1DF151220009CF7A /* LibraryTableViewController.swift */,
 				0D299B1E1DF151220009CF7A /* LibraryTableViewController.xib */,
 				0D015AC51E00A31C00EBAB6E /* LibraryTableViewControllerCellBased.swift */,
 				0D015AC31E00A30900EBAB6E /* LibraryTableViewControllerCellBased.xib */,
@@ -625,7 +622,6 @@
 				0DEF66BB1D383A8700EA3ADC /* Artist.swift in Sources */,
 				0DD7D6D91D3F3A350035BAD8 /* AlbumArtworkCollection.swift in Sources */,
 				0D84EDE71DA326BD0057411F /* NetworkTrack+CoreDataProperties.swift in Sources */,
-				0D8B7E2E1DFDE2CA0018E242 /* MTSortDescriptor.swift in Sources */,
 				0D01AD911D7079D900F9211F /* EqualizerWindowController.swift in Sources */,
 				0D9CE67B1D34A7DF004FA8CB /* ImportProgressBar.swift in Sources */,
 				0D76F6A81D24B9AC00C6E70F /* DatabaseManager.swift in Sources */,

@@ -7,18 +7,43 @@
 //
 
 import Cocoa
+import MultipeerConnectivity
 
 enum TrackQueueViewType {
     case pastTrack
     case currentTrack
     case futureTrack
+    case transient
     case source
+}
+
+class PlaylistOrderObject: Equatable, Hashable {
+    
+    var inorder_play_order: [Int]
+    var shuffled_play_order: [Int]?
+    var current_play_order: [Int]?
+    
+    init(inorder_play_order: [Int]) {
+        self.inorder_play_order = inorder_play_order
+    }
+    
+    var hashValue: Int {
+        get {
+            return inorder_play_order.count
+        }
+    }
+}
+
+func ==(lpoo: PlaylistOrderObject, rpoo: PlaylistOrderObject) -> Bool {
+    return lpoo.inorder_play_order == rpoo.inorder_play_order
 }
 
 class TrackQueueView: NSObject {
     
     var track: Track?
     var source: String?
+    var sourcePlaylistOrder: PlaylistOrderObject?
+    var index: Int?
     var viewType: TrackQueueViewType?
     var wasQueuedManually: Bool?
     
@@ -51,6 +76,14 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     var numPastTracksToShow = 3
     var globalOffset = 0
     var showAllTracks = false
+    var temporaryPooForDragging: PlaylistOrderObject?
+    var temporaryPooIndexForDragging: Int?
+    var currentAudioSource: SourceListItem?
+    var currentSourceListItem: SourceListItem?
+    var currentSourcePlayOrder: PlaylistOrderObject?
+    var currentSourceIndex: Int?
+    var currentTrack: Track?
+    var shuffle: Bool = false
     
     func reloadData() {
         tableView?.reloadData()
@@ -84,22 +117,24 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         print("dragging session will begin called")
     }
     
-    func changeCurrentTrack(track: Track, context: String) {
+    func changeCurrentTrack(track: Track) {
         print("change current track called")
         if (trackQueue.count == 0) {
             let newCurrentTrackView = TrackQueueView()
             newCurrentTrackView.viewType = .currentTrack
             newCurrentTrackView.track = track
+            newCurrentTrackView.wasQueuedManually = true
+            newCurrentTrackView.sourcePlaylistOrder = currentSourcePlayOrder
             trackQueue.append(newCurrentTrackView)
             let newSourceView = TrackQueueView()
-            newSourceView.source = context
+            newSourceView.source = currentSourceListItem?.name
             newSourceView.viewType = .source
             trackQueue.append(newSourceView)
             currentTrackIndex = 0
         }
         else {
             if currentTrackIndex != nil {
-                insertTrackInQueue(track, index: currentTrackIndex! + 1, context: context, manually: false)
+                insertTrackInQueue(track, index: currentTrackIndex! + 1, context: currentSourceListItem!.name!, manually: false)
                 /*let newCurrentTrackView = TrackQueueView()
                 newCurrentTrackView.viewType = .futureTrack
                 newCurrentTrackView.track = track
@@ -121,6 +156,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             newFutureTrackView.viewType = .futureTrack
         }
         newFutureTrackView.track = track
+        newFutureTrackView.sourcePlaylistOrder = currentSourcePlayOrder
         if manually == true {
             newFutureTrackView.wasQueuedManually = true
         }
@@ -153,6 +189,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             newTrackView.track = track
             newTrackView.source = context
             newTrackView.viewType = .futureTrack
+            newTrackView.sourcePlaylistOrder = currentSourcePlayOrder
             if manually == true {
                 newTrackView.wasQueuedManually = true
             }
@@ -166,7 +203,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     
     func nextTrack() {
         print("next track in track queue called")
-        if currentTrackIndex != nil && trackQueue.count > 0 && (trackQueue[currentTrackIndex! + 1]).viewType == .futureTrack {
+        if currentTrackIndex != nil && trackQueue.count > 0 && ((trackQueue[currentTrackIndex! + 1]).viewType == .futureTrack || trackQueue[currentTrackIndex! + 1].viewType == .transient) {
             (trackQueue[currentTrackIndex!]).viewType = .pastTrack
             currentTrackIndex! += 1
             numPastTracks += 1
@@ -176,11 +213,13 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             if (trackQueue.count > currentTrackIndex! + 1) {
                 print("detected queued tracks")
                 trackQueue[currentTrackIndex!].viewType = .currentTrack
+                self.currentTrack = trackQueue[currentTrackIndex!].track
             }
         } else {
             if trackQueue.count > 0 {
                 currentTrackIndex = 0
                 trackQueue[currentTrackIndex!].viewType = .currentTrack
+                self.currentTrack = trackQueue[currentTrackIndex!].track
             }
         }
         tableView?.reloadData()
@@ -195,83 +234,45 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         print("skip to previous track called")
         //currently micromanages the MWC queue and the audio module, in spite of better judgement
         if currentTrackIndex != nil {
-            if trackQueue[currentTrackIndex!].wasQueuedManually != true {
-                trackQueue.removeAtIndex(currentTrackIndex!)
-                if trackQueue.count > 1 {
-                    if currentTrackIndex! != 0 {
-                        let track = trackQueue[currentTrackIndex! - 1]
-                        trackQueue[currentTrackIndex! - 1].viewType = .currentTrack
-                        currentTrackIndex! -= 1
-                        numPastTracks -= 1
-                        if numPastTracks >= numPastTracksToShow - 1 {
-                            globalOffset -= 1
-                        }
-                        mainWindowController?.delegate?.audioModule.currentTrackLocation = track.track?.location
-                        mainWindowController?.delegate?.audioModule.skip_backward()
-                        mainWindowController?.current_source_index! -= 1
-                        mainWindowController?.currentTrack?.is_playing = false
-                        mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
-                        mainWindowController?.currentTrack = track.track
-                        mainWindowController?.timer?.invalidate()
-                        mainWindowController?.initializeInterfaceForNewTrack()
-                        mainWindowController?.currentTrack?.is_playing = true
-                        mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
-                    } else {
-                        mainWindowController?.currentTrack?.is_playing = false
-                        mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
-                        mainWindowController?.currentTrack = nil
-                        mainWindowController?.delegate?.audioModule.currentTrackLocation = nil
-                        mainWindowController?.delegate?.audioModule.skip_backward()
-                        currentTrackIndex = nil
+            if trackQueue.count > 1 {
+                if currentTrackIndex! != 0 {
+                    print("making tqv transient")
+                    trackQueue[currentTrackIndex!].viewType = .transient
+                    let track = trackQueue[currentTrackIndex! - 1]
+                    self.currentTrack = track.track
+                    let newFutureTrack = trackQueue[currentTrackIndex!]
+                    newFutureTrack.viewType = .transient
+                    trackQueue[currentTrackIndex! - 1].viewType = .currentTrack
+                    currentTrackIndex! -= 1
+                    numPastTracks -= 1
+                    if numPastTracks >= numPastTracksToShow - 1 {
+                        globalOffset -= 1
                     }
+                    mainWindowController?.delegate?.audioModule.currentTrackLocation = track.track?.location
+                    mainWindowController?.delegate?.audioModule.skip_backward()
+                    mainWindowController?.currentTrack?.is_playing = false
+                    mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                    mainWindowController?.currentTrack = track.track
+                    mainWindowController?.timer?.invalidate()
+                    mainWindowController?.initializeInterfaceForNewTrack()
+                    mainWindowController?.currentTrack?.is_playing = true
+                    mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                    mainWindowController?.delegate?.audioModule.trackQueue.insert(newFutureTrack.track!, atIndex: 0)
                 } else {
-                    uninitializeTrackQueue()
                     mainWindowController?.currentTrack?.is_playing = false
                     mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                     mainWindowController?.currentTrack = nil
                     mainWindowController?.delegate?.audioModule.currentTrackLocation = nil
                     mainWindowController?.delegate?.audioModule.skip_backward()
+                    currentTrackIndex = nil
                 }
             } else {
-                if trackQueue.count > 1 {
-                    if currentTrackIndex! != 0 {
-                        trackQueue[currentTrackIndex!].viewType = .futureTrack
-                        let track = trackQueue[currentTrackIndex! - 1]
-                        let newFutureTrack = trackQueue[currentTrackIndex!]
-                        newFutureTrack.viewType = .futureTrack
-                        trackQueue[currentTrackIndex! - 1].viewType = .currentTrack
-                        currentTrackIndex! -= 1
-                        numPastTracks -= 1
-                        if numPastTracks >= numPastTracksToShow - 1 {
-                            globalOffset -= 1
-                        }
-                        mainWindowController?.delegate?.audioModule.currentTrackLocation = track.track?.location
-                        mainWindowController?.delegate?.audioModule.skip_backward()
-                        mainWindowController?.currentTrack?.is_playing = false
-                        mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
-                        mainWindowController?.currentTrack = track.track
-                        mainWindowController?.timer?.invalidate()
-                        mainWindowController?.initializeInterfaceForNewTrack()
-                        mainWindowController?.currentTrack?.is_playing = true
-                        mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
-                        mainWindowController?.delegate?.audioModule.trackQueue.insert(newFutureTrack.track!, atIndex: 0)
-                        mainWindowController?.trackQueue.insert(newFutureTrack.track!, atIndex: 0)
-                    } else {
-                        mainWindowController?.currentTrack?.is_playing = false
-                        mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
-                        mainWindowController?.currentTrack = nil
-                        mainWindowController?.delegate?.audioModule.currentTrackLocation = nil
-                        mainWindowController?.delegate?.audioModule.skip_backward()
-                        currentTrackIndex = nil
-                    }
-                } else {
-                    uninitializeTrackQueue()
-                    mainWindowController?.currentTrack?.is_playing = false
-                    mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
-                    mainWindowController?.currentTrack = nil
-                    mainWindowController?.delegate?.audioModule.currentTrackLocation = nil
-                    mainWindowController?.delegate?.audioModule.skip_backward()
-                }
+                uninitializeTrackQueue()
+                mainWindowController?.currentTrack?.is_playing = false
+                mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                mainWindowController?.currentTrack = nil
+                mainWindowController?.delegate?.audioModule.currentTrackLocation = nil
+                mainWindowController?.delegate?.audioModule.skip_backward()
             }
         }
         print("current track index is \(currentTrackIndex)")
@@ -282,6 +283,117 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         guard currentTrackIndex != nil && trackQueue.count > 2 else {return nil}
         let row = currentTrackIndex! - 1
         return trackQueue[row].track
+    }
+    
+    func getNextTrack() -> Track? {
+        if trackQueue.count >= currentTrackIndex! + 3 {
+            //addTrackToQueue(trackQueue[currentTrackIndex! + 1].track!, context: self.currentAudioSource!.name!, tense: 2, manually: false)
+            return trackQueue[currentTrackIndex! + 1].track
+        } else {
+            if currentSourcePlayOrder!.current_play_order!.count <= currentSourceIndex! + 1 {
+                return nil
+            } else {
+                var id: Int?
+                id = currentSourcePlayOrder!.current_play_order![currentSourceIndex! + 1]
+                currentSourceIndex! += 1
+                var next_track: Track?
+                if currentAudioSource?.is_network == true {
+                    next_track = getNetworkTrackWithID(id!)
+                } else {
+                    next_track = getTrackWithID(id!)
+                }
+                addTrackToQueue(next_track!, context: self.currentAudioSource!.name!, tense: 2, manually: false)
+                return next_track
+            }
+        }
+    }
+    
+    func modifyPlayOrderArrayForQueuedTracks(tracks: [Track]) {
+        for track in tracks {
+            self.currentSourcePlayOrder?.current_play_order = self.currentSourcePlayOrder?.current_play_order?.filter({$0 != track.id})
+        }
+    }
+    
+    func makePlayOrderChangesIfNecessaryForQueuedTracks(tracks: [Track]) {
+        if currentSourceListItem != currentAudioSource {
+            createPlayOrderArray(tracks.last!, row: nil)
+        } else {
+            modifyPlayOrderArrayForQueuedTracks(tracks)
+        }
+    }
+    
+    func modifyPlayOrderForSortDescriptorChange() {
+        if currentAudioSource == currentSourceListItem && self.shuffle == false && self.currentTrack != nil {
+            let upcomingIDsResult = mainWindowController!.currentTableViewController?.modifyPlayOrderForSortDescriptors(currentSourcePlayOrder!, trackID: Int(self.currentTrack!.id!))
+            self.currentSourceIndex = upcomingIDsResult
+        }
+    }
+    
+    func createPlayOrderArray(track: Track, row: Int?) {
+        print("initialize array called")
+        let playOrderArray = mainWindowController!.createPlayOrderForTrackID(Int(track.id!), row: row)
+        self.currentAudioSource = currentSourceListItem
+        self.currentSourcePlayOrder = playOrderArray.0
+        self.currentSourceIndex = playOrderArray.1
+        destroyTransientTracks()
+    }
+    
+    func shufflePressed(state: Int) {
+        if (state == NSOnState) {
+            self.shuffle = true
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: DEFAULTS_SHUFFLE_STRING)
+            if currentSourcePlayOrder != nil {
+                print("shuffling")
+                if currentSourcePlayOrder?.shuffled_play_order != nil {
+                    let idArray = currentSourcePlayOrder?.shuffled_play_order
+                    var shuffled_array = idArray
+                    shuffle_array(&shuffled_array!)
+                    if self.currentTrack != nil {
+                        let indexOfPlayedTrack = shuffled_array!.indexOf(Int(self.currentTrack!.id!))!
+                        if indexOfPlayedTrack != 0 {
+                            swap(&shuffled_array![shuffled_array!.indexOf(Int(self.currentTrack!.id!))!], &shuffled_array![0])
+                        }
+                    }
+                    currentSourcePlayOrder?.shuffled_play_order = shuffled_array
+                } else {
+                    let idArray = currentSourcePlayOrder?.inorder_play_order
+                    var shuffled_array = idArray
+                    shuffle_array(&shuffled_array!)
+                    if self.currentTrack != nil {
+                        let indexOfPlayedTrack = shuffled_array!.indexOf(Int(self.currentTrack!.id!))!
+                        if indexOfPlayedTrack != 0 {
+                            swap(&shuffled_array![shuffled_array!.indexOf(Int(self.currentTrack!.id!))!], &shuffled_array![0])
+                        }
+                    }
+                    currentSourcePlayOrder?.shuffled_play_order = shuffled_array
+                }
+                currentSourceIndex = 0
+                currentSourcePlayOrder?.current_play_order = currentSourcePlayOrder?.shuffled_play_order
+            }
+        }
+        else {
+            self.shuffle = false
+            NSUserDefaults.standardUserDefaults().setBool(false, forKey: "shuffle")
+            if currentSourcePlayOrder != nil {
+                currentSourcePlayOrder?.current_play_order = currentSourcePlayOrder!.inorder_play_order
+                if self.currentTrack != nil {
+                    self.currentSourceIndex = (currentSourcePlayOrder!.current_play_order!.indexOf(Int(self.currentTrack!.id!))!)
+                } else {
+                    self.currentSourceIndex = 0
+                }
+                print("current source index \(currentSourceIndex)")
+            }
+        }
+        destroyTransientTracks()
+    }
+    
+    func destroyTransientTracks() {
+        let transientTQVs = trackQueue.filter({return $0.viewType == .transient})
+        for transientTQV in transientTQVs {
+            mainWindowController?.delegate?.audioModule.trackQueue.removeFirst()
+            trackQueue.removeAtIndex(trackQueue.indexOf(transientTQV)!)
+        }
+        tableView.reloadData()
     }
     
     func tableView(tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
@@ -316,7 +428,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         mainWindowController?.createPlaylistFromTracks(track_id_list)
     }
     
-    func addTracksToQueue(row: Int?, context: String?, tracks: [Track]) {
+    func addTracksToQueue(row: Int?, tracks: [Track]) {
         var actualRow: Int
         let theRow = row == nil ? self.tableView.numberOfRows : row!
         switch showAllTracks {
@@ -326,20 +438,13 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             actualRow = theRow + globalOffset
         }
         for track in tracks {
-            insertTrackInQueue(track, index: actualRow, context: context!, manually: true)
+            insertTrackInQueue(track, index: actualRow, context: currentSourceListItem!.name!, manually: true)
             let queueIndex = currentTrackIndex == nil ? actualRow : actualRow - currentTrackIndex! - 1
             print("queue index \(queueIndex), actualRow \(actualRow), currentIndex \(currentTrackIndex)")
             mainWindowController?.delegate?.audioModule.addTrackToQueue(track, index: queueIndex)
-            if queueIndex >= mainWindowController?.trackQueue.count || queueIndex == -1 {
-                print("putting \(track.name) at index \(mainWindowController!.trackQueue.count - 1)")
-                mainWindowController?.trackQueue.append(track)
-            } else {
-                print("putting \(track.name) at index \(queueIndex)")
-                mainWindowController?.trackQueue.insert(track, atIndex: queueIndex)
-            }
             actualRow += 1
         }
-        mainWindowController?.makePlayOrderChangesIfNecessaryForQueuedTracks(tracks)
+        modifyPlayOrderArrayForQueuedTracks(tracks)
         tableView.reloadData()
     }
     
@@ -354,7 +459,8 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         print("accept drop")
         if (info.draggingPasteboard().types!.contains("Track")) {
             let thing = info.draggingPasteboard().dataForType("Track")
-            let context = info.draggingPasteboard().stringForType("context")
+            self.temporaryPooForDragging = nil
+            self.temporaryPooIndexForDragging = nil
             let unCodedThing = NSKeyedUnarchiver.unarchiveObjectWithData(thing!) as! NSMutableArray
             let tracks = { () -> [Track] in
                 var result = [Track]()
@@ -364,7 +470,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 }
                 return result
             }()
-            addTracksToQueue(row, context: context, tracks: tracks)
+            addTracksToQueue(row, tracks: tracks)
         }
         if (info.draggingPasteboard().types!.contains("public.TrackQueueView")) {
             let codedViews = info.draggingPasteboard().dataForType("public.TrackQueueView")
@@ -383,7 +489,6 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 }
                 swap(&self.trackQueue[actualIndex], &self.trackQueue[actualRow + row_offset])
                 self.mainWindowController?.delegate?.audioModule.swapTracks(actualIndex - self.currentTrackIndex! - 1, second_index: actualRow + row_offset - self.currentTrackIndex! - 1)
-                swap(&self.mainWindowController!.trackQueue[actualIndex - self.currentTrackIndex! - 1], &self.mainWindowController!.trackQueue[actualRow + row_offset - self.currentTrackIndex! - 1])
                 row_offset += 1
             })
         }
@@ -425,7 +530,6 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             if self.currentTrackIndex != nil {
                 newIndex -= self.currentTrackIndex!
             }
-            print(self.mainWindowController?.trackQueue.removeAtIndex(newIndex - 1))
             self.mainWindowController?.delegate?.audioModule.trackQueue.removeAtIndex(newIndex - 1)
         }
         //print(self.trackQueue)
@@ -510,6 +614,28 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 (result.subviews[1] as! NSTextField).stringValue = object.source!
                 return result
             case .futureTrack:
+                let result = tableView.makeViewWithIdentifier("futureTrack", owner: nil) as! TrackNameTableCell
+                (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
+                var artist_aa_string = ""
+                if object.track!.artist != nil {
+                    artist_aa_string += object.track!.artist!.name!
+                }
+                if object.track!.album != nil {
+                    artist_aa_string += " - " + object.track!.album!.name!
+                }
+                (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
+                if object.track!.album?.primary_art != nil {
+                    let art = object.track?.album?.primary_art
+                    let path = art?.artwork_location!
+                    let url = NSURL(string: path!)
+                    let image = NSImage(contentsOfURL: url!)
+                    (result.subviews[0] as! NSImageView).image = image
+                }
+                else {
+                    (result.subviews[0] as! NSImageView).image = nil
+                }
+                return result
+            case .transient:
                 let result = tableView.makeViewWithIdentifier("futureTrack", owner: nil) as! TrackNameTableCell
                 (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
                 var artist_aa_string = ""

@@ -34,7 +34,7 @@ class DragAndDropImageView: NSImageView {
     }
     
     override func performDragOperation(sender: NSDraggingInfo) -> Bool {
-        //do the album art shit
+        //do the album art stuff
         if let board = sender.draggingPasteboard().propertyListForType("NSFilenamesPboardType") as? NSArray,
             imagePath = board[0] as? String {
             let fileManager = NSFileManager.defaultManager()

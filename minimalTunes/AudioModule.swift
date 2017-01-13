@@ -188,6 +188,10 @@ class AudioModule: NSObject {
         changeTrack()
     }
     
+    func stopForNetworkTrack() {
+        curNode.pause()
+    }
+    
     func playImmediately(trackLocation: String) {
         currentHandlerType = .destroy
         print("paused value is \(is_paused)")
@@ -395,6 +399,11 @@ class AudioModule: NSObject {
     
     func skip() {
         tryGetMoreTracks()
+        if networkFlag == true {
+            currentHandlerType = .natural
+            networkFlag = false
+            return
+        }
         currentHandlerType = .destroy
         if (currentTrackLocation != nil) {
             print("skipping to new track")

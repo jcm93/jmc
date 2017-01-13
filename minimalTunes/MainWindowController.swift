@@ -64,11 +64,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     var importWindowController: ImportWindowController?
     
     //other variables
-    var trackQueue = [Track]()
     var saved_search_bar_content: String?
     var networkedLibraries = NSMutableDictionary()
     var currentAudioSource: SourceListItem?
     var currentSourceListItem: SourceListItem?
+    var networkSongWasPlayed = false
     var delegate: AppDelegate?
     var timer: NSTimer?
     var lastTimerDate: NSDate?
@@ -84,10 +84,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     var currentTrackView: TrackView?
     var currentNetworkTrack: Track?
     var currentNetworkTrackView: TrackView?
-    var current_source_play_order: [Int]?
-    var current_source_temp_shuffle: [Int]?
-    var current_source_unshuffled_play_order: [Int]?
-    var current_source_index: Int?
+    //var current_source_play_order: PlaylistOrderObject?
+    var current_source_temp_shuffle: PlaylistOrderObject?
+    //var current_source_unshuffled_play_order: PlaylistOrderObject?
+    //var current_source_index: Int?
+    var currentPlaylistOrderObject: PlaylistOrderObject?
     var current_source_index_temp: Int?
     var infoString: String?
     var auxArrayController: NSArrayController?
@@ -183,6 +184,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     func addObserversAndInitializeNewTableView(table: LibraryTableViewController, item: SourceListItem) {
         table.trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .New, context: &my_context)
         table.trackViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .New, context: &my_context)
+        table.trackViewArrayController.addObserver(self, forKeyPath: "sortDescriptors", options: .New, context: &my_context)
         table.item = item
         table.mainWindowController = self
     }
@@ -190,6 +192,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     func switchToPlaylist(item: SourceListItem) {
         if item == currentSourceListItem {return}
         currentTableViewController?.hasInitialized = false
+        trackQueueViewController?.currentSourceListItem = item
         currentSourceListItem = item
         let id = item.playlist?.id
         if id != nil {
@@ -286,104 +289,32 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         tagWindowController?.showWindow(self)
     }
     
-    
-    func addTracksToQueue(tracks: [Track]) {
-        trackQueueViewController?.addTracksToQueue(nil, context: currentSourceListItem!.name!, tracks: tracks)
-        //self.trackQueueViewController?.reloadData()
-    }
-    
-    func makePlayOrderChangesIfNecessaryForQueuedTracks(tracks: [Track]) {
-        for track in tracks {
-            if currentSourceListItem != currentAudioSource {
-                createPlayOrderArray(track)
-            } else {
-                modifyPlayOrderArrayForQueuedTracks([track])
-            }
+    func createPlayOrderForTrackID(id: Int, row: Int?) -> (PlaylistOrderObject, Int) {
+        let poo = currentTableViewController!.getUpcomingIDsForPlayEvent(self.shuffleButton.state, id: id, row: row)
+        if self.shuffleButton.state == NSOnState {
+            poo.0.current_play_order = poo.0.shuffled_play_order
+        } else {
+            poo.0.current_play_order = poo.0.inorder_play_order
         }
-    }
-    
-    func modifyPlayOrderArrayForQueuedTracks(tracks: [Track]) {
-        for track in tracks {
-            self.current_source_play_order = self.current_source_play_order?.filter({$0 != track.id})
-        }
-    }
-    
-    func createPlayOrderArray(track_played: Track) {
-        print("initialize array called")
-        let selectionItem = sourceListViewController!.getCurrentSelection()
-        let result = currentTableViewController?.getUpcomingIDsForPlayEvent(self.shuffleButton.state, id: Int(track_played.id!))
-        self.current_source_play_order = result!.0
-        if result!.1 != nil {
-            self.current_source_unshuffled_play_order = result!.1
-        }
-        self.current_source_index = 0
-        is_initialized = true
-        currentAudioSource = selectionItem.item
-    }
-    
-    func modifyPlayOrderForSortDescriptorChange() {
-        if currentAudioSource == currentSourceListItem && shuffleButton.state == NSOffState && currentTrack != nil {
-            self.current_source_play_order = libraryTableViewController?.getUpcomingIDsForPlayEvent(NSOffState, id: Int(currentTrack!.id!)).0
-        }
+        return poo
     }
     
     func getNextTrack() -> Track? {
+        let track: Track?
         if repeatButton.state == NSOnState {
             return currentTrack
-        }
-        var id: Int?
-        if current_source_play_order!.count <= current_source_index! + 1 {
-            return nil
         } else {
-            id = current_source_play_order![current_source_index! + 1]
-            current_source_index! += 1
-            var next_track: Track?
+            track = trackQueueViewController?.getNextTrack()
             if currentAudioSource?.is_network == true {
-                delegate?.serviceBrowser?.askPeerForSong(currentAudioSource!.library!.peer as! MCPeerID, id: id!)
+                delegate?.serviceBrowser?.askPeerForSong(currentAudioSource!.library!.peer as! MCPeerID, id: Int(track!.id!))
                 dispatch_async(dispatch_get_main_queue()) {
                     self.initializeInterfaceForNetworkTrack()
                     self.timer?.invalidate()
                 }
-                next_track = getNetworkTrackWithID(id!)
-            } else {
-                next_track = getTrackWithID(id!)
+                delegate?.audioModule.networkFlag = true
             }
-            trackQueue.insert(next_track!, atIndex: 0)
-            dispatch_async(dispatch_get_main_queue()) {
-                self.trackQueueViewController?.addTrackToQueue(next_track!, context: self.currentSourceListItem!.name!, tense: 2, manually: false)
-            }
-            return next_track
+            return track
         }
-    }
-    
-    func getTrackWithID(id: Int) -> Track? {
-        let fetch_req = NSFetchRequest(entityName: "Track")
-        let pred = NSPredicate(format: "id == \(id)")
-        fetch_req.predicate = pred
-        let result: Track? = {() -> Track? in
-            do {
-                return try (managedContext.executeFetchRequest(fetch_req) as! [Track])[0]
-            }
-            catch {
-                return nil
-            }
-        }()
-        return result
-    }
-    
-    func getNetworkTrackWithID(id: Int) -> Track? {
-        let fetch_req = NSFetchRequest(entityName: "Track")
-        let pred = NSPredicate(format: "id == \(id) && is_network == true")
-        fetch_req.predicate = pred
-        let result: Track? = {() -> Track? in
-            do {
-                return try (managedContext.executeFetchRequest(fetch_req) as! [Track])[0]
-            }
-            catch {
-                return nil
-            }
-        }()
-        return result
     }
     
     @IBAction func repeatButtonPressed(sender: AnyObject) {
@@ -397,31 +328,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     @IBAction func shuffleButtonPressed(sender: AnyObject) {
-        if (shuffleButton.state == NSOnState) {
-            self.shuffle = true
-            NSUserDefaults.standardUserDefaults().setBool(true, forKey: DEFAULTS_SHUFFLE_STRING)
-            print("shuffling")
-            current_source_unshuffled_play_order = current_source_play_order
-            if current_source_unshuffled_play_order != nil {
-            shuffle_array(&current_source_play_order!)
-                if (currentTrack != nil) {
-                    current_source_play_order = current_source_play_order!.filter( {
-                        $0 != currentTrack!.id
-                    })
-                }
-                current_source_index = 0
-            }
-        }
-        else {
-            current_source_play_order = current_source_unshuffled_play_order
-            self.shuffle = false
-            if currentTrack != nil {
-                current_source_index = (current_source_play_order!.indexOf(Int(currentTrack!.id!))! + 1)
-            } else {
-            }
-            print("current source index:" + String(current_source_index))
-            NSUserDefaults.standardUserDefaults().setBool(false, forKey: "shuffle")
-        }
+        trackQueueViewController?.shufflePressed((sender as! NSButton).state)
     }
     
     @IBAction func tempBreak(sender: AnyObject) {
@@ -453,19 +360,27 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
 
     func playNetworkSongCallback() {
         guard self.is_streaming == true else {return}
+        if trackQueueViewController?.trackQueue.count < 1 || networkSongWasPlayed == true {
+            trackQueueViewController?.changeCurrentTrack(self.currentTrack!)
+            if networkSongWasPlayed == true {
+                networkSongWasPlayed = false
+            }
+        }
         delegate?.audioModule.playNetworkImmediately(self.currentTrack!)
         //initializeInterfaceForNewTrack()
         paused = false
     }
     
-    func playSong(track: Track) {
+    func playSong(track: Track, row: Int?) {
         if track.is_network == true {
             self.is_streaming = true
             initializeInterfaceForNetworkTrack()
             let peer = sourceListViewController!.getCurrentSelectionSharedLibraryPeer()
+            delegate?.audioModule.stopForNetworkTrack()
             delegate?.serviceBrowser?.getTrack(Int(track.id!), peer: peer)
             currentTrack = track
-            createPlayOrderArray(track)
+            networkSongWasPlayed = true
+            trackQueueViewController?.createPlayOrderArray(track, row: row)
             return
         } else {
             self.is_streaming = false
@@ -473,11 +388,10 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         if (paused == true && delegate?.audioModule.is_initialized == true) {
             unpause()
         }
-        createPlayOrderArray(track)
-        trackQueue.insert(track, atIndex: 0)
+        trackQueueViewController?.createPlayOrderArray(track, row: row)
         //trackQueueViewController?.addTrackToQueue(track, context: currentSourceListItem!.name!, tense: 2)
-        trackQueueViewController?.changeCurrentTrack(track, context: currentSourceListItem!.name!)
         delegate?.audioModule.playImmediately(track.location!)
+        trackQueueViewController?.changeCurrentTrack(track)
         paused = false
         //currentTrack = track
     }
@@ -492,10 +406,10 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     func playAnything() {
-        if trackQueue.isEmpty {
+        if trackQueueViewController?.trackQueue.count == 0 {
             let trackToPlay = currentTableViewController!.getTrackWithNoContext(shuffleButton.state)
             if trackToPlay != nil {
-                playSong(trackToPlay!)
+                playSong(trackToPlay!, row: nil)
             }
         } else {
             delegate?.audioModule.skip()
@@ -630,6 +544,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     func initializeInterfaceForNetworkTrack() {
         theBox.contentView?.hidden = false
         print("initializing interface for network track")
+        self.timer?.invalidate()
         self.progressBar.indeterminate = true
         self.progressBar.startAnimation(nil)
         self.songNameLabel.stringValue = "Initializing playback..."
@@ -750,11 +665,10 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
                 if currentTrack != nil {
                     currentTableViewController?.reloadNowPlayingForTrack(currentTrack!)
                 }
-                if trackQueue.count > 0 {
-                    self.currentTrack = trackQueue.removeFirst()
-                }
+                trackQueueViewController!.nextTrack()
+                currentTrack = trackQueueViewController?.trackQueue[trackQueueViewController!.currentTrackIndex!].track
                 if is_initialized == false {
-                    createPlayOrderArray(self.currentTrack!)
+                    trackQueueViewController!.createPlayOrderArray(self.currentTrack!, row: nil)
                     paused = false
                     is_initialized = true
                 }
@@ -762,7 +676,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
                 initializeInterfaceForNewTrack()
                 currentTrack?.is_playing = true
                 currentTableViewController?.reloadNowPlayingForTrack(currentTrack!)
-                trackQueueViewController!.nextTrack()
                 let after = NSDate()
                 let since = after.timeIntervalSinceDate(before)
                 print(since)
@@ -772,19 +685,13 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
                 cleanUpBar()
             }
             else if keyPath! == "sortDescriptors" {
-                if (currentSourceListItem == currentAudioSource) {
-                    self.modifyPlayOrderForSortDescriptorChange()
-                }
+                self.trackQueueViewController!.modifyPlayOrderForSortDescriptorChange()
             }
             else if keyPath! == "filterPredicate" {
                 print("filter predicate changed")
-                if (currentSourceListItem == currentAudioSource) && current_source_play_order != nil {
-                    self.current_source_play_order = currentTableViewController!.fixPlayOrderForChangedFilterPredicate(current_source_play_order!, shuffleState: shuffleButton.state)
+                if (currentSourceListItem == currentAudioSource) && trackQueueViewController?.currentSourcePlayOrder != nil {
+                    currentTableViewController!.fixPlayOrderForChangedFilterPredicate(trackQueueViewController!.currentSourcePlayOrder!, shuffleState: shuffleButton.state)
                 }
-                print(current_source_play_order?.count)
-                print(current_source_temp_shuffle?.count)
-                //updateCachedSorts()
-                //updateNewCachedSorts()
             } else if keyPath! == "arrangedObjects" {
                 updateInfo()
             } else if keyPath! == "albumArtworkAdded" {
@@ -860,6 +767,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         self.delegate?.audioModule.addObserver(self, forKeyPath: "done_playing", options: .New, context: &my_context)
         self.libraryTableViewController?.trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .New, context: &my_context)
         self.libraryTableViewController?.trackViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .New, context: &my_context)
+        self.libraryTableViewController?.trackViewArrayController.addObserver(self, forKeyPath: "sortDescriptors", options: .New, context: &my_context)
         self.libraryTableViewController?.trackViewArrayController.fetchPredicate = NSPredicate(format: "is_network == nil or is_network == false")
         self.albumArtViewController?.addObserver(self, forKeyPath: "albumArtworkAdded", options: .New, context: &my_context)
         trackQueueViewController?.mainWindowController = self

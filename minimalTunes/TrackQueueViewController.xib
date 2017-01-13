@@ -231,7 +231,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                         <rect key="frame" x="-16" y="0.0" width="16" height="0.0"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <tableHeaderView key="headerView" id="x72-Ua-Fva">
+                    <tableHeaderView key="headerView" hidden="YES" id="x72-Ua-Fva">
                         <rect key="frame" x="0.0" y="0.0" width="269" height="23"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </tableHeaderView>
