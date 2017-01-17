@@ -48,8 +48,12 @@ let DEFAULTS_CURRENT_EQ_STRING = "currentEQ"
 let DEFAULTS_VOLUME_STRING = "currentVolume"
 let DEFAULTS_PLAYLIST_SORT_DESCRIPTOR_STRING = "defaultPlaylistSortDescriptor"
 let DEFAULTS_LIBRARY_SORT_DESCRIPTOR_STRING = "defaultsLibrarySortDescriptor"
+let DEFAULTS_SHARING_STRING = "sharesLibrary"
 
 //other constants
+var LIBRARY_MOVES_DESCRIPTION = "Added media will be moved into a subdirectory of this directory"
+var LIBRARY_COPIES_DESCRIPTION = "Added media will be copied into a subdirectory of this directory"
+var LIBRARY_DOES_NOTHING_DESCRIPTION = "Added media will not be organized"
 let NO_ORGANIZATION_TYPE = 0
 let MOVE_ORGANIZATION_TYPE = 1
 let COPY_ORGANIZATION_TYPE = 2

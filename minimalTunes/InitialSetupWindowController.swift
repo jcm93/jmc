@@ -26,23 +26,20 @@ class InitialSetupWindowController: NSWindowController {
     var organizationType: LibraryOrganizationType = .move
     var modifyMetadata: Bool = false
     var directoryURL: NSURL?
-    var moveString = "Added media will be moved into a subdirectory of this directory"
-    var copyString = "Added media will be copied into a subdirectory of this directory"
-    var noString = "Added media will not be organized"
     var library: Library?
     
     @IBAction func moveRadioAction(sender: AnyObject) {
         if moveRadioButton.state == NSOnState {
             organizationType = .move
-            organizationDescField.stringValue = moveString
+            organizationDescField.stringValue = LIBRARY_MOVES_DESCRIPTION
         }
         else if copyRadioButton.state == NSOnState {
             organizationType = .copy
-            organizationDescField.stringValue = copyString
+            organizationDescField.stringValue = LIBRARY_COPIES_DESCRIPTION
         }
         else if noOrganizeRadioButton.state == NSOnState {
             organizationType = .none
-            organizationDescField.stringValue = noString
+            organizationDescField.stringValue = LIBRARY_DOES_NOTHING_DESCRIPTION
         }
     }
     
@@ -152,17 +149,20 @@ class InitialSetupWindowController: NSWindowController {
     }
     
     @IBAction func OKPressed(sender: AnyObject) {
-        self.window?.close()
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: DEFAULTS_ARE_INITIALIZED_STRING)
         NSUserDefaults.standardUserDefaults().setBool(modifyMetadata, forKey: DEFAULTS_RENAMES_FILES_STRING)
         NSUserDefaults.standardUserDefaults().setObject(organizationType.rawValue, forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
         NSUserDefaults.standardUserDefaults().setObject(directoryURL?.path, forKey: DEFAULTS_LIBRARY_PATH_STRING)
         NSUserDefaults.standardUserDefaults().setBool(false, forKey: DEFAULTS_SHUFFLE_STRING)
         NSUserDefaults.standardUserDefaults().setFloat(1.0, forKey: DEFAULTS_VOLUME_STRING)
+        NSUserDefaults.standardUserDefaults().setObject("\(NSFullUserName())'s Library", forKey: DEFAULTS_LIBRARY_NAME_STRING)
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING)
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: DEFAULTS_SHARING_STRING)
         if self.library == nil {
             setupForNilLibrary()
         }
         (NSApplication.sharedApplication().delegate as! AppDelegate).initializeLibraryAndShowMainWindow()
+        self.window?.close()
     }
     
     override func windowDidLoad() {

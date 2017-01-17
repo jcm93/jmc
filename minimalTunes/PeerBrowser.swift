@@ -256,7 +256,7 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
     }
     
     func sendPeerLibraryName(peer: MCPeerID) {
-        let libraryName = NSUserDefaults.standardUserDefaults().stringForKey("libraryName")
+        let libraryName = NSUserDefaults.standardUserDefaults().stringForKey(DEFAULTS_LIBRARY_NAME_STRING)
         let libraryNameDictionary = NSMutableDictionary()
         libraryNameDictionary["type"] = "payload"
         libraryNameDictionary["payload"] = "name"
