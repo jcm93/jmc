@@ -13,7 +13,7 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kqx-LL-MdM">
+        <customView translatesAutoresizingMaskIntoConstraints="NO" id="kqx-LL-MdM">
             <rect key="frame" x="0.0" y="0.0" width="341" height="457"/>
             <subviews>
                 <scrollView focusRingType="none" misplaced="YES" placeholderIntrinsicWidth="267" placeholderIntrinsicHeight="389" borderType="none" autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="allowed" translatesAutoresizingMaskIntoConstraints="NO" id="TcG-wM-LGT">
@@ -26,7 +26,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="267" height="389"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
-                                <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" red="0.0" green="0.41176470588235292" blue="0.85098039215686272" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
                                     <tableColumn width="264" minWidth="16" maxWidth="500" id="egr-Q3-P5d">

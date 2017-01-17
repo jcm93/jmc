@@ -46,6 +46,8 @@ let DEFAULTS_REPEAT_STRING = "willRepeat"
 let DEFAULTS_NEW_NETWORK_TRACK = "newNetworkTrack"
 let DEFAULTS_CURRENT_EQ_STRING = "currentEQ"
 let DEFAULTS_VOLUME_STRING = "currentVolume"
+let DEFAULTS_PLAYLIST_SORT_DESCRIPTOR_STRING = "defaultPlaylistSortDescriptor"
+let DEFAULTS_LIBRARY_SORT_DESCRIPTOR_STRING = "defaultsLibrarySortDescriptor"
 
 //other constants
 let NO_ORGANIZATION_TYPE = 0
@@ -87,7 +89,8 @@ func purgeCurrentlyPlaying() {
     }
 }
 
-let VALID_ARTWORK_TYPE_EXTENSIONS = [".jpg", ".png", ".tiff", ".gif", ".pdf"]
+let VALID_ARTWORK_TYPE_EXTENSIONS = ["jpg", "png", "tiff", "gif", "pdf"]
+let VALID_FILE_TYPES = ["aac", "adts", "ac3", "aif", "aiff", "aifc", "caf", "mp3", "mp4", "m4a", "snd", "au", "sd2", "wav"]
 
 let fieldsToCachedOrdersDictionary: NSDictionary = [
     "date_added" : "Date Added",
@@ -98,6 +101,13 @@ let fieldsToCachedOrdersDictionary: NSDictionary = [
     "kind" : "Kind",
     "genre" : "Genre"
 ]
+
+func validateStringForFilename(string: String) -> String {
+    let newString = String(string.characters.map({
+        $0 == "/" ? ":" : $0
+    }))
+    return newString
+}
 
 let equalizerDefaultsDictionary: NSDictionary = [
     "Flat" : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -171,7 +181,12 @@ func getTrackWithID(id: Int) -> Track? {
     fetch_req.predicate = pred
     let result: Track? = {() -> Track? in
         do {
-            return try (managedContext.executeFetchRequest(fetch_req) as! [Track])[0]
+            let trackList = try managedContext.executeFetchRequest(fetch_req) as? [Track]
+            if trackList!.count > 0 {
+                return trackList![0]
+            } else {
+                return nil
+            }
         }
         catch {
             return nil
@@ -934,7 +949,7 @@ func reorderForTracks(tracks: [Track], cachedOrder: CachedOrder) {
     }
     for track in tracks {
         let index = insert(fuckYou, track: track.view!, isGreater: comparator)
-        print("index is \(index)")
+        //print("index is \(index)")
         fuckYou.insertObject(track.view!, atIndex: index)
         fixIndices(fuckYou, index: index, order: cachedOrder.order!)
     }

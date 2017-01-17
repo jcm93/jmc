@@ -369,6 +369,15 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     }
     
     override func viewDidLoad() {
+        trackViewArrayController.tableViewController = self
+        tableView.doubleAction = #selector(tableViewDoubleClick)
+        columnVisibilityMenu.delegate = self
+        self.initializeColumnVisibilityMenu(self.tableView)
+        tableView.setDelegate(trackViewArrayController)
+        tableView.setDataSource(trackViewArrayController)
+        tableView.libraryTableViewController = self
+        tableView.reloadData()
+        trackViewArrayController.mainWindow = self.mainWindowController
         if playlist != nil {
             tableView.registerForDraggedTypes(["Track"]) //to enable d&d reordering
             tableView.tableColumns[1].hidden = false
@@ -381,16 +390,12 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             initializeForPlaylist()
         } else {
             tableView.tableColumns[1].hidden = true
+            if let sortData = NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_LIBRARY_SORT_DESCRIPTOR_STRING) {
+                if let sortDescriptors = NSKeyedUnarchiver.unarchiveObjectWithData(sortData as! NSData) {
+                    tableView.sortDescriptors = sortDescriptors as! [NSSortDescriptor]
+                }
+            }
         }
-        trackViewArrayController.tableViewController = self
-        tableView.doubleAction = #selector(tableViewDoubleClick)
-        columnVisibilityMenu.delegate = self
-        self.initializeColumnVisibilityMenu(self.tableView)
-        tableView.setDelegate(trackViewArrayController)
-        tableView.setDataSource(trackViewArrayController)
-        tableView.libraryTableViewController = self
-        tableView.reloadData()
-        trackViewArrayController.mainWindow = self.mainWindowController
         super.viewDidLoad()
         // Do view setup here.
     }

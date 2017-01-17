@@ -15,7 +15,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     var draggedRowIndexes: NSIndexSet?
     
     func tableView(tableView: NSTableView, willDisplayCell cell: AnyObject, forTableColumn tableColumn: NSTableColumn?, row: Int) {
-        if tableColumn?.identifier == "is_playing" {
+        if tableColumn == tableView.tableColumns[0] {
             if (self.arrangedObjects as! [TrackView])[row].track?.is_playing == true {
                 (cell as! NSImageCell).image = NSImage(named: "NSAudioOutputVolumeMedTemplate")
             } else {
@@ -27,6 +27,12 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     
     func tableView(tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
         print("sort descriptors did change called")
+        let archivedSortDescriptor = NSKeyedArchiver.archivedDataWithRootObject(tableView.sortDescriptors)
+        if tableViewController?.playlist?.track_id_list != nil {
+            NSUserDefaults.standardUserDefaults().setObject(archivedSortDescriptor, forKey: DEFAULTS_PLAYLIST_SORT_DESCRIPTOR_STRING)
+        } else {
+            NSUserDefaults.standardUserDefaults().setObject(archivedSortDescriptor, forKey: DEFAULTS_LIBRARY_SORT_DESCRIPTOR_STRING)
+        }
     }
     
     func tableView(tableView: NSTableView, writeRowsWithIndexes rowIndexes: NSIndexSet, toPasteboard pboard: NSPasteboard) -> Bool {

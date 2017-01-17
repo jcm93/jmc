@@ -156,6 +156,9 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             newFutureTrackView.viewType = .futureTrack
         }
         newFutureTrackView.track = track
+        if currentSourceListItem != currentAudioSource && manually == true {
+            createPlayOrderArray(track, row: nil)
+        }
         newFutureTrackView.sourcePlaylistOrder = currentSourcePlayOrder
         if manually == true {
             newFutureTrackView.wasQueuedManually = true
@@ -310,7 +313,9 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     
     func modifyPlayOrderArrayForQueuedTracks(tracks: [Track]) {
         for track in tracks {
-            self.currentSourcePlayOrder?.current_play_order = self.currentSourcePlayOrder?.current_play_order?.filter({$0 != track.id})
+            if track.id != currentSourcePlayOrder?.current_play_order![currentSourceIndex!] {
+                self.currentSourcePlayOrder?.current_play_order = self.currentSourcePlayOrder?.current_play_order?.filter({$0 != track.id})
+            }
         }
     }
     
@@ -349,9 +354,10 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                     var shuffled_array = idArray
                     shuffle_array(&shuffled_array!)
                     if self.currentTrack != nil {
-                        let indexOfPlayedTrack = shuffled_array!.indexOf(Int(self.currentTrack!.id!))!
-                        if indexOfPlayedTrack != 0 {
-                            swap(&shuffled_array![shuffled_array!.indexOf(Int(self.currentTrack!.id!))!], &shuffled_array![0])
+                        if let indexOfPlayedTrack = shuffled_array?.indexOf(Int(self.currentTrack!.id!)) {
+                            if indexOfPlayedTrack != 0 {
+                                swap(&shuffled_array![shuffled_array!.indexOf(Int(self.currentTrack!.id!))!], &shuffled_array![0])
+                            }
                         }
                     }
                     currentSourcePlayOrder?.shuffled_play_order = shuffled_array
@@ -360,9 +366,10 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                     var shuffled_array = idArray
                     shuffle_array(&shuffled_array!)
                     if self.currentTrack != nil {
-                        let indexOfPlayedTrack = shuffled_array!.indexOf(Int(self.currentTrack!.id!))!
-                        if indexOfPlayedTrack != 0 {
-                            swap(&shuffled_array![shuffled_array!.indexOf(Int(self.currentTrack!.id!))!], &shuffled_array![0])
+                        if let indexOfPlayedTrack = shuffled_array?.indexOf(Int(self.currentTrack!.id!)) {
+                            if indexOfPlayedTrack != 0 {
+                                swap(&shuffled_array![shuffled_array!.indexOf(Int(self.currentTrack!.id!))!], &shuffled_array![0])
+                            }
                         }
                     }
                     currentSourcePlayOrder?.shuffled_play_order = shuffled_array
@@ -377,7 +384,9 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             if currentSourcePlayOrder != nil {
                 currentSourcePlayOrder?.current_play_order = currentSourcePlayOrder!.inorder_play_order
                 if self.currentTrack != nil {
-                    self.currentSourceIndex = (currentSourcePlayOrder!.current_play_order!.indexOf(Int(self.currentTrack!.id!))!)
+                    if let index = currentSourcePlayOrder!.current_play_order!.indexOf(Int(self.currentTrack!.id!)) {
+                        self.currentSourceIndex = index
+                    }
                 } else {
                     self.currentSourceIndex = 0
                 }

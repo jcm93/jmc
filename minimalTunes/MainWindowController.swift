@@ -305,8 +305,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             return currentTrack
         } else {
             track = trackQueueViewController?.getNextTrack()
-            if currentAudioSource?.is_network == true {
-                delegate?.serviceBrowser?.askPeerForSong(currentAudioSource!.library!.peer as! MCPeerID, id: Int(track!.id!))
+            if trackQueueViewController?.currentAudioSource?.is_network == true {
+                delegate?.serviceBrowser?.askPeerForSong(trackQueueViewController!.currentAudioSource!.library!.peer as! MCPeerID, id: Int(track!.id!))
                 dispatch_async(dispatch_get_main_queue()) {
                     self.initializeInterfaceForNetworkTrack()
                     self.timer?.invalidate()
@@ -361,7 +361,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     func playNetworkSongCallback() {
         guard self.is_streaming == true else {return}
         if trackQueueViewController?.trackQueue.count < 1 || networkSongWasPlayed == true {
-            trackQueueViewController?.changeCurrentTrack(self.currentTrack!)
+            //trackQueueViewController?.changeCurrentTrack(self.currentTrack!)
             if networkSongWasPlayed == true {
                 networkSongWasPlayed = false
             }
@@ -378,9 +378,14 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             let peer = sourceListViewController!.getCurrentSelectionSharedLibraryPeer()
             delegate?.audioModule.stopForNetworkTrack()
             delegate?.serviceBrowser?.getTrack(Int(track.id!), peer: peer)
+            if self.currentTrack != nil {
+                currentTrack?.is_playing = false
+                currentTableViewController?.reloadNowPlayingForTrack(self.currentTrack!)
+            }
             currentTrack = track
             networkSongWasPlayed = true
             trackQueueViewController?.createPlayOrderArray(track, row: row)
+            trackQueueViewController?.changeCurrentTrack(self.currentTrack!)
             return
         } else {
             self.is_streaming = false
@@ -668,7 +673,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
                 trackQueueViewController!.nextTrack()
                 currentTrack = trackQueueViewController?.trackQueue[trackQueueViewController!.currentTrackIndex!].track
                 if is_initialized == false {
-                    trackQueueViewController!.createPlayOrderArray(self.currentTrack!, row: nil)
+                    //trackQueueViewController!.createPlayOrderArray(self.currentTrack!, row: nil)
                     paused = false
                     is_initialized = true
                 }

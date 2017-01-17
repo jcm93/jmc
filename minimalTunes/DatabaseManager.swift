@@ -9,7 +9,6 @@
 import Cocoa
 import CoreFoundation
 import CoreServices
-import AVFoundation
 
 func instanceCheck(entity: String, name: String) -> NSManagedObject? {
     let managedContext: NSManagedObjectContext = {
@@ -54,9 +53,13 @@ struct FSError {
     var whichError: Int
 }
 
-enum TrackAddToDatabaseError: ErrorType {
-    case couldNotUpdateFileSystem
-    case couldntEVenOpenTheFile
+class FileAddToDatabaseError: NSObject {
+    let urlString: String
+    let error: String
+    init(url: String, error: String) {
+        self.urlString = url
+        self.error = error
+    }
 }
 
 class DatabaseManager: NSObject {
@@ -74,26 +77,6 @@ class DatabaseManager: NSObject {
             return nil
         }
     }()
-    
-    func getArtworkFromFile(urlString: String) -> NSData? {
-        print("checking for art in file")
-        let url = NSURL(string: urlString)
-        let mediaObject = AVAsset(URL: url!)
-        var art: NSData?
-        let commonMeta = mediaObject.commonMetadata
-        for metadataItem in commonMeta {
-            if metadataItem.commonKey == "artwork" {
-                print("found art in file")
-                art = metadataItem.value as? NSData
-            }
-        }
-        if art != nil {
-            return art
-        }
-        else {
-            return nil
-        }
-    }
     
     func searchAlbumDirectoryForArt(track: Track) -> NSURL? {
         let locationURL = NSURL(string: track.location!)
@@ -114,8 +97,14 @@ class DatabaseManager: NSObject {
     
     func addPrimaryArtForTrack(track: Track, art: NSData) -> Track? {
         print("adding new primary album art")
-        guard let artImage = NSImage(data: art) else {return nil}
         let artHash = art.hashValue
+        if let currentPrimaryHash = track.album?.primary_art?.image_hash {
+            if Int(currentPrimaryHash) == artHash {
+                print("artwork collision")
+                return nil
+            }
+        }
+        guard let artImage = NSImage(data: art) else {return nil}
         let newArtwork = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtwork", inManagedObjectContext: managedContext) as! AlbumArtwork
         newArtwork.image_hash = artHash
         if track.album?.primary_art != nil {
@@ -214,18 +203,27 @@ class DatabaseManager: NSObject {
         track.sort_composer = getSortName(track.composer?.name)
     }
     
-    func addTracksFromURLStrings(urlStrings: [String]) throws -> TrackAddToDatabaseError {
-        let addedArtists: NSMutableDictionary = NSMutableDictionary()
-        let addedAlbums: NSMutableDictionary = NSMutableDictionary()
-        let addedComposers: NSMutableDictionary = NSMutableDictionary()
-        let addedGenres: NSMutableDictionary = NSMutableDictionary()
+    func handleDirectoryEnumerationError(url: NSURL, error: NSError) -> Bool {
+        print("this is bad! returning true anyway")
+        return true
+    }
+    
+    func addTracksFromURLStrings(urlStrings: [String]) -> [FileAddToDatabaseError] {
+        var errors = [FileAddToDatabaseError]()
+        var addedArtists = [String: Artist]()
+        var addedAlbums = [String: Album]()
+        var addedComposers = [String: Composer]()
+        var addedGenres = [String: Genre]()
         var tracks = [Track]()
         for urlString in urlStrings {
+            var addedArtist: Artist?
+            var addedAlbum: Album?
+            var addedComposer: Composer?
+            var addedGenre: Genre?
             var hasArt = false
-            guard let url = NSURL(string: urlString) else {continue}
-            guard let mediaFileObject = getMDItemFromURL(url) else {continue}
+            guard let url = NSURL(string: urlString) else {errors.append(FileAddToDatabaseError(url: urlString, error: "Failure constructing NSURL"));continue}
+            guard let mediaFileObject = getMDItemFromURL(url) else {errors.append(FileAddToDatabaseError(url: urlString, error: "Failure getting file metadata"));continue}
             let track = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: managedContext) as! Track
-            tracks.append(track)
             let trackView = NSEntityDescription.insertNewObjectForEntityForName("TrackView", inManagedObjectContext: managedContext) as! TrackView
             trackView.track = track
             var art: NSData?
@@ -236,13 +234,13 @@ class DatabaseManager: NSObject {
             track.bit_rate = (MDItemCopyAttribute(mediaFileObject, "kMDItemAudioBitRate") as! Int)/1000
             track.id = library?.next_track_id
             library?.next_track_id = Int(library!.next_track_id!) + 1
-            track.status = 1
+            track.status = 0
             track.time = (MDItemCopyAttribute(mediaFileObject, "kMDItemDurationSeconds") as! Int) * 1000
             track.size = MDItemCopyAttribute(mediaFileObject, "kMDItemFSSize") as! Int
             track.name = MDItemCopyAttribute(mediaFileObject, "kMDItemTitle") as? String
             track.track_num = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioTrackNumber") as? Int
             if let genreCheck = MDItemCopyAttribute(mediaFileObject, "kMDItemMusicalGenre") as? String {
-                if let alreadyAddedGenre = addedGenres[genreCheck] as? Genre {
+                if let alreadyAddedGenre = addedGenres[genreCheck] {
                     track.genre = alreadyAddedGenre
                 } else {
                     let newGenre = NSEntityDescription.insertNewObjectForEntityForName("Genre", inManagedObjectContext: managedContext) as! Genre
@@ -251,10 +249,11 @@ class DatabaseManager: NSObject {
                     library?.next_genre_id = Int(library!.next_genre_id!) + 1
                     track.genre = newGenre
                     addedGenres[genreCheck] = newGenre
+                    addedGenre = newGenre
                 }
             }
             if let albumCheck = MDItemCopyAttribute(mediaFileObject, "kMDItemAlbum") as? String {
-                if let alreadyAddedAlbum = addedAlbums[albumCheck] as? Album {
+                if let alreadyAddedAlbum = addedAlbums[albumCheck] {
                     track.album = alreadyAddedAlbum
                 } else {
                     let newAlbum = NSEntityDescription.insertNewObjectForEntityForName("Album", inManagedObjectContext: managedContext) as! Album
@@ -263,11 +262,12 @@ class DatabaseManager: NSObject {
                     library?.next_album_id = Int(library!.next_album_id!) + 1
                     track.album = newAlbum
                     addedAlbums[albumCheck] = newAlbum
+                    addedAlbum = newAlbum
                 }
             }
             if let artistCheck = MDItemCopyAttribute(mediaFileObject, "kMDItemAuthors") as? [String] {
                 let mainArtistCheck = artistCheck[0]
-                if let alreadyAddedArtist = addedArtists[mainArtistCheck] as? Artist {
+                if let alreadyAddedArtist = addedArtists[mainArtistCheck] {
                     track.artist = alreadyAddedArtist
                 } else {
                     let newArtist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: managedContext) as! Artist
@@ -276,10 +276,11 @@ class DatabaseManager: NSObject {
                     library?.next_artist_id = Int(library!.next_artist_id!) + 1
                     track.artist = newArtist
                     addedArtists[mainArtistCheck] = newArtist
+                    addedArtist = newArtist
                 }
             }
             if let composerCheck = MDItemCopyAttribute(mediaFileObject, "kMDItemComposer") as? String {
-                if let alreadyAddedComposer = addedArtists[composerCheck] as? Composer {
+                if let alreadyAddedComposer = addedComposers[composerCheck] {
                     track.composer = alreadyAddedComposer
                 } else {
                     let newComposer = NSEntityDescription.insertNewObjectForEntityForName("Composer", inManagedObjectContext: managedContext) as! Composer
@@ -288,37 +289,54 @@ class DatabaseManager: NSObject {
                     library?.next_composer_id = Int(library!.next_composer_id!) + 1
                     track.composer = newComposer
                     addedComposers[composerCheck] = newComposer
+                    addedComposer = newComposer
                 }
             }
             //add sort values
             addSortValues(track)
-            var otherMetadataForAlbumArt = AVAsset(URL: url).commonMetadata
+            /*var otherMetadataForAlbumArt = AVAsset(URL: url).commonMetadata
             otherMetadataForAlbumArt = otherMetadataForAlbumArt.filter({return $0.commonKey == "artwork"})
             if otherMetadataForAlbumArt.count > 0 {
                 art = otherMetadataForAlbumArt[0].value as? NSData
                 if art != nil {
                     hasArt = true
                 }
-            }
+            }*/
             if moveFileToAppropriateLocationForTrack(track, currentURL: url) != nil {
-                if hasArt == true {
+                /*if hasArt == true {
                     addPrimaryArtForTrack(track, art: art!)
-                }
+                }*/
+                tracks.append(track)
             } else {
-                return .couldNotUpdateFileSystem
+                print("error moving")
+                errors.append(FileAddToDatabaseError(url: urlString, error: "Couldn't move/copy file to album directory"))
+                managedContext.deleteObject(track)
+                managedContext.deleteObject(trackView)
+                if addedArtist != nil {
+                    managedContext.deleteObject(addedArtist!)
+                }
+                if addedGenre != nil {
+                    managedContext.deleteObject(addedGenre!)
+                }
+                if addedComposer != nil {
+                    managedContext.deleteObject(addedComposer!)
+                }
+                if addedAlbum != nil {
+                    managedContext.deleteObject(addedAlbum!)
+                }
             }
         }
         for order in cachedOrders! {
             reorderForTracks(tracks, cachedOrder: order)
         }
-        return .couldntEVenOpenTheFile
+        return errors
     }
     
     func moveFileToAppropriateLocationForTrack(track: Track, currentURL: NSURL) -> NSURL? {
         let fileName = {() -> String in
             switch NSUserDefaults.standardUserDefaults().boolForKey(DEFAULTS_RENAMES_FILES_STRING) {
             case true:
-                return self.formFilenameForTrack(track)
+                return validateStringForFilename(self.formFilenameForTrack(track))
             default:
                 return currentURL.lastPathComponent!
             }
@@ -327,11 +345,12 @@ class DatabaseManager: NSObject {
         var fileURL: NSURL?
         let orgType = NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)! as! Int
         if orgType == NO_ORGANIZATION_TYPE {
-            track.location = currentURL.absoluteString
+            track.location = currentURL.URLByDeletingLastPathComponent!.URLByAppendingPathComponent(fileName).absoluteString
+            fileURL = currentURL
         } else {
             let libraryPathURL = NSURL(fileURLWithPath: NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_LIBRARY_PATH_STRING) as! String)
-            let albumArtist = track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING
-            let album = track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING
+            let albumArtist = validateStringForFilename(track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING)
+            let album = validateStringForFilename(track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING)
             albumDirectoryURL = libraryPathURL.URLByAppendingPathComponent(albumArtist).URLByAppendingPathComponent(album)
             do {
                 try fileManager.createDirectoryAtURL(albumDirectoryURL!, withIntermediateDirectories: true, attributes: nil)
@@ -365,8 +384,8 @@ class DatabaseManager: NSObject {
         var albumDirectoryURL: NSURL?
         var fileURL: NSURL?
         let libraryPathURL = NSURL(fileURLWithPath: NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_LIBRARY_PATH_STRING) as! String)
-        let albumArtist = track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING
-        let album = track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING
+        let albumArtist = validateStringForFilename(track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING)
+        let album = validateStringForFilename(track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING)
         albumDirectoryURL = libraryPathURL.URLByAppendingPathComponent(albumArtist).URLByAppendingPathComponent(album)
         do {
             try fileManager.createDirectoryAtURL(albumDirectoryURL!, withIntermediateDirectories: true, attributes: nil)
@@ -386,6 +405,12 @@ class DatabaseManager: NSObject {
     }
     
     func formFilenameForTrack(track: Track) -> String {
+        let discNumberStringRepresentation: String
+        if track.disc_number != nil {
+            discNumberStringRepresentation = "\(String(track.disc_number))-"
+        } else {
+            discNumberStringRepresentation = ""
+        }
         let trackNumberStringRepresentation: String
         if track.track_num != nil {
             let trackNumber = Int(track.track_num!)
@@ -399,7 +424,7 @@ class DatabaseManager: NSObject {
         }
         let trackNameString = track.name != nil ? track.name! : ""
         let trackExtension = NSURL(string: track.location!)!.pathExtension!
-        var filenameString = "\(trackNumberStringRepresentation) \(trackNameString).\(trackExtension)"
+        var filenameString = "\(discNumberStringRepresentation)\(trackNumberStringRepresentation) \(trackNameString).\(trackExtension)"
         if filenameString == " " {
             filenameString = NO_FILENAME_STRING
         }
@@ -411,6 +436,7 @@ class DatabaseManager: NSObject {
         let newTrackView = NSEntityDescription.insertNewObjectForEntityForName("TrackView", inManagedObjectContext: managedContext) as! TrackView
         newTrackView.track = newTrack
         newTrack.id = library?.next_track_id
+        newTrack.status = nil
         library?.next_track_id = Int(library!.next_track_id!) + 1
         newTrack.status = 1
         let dateFormatter = NSDateFormatter()

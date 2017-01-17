@@ -55,17 +55,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         openFiles()
     }
     func openFiles() {
+        let fileManager = NSFileManager.defaultManager()
         let myFileDialog: NSOpenPanel = NSOpenPanel()
         let handler = DatabaseManager()
         myFileDialog.allowsMultipleSelection = true
-        myFileDialog.canChooseDirectories = false
+        //todo myFileDialog.allowedFileTypes =
+        myFileDialog.canChooseDirectories = true
         myFileDialog.runModal()
-        let urlStrings = myFileDialog.URLs.map({return $0.absoluteString})
-        do {
-            try handler.addTracksFromURLStrings(urlStrings)
-        } catch {
-            print(error)
+        var urlStrings = [String]()
+        for url in myFileDialog.URLs {
+            var isDirectory = ObjCBool(true)
+            if fileManager.fileExistsAtPath(url.path!, isDirectory: &isDirectory) {
+                if isDirectory {
+                    let enumerator = fileManager.enumeratorAtURL(url, includingPropertiesForKeys: nil, options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: handler.handleDirectoryEnumerationError)!
+                    for fileURLElement in enumerator {
+                        let fileURL = fileURLElement as! NSURL
+                        if fileURL.pathExtension != nil && VALID_FILE_TYPES.contains(fileURL.pathExtension!.lowercaseString) {
+                            urlStrings.append(fileURL.absoluteString)
+                        }
+                    }
+                }
+            }
         }
+        let errorResults = handler.addTracksFromURLStrings(urlStrings)
     }
     
     func initializeProgressBarWindow() {

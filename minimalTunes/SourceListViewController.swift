@@ -544,7 +544,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         sourceList.setDelegate(self)
         sourceList.setDataSource(self)
         sourceList.autosaveExpandedItems = true
-        sourceList.expandItem(nil, expandChildren: true)
+        sourceList.expandItem(libraryHeaderNode)
+        sourceList.expandItem(playlistHeaderNode)
         sourceList.reloadData()
         sourceList.allowsEmptySelection = false
         // Do view setup here.
