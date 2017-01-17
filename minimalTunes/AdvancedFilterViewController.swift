@@ -12,6 +12,7 @@ class AdvancedFilterViewController: NSViewController {
     
     @IBOutlet weak var predicateEditor: NSPredicateEditor!
     
+    @IBOutlet weak var limitCheck: NSButton!
     @IBOutlet weak var createSmartPlaylistButton: NSButton!
     @IBOutlet weak var playlistLengthDeterminantSelector: NSPopUpButton!
     @IBOutlet weak var itemLimitField: NSTextField!
@@ -35,9 +36,11 @@ class AdvancedFilterViewController: NSViewController {
     
     @IBAction func createSmartPlaylistButtonPressed(sender: AnyObject) {
         let newSmartCriteria = NSEntityDescription.insertNewObjectForEntityForName("SmartCriteria", inManagedObjectContext: managedContext) as! SmartCriteria
-        newSmartCriteria.fetch_limit = itemLimitField.integerValue
-        newSmartCriteria.fetch_limit_type = playlistLengthDeterminantSelector.titleOfSelectedItem
-        newSmartCriteria.ordering_criterion = playlistSelectionCriteriaSelector.titleOfSelectedItem
+        if limitCheck.state == NSOnState {
+            newSmartCriteria.fetch_limit = itemLimitField.integerValue
+            newSmartCriteria.fetch_limit_type = playlistLengthDeterminantSelector.titleOfSelectedItem
+            newSmartCriteria.ordering_criterion = playlistSelectionCriteriaSelector.titleOfSelectedItem
+        }
         newSmartCriteria.predicate = predicateEditor.predicate
         mainWindowController?.createPlaylistFromSmartCriteria(newSmartCriteria)
     }

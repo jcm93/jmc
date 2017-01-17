@@ -124,10 +124,20 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
         self.mainWindowController?.currentTableViewController?.trackViewArrayController.rearrangeObjects()
     }
     
+    @IBAction func releaseDateChecked(sender: AnyObject) {
+        if releaseDateCheck.state == NSOnState {
+            releaseDatePicker.datePickerElements = .YearMonthDayDatePickerElementFlag
+            releaseDatePicker.enabled = true
+        } else {
+            releaseDatePicker.datePickerElements = NSDatePickerElementFlags(rawValue: 0)
+            releaseDatePicker.enabled = false
+        }
+    }
+    
     @IBAction func datePickerAction(sender: AnyObject) {
-        releaseDateCheck.state = NSOnState
         
     }
+    
     func allEqual<T:Equatable>(thing: [T?]) -> Bool {
         let firstElem = thing.first!
         if thing.contains( {$0 != firstElem}) == false {
@@ -184,6 +194,8 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
                 releaseDateCheck.state = NSOnState
             } else {
                 releaseDateCheck.state = NSOffState
+                releaseDatePicker.datePickerElements = NSDatePickerElementFlags(rawValue: 0)
+                releaseDatePicker.enabled = false
             }
         }
         let track_nums = selectedTracks!.map({return $0.track_num})
@@ -237,7 +249,13 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
         
         
     }
+    @IBAction func previousTrackAction(sender: AnyObject) {
+        
+    }
     
+    @IBAction func nextTrackAction(sender: AnyObject) {
+        
+    }
     func initForSelection() {
         if selectedTracks!.count > 1 {
             nextTrackButton.hidden = true

@@ -153,11 +153,8 @@
                                                         </constraints>
                                                         <imageCell key="cell" refusesFirstResponder="YES" imageScaling="proportionallyDown" image="Smart Playlist" id="jkb-uo-Mcr"/>
                                                     </imageView>
-                                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AqR-Ld-Xmo">
+                                                    <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AqR-Ld-Xmo">
                                                         <rect key="frame" x="25" y="0.0" width="120" height="17"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="116" id="MlN-Jj-333"/>
-                                                        </constraints>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" title="Smart Playlist Cell" id="NI7-zb-I0l">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -175,6 +172,7 @@
                                                     <constraint firstItem="AqR-Ld-Xmo" firstAttribute="leading" secondItem="beH-Cf-Y5y" secondAttribute="trailing" constant="7" id="aze-TI-Di9"/>
                                                     <constraint firstItem="beH-Cf-Y5y" firstAttribute="leading" secondItem="Mcv-Eg-DSQ" secondAttribute="leading" constant="3" id="hgY-gm-5td"/>
                                                     <constraint firstItem="beH-Cf-Y5y" firstAttribute="bottom" secondItem="AqR-Ld-Xmo" secondAttribute="bottom" id="ssN-Ed-7MG"/>
+                                                    <constraint firstAttribute="trailing" secondItem="AqR-Ld-Xmo" secondAttribute="trailing" constant="3" id="yoi-rO-REG"/>
                                                 </constraints>
                                                 <connections>
                                                     <outlet property="imageView" destination="beH-Cf-Y5y" id="PVz-4h-lsw"/>

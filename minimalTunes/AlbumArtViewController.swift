@@ -45,6 +45,9 @@ class AlbumArtViewController: NSViewController {
             //todo: implement this
             return
         }
+        if track.album == nil {
+            return
+        }
         if track.album != nil && track.album!.primary_art != nil {
             print("gonna get sum album art")
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {

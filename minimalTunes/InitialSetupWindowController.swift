@@ -156,8 +156,9 @@ class InitialSetupWindowController: NSWindowController {
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: DEFAULTS_ARE_INITIALIZED_STRING)
         NSUserDefaults.standardUserDefaults().setBool(modifyMetadata, forKey: DEFAULTS_RENAMES_FILES_STRING)
         NSUserDefaults.standardUserDefaults().setObject(organizationType.rawValue, forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
-        NSUserDefaults.standardUserDefaults().setObject(directoryURL?.absoluteString, forKey: DEFAULTS_LIBRARY_PATH_STRING)
+        NSUserDefaults.standardUserDefaults().setObject(directoryURL?.path, forKey: DEFAULTS_LIBRARY_PATH_STRING)
         NSUserDefaults.standardUserDefaults().setBool(false, forKey: DEFAULTS_SHUFFLE_STRING)
+        NSUserDefaults.standardUserDefaults().setFloat(1.0, forKey: DEFAULTS_VOLUME_STRING)
         if self.library == nil {
             setupForNilLibrary()
         }

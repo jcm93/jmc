@@ -789,11 +789,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         //let volumeSongBarDistanceConstraint = NSLayoutConstraint(item: volumeSlider, attribute: .Trailing, relatedBy: .GreaterThanOrEqual, toItem: theBox, attribute: .Leading, multiplier: 1.0, constant: userScreenSize! * MIN_DISTANCE_BETWEEN_VOLUME_AND_SONG_BAR_FRACTION)
         NSLayoutConstraint.activateConstraints([songBarMinimumWidthConstraint, volumeBarMinimumWidthConstraint, searchBarMinimumWidthConstraint, volumeSliderMaxWidthConstraint])
         let volume = NSUserDefaults.standardUserDefaults().floatForKey(DEFAULTS_VOLUME_STRING)
-        if volume != 0 {
-            volumeSlider.floatValue = volume
-        } else {
-            volumeSlider.floatValue = 1.0
-        }
+        volumeSlider.floatValue = volume
         volumeDidChange(volumeSlider)
         super.windowDidLoad()
         sourceListViewController?.selectStuff()

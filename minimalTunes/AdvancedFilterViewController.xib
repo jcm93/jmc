@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="createSmartPlaylistButton" destination="Eoa-Ns-eJT" id="HuX-ZJ-SXe"/>
                 <outlet property="itemLimitField" destination="uih-3t-llx" id="cd2-zt-Zq7"/>
+                <outlet property="limitCheck" destination="iMc-98-GX4" id="CRV-Jn-YnE"/>
                 <outlet property="playlistLengthDeterminantSelector" destination="hJp-25-SH6" id="NyX-2n-3wN"/>
                 <outlet property="playlistSelectionCriteriaSelector" destination="08W-on-0KQ" id="rq1-SY-BmW"/>
                 <outlet property="predicateEditor" destination="uhI-gx-qru" id="e6h-bD-aC9"/>

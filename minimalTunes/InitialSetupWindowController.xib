@@ -107,7 +107,7 @@
                         <pathCell key="cell" selectable="YES" editable="YES" alignment="left" id="RNo-7w-CGU">
                             <font key="font" metaFont="system"/>
                             <url key="url" string="file:///"/>
-                            <color key="backgroundColor" red="0.8980392157" green="0.92549019610000005" blue="0.97254901959999995" alpha="1" colorSpace="deviceRGB"/>
+                            <color key="backgroundColor" red="0.89803921568627454" green="0.92549019607843142" blue="0.97254901960784312" alpha="1" colorSpace="deviceRGB"/>
                         </pathCell>
                     </pathControl>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xVd-Dw-PwO">
