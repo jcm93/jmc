@@ -9,6 +9,7 @@
 import Cocoa
 import CoreFoundation
 import CoreServices
+import AVFoundation
 
 func instanceCheck(entity: String, name: String) -> NSManagedObject? {
     let managedContext: NSManagedObjectContext = {
@@ -77,6 +78,26 @@ class DatabaseManager: NSObject {
             return nil
         }
     }()
+    
+    func getArtworkFromFile(urlString: String) -> NSData? {
+        print("checking for art in file")
+        let url = NSURL(string: urlString)
+        let mediaObject = AVAsset(URL: url!)
+        var art: NSData?
+        let commonMeta = mediaObject.commonMetadata
+        for metadataItem in commonMeta {
+            if metadataItem.commonKey == "artwork" {
+                print("found art in file")
+                art = metadataItem.value as? NSData
+            }
+        }
+        if art != nil {
+            return art
+        }
+        else {
+            return nil
+        }
+    }
     
     func searchAlbumDirectoryForArt(track: Track) -> NSURL? {
         let locationURL = NSURL(string: track.location!)
@@ -215,6 +236,7 @@ class DatabaseManager: NSObject {
         var addedComposers = [String: Composer]()
         var addedGenres = [String: Genre]()
         var tracks = [Track]()
+        var index = 0
         for urlString in urlStrings {
             var addedArtist: Artist?
             var addedAlbum: Album?
@@ -231,13 +253,31 @@ class DatabaseManager: NSObject {
             track.date_added = NSDate()
             track.date_modified = MDItemCopyAttribute(mediaFileObject, "kMDItemContentModificationDate") as? NSDate
             track.file_kind = MDItemCopyAttribute(mediaFileObject, "kMDItemKind") as? String
-            track.bit_rate = (MDItemCopyAttribute(mediaFileObject, "kMDItemAudioBitRate") as! Int)/1000
+            let bitRateCheck = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioBitRate") as? Int
+            if bitRateCheck != nil {
+                track.bit_rate = bitRateCheck!/1000
+            } else {
+                managedContext.deleteObject(track.view!)
+                managedContext.deleteObject(track)
+                continue
+            }
             track.id = library?.next_track_id
             library?.next_track_id = Int(library!.next_track_id!) + 1
             track.status = 0
-            track.time = (MDItemCopyAttribute(mediaFileObject, "kMDItemDurationSeconds") as! Int) * 1000
+            track.time = {
+                if let time = (MDItemCopyAttribute(mediaFileObject, "kMDItemDurationSeconds") as? Int) {
+                    return time * 1000
+                } else {
+                    return nil
+                }
+            }()
             track.size = MDItemCopyAttribute(mediaFileObject, "kMDItemFSSize") as! Int
-            track.name = MDItemCopyAttribute(mediaFileObject, "kMDItemTitle") as? String
+            let name = MDItemCopyAttribute(mediaFileObject, "kMDItemTitle") as? String
+            if name != nil {
+                track.name = name
+            } else {
+                track.name = url.URLByDeletingPathExtension!.lastPathComponent!
+            }
             track.track_num = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioTrackNumber") as? Int
             if let genreCheck = MDItemCopyAttribute(mediaFileObject, "kMDItemMusicalGenre") as? String {
                 if let alreadyAddedGenre = addedGenres[genreCheck] {
@@ -294,40 +334,53 @@ class DatabaseManager: NSObject {
             }
             //add sort values
             addSortValues(track)
-            /*var otherMetadataForAlbumArt = AVAsset(URL: url).commonMetadata
-            otherMetadataForAlbumArt = otherMetadataForAlbumArt.filter({return $0.commonKey == "artwork"})
-            if otherMetadataForAlbumArt.count > 0 {
-                art = otherMetadataForAlbumArt[0].value as? NSData
-                if art != nil {
-                    hasArt = true
-                }
-            }*/
-            if moveFileToAppropriateLocationForTrack(track, currentURL: url) != nil {
-                /*if hasArt == true {
-                    addPrimaryArtForTrack(track, art: art!)
+            autoreleasepool {
+                /*var otherMetadataForAlbumArt = AVAsset(URL: url).commonMetadata
+                otherMetadataForAlbumArt = otherMetadataForAlbumArt.filter({return $0.commonKey == "artwork"})
+                if otherMetadataForAlbumArt.count > 0 {
+                    art = otherMetadataForAlbumArt[0].value as? NSData
+                    if art != nil {
+                        hasArt = true
+                    }
                 }*/
-                tracks.append(track)
-            } else {
-                print("error moving")
-                errors.append(FileAddToDatabaseError(url: urlString, error: "Couldn't move/copy file to album directory"))
-                managedContext.deleteObject(track)
-                managedContext.deleteObject(trackView)
-                if addedArtist != nil {
-                    managedContext.deleteObject(addedArtist!)
-                }
-                if addedGenre != nil {
-                    managedContext.deleteObject(addedGenre!)
-                }
-                if addedComposer != nil {
-                    managedContext.deleteObject(addedComposer!)
-                }
-                if addedAlbum != nil {
-                    managedContext.deleteObject(addedAlbum!)
+                if moveFileToAppropriateLocationForTrack(track, currentURL: url) != nil {
+                    /*if hasArt == true {
+                        addPrimaryArtForTrack(track, art: art!)
+                    }*/
+                    tracks.append(track)
+                } else {
+                    print("error moving")
+                    errors.append(FileAddToDatabaseError(url: urlString, error: "Couldn't move/copy file to album directory"))
+                    managedContext.deleteObject(track)
+                    managedContext.deleteObject(trackView)
+                    if addedArtist != nil {
+                        managedContext.deleteObject(addedArtist!)
+                    }
+                    if addedGenre != nil {
+                        managedContext.deleteObject(addedGenre!)
+                    }
+                    if addedComposer != nil {
+                        managedContext.deleteObject(addedComposer!)
+                    }
+                    if addedAlbum != nil {
+                        managedContext.deleteObject(addedAlbum!)
+                    }
                 }
             }
+            print(index)
+            addedArtist = nil
+            addedAlbum = nil
+            addedGenre = nil
+            addedComposer = nil
+            index += 1
         }
         for order in cachedOrders! {
             reorderForTracks(tracks, cachedOrder: order)
+        }
+        do {
+            try managedContext.save()
+        } catch {
+            print(error)
         }
         return errors
     }

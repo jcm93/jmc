@@ -711,11 +711,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         if self.currentTableViewController == nil {
             return
         }
-        dispatch_async(dispatch_get_main_queue()) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             let trackArray = (self.currentTableViewController?.trackViewArrayController?.arrangedObjects as! [TrackView])
             let numItems = trackArray.count
-            let totalSize = trackArray.map({return (($0.track)!.size!.longLongValue)}).reduce(0, combine: {$0 + $1})
-            let totalTime = trackArray.map({return ($0.track)!.time!.doubleValue}).reduce(0, combine: {$0 + $1})
+            let totalSize = trackArray.map({return (($0.track)!.size?.longLongValue)}).reduce(0, combine: {$0 + ($1 != nil ? $1! : 0)})
+            let totalTime = trackArray.map({return (($0.track)!.time?.doubleValue)}).reduce(0, combine: {$0 + ($1 != nil ? $1! : 0)})
             let numString = self.numberFormatter.stringFromNumber(numItems)
             let sizeString = self.sizeFormatter.stringFromByteCount(totalSize)
             let timeString = self.dateFormatter.stringFromTimeInterval(totalTime/1000)

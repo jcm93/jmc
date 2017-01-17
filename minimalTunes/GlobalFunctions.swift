@@ -571,7 +571,7 @@ func getSortName(name: String?) -> String? {
     if name != nil {
         for prefix in defaultSortPrefixDictionary.allKeys {
             if name!.lowercaseString.hasPrefix(prefix as! String) {
-                let range = name!.startIndex...name!.startIndex.advancedBy((prefix as! String).characters.count)
+                let range = name!.startIndex...name!.startIndex.advancedBy((prefix as! String).characters.count - 1)
                 sortName!.removeRange(range)
                 return sortName
             }
@@ -922,7 +922,7 @@ func fixIndices(set: NSMutableOrderedSet, index: Int, order: String) {
 
 func reorderForTracks(tracks: [Track], cachedOrder: CachedOrder) {
     print("reordering for tracks for cached order \(cachedOrder.order!)")
-    var comparator: (Track) -> (Track) -> NSComparisonResult
+    let comparator: (Track) -> (Track) -> NSComparisonResult
     switch cachedOrder.order! {
     case "Artist":
         comparator = Track.compareArtist
@@ -943,17 +943,58 @@ func reorderForTracks(tracks: [Track], cachedOrder: CachedOrder) {
     default:
         comparator = Track.compareArtist
     }
-    let fuckYou = cachedOrder.track_views!.mutableCopy() as! NSMutableOrderedSet
-    for track in tracks {
-        fuckYou.removeObject(track.view!)
+    if tracks.count > cachedOrder.track_views?.count {
+        let allTracks = (cachedOrder.track_views!.array as! [TrackView]).map({return $0.track!}) + tracks as NSArray
+        let newTracks: NSArray
+        let key: String
+        switch cachedOrder.order! {
+        case "Artist":
+            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareArtist))
+            key = "artist_order"
+        case "Album":
+            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareAlbum))
+            key = "album_order"
+        case "Date Added":
+            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareDateAdded))
+            key = "date_added_order"
+        case "Name":
+            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareName))
+            key = "name_order"
+        case "Date Released":
+            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareDateReleased))
+            key = "release_date_order"
+        case "Album Artist":
+            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareAlbumArtist))
+            key = "album_artist_order"
+        case "Genre":
+            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareGenre))
+            key = "genre_order"
+        case "Kind":
+            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareKind))
+            key = "kind_order"
+        default:
+            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareArtist))
+            key = "artist_order"
+        }
+        var index = 0
+        for track in newTracks.map({return ($0 as! Track).view!}) {
+            track.setValue(index, forKey: key)
+            index += 1
+        }
+        cachedOrder.track_views = NSOrderedSet(array: newTracks.map({return $0.view!}) as! [TrackView])
+    } else {
+        let mutableVersion = cachedOrder.track_views!.mutableCopy() as! NSMutableOrderedSet
+        for track in tracks {
+            mutableVersion.removeObject(track.view!)
+        }
+        for track in tracks {
+            let index = insert(mutableVersion, track: track.view!, isGreater: comparator)
+            //print("index is \(index)")
+            mutableVersion.insertObject(track.view!, atIndex: index)
+            fixIndices(mutableVersion, index: index, order: cachedOrder.order!)
+        }
+        cachedOrder.track_views = mutableVersion.copy() as? NSOrderedSet
     }
-    for track in tracks {
-        let index = insert(fuckYou, track: track.view!, isGreater: comparator)
-        //print("index is \(index)")
-        fuckYou.insertObject(track.view!, atIndex: index)
-        fixIndices(fuckYou, index: index, order: cachedOrder.order!)
-    }
-    cachedOrder.track_views = fuckYou.copy() as? NSOrderedSet
 }
 
 func addSecondaryArtForTrack(track: Track, art: NSData, albumDirectoryPath: String) -> Track {
@@ -988,9 +1029,3 @@ func addSecondaryArtForTrack(track: Track, art: NSData, albumDirectoryPath: Stri
     }
     return track
 }
-
-
-
-
-
-
