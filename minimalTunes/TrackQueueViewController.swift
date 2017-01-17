@@ -484,24 +484,25 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         if (info.draggingPasteboard().types!.contains("public.TrackQueueView")) {
             let codedViews = info.draggingPasteboard().dataForType("public.TrackQueueView")
             let rows = NSKeyedUnarchiver.unarchiveObjectWithData(codedViews!) as! NSIndexSet
-            var row_offset = 0
-            rows.enumerateIndexesUsingBlock({(index, stop) -> Void in
-                tableView.moveRowAtIndex(index, toIndex: row + row_offset)
-                print(index)
-                print(row)
-                let actualIndex: Int
-                switch self.showAllTracks {
-                case true:
-                    actualIndex = index
-                default:
-                    actualIndex = index + self.globalOffset
+            var item_offset = 0
+            var index_offset = 0
+            let flippedRows = rows.reverse()
+            var tracks = [Track]()
+            for (index, element) in flippedRows.enumerate() {
+                tableView.moveRowAtIndex(element + item_offset, toIndex: row + index_offset)
+                let tqv = trackQueue.removeAtIndex(element + item_offset + globalOffset)
+                trackQueue.insert(tqv, atIndex: row + index_offset + globalOffset)
+                let t = self.mainWindowController!.delegate!.audioModule.trackQueue.removeAtIndex(element + item_offset + globalOffset - currentTrackIndex! - 1)
+                self.mainWindowController?.delegate?.audioModule.trackQueue.insert(t, atIndex: row + index_offset + globalOffset - currentTrackIndex! - 1)
+                if index + 1 < flippedRows.count && flippedRows[index+1] >= row {
+                    item_offset += 1
+                } else {
+                    item_offset = 0
+                    index_offset -= 1
                 }
-                swap(&self.trackQueue[actualIndex], &self.trackQueue[actualRow + row_offset])
-                self.mainWindowController?.delegate?.audioModule.swapTracks(actualIndex - self.currentTrackIndex! - 1, second_index: actualRow + row_offset - self.currentTrackIndex! - 1)
-                row_offset += 1
-            })
+            }
         }
-        tableView.reloadData()
+        //tableView.reloadData()
         return true
     }
     
