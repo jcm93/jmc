@@ -61,23 +61,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         myFileDialog.allowsMultipleSelection = true
         //todo myFileDialog.allowedFileTypes =
         myFileDialog.canChooseDirectories = true
-        myFileDialog.runModal()
+        let modalResult = myFileDialog.runModal()
+        if modalResult == NSFileHandlingPanelOKButton {
         var urlStrings = [String]()
-        for url in myFileDialog.URLs {
-            var isDirectory = ObjCBool(true)
-            if fileManager.fileExistsAtPath(url.path!, isDirectory: &isDirectory) {
-                if isDirectory {
-                    let enumerator = fileManager.enumeratorAtURL(url, includingPropertiesForKeys: nil, options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: handler.handleDirectoryEnumerationError)!
-                    for fileURLElement in enumerator {
-                        let fileURL = fileURLElement as! NSURL
-                        if fileURL.pathExtension != nil && VALID_FILE_TYPES.contains(fileURL.pathExtension!.lowercaseString) {
-                            urlStrings.append(fileURL.absoluteString)
+            for url in myFileDialog.URLs {
+                var isDirectory = ObjCBool(true)
+                if fileManager.fileExistsAtPath(url.path!, isDirectory: &isDirectory) {
+                    if isDirectory {
+                        let enumerator = fileManager.enumeratorAtURL(url, includingPropertiesForKeys: nil, options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: handler.handleDirectoryEnumerationError)!
+                        for fileURLElement in enumerator {
+                            let fileURL = fileURLElement as! NSURL
+                            if fileURL.pathExtension != nil && VALID_FILE_TYPES.contains(fileURL.pathExtension!.lowercaseString) {
+                                urlStrings.append(fileURL.absoluteString)
+                            }
                         }
                     }
                 }
             }
+            let errorResults = handler.addTracksFromURLStrings(urlStrings)
+        } else {
+            
         }
-        let errorResults = handler.addTracksFromURLStrings(urlStrings)
     }
     
     func initializeProgressBarWindow() {
