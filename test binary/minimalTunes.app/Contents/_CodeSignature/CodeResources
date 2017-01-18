@@ -6,7 +6,7 @@
 	<dict>
 		<key>Resources/AdvancedFilterViewController.nib</key>
 		<data>
-		LdV7xudWsp5BwGRxGAES+UtgUWc=
+		0/6NzGtuZy5Ikdxux7kQEJD0r3Q=
 		</data>
 		<key>Resources/AlbumArtViewController.nib</key>
 		<data>
@@ -14,7 +14,7 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		7kuBbrvz8L7f0bmE7ZO5a59SRj0=
+		QPDQw7Lm+n5MafVbMkOkuro5KR4=
 		</data>
 		<key>Resources/Base.lproj/MainMenu.nib</key>
 		<dict>
@@ -27,7 +27,11 @@
 		</dict>
 		<key>Resources/EqualizerWindowController.nib</key>
 		<data>
-		4lySAdm1OCLENAy/MZ8TMmCDFug=
+		BYu9XfZNi4XoOTlzBMLUbGdpoEw=
+		</data>
+		<key>Resources/ImportErrorWindowController.nib</key>
+		<data>
+		9ga/9L+GbhSfj77BfXf/RttDYjw=
 		</data>
 		<key>Resources/ImportProgressBar.nib</key>
 		<data>
@@ -43,7 +47,7 @@
 		</data>
 		<key>Resources/LibraryTableViewController.nib</key>
 		<data>
-		XcZbKQDHJn6RwCwbBldbk8FfdeQ=
+		smyDdDk2IHlOY4u0JaLdjjXn07A=
 		</data>
 		<key>Resources/LibraryTableViewControllerCellBased.nib</key>
 		<data>
@@ -67,7 +71,7 @@
 		</data>
 		<key>Resources/SourceListViewController.nib</key>
 		<data>
-		XV+ZkBwosy2SQsBv54Tq9iuQe78=
+		/wZgRnVGufp7l/62+7OQQZNEJm8=
 		</data>
 		<key>Resources/TagEditorWindow.nib</key>
 		<data>
@@ -75,7 +79,7 @@
 		</data>
 		<key>Resources/TrackQueueViewController.nib</key>
 		<data>
-		jytF/gw8xhH0yEzdeTjIDv0vNOc=
+		OZrsE7IqEbyEHRt6wXcj43IYwaU=
 		</data>
 		<key>Resources/minimalTunes.momd/VersionInfo.plist</key>
 		<data>
@@ -222,11 +226,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			LdV7xudWsp5BwGRxGAES+UtgUWc=
+			0/6NzGtuZy5Ikdxux7kQEJD0r3Q=
 			</data>
 			<key>hash2</key>
 			<data>
-			uotFjWMdjQmXl+ZjHEUq9B6nlWaVWY1UNfeRz8Pt5ZU=
+			rePuMLPqXtg03k+7ypyqAOkD4+qR6xGzocWhA6+qeDw=
 			</data>
 		</dict>
 		<key>Resources/AlbumArtViewController.nib</key>
@@ -244,11 +248,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			7kuBbrvz8L7f0bmE7ZO5a59SRj0=
+			QPDQw7Lm+n5MafVbMkOkuro5KR4=
 			</data>
 			<key>hash2</key>
 			<data>
-			/3Yw1KHLy5aaQ6qdBStGWhXUmtdWsi5tq78UiWLW6BY=
+			57ZVPBlWE1HAAB2D1+5N7rmPrpm98dIedy1KTp7oleA=
 			</data>
 		</dict>
 		<key>Resources/Base.lproj/MainMenu.nib</key>
@@ -268,11 +272,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			4lySAdm1OCLENAy/MZ8TMmCDFug=
+			BYu9XfZNi4XoOTlzBMLUbGdpoEw=
 			</data>
 			<key>hash2</key>
 			<data>
-			9NQG47RKk2XyInsRfF5Y+63IncpjiwipMwDPVLZO+jc=
+			YqXGUJm+MPeLW8apicBvWIX8d3bEIKjv99aZTRS3kMw=
+			</data>
+		</dict>
+		<key>Resources/ImportErrorWindowController.nib</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			9ga/9L+GbhSfj77BfXf/RttDYjw=
+			</data>
+			<key>hash2</key>
+			<data>
+			Bl2HDJ84PUK7yvBrcMuGUsJnWSLXXmWl4yKoq0eUvuo=
 			</data>
 		</dict>
 		<key>Resources/ImportProgressBar.nib</key>
@@ -312,11 +327,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			XcZbKQDHJn6RwCwbBldbk8FfdeQ=
+			smyDdDk2IHlOY4u0JaLdjjXn07A=
 			</data>
 			<key>hash2</key>
 			<data>
-			J2V7K1wwx5MJIZYL6eZ4aWI+FY1sBMVOYMsJ48/Fkrw=
+			s5Xh+Xv7PPRMa0JGXk//LI5OQ9/2zBsEfbFR1VIkyRo=
 			</data>
 		</dict>
 		<key>Resources/LibraryTableViewControllerCellBased.nib</key>
@@ -378,11 +393,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			XV+ZkBwosy2SQsBv54Tq9iuQe78=
+			/wZgRnVGufp7l/62+7OQQZNEJm8=
 			</data>
 			<key>hash2</key>
 			<data>
-			wvfrnKt8oDycef1gaiPmgMVeYrB9fp6jKQGWn57g1+w=
+			j53V4Bo13yilpOfC0rRLQzjZO9qpk8WIHp5vQ8nJzeI=
 			</data>
 		</dict>
 		<key>Resources/TagEditorWindow.nib</key>
@@ -400,11 +415,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			jytF/gw8xhH0yEzdeTjIDv0vNOc=
+			OZrsE7IqEbyEHRt6wXcj43IYwaU=
 			</data>
 			<key>hash2</key>
 			<data>
-			fi908+wDaiw76/MOWGY7GNnbM1M2cd6i53wZvdbb4og=
+			hIoZ4ny3dV7Sgob2qBGmd7AH8rDBHRMExBfBqZ7d65c=
 			</data>
 		</dict>
 		<key>Resources/minimalTunes.momd/VersionInfo.plist</key>
