@@ -12,11 +12,23 @@ class EqualizerWindowController: NSWindowController {
     
     var audioModule: AudioModule?
     
+    @IBOutlet weak var gainSlider: NSSlider!
+    @IBOutlet weak var firstSlider: NSSlider!
     @IBOutlet weak var eqToggle: NSButton!
+    @IBOutlet weak var secondSlider: NSSlider!
+    @IBOutlet weak var thirdSlider: NSSlider!
+    @IBOutlet weak var fourthSlider: NSSlider!
+    @IBOutlet weak var fifthSlider: NSSlider!
+    @IBOutlet weak var sixthSlider: NSSlider!
+    @IBOutlet weak var seventhSlider: NSSlider!
+    @IBOutlet weak var eighthSlider: NSSlider!
+    @IBOutlet weak var ninthSlider: NSSlider!
+    @IBOutlet weak var tenthSlider: NSSlider!
     
     @IBAction func equalizerToggled(sender: AnyObject) {
         let state = eqToggle.state
         self.audioModule!.toggleEqualizer(state)
+        NSUserDefaults.standardUserDefaults().setInteger(eqToggle.state, forKey: DEFAULTS_IS_EQ_ENABLED_STRING)
     }
     
     @IBAction func gainSliderDidChange(sender: AnyObject) {
@@ -32,8 +44,21 @@ class EqualizerWindowController: NSWindowController {
     }
 
     override func windowDidLoad() {
+        let bandSliders = [firstSlider, secondSlider, thirdSlider, fourthSlider, fifthSlider, sixthSlider, seventhSlider, eighthSlider, ninthSlider, tenthSlider]
+        
         super.windowDidLoad()
-
+        let defaultEQ = NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_CURRENT_EQ_STRING) as? [Float]
+        if defaultEQ != nil {
+            var index = 0
+            for band in defaultEQ! {
+                if index == 10 {continue}
+                bandSliders[index].floatValue = band
+                index += 1
+            }
+            gainSlider.floatValue = defaultEQ![10]
+        }
+        let eqEnabledState = NSUserDefaults.standardUserDefaults().integerForKey(DEFAULTS_IS_EQ_ENABLED_STRING)
+        eqToggle.state = eqEnabledState
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     }
     

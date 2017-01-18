@@ -488,6 +488,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         print("called")
         if (paused == true) {
             //if not initialized, play selected track/shuffle
+            if is_initialized == false {
+                playAnything()
+            }
             unpause()
             paused = false
         }

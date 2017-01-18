@@ -155,6 +155,7 @@ class InitialSetupWindowController: NSWindowController {
         NSUserDefaults.standardUserDefaults().setObject(directoryURL?.path, forKey: DEFAULTS_LIBRARY_PATH_STRING)
         NSUserDefaults.standardUserDefaults().setBool(false, forKey: DEFAULTS_SHUFFLE_STRING)
         NSUserDefaults.standardUserDefaults().setFloat(1.0, forKey: DEFAULTS_VOLUME_STRING)
+        NSUserDefaults.standardUserDefaults().setInteger(1, forKey: DEFAULTS_IS_EQ_ENABLED_STRING)
         NSUserDefaults.standardUserDefaults().setObject("\(NSFullUserName())'s Library", forKey: DEFAULTS_LIBRARY_NAME_STRING)
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING)
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: DEFAULTS_SHARING_STRING)

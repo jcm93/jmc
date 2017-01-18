@@ -74,6 +74,8 @@
 		0DB8EFEA1DC4FC4D00009900 /* MainTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB8EFE91DC4FC4D00009900 /* MainTableViewDataSource.swift */; };
 		0DC2E8F51E0110D200671D83 /* MTTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC2E8F41E0110D200671D83 /* MTTextFieldCell.swift */; };
 		0DC2E8F71E01E47900671D83 /* SpecialScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC2E8F61E01E47900671D83 /* SpecialScrollView.swift */; };
+		0DC7127C1E2F115A0054ECE6 /* ImportErrorWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC7127A1E2F115A0054ECE6 /* ImportErrorWindowController.swift */; };
+		0DC7127D1E2F115A0054ECE6 /* ImportErrorWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DC7127B1E2F115A0054ECE6 /* ImportErrorWindowController.xib */; };
 		0DC84C5F1DBAD0C100E8877C /* NewCachedOrder+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC84C5D1DBAD0C100E8877C /* NewCachedOrder+CoreDataProperties.swift */; };
 		0DC84C601DBAD0C100E8877C /* NewCachedOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC84C5E1DBAD0C100E8877C /* NewCachedOrder.swift */; };
 		0DCB81721DCAA45C006FBA9D /* MainTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DCB81711DCAA45C006FBA9D /* MainTableViewDelegate.swift */; };
@@ -203,6 +205,8 @@
 		0DB8EFE91DC4FC4D00009900 /* MainTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTableViewDataSource.swift; sourceTree = "<group>"; };
 		0DC2E8F41E0110D200671D83 /* MTTextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTTextFieldCell.swift; sourceTree = "<group>"; };
 		0DC2E8F61E01E47900671D83 /* SpecialScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecialScrollView.swift; sourceTree = "<group>"; };
+		0DC7127A1E2F115A0054ECE6 /* ImportErrorWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportErrorWindowController.swift; sourceTree = "<group>"; };
+		0DC7127B1E2F115A0054ECE6 /* ImportErrorWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImportErrorWindowController.xib; sourceTree = "<group>"; };
 		0DC84C5D1DBAD0C100E8877C /* NewCachedOrder+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NewCachedOrder+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0DC84C5E1DBAD0C100E8877C /* NewCachedOrder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewCachedOrder.swift; sourceTree = "<group>"; };
 		0DCB81711DCAA45C006FBA9D /* MainTableViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTableViewDelegate.swift; sourceTree = "<group>"; };
@@ -316,6 +320,8 @@
 		0D01AD951D707D2600F9211F /* Other Windows */ = {
 			isa = PBXGroup;
 			children = (
+				0DC7127A1E2F115A0054ECE6 /* ImportErrorWindowController.swift */,
+				0DC7127B1E2F115A0054ECE6 /* ImportErrorWindowController.xib */,
 				0D01AD8F1D7079D900F9211F /* EqualizerWindowController.swift */,
 				0D01AD901D7079D900F9211F /* EqualizerWindowController.xib */,
 				0DD274EA1D30462F0055C43B /* PreferencesWindowController.swift */,
@@ -520,6 +526,7 @@
 				TargetAttributes = {
 					0DAB308C1CFBA3340028928F = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 6E383BMF5Y;
 					};
 					0DAB309E1CFBA3340028928F = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -559,6 +566,7 @@
 				0D015AC41E00A30900EBAB6E /* LibraryTableViewControllerCellBased.xib in Resources */,
 				0D9CE6761D34128B004FA8CB /* InitialSetupWindowController.xib in Resources */,
 				0D299B241DF158A60009CF7A /* AdvancedFilterViewController.xib in Resources */,
+				0DC7127D1E2F115A0054ECE6 /* ImportErrorWindowController.xib in Resources */,
 				0D299B1C1DF11F140009CF7A /* TrackQueueViewController.xib in Resources */,
 				0DAB30961CFBA3340028928F /* Assets.xcassets in Resources */,
 				0DF4BEF41CFD0D4E00AC5824 /* MainWindowController.xib in Resources */,
@@ -652,6 +660,7 @@
 				0D2EEFB71DB97DEC0065B0B3 /* CachedOrder.swift in Sources */,
 				0D84EDE61DA326BD0057411F /* SongCollection.swift in Sources */,
 				0D388AAB1E1DBB4800D25A7D /* SmartCriteria.swift in Sources */,
+				0DC7127C1E2F115A0054ECE6 /* ImportErrorWindowController.swift in Sources */,
 				0D76F6AC1D28581900C6E70F /* DragAndDropTreeController.swift in Sources */,
 				0DD7D6D71D3F3A350035BAD8 /* Album.swift in Sources */,
 				0DD7D6DA1D3F3A350035BAD8 /* AlbumArtwork+CoreDataProperties.swift in Sources */,

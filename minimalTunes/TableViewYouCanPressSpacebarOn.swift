@@ -15,18 +15,45 @@ class TableViewYouCanPressSpacebarOn: NSTableView {
     var trackQueueViewController: TrackQueueViewController?
     var windowIdentifier: String?
     
+    var shouldDrawFocusRing = false
+    
     let types = ["Track"]
 
 
     override func drawRect(dirtyRect: NSRect) {
+        if self.shouldDrawFocusRing {
+            NSSetFocusRingStyle(NSFocusRingPlacement.Only)
+            NSRectFill(self.bounds)
+        }
         super.drawRect(dirtyRect)
-
         // Drawing code here.
     }
     
     override func awakeFromNib() {
         //self.registerForDraggedTypes(types)
     }
+    
+    /*override func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation {
+        if sender.draggingPasteboard().types!.contains(NSFilenamesPboardType) {
+            self.shouldDrawFocusRing = true
+            self.setKeyboardFocusRingNeedsDisplayInRect(self.bounds)
+        }
+        let operation = super.draggingEntered(sender)
+        self.drawRect(self.bounds)
+        return operation
+    }
+    
+    override func draggingExited(sender: NSDraggingInfo?) {
+        self.shouldDrawFocusRing = false
+        self.setKeyboardFocusRingNeedsDisplayInRect(self.bounds)
+        super.draggingExited(sender)
+    }
+    
+    override func concludeDragOperation(sender: NSDraggingInfo?) {
+        self.shouldDrawFocusRing = false
+        self.setKeyboardFocusRingNeedsDisplayInRect(self.bounds)
+        super.concludeDragOperation(sender)
+    }*/
     
     
     override func rightMouseDown(theEvent: NSEvent) {

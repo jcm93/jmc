@@ -24,7 +24,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var iTunesParser: iTunesLibraryParser?
     var audioModule: AudioModule = AudioModule()
     let fileManager = NSFileManager.defaultManager()
+    let handler = DatabaseManager()
     var serviceBrowser: ConnectivityManager?
+    var importErrorWindowController: ImportErrorWindowController?
     
     @IBAction func jumpToCurrentSong(sender: AnyObject) {
         mainWindowController!.jumpToCurrentSong()
@@ -44,6 +46,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if mainWindowController?.hasMusic == true {
             self.serviceBrowser = ConnectivityManager(delegate: self, slvc: mainWindowController!.sourceListViewController!)
         }
+        let defaultsEQOnState = NSUserDefaults.standardUserDefaults().integerForKey(DEFAULTS_IS_EQ_ENABLED_STRING)
+        audioModule.toggleEqualizer(defaultsEQOnState)
     }
     
     @IBAction func openImportWindow(sender: AnyObject) {
@@ -51,37 +55,65 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         importWindowController?.mainWindowController = mainWindowController
         importWindowController?.showWindow(self)
     }
+    
     @IBAction func addToLibrary(sender: AnyObject) {
         openFiles()
     }
-    func openFiles() {
-        let fileManager = NSFileManager.defaultManager()
-        let myFileDialog: NSOpenPanel = NSOpenPanel()
-        let handler = DatabaseManager()
-        myFileDialog.allowsMultipleSelection = true
-        //todo myFileDialog.allowedFileTypes =
-        myFileDialog.canChooseDirectories = true
-        let modalResult = myFileDialog.runModal()
-        if modalResult == NSFileHandlingPanelOKButton {
+    
+    func getFilesAsURLStringsInURLList(urls: [NSURL]) -> ([String],[FileAddToDatabaseError]) {
         var urlStrings = [String]()
-            for url in myFileDialog.URLs {
-                var isDirectory = ObjCBool(true)
-                if fileManager.fileExistsAtPath(url.path!, isDirectory: &isDirectory) {
-                    if isDirectory {
-                        let enumerator = fileManager.enumeratorAtURL(url, includingPropertiesForKeys: nil, options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: handler.handleDirectoryEnumerationError)!
-                        for fileURLElement in enumerator {
-                            let fileURL = fileURLElement as! NSURL
-                            if fileURL.pathExtension != nil && VALID_FILE_TYPES.contains(fileURL.pathExtension!.lowercaseString) {
-                                urlStrings.append(fileURL.absoluteString)
-                            }
+        var errors = [FileAddToDatabaseError]()
+        for url in urls {
+            var isDirectory = ObjCBool(true)
+            if fileManager.fileExistsAtPath(url.path!, isDirectory: &isDirectory) {
+                if isDirectory {
+                    let enumerator = fileManager.enumeratorAtURL(url, includingPropertiesForKeys: nil, options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: handler.handleDirectoryEnumerationError)!
+                    for fileURLElement in enumerator {
+                        let fileURL = fileURLElement as! NSURL
+                        if fileURL.pathExtension != nil && VALID_FILE_TYPES.contains(fileURL.pathExtension!.lowercaseString) {
+                            urlStrings.append(fileURL.absoluteString)
+                        } else {
+                            let error = FileAddToDatabaseError(url: fileURL.absoluteString, error: "invalid file type")
+                            errors.append(error)
                         }
+                    }
+                } else {
+                    if url.pathExtension != nil && VALID_FILE_TYPES.contains(url.pathExtension!.lowercaseString) {
+                        urlStrings.append(url.absoluteString)
                     }
                 }
             }
-            let errorResults = handler.addTracksFromURLStrings(urlStrings)
-        } else {
-            
         }
+        return (urlStrings, errors)
+    }
+    
+    func openFiles() {
+        let myFileDialog: NSOpenPanel = NSOpenPanel()
+        myFileDialog.allowsMultipleSelection = true
+        myFileDialog.allowedFileTypes = VALID_FILE_TYPES
+        myFileDialog.canChooseDirectories = true
+        let modalResult = myFileDialog.runModal()
+        if modalResult == NSFileHandlingPanelOKButton {
+            let directoryCrawlResult = getFilesAsURLStringsInURLList(myFileDialog.URLs)
+            let urlStrings = directoryCrawlResult.0
+            var errors = directoryCrawlResult.1
+            let errorResults = addURLStringsToLibrary(urlStrings)
+            errors.appendContentsOf(errorResults)
+            showImportErrors(errors)
+        }
+    }
+    
+    func showImportErrors(errors: [FileAddToDatabaseError]) {
+        if errors.count > 0 {
+            self.importErrorWindowController = ImportErrorWindowController(windowNibName: "ImportErrorWindowController")
+            self.importErrorWindowController?.errors = errors
+            self.importErrorWindowController?.showWindow(self)
+        }
+    }
+    
+    func addURLStringsToLibrary(urlStrings: [String]) -> [FileAddToDatabaseError] {
+        let result = handler.addTracksFromURLStrings(urlStrings)
+        return result
     }
     
     func initializeProgressBarWindow() {

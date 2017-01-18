@@ -64,6 +64,22 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     }
     
     func tableView(tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
+        if info.draggingPasteboard().types!.contains(NSFilenamesPboardType) {
+            let files = info.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as! NSArray
+            let urls = files.map({return NSURL(fileURLWithPath: $0 as! String)})
+            let appDelegate = (NSApplication.sharedApplication().delegate as! AppDelegate)
+            var errors = [FileAddToDatabaseError]()
+            let urlParseResult = appDelegate.getFilesAsURLStringsInURLList(urls)
+            errors.appendContentsOf(urlParseResult.1)
+            let urlStrings = urlParseResult.0
+            let newErrors = appDelegate.addURLStringsToLibrary(urlStrings)
+            errors.appendContentsOf(newErrors)
+            for error in errors {
+                error.urlString = error.urlString.stringByRemovingPercentEncoding!
+            }
+            appDelegate.showImportErrors(errors)
+            return true
+        }
         //if we've reached this point, we must be in a playlist with a valid track id list, and the table must be sorted by playlist order
         var track_id_list = tableViewController!.playlist!.track_id_list as! [Int]
         var ids = [Int]()
@@ -80,6 +96,11 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     }
     
     func tableView(tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
+        if info.draggingPasteboard().types!.contains(NSFilenamesPboardType) {
+            print("doingle")
+            tableView.setDropRow(-1, dropOperation: NSTableViewDropOperation.On)
+            return .Copy
+        }
         if draggedRowIndexes != nil && dropOperation == .Above && tableView.sortDescriptors == [tableView.tableColumns[1].sortDescriptorPrototype!] && tableViewController?.playlist?.smart_criteria == nil {
             return .Move
         } else {

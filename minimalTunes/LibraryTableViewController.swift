@@ -377,6 +377,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         tableView.setDataSource(trackViewArrayController)
         tableView.libraryTableViewController = self
         tableView.reloadData()
+        tableView.registerForDraggedTypes([NSFilenamesPboardType])
         trackViewArrayController.mainWindow = self.mainWindowController
         if playlist != nil {
             tableView.registerForDraggedTypes(["Track"]) //to enable d&d reordering

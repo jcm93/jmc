@@ -7,7 +7,18 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="EqualizerWindowController" customModule="minimalTunes" customModuleProvider="target">
             <connections>
+                <outlet property="eighthSlider" destination="nnC-W6-vb0" id="g4V-OT-AUS"/>
                 <outlet property="eqToggle" destination="rSk-LZ-rJU" id="9FI-dc-6fZ"/>
+                <outlet property="fifthSlider" destination="5cJ-rf-931" id="hci-mR-tTX"/>
+                <outlet property="firstSlider" destination="sEY-UG-7LR" id="Gpb-mO-sHg"/>
+                <outlet property="fourthSlider" destination="F7h-Zo-88O" id="Yhc-o7-qMr"/>
+                <outlet property="gainSlider" destination="ymP-fR-Kf3" id="fY3-93-ZMm"/>
+                <outlet property="ninthSlider" destination="j6n-PF-UmH" id="acA-UN-rhc"/>
+                <outlet property="secondSlider" destination="T9y-8B-wJ0" id="Fix-0V-b9z"/>
+                <outlet property="seventhSlider" destination="PtR-pz-wbt" id="l3a-DJ-DaI"/>
+                <outlet property="sixthSlider" destination="VVp-tg-Vkr" id="oNn-Fu-bfd"/>
+                <outlet property="tenthSlider" destination="10V-zh-jxT" id="yW0-bd-dn5"/>
+                <outlet property="thirdSlider" destination="okE-yh-VxO" id="Nu6-UB-kvB"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>

@@ -55,8 +55,8 @@ struct FSError {
 }
 
 class FileAddToDatabaseError: NSObject {
-    let urlString: String
-    let error: String
+    var urlString: String
+    var error: String
     init(url: String, error: String) {
         self.urlString = url
         self.error = error
