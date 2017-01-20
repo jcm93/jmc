@@ -86,7 +86,8 @@ class ImportWindowController: NSWindowController {
         self.window?.close()
         self.mainWindowController?.hasMusic = true
         //self.mainWindowController?.sourceListTreeController.content = self.mainWindowController?.sourceListHeaderNodes
-        self.mainWindowController?.windowDidLoad()
+        //self.mainWindowController?.windowDidLoad()
+        self.mainWindowController?.sourceListViewController?.viewDidLoad()
     }
     
     func openFile() {

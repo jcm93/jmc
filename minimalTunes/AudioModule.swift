@@ -131,19 +131,19 @@ class AudioModule: NSObject {
             switch address.mSelector {
             case kAudioHardwarePropertyDefaultOutputDevice:
                 var deviceID = getDefaultAudioOutputDevice()
-                AudioUnitSetProperty(audioEngine.outputNode.audioUnit, kAudioOutputUnitProperty_CurrentDevice, kAudioUnitScope_Global, 0, &deviceID, UInt32(sizeof(AudioObjectID)))
                 print(audioEngine.running)
                 print(curNode.playing)
-                if audioEngine.running == false {
-                    do {
-                        try print("audio engine start was \(audioEngine.start())")
-                    } catch {
-                        print("starting failed")
-                        print(error)
-                    }
+                do {
+                    AudioUnitSetProperty(audioEngine.outputNode.audioUnit, kAudioOutputUnitProperty_CurrentDevice, kAudioUnitScope_Global, 0, &deviceID, UInt32(sizeof(AudioObjectID)))
+                    audioEngine.reset()
+                    try audioEngine.start()
+                } catch {
+                    print("starting failed")
+                    print(error)
                 }
-                print(audioEngine.running)
                 print("kAudioHardwarePropertyDefaultOutputDevice: \(deviceID)")
+                print(audioEngine.running)
+                print(curNode.playing)
             default:
                 print("uhh")
             }
