@@ -104,6 +104,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     let sizeFormatter = NSByteCountFormatter()
     let fileManager = NSFileManager.defaultManager()
     var currentFilterPredicate: NSPredicate?
+    var isDoneWithSkipOperation = true
+    var isDoneWithSkipBackOperation = true
     
     lazy var cachedOrders: [CachedOrder]? = {
         let request = NSFetchRequest(entityName: "CachedOrder")
@@ -341,6 +343,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         sourceListViewController!.createPlaylistFolder(nil)
     }
     @IBAction func addSmartPlaylistButton(sender: AnyObject) {
+        sourceListViewController!.selectLibrary()
         showAdvancedFilter()
     }
     
@@ -457,12 +460,16 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     func skip() {
+        guard self.isDoneWithSkipOperation else {return}
+        self.isDoneWithSkipOperation = false
         self.currentTrack?.is_playing = false
         timer?.invalidate()
         delegate?.audioModule.skip()
     }
     
     func skipBackward() {
+        guard self.isDoneWithSkipBackOperation else {return}
+        self.isDoneWithSkipBackOperation = false
         self.currentTrack?.is_playing = false
         timer?.invalidate()
         let nodeTime = delegate?.audioModule.curNode.lastRenderTime
@@ -687,6 +694,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
                 let after = NSDate()
                 let since = after.timeIntervalSinceDate(before)
                 print(since)
+                self.isDoneWithSkipOperation = true
+                self.isDoneWithSkipBackOperation = true
             }
             else if keyPath! == "done_playing" {
                 print("controller detects finished playing")
@@ -714,7 +723,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         if self.currentTableViewController == nil {
             return
         }
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+        dispatch_async(dispatch_get_main_queue()) {
             let trackArray = (self.currentTableViewController?.trackViewArrayController?.arrangedObjects as! [TrackView])
             let numItems = trackArray.count
             let totalSize = trackArray.map({return (($0.track)!.size?.longLongValue)}).reduce(0, combine: {$0 + ($1 != nil ? $1! : 0)})

@@ -114,6 +114,36 @@ func validateStringForFilename(string: String) -> String {
     return newString
 }
 
+func getImageExtension(uti: CFString) -> String? {
+    if UTTypeConformsTo(uti, kUTTypeImage) {
+        if UTTypeConformsTo(uti, kUTTypeJPEG) {
+            return "jpg"
+        } else if UTTypeConformsTo(uti, kUTTypeJPEG2000) {
+            return "jpg"
+        } else if UTTypeConformsTo(uti, kUTTypeTIFF) {
+            return "tiff"
+        } else if UTTypeConformsTo(uti, kUTTypePICT) {
+            return "pict"
+        } else if UTTypeConformsTo(uti, kUTTypeGIF) {
+            return "gif"
+        } else if UTTypeConformsTo(uti, kUTTypePNG) {
+            return "png"
+        } else if UTTypeConformsTo(uti, kUTTypeQuickTimeImage) {
+            return "qtif"
+        } else if UTTypeConformsTo(uti, kUTTypeAppleICNS) {
+            return "icns"
+        } else if UTTypeConformsTo(uti, kUTTypeBMP) {
+            return "bmp"
+        } else if UTTypeConformsTo(uti, kUTTypeICO) {
+            return "ico"
+        } else {
+            return nil
+        }
+    } else {
+        return nil
+    }
+}
+
 let equalizerDefaultsDictionary: NSDictionary = [
     "Flat" : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]

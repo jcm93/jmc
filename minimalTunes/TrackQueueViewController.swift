@@ -280,6 +280,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         }
         print("current track index is \(currentTrackIndex)")
         tableView.reloadData()
+        mainWindowController?.isDoneWithSkipBackOperation = true
     }
     
     func getLastTrack() -> Track? {

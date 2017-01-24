@@ -125,7 +125,9 @@ class DatabaseManager: NSObject {
                 return nil
             }
         }
-        guard let artImage = NSImage(data: art) else {return nil}
+        guard let artImage = CGImageSourceCreateWithData(art, nil) else {return nil}
+        guard let artUTI = CGImageSourceGetType(artImage) else {return nil}
+        guard let artExtension = getImageExtension(artUTI) else {return nil}
         let newArtwork = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtwork", inManagedObjectContext: managedContext) as! AlbumArtwork
         newArtwork.image_hash = artHash
         if track.album?.primary_art != nil {
@@ -156,14 +158,11 @@ class DatabaseManager: NSObject {
                 newArtworkCollection.addArtObject(track.album!.primary_art!)
             }
         }
-        let artURL = NSURL(string: track.location!)?.URLByDeletingLastPathComponent?.URLByAppendingPathComponent("\(artHash).png")
+        let artURL = NSURL(string: track.location!)?.URLByDeletingLastPathComponent?.URLByAppendingPathComponent("\(artHash)").URLByAppendingPathExtension(artExtension)
         newArtwork.artwork_location = artURL!.absoluteString
-        let artTIFF = artImage.TIFFRepresentation
-        let artRep = NSBitmapImageRep(data: artTIFF!)
-        let artPNG = artRep?.representationUsingType(.NSPNGFileType, properties: [:])
         track.album?.primary_art = newArtwork
         do {
-            try artPNG?.writeToURL(artURL!, options: NSDataWritingOptions.DataWritingAtomic)
+            try art.writeToURL(artURL!, options: NSDataWritingOptions.DataWritingAtomic)
         } catch {
             print("error writing file: \(error)")
         }

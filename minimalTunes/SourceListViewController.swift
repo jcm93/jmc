@@ -91,6 +91,11 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         return node
     }
     
+    func selectLibrary() {
+        let libraryRowIndexSet = NSIndexSet(index: 1)
+        sourceList.selectRowIndexes(libraryRowIndexSet, byExtendingSelection: false)
+    }
+    
     func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
         if item == nil {
             if rootNode == nil {
@@ -163,6 +168,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         let playlistFolderNode = SourceListNode(item: playlistFolderItem)
         playlistFolderItem.name = "New Playlist Folder"
         playlistFolderItem.parent = rootNode?.children[2].item
+        playlistFolderNode.parent = playlistHeaderNode
         if nodes != nil {
             makeNodesSubnodesOfNode(nodes!, parentNode: playlistFolderNode, index: 0)
         }
@@ -188,12 +194,14 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             let currentItemSiblingsMutableCopy = currentParentItem.children!.mutableCopy() as! NSMutableOrderedSet
             currentItemSiblingsMutableCopy.removeObject(item)
             currentParentItem.children = currentItemSiblingsMutableCopy as NSOrderedSet
-            item.node?.parent = parentNode
+            item.node!.parent = parentNode
             item.parent = parentItem
             //insert into new sibling sets at appropriate index
             newItemChildren.insertObject(item, atIndex: mutableIndex)
             parentNode.children.insert(item.node!, atIndex: mutableIndex)
-            mutableIndex += 1
+            if !(parentNode == currentParentNode && currentNodeSiblingIndex < index) {
+                mutableIndex += 1
+            }
         }
         parentItem.children = newItemChildren as NSOrderedSet
         var index = 0
@@ -223,6 +231,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         library?.next_playlist_id = Int(library!.next_playlist_id!) + 1
         //create node
         let newSourceListNode = SourceListNode(item: playlistItem)
+        newSourceListNode.parent = playlistHeaderNode
         playlistHeaderNode?.children.insert(newSourceListNode, atIndex: 0)
         sourceList.reloadData()
         print(getNodesBeforePlaylists())

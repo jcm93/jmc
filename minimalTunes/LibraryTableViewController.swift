@@ -65,8 +65,14 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         guard tableView!.selectedRow >= 0 else {
             return
         }
+        /*
+        single
         let item = (trackViewArrayController?.arrangedObjects as! [TrackView])[tableView!.selectedRow].track
         mainWindowController!.playSong(item!, row: tableView!.selectedRow)
+        */
+        var items = (trackViewArrayController.selectedObjects as! [TrackView]).map({return $0.track!})
+        mainWindowController?.playSong(items.removeFirst(), row: nil)
+        mainWindowController?.trackQueueViewController?.addTracksToQueue(nil, tracks: items)
     }
     
     @IBAction func getInfoFromTableView(sender: AnyObject) {
@@ -286,10 +292,10 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     func initializeColumnVisibilityMenu(tableView: NSTableView) {
         var savedColumns = NSUserDefaults.standardUserDefaults().dictionaryForKey(DEFAULTS_SAVED_COLUMNS_STRING)
-        if savedColumns == nil {
+        /*if savedColumns == nil {
             savedColumns = DEFAULT_COLUMN_VISIBILITY_DICTIONARY
             NSUserDefaults.standardUserDefaults().setObject(savedColumns, forKey: DEFAULTS_SAVED_COLUMNS_STRING)
-        }
+        }*/
         
         let menu = tableView.headerView?.menu
         for column in tableView.tableColumns {
@@ -372,7 +378,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         trackViewArrayController.tableViewController = self
         tableView.doubleAction = #selector(tableViewDoubleClick)
         columnVisibilityMenu.delegate = self
-        self.initializeColumnVisibilityMenu(self.tableView)
+        //self.initializeColumnVisibilityMenu(self.tableView)
         tableView.setDelegate(trackViewArrayController)
         tableView.setDataSource(trackViewArrayController)
         tableView.libraryTableViewController = self

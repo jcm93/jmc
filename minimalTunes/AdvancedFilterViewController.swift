@@ -40,6 +40,10 @@ class AdvancedFilterViewController: NSViewController {
             newSmartCriteria.fetch_limit = itemLimitField.integerValue
             newSmartCriteria.fetch_limit_type = playlistLengthDeterminantSelector.titleOfSelectedItem
             newSmartCriteria.ordering_criterion = playlistSelectionCriteriaSelector.titleOfSelectedItem
+        } else {
+            newSmartCriteria.fetch_limit = nil
+            newSmartCriteria.fetch_limit_type = nil
+            newSmartCriteria.ordering_criterion = nil
         }
         newSmartCriteria.predicate = predicateEditor.predicate
         mainWindowController?.createPlaylistFromSmartCriteria(newSmartCriteria)

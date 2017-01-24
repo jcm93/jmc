@@ -46,6 +46,7 @@ class AlbumArtViewController: NSViewController {
             return
         }
         if track.album == nil {
+            self.albumArtView.image = nil
             return
         }
         if track.album != nil && track.album!.primary_art != nil {
@@ -63,46 +64,47 @@ class AlbumArtViewController: NSViewController {
         }
         else {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                var artworkFound = false
                 if NSUserDefaults.standardUserDefaults().boolForKey(DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING) == true {
                     print("checking mp3 for embedded art")
                     let artwork = self.fileHandler.getArtworkFromFile(track.location!)
                     if artwork != nil {
-                        let albumDirectoryURL = NSURL(string: track.location!)!.URLByDeletingLastPathComponent!
-                        if self.fileHandler.addPrimaryArtForTrack(track, art: artwork!) != nil {
-                            dispatch_async(dispatch_get_main_queue()) {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            if self.fileHandler.addPrimaryArtForTrack(track, art: artwork!) != nil {
                                 do {try managedContext.save()}catch {print(error)}
                                 self.initAlbumArt(track)
                                 self.doStupidTogglingForObservers()
+                            } else {
+                                self.albumArtView.image = nil
                             }
-                            artworkFound = true
+                        }
+                    } else {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.albumArtView.image = nil
                         }
                     }
                 }
-                if NSUserDefaults.standardUserDefaults().boolForKey(DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING) == true {
-                    let imageURL = self.fileHandler.searchAlbumDirectoryForArt(track)
-                    if imageURL != nil {
-                        let artwork = NSData(contentsOfURL: imageURL!)
-                        if artwork != nil {
-                            let albumDirectoryURL = NSURL(string: track.location!)!.URLByDeletingLastPathComponent!
+            }
+            if NSUserDefaults.standardUserDefaults().boolForKey(DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING) == true {
+                let imageURL = self.fileHandler.searchAlbumDirectoryForArt(track)
+                if imageURL != nil {
+                    let artwork = NSData(contentsOfURL: imageURL!)
+                    if artwork != nil {
+                        dispatch_async(dispatch_get_main_queue()) {
                             if self.fileHandler.addPrimaryArtForTrack(track, art: artwork!) != nil {
-                                dispatch_async(dispatch_get_main_queue()) {
-                                    do {try managedContext.save()}catch {print(error)}
-                                    self.initAlbumArt(track)
-                                    self.doStupidTogglingForObservers()
-                                }
-                                artworkFound = true
+                                do {try managedContext.save()}catch {print(error)}
+                                self.initAlbumArt(track)
+                                self.doStupidTogglingForObservers()
+                            } else {
+                                self.albumArtView.image = nil
                             }
                         }
-                    }
-                }
-                if artworkFound == false {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.albumArtView.image = nil
+                    } else {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.albumArtView.image = nil
+                        }
                     }
                 }
             }
         }
     }
-
 }

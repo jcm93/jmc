@@ -190,11 +190,8 @@
                                                         </constraints>
                                                         <imageCell key="cell" refusesFirstResponder="YES" imageScaling="proportionallyDown" image="NSFolder" id="DRR-b8-dfi"/>
                                                     </imageView>
-                                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rGi-MD-wou">
+                                                    <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rGi-MD-wou">
                                                         <rect key="frame" x="25" y="0.0" width="120" height="17"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="116" id="9lr-81-aOu"/>
-                                                        </constraints>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" title="Playlist Folder Cell" id="wje-s4-AlX">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -208,6 +205,7 @@
                                                 <constraints>
                                                     <constraint firstItem="VXA-EN-ZCh" firstAttribute="centerY" secondItem="7GM-a4-aIQ" secondAttribute="centerY" id="0Jp-P1-cRt"/>
                                                     <constraint firstItem="VXA-EN-ZCh" firstAttribute="leading" secondItem="7GM-a4-aIQ" secondAttribute="leading" constant="3" id="M2M-Hr-yof"/>
+                                                    <constraint firstAttribute="trailing" secondItem="rGi-MD-wou" secondAttribute="trailing" constant="3" id="WJf-R8-ZoD"/>
                                                     <constraint firstItem="VXA-EN-ZCh" firstAttribute="top" secondItem="7GM-a4-aIQ" secondAttribute="top" id="kjw-1I-Idp"/>
                                                     <constraint firstItem="VXA-EN-ZCh" firstAttribute="bottom" secondItem="rGi-MD-wou" secondAttribute="bottom" id="lqC-GN-1ZF"/>
                                                     <constraint firstItem="rGi-MD-wou" firstAttribute="leading" secondItem="VXA-EN-ZCh" secondAttribute="trailing" constant="7" id="oqf-vj-8po"/>

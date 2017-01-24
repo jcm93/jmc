@@ -134,8 +134,8 @@
                                 <rect key="frame" x="0.0" y="0.0" width="250" height="956"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
-                                    <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="NCt-3z-jDe">
-                                        <rect key="frame" x="0.0" y="-2" width="250" height="4"/>
+                                    <box verticalHuggingPriority="750" misplaced="YES" title="Box" boxType="separator" titlePosition="noTitle" id="NCt-3z-jDe">
+                                        <rect key="frame" x="0.0" y="-2" width="250" height="5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" id="Cl8-AN-f4P"/>
@@ -149,7 +149,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     </customView>
                                     <customView misplaced="YES" id="M4o-nI-Oef" userLabel="Artwork Target View">
-                                        <rect key="frame" x="0.0" y="702" width="250" height="246"/>
+                                        <rect key="frame" x="0.0" y="703" width="250" height="246"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="M4o-nI-Oef" secondAttribute="height" multiplier="1:1" id="MEG-4N-o0r"/>
