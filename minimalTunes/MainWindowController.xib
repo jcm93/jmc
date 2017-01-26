@@ -28,7 +28,6 @@
                 <outlet property="sourceAreaSplitView" destination="cpq-tS-fYo" id="zaf-Dz-wFo"/>
                 <outlet property="sourceListTargetView" destination="NBm-y3-IWU" id="WH9-F7-xQT"/>
                 <outlet property="theBox" destination="rTW-GT-cjN" id="N8D-h5-oSZ"/>
-                <outlet property="trackListTriangle" destination="jr9-jB-m4F" id="PqQ-C8-1Ub"/>
                 <outlet property="trackQueueTargetView" destination="267-Gg-sLE" id="vck-Gz-pLk"/>
                 <outlet property="volumeSlider" destination="ELy-ib-2qL" id="Sd0-cz-Nuw"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
@@ -81,6 +80,9 @@
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
+                                    <connections>
+                                        <action selector="durationLabelOnClick:" target="-2" id="CKg-0J-ltU"/>
+                                    </connections>
                                 </textField>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Adc-jG-fc7">
                                     <rect key="frame" x="3" y="10" width="37" height="17"/>
@@ -90,16 +92,6 @@
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
-                                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jr9-jB-m4F">
-                                    <rect key="frame" x="312" y="40" width="13" height="13"/>
-                                    <buttonCell key="cell" type="disclosureTriangle" bezelStyle="disclosure" imagePosition="above" alignment="left" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="v51-CI-wJX">
-                                        <behavior key="behavior" pushIn="YES" changeBackground="YES" changeGray="YES" lightByContents="YES"/>
-                                        <font key="font" metaFont="system"/>
-                                    </buttonCell>
-                                    <connections>
-                                        <action selector="trackListTriangleClicked:" target="-2" id="DhH-GK-6iH"/>
-                                    </connections>
-                                </button>
                                 <customView autoresizesSubviews="NO" focusRingType="none" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ErT-xb-uP3" customClass="ProgressBarView" customModule="minimalTunes" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="2" width="325" height="18"/>
                                     <subviews>
@@ -115,10 +107,8 @@
                             </subviews>
                             <constraints>
                                 <constraint firstItem="WDF-BI-DbQ" firstAttribute="centerX" secondItem="7Pq-FN-rew" secondAttribute="centerX" id="2jp-SH-Gkq"/>
-                                <constraint firstAttribute="trailing" secondItem="jr9-jB-m4F" secondAttribute="trailing" id="FZ4-Ok-uWJ"/>
                                 <constraint firstAttribute="bottom" secondItem="ErT-xb-uP3" secondAttribute="bottom" id="GKB-XS-6B5"/>
                                 <constraint firstItem="ErT-xb-uP3" firstAttribute="leading" secondItem="7Pq-FN-rew" secondAttribute="leading" id="KYT-Oz-BrM"/>
-                                <constraint firstItem="jr9-jB-m4F" firstAttribute="top" secondItem="7Pq-FN-rew" secondAttribute="top" id="XeX-rM-B6j"/>
                                 <constraint firstItem="WNx-p0-gWl" firstAttribute="centerX" secondItem="7Pq-FN-rew" secondAttribute="centerX" id="dGu-Xy-Lch"/>
                                 <constraint firstAttribute="trailing" secondItem="ErT-xb-uP3" secondAttribute="trailing" id="eRq-S9-jcY"/>
                                 <constraint firstAttribute="trailing" secondItem="R9m-ID-EYY" secondAttribute="trailing" constant="3" id="yWf-y1-cKv"/>

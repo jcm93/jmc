@@ -106,6 +106,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     var currentFilterPredicate: NSPredicate?
     var isDoneWithSkipOperation = true
     var isDoneWithSkipBackOperation = true
+    var durationShowsTimeRemaining = false
+    var viewHasLoaded = false
     
     lazy var cachedOrders: [CachedOrder]? = {
         let request = NSFetchRequest(entityName: "CachedOrder")
@@ -250,6 +252,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     func switchToLibrary() {
+        libraryTableViewController!.item = currentSourceListItem!
         if !librarySplitView.arrangedSubviews.contains(libraryTableViewController!.view) {
             print("adding library view to split view")
             currentTableViewController?.view.removeFromSuperview()
@@ -291,14 +294,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         tagWindowController?.showWindow(self)
     }
     
-    func createPlayOrderForTrackID(id: Int, row: Int?) -> (PlaylistOrderObject, Int) {
-        let poo = currentTableViewController!.getUpcomingIDsForPlayEvent(self.shuffleButton.state, id: id, row: row)
-        if self.shuffleButton.state == NSOnState {
-            poo.0.current_play_order = poo.0.shuffled_play_order
-        } else {
-            poo.0.current_play_order = poo.0.inorder_play_order
-        }
-        return poo
+    func createPlayOrderForTrackID(id: Int, row: Int?) -> Int {
+        return currentTableViewController!.getUpcomingIDsForPlayEvent(self.shuffleButton.state, id: id, row: row)
     }
     
     func getNextTrack() -> Track? {
@@ -327,10 +324,12 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             self.will_repeat = true
             NSUserDefaults.standardUserDefaults().setBool(false, forKey: DEFAULTS_REPEAT_STRING)
         }
+        delegate?.repeatMenuItem.state = repeatButton.state
     }
     
     @IBAction func shuffleButtonPressed(sender: AnyObject) {
-        trackQueueViewController?.shufflePressed((sender as! NSButton).state)
+        trackQueueViewController?.shufflePressed(shuffleButton.state)
+        delegate?.shuffleMenuItem.state = shuffleButton.state
     }
     
     @IBAction func tempBreak(sender: AnyObject) {
@@ -460,6 +459,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     func skip() {
+        guard trackQueueViewController!.currentTrack != nil else {return}
         guard self.isDoneWithSkipOperation else {return}
         self.isDoneWithSkipOperation = false
         self.currentTrack?.is_playing = false
@@ -468,6 +468,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     func skipBackward() {
+        guard trackQueueViewController!.currentTrack != nil else {return}
         guard self.isDoneWithSkipBackOperation else {return}
         self.isDoneWithSkipBackOperation = false
         self.currentTrack?.is_playing = false
@@ -590,7 +591,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         songNameLabel.stringValue = name_string
         artistAlbumLabel.stringValue = aa_string
         duration = delegate?.audioModule.duration_seconds
-        durationLabel.stringValue = getTimeAsString(duration!)!
+        if self.durationShowsTimeRemaining {
+            durationLabel.stringValue = "-\(getTimeAsString(duration!)!)"
+        } else {
+            durationLabel.stringValue = getTimeAsString(duration!)!
+        }
         currentTimeLabel.stringValue = getTimeAsString(0)!
         lastTimerDate = NSDate()
         secsPlayed = 0
@@ -632,6 +637,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             currentTimeLabel.stringValue = seconds_string!
             print(seconds_string)
             progressBar.doubleValue = (seconds * 100) / duration!
+            if self.durationShowsTimeRemaining {
+                durationLabel.stringValue = "-\(getTimeAsString(duration! - secsPlayed)!)"
+            }
         }
         else {
             currentTimeLabel.stringValue = ""
@@ -649,6 +657,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         let seconds_string = getTimeAsString(secsPlayed)
         if timer?.valid == true {
             currentTimeLabel.stringValue = seconds_string!
+            if self.durationShowsTimeRemaining {
+                durationLabel.stringValue = "-\(getTimeAsString(duration! - secsPlayed)!)"
+            }
             progressBar.doubleValue = (secsPlayed * 100) / duration!
             progressBar.displayIfNeeded()
             lastTimerDate = currentTime
@@ -657,6 +668,14 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             //print("doingle")
             //currentTimeLabel.stringValue = ""
             //progressBar.doubleValue = 0
+        }
+    }
+    
+    
+    @IBAction func durationLabelOnClick(sender: AnyObject) {
+        durationShowsTimeRemaining = !durationShowsTimeRemaining
+        if durationShowsTimeRemaining == false {
+            durationLabel.stringValue = getTimeAsString(self.duration!)!
         }
     }
     
@@ -706,8 +725,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             }
             else if keyPath! == "filterPredicate" {
                 print("filter predicate changed")
-                if (currentSourceListItem == currentAudioSource) && trackQueueViewController?.currentSourcePlayOrder != nil {
-                    currentTableViewController!.fixPlayOrderForChangedFilterPredicate(trackQueueViewController!.currentSourcePlayOrder!, shuffleState: shuffleButton.state)
+                if (trackQueueViewController!.currentSourceListItem == trackQueueViewController!.currentAudioSource) && trackQueueViewController?.currentAudioSource!.playOrderObject != nil {
+                    currentTableViewController!.fixPlayOrderForChangedFilterPredicate(trackQueueViewController!.currentAudioSource!.playOrderObject!, shuffleState: shuffleButton.state)
                 }
             } else if keyPath! == "arrangedObjects" {
                 updateInfo()
@@ -805,5 +824,12 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         volumeDidChange(volumeSlider)
         super.windowDidLoad()
         sourceListViewController?.selectStuff()
+        let clickRecognizer = NSClickGestureRecognizer()
+        clickRecognizer.buttonMask = 0x1
+        clickRecognizer.numberOfClicksRequired = 1
+        clickRecognizer.action = #selector(durationLabelOnClick)
+        durationLabel.addGestureRecognizer(clickRecognizer)
+        delegate?.shuffleMenuItem.state = shuffleButton.state
+        delegate?.repeatMenuItem.state = repeatButton.state
     }
 }

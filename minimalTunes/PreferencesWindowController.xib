@@ -23,7 +23,7 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
+        <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" unifiedTitleAndToolbar="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="581" height="422"/>
@@ -40,11 +40,10 @@
                         <tabViewItems>
                             <tabViewItem label="Item 0" identifier="" id="5wv-L6-agV">
                                 <view key="view" ambiguous="YES" id="S9T-MJ-G6F">
-                                    <rect key="frame" x="0.0" y="0.0" width="581" height="283"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fCu-4G-hsb">
-                                            <rect key="frame" x="339" y="114" width="224" height="36"/>
+                                            <rect key="frame" x="339" y="-169" width="224" height="36"/>
                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="String describing organizational behavior re: this directory" id="bvv-fW-dgy">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -52,7 +51,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gq5-W5-HUp">
-                                            <rect key="frame" x="339" y="185" width="139" height="34"/>
+                                            <rect key="frame" x="339" y="-98" width="139" height="34"/>
                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Media folder location:" id="9ew-cZ-3em">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -60,7 +59,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="28d-AY-PW3">
-                                            <rect key="frame" x="341" y="156" width="220" height="36"/>
+                                            <rect key="frame" x="341" y="-127" width="220" height="36"/>
                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="File path" drawsBackground="YES" id="TMf-Xh-rzJ">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -68,7 +67,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zo7-27-gwr">
-                                            <rect key="frame" x="173" y="177" width="137" height="18"/>
+                                            <rect key="frame" x="173" y="-106" width="137" height="18"/>
                                             <buttonCell key="cell" type="radio" title="Move added media" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="eOf-8W-DF7">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -78,7 +77,7 @@
                                             </connections>
                                         </button>
                                         <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dte-bq-g0X">
-                                            <rect key="frame" x="173" y="155" width="136" height="18"/>
+                                            <rect key="frame" x="173" y="-128" width="136" height="18"/>
                                             <buttonCell key="cell" type="radio" title="Copy added media" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="MVT-Yh-r4T">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -88,7 +87,7 @@
                                             </connections>
                                         </button>
                                         <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tF1-Sw-iQi">
-                                            <rect key="frame" x="157" y="243" width="150" height="22"/>
+                                            <rect key="frame" x="157" y="-40" width="150" height="22"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="cE1-Ol-7qV">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -96,46 +95,46 @@
                                             </textFieldCell>
                                         </textField>
                                         <box verticalHuggingPriority="750" fixedFrame="YES" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="UjH-7m-p3c">
-                                            <rect key="frame" x="20" y="230" width="541" height="5"/>
+                                            <rect key="frame" x="20" y="-53" width="541" height="5"/>
                                             <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                                             <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box verticalHuggingPriority="750" fixedFrame="YES" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="KgC-9c-Xmk">
-                                            <rect key="frame" x="20" y="103" width="541" height="5"/>
+                                            <rect key="frame" x="20" y="-180" width="541" height="5"/>
                                             <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                                             <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3T6-g6-8XS">
-                                            <rect key="frame" x="155" y="75" width="202" height="18"/>
+                                            <rect key="frame" x="155" y="-208" width="202" height="18"/>
                                             <buttonCell key="cell" type="check" title="Share library on local network" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="G85-Ou-6tr">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                         </button>
                                         <box verticalHuggingPriority="750" fixedFrame="YES" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="scc-KR-tk0">
-                                            <rect key="frame" x="20" y="61" width="541" height="5"/>
+                                            <rect key="frame" x="20" y="-222" width="541" height="5"/>
                                             <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                                             <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="82q-B5-ckO">
-                                            <rect key="frame" x="155" y="31" width="228" height="18"/>
+                                            <rect key="frame" x="155" y="-252" width="228" height="18"/>
                                             <buttonCell key="cell" type="check" title="Check files for embedded artwork" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="L8i-fb-axz">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                         </button>
                                         <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PHh-Hv-cRy">
-                                            <rect key="frame" x="155" y="11" width="230" height="18"/>
+                                            <rect key="frame" x="155" y="-272" width="230" height="18"/>
                                             <buttonCell key="cell" type="check" title="Check album directory for artwork" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="qyx-wo-0Dm">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                         </button>
                                         <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gaa-KI-aS6">
-                                            <rect key="frame" x="155" y="200" width="216" height="18"/>
+                                            <rect key="frame" x="155" y="-83" width="216" height="18"/>
                                             <buttonCell key="cell" type="check" title="Organize library" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="j7U-aQ-Nhx">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -145,7 +144,7 @@
                                             </connections>
                                         </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cR4-Lh-wkd">
-                                            <rect key="frame" x="51" y="246" width="89" height="17"/>
+                                            <rect key="frame" x="51" y="-37" width="89" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Library Name:" id="PmA-Ny-BFA">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -153,7 +152,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VBU-29-mkj">
-                                            <rect key="frame" x="55" y="201" width="85" height="17"/>
+                                            <rect key="frame" x="55" y="-82" width="85" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Organization:" id="k7b-7n-Lge">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -161,7 +160,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LP8-lv-OaA">
-                                            <rect key="frame" x="85" y="77" width="55" height="17"/>
+                                            <rect key="frame" x="85" y="-206" width="55" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Sharing:" id="4UZ-Io-OZw">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -169,7 +168,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="34Q-Wz-gFL">
-                                            <rect key="frame" x="97" y="32" width="43" height="17"/>
+                                            <rect key="frame" x="97" y="-251" width="43" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Other:" id="gpo-ui-W88">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -177,7 +176,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yCo-Pj-IrB">
-                                            <rect key="frame" x="471" y="192" width="88" height="32"/>
+                                            <rect key="frame" x="471" y="-91" width="88" height="32"/>
                                             <buttonCell key="cell" type="push" title="Browse..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mqc-Ox-Ry3">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>

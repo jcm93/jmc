@@ -27,11 +27,41 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let handler = DatabaseManager()
     var serviceBrowser: ConnectivityManager?
     var importErrorWindowController: ImportErrorWindowController?
+    @IBOutlet weak var shuffleMenuItem: NSMenuItem!
+    @IBOutlet weak var repeatMenuItem: NSMenuItem!
     
     @IBAction func jumpToCurrentSong(sender: AnyObject) {
         mainWindowController!.jumpToCurrentSong()
     }
     
+    @IBAction func previousMenuItemAction(sender: AnyObject) {
+        mainWindowController?.skipBackward()
+    }
+    @IBAction func nextMenuItemAction(sender: AnyObject) {
+        mainWindowController?.skip()
+    }
+    @IBAction func pauseMenuItemAction(sender: AnyObject) {
+        if mainWindowController!.paused != true {
+            mainWindowController?.pause()
+        }
+    }
+    
+    @IBAction func playMenuItemAction(sender: AnyObject) {
+        if mainWindowController!.paused != false {
+            mainWindowController?.playPressed(self)
+        }
+    }
+    @IBAction func shuffleMenuItemAction(sender: AnyObject) {
+        shuffleMenuItem.state = shuffleMenuItem.state == NSOnState ? NSOffState : NSOnState
+        mainWindowController?.shuffleButton.state = shuffleMenuItem.state
+        mainWindowController?.shuffleButtonPressed(self)
+    }
+    
+    @IBAction func repeatMenuItemAction(sender: AnyObject) {
+        repeatMenuItem.state = repeatMenuItem.state == NSOnState ? NSOffState : NSOnState
+        mainWindowController?.repeatButton.state = repeatMenuItem.state
+        mainWindowController?.repeatButtonPressed(self)
+    }
     
     func initializeLibraryAndShowMainWindow() {
         mainWindowController = MainWindowController(windowNibName: "MainWindowController")

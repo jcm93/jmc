@@ -195,11 +195,11 @@
         <element name="Library" positionX="-801" positionY="-45" width="128" height="285"/>
         <element name="Property" positionX="-1251" positionY="660" width="128" height="193"/>
         <element name="SharedLibrary" positionX="-1557" positionY="99" width="128" height="60"/>
+        <element name="SmartCriteria" positionX="-1557" positionY="99" width="128" height="120"/>
         <element name="SongCollection" positionX="-864" positionY="174" width="128" height="193"/>
         <element name="SortOrder" positionX="-1548" positionY="108" width="128" height="75"/>
-        <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="208"/>
+        <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="210"/>
         <element name="Track" positionX="-1026" positionY="-54" width="128" height="600"/>
         <element name="TrackView" positionX="-1557" positionY="99" width="128" height="268"/>
-        <element name="SmartCriteria" positionX="-1557" positionY="99" width="128" height="120"/>
     </elements>
 </model>

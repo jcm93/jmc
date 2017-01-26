@@ -340,20 +340,6 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gHC-b6-KLy">
-                        <rect key="frame" x="98" y="182" width="144" height="26"/>
-                        <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="VP2-x5-2Jm">
-                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="menu"/>
-                            <menu key="menu" id="SaW-6d-pMN">
-                                <items>
-                                    <menuItem title="Manual" id="mMx-mE-dHG"/>
-                                    <menuItem title="Item 2" id="V42-Ta-OcK"/>
-                                    <menuItem title="Item 3" id="zWO-7h-67B"/>
-                                </items>
-                            </menu>
-                        </popUpButtonCell>
-                    </popUpButton>
                 </subviews>
             </view>
             <connections>

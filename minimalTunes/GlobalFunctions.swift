@@ -169,7 +169,7 @@ let DEFAULT_COLUMN_VISIBILITY_DICTIONARY: [String : AnyObject] = [
     "equalizer_preset" : 1,
     "file_kind" : 0,
     "genre" : 0,
-    "is_enabled" : 0,
+    "is_enabled" : 1,
     "is_playing" : 0,
     "movement_name" : 1,
     "movement_number" : 1,
