@@ -357,13 +357,13 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="oUl-bH-bXi"/>
-                            <menuItem title="Next" keyEquivalent="" id="ifz-C1-1yU">
+                            <menuItem title="Next" id="ifz-C1-1yU">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="nextMenuItemAction:" target="Voe-Tx-rLC" id="EQi-dp-60B"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Previous" keyEquivalent="" id="Ezj-5Q-6Kd">
+                            <menuItem title="Previous" id="Ezj-5Q-6Kd">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="previousMenuItemAction:" target="Voe-Tx-rLC" id="kmv-Ac-g30"/>

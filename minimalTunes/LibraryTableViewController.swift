@@ -157,11 +157,13 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     func modifyPlayOrderForSortDescriptors(poo: PlaylistOrderObject, trackID: Int) -> Int {
         let idArray = (self.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
         poo.current_play_order = idArray
+        let queuedTrackIDs = Set(mainWindowController!.trackQueueViewController!.trackQueue.filter({$0.viewType == .futureTrack})).map({return Int($0.track!.id!)})
+        poo.current_play_order = poo.current_play_order!.filter({!queuedTrackIDs.contains($0)})
         return idArray.indexOf(trackID)!
     }
 
     func getUpcomingIDsForPlayEvent(shuffleState: Int, id: Int, row: Int?) -> Int {
-        let idArray = self.item!.playOrderObject!.current_play_order!
+        let idArray = (trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
         if shuffleState == NSOnState {
             //secretly adjust the shuffled array such that it behaves mysteriously like a ring buffer. ssshhhh
             let currentShuffleArray = self.item!.playOrderObject!.shuffled_play_order!
@@ -178,6 +180,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             }
             return 0
         } else {
+            self.item?.playOrderObject?.current_play_order = idArray
             if row != nil {
                 return row!
             } else {
@@ -200,6 +203,8 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                 } else {
                     mainWindowController?.trackQueueViewController?.currentSourceIndex = -1
                 }
+                let queuedTrackIDs = Set(mainWindowController!.trackQueueViewController!.trackQueue.filter({$0.viewType == .futureTrack})).map({return Int($0.track!.id!)})
+                self.item!.playOrderObject!.current_play_order = self.item!.playOrderObject!.current_play_order!.filter({!queuedTrackIDs.contains($0)})
             }
         }
     }

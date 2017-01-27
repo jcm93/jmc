@@ -268,6 +268,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                     mainWindowController?.currentTrack?.is_playing = false
                     mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                     mainWindowController?.currentTrack = nil
+                    self.currentAudioSource = nil
                     mainWindowController?.delegate?.audioModule.currentTrackLocation = nil
                     mainWindowController?.delegate?.audioModule.skip_backward()
                     currentTrackIndex = nil
@@ -277,6 +278,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 mainWindowController?.currentTrack?.is_playing = false
                 mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                 mainWindowController?.currentTrack = nil
+                self.currentAudioSource = nil
                 mainWindowController?.delegate?.audioModule.currentTrackLocation = nil
                 mainWindowController?.delegate?.audioModule.skip_backward()
             }
@@ -298,6 +300,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             return trackQueue[currentTrackIndex! + 1].track
         } else {
             if currentAudioSource!.playOrderObject!.current_play_order!.count <= currentSourceIndex! + 1 {
+                currentAudioSource = nil
                 return nil
             } else {
                 var id: Int?
@@ -379,6 +382,8 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             for poo in activePlayOrders {
                 poo.current_play_order = (poo.sourceListItem.tableViewController?.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
                 if currentAudioSource?.playOrderObject == poo {
+                    let queuedTrackIDs = Set(trackQueue.filter({$0.viewType == .futureTrack})).map({return Int($0.track!.id!)})
+                    poo.current_play_order = poo.current_play_order!.filter({!queuedTrackIDs.contains($0)})
                     self.currentSourceIndex = poo.current_play_order?.indexOf(Int(self.currentTrack!.id!))
                 }
             }

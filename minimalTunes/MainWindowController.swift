@@ -311,6 +311,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
                 }
                 delegate?.audioModule.networkFlag = true
             }
+            if track == nil && self.currentTrack != nil {
+                currentTableViewController?.reloadNowPlayingForTrack(self.currentTrack!)
+            }
             return track
         }
     }
@@ -459,7 +462,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     
     func skip() {
         guard trackQueueViewController!.currentTrack != nil else {return}
-        guard self.isDoneWithSkipOperation else {return}
+        guard self.isDoneWithSkipOperation else {print("can't skip");return}
         self.isDoneWithSkipOperation = false
         self.currentTrack?.is_playing = false
         timer?.invalidate()
@@ -468,7 +471,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     
     func skipBackward() {
         guard trackQueueViewController!.currentTrack != nil else {return}
-        guard self.isDoneWithSkipBackOperation else {return}
+        guard self.isDoneWithSkipBackOperation else {print("can't skip backward");return}
         self.isDoneWithSkipBackOperation = false
         self.currentTrack?.is_playing = false
         timer?.invalidate()
