@@ -25,6 +25,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     var playlist: SongCollection?
     var advancedFilterVisible: Bool = false
     var hasInitialized = false
+    var hasCreatedPlayOrder = false
     var needsPlaylistRefresh = false
     
     var isVisibleDict = NSMutableDictionary()
@@ -160,15 +161,21 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     }
 
     func getUpcomingIDsForPlayEvent(shuffleState: Int, id: Int, row: Int?) -> Int {
-        var idArray = self.item!.playOrderObject!.current_play_order!
+        let idArray = self.item!.playOrderObject!.current_play_order!
         if shuffleState == NSOnState {
             //secretly adjust the shuffled array such that it behaves mysteriously like a ring buffer. ssshhhh
-            let indexToSwap = idArray.indexOf(id)!
-            let beginningOfArray = idArray[0..<indexToSwap]
-            let endOfArray = idArray[indexToSwap..<idArray.count]
+            let currentShuffleArray = self.item!.playOrderObject!.shuffled_play_order!
+            let indexToSwap = currentShuffleArray.indexOf(id)!
+            let beginningOfArray = currentShuffleArray[0..<indexToSwap]
+            let endOfArray = currentShuffleArray[indexToSwap..<currentShuffleArray.count]
             let newArraySliceConcatenation = endOfArray + beginningOfArray
-            idArray = Array(newArraySliceConcatenation)
-            self.item?.playOrderObject?.current_play_order = idArray
+            self.item?.playOrderObject?.shuffled_play_order = Array(newArraySliceConcatenation)
+            if self.item!.playOrderObject!.current_play_order! != self.item!.playOrderObject!.shuffled_play_order! {
+                let idSet = Set(idArray)
+                self.item?.playOrderObject?.current_play_order = self.item!.playOrderObject!.shuffled_play_order!.filter({idSet.contains($0)})
+            } else {
+                self.item?.playOrderObject?.current_play_order = self.item!.playOrderObject!.shuffled_play_order!
+            }
             return 0
         } else {
             if row != nil {
@@ -177,42 +184,24 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                 return idArray.indexOf(id)!
             }
         }
-        /*let idArray = (self.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
-        var shuffled_array: [Int]?
-        var initialSourceIndex: Int
+    }
+    
+    func fixPlayOrderForChangedFilterPredicate(shuffleState: Int) {
+        print("fixing play order for changed filter predicate")
         if shuffleState == NSOnState {
-            shuffled_array = idArray
-            if row != nil {
-                shuffled_array?.removeAtIndex(row!)
-            }
-            shuffle_array(&shuffled_array!)
-            if row != nil {
-                shuffled_array?.insert(id, atIndex: 0)
-            } else {
-                let indexOfPlayedTrack = shuffled_array!.indexOf(id)!
-                if indexOfPlayedTrack != 0 {
-                    swap(&shuffled_array![indexOfPlayedTrack], &shuffled_array![0])
+            let idSet = Set((trackViewArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int}))
+            let newPlayOrder = self.item!.playOrderObject!.shuffled_play_order!.filter({idSet.contains($0)})
+            self.item!.playOrderObject!.current_play_order = newPlayOrder
+        } else {
+            self.item?.playOrderObject?.current_play_order = (trackViewArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int})
+            if mainWindowController?.trackQueueViewController?.currentAudioSource == self.item {
+                if let index = self.item?.playOrderObject?.current_play_order?.indexOf(Int(mainWindowController!.currentTrack!.id!)) {
+                    mainWindowController?.trackQueueViewController?.currentSourceIndex = index
+                } else {
+                    mainWindowController?.trackQueueViewController?.currentSourceIndex = -1
                 }
             }
         }
-        initialSourceIndex = shuffleState == NSOnState ? 0 : row != nil ? row! : idArray.indexOf(id)!
-        let newPoo = PlaylistOrderObject(inorder_play_order: idArray)
-        newPoo.shuffled_play_order = shuffled_array
-        return (newPoo, initialSourceIndex)*/
-    }
-    
-    func fixPlayOrderForChangedFilterPredicate(current_source_play_order: PlaylistOrderObject, shuffleState: Int) {
-        print("fixing play order for changed filter predicate")
-        let trackIDSet = Set((trackViewArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int}))
-        let baseOrder: [Int] = {
-            if shuffleState == NSOnState {
-                return current_source_play_order.shuffled_play_order!
-            } else {
-                return current_source_play_order.inorder_play_order
-            }
-        }()
-        let newPlayOrder = baseOrder.filter({trackIDSet.contains($0)})
-        current_source_play_order.current_play_order = newPlayOrder
     }
     
     func initializeSmartPlaylist() {
@@ -358,25 +347,26 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     func initializePlayOrderObject() {
         let currentIDArray = (self.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
-        let newPoo = PlaylistOrderObject(inorder_play_order: currentIDArray)
+        let newPoo = PlaylistOrderObject(sli: self.item!)
+        var shuffledArray = currentIDArray
+        shuffle_array(&shuffledArray)
+        newPoo.shuffled_play_order = shuffledArray
         if mainWindowController?.shuffle == true {
-            var shuffledArray = currentIDArray
-            shuffle_array(&shuffledArray)
-            newPoo.shuffled_play_order = shuffledArray
             newPoo.current_play_order = shuffledArray
         } else {
             newPoo.current_play_order = currentIDArray
         }
         self.item?.playOrderObject = newPoo
-        newPoo.sourceListItem = self.item
     }
     
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         if keyPath == "arrangedObjects" {
-            if self.hasInitialized == false && (self.trackViewArrayController.arrangedObjects as! [TrackView]).count > 0 {
+            if self.hasCreatedPlayOrder == false && (self.trackViewArrayController.arrangedObjects as! [TrackView]).count > 0 {
                 initializePlayOrderObject()
+                mainWindowController?.trackQueueViewController?.activePlayOrders.append(self.item!.playOrderObject!)
+                self.item!.tableViewController = self
                 print("initialized poo for new view")
-                self.hasInitialized = true
+                self.hasCreatedPlayOrder = true
             }
         }
     }

@@ -25,4 +25,5 @@ class SourceListItem: NSManagedObject {
     
     var node: SourceListNode?
     var playOrderObject: PlaylistOrderObject?
+    var tableViewController: LibraryTableViewController?
 }

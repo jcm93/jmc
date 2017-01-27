@@ -19,24 +19,24 @@ enum TrackQueueViewType {
 
 class PlaylistOrderObject: Equatable, Hashable {
     
-    var inorder_play_order: [Int]
     var shuffled_play_order: [Int]?
     var current_play_order: [Int]?
-    var sourceListItem: SourceListItem?
+    var sourceListItem: SourceListItem
+    var inorderNeedsUpdate: Bool?
     
-    init(inorder_play_order: [Int]) {
-        self.inorder_play_order = inorder_play_order
+    init(sli: SourceListItem) {
+        self.sourceListItem = sli
     }
     
     var hashValue: Int {
         get {
-            return inorder_play_order.count
+            return self.sourceListItem.hashValue
         }
     }
 }
 
 func ==(lpoo: PlaylistOrderObject, rpoo: PlaylistOrderObject) -> Bool {
-    return lpoo.inorder_play_order == rpoo.inorder_play_order
+    return lpoo.sourceListItem == rpoo.sourceListItem
 }
 
 class TrackQueueView: NSObject {
@@ -84,6 +84,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     var currentSourceIndex: Int?
     var currentTrack: Track?
     var shuffle: Bool = false
+    var activePlayOrders = [PlaylistOrderObject]()
     
     func reloadData() {
         tableView?.reloadData()
@@ -132,7 +133,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             newSourceView.viewType = .source
             trackQueue.append(newSourceView)
             currentTrackIndex = 0
-            currentSourceIndex = 0
+            //currentSourceIndex = 0
         }
         else {
             if currentTrackIndex != nil {
@@ -331,9 +332,11 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     }
     
     func modifyPlayOrderForSortDescriptorChange() {
-        if currentAudioSource == currentSourceListItem && self.shuffle == false && self.currentTrack != nil {
-            let upcomingIDsResult = mainWindowController!.currentTableViewController?.modifyPlayOrderForSortDescriptors(currentAudioSource!.playOrderObject!, trackID: Int(self.currentTrack!.id!))
-            self.currentSourceIndex = upcomingIDsResult
+        if shuffle == false {
+            self.currentSourceListItem!.playOrderObject!.current_play_order = (self.currentSourceListItem?.tableViewController?.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
+            if currentSourceListItem == currentAudioSource {
+                self.currentSourceIndex = self.currentSourceListItem?.playOrderObject?.current_play_order?.indexOf(Int(self.currentTrack!.id!))
+            }
         }
     }
     
@@ -341,24 +344,6 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         print("initialize array called")
         currentAudioSource = currentSourceListItem
         self.currentSourceIndex = mainWindowController?.createPlayOrderForTrackID(Int(track.id!), row: row)
-        if mainWindowController?.shuffle == true {
-            //adjust shuffled play order array such that it behaves just like a ring buffer. sssshhhh
-        }
-        /*if currentSourceListItem == currentAudioSource || currentAudioSource == nil {
-            //don't create new play order, just manipulate the current one
-            let currentIDSet = Set((mainWindowController?.currentTableViewController?.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)}))
-            if mainWindowController?.shuffle == true {
-                self.currentAudioSource!.playOrderObject!.current_play_order = self.currentAudioSource!.playOrderObject!.shuffled_play_order!.filter({return currentIDSet.contains($0)})
-            } else {
-                self.currentAudioSource!.playOrderObject!.current_play_order = self.currentAudioSource!.playOrderObject!.inorder_play_order.filter({return currentIDSet.contains($0)})
-            }
-            currentAudioSource = currentSourceListItem
-        } else {
-            let playOrderArray = mainWindowController!.createPlayOrderForTrackID(Int(track.id!), row: row)
-            self.currentAudioSource = currentSourceListItem
-            self.currentAudioSource!.playOrderObject = playOrderArray.0
-            self.currentSourceIndex = playOrderArray.1
-        }*/
         destroyTransientTracks()
     }
     
@@ -366,50 +351,36 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         if (state == NSOnState) {
             self.shuffle = true
             NSUserDefaults.standardUserDefaults().setBool(true, forKey: DEFAULTS_SHUFFLE_STRING)
-            if currentAudioSource!.playOrderObject != nil {
+            for poo in activePlayOrders {
                 print("shuffling")
-                if currentAudioSource!.playOrderObject?.shuffled_play_order != nil {
-                    let idArray = currentAudioSource!.playOrderObject?.shuffled_play_order
-                    var shuffled_array = idArray
-                    shuffle_array(&shuffled_array!)
-                    if self.currentTrack != nil {
-                        if let indexOfPlayedTrack = shuffled_array?.indexOf(Int(self.currentTrack!.id!)) {
-                            if indexOfPlayedTrack != 0 {
-                                swap(&shuffled_array![shuffled_array!.indexOf(Int(self.currentTrack!.id!))!], &shuffled_array![0])
-                            }
+                let idArray = poo.shuffled_play_order
+                var shuffled_array = idArray
+                shuffle_array(&shuffled_array!)
+                if self.currentTrack != nil {
+                    if let indexOfPlayedTrack = shuffled_array?.indexOf(Int(self.currentTrack!.id!)) {
+                        if indexOfPlayedTrack != 0 {
+                            swap(&shuffled_array![shuffled_array!.indexOf(Int(self.currentTrack!.id!))!], &shuffled_array![0])
                         }
                     }
-                    currentAudioSource!.playOrderObject?.shuffled_play_order = shuffled_array
-                } else {
-                    let idArray = currentAudioSource!.playOrderObject?.inorder_play_order
-                    var shuffled_array = idArray
-                    shuffle_array(&shuffled_array!)
-                    if self.currentTrack != nil {
-                        if let indexOfPlayedTrack = shuffled_array?.indexOf(Int(self.currentTrack!.id!)) {
-                            if indexOfPlayedTrack != 0 {
-                                swap(&shuffled_array![shuffled_array!.indexOf(Int(self.currentTrack!.id!))!], &shuffled_array![0])
-                            }
-                        }
-                    }
-                    currentAudioSource!.playOrderObject?.shuffled_play_order = shuffled_array
                 }
+                poo.shuffled_play_order = shuffled_array
                 currentSourceIndex = 0
-                currentAudioSource!.playOrderObject?.current_play_order = currentAudioSource!.playOrderObject?.shuffled_play_order
+                if poo.current_play_order!.count != poo.shuffled_play_order!.count {
+                    let trackSet = Set(poo.current_play_order!)
+                    poo.current_play_order = poo.shuffled_play_order!.filter({trackSet.contains($0)})
+                } else {
+                    poo.current_play_order = poo.shuffled_play_order
+                }
             }
         }
         else {
             self.shuffle = false
             NSUserDefaults.standardUserDefaults().setBool(false, forKey: "shuffle")
-            if currentAudioSource!.playOrderObject != nil {
-                currentAudioSource!.playOrderObject?.current_play_order = currentAudioSource!.playOrderObject!.inorder_play_order
-                if self.currentTrack != nil {
-                    if let index = currentAudioSource!.playOrderObject!.current_play_order!.indexOf(Int(self.currentTrack!.id!)) {
-                        self.currentSourceIndex = index
-                    }
-                } else {
-                    self.currentSourceIndex = 0
+            for poo in activePlayOrders {
+                poo.current_play_order = (poo.sourceListItem.tableViewController?.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
+                if currentAudioSource?.playOrderObject == poo {
+                    self.currentSourceIndex = poo.current_play_order?.indexOf(Int(self.currentTrack!.id!))
                 }
-                print("current source index \(currentSourceIndex)")
             }
         }
         destroyTransientTracks()

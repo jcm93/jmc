@@ -542,6 +542,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     func selectStuff() {
         let indexSet = NSIndexSet(index: 1)
         sourceList.selectRowIndexes(indexSet, byExtendingSelection: false)
+        mainWindowController?.libraryTableViewController?.item = libraryHeaderNode?.children[0].item
     }
     
     override func viewDidLoad() {

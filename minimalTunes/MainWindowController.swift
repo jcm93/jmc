@@ -252,7 +252,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     func switchToLibrary() {
-        libraryTableViewController!.item = currentSourceListItem!
         if !librarySplitView.arrangedSubviews.contains(libraryTableViewController!.view) {
             print("adding library view to split view")
             currentTableViewController?.view.removeFromSuperview()
@@ -725,9 +724,10 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             }
             else if keyPath! == "filterPredicate" {
                 print("filter predicate changed")
-                if (trackQueueViewController!.currentSourceListItem == trackQueueViewController!.currentAudioSource) && trackQueueViewController?.currentAudioSource!.playOrderObject != nil {
+                currentTableViewController?.fixPlayOrderForChangedFilterPredicate(shuffleButton.state)
+                /*if (trackQueueViewController!.currentSourceListItem == trackQueueViewController!.currentAudioSource) && trackQueueViewController?.currentAudioSource!.playOrderObject != nil {
                     currentTableViewController!.fixPlayOrderForChangedFilterPredicate(trackQueueViewController!.currentAudioSource!.playOrderObject!, shuffleState: shuffleButton.state)
-                }
+                }*/
             } else if keyPath! == "arrangedObjects" {
                 updateInfo()
             } else if keyPath! == "albumArtworkAdded" {
