@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15F34" minimumToolsVersion="Automatic">
+    <entity name="Album" representedClassName=".Album" syncable="YES">
+        <attribute name="disc_count" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="is_compilation" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="release_date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="track_count" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="album_artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="albums" inverseEntity="Artist" syncable="YES"/>
+        <relationship name="other_art" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AlbumArtworkCollection" inverseName="album" inverseEntity="AlbumArtworkCollection" syncable="YES"/>
+        <relationship name="primary_art" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AlbumArtwork" inverseName="primary_album" inverseEntity="AlbumArtwork" syncable="YES"/>
+        <relationship name="properties" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Property" inverseName="album" inverseEntity="Property" syncable="YES"/>
+        <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="album" inverseEntity="Track" syncable="YES"/>
+    </entity>
+    <entity name="AlbumArtwork" representedClassName=".AlbumArtwork" syncable="YES">
+        <attribute name="artwork_location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="image_hash" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <relationship name="collection" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AlbumArtworkCollection" inverseName="art" inverseEntity="AlbumArtworkCollection" syncable="YES"/>
+        <relationship name="primary_album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="primary_art" inverseEntity="Album" syncable="YES"/>
+    </entity>
+    <entity name="AlbumArtworkCollection" representedClassName=".AlbumArtworkCollection" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="other_art" inverseEntity="Album" syncable="YES"/>
+        <relationship name="art" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AlbumArtwork" inverseName="collection" inverseEntity="AlbumArtwork" syncable="YES"/>
+    </entity>
+    <entity name="Artist" representedClassName=".Artist" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="albums" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Album" inverseName="album_artist" inverseEntity="Album" syncable="YES"/>
+        <relationship name="composers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Composer" inverseName="artists" inverseEntity="Composer" syncable="YES"/>
+        <relationship name="properties" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Property" inverseName="artist" inverseEntity="Property" syncable="YES"/>
+        <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="artist" inverseEntity="Track" syncable="YES"/>
+    </entity>
+    <entity name="CachedOrder" representedClassName=".CachedOrder" syncable="YES">
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="order" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="filtered_track_views" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TrackView" inverseName="filtered_orders" inverseEntity="TrackView" syncable="YES"/>
+        <relationship name="library" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="cached_orders" inverseEntity="Library" syncable="YES"/>
+        <relationship name="track_views" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TrackView" inverseName="orders" inverseEntity="TrackView" syncable="YES"/>
+    </entity>
+    <entity name="Composer" representedClassName=".Composer" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="artists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Artist" inverseName="composers" inverseEntity="Artist" syncable="YES"/>
+        <relationship name="properties" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Property" inverseName="composer" inverseEntity="Property" syncable="YES"/>
+        <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="composer" inverseEntity="Track" syncable="YES"/>
+    </entity>
+    <entity name="Genre" representedClassName=".Genre" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="properties" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Property" inverseName="genre" inverseEntity="Property" syncable="YES"/>
+        <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="genre" inverseEntity="Track" syncable="YES"/>
+    </entity>
+    <entity name="Library" representedClassName=".Library" syncable="YES">
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="library_location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="next_album_artwork_collection_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="next_album_artwork_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="next_album_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="next_artist_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="next_composer_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="next_genre_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="next_playlist_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="next_track_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="peer" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="cached_orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CachedOrder" inverseName="library" inverseEntity="CachedOrder" syncable="YES"/>
+        <relationship name="local_items" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SourceListItem" inverseName="library" inverseEntity="SourceListItem" syncable="YES"/>
+        <relationship name="master_playlist" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SongCollection" inverseName="if_master_library" inverseEntity="SongCollection" syncable="YES"/>
+    </entity>
+    <entity name="Property" representedClassName=".Property" syncable="YES">
+        <attribute name="attribute" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="properties" inverseEntity="Album" syncable="YES"/>
+        <relationship name="artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="properties" inverseEntity="Artist" syncable="YES"/>
+        <relationship name="composer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Composer" inverseName="properties" inverseEntity="Composer" syncable="YES"/>
+        <relationship name="genre" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Genre" inverseName="properties" inverseEntity="Genre" syncable="YES"/>
+        <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="user_defined_properties" inverseEntity="Track" syncable="YES"/>
+    </entity>
+    <entity name="SharedLibrary" syncable="YES">
+        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="SmartCriteria" representedClassName=".SmartCriteria" syncable="YES">
+        <attribute name="fetch_limit" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="fetch_limit_type" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ordering_criterion" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="predicate" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <relationship name="playlist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SongCollection" inverseName="smart_criteria" inverseEntity="SongCollection" syncable="YES"/>
+    </entity>
+    <entity name="SongCollection" representedClassName=".SongCollection" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_smart" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="track_id_list" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <relationship name="if_master_library" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="master_playlist" inverseEntity="Library" syncable="YES"/>
+        <relationship name="if_master_list_item" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SourceListItem" inverseName="master_playlist" inverseEntity="SourceListItem" syncable="YES"/>
+        <relationship name="list_item" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SourceListItem" inverseName="playlist" inverseEntity="SourceListItem" syncable="YES"/>
+        <relationship name="smart_criteria" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SmartCriteria" inverseName="playlist" inverseEntity="SmartCriteria" syncable="YES"/>
+        <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrackView" inverseName="playlists" inverseEntity="TrackView" syncable="YES"/>
+    </entity>
+    <entity name="SortOrder" syncable="YES">
+        <attribute name="order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <relationship name="track_view" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackView" inverseName="other_sort_orders" inverseEntity="TrackView" syncable="YES"/>
+    </entity>
+    <entity name="SourceListItem" representedClassName=".SourceListItem" syncable="YES">
+        <attribute name="is_folder" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_header" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_root" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sort_order" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SourceListItem" inverseName="parent" inverseEntity="SourceListItem" syncable="YES"/>
+        <relationship name="library" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="local_items" inverseEntity="Library" syncable="YES"/>
+        <relationship name="master_playlist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SongCollection" inverseName="if_master_list_item" inverseEntity="SongCollection" syncable="YES"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SourceListItem" inverseName="children" inverseEntity="SourceListItem" syncable="YES"/>
+        <relationship name="playlist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SongCollection" inverseName="list_item" inverseEntity="SongCollection" syncable="YES"/>
+    </entity>
+    <entity name="Track" representedClassName=".Track" syncable="YES">
+        <attribute name="bit_rate" optional="YES" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="bpm" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="comments" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="date_added" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="date_last_played" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="date_last_skipped" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="date_modified" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="disc_number" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="equalizer_preset" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="file_kind" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_playing" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="misc_search_field" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="movement_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="movement_number" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="play_count" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="rating" optional="YES" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="sample_rate" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="size" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="skip_count" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="sort_album" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="sort_album_artist" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="sort_artist" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="sort_composer" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="sort_name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="time" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="track_num" optional="YES" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="tracks" inverseEntity="Album" syncable="YES"/>
+        <relationship name="artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="tracks" inverseEntity="Artist" syncable="YES"/>
+        <relationship name="composer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Composer" inverseName="tracks" inverseEntity="Composer" syncable="YES"/>
+        <relationship name="genre" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Genre" inverseName="tracks" inverseEntity="Genre" syncable="YES"/>
+        <relationship name="user_defined_properties" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Property" inverseName="tracks" inverseEntity="Property" syncable="YES"/>
+        <relationship name="view" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackView" inverseName="track" inverseEntity="TrackView" syncable="YES"/>
+    </entity>
+    <entity name="TrackView" representedClassName=".TrackView" syncable="YES">
+        <attribute name="album_artist_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="album_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="artist_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="date_added_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="genre_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="is_network" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="kind_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="name_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="playlist_order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="release_date_order" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <relationship name="filtered_orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CachedOrder" inverseName="filtered_track_views" inverseEntity="CachedOrder" syncable="YES"/>
+        <relationship name="orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CachedOrder" inverseName="track_views" inverseEntity="CachedOrder" syncable="YES"/>
+        <relationship name="other_sort_orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SortOrder" inverseName="track_view" inverseEntity="SortOrder" syncable="YES"/>
+        <relationship name="playlists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SongCollection" inverseName="tracks" inverseEntity="SongCollection" syncable="YES"/>
+        <relationship name="track" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Track" inverseName="view" inverseEntity="Track" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Album" positionX="-1548" positionY="126" width="128" height="223"/>
+        <element name="AlbumArtwork" positionX="-1757" positionY="81" width="128" height="135"/>
+        <element name="AlbumArtworkCollection" positionX="-1764" positionY="243" width="128" height="103"/>
+        <element name="Artist" positionX="-1323" positionY="117" width="128" height="148"/>
+        <element name="CachedOrder" positionX="-1262" positionY="-45" width="128" height="120"/>
+        <element name="Composer" positionX="-1539" positionY="375" width="128" height="133"/>
+        <element name="Genre" positionX="-1532" positionY="542" width="128" height="120"/>
+        <element name="Library" positionX="-801" positionY="-45" width="128" height="285"/>
+        <element name="Property" positionX="-1251" positionY="660" width="128" height="193"/>
+        <element name="SharedLibrary" positionX="-1557" positionY="99" width="128" height="60"/>
+        <element name="SmartCriteria" positionX="-1557" positionY="99" width="128" height="120"/>
+        <element name="SongCollection" positionX="-864" positionY="174" width="128" height="193"/>
+        <element name="SortOrder" positionX="-1548" positionY="108" width="128" height="75"/>
+        <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="210"/>
+        <element name="Track" positionX="-1026" positionY="-54" width="128" height="600"/>
+        <element name="TrackView" positionX="-1557" positionY="99" width="128" height="268"/>
+    </elements>
+</model>

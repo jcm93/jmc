@@ -66,7 +66,7 @@
 		0DA8D03E1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA8D03D1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift */; };
 		0DA8D0401D1B1128009FEC28 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */; };
 		0DAB30911CFBA3340028928F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30901CFBA3340028928F /* AppDelegate.swift */; };
-		0DAB30941CFBA3340028928F /* minimalTunes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30921CFBA3340028928F /* minimalTunes.xcdatamodeld */; };
+		0DAB30941CFBA3340028928F /* jmc.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30921CFBA3340028928F /* jmc.xcdatamodeld */; };
 		0DAB30961CFBA3340028928F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0DAB30951CFBA3340028928F /* Assets.xcassets */; };
 		0DAB30991CFBA3340028928F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DAB30971CFBA3340028928F /* MainMenu.xib */; };
 		0DAB30A41CFBA3340028928F /* minimalTunesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30A31CFBA3340028928F /* minimalTunesTests.swift */; };
@@ -177,7 +177,7 @@
 		0D84EDE21DA326BD0057411F /* SongCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongCollection.swift; sourceTree = "<group>"; };
 		0D84EDE31DA326BD0057411F /* NetworkTrack+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NetworkTrack+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D84EDE41DA326BD0057411F /* NetworkTrack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkTrack.swift; sourceTree = "<group>"; };
-		0D87867C1E3EFC000091785B /* minimalTunes-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "minimalTunes-Bridging-Header.h"; sourceTree = "<group>"; };
+		0D87867C1E3EFC000091785B /* jmc-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "jmc-Bridging-Header.h"; sourceTree = "<group>"; };
 		0D8B7E2B1DF8C9240018E242 /* IntermediateTrackRepresentation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntermediateTrackRepresentation.swift; sourceTree = "<group>"; };
 		0D8D4A151D90868500FA1603 /* LocationManagerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManagerController.swift; sourceTree = "<group>"; };
 		0D8D4A161D90868500FA1603 /* LocationManagerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationManagerController.xib; sourceTree = "<group>"; };
@@ -192,14 +192,14 @@
 		0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		0DAB308D1CFBA3340028928F /* jmc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = jmc.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0DAB30901CFBA3340028928F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0DAB30931CFBA3340028928F /* minimalTunes.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = minimalTunes.xcdatamodel; sourceTree = "<group>"; };
+		0DAB30931CFBA3340028928F /* jmc.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = jmc.xcdatamodel; sourceTree = "<group>"; };
 		0DAB30951CFBA3340028928F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0DAB30981CFBA3340028928F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		0DAB309A1CFBA3340028928F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0DAB309F1CFBA3340028928F /* jmc.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = jmc.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0DAB309F1CFBA3340028928F /* jmc.temp_caseinsensitive_rename.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = jmc.temp_caseinsensitive_rename.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0DAB30A31CFBA3340028928F /* minimalTunesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = minimalTunesTests.swift; sourceTree = "<group>"; };
 		0DAB30A51CFBA3340028928F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0DAB30AA1CFBA3340028928F /* jmc.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = jmc.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0DAB30AA1CFBA3340028928F /* jmc.temp_caseinsensitive_rename.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = jmc.temp_caseinsensitive_rename.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0DAB30AE1CFBA3340028928F /* minimalTunesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = minimalTunesUITests.swift; sourceTree = "<group>"; };
 		0DAB30B01CFBA3340028928F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0DB8EFE91DC4FC4D00009900 /* MainTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTableViewDataSource.swift; sourceTree = "<group>"; };
@@ -343,11 +343,11 @@
 		0D01AD961D707DD800F9211F /* Miscellaneous */ = {
 			isa = PBXGroup;
 			children = (
-				0D87867C1E3EFC000091785B /* minimalTunes-Bridging-Header.h */,
+				0D87867C1E3EFC000091785B /* jmc-Bridging-Header.h */,
 				0D9CE6771D3442D3004FA8CB /* Preferences.plist */,
 				0DAB30951CFBA3340028928F /* Assets.xcassets */,
 				0DAB309A1CFBA3340028928F /* Info.plist */,
-				0DAB30921CFBA3340028928F /* minimalTunes.xcdatamodeld */,
+				0DAB30921CFBA3340028928F /* jmc.xcdatamodeld */,
 			);
 			name = Miscellaneous;
 			sourceTree = "<group>";
@@ -413,8 +413,8 @@
 			children = (
 				0D01AD981D707ED900F9211F /* Core Data Shit */,
 				0DAB308F1CFBA3340028928F /* jmc */,
-				0DAB30A21CFBA3340028928F /* minimalTunesTests */,
-				0DAB30AD1CFBA3340028928F /* minimalTunesUITests */,
+				0DAB30A21CFBA3340028928F /* jmcTests */,
+				0DAB30AD1CFBA3340028928F /* jmcUITests */,
 				0DAB308E1CFBA3340028928F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -423,8 +423,8 @@
 			isa = PBXGroup;
 			children = (
 				0DAB308D1CFBA3340028928F /* jmc.app */,
-				0DAB309F1CFBA3340028928F /* jmc.xctest */,
-				0DAB30AA1CFBA3340028928F /* jmc.xctest */,
+				0DAB309F1CFBA3340028928F /* jmc.temp_caseinsensitive_rename.xctest */,
+				0DAB30AA1CFBA3340028928F /* jmc.temp_caseinsensitive_rename.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -438,26 +438,25 @@
 				0D01AD951D707D2600F9211F /* Other Windows */,
 				0D01AD961D707DD800F9211F /* Miscellaneous */,
 			);
-			name = jmc;
-			path = minimalTunes;
-			sourceTree = "<group>";
+			path = jmc;
+			sourceTree = SOURCE_ROOT;
 		};
-		0DAB30A21CFBA3340028928F /* minimalTunesTests */ = {
+		0DAB30A21CFBA3340028928F /* jmcTests */ = {
 			isa = PBXGroup;
 			children = (
 				0DAB30A31CFBA3340028928F /* minimalTunesTests.swift */,
 				0DAB30A51CFBA3340028928F /* Info.plist */,
 			);
-			path = minimalTunesTests;
+			path = jmcTests;
 			sourceTree = "<group>";
 		};
-		0DAB30AD1CFBA3340028928F /* minimalTunesUITests */ = {
+		0DAB30AD1CFBA3340028928F /* jmcUITests */ = {
 			isa = PBXGroup;
 			children = (
 				0DAB30AE1CFBA3340028928F /* minimalTunesUITests.swift */,
 				0DAB30B01CFBA3340028928F /* Info.plist */,
 			);
-			path = minimalTunesUITests;
+			path = jmcUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -494,7 +493,7 @@
 			);
 			name = jmcTests;
 			productName = minimalTunesTests;
-			productReference = 0DAB309F1CFBA3340028928F /* jmc.xctest */;
+			productReference = 0DAB309F1CFBA3340028928F /* jmc.temp_caseinsensitive_rename.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		0DAB30A91CFBA3340028928F /* jmcUITests */ = {
@@ -512,7 +511,7 @@
 			);
 			name = jmcUITests;
 			productName = minimalTunesUITests;
-			productReference = 0DAB30AA1CFBA3340028928F /* jmc.xctest */;
+			productReference = 0DAB30AA1CFBA3340028928F /* jmc.temp_caseinsensitive_rename.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -669,7 +668,7 @@
 				0D84EDE81DA326BD0057411F /* NetworkTrack.swift in Sources */,
 				0DC2E8F71E01E47900671D83 /* SpecialScrollView.swift in Sources */,
 				0DC84C5F1DBAD0C100E8877C /* NewCachedOrder+CoreDataProperties.swift in Sources */,
-				0DAB30941CFBA3340028928F /* minimalTunes.xcdatamodeld in Sources */,
+				0DAB30941CFBA3340028928F /* jmc.xcdatamodeld in Sources */,
 				0DEF66C71D383A8700EA3ADC /* SourceListItem.swift in Sources */,
 				0D0E5FAF1D3E909D009E0FA3 /* DragAndDropImageView.swift in Sources */,
 				0D388AAA1E1DBB4800D25A7D /* SmartCriteria+CoreDataProperties.swift in Sources */,
@@ -829,11 +828,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
-				INFOPLIST_FILE = minimalTunes/Info.plist;
+				INFOPLIST_FILE = jmc/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunes;
+				PRODUCT_BUNDLE_IDENTIFIER = jcm.jmc;
 				PRODUCT_NAME = jmc;
-				SWIFT_OBJC_BRIDGING_HEADER = "minimalTunes/minimalTunes-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "jmc/jmc-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -845,11 +844,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
-				INFOPLIST_FILE = minimalTunes/Info.plist;
+				INFOPLIST_FILE = jmc/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunes;
+				PRODUCT_BUNDLE_IDENTIFIER = jcm.jmc;
 				PRODUCT_NAME = jmc;
-				SWIFT_OBJC_BRIDGING_HEADER = "minimalTunes/minimalTunes-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "jmc/jmc-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Release;
@@ -862,8 +861,8 @@
 				INFOPLIST_FILE = minimalTunesTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunesTests;
-				PRODUCT_NAME = jmc;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/jmc.app/Contents/MacOS/jmc";
+				PRODUCT_NAME = jmc.temp_caseinsensitive_rename;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/jmc.temp_caseinsensitive_rename.app/Contents/MacOS/jmc.temp_caseinsensitive_rename";
 			};
 			name = Debug;
 		};
@@ -875,8 +874,8 @@
 				INFOPLIST_FILE = minimalTunesTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunesTests;
-				PRODUCT_NAME = jmc;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/jmc.app/Contents/MacOS/jmc";
+				PRODUCT_NAME = jmc.temp_caseinsensitive_rename;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/jmc.temp_caseinsensitive_rename.app/Contents/MacOS/jmc.temp_caseinsensitive_rename";
 			};
 			name = Release;
 		};
@@ -887,7 +886,7 @@
 				INFOPLIST_FILE = minimalTunesUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunesUITests;
-				PRODUCT_NAME = jmc;
+				PRODUCT_NAME = jmc.temp_caseinsensitive_rename;
 				TEST_TARGET_NAME = minimalTunes;
 			};
 			name = Debug;
@@ -899,7 +898,7 @@
 				INFOPLIST_FILE = minimalTunesUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunesUITests;
-				PRODUCT_NAME = jmc;
+				PRODUCT_NAME = jmc.temp_caseinsensitive_rename;
 				TEST_TARGET_NAME = minimalTunes;
 			};
 			name = Release;
@@ -946,13 +945,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		0DAB30921CFBA3340028928F /* minimalTunes.xcdatamodeld */ = {
+		0DAB30921CFBA3340028928F /* jmc.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				0DAB30931CFBA3340028928F /* minimalTunes.xcdatamodel */,
+				0DAB30931CFBA3340028928F /* jmc.xcdatamodel */,
 			);
-			currentVersion = 0DAB30931CFBA3340028928F /* minimalTunes.xcdatamodel */;
-			path = minimalTunes.xcdatamodeld;
+			currentVersion = 0DAB30931CFBA3340028928F /* jmc.xcdatamodel */;
+			path = jmc.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
