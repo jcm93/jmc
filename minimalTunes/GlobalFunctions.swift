@@ -95,7 +95,7 @@ func purgeCurrentlyPlaying() {
 }
 
 let VALID_ARTWORK_TYPE_EXTENSIONS = ["jpg", "png", "tiff", "gif", "pdf"]
-let VALID_FILE_TYPES = ["aac", "adts", "ac3", "aif", "aiff", "aifc", "caf", "mp3", "mp4", "m4a", "snd", "au", "sd2", "wav"]
+let VALID_FILE_TYPES = ["aac", "adts", "ac3", "aif", "aiff", "aifc", "caf", "mp3", "mp4", "m4a", "snd", "au", "sd2", "wav", "alac"]
 
 let fieldsToCachedOrdersDictionary: NSDictionary = [
     "date_added" : "Date Added",
