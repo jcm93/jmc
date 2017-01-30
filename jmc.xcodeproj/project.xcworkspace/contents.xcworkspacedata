@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Volumes/Macintosh HD/CS/minimalTunes/jmc.xcodeproj">
+      location = "self:../jmc">
    </FileRef>
 </Workspace>

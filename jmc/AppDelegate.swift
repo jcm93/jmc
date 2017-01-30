@@ -226,12 +226,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "jcm.minimalTunes" in the user's Application Support directory.
         let urls = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
         let appSupportURL = urls[urls.count - 1]
-        return appSupportURL.URLByAppendingPathComponent("jcm.minimalTunes")
+        return appSupportURL.URLByAppendingPathComponent("jcm.jmc")
     }()
 
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-        let modelURL = NSBundle.mainBundle().URLForResource("minimalTunes", withExtension: "momd")!
+        let modelURL = NSBundle.mainBundle().URLForResource("jmc", withExtension: "momd")!
         return NSManagedObjectModel(contentsOfURL: modelURL)!
     }()
 
