@@ -177,7 +177,7 @@
 		0D84EDE21DA326BD0057411F /* SongCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongCollection.swift; sourceTree = "<group>"; };
 		0D84EDE31DA326BD0057411F /* NetworkTrack+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NetworkTrack+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D84EDE41DA326BD0057411F /* NetworkTrack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkTrack.swift; sourceTree = "<group>"; };
-		0D87867C1E3EFC000091785B /* minimalTunes-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "minimalTunes-Bridging-Header.h"; sourceTree = "<group>"; };
+		0D87867C1E3EFC000091785B /* jmc-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "jmc-Bridging-Header.h"; sourceTree = "<group>"; };
 		0D8B7E2B1DF8C9240018E242 /* IntermediateTrackRepresentation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntermediateTrackRepresentation.swift; sourceTree = "<group>"; };
 		0D8D4A151D90868500FA1603 /* LocationManagerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManagerController.swift; sourceTree = "<group>"; };
 		0D8D4A161D90868500FA1603 /* LocationManagerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationManagerController.xib; sourceTree = "<group>"; };
@@ -343,7 +343,7 @@
 		0D01AD961D707DD800F9211F /* Miscellaneous */ = {
 			isa = PBXGroup;
 			children = (
-				0D87867C1E3EFC000091785B /* minimalTunes-Bridging-Header.h */,
+				0D87867C1E3EFC000091785B /* jmc-Bridging-Header.h */,
 				0D9CE6771D3442D3004FA8CB /* Preferences.plist */,
 				0DAB30951CFBA3340028928F /* Assets.xcassets */,
 				0DAB309A1CFBA3340028928F /* Info.plist */,
@@ -413,8 +413,8 @@
 			children = (
 				0D01AD981D707ED900F9211F /* Core Data Shit */,
 				0DAB308F1CFBA3340028928F /* jmc */,
-				0DAB30A21CFBA3340028928F /* minimalTunesTests */,
-				0DAB30AD1CFBA3340028928F /* minimalTunesUITests */,
+				0DAB30A21CFBA3340028928F /* jmcTests */,
+				0DAB30AD1CFBA3340028928F /* jmcUITests */,
 				0DAB308E1CFBA3340028928F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -438,26 +438,25 @@
 				0D01AD951D707D2600F9211F /* Other Windows */,
 				0D01AD961D707DD800F9211F /* Miscellaneous */,
 			);
-			name = jmc;
-			path = minimalTunes;
+			path = jmc;
 			sourceTree = "<group>";
 		};
-		0DAB30A21CFBA3340028928F /* minimalTunesTests */ = {
+		0DAB30A21CFBA3340028928F /* jmcTests */ = {
 			isa = PBXGroup;
 			children = (
 				0DAB30A31CFBA3340028928F /* minimalTunesTests.swift */,
 				0DAB30A51CFBA3340028928F /* Info.plist */,
 			);
-			path = minimalTunesTests;
+			path = jmcTests;
 			sourceTree = "<group>";
 		};
-		0DAB30AD1CFBA3340028928F /* minimalTunesUITests */ = {
+		0DAB30AD1CFBA3340028928F /* jmcUITests */ = {
 			isa = PBXGroup;
 			children = (
 				0DAB30AE1CFBA3340028928F /* minimalTunesUITests.swift */,
 				0DAB30B01CFBA3340028928F /* Info.plist */,
 			);
-			path = minimalTunesUITests;
+			path = jmcUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -829,11 +828,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
-				INFOPLIST_FILE = minimalTunes/Info.plist;
+				INFOPLIST_FILE = jmc/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunes;
+				PRODUCT_BUNDLE_IDENTIFIER = jcm.jmc;
 				PRODUCT_NAME = jmc;
-				SWIFT_OBJC_BRIDGING_HEADER = "minimalTunes/minimalTunes-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "jmc/jmc-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -845,11 +844,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
-				INFOPLIST_FILE = minimalTunes/Info.plist;
+				INFOPLIST_FILE = jmc/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunes;
+				PRODUCT_BUNDLE_IDENTIFIER = jcm.jmc;
 				PRODUCT_NAME = jmc;
-				SWIFT_OBJC_BRIDGING_HEADER = "minimalTunes/minimalTunes-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "jmc/jmc-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Release;
