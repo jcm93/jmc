@@ -1,8 +1,14 @@
 //
-//  Use this file to import your target's public headers that you would like to expose to Swift.
+//  jmc-Bridging-Header.h
+//  jmc
+//
+//  Created by John Moody on 1/29/17.
+//  Copyright © 2017 John Moody. All rights reserved.
 //
 
-#import <CommonCrypto/CommonCrypto.h>
+#ifndef jmc_Bridging_Header_h
+#define jmc_Bridging_Header_h
 #import <Foundation/Foundation.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+
+
+#endif /* jmc_Bridging_Header_h */
