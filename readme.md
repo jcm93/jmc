@@ -1,7 +1,4 @@
-+++
-title = "jmc"
-+++
-
+# jmc
 ![screenshot](https://i.imgur.com/8NhiZpE.png)
 
 jmc is a fast, no-nonsense media manager for macOS. It has an elegant, streamlined interface that harkens back to early versions of iTunes. jmc aims to give you the power and functionality associated with hackable media managers like foobar2000 with the elegance and simplicity of a well-designed platform-native macOS application.
@@ -21,7 +18,7 @@ jmc is written completely in Swift, is completely open-source, and runs on OS X 
 - [Installation](#installation)
 - [Roadmap](#roadmap)
 
-# Features {#features}
+# Features
 jmc looks a lot like iTunes, but fixes many frustrating and unintuitive aspects of the iTunes interface. In particular:
 
 - jmc doesn't change your focus in the songs view when you skip a song.
@@ -45,8 +42,8 @@ jmc can connect to jmc clients nearby, displaying them in the source list. Clien
 
 ![screenshot](https://i.imgur.com/SJ5RgM5.png)
 
-# Installation {#installation}
-You can either compile jmc from source manually or download the latest stable artifact [here](https://github.com/jcm93/jmc/). In the future, binaries for jmc will likely be distributed through the App Store. In the meantime, please consider [buying me some coffee or food](/money/)!
+# Installation
+You can either compile jmc from source manually or download the latest stable artifact [here](https://github.com/jcm93/jmc/). In the future, binaries for jmc will likely be distributed through the App Store. In the meantime, please consider [buying me some coffee or food](https://jcm93.github.io/money/)!
 
 ### Setup
 You can choose to allow jmc to organize your library by moving or copying added files, or have it perform no organization at all. 
@@ -55,7 +52,7 @@ To import an existing iTunes library, use the “Import iTunes Library” action
 
 When adding media, jmc can rename your files to follow the “${disc number}-${track number} ${track name}.${extension}” convention. Currently, jmc will never modify the content of files.
 
-# Roadmap {#roadmap}
+# Roadmap
 
 A few high priorities for jmc features are:
 
