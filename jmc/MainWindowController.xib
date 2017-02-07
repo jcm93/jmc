@@ -1,12 +1,14 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="box content view" minToolsVersion="7.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="MainWindowController" customModule="minimalTunes" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="MainWindowController" customModule="jmc" customModuleProvider="target">
             <connections>
                 <outlet property="advancedSearchToggle" destination="0eg-hu-JdK" id="a8b-oC-Ej5"/>
                 <outlet property="artistAlbumLabel" destination="WNx-p0-gWl" id="MpA-ce-7KD"/>
@@ -37,14 +39,14 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" unifiedTitleAndToolbar="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="0.0" y="341" width="1680" height="1050"/>
+            <rect key="contentRect" x="0.0" y="341" width="1681" height="1050"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <view key="contentView" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="1680" height="1050"/>
+                <rect key="frame" x="0.0" y="0.0" width="1681" height="1050"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <slider verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ELy-ib-2qL">
-                        <rect key="frame" x="360" y="1003" width="192" height="21"/>
+                        <rect key="frame" x="360" y="1003" width="192" height="19"/>
                         <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="ogb-69-MQS"/>
                         <connections>
                             <action selector="volumeDidChange:" target="-2" id="ezm-wM-qIt"/>
@@ -85,13 +87,14 @@
                                 </textField>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Adc-jG-fc7">
                                     <rect key="frame" x="3" y="10" width="37" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="ZTK-xh-F50">
                                         <font key="font" metaFont="miniSystem"/>
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
-                                <customView autoresizesSubviews="NO" focusRingType="none" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ErT-xb-uP3" customClass="ProgressBarView" customModule="minimalTunes" customModuleProvider="target">
+                                <customView autoresizesSubviews="NO" focusRingType="none" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ErT-xb-uP3" customClass="ProgressBarView" customModule="jmc" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="2" width="325" height="18"/>
                                     <subviews>
                                         <progressIndicator ambiguous="YES" misplaced="YES" maxValue="100" displayedWhenStopped="NO" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="c8A-nk-1SH">
@@ -101,40 +104,43 @@
                                     <constraints>
                                         <constraint firstItem="c8A-nk-1SH" firstAttribute="leading" secondItem="ErT-xb-uP3" secondAttribute="leading" id="3yQ-7I-BUy"/>
                                         <constraint firstAttribute="trailing" secondItem="c8A-nk-1SH" secondAttribute="trailing" id="Z6T-fo-hEn"/>
+                                        <constraint firstItem="c8A-nk-1SH" firstAttribute="top" secondItem="ErT-xb-uP3" secondAttribute="top" id="cse-vH-8Af"/>
                                     </constraints>
                                 </customView>
                             </subviews>
                             <constraints>
                                 <constraint firstItem="WDF-BI-DbQ" firstAttribute="centerX" secondItem="7Pq-FN-rew" secondAttribute="centerX" id="2jp-SH-Gkq"/>
+                                <constraint firstItem="R9m-ID-EYY" firstAttribute="top" secondItem="WDF-BI-DbQ" secondAttribute="bottom" constant="7" id="2vD-PJ-njT"/>
                                 <constraint firstAttribute="bottom" secondItem="ErT-xb-uP3" secondAttribute="bottom" id="GKB-XS-6B5"/>
+                                <constraint firstItem="WDF-BI-DbQ" firstAttribute="top" secondItem="7Pq-FN-rew" secondAttribute="top" constant="2" id="Gdp-HT-Hq7"/>
                                 <constraint firstItem="ErT-xb-uP3" firstAttribute="leading" secondItem="7Pq-FN-rew" secondAttribute="leading" id="KYT-Oz-BrM"/>
+                                <constraint firstItem="WNx-p0-gWl" firstAttribute="top" secondItem="WDF-BI-DbQ" secondAttribute="bottom" constant="2" id="bZI-lN-KPl"/>
                                 <constraint firstItem="WNx-p0-gWl" firstAttribute="centerX" secondItem="7Pq-FN-rew" secondAttribute="centerX" id="dGu-Xy-Lch"/>
                                 <constraint firstAttribute="trailing" secondItem="ErT-xb-uP3" secondAttribute="trailing" id="eRq-S9-jcY"/>
+                                <constraint firstItem="ErT-xb-uP3" firstAttribute="top" secondItem="WDF-BI-DbQ" secondAttribute="bottom" constant="14" id="ngW-p3-FzT"/>
                                 <constraint firstAttribute="trailing" secondItem="R9m-ID-EYY" secondAttribute="trailing" constant="3" id="yWf-y1-cKv"/>
                             </constraints>
                         </view>
-                        <color key="borderColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="fillColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="53" id="b6D-BS-N5h"/>
+                        </constraints>
                     </box>
                     <splitView misplaced="YES" arrangesAllSubviews="NO" autosaveName="Parent Split View" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r3P-eO-TmU">
-                        <rect key="frame" x="0.0" y="36" width="1680" height="949"/>
+                        <rect key="frame" x="0.0" y="36" width="1681" height="949"/>
                         <subviews>
                             <splitView fixedFrame="YES" arrangesAllSubviews="NO" autosaveName="Source Area Split View" dividerStyle="thin" id="cpq-tS-fYo" userLabel="Source Area Split View">
-                                <rect key="frame" x="0.0" y="0.0" width="250" height="956"/>
+                                <rect key="frame" x="0.0" y="0.0" width="250" height="949"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
-                                    <box verticalHuggingPriority="750" misplaced="YES" title="Box" boxType="separator" titlePosition="noTitle" id="NCt-3z-jDe">
+                                    <box verticalHuggingPriority="750" misplaced="YES" boxType="separator" id="NCt-3z-jDe">
                                         <rect key="frame" x="0.0" y="-2" width="250" height="5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" id="Cl8-AN-f4P"/>
                                         </constraints>
-                                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <font key="titleFont" metaFont="system"/>
                                     </box>
                                     <customView fixedFrame="YES" id="NBm-y3-IWU" userLabel="Source List Target View">
-                                        <rect key="frame" x="0.0" y="1" width="250" height="700"/>
+                                        <rect key="frame" x="0.0" y="2" width="250" height="700"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     </customView>
                                     <customView misplaced="YES" id="M4o-nI-Oef" userLabel="Artwork Target View">
@@ -152,11 +158,11 @@
                                 </holdingPriorities>
                             </splitView>
                             <splitView fixedFrame="YES" placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="568" arrangesAllSubviews="NO" autosaveName="Library Split View" dividerStyle="thin" id="wUo-rb-c1E" userLabel="Library Split View">
-                                <rect key="frame" x="251" y="0.0" width="1176" height="956"/>
+                                <rect key="frame" x="251" y="0.0" width="1177" height="949"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </splitView>
                             <customView fixedFrame="YES" id="267-Gg-sLE">
-                                <rect key="frame" x="1428" y="0.0" width="252" height="956"/>
+                                <rect key="frame" x="1429" y="0.0" width="252" height="949"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </customView>
                         </subviews>
@@ -166,11 +172,8 @@
                             <real value="321"/>
                         </holdingPriorities>
                     </splitView>
-                    <box verticalHuggingPriority="750" misplaced="YES" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="wxs-uU-bSr">
+                    <box verticalHuggingPriority="750" misplaced="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="wxs-uU-bSr">
                         <rect key="frame" x="353" y="378" width="96" height="5"/>
-                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <font key="titleFont" metaFont="system"/>
                     </box>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="jia-N3-aQf">
                         <rect key="frame" x="156" y="1007" width="26" height="26"/>
@@ -222,7 +225,7 @@
                             <binding destination="-2" name="value" keyPath="self.infoString" id="pea-7J-Wc9"/>
                         </connections>
                     </textField>
-                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qNB-cP-szA">
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qNB-cP-szA">
                         <rect key="frame" x="20" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="CmQ-IH-Ozt"/>
@@ -236,7 +239,7 @@
                             <binding destination="-2" name="value" keyPath="self.shuffle" id="bQc-Re-Dbd"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eg4-23-xqc" userLabel="Repeat Button">
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eg4-23-xqc" userLabel="Repeat Button">
                         <rect key="frame" x="72" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="Y6E-k5-wbL"/>
@@ -251,7 +254,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gzN-xP-Utz" userLabel="Queue Button">
-                        <rect key="frame" x="1617" y="4" width="44" height="25"/>
+                        <rect key="frame" x="1618" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="hy6-BX-4Jm"/>
                         </constraints>
@@ -268,7 +271,7 @@
                             </binding>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rfk-1e-A3X" userLabel="Sharing Button">
+                    <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rfk-1e-A3X" userLabel="Sharing Button">
                         <rect key="frame" x="176" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="JnY-Ra-xjN"/>
@@ -278,7 +281,7 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
-                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0eg-hu-JdK" userLabel="Sharing Button">
+                    <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0eg-hu-JdK" userLabel="Sharing Button">
                         <rect key="frame" x="228" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="ZOb-CT-5a5"/>
@@ -302,7 +305,7 @@
                             <action selector="searchFieldAction:" target="-2" id="9Ue-Gx-ySp"/>
                         </connections>
                     </searchField>
-                    <segmentedControl verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mb6-nw-TjG" customClass="AddPlaylistButton" customModule="minimalTunes" customModuleProvider="target">
+                    <segmentedControl verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mb6-nw-TjG" customClass="AddPlaylistButton" customModule="jmc" customModuleProvider="target">
                         <rect key="frame" x="124" y="4" width="44" height="25"/>
                         <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="momentary" id="yAI-sF-vf6">
                             <font key="font" metaFont="system"/>
@@ -322,6 +325,8 @@
                     <constraint firstItem="vko-jh-7ju" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="16" id="ALI-q0-qAb"/>
                     <constraint firstItem="r3P-eO-TmU" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="60" id="FWU-KC-1lo"/>
                     <constraint firstAttribute="trailing" secondItem="wxs-uU-bSr" secondAttribute="trailing" id="Hgn-uz-KPD"/>
+                    <constraint firstItem="eg4-23-xqc" firstAttribute="leading" secondItem="qNB-cP-szA" secondAttribute="trailing" constant="8" id="Hp9-ba-XHT"/>
+                    <constraint firstItem="rfk-1e-A3X" firstAttribute="leading" secondItem="mb6-nw-TjG" secondAttribute="trailing" constant="8" id="IAe-9f-vmX"/>
                     <constraint firstItem="wxs-uU-bSr" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="JFe-fa-ed3"/>
                     <constraint firstItem="mb6-nw-TjG" firstAttribute="leading" secondItem="eg4-23-xqc" secondAttribute="trailing" constant="8" id="KqT-vl-Awh"/>
                     <constraint firstAttribute="bottom" secondItem="mb6-nw-TjG" secondAttribute="bottom" constant="6" id="Mat-o4-b8L"/>
@@ -333,6 +338,7 @@
                     <constraint firstItem="vko-jh-7ju" firstAttribute="leading" secondItem="jia-N3-aQf" secondAttribute="trailing" constant="32" id="WPF-26-Fj6"/>
                     <constraint firstAttribute="bottom" secondItem="0eg-hu-JdK" secondAttribute="bottom" constant="6" id="Wbh-jH-zym"/>
                     <constraint firstAttribute="bottom" secondItem="qNB-cP-szA" secondAttribute="bottom" constant="6" id="Ws8-am-zPh"/>
+                    <constraint firstItem="qNB-cP-szA" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="XrY-pL-dD1"/>
                     <constraint firstItem="ELy-ib-2qL" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="23" id="an8-o8-WBZ"/>
                     <constraint firstAttribute="bottom" secondItem="FOU-Bi-82q" secondAttribute="bottom" constant="10" id="gP9-zO-Tke"/>
                     <constraint firstItem="jia-N3-aQf" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="17" id="gpH-Wp-piW"/>
@@ -346,6 +352,7 @@
                     <constraint firstItem="FOU-Bi-82q" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="mfK-fT-Eft"/>
                     <constraint firstItem="eg4-23-xqc" firstAttribute="top" secondItem="r3P-eO-TmU" secondAttribute="bottom" constant="6" id="qpU-t1-OEz"/>
                     <constraint firstAttribute="trailing" secondItem="S7Y-RM-UHH" secondAttribute="trailing" constant="69" id="s45-mW-cBO"/>
+                    <constraint firstItem="rTW-GT-cjN" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="4" id="sNq-FP-47X"/>
                     <constraint firstAttribute="bottom" secondItem="eg4-23-xqc" secondAttribute="bottom" constant="6" id="sd9-Vy-rms"/>
                     <constraint firstAttribute="bottom" secondItem="gzN-xP-Utz" secondAttribute="bottom" constant="6" id="wBw-oE-Tlu"/>
                     <constraint firstItem="rTW-GT-cjN" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="xKF-Wc-5Bp"/>
