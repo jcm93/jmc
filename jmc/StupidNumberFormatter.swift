@@ -8,13 +8,13 @@
 
 import Cocoa
 
-class StupidNumberFormatter: NSFormatter {
+class StupidNumberFormatter: Formatter {
 
-    override func stringForObjectValue(obj: AnyObject) -> String? {
-        return (obj as! NSNumber).intValue > 0 ? obj.description : ""
+    override func string(for obj: Any?) -> String? {
+        return (obj as! NSNumber).int32Value > 0 ? String(describing: obj) : ""
     }
     
-    override func getObjectValue(obj: AutoreleasingUnsafeMutablePointer<AnyObject?>, forString string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>) -> Bool {
+    func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AutoreleasingUnsafeMutablePointer<AnyObject?>>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<AutoreleasingUnsafeMutablePointer<NSString?>>?) -> Bool {
         return false
     }
     

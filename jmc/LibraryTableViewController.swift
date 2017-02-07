@@ -7,6 +7,30 @@
 //
 
 import Cocoa
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func >= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l >= r
+  default:
+    return !(lhs < rhs)
+  }
+}
+
 private var my_context = 0
 
 class LibraryTableViewController: NSViewController, NSMenuDelegate {
@@ -20,7 +44,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     var rightMouseDownTarget: [TrackView]?
     var rightMouseDownRow: Int?
     var item: SourceListItem?
-    var managedContext = (NSApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+    var managedContext = (NSApplication.shared().delegate as! AppDelegate).managedObjectContext
     var searchString: String?
     var playlist: SongCollection?
     var advancedFilterVisible: Bool = false
@@ -37,16 +61,16 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         }
     }
     
-    func reloadNowPlayingForTrack(track: Track) {
-        if let row = (trackViewArrayController.arrangedObjects as! [TrackView]).indexOf(track.view!) {
-            let tableRowIndexSet = NSIndexSet(index: row)
-            let tableColumnIndexSet = NSIndexSet(index: 0)
-            tableView.reloadDataForRowIndexes(tableRowIndexSet, columnIndexes: tableColumnIndexSet)
+    func reloadNowPlayingForTrack(_ track: Track) {
+        if let row = (trackViewArrayController.arrangedObjects as! [TrackView]).index(of: track.view!) {
+            let tableRowIndexSet = IndexSet(integer: row)
+            let tableColumnIndexSet = IndexSet(integer: 0)
+            tableView.reloadData(forRowIndexes: tableRowIndexSet, columnIndexes: tableColumnIndexSet)
         }
     }
     
-    func getTrackWithNoContext(shuffleState: Int) -> Track? {
-        guard trackViewArrayController.arrangedObjects.count > 0 else {return nil}
+    func getTrackWithNoContext(_ shuffleState: Int) -> Track? {
+        guard (trackViewArrayController.arrangedObjects as AnyObject).count > 0 else {return nil}
         
         if tableView?.selectedRow >= 0 {
             return (trackViewArrayController?.arrangedObjects as! [TrackView])[tableView!.selectedRow].track!
@@ -76,17 +100,17 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         mainWindowController?.trackQueueViewController?.addTracksToQueue(nil, tracks: items)
     }
     
-    @IBAction func getInfoFromTableView(sender: AnyObject) {
+    @IBAction func getInfoFromTableView(_ sender: AnyObject) {
         let selectedTracks = rightMouseDownTarget!.map({return $0.track!})
         self.mainWindowController?.launchGetInfo(selectedTracks)
     }
     
-    @IBAction func addToQueueFromTableView(sender: AnyObject) {
+    @IBAction func addToQueueFromTableView(_ sender: AnyObject) {
         let selectedTracks = rightMouseDownTarget!.map({return $0.track!})
         self.mainWindowController?.trackQueueViewController?.addTracksToQueue(nil, tracks: selectedTracks)
     }
     
-    @IBAction func playFromTableView(sender: AnyObject) {
+    @IBAction func playFromTableView(_ sender: AnyObject) {
         let tracksToPlay = rightMouseDownTarget!.map({return $0.track!})
         self.mainWindowController?.playSong(tracksToPlay[0], row: rightMouseDownRow)
         if tracksToPlay.count > 1 {
@@ -95,9 +119,9 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         }
     }
     
-    func jumpToCurrentSong(track: Track?) {
+    func jumpToCurrentSong(_ track: Track?) {
         if track != nil {
-            let index = (trackViewArrayController.arrangedObjects as! [TrackView]).indexOf(track!.view!)
+            let index = (trackViewArrayController.arrangedObjects as! [TrackView]).index(of: track!.view!)
             if index != nil {
                 tableView.scrollRowToVisible(index!)
             }
@@ -108,7 +132,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         mainWindowController?.interpretSpacebarEvent()
     }
     
-    func tableViewDoubleClick(sender: AnyObject) {
+    func tableViewDoubleClick(_ sender: AnyObject) {
         guard tableView!.selectedRow >= 0 && tableView!.clickedRow >= 0 else {
             return
         }
@@ -116,7 +140,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         mainWindowController!.playSong(item!, row: tableView!.selectedRow)
     }
     
-    override func keyDown(theEvent: NSEvent) {
+    override func keyDown(with theEvent: NSEvent) {
         print(theEvent.keyCode)
         if (theEvent.keyCode == 36) {
             guard tableView!.selectedRow >= 0 else {
@@ -132,7 +156,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         else if theEvent.keyCode == 123 {
             mainWindowController?.skipBackward()
         } else {
-            super.keyDown(theEvent)
+            super.keyDown(with: theEvent)
         }
     }
     
@@ -140,9 +164,9 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         tableView.scrollRowToVisible(tableView.selectedRow)
     }
     
-    func determineRightMouseDownTarget(row: Int) {
+    func determineRightMouseDownTarget(_ row: Int) {
         let selectedRows = self.tableView.selectedRowIndexes
-        if selectedRows.containsIndex(row) {
+        if selectedRows.contains(row) {
             self.rightMouseDownTarget = trackViewArrayController.selectedObjects as? [TrackView]
         } else {
             self.rightMouseDownTarget = [(trackViewArrayController.arrangedObjects as! [TrackView])[row]]
@@ -154,20 +178,20 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         
     }
     
-    func modifyPlayOrderForSortDescriptors(poo: PlaylistOrderObject, trackID: Int) -> Int {
+    func modifyPlayOrderForSortDescriptors(_ poo: PlaylistOrderObject, trackID: Int) -> Int {
         let idArray = (self.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
         poo.current_play_order = idArray
         let queuedTrackIDs = Set(mainWindowController!.trackQueueViewController!.trackQueue.filter({$0.viewType == .futureTrack})).map({return Int($0.track!.id!)})
         poo.current_play_order = poo.current_play_order!.filter({!queuedTrackIDs.contains($0)})
-        return idArray.indexOf(trackID)!
+        return idArray.index(of: trackID)!
     }
 
-    func getUpcomingIDsForPlayEvent(shuffleState: Int, id: Int, row: Int?) -> Int {
+    func getUpcomingIDsForPlayEvent(_ shuffleState: Int, id: Int, row: Int?) -> Int {
         let idArray = (trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
         if shuffleState == NSOnState {
             //secretly adjust the shuffled array such that it behaves mysteriously like a ring buffer. ssshhhh
             let currentShuffleArray = self.item!.playOrderObject!.shuffled_play_order!
-            let indexToSwap = currentShuffleArray.indexOf(id)!
+            let indexToSwap = currentShuffleArray.index(of: id)!
             let beginningOfArray = currentShuffleArray[0..<indexToSwap]
             let endOfArray = currentShuffleArray[indexToSwap..<currentShuffleArray.count]
             let newArraySliceConcatenation = endOfArray + beginningOfArray
@@ -184,12 +208,12 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             if row != nil {
                 return row!
             } else {
-                return idArray.indexOf(id)!
+                return idArray.index(of: id)!
             }
         }
     }
     
-    func fixPlayOrderForChangedFilterPredicate(shuffleState: Int) {
+    func fixPlayOrderForChangedFilterPredicate(_ shuffleState: Int) {
         print("fixing play order for changed filter predicate")
         if shuffleState == NSOnState {
             let idSet = Set((trackViewArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int}))
@@ -198,7 +222,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         } else {
             self.item?.playOrderObject?.current_play_order = (trackViewArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int})
             if mainWindowController?.trackQueueViewController?.currentAudioSource == self.item {
-                if let index = self.item?.playOrderObject?.current_play_order?.indexOf(Int(mainWindowController!.currentTrack!.id!)) {
+                if let index = self.item?.playOrderObject?.current_play_order?.index(of: Int(mainWindowController!.currentTrack!.id!)) {
                     mainWindowController?.trackQueueViewController?.currentSourceIndex = index
                 } else {
                     mainWindowController?.trackQueueViewController?.currentSourceIndex = -1
@@ -212,49 +236,49 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     func initializeSmartPlaylist() {
         let smart_criteria = playlist!.smart_criteria
         let smart_predicate = smart_criteria?.predicate as! NSPredicate
-        let fetchRequest = NSFetchRequest(entityName: "TrackView")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackView")
         fetchRequest.predicate = smart_predicate
         do {
-            var results = try managedContext.executeFetchRequest(fetchRequest) as? NSArray
+            var results = try managedContext.fetch(fetchRequest) as? NSArray
             if results != nil {
-                results = (results as! [TrackView]).map({return $0.track!})
+                results = (results as! [TrackView]).map({return $0.track!}) as NSArray
                 if smart_criteria?.ordering_criterion != nil {
                     switch smart_criteria!.ordering_criterion! {
                     case "random":
-                        results = shuffleArray(results as! [Track])
+                        results = shuffleArray(results as! [Track]) as! NSArray
                     case "name":
-                        results = results?.sortedArrayUsingSelector(#selector(Track.compareName))
+                        results = results!.sortedArray(using: #selector(Track.compareName)) as NSArray
                     case "artist":
-                        results = results?.sortedArrayUsingSelector(#selector(Track.compareArtist))
+                        results = results!.sortedArray(using: #selector(Track.compareArtist)) as NSArray
                     case "album":
-                        results = results?.sortedArrayUsingSelector(#selector(Track.compareAlbum))
+                        results = results!.sortedArray(using: #selector(Track.compareAlbum)) as NSArray
                     case "composer":
                         let sortDescriptor = NSSortDescriptor(key: "composer.name", ascending: true)
-                        results = results?.sortedArrayUsingDescriptors([sortDescriptor])
+                        results = results?.sortedArray(using: [sortDescriptor]) as NSArray?
                     case "genre":
-                        results = results?.sortedArrayUsingSelector(#selector(Track.compareGenre))
+                        results = results!.sortedArray(using: #selector(Track.compareGenre)) as NSArray
                     case "most recently added":
-                        results = results?.sortedArrayUsingSelector(#selector(Track.compareDateAdded))
+                        results = results!.sortedArray(using: #selector(Track.compareDateAdded)) as NSArray
                     case "least recently added":
-                        results = results?.sortedArrayUsingSelector(#selector(Track.compareDateAdded)).reverse()
+                        results = results!.sortedArray(using: #selector(Track.compareDateAdded)).reversed() as NSArray
                     case "most played":
                         let sortDescriptor = NSSortDescriptor(key: "play_count", ascending: false)
-                        results = results?.sortedArrayUsingDescriptors([sortDescriptor])
+                        results = results?.sortedArray(using: [sortDescriptor]) as NSArray?
                     case "least played":
                         let sortDescriptor = NSSortDescriptor(key: "play_count", ascending: true)
-                        results = results?.sortedArrayUsingDescriptors([sortDescriptor])
+                        results = results?.sortedArray(using: [sortDescriptor]) as NSArray?
                     case "most skipped":
                         let sortDescriptor = NSSortDescriptor(key: "skip_count", ascending: false)
-                        results = results?.sortedArrayUsingDescriptors([sortDescriptor])
+                        results = results?.sortedArray(using: [sortDescriptor]) as NSArray?
                     case "least skipped":
                         let sortDescriptor = NSSortDescriptor(key: "skip_count", ascending: true)
-                        results = results?.sortedArrayUsingDescriptors([sortDescriptor])
+                        results = results?.sortedArray(using: [sortDescriptor]) as NSArray?
                     case "most recently played":
                         let sortDescriptor = NSSortDescriptor(key: "date_last_played", ascending: true)
-                        results = results?.sortedArrayUsingDescriptors([sortDescriptor])
+                        results = results?.sortedArray(using: [sortDescriptor]) as NSArray?
                     case "least recently played":
                         let sortDescriptor = NSSortDescriptor(key: "date_last_played", ascending: false)
-                        results = results?.sortedArrayUsingDescriptors([sortDescriptor])
+                        results = results?.sortedArray(using: [sortDescriptor]) as NSArray?
                     default:
                         print("fuck")
                     }
@@ -289,7 +313,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                     prunedResults = results as! [Track]
                 }
                 let track_id_list = prunedResults.map({return $0.id as! Int})
-                playlist?.track_id_list = track_id_list
+                playlist?.track_id_list = track_id_list as NSObject?
             }
         } catch {
             print(error)
@@ -302,8 +326,8 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     }
 
     
-    func initializeColumnVisibilityMenu(tableView: NSTableView) {
-        var savedColumns = NSUserDefaults.standardUserDefaults().dictionaryForKey(DEFAULTS_SAVED_COLUMNS_STRING)
+    func initializeColumnVisibilityMenu(_ tableView: NSTableView) {
+        var savedColumns = UserDefaults.standard.dictionary(forKey: DEFAULTS_SAVED_COLUMNS_STRING)
         /*if savedColumns == nil {
             savedColumns = DEFAULT_COLUMN_VISIBILITY_DICTIONARY
             NSUserDefaults.standardUserDefaults().setObject(savedColumns, forKey: DEFAULTS_SAVED_COLUMNS_STRING)
@@ -322,30 +346,30 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             }
             if (savedColumns != nil) {
                 let isHidden = savedColumns![column.identifier] as! Bool
-                column.hidden = isHidden
+                column.isHidden = isHidden
             }
             menuItem.target = self
             menuItem.representedObject = column
-            menuItem.state = column.hidden ? NSOffState : NSOnState
+            menuItem.state = column.isHidden ? NSOffState : NSOnState
             menu?.addItem(menuItem)
         }
     }
     
-    func toggleColumn(menuItem: NSMenuItem) {
+    func toggleColumn(_ menuItem: NSMenuItem) {
         let column = menuItem.representedObject as! NSTableColumn
-        column.hidden = !column.hidden
-        menuItem.state = column.hidden ? NSOffState : NSOnState
+        column.isHidden = !column.isHidden
+        menuItem.state = column.isHidden ? NSOffState : NSOnState
         let columnVisibilityDictionary = NSMutableDictionary()
         for column in tableView.tableColumns {
-            columnVisibilityDictionary[column.identifier] = column.hidden
+            columnVisibilityDictionary[column.identifier] = column.isHidden
         }
-        NSUserDefaults.standardUserDefaults().setObject(columnVisibilityDictionary, forKey: DEFAULTS_SAVED_COLUMNS_STRING)
+        UserDefaults.standard.set(columnVisibilityDictionary, forKey: DEFAULTS_SAVED_COLUMNS_STRING)
     }
     
-    func menuWillOpen(menu: NSMenu) {
-        for menuItem in menu.itemArray {
+    func menuWillOpen(_ menu: NSMenu) {
+        for menuItem in menu.items {
             if menuItem.representedObject != nil {
-                menuItem.state = (menuItem.representedObject as! NSTableColumn).hidden ? NSOffState : NSOnState
+                menuItem.state = (menuItem.representedObject as! NSTableColumn).isHidden ? NSOffState : NSOnState
             }
         }
     }
@@ -364,7 +388,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         self.item?.playOrderObject = newPoo
     }
     
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "arrangedObjects" {
             if self.hasCreatedPlayOrder == false && (self.trackViewArrayController.arrangedObjects as! [TrackView]).count > 0 {
                 initializePlayOrderObject()
@@ -385,17 +409,17 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             let predicate = NSPredicate(format: "track.id in %@", track_id_list)
             predicates.append(predicate)
             
-            let fetchReq = NSFetchRequest(entityName: "TrackView")
+            let fetchReq = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackView")
             fetchReq.predicate = predicate
             do {
-                let results = try managedContext.executeFetchRequest(fetchReq) as! [TrackView]
+                let results = try managedContext.fetch(fetchReq) as! [TrackView]
                 let trackViewIDDictionary = NSMutableDictionary()
                 for result in results {
                     trackViewIDDictionary[result.track!.id!] = result
                 }
                 var index = 1
                 for id in track_id_list {
-                    (trackViewIDDictionary[id] as! TrackView).playlist_order = index
+                    (trackViewIDDictionary[id] as! TrackView).playlist_order = index as NSNumber?
                     index += 1
                 }
             } catch {
@@ -413,20 +437,20 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     }
     
     override func viewDidLoad() {
-        trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .New, context: &my_context)
+        trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .new, context: &my_context)
         trackViewArrayController.tableViewController = self
         tableView.doubleAction = #selector(tableViewDoubleClick)
         columnVisibilityMenu.delegate = self
         //self.initializeColumnVisibilityMenu(self.tableView)
-        tableView.setDelegate(trackViewArrayController)
-        tableView.setDataSource(trackViewArrayController)
+        tableView.delegate = trackViewArrayController
+        tableView.dataSource = trackViewArrayController
         tableView.libraryTableViewController = self
         tableView.reloadData()
-        tableView.registerForDraggedTypes([NSFilenamesPboardType])
+        tableView.register(forDraggedTypes: [NSFilenamesPboardType])
         trackViewArrayController.mainWindow = self.mainWindowController
         if playlist != nil {
-            tableView.registerForDraggedTypes(["Track"]) //to enable d&d reordering
-            tableView.tableColumns[1].hidden = false
+            tableView.register(forDraggedTypes: ["Track"]) //to enable d&d reordering
+            tableView.tableColumns[1].isHidden = false
             tableView.sortDescriptors = [tableView.tableColumns[1].sortDescriptorPrototype!]
             if playlist?.smart_criteria != nil {
                 initializeSmartPlaylist()
@@ -435,9 +459,9 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             }
             initializeForPlaylist()
         } else {
-            tableView.tableColumns[1].hidden = true
-            if let sortData = NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_LIBRARY_SORT_DESCRIPTOR_STRING) {
-                if let sortDescriptors = NSKeyedUnarchiver.unarchiveObjectWithData(sortData as! NSData) {
+            tableView.tableColumns[1].isHidden = true
+            if let sortData = UserDefaults.standard.object(forKey: DEFAULTS_LIBRARY_SORT_DESCRIPTOR_STRING) {
+                if let sortDescriptors = NSKeyedUnarchiver.unarchiveObject(with: sortData as! Data) {
                     tableView.sortDescriptors = sortDescriptors as! [NSSortDescriptor]
                 }
             }

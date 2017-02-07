@@ -22,77 +22,77 @@ class PreferencesWindowController: NSWindowController {
     @IBOutlet weak var copyRadio: NSButton!
     @IBOutlet weak var moveRadio: NSButton!
     @IBOutlet weak var mediaFolderPath: NSTextField!
-    var mediaFolderURL: NSURL?
+    var mediaFolderURL: URL?
     
-    @IBAction func radioButtonAction(sender: AnyObject) {
+    @IBAction func radioButtonAction(_ sender: AnyObject) {
         
     }
-    @IBAction func generalPressed(sender: AnyObject) {
-        tabView.selectTabViewItemAtIndex(0)
+    @IBAction func generalPressed(_ sender: AnyObject) {
+        tabView.selectTabViewItem(at: 0)
     }
     
-    @IBAction func playbackPressed(sender: AnyObject) {
-        tabView.selectTabViewItemAtIndex(1)
+    @IBAction func playbackPressed(_ sender: AnyObject) {
+        tabView.selectTabViewItem(at: 1)
     }
     
-    @IBAction func sharingPressed(sender: AnyObject) {
-        tabView.selectTabViewItemAtIndex(2)
+    @IBAction func sharingPressed(_ sender: AnyObject) {
+        tabView.selectTabViewItem(at: 2)
     }
     
-    @IBAction func libraryPressed(sender: AnyObject) {
-        tabView.selectTabViewItemAtIndex(3)
+    @IBAction func libraryPressed(_ sender: AnyObject) {
+        tabView.selectTabViewItem(at: 3)
     }
     
-    @IBAction func advancedPressed(sender: AnyObject) {
-        tabView.selectTabViewItemAtIndex(4)
+    @IBAction func advancedPressed(_ sender: AnyObject) {
+        tabView.selectTabViewItem(at: 4)
     }
     
     @IBOutlet weak var browseButton: NSButton!
     
-    @IBAction func organizationCheckAction(sender: AnyObject) {
+    @IBAction func organizationCheckAction(_ sender: AnyObject) {
         if organizeLibraryCheck.state == NSOnState {
-            moveRadio.enabled = true
-            copyRadio.enabled = true
+            moveRadio.isEnabled = true
+            copyRadio.isEnabled = true
             moveRadio.state = NSOnState
-            browseButton.enabled = true
+            browseButton.isEnabled = true
         } else {
-            browseButton.enabled = false
-            moveRadio.enabled = false
-            copyRadio.enabled = false
+            browseButton.isEnabled = false
+            moveRadio.isEnabled = false
+            copyRadio.isEnabled = false
             moveRadio.state = NSOffState
             copyRadio.state = NSOffState
         }
     }
     
-    @IBAction func browseClicked(sender: AnyObject) {
+    @IBAction func browseClicked(_ sender: AnyObject) {
         let myFileDialog: NSOpenPanel = NSOpenPanel()
         myFileDialog.canChooseFiles = false
         myFileDialog.canChooseDirectories = true
         myFileDialog.runModal()
         
         // Get the path to the file chosen in the NSOpenPanel
-        if myFileDialog.URL!.path != nil {
-            mediaFolderURL = myFileDialog.URL!
-            mediaFolderPath.stringValue = mediaFolderURL!.path!
+        if myFileDialog.url!.path != nil {
+            mediaFolderURL = myFileDialog.url!
+            mediaFolderPath.stringValue = mediaFolderURL!.path
         }
     }
 
     func initializeFields() {
-        let defaults = NSUserDefaults.standardUserDefaults()
+        let defaults = UserDefaults.standard
         
-        libraryNameField.stringValue = defaults.stringForKey(DEFAULTS_LIBRARY_NAME_STRING) != nil ? defaults.stringForKey(DEFAULTS_LIBRARY_NAME_STRING)! : ""
-        let organization = defaults.integerForKey(DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
+        libraryNameField.stringValue = defaults.string(forKey: DEFAULTS_LIBRARY_NAME_STRING) != nil ? defaults.string(forKey: DEFAULTS_LIBRARY_NAME_STRING)! : ""
+        let organization = defaults.integer(forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
         if organization == NO_ORGANIZATION_TYPE {
             organizeLibraryCheck.state = NSOffState
             mediaFolderPath.stringValue = ""
-            browseButton.enabled = false
-            moveRadio.enabled = false
-            copyRadio.enabled = false
+            browseButton.isEnabled = false
+            moveRadio.isEnabled = false
+            copyRadio.isEnabled = false
             organizationString.stringValue = LIBRARY_DOES_NOTHING_DESCRIPTION
         } else {
-            browseButton.enabled = true
-            moveRadio.enabled = true
-            copyRadio.enabled = true
+            browseButton.isEnabled = true
+            moveRadio.isEnabled = true
+            copyRadio.isEnabled = true
             if organization == MOVE_ORGANIZATION_TYPE {
                 moveRadio.state = NSOnState
                 copyRadio.state = NSOffState
@@ -104,41 +104,44 @@ class PreferencesWindowController: NSWindowController {
             }
         }
         
-        let sharing = defaults.boolForKey(DEFAULTS_SHARING_STRING)
+        let sharing = defaults.bool(forKey: DEFAULTS_SHARING_STRING)
         sharingCheck.state = sharing == true ? NSOnState : NSOffState
         
-        let checkEmbedded = defaults.boolForKey(DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING)
+        let checkEmbedded = defaults.bool(forKey: DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING)
         checkEmbeddedArtworkCheck.state = checkEmbedded == true ? NSOnState : NSOffState
         
-        let checkDir = defaults.boolForKey(DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING)
+        let checkDir = defaults.bool(forKey: DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING)
         checkAlbumDirectoryCheck.state = checkDir == true ? NSOnState : NSOffState
         
-        mediaFolderPath.stringValue = defaults.stringForKey(DEFAULTS_LIBRARY_PATH_STRING)!
+        mediaFolderPath.stringValue = defaults.string(forKey: DEFAULTS_LIBRARY_PATH_STRING)!
         
         
     }
-    @IBAction func cancelAction(sender: AnyObject) {
+    @IBAction func cancelAction(_ sender: AnyObject) {
         print("cancel action on preferences")
         self.window?.close()
     }
     
-    @IBAction func okAction(sender: AnyObject) {
+    @IBAction func okAction(_ sender: AnyObject) {
         print("ok action on preferences")
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setObject(libraryNameField.stringValue, forKey: DEFAULTS_LIBRARY_NAME_STRING)
-        defaults.setBool(Bool(sharingCheck.state), forKey: DEFAULTS_SHARING_STRING)
-        defaults.setBool(Bool(checkEmbeddedArtworkCheck.state), forKey: DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING)
-        defaults.setBool(Bool(checkAlbumDirectoryCheck.state), forKey: DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING)
+        let defaults = UserDefaults.standard
+        defaults.set(libraryNameField.stringValue, forKey: DEFAULTS_LIBRARY_NAME_STRING)
+        let sharingBool = sharingCheck.state != 0
+        let artBool = checkEmbeddedArtworkCheck.state != 0
+        let artDirectoryBool = checkAlbumDirectoryCheck.state != 0
+        defaults.set(sharingBool, forKey: DEFAULTS_SHARING_STRING)
+        defaults.set(artBool, forKey: DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING)
+        defaults.set(artDirectoryBool, forKey: DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING)
         if organizeLibraryCheck.state == NSOffState {
-            defaults.setInteger(NO_ORGANIZATION_TYPE, forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
+            defaults.set(NO_ORGANIZATION_TYPE, forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
         } else {
             if mediaFolderPath.stringValue != "/" && mediaFolderPath.stringValue != "" {
-                defaults.setObject(mediaFolderPath.stringValue, forKey: DEFAULTS_LIBRARY_PATH_STRING)
+                defaults.set(mediaFolderPath.stringValue, forKey: DEFAULTS_LIBRARY_PATH_STRING)
             }
             if moveRadio.state == NSOnState {
-                defaults.setInteger(MOVE_ORGANIZATION_TYPE, forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
+                defaults.set(MOVE_ORGANIZATION_TYPE, forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
             } else if copyRadio.state == NSOnState {
-                defaults.setInteger(COPY_ORGANIZATION_TYPE, forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
+                defaults.set(COPY_ORGANIZATION_TYPE, forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
             }
         }
         self.window?.close()

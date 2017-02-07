@@ -20,12 +20,12 @@ class TableViewYouCanPressSpacebarOn: NSTableView {
     let types = ["Track"]
 
 
-    override func drawRect(dirtyRect: NSRect) {
+    override func draw(_ dirtyRect: NSRect) {
         if self.shouldDrawFocusRing {
-            NSSetFocusRingStyle(NSFocusRingPlacement.Only)
+            NSSetFocusRingStyle(NSFocusRingPlacement.only)
             NSRectFill(self.bounds)
         }
-        super.drawRect(dirtyRect)
+        super.draw(dirtyRect)
         // Drawing code here.
     }
     
@@ -56,17 +56,17 @@ class TableViewYouCanPressSpacebarOn: NSTableView {
     }*/
     
     
-    override func rightMouseDown(theEvent: NSEvent) {
+    override func rightMouseDown(with theEvent: NSEvent) {
         let globalLocation = theEvent.locationInWindow
-        let localLocation = self.convertPoint(globalLocation, fromView: nil)
-        let clickedRow = self.rowAtPoint(localLocation)
+        let localLocation = self.convert(globalLocation, from: nil)
+        let clickedRow = self.row(at: localLocation)
         if clickedRow != -1 {
             libraryTableViewController?.determineRightMouseDownTarget(clickedRow)
         }
-        super.rightMouseDown(theEvent)
+        super.rightMouseDown(with: theEvent)
     }
     
-    override func keyDown(theEvent: NSEvent) {
+    override func keyDown(with theEvent: NSEvent) {
         Swift.print("\(theEvent.keyCode) was pressed")
         if theEvent.keyCode == 49 {
             libraryTableViewController?.interpretSpacebarEvent()
@@ -77,7 +77,7 @@ class TableViewYouCanPressSpacebarOn: NSTableView {
             trackQueueViewController?.interpretDeleteEvent()
         }
         else {
-            super.keyDown(theEvent)
+            super.keyDown(with: theEvent)
         }
     }
 }

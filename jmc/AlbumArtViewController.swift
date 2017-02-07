@@ -31,16 +31,16 @@ class AlbumArtViewController: NSViewController {
     }
     
     
-    func toggleHidden(artworkToggle: Int) {
+    func toggleHidden(_ artworkToggle: Int) {
         if artworkToggle == NSOnState {
-            albumArtBox.hidden = false
+            albumArtBox.isHidden = false
         }
         else {
-            albumArtBox.hidden = true
+            albumArtBox.isHidden = true
         }
     }
 
-    func initAlbumArt(track: Track) {
+    func initAlbumArt(_ track: Track) {
         if track.is_network == true {
             //todo: implement this
             return
@@ -51,24 +51,24 @@ class AlbumArtViewController: NSViewController {
         }
         if track.album != nil && track.album!.primary_art != nil {
             print("gonna get sum album art")
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async {
                 let art = track.album!.primary_art
                 let path = art?.artwork_location!
-                let url = NSURL(string: path!)
-                let image = NSImage(contentsOfURL: url!)
-                dispatch_async(dispatch_get_main_queue()) {
+                let url = URL(string: path!)
+                let image = NSImage(contentsOf: url!)
+                DispatchQueue.main.async {
                     self.albumArtView.image = image
                 }
             }
             doStupidTogglingForObservers()
         }
         else {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                if NSUserDefaults.standardUserDefaults().boolForKey(DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING) == true {
+            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async {
+                if UserDefaults.standard.bool(forKey: DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING) == true {
                     print("checking mp3 for embedded art")
                     let artwork = self.fileHandler.getArtworkFromFile(track.location!)
                     if artwork != nil {
-                        dispatch_async(dispatch_get_main_queue()) {
+                        DispatchQueue.main.async {
                             if self.fileHandler.addPrimaryArtForTrack(track, art: artwork!) != nil {
                                 do {try managedContext.save()}catch {print(error)}
                                 self.initAlbumArt(track)
@@ -78,18 +78,18 @@ class AlbumArtViewController: NSViewController {
                             }
                         }
                     } else {
-                        dispatch_async(dispatch_get_main_queue()) {
+                        DispatchQueue.main.async {
                             self.albumArtView.image = nil
                         }
                     }
                 }
             }
-            if NSUserDefaults.standardUserDefaults().boolForKey(DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING) == true {
+            if UserDefaults.standard.bool(forKey: DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING) == true {
                 let imageURL = self.fileHandler.searchAlbumDirectoryForArt(track)
                 if imageURL != nil {
-                    let artwork = NSData(contentsOfURL: imageURL!)
+                    let artwork = try? Data(contentsOf: imageURL!)
                     if artwork != nil {
-                        dispatch_async(dispatch_get_main_queue()) {
+                        DispatchQueue.main.async {
                             if self.fileHandler.addPrimaryArtForTrack(track, art: artwork!) != nil {
                                 do {try managedContext.save()}catch {print(error)}
                                 self.initAlbumArt(track)
@@ -99,7 +99,7 @@ class AlbumArtViewController: NSViewController {
                             }
                         }
                     } else {
-                        dispatch_async(dispatch_get_main_queue()) {
+                        DispatchQueue.main.async {
                             self.albumArtView.image = nil
                         }
                     }

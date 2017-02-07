@@ -22,7 +22,7 @@ class ImportErrorWindowController: NSWindowController {
             errorStringTextField.stringValue = "1 item was not imported:"
         }
         super.windowDidLoad()
-        self.window!.titleVisibility = NSWindowTitleVisibility.Hidden
+        self.window!.titleVisibility = NSWindowTitleVisibility.hidden
         self.window!.titlebarAppearsTransparent = true
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     }

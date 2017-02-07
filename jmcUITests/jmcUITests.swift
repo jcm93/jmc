@@ -8,7 +8,7 @@
 
 import XCTest
 
-class minimalTunesUITests: XCTestCase {
+class jmcUITests: XCTestCase {
         
     override func setUp() {
         super.setUp()

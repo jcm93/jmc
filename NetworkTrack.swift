@@ -13,5 +13,5 @@ import CoreData
 class NetworkTrack: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
-    @NSManaged func addPlaylistObject(playlist: SongCollection)
+    @NSManaged func addPlaylistObject(_ playlist: SongCollection)
 }

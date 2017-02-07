@@ -8,20 +8,20 @@
 
 import Cocoa
 
-class TransformerIntegerToTimestamp: NSValueTransformer {
+class TransformerIntegerToTimestamp: ValueTransformer {
     override class func transformedValueClass() -> AnyClass {
         return NSNumber.self
     }
     override class func allowsReverseTransformation() -> Bool {
         return false
     }
-    override func transformedValue(value: AnyObject?) -> AnyObject? {
+    override func transformedValue(_ value: Any?) -> Any? {
         guard let type = value as? NSNumber else {
             return nil
         }
-        let hr = type.integerValue / 3600000
-        let min = (type.integerValue - (hr * 3600000)) / 60000
-        let sec = (type.integerValue - (hr * 3600000) - (min * 60000)) / 1000
+        let hr = type.intValue / 3600000
+        let min = (type.intValue - (hr * 3600000)) / 60000
+        let sec = (type.intValue - (hr * 3600000) - (min * 60000)) / 1000
         var stamp = ""
         if (sec < 10) {
             stamp = "\(min):0\(sec)"

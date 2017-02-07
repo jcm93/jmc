@@ -22,16 +22,16 @@ class ImportWindowController: NSWindowController {
     var mainWindowController: MainWindowController?
     
     let managedContext: NSManagedObjectContext = {
-        return (NSApplication.sharedApplication().delegate
+        return (NSApplication.shared().delegate
             as? AppDelegate)?.managedObjectContext }()!
     
     var moveFiles: Bool = true
 
-    @IBAction func browseClicked(sender: AnyObject) {
+    @IBAction func browseClicked(_ sender: AnyObject) {
         openFile()
     }
     
-    @IBAction func radioButtonAction(sender: AnyObject) {
+    @IBAction func radioButtonAction(_ sender: AnyObject) {
         if keepDirectoryRadioButton.state == NSOnState {
             moveFiles = false
         }
@@ -46,42 +46,42 @@ class ImportWindowController: NSWindowController {
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     }
     
-    @IBAction func confirmClicked(sender: AnyObject) {
-        var pathURL = NSURL(fileURLWithPath: path!)
-        pathURL = pathURL.URLByDeletingLastPathComponent!
-        pathURL = pathURL.URLByAppendingPathComponent("iTunes Music", isDirectory: true)
-        let fileManager = NSFileManager.defaultManager()
-        if fileManager.fileExistsAtPath(pathURL.path!, isDirectory: nil) == false {
-            pathURL = pathURL.URLByDeletingLastPathComponent!
-            pathURL = pathURL.URLByAppendingPathComponent("iTunes Media", isDirectory: true)
+    @IBAction func confirmClicked(_ sender: AnyObject) {
+        var pathURL = URL(fileURLWithPath: path!)
+        pathURL = pathURL.deletingLastPathComponent()
+        pathURL = pathURL.appendingPathComponent("iTunes Music", isDirectory: true)
+        let fileManager = FileManager.default
+        if fileManager.fileExists(atPath: pathURL.path, isDirectory: nil) == false {
+            pathURL = pathURL.deletingLastPathComponent()
+            pathURL = pathURL.appendingPathComponent("iTunes Media", isDirectory: true)
         }
-        NSUserDefaults.standardUserDefaults().setObject(pathURL.path, forKey: "libraryPath")
-        let appDelegate = (NSApplication.sharedApplication().delegate as! AppDelegate)
+        UserDefaults.standard.set(pathURL.path, forKey: "libraryPath")
+        let appDelegate = (NSApplication.shared().delegate as! AppDelegate)
         appDelegate.iTunesParser = self.iTunesParser
         appDelegate.initializeProgressBarWindow()
         print("made it here")
         appDelegate.importProgressBar?.doStuff()
-        iTunesParser?.addObserver(self, forKeyPath: "doneEverything", options: .New, context: &my_special_context)
+        iTunesParser?.addObserver(self, forKeyPath: "doneEverything", options: .new, context: &my_special_context)
     }
     
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "doneEverything" {
             print("window controller here")
             completionHandler()
         }
     }
     
-    func subContextDidSave(notification: NSNotification) {
+    func subContextDidSave(_ notification: Notification) {
         print("main context merging changes, supposedly")
-        let selector = #selector(NSManagedObjectContext.mergeChangesFromContextDidSaveNotification)
-        managedContext.performSelectorOnMainThread(selector, withObject: notification, waitUntilDone: true)
+        let selector = #selector(NSManagedObjectContext.mergeChanges(fromContextDidSave:))
+        managedContext.performSelector(onMainThread: selector, with: notification, waitUntilDone: true)
     }
     
     func completionHandler() {
         print("import window done clause")
         do { try managedContext.save() } catch {print("\(error)")}
-        let appDelegate = (NSApplication.sharedApplication().delegate as! AppDelegate)
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasMusic")
+        let appDelegate = (NSApplication.shared().delegate as! AppDelegate)
+        UserDefaults.standard.set(true, forKey: "hasMusic")
         appDelegate.importProgressBar?.window?.close()
         self.window?.close()
         self.mainWindowController?.hasMusic = true
@@ -95,21 +95,18 @@ class ImportWindowController: NSWindowController {
         myFileDialog.runModal()
         
         // Get the path to the file chosen in the NSOpenPanel
-        if myFileDialog.URL!.path != nil {
-            path = myFileDialog.URL!.path!
-            pathController.URL = myFileDialog.URL
+        if myFileDialog.url!.path != nil {
+            path = myFileDialog.url!.path
+            pathController.url = myFileDialog.url
         }
         do {
             iTunesParser = try iTunesLibraryParser(path: path!)
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(subContextDidSave), name: NSManagedObjectContextDidSaveNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(subContextDidSave), name: NSNotification.Name.NSManagedObjectContextDidSave, object: nil)
         } catch {
-            OKButton.enabled = false
+            OKButton.isEnabled = false
         }
         
         // Make sure that a path was chosen
-        if (path != nil) {
-            let err = NSError?()
-        }
         
     }
     

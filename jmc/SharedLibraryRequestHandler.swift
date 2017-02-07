@@ -12,12 +12,12 @@ import CoreData
 class SharedLibraryRequestHandler {
     
     func getSourceList() -> [NSMutableDictionary]? {
-        let fetchRequest = NSFetchRequest(entityName: "SourceListItem")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "SourceListItem")
         let predicate = NSPredicate(format: "(playlist != nil) AND (is_network == nil OR is_network == false)")
         fetchRequest.predicate = predicate
         var results: [SourceListItem]?
         do {
-            results = try managedContext.executeFetchRequest(fetchRequest) as? [SourceListItem]
+            results = try managedContext.fetch(fetchRequest) as? [SourceListItem]
         }catch {
             print("error: \(error)")
         }
@@ -27,24 +27,24 @@ class SharedLibraryRequestHandler {
             serializedResults.append(item.dictRepresentation())
         }
         return serializedResults
-        var finalObject: NSData?
+        var finalObject: Data?
         do {
-            finalObject = try NSJSONSerialization.dataWithJSONObject(serializedResults, options: NSJSONWritingOptions.PrettyPrinted)
+            finalObject = try JSONSerialization.data(withJSONObject: serializedResults, options: JSONSerialization.WritingOptions.prettyPrinted)
         } catch {
             print("error: \(error)")
         }
         //return finalObject
     }
     
-    func getPlaylist(id: Int, fields: [String]) -> NSDictionary? {
+    func getPlaylist(_ id: Int, fields: [String]) -> NSDictionary? {
         //sends a dictionary containing JSON tracks and artists etc., and cached sort orders for the important sorts
         let playlistDictionary = NSMutableDictionary()
-        let playlistRequest = NSFetchRequest(entityName: "SongCollection")
+        let playlistRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "SongCollection")
         let playlistPredicate = NSPredicate(format: "id = '\(id)'")
         playlistRequest.predicate = playlistPredicate
         let result: SongCollection? = {
             do {
-                let thing = try managedContext.executeFetchRequest(playlistRequest) as! [SongCollection]
+                let thing = try managedContext.fetch(playlistRequest) as! [SongCollection]
                 if thing.count > 0 {
                     return thing[0]
                 } else {
@@ -57,14 +57,14 @@ class SharedLibraryRequestHandler {
         }()
         print(result)
         guard result != nil else {return nil}
-        let playlistSongsRequest = NSFetchRequest(entityName: "Track")
+        let playlistSongsRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Track")
         let id_array = result?.track_id_list
         guard id_array != nil else {return nil}
         let playlistSongsPredicate = NSPredicate(format: "id in %@", id_array!)
         playlistSongsRequest.predicate = playlistSongsPredicate
         let results: [Track]? = {
             do {
-                let thing = try managedContext.executeFetchRequest(playlistSongsRequest) as! [Track]
+                let thing = try managedContext.fetch(playlistSongsRequest) as! [Track]
                 if thing.count > 0 {
                     return thing
                 } else {
@@ -86,13 +86,13 @@ class SharedLibraryRequestHandler {
         return playlistDictionary
     }
     
-    func getAllMetadataForTrack(trackID: Int) -> NSDictionary? {
-        let trackFetchRequest = NSFetchRequest(entityName: "Track")
+    func getAllMetadataForTrack(_ trackID: Int) -> NSDictionary? {
+        let trackFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Track")
         let trackFetchPredicate = NSPredicate(format: "id == \(trackID)")
         trackFetchRequest.predicate = trackFetchPredicate
         let track: Track? = {() -> Track? in
             do {
-                let result = try managedContext.executeFetchRequest(trackFetchRequest) as! [Track]
+                let result = try managedContext.fetch(trackFetchRequest) as! [Track]
                 return result[0]
             } catch {
                 print("error: \(error)")
@@ -104,7 +104,7 @@ class SharedLibraryRequestHandler {
         return metadata
     }
     
-    func getCachedOrders(fields: [String], id_array: [Int]) -> [NSDictionary]? {
+    func getCachedOrders(_ fields: [String], id_array: [Int]) -> [NSDictionary]? {
         //takes an array of track IDs about to be sent over the wire, and compiles the cached orders for sorting them, filtered according to what fields are displayed in the peer's table.
         //returns array of dictionaries, whose gots arrays of ints insides em
         var cachedOrdersDictionary = [NSDictionary]()
@@ -113,10 +113,10 @@ class SharedLibraryRequestHandler {
             filterDictionary[id] = true
         }
         let cachedOrders: [CachedOrder] = {
-            let fetch_request = NSFetchRequest(entityName: "CachedOrder")
+            let fetch_request = NSFetchRequest<NSFetchRequestResult>(entityName: "CachedOrder")
             let result = [CachedOrder]()
             do {
-                let thing = try managedContext.executeFetchRequest(fetch_request) as! [CachedOrder]
+                let thing = try managedContext.fetch(fetch_request) as! [CachedOrder]
                 if thing.count != 0 {
                     return thing
                 }
@@ -149,13 +149,13 @@ class SharedLibraryRequestHandler {
         return cachedOrdersDictionary
     }
     
-    func getSong(id: Int) -> NSData? {
-        let songRequest = NSFetchRequest(entityName: "Track")
+    func getSong(_ id: Int) -> Data? {
+        let songRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Track")
         let songPredicate = NSPredicate(format: "id = %i", id)
         songRequest.predicate = songPredicate
         let result: Track? = {
             do {
-                let thing = try managedContext.executeFetchRequest(songRequest) as! [Track]
+                let thing = try managedContext.fetch(songRequest) as! [Track]
                 if thing.count > 0 {
                     return thing[0]
                 } else {
@@ -167,8 +167,8 @@ class SharedLibraryRequestHandler {
             return nil
         }()
         guard result != nil else {return nil}
-        let trackURL = NSURL(string: result!.location!)
-        let trackData = NSData(contentsOfURL: trackURL!)
+        let trackURL = URL(string: result!.location!)
+        let trackData = try? Data(contentsOf: trackURL!)
         return trackData
     }
 }

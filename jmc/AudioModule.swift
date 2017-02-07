@@ -8,6 +8,19 @@
 
 import Cocoa
 import AVFoundation
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 enum completionHandlerType {
     case seek
@@ -60,7 +73,7 @@ class AudioModule: NSObject {
         bands[9].frequency = 16384
         bands[9].bandwidth = 1
         bands[9].bypass = false
-        if let defaultsEQ = NSUserDefaults.standardUserDefaults().objectForKey(DEFAULTS_CURRENT_EQ_STRING) as? [Float] {
+        if let defaultsEQ = UserDefaults.standard.object(forKey: DEFAULTS_CURRENT_EQ_STRING) as? [Float] {
             var index = 0
             for band in defaultsEQ {
                 if index == 10 {continue}
@@ -91,7 +104,8 @@ class AudioModule: NSObject {
     
     var mainWindowController: MainWindowController?
     
-    func addListenerBlock( listenerBlock: AudioObjectPropertyListenerBlock, onAudioObjectID: AudioObjectID, var forPropertyAddress: AudioObjectPropertyAddress) {
+    func addListenerBlock( _ listenerBlock: @escaping AudioObjectPropertyListenerBlock, onAudioObjectID: AudioObjectID, forPropertyAddress: AudioObjectPropertyAddress) {
+        var forPropertyAddress = forPropertyAddress
         if (kAudioHardwareNoError != AudioObjectAddPropertyListenerBlock(onAudioObjectID, &forPropertyAddress, nil, listenerBlock)) {
             print("Error calling: AudioObjectAddPropertyListenerBlock") }
     }
@@ -105,9 +119,9 @@ class AudioModule: NSObject {
                             mScope: kAudioObjectPropertyScopeGlobal,
                             mElement: kAudioObjectPropertyElementMaster))
         
-        audioEngine.attachNode(curNode)
+        audioEngine.attach(curNode)
         //audioEngine.connect(curNode, to: audioEngine.mainMixerNode, format: curFile?.processingFormat)
-        audioEngine.attachNode(equalizer)
+        audioEngine.attach(equalizer)
         /*audioEngine.connect(curNode, to: equalizer, format: nil)
          audioEngine.connect(equalizer, to: audioEngine.outputNode, format: nil)*/
         audioEngine.connect(curNode, to: equalizer, format: nil)
@@ -118,23 +132,23 @@ class AudioModule: NSObject {
         
         var devicePropertyAddress = AudioObjectPropertyAddress(mSelector: kAudioHardwarePropertyDefaultOutputDevice, mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMaster)
         var deviceID: AudioObjectID = 0
-        var dataSize = UInt32(truncatingBitPattern: sizeof(AudioDeviceID))
+        var dataSize = UInt32(truncatingBitPattern: MemoryLayout<AudioDeviceID>.size)
         let systemObjectID = AudioObjectID(bitPattern: kAudioObjectSystemObject)
         if (kAudioHardwareNoError != AudioObjectGetPropertyData(systemObjectID, &devicePropertyAddress, 0, nil, &dataSize, &deviceID)) { return 0 }
         return deviceID
     }
  
-    func audioObjectPropertyListenerBlock (numberAddresses: UInt32, addresses: UnsafePointer<AudioObjectPropertyAddress>) {
+    func audioObjectPropertyListenerBlock (_ numberAddresses: UInt32, addresses: UnsafePointer<AudioObjectPropertyAddress>) {
         var index: UInt32 = 0
         while index < numberAddresses {
             let address: AudioObjectPropertyAddress = addresses[0]
             switch address.mSelector {
             case kAudioHardwarePropertyDefaultOutputDevice:
                 var deviceID = getDefaultAudioOutputDevice()
-                print(audioEngine.running)
-                print(curNode.playing)
+                print(audioEngine.isRunning)
+                print(curNode.isPlaying)
                 do {
-                    AudioUnitSetProperty(audioEngine.outputNode.audioUnit, kAudioOutputUnitProperty_CurrentDevice, kAudioUnitScope_Global, 0, &deviceID, UInt32(sizeof(AudioObjectID)))
+                    AudioUnitSetProperty(audioEngine.outputNode.audioUnit!, kAudioOutputUnitProperty_CurrentDevice, kAudioUnitScope_Global, 0, &deviceID, UInt32(MemoryLayout<AudioObjectID>.size))
                     audioEngine.reset()
                     try audioEngine.start()
                 } catch {
@@ -142,8 +156,8 @@ class AudioModule: NSObject {
                     print(error)
                 }
                 print("kAudioHardwarePropertyDefaultOutputDevice: \(deviceID)")
-                print(audioEngine.running)
-                print(curNode.playing)
+                print(audioEngine.isRunning)
+                print(curNode.isPlaying)
             default:
                 print("uhh")
             }
@@ -151,25 +165,25 @@ class AudioModule: NSObject {
         }
     }
     
-    func adjustEqualizer(band: Int, value: Float) {
+    func adjustEqualizer(_ band: Int, value: Float) {
         print("adjust band called")
         guard -12 <= value && value <= 12 else {return}
         print("adjusting a band")
         let band = equalizer.bands[band]
         var defaultsEQ = equalizer.bands.map({return $0.gain})
         defaultsEQ.append(equalizer.globalGain)
-        NSUserDefaults.standardUserDefaults().setObject(defaultsEQ, forKey: DEFAULTS_CURRENT_EQ_STRING)
+        UserDefaults.standard.set(defaultsEQ, forKey: DEFAULTS_CURRENT_EQ_STRING)
         band.gain = value
     }
     
-    func changeVolume(newVolume: Float) {
+    func changeVolume(_ newVolume: Float) {
         //todo figure out why this doesnt work
         guard newVolume <= 1 && newVolume >= 0 else {return}
         audioEngine.mainMixerNode.outputVolume = newVolume
-        NSUserDefaults.standardUserDefaults().setFloat(newVolume, forKey: DEFAULTS_VOLUME_STRING)
+        UserDefaults.standard.set(newVolume, forKey: DEFAULTS_VOLUME_STRING)
     }
     
-    func toggleEqualizer(state: Int) {
+    func toggleEqualizer(_ state: Int) {
         if state == NSOnState {
             print("using eq")
             equalizer.bypass = false
@@ -180,12 +194,12 @@ class AudioModule: NSObject {
         }
     }
     
-    func adjustGain(value: Float) {
+    func adjustGain(_ value: Float) {
         guard -12 <= value && value <= 12 else {return}
         equalizer.globalGain = value
     }
     
-    func playNetworkImmediately(track: Track) {
+    func playNetworkImmediately(_ track: Track) {
         currentHandlerType = .destroy
         currentTrackLocation = track.location
         print("paused value is \(is_paused)")
@@ -200,7 +214,7 @@ class AudioModule: NSObject {
         curNode.pause()
     }
     
-    func playImmediately(trackLocation: String) {
+    func playImmediately(_ trackLocation: String) {
         currentHandlerType = .destroy
         print("paused value is \(is_paused)")
         currentTrackLocation = trackLocation
@@ -214,7 +228,7 @@ class AudioModule: NSObject {
         changeTrack()
     }
     
-    func playImmediatelyNoObservers(trackLocation: String) {
+    func playImmediatelyNoObservers(_ trackLocation: String) {
         currentHandlerType = .destroy
         print("paused value is \(is_paused)")
         currentTrackLocation = trackLocation
@@ -227,10 +241,10 @@ class AudioModule: NSObject {
         currentHandlerType = .natural
     }
     
-    func removeTracksFromQueue(indexes: [Int]) {
+    func removeTracksFromQueue(_ indexes: [Int]) {
     }
     
-    func addTrackToQueue(track: Track, index: Int?) {
+    func addTrackToQueue(_ track: Track, index: Int?) {
         print("adding track to audio queue")
         print(index)
         print(trackQueue.count)
@@ -242,7 +256,7 @@ class AudioModule: NSObject {
         }
         else {
             if (index != nil && index < trackQueue.count) {
-                trackQueue.insert(track, atIndex: index!)
+                trackQueue.insert(track, at: index!)
                 print("inserted \(track.name) at \(index)")
             }
             else {
@@ -252,7 +266,7 @@ class AudioModule: NSObject {
     }
     
     
-    func swapTracks(first_index: Int, second_index: Int) {
+    func swapTracks(_ first_index: Int, second_index: Int) {
         if (trackQueue.count < 2) {
             return
         }
@@ -273,23 +287,23 @@ class AudioModule: NSObject {
                 total_offset_frames = 0
                 total_offset_seconds = 0
                 audioEngine.stop()
-                audioEngine.detachNode(curNode)
+                audioEngine.detach(curNode)
                 curNode = AVAudioPlayerNode()
-                audioEngine.attachNode(curNode)
+                audioEngine.attach(curNode)
                 audioEngine.connect(curNode, to: equalizer, format: nil)
                 let location = currentTrackLocation!
-                let url = NSURL(string: location)
-                if verbotenFileTypes.contains(url!.pathExtension!) {
+                let url = URL(string: location)
+                if verbotenFileTypes.contains(url!.pathExtension) {
                     return
                 }
                 curFile = try AVAudioFile(forReading: url!)
                 print(location)
-                curNode.scheduleFile(curFile!, atTime: nil, completionHandler: handleCompletion)
+                curNode.scheduleFile(curFile!, at: nil, completionHandler: handleCompletion)
                 print(curFile?.processingFormat)
                 print(audioEngine.outputNode)
                 //audioEngine.connect(curNode, to: audioEngine.mainMixerNode, format: curFile?.processingFormat)
                 resetValues()
-                if (audioEngine.running == false) {
+                if (audioEngine.isRunning == false) {
                     try audioEngine.start()
                 }
                 is_initialized = true
@@ -302,7 +316,7 @@ class AudioModule: NSObject {
     }
     
     func changeTrack() {
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             print("changing track")
             if self.track_changed == false {
                 self.track_changed = true
@@ -322,7 +336,7 @@ class AudioModule: NSObject {
         }
     }
     
-    func getTrackLocation(track: Track) -> String {
+    func getTrackLocation(_ track: Track) -> String {
         if track.is_network == false {
             return track.location!
         } else {
@@ -359,13 +373,13 @@ class AudioModule: NSObject {
                 var delay: Double = 0
                 do {
                     let location = currentTrackLocation!
-                    let url = NSURL(string: location)
+                    let url = URL(string: location)
                     let gapless_duration = AVAudioTime(sampleTime: curFile!.length - Int64(track_frame_offset!), atRate: curFile!.processingFormat.sampleRate)
                     total_offset_frames += gapless_duration.sampleTime
                     total_offset_seconds = total_offset_frames / Int64(curFile!.processingFormat.sampleRate)
                     curFile = try AVAudioFile(forReading: url!)
                     let time = AVAudioTime(sampleTime: total_offset_frames, atRate: curFile!.processingFormat.sampleRate)
-                    curNode.scheduleFile(curFile!, atTime: time, completionHandler: handleCompletion)
+                    curNode.scheduleFile(curFile!, at: time, completionHandler: handleCompletion)
                     delay = ((Double(gapless_duration.sampleTime) / gapless_duration.sampleRate) - (Double(curNode.lastRenderTime!.sampleTime - Int64(track_frame_offset!))/(curNode.lastRenderTime?.sampleRate)!))
                     print("delay set to \(delay)")
                     self.track_frame_offset = 0
@@ -373,7 +387,7 @@ class AudioModule: NSObject {
                 } catch {
                     print("error: \(error)")
                 }
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) {
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) {
                     self.changeTrack()
                 }
             }
@@ -382,7 +396,7 @@ class AudioModule: NSObject {
                 let gapless_duration = AVAudioTime(sampleTime: curFile!.length, atRate: curFile!.processingFormat.sampleRate)
                 let delay = ((Double(gapless_duration.sampleTime) / gapless_duration.sampleRate) - (Double(curNode.lastRenderTime!.sampleTime)/(curNode.lastRenderTime?.sampleRate)!))
                 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) {
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) {
                     //cleanly stop everything
                     self.observerDonePlaying()
                     self.total_offset_frames = 0
@@ -449,12 +463,12 @@ class AudioModule: NSObject {
 
     }
     
-    func seek(frac: Double) {
+    func seek(_ frac: Double) {
         let frame = Int64(frac * Double(duration_frames!))
         track_frame_offset = Double(frame)
         currentHandlerType = .seek
         curNode.stop()
-        curNode.scheduleSegment(curFile!, startingFrame: frame, frameCount: UInt32(duration_frames!)-UInt32(frame), atTime: nil, completionHandler: handleCompletion)
+        curNode.scheduleSegment(curFile!, startingFrame: frame, frameCount: UInt32(duration_frames!)-UInt32(frame), at: nil, completionHandler: handleCompletion)
         if (is_paused == false) {
             curNode.play()
         }
@@ -473,7 +487,7 @@ class AudioModule: NSObject {
     
     func play() {
         is_paused = false
-        if audioEngine.running == true {
+        if audioEngine.isRunning == true {
             curNode.play()
         } else {
             audioEngine.prepare()

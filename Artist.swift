@@ -13,5 +13,5 @@ import CoreData
 class Artist: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
-    @NSManaged func addAlbumsObject(album: Album)
+    @NSManaged func addAlbumsObject(_ album: Album)
 }

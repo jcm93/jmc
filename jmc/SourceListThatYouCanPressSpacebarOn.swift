@@ -14,20 +14,20 @@ class SourceListThatYouCanPressSpacebarOn: NSOutlineView {
     var treeController: DragAndDropTreeController?
     
     override func awakeFromNib() {
-        self.registerForDraggedTypes(["SourceListItem", "Track", "NetworkTrack"])
+        self.register(forDraggedTypes: ["SourceListItem", "Track", "NetworkTrack"])
     }
 
-    override func drawRect(dirtyRect: NSRect) {
-        super.drawRect(dirtyRect)
+    override func draw(_ dirtyRect: NSRect) {
+        super.draw(dirtyRect)
 
         // Drawing code here.
     }
-    override func keyDown(theEvent: NSEvent) {
+    override func keyDown(with theEvent: NSEvent) {
         if (theEvent.keyCode == 49) {
             mainWindowController?.interpretSpacebarEvent()
         }
         else {
-            super.keyDown(theEvent)
+            super.keyDown(with: theEvent)
         }
     }
     

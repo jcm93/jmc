@@ -14,11 +14,11 @@ class LibraryTableViewControllerCellBased: LibraryTableViewController {
         self.tableView.doubleAction = #selector(tableViewDoubleClick)
         columnVisibilityMenu.delegate = self
         self.initializeColumnVisibilityMenu(self.tableView)
-        tableView.setDelegate(trackViewArrayController)
-        tableView.setDataSource(trackViewArrayController)
+        tableView.delegate = trackViewArrayController
+        tableView.dataSource = trackViewArrayController
         tableView.libraryTableViewController = self
         tableView.reloadData()
-        tableView.focusRingType = .None
+        tableView.focusRingType = .none
         self.view.window?.makeFirstResponder(self)
         super.viewDidLoad()
         // Do view setup here.

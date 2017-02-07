@@ -8,6 +8,30 @@
 
 import Cocoa
 import MultipeerConnectivity
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutlineViewDataSource, NSTextFieldDelegate {
     
@@ -32,11 +56,11 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     
     
     lazy var rootSourceListItem: SourceListItem? = {
-        let request = NSFetchRequest(entityName: "SourceListItem")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "SourceListItem")
         do {
             let predicate = NSPredicate(format: "is_root == true")
             request.predicate = predicate
-            let result = try self.managedContext.executeFetchRequest(request) as! [SourceListItem]
+            let result = try self.managedContext.fetch(request) as! [SourceListItem]
             if result.count > 0 {
                 return result[0]
             } else {
@@ -49,7 +73,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }()
     
     lazy var managedContext: NSManagedObjectContext = {
-        return (NSApplication.sharedApplication().delegate
+        return (NSApplication.shared().delegate
             as? AppDelegate)?.managedObjectContext }()!
     
     func createTree() {
@@ -77,7 +101,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         nodesNotVisited.append(rootNode!)
         while nodesNotVisited.isEmpty == false {
             let node = nodesNotVisited.removeFirst()
-            node.children.sortInPlace({return Int($0.item.sort_order!) < Int($1.item.sort_order!)})
+            node.children.sort(by: {return Int($0.item.sort_order!) < Int($1.item.sort_order!)})
             for node in node.children {
                 if node.children.count > 0 {
                     nodesNotVisited.append(node)
@@ -87,16 +111,16 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     func getCurrentSelection() -> SourceListNode {
-        let node = self.sourceList.itemAtRow(sourceList.selectedRow) as! SourceListNode
+        let node = self.sourceList.item(atRow: sourceList.selectedRow) as! SourceListNode
         return node
     }
     
     func selectLibrary() {
-        let libraryRowIndexSet = NSIndexSet(index: 1)
+        let libraryRowIndexSet = IndexSet(integer: 1)
         sourceList.selectRowIndexes(libraryRowIndexSet, byExtendingSelection: false)
     }
     
-    func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
+    func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         if item == nil {
             if rootNode == nil {
                 return 0
@@ -112,7 +136,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         let source = item as! SourceListNode
         return source.children.count
     }
-    func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool {
+    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         let source = item as! SourceListNode
         if source.children.count > 0 {
             return true
@@ -121,16 +145,16 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         }
     }
     
-    func outlineView(outlineView: NSOutlineView, setObjectValue object: AnyObject?, forTableColumn tableColumn: NSTableColumn?, byItem item: AnyObject?) {
+    func outlineView(_ outlineView: NSOutlineView, setObjectValue object: Any?, for tableColumn: NSTableColumn?, byItem item: Any?) {
         print("set object value called")
     }
     
-    override func controlTextDidEndEditing(obj: NSNotification) {
-        let node = sourceList.itemAtRow(sourceList.rowForView(obj.object as! NSTextField)) as! SourceListNode
+    override func controlTextDidEndEditing(_ obj: Notification) {
+        let node = sourceList.item(atRow: sourceList.row(for: obj.object as! NSTextField)) as! SourceListNode
         node.item.name = (obj.object as! NSTextField).stringValue
     }
     
-    func outlineView(outlineView: NSOutlineView, child index: Int, ofItem item: AnyObject?) -> AnyObject {
+    func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         if item == nil {
             if rootNode!.children[index].children.count > 0 {
                 return rootNode!.children[index]
@@ -143,7 +167,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         return child
     }
     
-    func outlineView(outlineView: NSOutlineView, shouldEditTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> Bool {
+    func outlineView(_ outlineView: NSOutlineView, shouldEdit tableColumn: NSTableColumn?, item: Any) -> Bool {
         print("should edit called")
         return true
     }
@@ -151,8 +175,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     func getNodesBeforePlaylists() -> Int {
         var index = 0
         var found = false
-        while found == false && sourceList.itemAtRow(index) != nil {
-            let item = sourceList.itemAtRow(index) as! SourceListNode
+        while found == false && sourceList.item(atRow: index) != nil {
+            let item = sourceList.item(atRow: index) as! SourceListNode
             if item.item.parent == playlistHeaderNode!.item {
                 found = true
             } else {
@@ -162,8 +186,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         return index
     }
     
-    func createPlaylistFolder(nodes: [SourceListNode]?) {
-        let playlistFolderItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
+    func createPlaylistFolder(_ nodes: [SourceListNode]?) {
+        let playlistFolderItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         playlistFolderItem.is_folder = true
         let playlistFolderNode = SourceListNode(item: playlistFolderItem)
         playlistFolderItem.name = "New Playlist Folder"
@@ -172,14 +196,14 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         if nodes != nil {
             makeNodesSubnodesOfNode(nodes!, parentNode: playlistFolderNode, index: 0)
         }
-        playlistHeaderNode?.children.insert(playlistFolderNode, atIndex: 0)
+        playlistHeaderNode?.children.insert(playlistFolderNode, at: 0)
         sourceList.reloadData()
-        let newPlaylistIndex = NSIndexSet(index: getNodesBeforePlaylists())
+        let newPlaylistIndex = IndexSet(integer: getNodesBeforePlaylists())
         sourceList.selectRowIndexes(newPlaylistIndex, byExtendingSelection: false)
-        sourceList.editColumn(0, row: sourceList.selectedRow, withEvent: nil, select: true)
+        sourceList.editColumn(0, row: sourceList.selectedRow, with: nil, select: true)
     }
     
-    func makeNodesSubnodesOfNode(nodes: [SourceListNode], parentNode: SourceListNode, index: Int) {
+    func makeNodesSubnodesOfNode(_ nodes: [SourceListNode], parentNode: SourceListNode, index: Int) {
         let parentItem = parentNode.item
         let itemsToBeAdded = nodes.map({return $0.item})
         let newItemChildren: NSMutableOrderedSet = parentItem.children?.count > 0 ? parentItem.children?.mutableCopy() as! NSMutableOrderedSet : NSMutableOrderedSet()
@@ -189,16 +213,16 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             let currentParentNode = item.node!.parent!
             let currentParentItem = item.node!.parent!.item
             //remove from sibling sets for both items and nodes, then reset parents
-            let currentNodeSiblingIndex = currentParentNode.children.indexOf(item.node!)
-            currentParentNode.children.removeAtIndex(currentNodeSiblingIndex!)
+            let currentNodeSiblingIndex = currentParentNode.children.index(of: item.node!)
+            currentParentNode.children.remove(at: currentNodeSiblingIndex!)
             let currentItemSiblingsMutableCopy = currentParentItem.children!.mutableCopy() as! NSMutableOrderedSet
-            currentItemSiblingsMutableCopy.removeObject(item)
+            currentItemSiblingsMutableCopy.remove(item)
             currentParentItem.children = currentItemSiblingsMutableCopy as NSOrderedSet
             item.node!.parent = parentNode
             item.parent = parentItem
             //insert into new sibling sets at appropriate index
-            newItemChildren.insertObject(item, atIndex: mutableIndex)
-            parentNode.children.insert(item.node!, atIndex: mutableIndex)
+            newItemChildren.insert(item, at: mutableIndex)
+            parentNode.children.insert(item.node!, at: mutableIndex)
             if !(parentNode == currentParentNode && currentNodeSiblingIndex < index) {
                 mutableIndex += 1
             }
@@ -206,46 +230,46 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         parentItem.children = newItemChildren as NSOrderedSet
         var index = 0
         for node in parentNode.children {
-            node.item.sort_order = index
+            node.item.sort_order = index as NSNumber?
             index += 1
         }
         sortTree()
         sourceList.reloadData()
     }
     
-    func createPlaylist(tracks: [Int]?, smart_criteria: SmartCriteria?) {
+    func createPlaylist(_ tracks: [Int]?, smart_criteria: SmartCriteria?) {
         //create playlist
-        let playlist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: managedContext) as! SongCollection
-        let playlistItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
+        let playlist = NSEntityDescription.insertNewObject(forEntityName: "SongCollection", into: managedContext) as! SongCollection
+        let playlistItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         playlistItem.playlist = playlist
         playlistItem.name = "New Playlist"
         playlistItem.parent = rootNode?.children[2].item
         if tracks != nil {
-            playlist.track_id_list = tracks!
+            playlist.track_id_list = tracks! as NSObject?
         }
         if smart_criteria != nil {
             playlist.smart_criteria = smart_criteria
         }
         //todo ID
         playlist.id = library?.next_playlist_id
-        library?.next_playlist_id = Int(library!.next_playlist_id!) + 1
+        library?.next_playlist_id = Int(library!.next_playlist_id!) + 1 as NSNumber
         //create node
         let newSourceListNode = SourceListNode(item: playlistItem)
         newSourceListNode.parent = playlistHeaderNode
-        playlistHeaderNode?.children.insert(newSourceListNode, atIndex: 0)
+        playlistHeaderNode?.children.insert(newSourceListNode, at: 0)
         sourceList.reloadData()
         print(getNodesBeforePlaylists())
-        let newPlaylistIndex = NSIndexSet(index: getNodesBeforePlaylists())
+        let newPlaylistIndex = IndexSet(integer: getNodesBeforePlaylists())
         sourceList.selectRowIndexes(newPlaylistIndex, byExtendingSelection: false)
-        sourceList.editColumn(0, row: sourceList.selectedRow, withEvent: nil, select: true)
+        sourceList.editColumn(0, row: sourceList.selectedRow, with: nil, select: true)
     }
     
-    func addNetworkedLibrary(peer: MCPeerID) {
-        let newSourceListItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
+    func addNetworkedLibrary(_ peer: MCPeerID) {
+        let newSourceListItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         newSourceListItem.parent = self.rootNode?.children[1].item
         newSourceListItem.name = peer.displayName
         newSourceListItem.is_network = true
-        let newLibrary = NSEntityDescription.insertNewObjectForEntityForName("Library", inManagedObjectContext: managedContext) as! Library
+        let newLibrary = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
         newLibrary.is_network = true
         newLibrary.name = peer.displayName
         newLibrary.peer = peer
@@ -253,13 +277,13 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         let newSourceListNode = SourceListNode(item: newSourceListItem)
         self.rootNode?.children[1].children.append(newSourceListNode)
         sharedLibraryIdentifierDictionary[peer] = newSourceListNode
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             self.sourceList.reloadData()
         }
         print("wrote \(peer) to shared library identifier dictionary")
     }
     
-    func removeNetworkedLibrary(peer: MCPeerID) {
+    func removeNetworkedLibrary(_ peer: MCPeerID) {
         guard let node = self.sharedLibraryIdentifierDictionary[peer] as? SourceListNode else {return}
         var nodesNotVisited = [SourceListNode]()
         nodesNotVisited.append(node)
@@ -267,32 +291,32 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             let theNode = nodesNotVisited.removeFirst()
             if theNode.item.playlist?.track_id_list != nil {
                 //delete network tracks, track views, artist, albums, composers, genres
-                let trackViewFetchRequest = NSFetchRequest(entityName: "TrackView")
+                let trackViewFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackView")
                 let trackViewFetchPredicate = NSPredicate(format: "is_network == true AND track.id in %@", theNode.item.playlist?.track_id_list as! [Int])
                 trackViewFetchRequest.predicate = trackViewFetchPredicate
                 do {
-                    let results = try managedContext.executeFetchRequest(trackViewFetchRequest) as! [TrackView]
+                    let results = try managedContext.fetch(trackViewFetchRequest) as! [TrackView]
                     for thing in results {
-                        managedContext.deleteObject(thing.track!)
-                        managedContext.deleteObject(thing)
+                        managedContext.delete(thing.track!)
+                        managedContext.delete(thing)
                     }
                 } catch {
                     print(error)
                 }
             }
             if theNode.children.count > 0 {
-                nodesNotVisited.appendContentsOf(theNode.children)
+                nodesNotVisited.append(contentsOf: theNode.children)
             }
         }
-        sharedHeaderNode!.children.removeAtIndex(sharedHeaderNode!.children.indexOf(node)!)
-        let deleteFetch = NSFetchRequest(entityName: "SourceListItem")
+        sharedHeaderNode!.children.remove(at: sharedHeaderNode!.children.index(of: node)!)
+        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "SourceListItem")
         let deletePredicate = NSPredicate(format: "is_network == true")
         deleteFetch.predicate = deletePredicate
         do {
-            let results = try managedContext.executeFetchRequest(deleteFetch) as! [SourceListItem]
+            let results = try managedContext.fetch(deleteFetch) as! [SourceListItem]
             for result in results {
                 if result.library?.peer == peer {
-                    managedContext.deleteObject(result)
+                    managedContext.delete(result)
                 }
             }
             try managedContext.save()
@@ -302,11 +326,11 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         sourceList.reloadData()
     }
     
-    func addSourcesForNetworkedLibrary(sourceData: [NSDictionary], peer: MCPeerID) {
+    func addSourcesForNetworkedLibrary(_ sourceData: [NSDictionary], peer: MCPeerID) {
         print("looking up \(peer) in shared library identifier dictionary")
         let item = self.sharedLibraryIdentifierDictionary[peer] as! SourceListNode
         //create sourcelistitem
-        let masterItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
+        let masterItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         masterItem.name = "Music"
         
         masterItem.parent = item.item
@@ -316,7 +340,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         let newSourceListNode = SourceListNode(item: masterItem)
         item.children.append(newSourceListNode)
         //create expandable sourcelistitem for playlists
-        let playlistsItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
+        let playlistsItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         playlistsItem.name = "Playlists"
         playlistsItem.parent = item.item
         playlistsItem.is_network = true
@@ -326,14 +350,14 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         item.children.append(playlistsItemNode)
         for playlist in sourceData {
             //create sourcelistitem
-            let newItem = NSEntityDescription.insertNewObjectForEntityForName("SourceListItem", inManagedObjectContext: managedContext) as! SourceListItem
-            newItem.sort_order = playlist["sort_order"] as! Int
+            let newItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
+            newItem.sort_order = playlist["sort_order"] as! Int as NSNumber?
             newItem.name = playlist["name"] as? String
             newItem.parent = playlistsItem
             newItem.library = item.item.library
             //create playlist object
-            let newPlaylist = NSEntityDescription.insertNewObjectForEntityForName("SongCollection", inManagedObjectContext: managedContext) as! SongCollection
-            newPlaylist.id = playlist["id"] as! Int
+            let newPlaylist = NSEntityDescription.insertNewObject(forEntityName: "SongCollection", into: managedContext) as! SongCollection
+            newPlaylist.id = playlist["id"] as! Int as NSNumber?
             newItem.playlist = newPlaylist
             newItem.parent = playlistsItem
             newItem.is_network = true
@@ -342,12 +366,12 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             sourceNode.item = newItem
             playlistsItemNode.children.append(sourceNode)
         }
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             self.sourceList.reloadData()
         }
     }
     
-    func outlineView(outlineView: NSOutlineView, shouldSelectItem item: AnyObject) -> Bool {
+    func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
         let source = (item as! SourceListNode).item
         if source.is_header == true {
             return false
@@ -358,49 +382,49 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         }
     }
     
-    func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
+    func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         let source = item as! SourceListNode
         if (source.item.is_header == true) {
-            let view = outlineView.makeViewWithIdentifier("HeaderCell", owner: self) as! SourceListCellView
+            let view = outlineView.make(withIdentifier: "HeaderCell", owner: self) as! SourceListCellView
             view.node = source
             view.textField?.stringValue = source.item.name!
-            view.textField?.editable = false
+            view.textField?.isEditable = false
             return view
         } else if source.item.playlist != nil {
             if source.item.playlist?.smart_criteria != nil {
-                let view = outlineView.makeViewWithIdentifier("SmartPlaylistCell", owner: self) as! SourceListCellView
+                let view = outlineView.make(withIdentifier: "SmartPlaylistCell", owner: self) as! SourceListCellView
                 view.node = source
                 view.textField?.stringValue = source.item.name!
                 view.textField?.delegate = self
                 return view
             } else {
-                let view = outlineView.makeViewWithIdentifier("PlaylistCell", owner: self) as! SourceListCellView
+                let view = outlineView.make(withIdentifier: "PlaylistCell", owner: self) as! SourceListCellView
                 view.node = source
                 view.textField?.stringValue = source.item.name!
                 view.textField?.delegate = self
                 return view
             }
         } else if source.item.is_network == true {
-            let view = outlineView.makeViewWithIdentifier("NetworkLibraryCell", owner: self) as! SourceListCellView
+            let view = outlineView.make(withIdentifier: "NetworkLibraryCell", owner: self) as! SourceListCellView
             view.node = source
             view.textField?.stringValue = source.item.name!
-            view.textField?.editable = false
+            view.textField?.isEditable = false
             return view
         } else if source.item.is_folder == true {
-            let view = outlineView.makeViewWithIdentifier("PlaylistFolderCell", owner: self) as! SourceListCellView
+            let view = outlineView.make(withIdentifier: "PlaylistFolderCell", owner: self) as! SourceListCellView
             view.node = source
             view.textField?.stringValue = source.item.name!
             view.textField?.delegate = self
-            view.textField?.editable = true
+            view.textField?.isEditable = true
             return view
         } else if source.item.library != nil {
-            let view = outlineView.makeViewWithIdentifier("MasterPlaylistCell", owner: self) as! SourceListCellView
+            let view = outlineView.make(withIdentifier: "MasterPlaylistCell", owner: self) as! SourceListCellView
             view.node = source
             view.textField?.stringValue = source.item.name!
-            view.textField?.editable = false
+            view.textField?.isEditable = false
             return view
         } else {
-            let view = outlineView.makeViewWithIdentifier("PlaylistCell", owner: self) as! SourceListCellView
+            let view = outlineView.make(withIdentifier: "PlaylistCell", owner: self) as! SourceListCellView
             view.node = source
             view.textField?.stringValue = source.item.name!
             view.textField?.delegate = self
@@ -408,23 +432,23 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         }
     }
     
-    func getNetworkPlaylist(id: Int) -> SourceListItem? {
+    func getNetworkPlaylist(_ id: Int) -> SourceListItem? {
         let item = requestedSharedPlaylists[id] as? SourceListItem
         return item
     }
     
     func getCurrentSelectionSharedLibraryPeer() -> MCPeerID {
-        return (sourceList.itemAtRow(sourceList.selectedRow) as! SourceListNode).item.library!.peer as! MCPeerID
+        return (sourceList.item(atRow: sourceList.selectedRow) as! SourceListNode).item.library!.peer as! MCPeerID
     }
     
-    func doneAddingNetworkPlaylistCallback(item: SourceListItem) {
+    func doneAddingNetworkPlaylistCallback(_ item: SourceListItem) {
         guard currentSourceListItem == item else {return}
         let track_id_list = item.playlist?.track_id_list as? [Int]
         mainWindowController?.networkPlaylistCallback(Int(item.playlist!.id!), idList: track_id_list!)
     }
     
-    func outlineViewSelectionDidChange(notification: NSNotification) {
-        let selectionNode = (sourceList.itemAtRow(sourceList.selectedRow) as! SourceListNode)
+    func outlineViewSelectionDidChange(_ notification: Notification) {
+        let selectionNode = (sourceList.item(atRow: sourceList.selectedRow) as! SourceListNode)
         let selection = selectionNode.item
         self.currentSourceListItem = selection
         let track_id_list = selection.playlist?.track_id_list as? [Int]
@@ -436,11 +460,11 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         mainWindowController?.switchToPlaylist(selection)
     }
     
-    func outlineView(outlineView: NSOutlineView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forItems draggedItems: [AnyObject]) {
+    func outlineView(_ outlineView: NSOutlineView, draggingSession session: NSDraggingSession, willBeginAt screenPoint: NSPoint, forItems draggedItems: [Any]) {
         print("called")
     }
     
-    func outlineView(outlineView: NSOutlineView, writeItems items: [AnyObject], toPasteboard pasteboard: NSPasteboard) -> Bool {
+    func outlineView(_ outlineView: NSOutlineView, writeItems items: [Any], to pasteboard: NSPasteboard) -> Bool {
         print(items)
         draggedNodes = items as? [SourceListNode]
         //for intra-NSOV drags, we do not attach pasteboard data
@@ -448,42 +472,42 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         return true
     }
     
-    func outlineView(outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: AnyObject?, proposedChildIndex index: Int) -> NSDragOperation {
+    func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
         print("validate drop called on source list")
-        print(info.draggingPasteboard().dataForType("Track"))
+        print(info.draggingPasteboard().data(forType: "Track"))
         if draggedNodes != nil {
             let node = item as? SourceListNode
             print(index)
             if node?.item.is_folder == true {
                 print("returning generic")
-                return .Every
+                return .every
             } else if node == playlistHeaderNode && index != -1 {
                 print("returning move")
-                return .Move
+                return .move
             } else {
                 print("returning none")
-                return .None
+                return NSDragOperation()
             }
-        } else if info.draggingPasteboard().dataForType("Track") != nil {
+        } else if info.draggingPasteboard().data(forType: "Track") != nil {
             print("non nil track data")
             if item != nil && (item as! SourceListNode).item.parent?.name == "Playlists" {
-                return .Generic
+                return .generic
             }
-        } else if info.draggingPasteboard().dataForType("NetworkTrack") != nil {
+        } else if info.draggingPasteboard().data(forType: "NetworkTrack") != nil {
             print("non nil networktrack data")
             if item != nil {
                 let itemParentName = (item as! SourceListNode).item.parent?.name
                 print(itemParentName)
                 if item != nil && (itemParentName == "Playlists" || itemParentName == "Library") {
-                    return .Generic
+                    return .generic
                 }
             }
         }
         print("returning none")
-        return .None
+        return NSDragOperation()
     }
     
-    func outlineView(outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: AnyObject?, childIndex index: Int) -> Bool {
+    func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
         if draggedNodes != nil {
             var fixedIndex = index
             if index == -1 {
@@ -493,17 +517,17 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             draggedNodes = nil
             sourceList.reloadData()
             return true
-        } else if info.draggingPasteboard().dataForType("Track") != nil {
+        } else if info.draggingPasteboard().data(forType: "Track") != nil {
             print("doing stuff")
             let playlistItem = (item as! SourceListNode).item
             let playlist = playlistItem.playlist
-            let data = info.draggingPasteboard().dataForType("Track")
-            let unCodedThing = NSKeyedUnarchiver.unarchiveObjectWithData(data!) as! NSMutableArray
+            let data = info.draggingPasteboard().data(forType: "Track")
+            let unCodedThing = NSKeyedUnarchiver.unarchiveObject(with: data!) as! NSMutableArray
             let tracks = { () -> [Track] in
                 var result = [Track]()
                 for trackURI in unCodedThing {
-                    let id = managedContext.persistentStoreCoordinator?.managedObjectIDForURIRepresentation(trackURI as! NSURL)
-                    result.append(managedContext.objectWithID(id!) as! Track)
+                    let id = managedContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: trackURI as! URL)
+                    result.append(managedContext.object(with: id!) as! Track)
                 }
                 return result
             }()
@@ -515,19 +539,19 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
                     id_list = [Int]()
                 }
                 id_list.append(Int(track.id!))
-                playlist?.track_id_list = id_list
+                playlist?.track_id_list = id_list as NSObject?
             }
-        } else if info.draggingPasteboard().dataForType("NetworkTrack") != nil {
+        } else if info.draggingPasteboard().data(forType: "NetworkTrack") != nil {
             print("processing network track transfers")
             let playlistItem = (item as! SourceListNode).item
             let playlist = playlistItem.playlist
-            let data = info.draggingPasteboard().dataForType("NetworkTrack")
-            let unCodedThing = NSKeyedUnarchiver.unarchiveObjectWithData(data!) as! NSMutableArray
+            let data = info.draggingPasteboard().data(forType: "NetworkTrack")
+            let unCodedThing = NSKeyedUnarchiver.unarchiveObject(with: data!) as! NSMutableArray
             let tracks = { () -> [Track] in
                 var result = [Track]()
                 for trackURI in unCodedThing {
-                    let id = managedContext.persistentStoreCoordinator?.managedObjectIDForURIRepresentation(trackURI as! NSURL)
-                    result.append(managedContext.objectWithID(id!) as! Track)
+                    let id = managedContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: trackURI as! URL)
+                    result.append(managedContext.object(with: id!) as! Track)
                 }
                 return result
             }()
@@ -540,7 +564,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     func selectStuff() {
-        let indexSet = NSIndexSet(index: 1)
+        let indexSet = IndexSet(integer: 1)
         sourceList.selectRowIndexes(indexSet, byExtendingSelection: false)
         mainWindowController?.libraryTableViewController?.item = libraryHeaderNode?.children[0].item
     }
@@ -551,8 +575,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         libraryHeaderNode = rootNode?.children[0]
         sharedHeaderNode = rootNode?.children[1]
         playlistHeaderNode = rootNode?.children[2]
-        sourceList.setDelegate(self)
-        sourceList.setDataSource(self)
+        sourceList.delegate = self
+        sourceList.dataSource = self
         sourceList.autosaveExpandedItems = true
         sourceList.expandItem(libraryHeaderNode)
         sourceList.expandItem(playlistHeaderNode)

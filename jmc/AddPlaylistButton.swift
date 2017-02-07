@@ -10,8 +10,8 @@ import Cocoa
 
 class AddPlaylistButton: NSSegmentedControl {
 
-    override func drawRect(dirtyRect: NSRect) {
-        super.drawRect(dirtyRect)
+    override func draw(_ dirtyRect: NSRect) {
+        super.draw(dirtyRect)
         self.setMenu(self.menu, forSegment: 0)
 
         // Drawing code here.

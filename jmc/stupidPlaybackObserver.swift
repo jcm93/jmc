@@ -9,17 +9,17 @@
 import Cocoa
 
 class stupidPlaybackObserver: NSObject {
-    private var kvocontext = 0
+    fileprivate var kvocontext = 0
     
-    private let queue: AudioModule
+    fileprivate let queue: AudioModule
     
     init(the_queue: AudioModule) {
         self.queue = the_queue
         super.init()
-        queue.addObserver(self, forKeyPath: "is_initialized", options: .New, context: &kvocontext)
+        queue.addObserver(self, forKeyPath: "is_initialized", options: .new, context: &kvocontext)
     }
     
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if context == &kvocontext {
             return
         }

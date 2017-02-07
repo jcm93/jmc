@@ -20,11 +20,11 @@ class AdvancedFilterViewController: NSViewController {
     
     var mainWindowController: MainWindowController?
     
-    @IBAction func lengthDeterminantChanged(sender: AnyObject) {
+    @IBAction func lengthDeterminantChanged(_ sender: AnyObject) {
         
     }
 
-    @IBAction func orderingCriterionChanged(sender: AnyObject) {
+    @IBAction func orderingCriterionChanged(_ sender: AnyObject) {
         
     }
     
@@ -34,10 +34,10 @@ class AdvancedFilterViewController: NSViewController {
         }
     }
     
-    @IBAction func createSmartPlaylistButtonPressed(sender: AnyObject) {
-        let newSmartCriteria = NSEntityDescription.insertNewObjectForEntityForName("SmartCriteria", inManagedObjectContext: managedContext) as! SmartCriteria
+    @IBAction func createSmartPlaylistButtonPressed(_ sender: AnyObject) {
+        let newSmartCriteria = NSEntityDescription.insertNewObject(forEntityName: "SmartCriteria", into: managedContext) as! SmartCriteria
         if limitCheck.state == NSOnState {
-            newSmartCriteria.fetch_limit = itemLimitField.integerValue
+            newSmartCriteria.fetch_limit = itemLimitField.integerValue as NSNumber?
             newSmartCriteria.fetch_limit_type = playlistLengthDeterminantSelector.titleOfSelectedItem
             newSmartCriteria.ordering_criterion = playlistSelectionCriteriaSelector.titleOfSelectedItem
         } else {
@@ -52,7 +52,7 @@ class AdvancedFilterViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if mainWindowController?.currentTableViewController?.playlist != nil {
-            createSmartPlaylistButton.enabled = false
+            createSmartPlaylistButton.isEnabled = false
         }
         // Do view setup here.
     }

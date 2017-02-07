@@ -10,15 +10,39 @@
 
 import Cocoa
 import CoreData
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
 
-var managedContext = (NSApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
+
+var managedContext = (NSApplication.shared().delegate as! AppDelegate).managedObjectContext
 
 var library = {() -> Library? in
-    let fetchReq = NSFetchRequest(entityName: "Library")
+    let fetchReq = NSFetchRequest<NSFetchRequestResult>(entityName: "Library")
     let predicate = NSPredicate(format: "is_network == nil OR is_network == false")
     fetchReq.predicate = predicate
     do {
-        let result = try managedContext.executeFetchRequest(fetchReq)[0] as! Library
+        let result = try managedContext.fetch(fetchReq)[0] as! Library
         return result
     } catch {
         return nil
@@ -67,25 +91,25 @@ let MIN_SEARCH_BAR_WIDTH_FRACTION: CGFloat = 0.145
 let MAX_VOLUME_BAR_WIDTH_FRACTION: CGFloat = 0.101
 let MIN_DISTANCE_BETWEEN_VOLUME_AND_SONG_BAR_FRACTION: CGFloat = 0.025
 
-let SOURCE_FETCH_REQUEST = NSFetchRequest(entityName: "SourceListItem")
-let TRACK_FETCH_REQUEST = NSFetchRequest(entityName: "Track")
-let TRACK_VIEW_FETCH_REQUEST = NSFetchRequest(entityName: "TrackView")
-let ALBUM_FETCH_REQUEST = NSFetchRequest(entityName: "Album")
-let ARTIST_FETCH_REQUEST = NSFetchRequest(entityName: "Artist")
-let COMPOSER_FETCH_REQUEST = NSFetchRequest(entityName: "Composer")
-let GENRE_FETCH_REQUEST = NSFetchRequest(entityName: "Genre")
-let SONG_COLLECTION_FETCH_REQUEST = NSFetchRequest(entityName: "SongCollection")
+let SOURCE_FETCH_REQUEST = NSFetchRequest<NSFetchRequestResult>(entityName: "SourceListItem")
+let TRACK_FETCH_REQUEST = NSFetchRequest<NSFetchRequestResult>(entityName: "Track")
+let TRACK_VIEW_FETCH_REQUEST = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackView")
+let ALBUM_FETCH_REQUEST = NSFetchRequest<NSFetchRequestResult>(entityName: "Album")
+let ARTIST_FETCH_REQUEST = NSFetchRequest<NSFetchRequestResult>(entityName: "Artist")
+let COMPOSER_FETCH_REQUEST = NSFetchRequest<NSFetchRequestResult>(entityName: "Composer")
+let GENRE_FETCH_REQUEST = NSFetchRequest<NSFetchRequestResult>(entityName: "Genre")
+let SONG_COLLECTION_FETCH_REQUEST = NSFetchRequest<NSFetchRequestResult>(entityName: "SongCollection")
 
 let IS_NETWORK_PREDICATE = NSPredicate(format: "is_network == %@", NSNumber(booleanLiteral: true))
 
-let BATCH_PURGE_NETWORK_FETCH_REQUESTS: [NSFetchRequest] = [GENRE_FETCH_REQUEST, COMPOSER_FETCH_REQUEST, ARTIST_FETCH_REQUEST, ALBUM_FETCH_REQUEST, TRACK_VIEW_FETCH_REQUEST, TRACK_FETCH_REQUEST, SOURCE_FETCH_REQUEST, SONG_COLLECTION_FETCH_REQUEST]
+let BATCH_PURGE_NETWORK_FETCH_REQUESTS: [NSFetchRequest<NSFetchRequestResult>] = [GENRE_FETCH_REQUEST, COMPOSER_FETCH_REQUEST, ARTIST_FETCH_REQUEST, ALBUM_FETCH_REQUEST, TRACK_VIEW_FETCH_REQUEST, TRACK_FETCH_REQUEST, SOURCE_FETCH_REQUEST, SONG_COLLECTION_FETCH_REQUEST]
 
 func purgeCurrentlyPlaying() {
-    let fetchRequest = NSFetchRequest(entityName: "Track")
+    let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Track")
     let predicate = NSPredicate(format: "is_playing == true")
     fetchRequest.predicate = predicate
     do {
-        let results = try managedContext.executeFetchRequest(fetchRequest) as! [Track]
+        let results = try managedContext.fetch(fetchRequest) as! [Track]
         for result in results {
             result.is_playing = nil
         }
@@ -107,14 +131,14 @@ let fieldsToCachedOrdersDictionary: NSDictionary = [
     "genre" : "Genre"
 ]
 
-func validateStringForFilename(string: String) -> String {
+func validateStringForFilename(_ string: String) -> String {
     let newString = String(string.characters.map({
         $0 == "/" ? ":" : $0
     }))
     return newString
 }
 
-func getImageExtension(uti: CFString) -> String? {
+func getImageExtension(_ uti: CFString) -> String? {
     if UTTypeConformsTo(uti, kUTTypeImage) {
         if UTTypeConformsTo(uti, kUTTypeJPEG) {
             return "jpg"
@@ -154,7 +178,7 @@ let defaultSortPrefixDictionary: NSMutableDictionary = [
     "an " : "",
 ]
 
-let DEFAULT_COLUMN_VISIBILITY_DICTIONARY: [String : AnyObject] = [
+let DEFAULT_COLUMN_VISIBILITY_DICTIONARY: [String : Int] = [
     "album" : 0,
     "artist" : 0,
     "bit_rate" : 0,
@@ -190,7 +214,7 @@ let DEFAULT_COLUMN_VISIBILITY_DICTIONARY: [String : AnyObject] = [
 ]
 
 
-func shuffleArray(array: [AnyObject]) -> [AnyObject]? {
+func shuffleArray(_ array: [AnyObject]) -> [AnyObject]? {
     guard array.count > 0 else {return nil}
     var newArray = array
     for i in 0..<array.count - 1 {
@@ -201,7 +225,7 @@ func shuffleArray(array: [AnyObject]) -> [AnyObject]? {
     return newArray
 }
 
-func shuffleMutableOrderedSet(inout mos: NSMutableOrderedSet) {
+func shuffleMutableOrderedSet(_ mos: inout NSMutableOrderedSet) {
     guard mos.count > 0 else {return}
     for i in 0..<mos.count - 1 {
         let j = Int(arc4random_uniform(UInt32(mos.count - i))) + i
@@ -210,13 +234,13 @@ func shuffleMutableOrderedSet(inout mos: NSMutableOrderedSet) {
     }
 }
 
-func getTrackWithID(id: Int) -> Track? {
-    let fetch_req = NSFetchRequest(entityName: "Track")
+func getTrackWithID(_ id: Int) -> Track? {
+    let fetch_req = NSFetchRequest<NSFetchRequestResult>(entityName: "Track")
     let pred = NSPredicate(format: "id == \(id)")
     fetch_req.predicate = pred
     let result: Track? = {() -> Track? in
         do {
-            let trackList = try managedContext.executeFetchRequest(fetch_req) as? [Track]
+            let trackList = try managedContext.fetch(fetch_req) as? [Track]
             if trackList!.count > 0 {
                 return trackList![0]
             } else {
@@ -230,13 +254,13 @@ func getTrackWithID(id: Int) -> Track? {
     return result
 }
 
-func getNetworkTrackWithID(id: Int) -> Track? {
-    let fetch_req = NSFetchRequest(entityName: "Track")
+func getNetworkTrackWithID(_ id: Int) -> Track? {
+    let fetch_req = NSFetchRequest<NSFetchRequestResult>(entityName: "Track")
     let pred = NSPredicate(format: "id == \(id) && is_network == true")
     fetch_req.predicate = pred
     let result: Track? = {() -> Track? in
         do {
-            return try (managedContext.executeFetchRequest(fetch_req) as! [Track])[0]
+            return try (managedContext.fetch(fetch_req) as! [Track])[0]
         }
         catch {
             return nil
@@ -249,44 +273,44 @@ func getNetworkTrackWithID(id: Int) -> Track? {
 let sharedLibraryNamesDictionary = NSMutableDictionary()
 
 extension Track {
-    @objc func compareArtist(other: Track) -> NSComparisonResult {
+    @objc func compareArtist(_ other: Track) -> ComparisonResult {
         let self_artist_name = (self.sort_artist != nil) ? self.sort_artist : self.artist?.name
         let other_artist_name = (other.sort_artist != nil) ? other.sort_artist : other.artist?.name
-        let artist_comparison: NSComparisonResult
+        let artist_comparison: ComparisonResult
         if self_artist_name == nil || other_artist_name == nil {
-            artist_comparison = (self_artist_name == other_artist_name) ? .OrderedSame : (other_artist_name != nil) ? .OrderedAscending : .OrderedDescending
+            artist_comparison = (self_artist_name == other_artist_name) ? .orderedSame : (other_artist_name != nil) ? .orderedAscending : .orderedDescending
         } else {
             artist_comparison = self_artist_name!.localizedStandardCompare(other_artist_name!)
         }
-        if artist_comparison == .OrderedSame {
+        if artist_comparison == .orderedSame {
             let self_album_name = self.sort_album != nil ? self.sort_album : self.album?.name
             let other_album_name = other.sort_album != nil ? other.sort_album : other.album?.name
-            let album_comparison: NSComparisonResult
+            let album_comparison: ComparisonResult
             if self_album_name == nil || other_album_name == nil {
-                album_comparison = (self_album_name == other_album_name) ? .OrderedSame : (other_album_name != nil) ? .OrderedAscending : .OrderedDescending
+                album_comparison = (self_album_name == other_album_name) ? .orderedSame : (other_album_name != nil) ? .orderedAscending : .orderedDescending
             } else {
                 album_comparison = self_album_name!.localizedStandardCompare(other_album_name!)
             }
-            if album_comparison == .OrderedSame {
+            if album_comparison == .orderedSame {
                 let self_disc_num = self.disc_number
                 let other_disc_num = other.disc_number
-                let disc_num_comparison: NSComparisonResult
+                let disc_num_comparison: ComparisonResult
                 if self_disc_num == nil || other_disc_num == nil {
-                    disc_num_comparison = (self_disc_num == other_disc_num) ? .OrderedSame : (other_disc_num != nil) ? .OrderedAscending : .OrderedDescending
+                    disc_num_comparison = (self_disc_num == other_disc_num) ? .orderedSame : (other_disc_num != nil) ? .orderedAscending : .orderedDescending
                 } else {
                     disc_num_comparison = self.disc_number!.compare(other_disc_num!)
                 }
-                if disc_num_comparison == .OrderedSame {
+                if disc_num_comparison == .orderedSame {
                     let self_track_num = self.track_num
                     let other_track_num = other.track_num
                     guard self_track_num != nil && other_track_num != nil else {
-                        return (self_track_num == other_track_num) ? .OrderedSame : (other_track_num != nil) ? .OrderedAscending : .OrderedDescending
+                        return (self_track_num == other_track_num) ? .orderedSame : (other_track_num != nil) ? .orderedAscending : .orderedDescending
                     }
                     if self_track_num == other_track_num {
                         let self_name = self.sort_name != nil ? self.sort_name : self.name
                         let other_name = other.sort_name != nil ? other.sort_name : other.name
                         guard self_name != nil && other_name != nil else {
-                            return (self_name == other_name) ? .OrderedSame : (other_name != nil) ? .OrderedAscending : .OrderedDescending
+                            return (self_name == other_name) ? .orderedSame : (other_name != nil) ? .orderedAscending : .orderedDescending
                         }
                         return self_name!.localizedStandardCompare(other_name!)
                     } else {
@@ -303,44 +327,44 @@ extension Track {
         }
     }
     
-    @objc func compareAlbum(other: Track) -> NSComparisonResult {
+    @objc func compareAlbum(_ other: Track) -> ComparisonResult {
         let self_album_name = self.sort_album != nil ? self.sort_album : self.album?.name
         let other_album_name = other.sort_album != nil ? other.sort_album : other.album?.name
-        let album_comparison: NSComparisonResult
+        let album_comparison: ComparisonResult
         if self_album_name == nil || other_album_name == nil {
-            album_comparison = (self_album_name == other_album_name) ? .OrderedSame : (other_album_name != nil) ? .OrderedAscending : .OrderedDescending
+            album_comparison = (self_album_name == other_album_name) ? .orderedSame : (other_album_name != nil) ? .orderedAscending : .orderedDescending
         } else {
             album_comparison = self_album_name!.localizedStandardCompare(other_album_name!)
         }
-        if album_comparison == .OrderedSame {
+        if album_comparison == .orderedSame {
             let self_artist_name = (self.sort_artist != nil) ? self.sort_artist : self.artist?.name
             let other_artist_name = (other.sort_artist != nil) ? other.sort_artist : other.artist?.name
-            let artist_comparison: NSComparisonResult
+            let artist_comparison: ComparisonResult
             if self_artist_name == nil || other_artist_name == nil {
-                artist_comparison = (self_artist_name == other_artist_name) ? .OrderedSame : (other_artist_name != nil) ? .OrderedAscending : .OrderedDescending
+                artist_comparison = (self_artist_name == other_artist_name) ? .orderedSame : (other_artist_name != nil) ? .orderedAscending : .orderedDescending
             } else {
                 artist_comparison = self_artist_name!.localizedStandardCompare(other_artist_name!)
             }
-            if artist_comparison == .OrderedSame {
+            if artist_comparison == .orderedSame {
                 let self_disc_num = self.disc_number
                 let other_disc_num = other.disc_number
-                let disc_num_comparison: NSComparisonResult
+                let disc_num_comparison: ComparisonResult
                 if self_disc_num == nil || other_disc_num == nil {
-                    disc_num_comparison = (self_disc_num == other_disc_num) ? .OrderedSame : (other_disc_num != nil) ? .OrderedAscending : .OrderedDescending
+                    disc_num_comparison = (self_disc_num == other_disc_num) ? .orderedSame : (other_disc_num != nil) ? .orderedAscending : .orderedDescending
                 } else {
                     disc_num_comparison = self.disc_number!.compare(other_disc_num!)
                 }
-                if disc_num_comparison == .OrderedSame {
+                if disc_num_comparison == .orderedSame {
                     let self_track_num = self.track_num
                     let other_track_num = other.track_num
                     guard self_track_num != nil && other_track_num != nil else {
-                        return (self_track_num == other_track_num) ? .OrderedSame : (other_track_num != nil) ? .OrderedAscending : .OrderedDescending
+                        return (self_track_num == other_track_num) ? .orderedSame : (other_track_num != nil) ? .orderedAscending : .orderedDescending
                     }
                     if self_track_num == other_track_num {
                         let self_name = self.sort_name != nil ? self.sort_name : self.name
                         let other_name = other.sort_name != nil ? other.sort_name : other.name
                         guard self_name != nil && other_name != nil else {
-                            return (self_name == other_name) ? .OrderedSame : (other_name != nil) ? .OrderedAscending : .OrderedDescending
+                            return (self_name == other_name) ? .orderedSame : (other_name != nil) ? .orderedAscending : .orderedDescending
                         }
                         return self_name!.localizedStandardCompare(other_name!)
                     } else {
@@ -357,44 +381,44 @@ extension Track {
         }
     }
     
-    @objc func compareAlbumArtist(other: Track) -> NSComparisonResult {
+    @objc func compareAlbumArtist(_ other: Track) -> ComparisonResult {
         let self_album_artist_name = self.sort_album_artist != nil ? self.sort_album_artist : self.album?.album_artist?.name != nil ? self.album?.album_artist?.name : self.sort_artist != nil ? self.sort_artist : self.artist?.name
         let other_album_artist_name = other.sort_album_artist != nil ? other.sort_album_artist : other.album?.album_artist?.name != nil ? other.album?.album_artist?.name : other.sort_artist != nil ? other.sort_artist : self.artist?.name
-        let album_artist_comparison: NSComparisonResult
+        let album_artist_comparison: ComparisonResult
         if self_album_artist_name == nil || other_album_artist_name == nil {
-            album_artist_comparison = (self_album_artist_name == other_album_artist_name) ? .OrderedSame : (other_album_artist_name != nil) ? .OrderedAscending : .OrderedDescending
+            album_artist_comparison = (self_album_artist_name == other_album_artist_name) ? .orderedSame : (other_album_artist_name != nil) ? .orderedAscending : .orderedDescending
         } else {
             album_artist_comparison = self_album_artist_name!.localizedStandardCompare(other_album_artist_name!)
         }
-        if album_artist_comparison == .OrderedSame {
+        if album_artist_comparison == .orderedSame {
             let self_album_name = (self.sort_album != nil) ? self.sort_album : self.album?.name
             let other_album_name = (other.sort_album != nil) ? other.sort_album : other.album?.name
-            let album_comparison: NSComparisonResult
+            let album_comparison: ComparisonResult
             if self_album_name == nil || other_album_name == nil {
-                album_comparison = (self_album_name == other_album_name) ? .OrderedSame : (other_album_name != nil) ? .OrderedAscending : .OrderedDescending
+                album_comparison = (self_album_name == other_album_name) ? .orderedSame : (other_album_name != nil) ? .orderedAscending : .orderedDescending
             } else {
                 album_comparison = self_album_name!.localizedStandardCompare(other_album_name!)
             }
-            if album_comparison == .OrderedSame {
+            if album_comparison == .orderedSame {
                 let self_disc_num = self.disc_number
                 let other_disc_num = other.disc_number
-                let disc_num_comparison: NSComparisonResult
+                let disc_num_comparison: ComparisonResult
                 if self_disc_num == nil || other_disc_num == nil {
-                    disc_num_comparison = (self_disc_num == other_disc_num) ? .OrderedSame : (other_disc_num != nil) ? .OrderedAscending : .OrderedDescending
+                    disc_num_comparison = (self_disc_num == other_disc_num) ? .orderedSame : (other_disc_num != nil) ? .orderedAscending : .orderedDescending
                 } else {
                     disc_num_comparison = self.disc_number!.compare(other_disc_num!)
                 }
-                if disc_num_comparison == .OrderedSame {
+                if disc_num_comparison == .orderedSame {
                     let self_track_num = self.track_num
                     let other_track_num = other.track_num
                     guard self_track_num != nil && other_track_num != nil else {
-                        return (self_track_num == other_track_num) ? .OrderedSame : (other_track_num != nil) ? .OrderedAscending : .OrderedDescending
+                        return (self_track_num == other_track_num) ? .orderedSame : (other_track_num != nil) ? .orderedAscending : .orderedDescending
                     }
                     if self_track_num == other_track_num {
                         let self_name = self.sort_name != nil ? self.sort_name : self.name
                         let other_name = other.sort_name != nil ? other.sort_name : other.name
                         guard self_name != nil && other_name != nil else {
-                            return (self_name == other_name) ? .OrderedSame : (other_name != nil) ? .OrderedAscending : .OrderedDescending
+                            return (self_name == other_name) ? .orderedSame : (other_name != nil) ? .orderedAscending : .orderedDescending
                         }
                         return self_name!.localizedStandardCompare(other_name!)
                     } else {
@@ -411,77 +435,77 @@ extension Track {
         }
     }
     
-    @objc func compareGenre(other: Track) -> NSComparisonResult {
+    @objc func compareGenre(_ other: Track) -> ComparisonResult {
         let self_genre_name = self.genre?.name
         let other_genre_name = other.genre?.name
-        let genre_comparison: NSComparisonResult
+        let genre_comparison: ComparisonResult
         if self_genre_name == nil || other_genre_name == nil {
-            genre_comparison = (self_genre_name == other_genre_name) ? .OrderedSame : (other_genre_name != nil) ? .OrderedAscending : .OrderedDescending
+            genre_comparison = (self_genre_name == other_genre_name) ? .orderedSame : (other_genre_name != nil) ? .orderedAscending : .orderedDescending
         } else {
             genre_comparison = self_genre_name!.localizedStandardCompare(other_genre_name!)
         }
-        if genre_comparison == .OrderedSame {
+        if genre_comparison == .orderedSame {
             return self.compareArtist(other)
         } else {
             return genre_comparison
         }
     }
     
-    @objc func compareKind(other: Track) -> NSComparisonResult {
+    @objc func compareKind(_ other: Track) -> ComparisonResult {
         let self_kind_name = self.file_kind
         let other_kind_name = other.file_kind
-        let kind_comparison: NSComparisonResult
+        let kind_comparison: ComparisonResult
         if self_kind_name == nil || other_kind_name == nil {
-            kind_comparison = (self_kind_name == other_kind_name) ? .OrderedSame : (other_kind_name != nil) ? .OrderedAscending : .OrderedDescending
+            kind_comparison = (self_kind_name == other_kind_name) ? .orderedSame : (other_kind_name != nil) ? .orderedAscending : .orderedDescending
         } else {
             kind_comparison = self_kind_name!.localizedStandardCompare(other_kind_name!)
         }
-        if kind_comparison == .OrderedSame {
+        if kind_comparison == .orderedSame {
             return self.compareArtist(other)
         } else {
             return kind_comparison
         }
     }
     
-    @objc func compareDateAdded(other: Track) -> NSComparisonResult {
+    @objc func compareDateAdded(_ other: Track) -> ComparisonResult {
         let self_date_added = self.date_added
         let other_date_added = other.date_added
         guard self_date_added != nil && other_date_added != nil else {
-            return (self_date_added == other_date_added) ? .OrderedSame : (other_date_added != nil) ? .OrderedAscending : .OrderedDescending
+            return (self_date_added == other_date_added) ? .orderedSame : (other_date_added != nil) ? .orderedAscending : .orderedDescending
         }
-        let dateDifference = self_date_added!.timeIntervalSinceDate(other_date_added!)
-        let comparison: NSComparisonResult = (abs(dateDifference) < DEFAULTS_DATE_SORT_GRANULARITY) ? .OrderedSame : (dateDifference > 0) ? .OrderedAscending : .OrderedDescending
-        if comparison == .OrderedSame {
+        let dateDifference = self_date_added!.timeIntervalSince(other_date_added! as Date)
+        let comparison: ComparisonResult = (abs(dateDifference) < DEFAULTS_DATE_SORT_GRANULARITY) ? .orderedSame : (dateDifference > 0) ? .orderedAscending : .orderedDescending
+        if comparison == .orderedSame {
             return self.compareArtist(other)
         } else {
             return comparison
         }
     }
     
-    @objc func compareDateReleased(other: Track) -> NSComparisonResult {
+    @objc func compareDateReleased(_ other: Track) -> ComparisonResult {
         let self_date_released = self.album?.release_date
         let other_date_released = other.album?.release_date
         guard self_date_released != nil && other_date_released != nil else {
-            return (self_date_released == other_date_released) ? .OrderedSame : (other_date_released != nil) ? .OrderedAscending : .OrderedDescending
+            return (self_date_released == other_date_released) ? .orderedSame : (other_date_released != nil) ? .orderedAscending : .orderedDescending
         }
-        let date_released_comparison = self_date_released!.compare(other_date_released!)
-        if date_released_comparison == .OrderedSame {
+        let date_released_comparison = self_date_released!.compare(other_date_released! as Date)
+        if date_released_comparison == .orderedSame {
             return self.compareArtist(other)
         } else {
             return date_released_comparison
         }
     }
     
-    @objc func compareName(other: Track) -> NSComparisonResult {
+    @objc func compareName(_ other: Track) -> ComparisonResult {
         let self_name = self.name
         let other_name = other.name
-        let name_comparison: NSComparisonResult
+        let name_comparison: ComparisonResult
         if self_name == nil || other_name == nil {
-            name_comparison = (self_name == other_name) ? .OrderedSame : (other_name != nil) ? .OrderedAscending : .OrderedDescending
+            name_comparison = (self_name == other_name) ? .orderedSame : (other_name != nil) ? .orderedAscending : .orderedDescending
         } else {
             name_comparison = self_name!.compare(other_name!)
         }
-        if name_comparison == .OrderedSame {
+        if name_comparison == .orderedSame {
             return self.compareArtist(other)
         } else {
             return name_comparison
@@ -497,7 +521,7 @@ var dateAddedSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "date_
 var nameSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_name", ascending:true, selector: #selector(NSString.localizedStandardCompare(_:)))]
 var timeSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "time", ascending: true), NSSortDescriptor(key: "sort_name", ascending:true, selector: #selector(NSString.localizedStandardCompare(_:)))]*/
 
-func shuffle_array(inout array: [Int]) {
+func shuffle_array(_ array: inout [Int]) {
     guard array.count > 0 else {return}
     for i in 0..<array.count - 1 {
         let j = Int(arc4random_uniform(UInt32(array.count - i))) + i
@@ -506,12 +530,12 @@ func shuffle_array(inout array: [Int]) {
     }
 }
 
-func checkIfArtistExists(name: String) -> Artist? {
-    let request = NSFetchRequest(entityName: "Artist")
+func checkIfArtistExists(_ name: String) -> Artist? {
+    let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Artist")
     let predicate = NSPredicate(format: "name == %@", name)
     request.predicate = predicate
     do {
-        let result = try managedContext.executeFetchRequest(request) as! [Artist]
+        let result = try managedContext.fetch(request) as! [Artist]
         if result.count > 0 {
             return result[0]
         } else {
@@ -523,12 +547,12 @@ func checkIfArtistExists(name: String) -> Artist? {
     }
 }
 
-func checkIfAlbumExists(name: String) -> Album? {
-    let request = NSFetchRequest(entityName: "Album")
+func checkIfAlbumExists(_ name: String) -> Album? {
+    let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Album")
     let predicate = NSPredicate(format: "name == %@", name)
     request.predicate = predicate
     do {
-        let result = try managedContext.executeFetchRequest(request) as! [Album]
+        let result = try managedContext.fetch(request) as! [Album]
         if result.count > 0 {
             return result[0]
         } else {
@@ -540,12 +564,12 @@ func checkIfAlbumExists(name: String) -> Album? {
     }
 }
 
-func checkIfComposerExists(name: String) -> Composer? {
-    let request = NSFetchRequest(entityName: "Composer")
+func checkIfComposerExists(_ name: String) -> Composer? {
+    let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Composer")
     let predicate = NSPredicate(format: "name == %@", name)
     request.predicate = predicate
     do {
-        let result = try managedContext.executeFetchRequest(request) as! [Composer]
+        let result = try managedContext.fetch(request) as! [Composer]
         if result.count > 0 {
             return result[0]
         } else {
@@ -557,12 +581,12 @@ func checkIfComposerExists(name: String) -> Composer? {
     }
 }
 
-func checkIfGenreExists(name: String) -> Genre? {
-    let request = NSFetchRequest(entityName: "Genre")
+func checkIfGenreExists(_ name: String) -> Genre? {
+    let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Genre")
     let predicate = NSPredicate(format: "name == %@", name)
     request.predicate = predicate
     do {
-        let result = try managedContext.executeFetchRequest(request) as! [Genre]
+        let result = try managedContext.fetch(request) as! [Genre]
         if result.count > 0 {
             return result[0]
         } else {
@@ -574,12 +598,12 @@ func checkIfGenreExists(name: String) -> Genre? {
     }
 }
 
-func checkIfCachedOrderExists(name: String) -> CachedOrder? {
-    let request = NSFetchRequest(entityName: "CachedOrder")
+func checkIfCachedOrderExists(_ name: String) -> CachedOrder? {
+    let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CachedOrder")
     let predicate = NSPredicate(format: "order == %@", name)
     request.predicate = predicate
     do {
-        let result = try managedContext.executeFetchRequest(request) as! [CachedOrder]
+        let result = try managedContext.fetch(request) as! [CachedOrder]
         if result.count > 0 {
             return result[0]
         } else {
@@ -592,22 +616,22 @@ func checkIfCachedOrderExists(name: String) -> CachedOrder? {
 }
 
 class MeTunesDate {
-    var date: NSDate
+    var date: Date
     var is_ambiguous: Bool
-    init(date: NSDate, is_ambiguous: Bool) {
+    init(date: Date, is_ambiguous: Bool) {
         self.date = date
         self.is_ambiguous = is_ambiguous
     }
 }
 
-func getSortName(name: String?) -> String? {
+func getSortName(_ name: String?) -> String? {
     //todo fix for defaults
     var sortName = name
     if name != nil {
         for prefix in defaultSortPrefixDictionary.allKeys {
-            if name!.lowercaseString.hasPrefix(prefix as! String) {
-                let range = name!.startIndex...name!.startIndex.advancedBy((prefix as! String).characters.count - 1)
-                sortName!.removeRange(range)
+            if name!.lowercased().hasPrefix(prefix as! String) {
+                let range = name!.startIndex...name!.characters.index(name!.startIndex, offsetBy: (prefix as! String).characters.count - 1)
+                sortName!.removeSubrange(range)
                 return sortName
             }
         }
@@ -615,7 +639,7 @@ func getSortName(name: String?) -> String? {
     return sortName
 }
 
-func getTimeAsString(time: NSTimeInterval) -> String? {
+func getTimeAsString(_ time: TimeInterval) -> String? {
     let dongs = Int(time)
     let hr = dongs / 3600
     let min = (dongs - (hr * 3600)) / 60
@@ -638,7 +662,7 @@ func getTimeAsString(time: NSTimeInterval) -> String? {
     return stamp
 }
 
-func editName(tracks: [Track]?, name: String) {
+func editName(_ tracks: [Track]?, name: String) {
     let sortName = getSortName(name)
     for track in tracks! {
         track.name = name
@@ -648,49 +672,49 @@ func editName(tracks: [Track]?, name: String) {
     }
 }
 
-func addIDsAndMakeNonNetwork(track: Track) {
+func addIDsAndMakeNonNetwork(_ track: Track) {
     let library = {() -> Library? in
-        let fetchReq = NSFetchRequest(entityName: "Library")
+        let fetchReq = NSFetchRequest<NSFetchRequestResult>(entityName: "Library")
         let predicate = NSPredicate(format: "is_network == nil OR is_network == false")
         fetchReq.predicate = predicate
         do {
-            let result = try managedContext.executeFetchRequest(fetchReq)[0] as! Library
+            let result = try managedContext.fetch(fetchReq)[0] as! Library
             return result
         } catch {
             return nil
         }
     }()
-    track.id = Int(library!.next_track_id!)
-    library!.next_track_id = Int(library!.next_track_id!) + 1
+    track.id = Int(library!.next_track_id!) as NSNumber?
+    library!.next_track_id = Int(library!.next_track_id!) + 1 as NSNumber
     if track.album?.is_network == true {
         track.album?.is_network = false
         track.album?.id = library?.next_album_id
-        library!.next_album_id = Int(library!.next_album_id!) + 1
+        library!.next_album_id = Int(library!.next_album_id!) + 1 as NSNumber
     }
     if track.artist?.is_network == true {
         track.artist?.is_network = false
         track.artist?.id = library?.next_artist_id
-        library!.next_artist_id = Int(library!.next_artist_id!) + 1
+        library!.next_artist_id = Int(library!.next_artist_id!) + 1 as NSNumber
     }
     if track.composer?.is_network == true {
         track.composer?.is_network = false
         track.composer?.id = library?.next_composer_id
-        library!.next_composer_id = Int(library!.next_composer_id!) + 1
+        library!.next_composer_id = Int(library!.next_composer_id!) + 1 as NSNumber
     }
     if track.genre?.is_network == true {
         track.genre?.is_network = false
         track.genre?.id = library?.next_genre_id
-        library!.next_genre_id = Int(library!.next_genre_id!) + 1
+        library!.next_genre_id = Int(library!.next_genre_id!) + 1 as NSNumber
     }
 }
 
-func getInstanceWithHighestIDForEntity(entityName: String) -> NSManagedObject? {
-    let fetchRequest = NSFetchRequest(entityName: entityName)
+func getInstanceWithHighestIDForEntity(_ entityName: String) -> NSManagedObject? {
+    let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
     fetchRequest.fetchLimit = 1
     let sortDescriptor = NSSortDescriptor(key: "id", ascending: false)
     fetchRequest.sortDescriptors = [sortDescriptor]
     do {
-        let result = try managedContext.executeFetchRequest(fetchRequest) as! [NSManagedObject]
+        let result = try managedContext.fetch(fetchRequest) as! [NSManagedObject]
         return result[0]
     } catch {
         print("error getting instance with highest id: \(error)")
@@ -698,10 +722,10 @@ func getInstanceWithHighestIDForEntity(entityName: String) -> NSManagedObject? {
     return nil
 }
 
-func editArtist(tracks: [Track]?, artistName: String) {
+func editArtist(_ tracks: [Track]?, artistName: String) {
     print(artistName)
     let managedContext: NSManagedObjectContext = {
-        return (NSApplication.sharedApplication().delegate
+        return (NSApplication.shared().delegate
             as? AppDelegate)?.managedObjectContext }()!
     let artistCheck = checkIfArtistExists(artistName)
     if artistCheck != nil {
@@ -714,7 +738,7 @@ func editArtist(tracks: [Track]?, artistName: String) {
             }
         }
     } else {
-        let new_artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: managedContext) as! Artist
+        let new_artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
         new_artist.name = artistName
         let sortArtistName = getSortName(artistName)
         for track in tracks! {
@@ -726,10 +750,10 @@ func editArtist(tracks: [Track]?, artistName: String) {
     }
 }
 
-func editComposer(tracks: [Track]?, composerName: String) {
+func editComposer(_ tracks: [Track]?, composerName: String) {
     print(composerName)
     let managedContext: NSManagedObjectContext = {
-        return (NSApplication.sharedApplication().delegate
+        return (NSApplication.shared().delegate
             as? AppDelegate)?.managedObjectContext }()!
     let composerCheck = checkIfComposerExists(composerName)
     if composerCheck != nil {
@@ -741,7 +765,7 @@ func editComposer(tracks: [Track]?, composerName: String) {
             }
         }
     } else {
-        let new_composer = NSEntityDescription.insertNewObjectForEntityForName("Composer", inManagedObjectContext: managedContext) as! Composer
+        let new_composer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: managedContext) as! Composer
         new_composer.name = composerName
         let sortComposerName = getSortName(composerName)
         for track in tracks! {
@@ -753,10 +777,10 @@ func editComposer(tracks: [Track]?, composerName: String) {
     }
 }
 
-func editGenre(tracks: [Track]?, genreName: String) {
+func editGenre(_ tracks: [Track]?, genreName: String) {
     print(genreName)
     let managedContext: NSManagedObjectContext = {
-        return (NSApplication.sharedApplication().delegate
+        return (NSApplication.shared().delegate
             as? AppDelegate)?.managedObjectContext }()!
     let genreCheck = checkIfGenreExists(genreName)
     if genreCheck != nil {
@@ -764,7 +788,7 @@ func editGenre(tracks: [Track]?, genreName: String) {
             track.genre = genreCheck!
         }
     } else {
-        let new_genre = NSEntityDescription.insertNewObjectForEntityForName("Genre", inManagedObjectContext: managedContext) as! Genre
+        let new_genre = NSEntityDescription.insertNewObject(forEntityName: "Genre", into: managedContext) as! Genre
         new_genre.name = genreName
         for track in tracks! {
             track.genre = new_genre
@@ -772,9 +796,9 @@ func editGenre(tracks: [Track]?, genreName: String) {
     }
 }
 
-func editAlbum(tracks: [Track]?, albumName: String) {
+func editAlbum(_ tracks: [Track]?, albumName: String) {
     let managedContext: NSManagedObjectContext = {
-        return (NSApplication.sharedApplication().delegate
+        return (NSApplication.shared().delegate
             as? AppDelegate)?.managedObjectContext }()!
     print(albumName)
     var album: Album?
@@ -792,7 +816,7 @@ func editAlbum(tracks: [Track]?, albumName: String) {
             print("new album name: \(track.sort_album)")
         }
     } else {
-        let new_album = NSEntityDescription.insertNewObjectForEntityForName("Album", inManagedObjectContext: managedContext) as! Album
+        let new_album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
         new_album.name = albumName
         let sortAlbumName = getSortName(albumName)
         for track in tracks! {
@@ -810,10 +834,10 @@ func editAlbum(tracks: [Track]?, albumName: String) {
     }
 }
 
-func editAlbumArtist(tracks: [Track]?, albumArtistName: String) {
+func editAlbumArtist(_ tracks: [Track]?, albumArtistName: String) {
     print(albumArtistName)
     let managedContext: NSManagedObjectContext = {
-        return (NSApplication.sharedApplication().delegate
+        return (NSApplication.shared().delegate
             as? AppDelegate)?.managedObjectContext }()!
     let artistCheck = checkIfArtistExists(albumArtistName)
     if artistCheck != nil {
@@ -826,7 +850,7 @@ func editAlbumArtist(tracks: [Track]?, albumArtistName: String) {
             }
         }
     } else {
-        let new_artist = NSEntityDescription.insertNewObjectForEntityForName("Artist", inManagedObjectContext: managedContext) as! Artist
+        let new_artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
         new_artist.name = albumArtistName
         let sortArtistName = getSortName(albumArtistName)
         let unique_albums = Set(tracks!.map({return $0.album!}))
@@ -841,41 +865,41 @@ func editAlbumArtist(tracks: [Track]?, albumArtistName: String) {
     }
 }
 
-func editTrackNum(tracks: [Track]?, num: Int) {
+func editTrackNum(_ tracks: [Track]?, num: Int) {
     if tracks != nil {
         for track in tracks! {
-            track.track_num = num
+            track.track_num = num as NSNumber?
         }
     }
 }
 
-func editTrackNumOf(tracks: [Track]?, num: Int) {
+func editTrackNumOf(_ tracks: [Track]?, num: Int) {
     if tracks != nil {
         let unique_albums = Set(tracks!.map({return $0.album!}))
         for album in unique_albums {
-            album.track_count = num
+            album.track_count = num as NSNumber?
         }
     }
 }
 
-func editDiscNum(tracks: [Track]?, num: Int) {
+func editDiscNum(_ tracks: [Track]?, num: Int) {
     if tracks != nil {
         for track in tracks! {
-            track.disc_number = num
+            track.disc_number = num as NSNumber?
         }
     }
 }
 
-func editDiscNumOf(tracks: [Track]?, num: Int) {
+func editDiscNumOf(_ tracks: [Track]?, num: Int) {
     if tracks != nil {
         let unique_albums = Set(tracks!.map({return $0.album!}))
         for album in unique_albums {
-            album.disc_count = num
+            album.disc_count = num as NSNumber?
         }
     }
 }
 
-func editComments(tracks: [Track]?, comments: String) {
+func editComments(_ tracks: [Track]?, comments: String) {
     if tracks != nil {
         for track in tracks! {
             track.comments = comments
@@ -883,34 +907,34 @@ func editComments(tracks: [Track]?, comments: String) {
     }
 }
 
-func editRating(tracks: [Track]?, rating: Int) {
+func editRating(_ tracks: [Track]?, rating: Int) {
     if tracks != nil {
         for track in tracks! {
-            track.rating = rating
+            track.rating = rating as NSNumber?
         }
     }
 }
 
-func editIsComp(tracks: [Track]?, isComp: Bool) {
+func editIsComp(_ tracks: [Track]?, isComp: Bool) {
     if tracks != nil {
         let unique_albums = Set(tracks!.map({return $0.album!}))
         for album in unique_albums {
-            album.is_compilation = isComp
+            album.is_compilation = isComp as NSNumber?
         }
     }
 }
 
-func insert(tracks: NSOrderedSet, track: TrackView, isGreater: (Track -> Track -> NSComparisonResult)) -> Int {
+func insert(_ tracks: NSOrderedSet, track: TrackView, isGreater: ((Track) -> (Track) -> ComparisonResult)) -> Int {
     var high: Int = tracks.count - 1
     var low: Int = 0
     var index: Int
     while (low <= high) {
         index = (low + high) / 2
         let result = isGreater(track.track!)((tracks[index] as! TrackView).track!)
-        if result == .OrderedDescending {
+        if result == .orderedDescending {
             low = index + 1
         }
-        else if result == .OrderedAscending {
+        else if result == .orderedAscending {
             high = index - 1
         }
         else {
@@ -920,7 +944,7 @@ func insert(tracks: NSOrderedSet, track: TrackView, isGreater: (Track -> Track -
     return low
 }
 
-func fixIndices(set: NSMutableOrderedSet, index: Int, order: String) {
+func fixIndices(_ set: NSMutableOrderedSet, index: Int, order: String) {
     let trackView = (set[index] as! TrackView)
     var testIndex = index + 1
     let key: String
@@ -946,18 +970,18 @@ func fixIndices(set: NSMutableOrderedSet, index: Int, order: String) {
     }
     trackView.setValue(index, forKey: key)
     var firstIndex = index
-    while (testIndex < set.count && (set[testIndex].valueForKey(key) as! Int) <= (set[firstIndex].valueForKey(key) as! Int)) {
-        let currentValue = set[testIndex].valueForKey(key) as! Int
-        set[testIndex].setValue(currentValue + 1, forKey: key)
+    while (testIndex < set.count && ((set[testIndex] as AnyObject).value(forKey: key) as! Int) <= ((set[firstIndex] as AnyObject).value(forKey: key) as! Int)) {
+        let currentValue = (set[testIndex] as AnyObject).value(forKey: key) as! Int
+        (set[testIndex] as AnyObject).setValue(currentValue + 1, forKey: key)
         firstIndex = firstIndex + 1
         testIndex = testIndex + 1
     }
 }
 
 
-func reorderForTracks(tracks: [Track], cachedOrder: CachedOrder) {
+func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder) {
     print("reordering for tracks for cached order \(cachedOrder.order!)")
-    let comparator: (Track) -> (Track) -> NSComparisonResult
+    let comparator: (Track) -> (Track) -> ComparisonResult
     switch cachedOrder.order! {
     case "Artist":
         comparator = Track.compareArtist
@@ -984,31 +1008,31 @@ func reorderForTracks(tracks: [Track], cachedOrder: CachedOrder) {
         let key: String
         switch cachedOrder.order! {
         case "Artist":
-            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareArtist))
+            newTracks = allTracks.sortedArray(using: #selector(Track.compareArtist)) as NSArray
             key = "artist_order"
         case "Album":
-            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareAlbum))
+            newTracks = allTracks.sortedArray(using: #selector(Track.compareAlbum)) as NSArray
             key = "album_order"
         case "Date Added":
-            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareDateAdded))
+            newTracks = allTracks.sortedArray(using: #selector(Track.compareDateAdded)) as NSArray
             key = "date_added_order"
         case "Name":
-            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareName))
+            newTracks = allTracks.sortedArray(using: #selector(Track.compareName)) as NSArray
             key = "name_order"
         case "Date Released":
-            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareDateReleased))
+            newTracks = allTracks.sortedArray(using: #selector(Track.compareDateReleased)) as NSArray
             key = "release_date_order"
         case "Album Artist":
-            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareAlbumArtist))
+            newTracks = allTracks.sortedArray(using: #selector(Track.compareAlbumArtist)) as NSArray
             key = "album_artist_order"
         case "Genre":
-            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareGenre))
+            newTracks = allTracks.sortedArray(using: #selector(Track.compareGenre)) as NSArray
             key = "genre_order"
         case "Kind":
-            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareKind))
+            newTracks = allTracks.sortedArray(using: #selector(Track.compareKind)) as NSArray
             key = "kind_order"
         default:
-            newTracks = allTracks.sortedArrayUsingSelector(#selector(Track.compareArtist))
+            newTracks = allTracks.sortedArray(using: #selector(Track.compareArtist)) as NSArray
             key = "artist_order"
         }
         var index = 0
@@ -1016,30 +1040,30 @@ func reorderForTracks(tracks: [Track], cachedOrder: CachedOrder) {
             track.setValue(index, forKey: key)
             index += 1
         }
-        cachedOrder.track_views = NSOrderedSet(array: newTracks.map({return $0.view!}) as! [TrackView])
+        cachedOrder.track_views = NSOrderedSet(array: newTracks.map({return ($0 as AnyObject).view!}) as! [TrackView])
     } else {
         let mutableVersion = cachedOrder.track_views!.mutableCopy() as! NSMutableOrderedSet
         for track in tracks {
-            mutableVersion.removeObject(track.view!)
+            mutableVersion.remove(track.view!)
         }
         for track in tracks {
             let index = insert(mutableVersion, track: track.view!, isGreater: comparator)
             //print("index is \(index)")
-            mutableVersion.insertObject(track.view!, atIndex: index)
+            mutableVersion.insert(track.view!, at: index)
             fixIndices(mutableVersion, index: index, order: cachedOrder.order!)
         }
         cachedOrder.track_views = mutableVersion.copy() as? NSOrderedSet
     }
 }
 
-func addSecondaryArtForTrack(track: Track, art: NSData, albumDirectoryPath: String) -> Track {
+func addSecondaryArtForTrack(_ track: Track, art: Data, albumDirectoryPath: String) -> Track {
     let artHash = art.hashValue
-    let newArtwork = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtwork", inManagedObjectContext: managedContext) as! AlbumArtwork
-    newArtwork.image_hash = artHash
+    let newArtwork = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
+    newArtwork.image_hash = artHash as NSNumber?
     if track.album!.other_art != nil {
         let contains: Bool = {
             for album in track.album!.other_art!.art! {
-                if (album as! AlbumArtwork).image_hash == artHash {
+                if (album as! AlbumArtwork).image_hash == (artHash as NSNumber) {
                     return true
                 }
             }
@@ -1052,13 +1076,13 @@ func addSecondaryArtForTrack(track: Track, art: NSData, albumDirectoryPath: Stri
     let artFilename = albumDirectoryPath + thing
     newArtwork.artwork_location = artFilename
     let artImage = NSImage(data: art)
-    let artTIFF = artImage?.TIFFRepresentation
+    let artTIFF = artImage?.tiffRepresentation
     let artRep = NSBitmapImageRep(data: artTIFF!)
-    let artPNG = artRep?.representationUsingType(.NSPNGFileType, properties: [:])
+    let artPNG = artRep?.representation(using: .PNG, properties: [:])
     track.album?.primary_art = newArtwork
     print("writing to \(artFilename)")
     do {
-        try artPNG?.writeToFile(artFilename, options: NSDataWritingOptions.AtomicWrite)
+        try artPNG?.write(to: URL(fileURLWithPath: artFilename), options: NSData.WritingOptions.atomicWrite)
     }catch {
         print("error writing file: \(error)")
     }

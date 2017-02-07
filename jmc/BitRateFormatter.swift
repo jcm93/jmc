@@ -8,13 +8,13 @@
 
 import Cocoa
 
-class BitRateFormatter: NSNumberFormatter {
+class BitRateFormatter: NumberFormatter {
     
-    override func stringForObjectValue(obj: AnyObject) -> String? {
-        return (obj as! NSNumber).descriptionWithLocale(NSLocale.currentLocale()) + " kbps"
+    override func string(for obj: Any?) -> String? {
+        return (obj as! NSNumber).description(withLocale: Locale.current) + " kbps"
     }
     
-    override func getObjectValue(obj: AutoreleasingUnsafeMutablePointer<AnyObject?>, forString string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>) -> Bool {
+    func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AutoreleasingUnsafeMutablePointer<AnyObject?>>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<AutoreleasingUnsafeMutablePointer<NSString?>>?) -> Bool {
         return false
     }
 

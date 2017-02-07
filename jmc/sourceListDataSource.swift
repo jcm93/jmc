@@ -52,14 +52,14 @@ class SourceListDataSource: NSObject, NSOutlineViewDataSource, NSOutlineViewDele
         }
     }
     
-    func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
+    func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         if item == nil {
             return 3
         }
         let source = item as! SourceListNode
         return source.children.count
     }
-    func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool {
+    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         let source = item as! SourceListNode
         if source.children.count > 0 {
             return true
@@ -67,7 +67,7 @@ class SourceListDataSource: NSObject, NSOutlineViewDataSource, NSOutlineViewDele
             return false
         }
     }
-    func outlineView(outlineView: NSOutlineView, child index: Int, ofItem item: AnyObject?) -> AnyObject {
+    func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         if item == nil {
             return rootNode!.children[index]
         }
@@ -75,20 +75,20 @@ class SourceListDataSource: NSObject, NSOutlineViewDataSource, NSOutlineViewDele
         let child = source.children[index]
         return child
     }
-    func outlineView(outlineView: NSOutlineView, objectValueForTableColumn tableColumn: NSTableColumn?, byItem item: AnyObject?) -> AnyObject? {
+    func outlineView(_ outlineView: NSOutlineView, objectValueFor tableColumn: NSTableColumn?, byItem item: Any?) -> Any? {
         let source = item as! SourceListNode
         if (source.item.is_header == true) {
-            return outlineView.makeViewWithIdentifier("HeaderCell", owner: self)
+            return outlineView.make(withIdentifier: "HeaderCell", owner: self)
         } else if source.item.playlist != nil {
-            return outlineView.makeViewWithIdentifier("PlaylistCell", owner: self)
+            return outlineView.make(withIdentifier: "PlaylistCell", owner: self)
         } else if source.item.is_network == true {
-            return outlineView.makeViewWithIdentifier("NetworkLibraryCell", owner: self)
+            return outlineView.make(withIdentifier: "NetworkLibraryCell", owner: self)
         } else if source.item.is_folder == true {
-            return outlineView.makeViewWithIdentifier("SongCollectionFolder'", owner: self)
+            return outlineView.make(withIdentifier: "SongCollectionFolder'", owner: self)
         } else if source.item.master_playlist != nil {
-            return outlineView.makeViewWithIdentifier("MasterPlaylistCell", owner: self)
+            return outlineView.make(withIdentifier: "MasterPlaylistCell", owner: self)
         } else {
-            return outlineView.makeViewWithIdentifier("PlaylistCell", owner: self)
+            return outlineView.make(withIdentifier: "PlaylistCell", owner: self)
         }
     }
 }

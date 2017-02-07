@@ -16,7 +16,7 @@ extension Album {
 
     @NSManaged var id: NSNumber?
     @NSManaged var name: String?
-    @NSManaged var release_date: NSDate?
+    @NSManaged var release_date: Date?
     @NSManaged var is_compilation: NSNumber?
     @NSManaged var track_count: NSNumber?
     @NSManaged var disc_count: NSNumber?

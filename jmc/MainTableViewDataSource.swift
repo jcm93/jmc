@@ -13,9 +13,9 @@ import CoreData
 class MainTableViewDataSource: NSObject, NSTableViewDataSource {
     
     lazy var cachedOrders: [CachedOrder]? = {
-        let request = NSFetchRequest(entityName: "CachedOrder")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CachedOrder")
         do {
-            let result = try managedContext.executeFetchRequest(request) as! [CachedOrder]
+            let result = try managedContext.fetch(request) as! [CachedOrder]
             return result
         } catch {
             print(error)
@@ -32,7 +32,7 @@ class MainTableViewDataSource: NSObject, NSTableViewDataSource {
     var currentOrder: CachedOrder?
     var currentArray: [TrackView]?
     
-    func numberOfRowsInTableView(tableView: NSTableView) -> Int {
+    func numberOfRows(in tableView: NSTableView) -> Int {
         print("number rows in table view called: \(currentArray!.count)")
         return currentArray!.count
     }

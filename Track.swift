@@ -14,9 +14,9 @@ class Track: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
     
-    func dictRepresentation(fields: [String]) -> NSDictionary {
+    func dictRepresentation(_ fields: [String]) -> NSDictionary {
         let dict = NSMutableDictionary()
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         self.view?.album_artist_order
         dict["id"] = self.id
@@ -38,16 +38,16 @@ class Track: NSManagedObject {
                 dict["album_order"] = self.view?.album_order
             case "date_added":
                 if self.date_added != nil {
-                    dict["date_added"] = dateFormatter.stringFromDate(self.date_added!)
+                    dict["date_added"] = dateFormatter.string(from: self.date_added! as Date)
                     dict["date_added_order"] = self.view?.date_added_order
                 }
             case "date_modified":
                 if self.date_modified != nil {
-                    dict["date_modified"] = dateFormatter.stringFromDate(self.date_modified!)
+                    dict["date_modified"] = dateFormatter.string(from: self.date_modified! as Date)
                 }
             case "date_released":
                 if self.album?.release_date != nil {
-                    dict["date_released"] = dateFormatter.stringFromDate(self.album!.release_date!)
+                    dict["date_released"] = dateFormatter.string(from: self.album!.release_date! as Date)
                     dict["release_date_order"] = self.view?.release_date_order
                 }
             case "comments":
@@ -66,11 +66,11 @@ class Track: NSManagedObject {
                 dict["kind_order"] = self.view?.kind_order
             case "date_last_played":
                 if self.date_last_played != nil {
-                    dict["date_last_played"] = dateFormatter.stringFromDate(self.date_last_played!)
+                    dict["date_last_played"] = dateFormatter.string(from: self.date_last_played! as Date)
                 }
             case "date_last_skipped":
                 if self.date_last_skipped != nil {
-                    dict["date_last_skipped"] = dateFormatter.stringFromDate(self.date_last_skipped!)
+                    dict["date_last_skipped"] = dateFormatter.string(from: self.date_last_skipped! as Date)
                 }
             case "movement_name":
                 dict["movement_name"] = self.movement_name

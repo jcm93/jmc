@@ -13,13 +13,13 @@ import Cocoa
 class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectionViewDataSource {
     
     lazy var managedContext: NSManagedObjectContext = {
-        return (NSApplication.sharedApplication().delegate
+        return (NSApplication.shared().delegate
             as? AppDelegate)?.managedObjectContext }()!
     
     lazy var artistList: [Artist] = {
-        let fetch_req = NSFetchRequest(entityName: "Artist")
+        let fetch_req = NSFetchRequest<NSFetchRequestResult>(entityName: "Artist")
         do {
-            return try (self.managedContext.executeFetchRequest(fetch_req) as! [Artist])
+            return try (self.managedContext.fetch(fetch_req) as! [Artist])
         } catch {
             print("error: \(error)")
             return [Artist]()
@@ -118,29 +118,29 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
         }
     }
     
-    @IBAction func confirmPressed(sender: AnyObject) {
+    @IBAction func confirmPressed(_ sender: AnyObject) {
         commitEdits()
         self.window?.close()
         self.mainWindowController?.currentTableViewController?.trackViewArrayController.rearrangeObjects()
     }
     
-    @IBAction func releaseDateChecked(sender: AnyObject) {
+    @IBAction func releaseDateChecked(_ sender: AnyObject) {
         if releaseDateCheck.state == NSOnState {
-            releaseDatePicker.datePickerElements = .YearMonthDayDatePickerElementFlag
-            releaseDatePicker.enabled = true
+            releaseDatePicker.datePickerElements = .yearMonthDayDatePickerElementFlag
+            releaseDatePicker.isEnabled = true
         } else {
             releaseDatePicker.datePickerElements = NSDatePickerElementFlags(rawValue: 0)
-            releaseDatePicker.enabled = false
+            releaseDatePicker.isEnabled = false
         }
     }
     
-    @IBAction func datePickerAction(sender: AnyObject) {
+    @IBAction func datePickerAction(_ sender: AnyObject) {
         
     }
     
-    func allEqual<T:Equatable>(thing: [T?]) -> Bool {
+    func allEqual<T:Equatable>(_ thing: [T?]) -> Bool {
         let firstElem = thing.first!
-        if thing.contains( {$0 != firstElem}) == false {
+        if thing.contains( where: {$0 != firstElem}) == false {
             return true
         }
         else {
@@ -190,36 +190,36 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
         let release_dates = selectedTracks!.map({ return $0.album?.release_date })
         if allEqual(release_dates) == true {
             if release_dates[0] != nil {
-                releaseDatePicker.dateValue = release_dates[0]!
+                releaseDatePicker.dateValue = release_dates[0]! as Date
                 releaseDateCheck.state = NSOnState
             } else {
                 releaseDateCheck.state = NSOffState
                 releaseDatePicker.datePickerElements = NSDatePickerElementFlags(rawValue: 0)
-                releaseDatePicker.enabled = false
+                releaseDatePicker.isEnabled = false
             }
         }
         let track_nums = selectedTracks!.map({return $0.track_num})
         if allEqual(track_nums) {
             if track_nums[0] != nil && track_nums[0] != 0 {
-                trackNumField.stringValue = String(track_nums[0]!)
+                trackNumField.stringValue = String(describing: track_nums[0]!)
             }
         }
         let track_num_ofs = selectedTracks!.map({return $0.album?.track_count})
         if allEqual(track_num_ofs) {
             if track_num_ofs[0] != nil && track_num_ofs[0] != 0 {
-                trackNumOfField.stringValue = String(track_num_ofs[0]!)
+                trackNumOfField.stringValue = String(describing: track_num_ofs[0]!)
             }
         }
         let disc_nums = selectedTracks!.map({return $0.disc_number})
         if allEqual(disc_nums) {
             if disc_nums[0] != nil && disc_nums[0] != 0 {
-                discNumField.stringValue = String(disc_nums[0]!)
+                discNumField.stringValue = String(describing: disc_nums[0]!)
             }
         }
         let disc_counts = selectedTracks!.map({return $0.album?.disc_count})
         if allEqual(disc_counts) {
             if disc_counts[0] != nil && disc_counts[0] != 0 {
-                discNumOfField.stringValue = String(disc_counts[0]!)
+                discNumOfField.stringValue = String(describing: disc_counts[0]!)
             }
         }
         let genres = selectedTracks!.map({return $0.genre?.name})
@@ -231,13 +231,13 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
         let is_compilations = selectedTracks!.map({return $0.album?.is_compilation})
         if allEqual(is_compilations) {
             if is_compilations[0] != nil {
-                compilationButton.state = is_compilations[0]! == NSNumber(bool: true) ? NSOnState : NSOffState
+                compilationButton.state = is_compilations[0]! == NSNumber(value: true as Bool) ? NSOnState : NSOffState
             }
         }
         let ratings = selectedTracks!.map({return $0.rating})
         if allEqual(ratings) {
             if ratings[0] != nil && ratings[0] != 0 {
-                ratingField.stringValue = String(ratings[0]!)
+                ratingField.stringValue = String(describing: ratings[0]!)
             }
         }
         let present_properties = Set(selectedTracks!.map({return $0.user_defined_properties!}).flatMap({$0}))
@@ -249,17 +249,17 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
         
         
     }
-    @IBAction func previousTrackAction(sender: AnyObject) {
+    @IBAction func previousTrackAction(_ sender: AnyObject) {
         
     }
     
-    @IBAction func nextTrackAction(sender: AnyObject) {
+    @IBAction func nextTrackAction(_ sender: AnyObject) {
         
     }
     func initForSelection() {
         if selectedTracks!.count > 1 {
-            nextTrackButton.hidden = true
-            previousTrackButton.hidden = true
+            nextTrackButton.isHidden = true
+            previousTrackButton.isHidden = true
             tabView.removeTabViewItem(fileInfoTab)
         }
         populateFields()
@@ -271,65 +271,65 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
         let album = selectedTracks![0].album
         guard album != nil else {return}
         if album!.primary_art != nil {
-            let artURL = NSURL(string: album!.primary_art!.artwork_location!)
-            self.imageView.image = NSImage(contentsOfURL: artURL!)
+            let artURL = URL(string: album!.primary_art!.artwork_location!)
+            self.imageView.image = NSImage(contentsOf: artURL!)
         }
         if album?.other_art != nil {
-            let artURLs: [NSURL] = album!.other_art!.art!.map({return NSURL(string: ($0 as! AlbumArtwork).artwork_location!)!})
-            self.artImages = artURLs.map({return NSImage(contentsOfURL: $0)!})
+            let artURLs: [URL] = album!.other_art!.art!.map({return URL(string: ($0 as! AlbumArtwork).artwork_location!)!})
+            self.artImages = artURLs.map({return NSImage(contentsOf: $0)!})
         }
         print("registering for dragged types")
-        artworkCollectionView.registerForDraggedTypes([NSPasteboardTypePNG, NSPasteboardTypeTIFF, NSFilenamesPboardType, "public.file-url", "Apple URL pasteboard type", "com.apple.finder.node", NSURLPboardType])
+        artworkCollectionView.register(forDraggedTypes: [NSPasteboardTypePNG, NSPasteboardTypeTIFF, NSFilenamesPboardType, "public.file-url", "Apple URL pasteboard type", "com.apple.finder.node", NSURLPboardType])
         artworkCollectionView.dataSource = self
         artworkCollectionView.delegate = self
-        artworkCollectionView.setDraggingSourceOperationMask(NSDragOperation.Every, forLocal: true)
-        artworkCollectionView.setDraggingSourceOperationMask(NSDragOperation.Every, forLocal: false)
+        artworkCollectionView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)
+        artworkCollectionView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: false)
     }
     
-    func collectionView(collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
         print("nr items in collection view called")
         return artImages!.count
     }
     
-    func collectionView(collectionView: NSCollectionView, itemForRepresentedObjectAtIndexPath indexPath: NSIndexPath) -> NSCollectionViewItem {
+    func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
         print("collection view data thing called")
         let index = indexPath.item
-        let thingy = collectionView.makeItemWithIdentifier("poop", forIndexPath: indexPath) as! NSCollectionViewItem
+        let thingy = collectionView.makeItem(withIdentifier: "poop", for: indexPath) 
         thingy.imageView?.image = artImages![index]
         return thingy
     }
     
-    func collectionView(collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath?>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionViewDropOperation>) -> NSDragOperation {
+    func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<IndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionViewDropOperation>) -> NSDragOperation {
         print("validating drop on collection view")
         print(draggingInfo.draggingPasteboard().types)
-        return .Every
+        return .every
     }
     
-    func collectionView(collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, index: Int, dropOperation: NSCollectionViewDropOperation) -> Bool {
+    func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, index: Int, dropOperation: NSCollectionViewDropOperation) -> Bool {
         print("accepting drop on collection view")
-        if let board = draggingInfo.draggingPasteboard().propertyListForType("NSFilenamesPboardType") as? NSArray, imagePath = board[0] as? String {
-            let artURL = NSURL(fileURLWithPath: imagePath)
-            let artImage = NSImage(contentsOfURL: artURL)
+        if let board = draggingInfo.draggingPasteboard().propertyList(forType: "NSFilenamesPboardType") as? NSArray, let imagePath = board[0] as? String {
+            let artURL = URL(fileURLWithPath: imagePath)
+            let artImage = NSImage(contentsOf: artURL)
             if artImage != nil {
                 let album = selectedTracks![0].album
                 guard album != nil else {return false}
-                let albumDirectoryURL = NSURL(string: selectedTracks![0].location!)?.URLByDeletingLastPathComponent
-                let albumArtwork = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtwork", inManagedObjectContext: managedContext) as! AlbumArtwork
-                albumArtwork.image_hash = artImage?.TIFFRepresentation!.hashValue
+                let albumDirectoryURL = NSURL(string: selectedTracks![0].location!)?.deletingLastPathComponent
+                let albumArtwork = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
+                albumArtwork.image_hash = artImage?.tiffRepresentation!.hashValue as NSNumber?
                 let filename = "\(albumArtwork.image_hash).png"
-                let artworkURL = albumDirectoryURL?.URLByAppendingPathComponent(filename)
-                let artBitmap = NSBitmapImageRep(data: artImage!.TIFFRepresentation!)
-                let artPNG = artBitmap?.representationUsingType(.NSPNGFileType, properties: [:])
+                let artworkURL = albumDirectoryURL?.appendingPathComponent(filename)
+                let artBitmap = NSBitmapImageRep(data: artImage!.tiffRepresentation!)
+                let artPNG = artBitmap?.representation(using: .PNG, properties: [:])
                 albumArtwork.artwork_location = artworkURL?.absoluteString
                 do {
-                    try artPNG?.writeToURL(artworkURL!, options: NSDataWritingOptions.AtomicWrite)
+                    try artPNG?.write(to: artworkURL!, options: NSData.WritingOptions.atomicWrite)
                 } catch {
                     print(error)
                 }
                 if album?.primary_art == nil {
                     albumArtwork.primary_album = album
                 } else if album?.other_art == nil {
-                    let otherArtCollection = NSEntityDescription.insertNewObjectForEntityForName("AlbumArtworkCollection", inManagedObjectContext: managedContext) as! AlbumArtworkCollection
+                    let otherArtCollection = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtworkCollection", into: managedContext) as! AlbumArtworkCollection
                     otherArtCollection.album = album
                     otherArtCollection.addArtObject(albumArtwork)
                 } else if album?.other_art != nil {

@@ -17,10 +17,10 @@ extension Track {
     @NSManaged var bit_rate: NSNumber?
     @NSManaged var bpm: NSNumber?
     @NSManaged var comments: String?
-    @NSManaged var date_added: NSDate?
-    @NSManaged var date_last_played: NSDate?
-    @NSManaged var date_last_skipped: NSDate?
-    @NSManaged var date_modified: NSDate?
+    @NSManaged var date_added: Date?
+    @NSManaged var date_last_played: Date?
+    @NSManaged var date_last_skipped: Date?
+    @NSManaged var date_modified: Date?
     @NSManaged var disc_number: NSNumber?
     @NSManaged var equalizer_preset: String?
     @NSManaged var file_kind: String?

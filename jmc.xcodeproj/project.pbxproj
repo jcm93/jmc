@@ -69,8 +69,8 @@
 		0DAB30911CFBA3340028928F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30901CFBA3340028928F /* AppDelegate.swift */; };
 		0DAB30961CFBA3340028928F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0DAB30951CFBA3340028928F /* Assets.xcassets */; };
 		0DAB30991CFBA3340028928F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DAB30971CFBA3340028928F /* MainMenu.xib */; };
-		0DAB30A41CFBA3340028928F /* minimalTunesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30A31CFBA3340028928F /* minimalTunesTests.swift */; };
-		0DAB30AF1CFBA3340028928F /* minimalTunesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30AE1CFBA3340028928F /* minimalTunesUITests.swift */; };
+		0DAB30A41CFBA3340028928F /* jmcTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30A31CFBA3340028928F /* jmcTests.swift */; };
+		0DAB30AF1CFBA3340028928F /* jmcUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30AE1CFBA3340028928F /* jmcUITests.swift */; };
 		0DB8EFEA1DC4FC4D00009900 /* MainTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB8EFE91DC4FC4D00009900 /* MainTableViewDataSource.swift */; };
 		0DC2E8F51E0110D200671D83 /* MTTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC2E8F41E0110D200671D83 /* MTTextFieldCell.swift */; };
 		0DC2E8F71E01E47900671D83 /* SpecialScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC2E8F61E01E47900671D83 /* SpecialScrollView.swift */; };
@@ -197,10 +197,10 @@
 		0DAB30981CFBA3340028928F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		0DAB309A1CFBA3340028928F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0DAB309F1CFBA3340028928F /* jmc.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = jmc.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0DAB30A31CFBA3340028928F /* minimalTunesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = minimalTunesTests.swift; sourceTree = "<group>"; };
+		0DAB30A31CFBA3340028928F /* jmcTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jmcTests.swift; sourceTree = "<group>"; };
 		0DAB30A51CFBA3340028928F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0DAB30AA1CFBA3340028928F /* jmc.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = jmc.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0DAB30AE1CFBA3340028928F /* minimalTunesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = minimalTunesUITests.swift; sourceTree = "<group>"; };
+		0DAB30AE1CFBA3340028928F /* jmcUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jmcUITests.swift; sourceTree = "<group>"; };
 		0DAB30B01CFBA3340028928F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0DB8EFE91DC4FC4D00009900 /* MainTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTableViewDataSource.swift; sourceTree = "<group>"; };
 		0DC2E8F41E0110D200671D83 /* MTTextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTTextFieldCell.swift; sourceTree = "<group>"; };
@@ -444,7 +444,7 @@
 		0DAB30A21CFBA3340028928F /* jmcTests */ = {
 			isa = PBXGroup;
 			children = (
-				0DAB30A31CFBA3340028928F /* minimalTunesTests.swift */,
+				0DAB30A31CFBA3340028928F /* jmcTests.swift */,
 				0DAB30A51CFBA3340028928F /* Info.plist */,
 			);
 			path = jmcTests;
@@ -453,7 +453,7 @@
 		0DAB30AD1CFBA3340028928F /* jmcUITests */ = {
 			isa = PBXGroup;
 			children = (
-				0DAB30AE1CFBA3340028928F /* minimalTunesUITests.swift */,
+				0DAB30AE1CFBA3340028928F /* jmcUITests.swift */,
 				0DAB30B01CFBA3340028928F /* Info.plist */,
 			);
 			path = jmcUITests;
@@ -527,13 +527,16 @@
 					0DAB308C1CFBA3340028928F = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = 6E383BMF5Y;
+						LastSwiftMigration = 0820;
 					};
 					0DAB309E1CFBA3340028928F = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0820;
 						TestTargetID = 0DAB308C1CFBA3340028928F;
 					};
 					0DAB30A91CFBA3340028928F = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0820;
 						TestTargetID = 0DAB308C1CFBA3340028928F;
 					};
 				};
@@ -696,7 +699,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0DAB30A41CFBA3340028928F /* minimalTunesTests.swift in Sources */,
+				0DAB30A41CFBA3340028928F /* jmcTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -704,7 +707,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0DAB30AF1CFBA3340028928F /* minimalTunesUITests.swift in Sources */,
+				0DAB30AF1CFBA3340028928F /* jmcUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -827,13 +830,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = jmc/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = jcm.jmc;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jcm.jmc;
 				PRODUCT_NAME = jmc;
 				SWIFT_OBJC_BRIDGING_HEADER = "jmc/jmc-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -846,10 +850,11 @@
 				GCC_OPTIMIZATION_LEVEL = s;
 				INFOPLIST_FILE = jmc/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = jcm.jmc;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jcm.jmc;
 				PRODUCT_NAME = jmc;
 				SWIFT_OBJC_BRIDGING_HEADER = "jmc/jmc-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -862,6 +867,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunesTests;
 				PRODUCT_NAME = jmc;
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/jmc.app/Contents/MacOS/jmc";
 			};
 			name = Debug;
@@ -875,6 +881,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunesTests;
 				PRODUCT_NAME = jmc;
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/jmc.app/Contents/MacOS/jmc";
 			};
 			name = Release;
@@ -887,6 +894,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunesUITests;
 				PRODUCT_NAME = jmc;
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = minimalTunes;
 			};
 			name = Debug;
@@ -899,6 +907,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunesUITests;
 				PRODUCT_NAME = jmc;
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = minimalTunes;
 			};
 			name = Release;
