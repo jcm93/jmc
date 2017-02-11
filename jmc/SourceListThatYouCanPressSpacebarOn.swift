@@ -11,7 +11,6 @@ import Cocoa
 class SourceListThatYouCanPressSpacebarOn: NSOutlineView {
     
     var mainWindowController: MainWindowController?
-    var treeController: DragAndDropTreeController?
     
     override func awakeFromNib() {
         self.register(forDraggedTypes: ["SourceListItem", "Track", "NetworkTrack"])

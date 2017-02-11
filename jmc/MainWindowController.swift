@@ -501,6 +501,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         let seconds = ((Double((playerTime?.sampleTime)!) + offset_thing!) / (playerTime?.sampleRate)!) - Double(delegate!.audioModule.total_offset_seconds)
         if seconds > 3 {
             delegate?.audioModule.skip_backward()
+            initializeInterfaceForNewTrack()
+            self.isDoneWithSkipBackOperation = true
         } else {
             trackQueueViewController?.skipToPreviousTrack()
         }
@@ -801,10 +803,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         self.libraryTableViewController = LibraryTableViewControllerCellBased(nibName: "LibraryTableViewControllerCellBased", bundle: nil)
         self.libraryTableViewController?.mainWindowController = self
         self.librarySplitView.addArrangedSubview(libraryTableViewController!.view)
-        //self.libraryTableTargetView.addSubview(self.libraryTableViewController!.view)
-        //self.libraryTableViewController!.view.frame = self.libraryTableTargetView.bounds
-        //let libraryTableLayoutConstraints = [NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Left, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Left, multiplier: 1, constant: 0), NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Right, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Right, multiplier: 1, constant: 0), NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Top, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Top, multiplier: 1, constant: 0), NSLayoutConstraint(item: libraryTableViewController!.view, attribute: .Bottom, relatedBy: .Equal, toItem: libraryTableTargetView, attribute: .Bottom, multiplier: 1, constant: 0)]
-        //NSLayoutConstraint.activateConstraints(libraryTableLayoutConstraints)
         numberFormatter.numberStyle = NumberFormatter.Style.decimal
         dateFormatter.unitsStyle = DateComponentsFormatter.UnitsStyle.full
         print(hasMusic)
@@ -827,13 +825,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         self.window!.titleVisibility = NSWindowTitleVisibility.hidden
         self.window!.titlebarAppearsTransparent = true
         UserDefaults.standard.set(true, forKey: "checkEmbeddedArtwork")
-        //current_source_play_order = (libraryTableViewController!.trackViewArrayController.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int})
         let userScreenSize = NSScreen.main()?.frame.width
         let songBarMinimumWidthConstraint = NSLayoutConstraint(item: theBox, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: MIN_SONG_BAR_WIDTH_FRACTION, constant: userScreenSize! * MIN_SONG_BAR_WIDTH_FRACTION)
         let volumeBarMinimumWidthConstraint = NSLayoutConstraint(item: volumeSlider, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: userScreenSize! * MIN_VOLUME_BAR_WIDTH_FRACTION)
         let searchBarMinimumWidthConstraint = NSLayoutConstraint(item: searchField, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: userScreenSize! * MIN_SEARCH_BAR_WIDTH_FRACTION)
         let volumeSliderMaxWidthConstraint = NSLayoutConstraint(item: volumeSlider, attribute: .width, relatedBy: .lessThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: userScreenSize! * MAX_VOLUME_BAR_WIDTH_FRACTION)
-        //let volumeSongBarDistanceConstraint = NSLayoutConstraint(item: volumeSlider, attribute: .Trailing, relatedBy: .GreaterThanOrEqual, toItem: theBox, attribute: .Leading, multiplier: 1.0, constant: userScreenSize! * MIN_DISTANCE_BETWEEN_VOLUME_AND_SONG_BAR_FRACTION)
         NSLayoutConstraint.activate([songBarMinimumWidthConstraint, volumeBarMinimumWidthConstraint, searchBarMinimumWidthConstraint, volumeSliderMaxWidthConstraint])
         let volume = UserDefaults.standard.float(forKey: DEFAULTS_VOLUME_STRING)
         volumeSlider.floatValue = volume
