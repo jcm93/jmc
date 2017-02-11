@@ -298,15 +298,18 @@ extension Track {
                 if self_disc_num == nil || other_disc_num == nil {
                     disc_num_comparison = (self_disc_num == other_disc_num) ? .orderedSame : (other_disc_num != nil) ? .orderedAscending : .orderedDescending
                 } else {
-                    disc_num_comparison = self.disc_number!.compare(other_disc_num!)
+                    disc_num_comparison = self_disc_num!.compare(other_disc_num!)
                 }
                 if disc_num_comparison == .orderedSame {
                     let self_track_num = self.track_num
                     let other_track_num = other.track_num
-                    guard self_track_num != nil && other_track_num != nil else {
-                        return (self_track_num == other_track_num) ? .orderedSame : (other_track_num != nil) ? .orderedAscending : .orderedDescending
+                    let track_num_comparison: ComparisonResult
+                    if self_track_num == nil || other_track_num == nil {
+                         track_num_comparison = (self_track_num == other_track_num) ? .orderedSame : (other_track_num != nil) ? .orderedAscending : .orderedDescending
+                    } else {
+                        track_num_comparison = self_track_num!.compare(other_track_num!)
                     }
-                    if self_track_num == other_track_num {
+                    if track_num_comparison == .orderedSame {
                         let self_name = self.sort_name != nil ? self.sort_name : self.name
                         let other_name = other.sort_name != nil ? other.sort_name : other.name
                         guard self_name != nil && other_name != nil else {
@@ -352,15 +355,18 @@ extension Track {
                 if self_disc_num == nil || other_disc_num == nil {
                     disc_num_comparison = (self_disc_num == other_disc_num) ? .orderedSame : (other_disc_num != nil) ? .orderedAscending : .orderedDescending
                 } else {
-                    disc_num_comparison = self.disc_number!.compare(other_disc_num!)
+                    disc_num_comparison = self_disc_num!.compare(other_disc_num!)
                 }
                 if disc_num_comparison == .orderedSame {
                     let self_track_num = self.track_num
                     let other_track_num = other.track_num
-                    guard self_track_num != nil && other_track_num != nil else {
-                        return (self_track_num == other_track_num) ? .orderedSame : (other_track_num != nil) ? .orderedAscending : .orderedDescending
+                    let track_num_comparison: ComparisonResult
+                    if self_track_num == nil || other_track_num == nil {
+                        track_num_comparison = (self_track_num == other_track_num) ? .orderedSame : (other_track_num != nil) ? .orderedAscending : .orderedDescending
+                    } else {
+                        track_num_comparison = self_track_num!.compare(other_track_num!)
                     }
-                    if self_track_num == other_track_num {
+                    if track_num_comparison == .orderedSame {
                         let self_name = self.sort_name != nil ? self.sort_name : self.name
                         let other_name = other.sort_name != nil ? other.sort_name : other.name
                         guard self_name != nil && other_name != nil else {
@@ -372,8 +378,7 @@ extension Track {
                     }
                 } else {
                     return disc_num_comparison
-                }
-            } else {
+                }            } else {
                 return artist_comparison
             }
         } else {
@@ -411,10 +416,13 @@ extension Track {
                 if disc_num_comparison == .orderedSame {
                     let self_track_num = self.track_num
                     let other_track_num = other.track_num
-                    guard self_track_num != nil && other_track_num != nil else {
-                        return (self_track_num == other_track_num) ? .orderedSame : (other_track_num != nil) ? .orderedAscending : .orderedDescending
+                    let track_num_comparison: ComparisonResult
+                    if self_track_num == nil || other_track_num == nil {
+                        track_num_comparison = (self_track_num == other_track_num) ? .orderedSame : (other_track_num != nil) ? .orderedAscending : .orderedDescending
+                    } else {
+                        track_num_comparison = self_track_num!.compare(other_track_num!)
                     }
-                    if self_track_num == other_track_num {
+                    if track_num_comparison == .orderedSame {
                         let self_name = self.sort_name != nil ? self.sort_name : self.name
                         let other_name = other.sort_name != nil ? other.sort_name : other.name
                         guard self_name != nil && other_name != nil else {
@@ -426,8 +434,7 @@ extension Track {
                     }
                 } else {
                     return disc_num_comparison
-                }
-            } else {
+                }            } else {
                 return album_comparison
             }
         } else {
@@ -1088,7 +1095,7 @@ func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder) {
         }
         for track in tracks {
             let index = insert(mutableVersion, track: track.view!, isGreater: comparator)
-            //print("index is \(index)")
+            print("index is \(index)")
             mutableVersion.insert(track.view!, at: index)
             fixIndices(mutableVersion, index: index, order: cachedOrder.order!)
         }
