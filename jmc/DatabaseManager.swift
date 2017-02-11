@@ -208,6 +208,7 @@ class DatabaseManager: NSObject {
         } catch {
             print("error checking directory: \(error)")
         }
+        print("moved \(currentLocationURL) to \(track.location!)")
     }
     
     func getMDItemFromURL(_ url: URL) -> MDItem? {

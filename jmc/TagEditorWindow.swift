@@ -9,8 +9,9 @@
 //tag editor window
 
 import Cocoa
+import CoreServices
 
-class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectionViewDataSource {
+class TagEditorWindow: NSWindowController {
     
     lazy var managedContext: NSManagedObjectContext = {
         return (NSApplication.shared().delegate
@@ -53,6 +54,10 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
     @IBOutlet weak var nameField: NSTextField!
     @IBOutlet weak var albumField: NSTextField!
     @IBOutlet weak var artistField: NSTextField!
+    
+    let fileSizeFormatter = ByteCountFormatter()
+    let bitRateFormatter = BitRateFormatter()
+    let sampleRateFormatter = SampleRateFormatter()
     
     
     //mark artwork view
@@ -109,12 +114,31 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
         if ratingField.stringValue.isEmpty == false {
             editRating(selectedTracks, rating: Int(ratingField.stringValue)!)
         }
-        print(selectedTracks)
+        if sortingNameSortAsField.stringValue.isEmpty == false {
+            editSortName(selectedTracks, sortName: sortingNameSortAsField.stringValue)
+        }
+        if sortingArtistSortAsField.stringValue.isEmpty == false {
+            editSortArtist(selectedTracks, sortArtist: sortingArtistSortAsField.stringValue)
+        }
+        if sortingAlbumSortAsField.stringValue.isEmpty == false {
+            editSortAlbum(selectedTracks, sortAlbum: sortingAlbumSortAsField.stringValue)
+        }
+        if sortingAlbumArtistSortAsField.stringValue.isEmpty == false {
+            editSortAlbumArtist(selectedTracks, sortAlbumArtist: sortingAlbumArtistSortAsField.stringValue)
+        }
+        if sortingComposerSortAsField.stringValue.isEmpty == false {
+            editSortComposer(selectedTracks, sortComposer: sortingComposerSortAsField.stringValue)
+        }
         for order in mainWindowController!.cachedOrders! {
             reorderForTracks(self.selectedTracks!, cachedOrder: order)
         }
         for track in selectedTracks! {
             fileHandler.moveFileAfterEdit(track)
+        }
+        do {
+            try managedContext.save()
+        } catch {
+            print("error saving context")
         }
     }
     
@@ -149,30 +173,40 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
     }
     
     func populateFields() {
-        print(selectedTracks)
+        var artist: String?
+        var album: String?
+        var albumArtist: String?
+        var composer: String?
         let names = selectedTracks!.map( { return $0.name } )
         if allEqual(names) == true {
             if names[0] != nil {
                 nameField.stringValue = names[0]!
+                sortingNameField.stringValue = names[0]!
             }
         }
         let artist_names = selectedTracks!.map( { return $0.artist?.name } )
         if allEqual(artist_names) == true {
             if artist_names[0] != nil {
+                artist = artist_names[0]!
                 artistField.stringValue = artist_names[0]!
+                sortingArtistField.stringValue = artist_names[0]!
             }
         }
         let album_names = selectedTracks!.map( { return $0.album?.name } )
         if allEqual(album_names) == true {
             if album_names[0] != nil {
+                album = album_names[0]!
                 albumField.stringValue = album_names[0]!
+                sortingAlbumField.stringValue = album_names[0]!
             }
             populateArtwork()
         }
         let album_artist_names = selectedTracks!.map( { return $0.album?.album_artist?.name } )
         if allEqual(album_artist_names) == true {
             if album_artist_names[0] != nil {
+                albumArtist = album_artist_names[0]!
                 albumArtistField.stringValue = album_artist_names[0]!
+                sortingAlbumArtistField.stringValue = album_artist_names[0]!
             }
         }
         let comments = selectedTracks!.map( { return $0.comments } )
@@ -185,6 +219,8 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
         if allEqual(composers) == true {
             if composers[0] != nil {
                 composerField.stringValue = composers[0]!
+                sortingComposerField.stringValue = composers[0]!
+                composer = composers[0]!
             }
         }
         let release_dates = selectedTracks!.map({ return $0.album?.release_date })
@@ -240,14 +276,49 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
                 ratingField.stringValue = String(describing: ratings[0]!)
             }
         }
-        let present_properties = Set(selectedTracks!.map({return $0.user_defined_properties!}).flatMap({$0}))
-        for property in present_properties {
-            
+        let sortNames = selectedTracks!.flatMap({return $0.sort_name})
+        let sortNamesSet = Set(sortNames)
+        if sortNamesSet.count == 1 && sortNames.count == selectedTracks?.count {
+            sortingNameSortAsField.stringValue = sortNames.first!
         }
-        
-        
-        
-        
+        let sortAlbums = selectedTracks!.flatMap({return $0.sort_album})
+        let sortAlbumsSet = Set(sortAlbums)
+        if sortAlbumsSet.count == 1 && sortAlbums.count == selectedTracks?.count {
+            sortingAlbumSortAsField.stringValue = sortAlbums.first!
+        }
+        let sortArtists = selectedTracks!.flatMap({return $0.sort_artist})
+        let sortArtistsSet = Set(sortArtists)
+        if sortArtistsSet.count == 1 && sortArtists.count == selectedTracks?.count {
+            sortingArtistSortAsField.stringValue = sortArtists.first!
+        }
+        let sortAlbumArtists = selectedTracks!.flatMap({return $0.sort_album_artist})
+        let sortAlbumArtistsSet = Set(sortAlbumArtists)
+        if sortAlbumArtistsSet.count == 1 && sortAlbumArtists.count == selectedTracks?.count {
+            sortingAlbumArtistSortAsField.stringValue = sortAlbumArtists.first!
+        }
+        let sortComposers = selectedTracks!.flatMap({return $0.sort_composer})
+        let sortComposersSet = Set(sortComposers)
+        if sortComposersSet.count == 1 && sortComposers.count == selectedTracks?.count{
+            sortingComposerSortAsField.stringValue = sortComposers.first!
+        }
+        var titleString = ""
+        if albumArtist != nil {
+            if artist != nil {
+                titleString.append(artist!)
+                if album != nil {
+                    titleString.append(" - \(album!)")
+                }
+            } else {
+                if album != nil {
+                    titleString = album!
+                }
+            }
+            if titleString != "" {
+                self.window?.title = titleString
+            } else {
+                self.window?.title = "Edit Info"
+            }
+        }
     }
     @IBAction func previousTrackAction(_ sender: AnyObject) {
         
@@ -261,6 +332,9 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
             nextTrackButton.isHidden = true
             previousTrackButton.isHidden = true
             tabView.removeTabViewItem(fileInfoTab)
+        } else {
+            currentTrack = selectedTracks![0]
+            populateFileInfo()
         }
         populateFields()
     }
@@ -279,77 +353,62 @@ class TagEditorWindow: NSWindowController, NSCollectionViewDelegate, NSCollectio
             self.artImages = artURLs.map({return NSImage(contentsOf: $0)!})
         }
         print("registering for dragged types")
-        artworkCollectionView.register(forDraggedTypes: [NSPasteboardTypePNG, NSPasteboardTypeTIFF, NSFilenamesPboardType, "public.file-url", "Apple URL pasteboard type", "com.apple.finder.node", NSURLPboardType])
-        artworkCollectionView.dataSource = self
-        artworkCollectionView.delegate = self
-        artworkCollectionView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)
-        artworkCollectionView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: false)
     }
     
-    func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("nr items in collection view called")
-        return artImages!.count
-    }
-    
-    func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        print("collection view data thing called")
-        let index = indexPath.item
-        let thingy = collectionView.makeItem(withIdentifier: "poop", for: indexPath) 
-        thingy.imageView?.image = artImages![index]
-        return thingy
-    }
-    
-    func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<IndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionViewDropOperation>) -> NSDragOperation {
-        print("validating drop on collection view")
-        print(draggingInfo.draggingPasteboard().types)
-        return .every
-    }
-    
-    func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, index: Int, dropOperation: NSCollectionViewDropOperation) -> Bool {
-        print("accepting drop on collection view")
-        if let board = draggingInfo.draggingPasteboard().propertyList(forType: "NSFilenamesPboardType") as? NSArray, let imagePath = board[0] as? String {
-            let artURL = URL(fileURLWithPath: imagePath)
-            let artImage = NSImage(contentsOf: artURL)
-            if artImage != nil {
-                let album = selectedTracks![0].album
-                guard album != nil else {return false}
-                let albumDirectoryURL = NSURL(string: selectedTracks![0].location!)?.deletingLastPathComponent
-                let albumArtwork = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
-                albumArtwork.image_hash = artImage?.tiffRepresentation!.hashValue as NSNumber?
-                let filename = "\(albumArtwork.image_hash).png"
-                let artworkURL = albumDirectoryURL?.appendingPathComponent(filename)
-                let artBitmap = NSBitmapImageRep(data: artImage!.tiffRepresentation!)
-                let artPNG = artBitmap?.representation(using: .PNG, properties: [:])
-                albumArtwork.artwork_location = artworkURL?.absoluteString
-                do {
-                    try artPNG?.write(to: artworkURL!, options: NSData.WritingOptions.atomicWrite)
-                } catch {
-                    print(error)
-                }
-                if album?.primary_art == nil {
-                    albumArtwork.primary_album = album
-                } else if album?.other_art == nil {
-                    let otherArtCollection = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtworkCollection", into: managedContext) as! AlbumArtworkCollection
-                    otherArtCollection.album = album
-                    otherArtCollection.addArtObject(albumArtwork)
-                } else if album?.other_art != nil {
-                    let collection = album?.other_art
-                    collection?.addArtObject(albumArtwork)
-                }
-                self.artImages?.append(artImage!)
-            }
-        }
-        return true
-    }
     //mark file info
+    @IBOutlet weak var kindLabel: NSTextField!
+    @IBOutlet weak var durationLabel: NSTextField!
+    @IBOutlet weak var sizeLabel: NSTextField!
+    @IBOutlet weak var bitRateLabel: NSTextField!
+    @IBOutlet weak var sampleRateLabel: NSTextField!
+    @IBOutlet weak var id3Label: NSTextField!
+    @IBOutlet weak var channelsLabel: NSTextField!
+    @IBOutlet weak var formatLabel: NSTextField!
+    @IBOutlet weak var encoderLabel: NSTextField!
+    @IBOutlet weak var dateModifiedLabel: NSTextField!
+    @IBOutlet weak var dateAddedLabel: NSTextField!
+    @IBOutlet weak var locationPathControl: NSPathControl!
+    
+    func populateFileInfo() {
+        //todo correct tags if inconsistent
+        let mdItem = MDItemCreateWithURL(kCFAllocatorDefault, NSURL(string: self.currentTrack!.location!))
+        let kind = MDItemCopyAttribute(mdItem, kMDItemKind) as? String
+        kindLabel.stringValue = kind!
+        let duration = MDItemCopyAttribute(mdItem, kMDItemDurationSeconds) as! Int
+        durationLabel.stringValue = getTimeAsString(Double(duration))!
+        let size = MDItemCopyAttribute(mdItem, kMDItemFSSize) as! Int
+        sizeLabel.stringValue = fileSizeFormatter.string(fromByteCount: Int64(size))
+        let bitRateCheck = MDItemCopyAttribute(mdItem, kMDItemAudioBitRate) as? Int
+        bitRateLabel.stringValue = bitRateFormatter.string(for: bitRateCheck)!
+        let sampleRateCheck = MDItemCopyAttribute(mdItem, kMDItemAudioSampleRate) as? Int
+        sampleRateLabel.stringValue = sampleRateFormatter.string(for: sampleRateCheck)!
+        let channels = MDItemCopyAttribute(mdItem, kMDItemAudioChannelCount) as! Int
+        channelsLabel.stringValue = String(describing: channels)
+        let encoder = MDItemCopyAttribute(mdItem, kMDItemAudioEncodingApplication) as? String
+        encoderLabel.stringValue = encoder != nil ? encoder! : "No encoder information available."
+        let dateModified = MDItemCopyAttribute(mdItem, kMDItemContentModificationDate) as? NSDate
+        dateModifiedLabel.stringValue = dateModified != nil ? dateModified!.description : ""
+        let dateAdded = MDItemCopyAttribute(mdItem, kMDItemDateAdded) as? NSDate
+        dateAddedLabel.stringValue = dateAdded != nil ? dateAdded!.description as! String : ""
+    }
     //mark playback
     //mark sorting
+    @IBOutlet weak var sortingNameField: NSTextField!
+    @IBOutlet weak var sortingNameSortAsField: NSTextField!
+    @IBOutlet weak var sortingAlbumField: NSTextField!
+    @IBOutlet weak var sortingAlbumSortAsField: NSTextField!
+    @IBOutlet weak var sortingArtistField: NSTextField!
+    @IBOutlet weak var sortingArtistSortAsField: NSTextField!
+    @IBOutlet weak var sortingAlbumArtistField: NSTextField!
+    @IBOutlet weak var sortingAlbumArtistSortAsField: NSTextField!
+    @IBOutlet weak var sortingComposerField: NSTextField!
+    @IBOutlet weak var sortingComposerSortAsField: NSTextField!
+    
 
     override func windowDidLoad() {
-        initForSelection()
         super.windowDidLoad()
-
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+        initForSelection()
     }
     
 }

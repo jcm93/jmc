@@ -924,6 +924,46 @@ func editIsComp(_ tracks: [Track]?, isComp: Bool) {
     }
 }
 
+func editSortName(_ tracks: [Track]?, sortName: String) {
+    if tracks != nil {
+        for track in tracks! {
+            track.sort_name = sortName
+        }
+    }
+}
+
+func editSortArtist(_ tracks: [Track]?, sortArtist: String) {
+    if tracks != nil {
+        for track in tracks! {
+            track.sort_name = sortArtist
+        }
+    }
+}
+
+func editSortAlbum(_ tracks: [Track]?, sortAlbum: String) {
+    if tracks != nil {
+        for track in tracks! {
+            track.sort_album = sortAlbum
+        }
+    }
+}
+
+func editSortAlbumArtist(_ tracks: [Track]?, sortAlbumArtist: String) {
+    if tracks != nil {
+        for track in tracks! {
+            track.sort_album_artist = sortAlbumArtist
+        }
+    }
+}
+
+func editSortComposer(_ tracks: [Track]?, sortComposer: String) {
+    if tracks != nil {
+        for track in tracks! {
+            track.sort_composer = sortComposer
+        }
+    }
+}
+
 func insert(_ tracks: NSOrderedSet, track: TrackView, isGreater: ((Track) -> (Track) -> ComparisonResult)) -> Int {
     var high: Int = tracks.count - 1
     var low: Int = 0

@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class SampleRateFormatter: Formatter {
+class SampleRateFormatter: NumberFormatter {
     
     override func string(for obj: Any?) -> String? {
         return (obj as! NSNumber).description(withLocale: Locale.current) + " Hz"
