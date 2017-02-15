@@ -120,6 +120,7 @@
 		0DD0DB0A1E53A8EE00807CAC /* ogg_mapping.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAE11E53A8EE00807CAC /* ogg_mapping.html */; };
 		0DD0DB0B1E53A8EE00807CAC /* flac.1 in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAE41E53A8EE00807CAC /* flac.1 */; };
 		0DD0DB0C1E53A8EE00807CAC /* metaflac.1 in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAE51E53A8EE00807CAC /* metaflac.1 */; };
+		0DD0DB0E1E54425800807CAC /* FlacDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD0DB0D1E54425800807CAC /* FlacDecoder.swift */; };
 		0DD274EC1D30462F0055C43B /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD274EA1D30462F0055C43B /* PreferencesWindowController.swift */; };
 		0DD274ED1D30462F0055C43B /* PreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DD274EB1D30462F0055C43B /* PreferencesWindowController.xib */; };
 		0DD274EF1D3190360055C43B /* GlobalFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD274EE1D3190360055C43B /* GlobalFunctions.swift */; };
@@ -306,6 +307,7 @@
 		0DD0DAE11E53A8EE00807CAC /* ogg_mapping.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ogg_mapping.html; sourceTree = "<group>"; };
 		0DD0DAE41E53A8EE00807CAC /* flac.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = flac.1; sourceTree = "<group>"; };
 		0DD0DAE51E53A8EE00807CAC /* metaflac.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = metaflac.1; sourceTree = "<group>"; };
+		0DD0DB0D1E54425800807CAC /* FlacDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlacDecoder.swift; sourceTree = "<group>"; };
 		0DD274EA1D30462F0055C43B /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
 		0DD274EB1D30462F0055C43B /* PreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesWindowController.xib; sourceTree = "<group>"; };
 		0DD274EE1D3190360055C43B /* GlobalFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalFunctions.swift; sourceTree = "<group>"; };
@@ -374,6 +376,7 @@
 		0D01AD931D707CE400F9211F /* Backend */ = {
 			isa = PBXGroup;
 			children = (
+				0DD0DB0D1E54425800807CAC /* FlacDecoder.swift */,
 				0D23CA6C1E03242400CAF529 /* PeerBrowser.swift */,
 				0DD274EE1D3190360055C43B /* GlobalFunctions.swift */,
 				0D1BDFA41D0F44A70092FBA0 /* AudioModule.swift */,
@@ -939,6 +942,7 @@
 				0D84EDE51DA326BD0057411F /* SongCollection+CoreDataProperties.swift in Sources */,
 				0DD7D6D81D3F3A350035BAD8 /* AlbumArtworkCollection+CoreDataProperties.swift in Sources */,
 				0D015AC61E00A31C00EBAB6E /* LibraryTableViewControllerCellBased.swift in Sources */,
+				0DD0DB0E1E54425800807CAC /* FlacDecoder.swift in Sources */,
 				0DEF66D31D383A8700EA3ADC /* Tag.swift in Sources */,
 				0DEF66C51D383A8700EA3ADC /* Property.swift in Sources */,
 				0D58F7491D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift in Sources */,
