@@ -14,6 +14,7 @@
 		0D0E5FA91D38444B009E0FA3 /* Track+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FA51D38444B009E0FA3 /* Track+CoreDataProperties.swift */; };
 		0D0E5FAA1D38444B009E0FA3 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FA61D38444B009E0FA3 /* Track.swift */; };
 		0D0E5FAF1D3E909D009E0FA3 /* DragAndDropImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */; };
+		0D116B851E5800FD00C759FD /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D116B841E5800FD00C759FD /* LocationManager.swift */; };
 		0D1BDFA51D0F44A70092FBA0 /* AudioModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1BDFA41D0F44A70092FBA0 /* AudioModule.swift */; };
 		0D23CA6D1E03242400CAF529 /* PeerBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D23CA6C1E03242400CAF529 /* PeerBrowser.swift */; };
 		0D2410A31D6735F200F95494 /* artAPIRequestDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */; };
@@ -180,6 +181,7 @@
 		0D0E5FA51D38444B009E0FA3 /* Track+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Track+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D0E5FA61D38444B009E0FA3 /* Track.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragAndDropImageView.swift; sourceTree = "<group>"; };
+		0D116B841E5800FD00C759FD /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		0D1BDFA41D0F44A70092FBA0 /* AudioModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioModule.swift; sourceTree = "<group>"; };
 		0D23CA6C1E03242400CAF529 /* PeerBrowser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerBrowser.swift; sourceTree = "<group>"; };
 		0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = artAPIRequestDelegate.swift; sourceTree = "<group>"; };
@@ -386,6 +388,7 @@
 				0DE74A521D7D9457005211E6 /* SharedLibraryRequestHandler.swift */,
 				0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */,
 				0D79409E1D13D2D5008AA167 /* stupidPlaybackObserver.swift */,
+				0D116B841E5800FD00C759FD /* LocationManager.swift */,
 			);
 			name = Backend;
 			sourceTree = "<group>";
@@ -973,6 +976,7 @@
 				0DA8D0401D1B1128009FEC28 /* ProgressBarView.swift in Sources */,
 				0DB8EFEA1DC4FC4D00009900 /* MainTableViewDataSource.swift in Sources */,
 				0D9CE6711D334F97004FA8CB /* ImportWindowController.swift in Sources */,
+				0D116B851E5800FD00C759FD /* LocationManager.swift in Sources */,
 				0DEF66C61D383A8700EA3ADC /* SourceListItem+CoreDataProperties.swift in Sources */,
 				0DCB81721DCAA45C006FBA9D /* MainTableViewDelegate.swift in Sources */,
 				0DEF66C21D383A8700EA3ADC /* ViewCoordinator+CoreDataProperties.swift in Sources */,
@@ -1236,8 +1240,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunesUITests;
 				PRODUCT_NAME = jmc;
+				PROVISIONING_PROFILE = "";
 				SWIFT_VERSION = 3.0;
-				TEST_TARGET_NAME = minimalTunes;
+				TEST_TARGET_NAME = jmc;
 			};
 			name = Debug;
 		};
@@ -1249,8 +1254,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunesUITests;
 				PRODUCT_NAME = jmc;
+				PROVISIONING_PROFILE = "";
 				SWIFT_VERSION = 3.0;
-				TEST_TARGET_NAME = minimalTunes;
+				TEST_TARGET_NAME = jmc;
 			};
 			name = Release;
 		};

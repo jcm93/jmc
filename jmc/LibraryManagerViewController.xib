@@ -104,7 +104,7 @@
                             </subviews>
                         </clipView>
                         <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="AIf-fn-epu">
-                            <rect key="frame" x="1" y="273" width="137" height="16"/>
+                            <rect key="frame" x="1" y="-16" width="0.0" height="16"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="uvv-9j-zUM">
@@ -150,9 +150,9 @@
                         </buttonCell>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Nlr-9X-hPe">
-                        <rect key="frame" x="192" y="326" width="228" height="18"/>
+                        <rect key="frame" x="192" y="326" width="205" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Watch directory for file movement" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Fdi-AM-oVD">
+                        <buttonCell key="cell" type="check" title="Monitor directory for new files" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Fdi-AM-oVD">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -163,7 +163,7 @@
                         <pathCell key="cell" selectable="YES" editable="YES" alignment="left" id="OOI-7X-oUy">
                             <font key="font" metaFont="system"/>
                             <url key="url" string="file://localhost/Applications/"/>
-                            <color key="backgroundColor" red="0.8980392157" green="0.92549019610000005" blue="0.97254901959999995" alpha="1" colorSpace="deviceRGB"/>
+                            <color key="backgroundColor" red="0.89803921568627454" green="0.92549019607843142" blue="0.97254901960784312" alpha="1" colorSpace="deviceRGB"/>
                         </pathCell>
                     </pathControl>
                     <comboBox verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dtT-LP-zFe">

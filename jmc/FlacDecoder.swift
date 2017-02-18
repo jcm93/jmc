@@ -8,7 +8,7 @@
 
 import Foundation
 
-class FlacDecoder {
+/*class FlacDecoder {
     var decoder: FLAC__StreamDecoder?
     var blockBuffer: UnsafeMutableRawPointer?
     
@@ -38,6 +38,22 @@ class FlacDecoder {
     
     let flacWriteCallback: @convention(c) (Optional<UnsafePointer<FLAC__StreamDecoder>>, Optional<UnsafePointer<FLAC__Frame>>, Optional<UnsafePointer<Optional<UnsafePointer<Int32>>>>, Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderWriteStatus = {
         (decoder: Optional<UnsafePointer<FLAC__StreamDecoder>>, frame: Optional<UnsafePointer<FLAC__Frame>>, buffer: Optional<UnsafePointer<Optional<UnsafePointer<Int32>>>>, client_data: Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderWriteStatus in
+        
+        let poop = frame!.pointee.header.
+        
+        switch frame!.pointee.header.bits_per_sample {
+        case 8:
+            
+            print(8)
+        case 12:
+            print(12)
+        case 16:
+            print(16)
+        case 20:
+            print(20)
+        case 24:
+            print(24)
+        }
         
     }
     
@@ -69,4 +85,4 @@ class FlacDecoder {
             
         }
     }
-}
+}*/

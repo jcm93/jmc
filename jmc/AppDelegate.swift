@@ -22,6 +22,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var importWindowController: ImportWindowController?
     var importProgressBar: ImportProgressBar?
     var iTunesParser: iTunesLibraryParser?
+    var locationManager: LocationManager?
     var audioModule: AudioModule = AudioModule()
     let fileHandler = FileManager.default
     let handler = DatabaseManager()
@@ -205,6 +206,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             initializeLibraryAndShowMainWindow()
         }
+        self.locationManager = LocationManager()
+        let array = ["/Volumes/Macintosh HD/CS/test/"] as! CFArray
+        self.locationManager?.createEventStream(paths: array, lastID: nil)
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
