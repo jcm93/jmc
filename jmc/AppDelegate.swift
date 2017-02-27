@@ -25,9 +25,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var locationManager: LocationManager?
     var audioModule: AudioModule = AudioModule()
     let fileHandler = FileManager.default
-    let handler = DatabaseManager()
     var serviceBrowser: ConnectivityManager?
     var importErrorWindowController: ImportErrorWindowController?
+    var libraryManagerWindowController: LibraryManagerViewController?
     @IBOutlet weak var shuffleMenuItem: NSMenuItem!
     @IBOutlet weak var repeatMenuItem: NSMenuItem!
     
@@ -79,6 +79,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         audioModule.toggleEqualizer(defaultsEQOnState)
     }
     
+    @IBAction func openLibraryManager(_ sender: Any) {
+        self.libraryManagerWindowController = LibraryManagerViewController(windowNibName: "LibraryManagerViewController")
+        self.libraryManagerWindowController?.showWindow(self)
+    }
     @IBAction func openImportWindow(_ sender: AnyObject) {
         importWindowController = ImportWindowController(windowNibName: "ImportWindowController")
         importWindowController?.mainWindowController = mainWindowController
@@ -89,34 +93,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         openFiles()
     }
     
-    func getFilesAsURLStringsInURLList(_ urls: [URL]) -> ([String],[FileAddToDatabaseError]) {
-        var urlStrings = [String]()
-        var errors = [FileAddToDatabaseError]()
-        for url in urls {
-            var isDirectory = ObjCBool(true)
-            if fileHandler.fileExists(atPath: url.path, isDirectory: &isDirectory) {
-                if isDirectory.boolValue {
-                    
-                    let enumerator = fileHandler.enumerator(at: url, includingPropertiesForKeys: nil, options: .skipsHiddenFiles, errorHandler: self.handler.handleDirectoryEnumerationError)
-                    for fileURLElement in enumerator! {
-                        let fileURL = fileURLElement as! URL
-                        if fileURL.pathExtension != nil && VALID_FILE_TYPES.contains(fileURL.pathExtension.lowercased()) {
-                            urlStrings.append(fileURL.absoluteString)
-                        } else {
-                            let error = FileAddToDatabaseError(url: fileURL.absoluteString, error: "invalid file type")
-                            errors.append(error)
-                        }
-                    }
-                } else {
-                    if url.pathExtension != nil && VALID_FILE_TYPES.contains(url.pathExtension.lowercased()) {
-                        urlStrings.append(url.absoluteString)
-                    }
-                }
-            }
-        }
-        return (urlStrings, errors)
-    }
-    
     func openFiles() {
         let myFileDialog: NSOpenPanel = NSOpenPanel()
         myFileDialog.allowsMultipleSelection = true
@@ -124,10 +100,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         myFileDialog.canChooseDirectories = true
         let modalResult = myFileDialog.runModal()
         if modalResult == NSFileHandlingPanelOKButton {
-            let directoryCrawlResult = getFilesAsURLStringsInURLList(myFileDialog.urls)
-            let urlStrings = directoryCrawlResult.0
+            let directoryCrawlResult = databaseManager!.getMediaURLsInDirectoryURLs(myFileDialog.urls)
+            let urls = directoryCrawlResult.0
             var errors = directoryCrawlResult.1
-            let errorResults = addURLStringsToLibrary(urlStrings)
+            let errorResults = addURLsToLibrary(urls)
             errors.append(contentsOf: errorResults)
             showImportErrors(errors)
             UserDefaults.standard.set(true, forKey: "hasMusic")
@@ -143,8 +119,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    func addURLStringsToLibrary(_ urlStrings: [String]) -> [FileAddToDatabaseError] {
-        let result = handler.addTracksFromURLStrings(urlStrings)
+    func addURLsToLibrary(_ urls: [URL], library: Library) -> [FileAddToDatabaseError] {
+        let result = databaseManager?.addTracksFromURLs(urls, library: library)
         return result
     }
     

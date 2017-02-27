@@ -23,7 +23,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="267" height="389"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" autosaveColumns="NO" rowHeight="20" viewBased="YES" indentationPerLevel="5" autosaveExpandedItems="YES" autoresizesOutlineColumn="YES" outlineTableColumn="egr-Q3-P5d" id="Brh-x7-enW" customClass="SourceListThatYouCanPressSpacebarOn" customModule="jmc" customModuleProvider="target">
+                            <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" autosaveColumns="NO" rowHeight="20" viewBased="YES" indentationPerLevel="10" autosaveExpandedItems="YES" autoresizesOutlineColumn="YES" outlineTableColumn="egr-Q3-P5d" id="Brh-x7-enW" customClass="SourceListThatYouCanPressSpacebarOn" customModule="jmc" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="267" height="389"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
@@ -125,7 +125,7 @@
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="116" id="bof-qS-efQ"/>
                                                         </constraints>
-                                                        <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Master Playlist Cell" id="RbZ-bh-63q">
+                                                        <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="All Sources" id="RbZ-bh-63q">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -146,8 +146,62 @@
                                                     <outlet property="textField" destination="ie1-Lv-hfk" id="27X-at-cYf"/>
                                                 </connections>
                                             </tableCellView>
-                                            <tableCellView identifier="SmartPlaylistCell" id="Mcv-Eg-DSQ" customClass="SourceListCellView" customModule="jmc" customModuleProvider="target">
+                                            <tableCellView identifier="MasterPlaylistCell" id="SW6-47-Uly" customClass="SourceListCellView" customModule="jmc" customModuleProvider="target">
                                                 <rect key="frame" x="1" y="58" width="264" height="17"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <imageView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VtN-DP-g9q">
+                                                        <rect key="frame" x="24" y="0.0" width="17" height="17"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="17" id="3ME-gC-fKS"/>
+                                                            <constraint firstAttribute="height" constant="17" id="dOi-Ea-gfW"/>
+                                                        </constraints>
+                                                        <imageCell key="cell" refusesFirstResponder="YES" imageScaling="proportionallyDown" image="Master Library" id="hvs-tw-jyW"/>
+                                                    </imageView>
+                                                    <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6ee-9J-eFa">
+                                                        <rect key="frame" x="46" y="0.0" width="120" height="17"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="116" id="cfz-oy-7Cy"/>
+                                                        </constraints>
+                                                        <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Master Playlist Cell" id="RQ2-UQ-Txu">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                        <connections>
+                                                            <binding destination="SW6-47-Uly" name="value" keyPath="objectValue.item.name" id="XxL-6T-KPT"/>
+                                                        </connections>
+                                                    </textField>
+                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e3p-jR-9sl">
+                                                        <rect key="frame" x="246" y="1" width="15" height="15"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAdvanced" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="pra-Zw-8uS">
+                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                    </button>
+                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cDA-dr-Fuy">
+                                                        <rect key="frame" x="1" y="-2" width="19" height="20"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" controlSize="small" state="on" inset="2" id="EAE-8l-FHF">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="smallSystem"/>
+                                                        </buttonCell>
+                                                    </button>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="VtN-DP-g9q" firstAttribute="leading" secondItem="SW6-47-Uly" secondAttribute="leading" constant="3" id="gjm-rx-hge"/>
+                                                    <constraint firstItem="6ee-9J-eFa" firstAttribute="leading" secondItem="VtN-DP-g9q" secondAttribute="trailing" constant="7" id="hmm-7L-DjW"/>
+                                                    <constraint firstItem="VtN-DP-g9q" firstAttribute="top" secondItem="6ee-9J-eFa" secondAttribute="top" id="t0K-pp-6wF"/>
+                                                    <constraint firstItem="VtN-DP-g9q" firstAttribute="centerY" secondItem="SW6-47-Uly" secondAttribute="centerY" id="vjB-rA-wEF"/>
+                                                </constraints>
+                                                <connections>
+                                                    <outlet property="imageView" destination="VtN-DP-g9q" id="Gby-M5-4SX"/>
+                                                    <outlet property="textField" destination="6ee-9J-eFa" id="Dua-wd-FkA"/>
+                                                </connections>
+                                            </tableCellView>
+                                            <tableCellView identifier="SmartPlaylistCell" id="Mcv-Eg-DSQ" customClass="SourceListCellView" customModule="jmc" customModuleProvider="target">
+                                                <rect key="frame" x="1" y="77" width="264" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView translatesAutoresizingMaskIntoConstraints="NO" id="beH-Cf-Y5y">
@@ -184,7 +238,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <tableCellView identifier="PlaylistFolderCell" id="7GM-a4-aIQ" customClass="SourceListCellView" customModule="jmc" customModuleProvider="target">
-                                                <rect key="frame" x="1" y="77" width="264" height="17"/>
+                                                <rect key="frame" x="1" y="96" width="264" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView translatesAutoresizingMaskIntoConstraints="NO" id="VXA-EN-ZCh">
@@ -221,7 +275,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <tableCellView identifier="NetworkLibraryCell" id="yxo-Wm-CPQ" customClass="SourceListCellView" customModule="jmc" customModuleProvider="target">
-                                                <rect key="frame" x="1" y="96" width="264" height="17"/>
+                                                <rect key="frame" x="1" y="115" width="264" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView translatesAutoresizingMaskIntoConstraints="NO" id="Izg-TZ-85e">
@@ -256,7 +310,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <tableCellView identifier="UnconfirmedNetworkLibraryCell" id="7FF-he-Du6" customClass="SourceListCellView" customModule="jmc" customModuleProvider="target">
-                                                <rect key="frame" x="1" y="115" width="264" height="17"/>
+                                                <rect key="frame" x="1" y="134" width="264" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView translatesAutoresizingMaskIntoConstraints="NO" id="MOd-A0-xgb">
@@ -326,6 +380,7 @@
     </objects>
     <resources>
         <image name="Master Library" width="15.75" height="13.5"/>
+        <image name="NSAdvanced" width="32" height="32"/>
         <image name="NSFolder" width="32" height="32"/>
         <image name="Playlist" width="20" height="20"/>
         <image name="Shared Library" width="23" height="20"/>

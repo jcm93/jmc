@@ -1,55 +1,75 @@
 //
 //  Track+CoreDataProperties.swift
-//  minimalTunes
+//  jmc
 //
-//  Created by John Moody on 11/25/16.
-//  Copyright © 2016 John Moody. All rights reserved.
-//
-//  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
-//  to delete and recreate this implementation file for your updated model.
+//  Created by John Moody on 2/22/17.
+//  Copyright © 2017 John Moody. All rights reserved.
 //
 
 import Foundation
 import CoreData
 
+
 extension Track {
 
-    @NSManaged var bit_rate: NSNumber?
-    @NSManaged var bpm: NSNumber?
-    @NSManaged var comments: String?
-    @NSManaged var date_added: Date?
-    @NSManaged var date_last_played: Date?
-    @NSManaged var date_last_skipped: Date?
-    @NSManaged var date_modified: Date?
-    @NSManaged var disc_number: NSNumber?
-    @NSManaged var equalizer_preset: String?
-    @NSManaged var file_kind: String?
-    @NSManaged var id: NSNumber?
-    @NSManaged var is_network: NSNumber?
-    @NSManaged var is_playing: NSNumber?
-    @NSManaged var location: String?
-    @NSManaged var misc_search_field: String?
-    @NSManaged var movement_name: String?
-    @NSManaged var movement_number: NSNumber?
-    @NSManaged var name: String?
-    @NSManaged var play_count: NSNumber?
-    @NSManaged var rating: NSNumber?
-    @NSManaged var sample_rate: NSNumber?
-    @NSManaged var size: NSNumber?
-    @NSManaged var skip_count: NSNumber?
-    @NSManaged var sort_album: String?
-    @NSManaged var sort_album_artist: String?
-    @NSManaged var sort_artist: String?
-    @NSManaged var sort_composer: String?
-    @NSManaged var sort_name: String?
-    @NSManaged var status: NSNumber?
-    @NSManaged var time: NSNumber?
-    @NSManaged var track_num: NSNumber?
-    @NSManaged var album: Album?
-    @NSManaged var artist: Artist?
-    @NSManaged var composer: Composer?
-    @NSManaged var genre: Genre?
-    @NSManaged var user_defined_properties: NSSet?
-    @NSManaged var view: TrackView?
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Track> {
+        return NSFetchRequest<Track>(entityName: "Track");
+    }
+
+    @NSManaged public var bit_rate: NSNumber?
+    @NSManaged public var bpm: NSNumber?
+    @NSManaged public var comments: String?
+    @NSManaged public var date_added: Date?
+    @NSManaged public var date_last_played: Date?
+    @NSManaged public var date_last_skipped: Date?
+    @NSManaged public var date_modified: Date?
+    @NSManaged public var disc_number: NSNumber?
+    @NSManaged public var equalizer_preset: String?
+    @NSManaged public var file_kind: String?
+    @NSManaged public var id: NSNumber?
+    @NSManaged public var is_network: NSNumber?
+    @NSManaged public var is_playing: NSNumber?
+    @NSManaged public var location: String?
+    @NSManaged public var misc_search_field: String?
+    @NSManaged public var movement_name: String?
+    @NSManaged public var movement_number: NSNumber?
+    @NSManaged public var name: String?
+    @NSManaged public var play_count: NSNumber?
+    @NSManaged public var rating: NSNumber?
+    @NSManaged public var sample_rate: NSNumber?
+    @NSManaged public var size: NSNumber?
+    @NSManaged public var skip_count: NSNumber?
+    @NSManaged public var sort_album: String?
+    @NSManaged public var sort_album_artist: String?
+    @NSManaged public var sort_artist: String?
+    @NSManaged public var sort_composer: String?
+    @NSManaged public var sort_name: String?
+    @NSManaged public var status: NSNumber?
+    @NSManaged public var time: NSNumber?
+    @NSManaged public var track_num: NSNumber?
+    @NSManaged public var album: Album?
+    @NSManaged public var artist: Artist?
+    @NSManaged public var composer: Composer?
+    @NSManaged public var genre: Genre?
+    @NSManaged public var library: Library?
+    @NSManaged public var user_defined_properties: NSSet?
+    @NSManaged public var view: TrackView?
+
+}
+
+// MARK: Generated accessors for user_defined_properties
+extension Track {
+
+    @objc(addUser_defined_propertiesObject:)
+    @NSManaged public func addToUser_defined_properties(_ value: Property)
+
+    @objc(removeUser_defined_propertiesObject:)
+    @NSManaged public func removeFromUser_defined_properties(_ value: Property)
+
+    @objc(addUser_defined_properties:)
+    @NSManaged public func addToUser_defined_properties(_ values: NSSet)
+
+    @objc(removeUser_defined_properties:)
+    @NSManaged public func removeFromUser_defined_properties(_ values: NSSet)
 
 }

@@ -37,9 +37,9 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 var managedContext = (NSApplication.shared().delegate as! AppDelegate).managedObjectContext
 
-var library = {() -> Library? in
+var globalRootLibrary = {() -> Library? in
     let fetchReq = NSFetchRequest<NSFetchRequestResult>(entityName: "Library")
-    let predicate = NSPredicate(format: "is_network == nil OR is_network == false")
+    let predicate = NSPredicate(format: "is_network == true")
     fetchReq.predicate = predicate
     do {
         let result = try managedContext.fetch(fetchReq)[0] as! Library
@@ -48,6 +48,30 @@ var library = {() -> Library? in
         return nil
     }
 }()
+
+func getAllLibraries() -> [Library]? {
+    let request = NSFetchRequest<Library>()
+    do {
+        let result = try managedContext.fetch(request)
+        return result
+    } catch {
+        print(error)
+        return nil
+    }
+}
+
+func getLibrary(withName name: String) -> [Library]? {
+    let request = NSFetchRequest<Library>()
+    let predicate = NSPredicate(format: "name == %@", name)
+    request.predicate = predicate
+    do {
+        let result = try managedContext.fetch(request)
+        return result
+    } catch {
+        print(error)
+        return nil
+    }
+}
 
 //mark sort descriptors
 var artistSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_artist", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "sort_album", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "track_num", ascending:true), NSSortDescriptor(key: "name", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:)))]

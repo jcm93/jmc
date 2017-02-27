@@ -229,7 +229,43 @@ class DatabaseManager: NSObject {
         return true
     }
     
-    func addTracksFromURLStrings(_ urlStrings: [String]) -> [FileAddToDatabaseError] {
+    func getMediaURLsInDirectoryURLs(_ urls: [URL]) -> ([URL],[FileAddToDatabaseError]) {
+        var mediaURLs = [URL]()
+        var errors = [FileAddToDatabaseError]()
+        for url in urls {
+            var isDirectory = ObjCBool(true)
+            if fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory) {
+                if isDirectory.boolValue {
+                    let enumerator = fileManager.enumerator(at: url, includingPropertiesForKeys: nil, options: .skipsHiddenFiles, errorHandler: self.handleDirectoryEnumerationError)
+                    for fileURLElement in enumerator! {
+                        let fileURL = fileURLElement as! URL
+                        if fileURL.pathExtension != "" && VALID_FILE_TYPES.contains(fileURL.pathExtension.lowercased()) {
+                            mediaURLs.append(fileURL)
+                        } else {
+                            let error = FileAddToDatabaseError(url: fileURL.absoluteString, error: "invalid file type")
+                            errors.append(error)
+                        }
+                    }
+                } else {
+                    if url.pathExtension != "" && VALID_FILE_TYPES.contains(url.pathExtension.lowercased()) {
+                        mediaURLs.append(url)
+                    }
+                }
+            }
+        }
+        return (mediaURLs, errors)
+    }
+    
+    func addNewSource(url: URL) {
+        let library = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
+        library.library_location = url.absoluteString
+        library.name = url.lastPathComponent
+        library.parent = globalRootLibrary
+        let mediaURLs = getMediaURLsInDirectoryURLs(url)
+        addTracksFromURLs(mediaURLs, to: library)
+    }
+    
+    func addTracksFromURLs(_ mediaURLs: [URL], to library: Library) -> [FileAddToDatabaseError] {
         var errors = [FileAddToDatabaseError]()
         var addedArtists = [String: Artist]()
         var addedAlbums = [String: Album]()
@@ -237,17 +273,17 @@ class DatabaseManager: NSObject {
         var addedGenres = [String: Genre]()
         var tracks = [Track]()
         var index = 0
-        for urlString in urlStrings {
+        for url in mediaURLs {
             var addedArtist: Artist?
             var addedAlbum: Album?
             var addedComposer: Composer?
             var addedGenre: Genre?
             var hasArt = false
-            guard let url = URL(string: urlString) else {errors.append(FileAddToDatabaseError(url: urlString, error: "Failure constructing NSURL"));continue}
-            guard let mediaFileObject = getMDItemFromURL(url) else {errors.append(FileAddToDatabaseError(url: urlString, error: "Failure getting file metadata"));continue}
+            guard let mediaFileObject = getMDItemFromURL(url) else {errors.append(FileAddToDatabaseError(url: url.absoluteString, error: "Failure getting file metadata"));continue}
             let track = NSEntityDescription.insertNewObject(forEntityName: "Track", into: managedContext) as! Track
             let trackView = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: managedContext) as! TrackView
             trackView.track = track
+            track.library = library
             var art: Data?
             track.sample_rate = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioSampleRate" as CFString) as? Int as NSNumber?
             track.date_added = Date()
@@ -261,8 +297,8 @@ class DatabaseManager: NSObject {
                 managedContext.delete(track)
                 continue
             }
-            track.id = library?.next_track_id
-            library?.next_track_id = Int(library!.next_track_id!) + 1 as NSNumber
+            track.id = globalRootLibrary?.next_track_id
+            globalRootLibrary?.next_track_id = Int(globalRootLibrary!.next_track_id!) + 1 as NSNumber
             track.status = 0
             track.time = {
                 if let time = (MDItemCopyAttribute(mediaFileObject, "kMDItemDurationSeconds" as CFString!) as? Int) {
@@ -285,8 +321,8 @@ class DatabaseManager: NSObject {
                 } else {
                     let newGenre = NSEntityDescription.insertNewObject(forEntityName: "Genre", into: managedContext) as! Genre
                     newGenre.name = genreCheck
-                    newGenre.id = library?.next_genre_id
-                    library?.next_genre_id = Int(library!.next_genre_id!) + 1 as NSNumber
+                    newGenre.id = globalRootLibrary?.next_genre_id
+                    globalRootLibrary?.next_genre_id = Int(globalRootLibrary!.next_genre_id!) + 1 as NSNumber
                     track.genre = newGenre
                     addedGenres[genreCheck] = newGenre
                     addedGenre = newGenre
@@ -298,8 +334,8 @@ class DatabaseManager: NSObject {
                 } else {
                     let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
                     newAlbum.name = albumCheck
-                    newAlbum.id = library?.next_album_id
-                    library?.next_album_id = Int(library!.next_album_id!) + 1 as NSNumber
+                    newAlbum.id = globalRootLibrary?.next_album_id
+                    globalRootLibrary?.next_album_id = Int(globalRootLibrary!.next_album_id!) + 1 as NSNumber
                     track.album = newAlbum
                     addedAlbums[albumCheck] = newAlbum
                     addedAlbum = newAlbum
@@ -312,8 +348,8 @@ class DatabaseManager: NSObject {
                 } else {
                     let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
                     newArtist.name = mainArtistCheck
-                    newArtist.id = library?.next_artist_id
-                    library?.next_artist_id = Int(library!.next_artist_id!) + 1 as NSNumber
+                    newArtist.id = globalRootLibrary?.next_artist_id
+                    globalRootLibrary?.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
                     track.artist = newArtist
                     addedArtists[mainArtistCheck] = newArtist
                     addedArtist = newArtist
@@ -325,8 +361,8 @@ class DatabaseManager: NSObject {
                 } else {
                     let newComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: managedContext) as! Composer
                     newComposer.name = composerCheck
-                    newComposer.id = library?.next_composer_id
-                    library?.next_composer_id = Int(library!.next_composer_id!) + 1 as NSNumber
+                    newComposer.id = globalRootLibrary?.next_composer_id
+                    globalRootLibrary?.next_composer_id = Int(globalRootLibrary!.next_composer_id!) + 1 as NSNumber
                     track.composer = newComposer
                     addedComposers[composerCheck] = newComposer
                     addedComposer = newComposer
@@ -350,7 +386,7 @@ class DatabaseManager: NSObject {
                     tracks.append(track)
                 } else {
                     print("error moving")
-                    errors.append(FileAddToDatabaseError(url: urlString, error: "Couldn't move/copy file to album directory"))
+                    errors.append(FileAddToDatabaseError(url: url.absoluteString, error: "Couldn't move/copy file to album directory"))
                     managedContext.delete(track)
                     managedContext.delete(trackView)
                     if addedArtist != nil {
@@ -401,7 +437,7 @@ class DatabaseManager: NSObject {
             track.location = currentURL.deletingLastPathComponent().appendingPathComponent(fileName).absoluteString
             fileURL = currentURL
         } else {
-            let libraryPathURL = URL(fileURLWithPath: UserDefaults.standard.object(forKey: DEFAULTS_LIBRARY_PATH_STRING) as! String)
+            let libraryPathURL = URL(string: track.library?.library_location)
             let albumArtist = validateStringForFilename(track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING)
             let album = validateStringForFilename(track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING)
             albumDirectoryURL = libraryPathURL.appendingPathComponent(albumArtist).appendingPathComponent(album)
@@ -488,9 +524,9 @@ class DatabaseManager: NSObject {
         let newTrack = NSEntityDescription.insertNewObject(forEntityName: "Track", into: managedContext) as! Track
         let newTrackView = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: managedContext) as! TrackView
         newTrackView.track = newTrack
-        newTrack.id = library?.next_track_id
+        newTrack.id = globalRootLibrary?.next_track_id
         newTrack.status = nil
-        library?.next_track_id = Int(library!.next_track_id!) + 1 as NSNumber
+        library?.next_track_id = Int(globalRootLibrary!.next_track_id!) + 1 as NSNumber
         newTrack.status = 1
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
@@ -514,8 +550,8 @@ class DatabaseManager: NSObject {
                         let artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
                         addedArtist = artist
                         artist.name = artistName
-                        artist.id = library?.next_artist_id
-                        library?.next_artist_id = Int(library!.next_artist_id!) + 1 as NSNumber
+                        artist.id = globalRootLibrary?.next_artist_id
+                        globalRootLibrary?.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
                         return artist
                     } else {
                         artistCheck?.is_network = nil
@@ -532,8 +568,8 @@ class DatabaseManager: NSObject {
                         let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
                         addedAlbum = album
                         album.name = albumName
-                        album.id = library?.next_album_id
-                        library?.next_album_id = Int(library!.next_album_id!) + 1 as NSNumber
+                        album.id = globalRootLibrary?.next_album_id
+                        globalRootLibrary?.next_album_id = Int(globalRootLibrary!.next_album_id!) + 1 as NSNumber
                         return album
                     } else {
                         albumCheck?.is_network = nil
@@ -559,8 +595,8 @@ class DatabaseManager: NSObject {
                         let composer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: managedContext) as! Composer
                         addedComposer = composer
                         composer.name = composerName
-                        composer.id = library?.next_composer_id
-                        library?.next_composer_id = Int(library!.next_composer_id!) + 1 as NSNumber
+                        composer.id = globalRootLibrary?.next_composer_id
+                        globalRootLibrary?.next_composer_id = Int(globalRootLibrary!.next_composer_id!) + 1 as NSNumber
                         return composer
                     } else {
                         composerCheck?.is_network = nil
@@ -578,8 +614,8 @@ class DatabaseManager: NSObject {
                         let genre = NSEntityDescription.insertNewObject(forEntityName: "Genre", into: managedContext) as! Genre
                         addedGenre = genre
                         genre.name = genreName
-                        genre.id = library?.next_genre_id
-                        library?.next_genre_id = Int(library!.next_genre_id!) + 1 as NSNumber
+                        genre.id = globalRootLibrary?.next_genre_id
+                        globalRootLibrary?.next_genre_id = Int(globalRootLibrary!.next_genre_id!) + 1 as NSNumber
                         return genre
                     } else {
                         genreCheck?.is_network = nil
@@ -774,8 +810,8 @@ class DatabaseManager: NSObject {
                             if artistCheck == nil {
                                 let artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
                                 artist.name = artistName
-                                artist.id = library?.next_artist_id
-                                library?.next_artist_id = Int(library!.next_artist_id!) + 1 as NSNumber
+                                artist.id = globalRootLibrary?.next_artist_id
+                                globalRootLibrary?.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
                                 artist.is_network = true
                                 addedArtists[artistName] = artist
                                 return artist
@@ -798,7 +834,7 @@ class DatabaseManager: NSObject {
                                 let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
                                 album.name = albumName
                                 album.id = library?.next_album_id
-                                library?.next_album_id = Int(library!.next_album_id!) + 1 as NSNumber
+                                globalRootLibrary?.next_album_id = Int(globalRootLibrary!.next_album_id!) + 1 as NSNumber
                                 album.is_network = true
                                 addedAlbums[albumName] = album
                                 return album
@@ -829,8 +865,8 @@ class DatabaseManager: NSObject {
                             if composerCheck == nil {
                                 let composer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: managedContext) as! Composer
                                 composer.name = composerName
-                                composer.id = library?.next_composer_id
-                                library?.next_composer_id = Int(library!.next_composer_id!) + 1 as NSNumber
+                                composer.id = globalRootLibrary?.next_composer_id
+                                globalRootLibrary?.next_composer_id = Int(globalRootLibrary!.next_composer_id!) + 1 as NSNumber
                                 composer.is_network = true
                                 addedComposers[composerName] = composer
                                 return composer
@@ -854,8 +890,8 @@ class DatabaseManager: NSObject {
                             if genreCheck == nil {
                                 let genre = NSEntityDescription.insertNewObject(forEntityName: "Genre", into: managedContext) as! Genre
                                 genre.name = genreName
-                                genre.id = library?.next_genre_id
-                                library?.next_genre_id = Int(library!.next_genre_id!) + 1 as NSNumber
+                                genre.id = globalRootLibrary?.next_genre_id
+                                globalRootLibrary?.next_genre_id = Int(globalRootLibrary!.next_genre_id!) + 1 as NSNumber
                                 genre.is_network = true
                                 addedGenres[genreName] = genre
                                 return genre

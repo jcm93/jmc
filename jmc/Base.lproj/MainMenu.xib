@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -12,8 +12,8 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customObject id="76H-Is-DYh" customClass="MainWindowController" customModule="minimalTunes" customModuleProvider="target"/>
-        <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="minimalTunes" customModuleProvider="target">
+        <customObject id="76H-Is-DYh" customClass="MainWindowController" customModule="jmc" customModuleProvider="target"/>
+        <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="jmc" customModuleProvider="target">
             <connections>
                 <outlet property="repeatMenuItem" destination="2KZ-Mz-PQy" id="OpJ-kz-a3W"/>
                 <outlet property="shuffleMenuItem" destination="b4e-W9-bct" id="9w2-aV-btF"/>
@@ -336,6 +336,19 @@
                             </menuItem>
                             <menuItem title="Album Art" id="hYx-vO-dOM">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Library" id="rgi-kD-AAS">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Library" id="Dg0-kB-e3J">
+                        <items>
+                            <menuItem title="Manage Library..." id="bBy-Ti-uZG">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="openLibraryManager:" target="Voe-Tx-rLC" id="OlN-XK-LQX"/>
+                                </connections>
                             </menuItem>
                         </items>
                     </menu>

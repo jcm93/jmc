@@ -28,5 +28,13 @@ class LocationManager: NSObject {
         eventStreamRef = newEventStream
         print("dongs")
     }
-
+    
+    func closeEventStream(eventStream: FSEventStreamRef) {
+        FSEventStreamStop(eventStream)
+        FSEventStreamInvalidate(eventStream)
+        FSEventStreamRelease(eventStream)
+    }
+    
+    
+    
 }
