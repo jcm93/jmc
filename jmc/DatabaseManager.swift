@@ -261,7 +261,7 @@ class DatabaseManager: NSObject {
         library.library_location = url.absoluteString
         library.name = url.lastPathComponent
         library.parent = globalRootLibrary
-        let mediaURLs = getMediaURLsInDirectoryURLs(url)
+        let mediaURLs = getMediaURLsInDirectoryURLs([url]).0
         addTracksFromURLs(mediaURLs, to: library)
     }
     
@@ -437,10 +437,10 @@ class DatabaseManager: NSObject {
             track.location = currentURL.deletingLastPathComponent().appendingPathComponent(fileName).absoluteString
             fileURL = currentURL
         } else {
-            let libraryPathURL = URL(string: track.library?.library_location)
+            let libraryPathURL = URL(string: track.library!.library_location!)
             let albumArtist = validateStringForFilename(track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING)
             let album = validateStringForFilename(track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING)
-            albumDirectoryURL = libraryPathURL.appendingPathComponent(albumArtist).appendingPathComponent(album)
+            albumDirectoryURL = libraryPathURL?.appendingPathComponent(albumArtist).appendingPathComponent(album)
             do {
                 try fileManager.createDirectory(at: albumDirectoryURL!, withIntermediateDirectories: true, attributes: nil)
             } catch {
@@ -526,7 +526,7 @@ class DatabaseManager: NSObject {
         newTrackView.track = newTrack
         newTrack.id = globalRootLibrary?.next_track_id
         newTrack.status = nil
-        library?.next_track_id = Int(globalRootLibrary!.next_track_id!) + 1 as NSNumber
+        globalRootLibrary?.next_track_id = Int(globalRootLibrary!.next_track_id!) + 1 as NSNumber
         newTrack.status = 1
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"

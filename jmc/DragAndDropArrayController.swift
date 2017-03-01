@@ -69,10 +69,11 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
             let urls = files.map({return URL(fileURLWithPath: $0 as! String)})
             let appDelegate = (NSApplication.shared().delegate as! AppDelegate)
             var errors = [FileAddToDatabaseError]()
-            let urlParseResult = appDelegate.getFilesAsURLStringsInURLList(urls)
+            let databaseManager = DatabaseManager()
+            let urlParseResult = databaseManager.getMediaURLsInDirectoryURLs(urls)
             errors.append(contentsOf: urlParseResult.1)
-            let urlStrings = urlParseResult.0
-            let newErrors = appDelegate.addURLStringsToLibrary(urlStrings)
+            let mediaURLs = urlParseResult.0
+            let newErrors = databaseManager.addTracksFromURLs(mediaURLs, to: self.mainWindow!.currentLibrary!)
             errors.append(contentsOf: newErrors)
             for error in errors {
                 error.urlString = error.urlString.removingPercentEncoding!

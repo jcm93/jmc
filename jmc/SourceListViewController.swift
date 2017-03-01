@@ -251,8 +251,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             playlist.smart_criteria = smart_criteria
         }
         //todo ID
-        playlist.id = library?.next_playlist_id
-        library?.next_playlist_id = Int(library!.next_playlist_id!) + 1 as NSNumber
+        playlist.id = globalRootLibrary?.next_playlist_id
+        globalRootLibrary?.next_playlist_id = Int(globalRootLibrary!.next_playlist_id!) + 1 as NSNumber
         //create node
         let newSourceListNode = SourceListNode(item: playlistItem)
         newSourceListNode.parent = playlistHeaderNode

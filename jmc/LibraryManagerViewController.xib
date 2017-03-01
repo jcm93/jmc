@@ -17,6 +17,7 @@
                 <outlet property="sourceMonitorStatusImageView" destination="oIl-ZY-RFN" id="Frd-yi-kAq"/>
                 <outlet property="sourceMonitorStatusTextField" destination="AEU-ft-2pI" id="Uu1-ef-7e3"/>
                 <outlet property="sourceNameField" destination="MI3-HB-OjX" id="7OT-hY-dgd"/>
+                <outlet property="sourceTableView" destination="aPl-kJ-iUc" id="Fyq-Un-RVt"/>
                 <outlet property="sourceTitleLabel" destination="vU2-oU-vRN" id="BZM-M8-cUZ"/>
                 <outlet property="tracksNotFoundArrayController" destination="Pf8-pz-DPL" id="AtD-2U-qZL"/>
                 <outlet property="verifyLocationsButton" destination="PHa-0d-qzs" id="3Bk-t9-t8Y"/>
@@ -79,7 +80,7 @@
                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                             </textFieldCell>
                                                             <connections>
-                                                                <binding destination="eJ0-Xx-UEH" name="value" keyPath="objectValue.name" id="dqg-eW-UI5"/>
+                                                                <binding destination="eJ0-Xx-UEH" name="value" keyPath="objectValue.name" id="4VF-Mc-vRo"/>
                                                             </connections>
                                                         </textField>
                                                     </subviews>
@@ -89,13 +90,10 @@
                                                     </connections>
                                                 </tableCellView>
                                             </prototypeCellViews>
-                                            <connections>
-                                                <binding destination="ljc-J3-KwU" name="value" keyPath="arrangedObjects.name" id="gWK-gk-dem"/>
-                                            </connections>
                                         </tableColumn>
                                     </tableColumns>
                                     <connections>
-                                        <binding destination="ljc-J3-KwU" name="content" keyPath="arrangedObjects" id="0xO-Cc-QGY"/>
+                                        <binding destination="ljc-J3-KwU" name="content" keyPath="arrangedObjects" id="a1o-kr-ckY"/>
                                     </connections>
                                 </tableView>
                             </subviews>
@@ -141,12 +139,12 @@
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="Source Information" identifier="1" id="qdL-ZQ-HuZ">
-                                <view key="view" id="d1g-kE-JPT">
+                                <view key="view" ambiguous="YES" id="d1g-kE-JPT">
                                     <rect key="frame" x="10" y="33" width="640" height="402"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vU2-oU-vRN">
-                                            <rect key="frame" x="15" y="382" width="194" height="17"/>
+                                            <rect key="frame" x="15" y="382" width="630" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Information for SOURCE_TITLE:" id="L9E-XS-t4N">
                                                 <font key="font" metaFont="system"/>
@@ -268,7 +266,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" ambiguous="YES" drawsBackground="NO" id="iHQ-Sy-Kiz">
                                                 <rect key="frame" x="1" y="1" width="604" height="313"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" viewBased="YES" id="4xm-sU-B8B">
                                                         <rect key="frame" x="0.0" y="0.0" width="604" height="313"/>
@@ -348,7 +346,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="Find New Media" identifier="" id="Hxo-TA-LW8">
-                                <view key="view" ambiguous="YES" id="hcG-11-571">
+                                <view key="view" id="hcG-11-571">
                                     <rect key="frame" x="10" y="33" width="640" height="402"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -376,7 +374,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" ambiguous="YES" id="SGd-Vs-1Xy">
                                                 <rect key="frame" x="1" y="0.0" width="604" height="284"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="40" rowSizeStyle="automatic" headerView="Exa-wk-Svv" viewBased="YES" id="Plo-RM-p8g">
                                                         <rect key="frame" x="0.0" y="0.0" width="604" height="261"/>
@@ -484,7 +482,7 @@ DQ
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="154" y="216"/>
+            <point key="canvasLocation" x="154" y="215.5"/>
         </window>
         <customView id="Fmh-ve-SfZ">
             <rect key="frame" x="0.0" y="0.0" width="447" height="133"/>
@@ -686,7 +684,11 @@ Gw
             </subviews>
             <point key="canvasLocation" x="869" y="318"/>
         </customView>
-        <arrayController mode="entity" entityName="Library" automaticallyPreparesContent="YES" id="ljc-J3-KwU"/>
+        <arrayController mode="entity" entityName="Library" automaticallyPreparesContent="YES" id="ljc-J3-KwU">
+            <connections>
+                <binding destination="-2" name="managedObjectContext" keyPath="self.managedContext" id="FFJ-19-067"/>
+            </connections>
+        </arrayController>
         <arrayController objectClassName="TrackNotFound" id="Pf8-pz-DPL"/>
         <arrayController objectClassName="URL" id="4Ry-w4-cNJ"/>
     </objects>

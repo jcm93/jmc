@@ -28,6 +28,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var serviceBrowser: ConnectivityManager?
     var importErrorWindowController: ImportErrorWindowController?
     var libraryManagerWindowController: LibraryManagerViewController?
+    var addToLibraryViewController: AddFilesWindowController?
+    
     @IBOutlet weak var shuffleMenuItem: NSMenuItem!
     @IBOutlet weak var repeatMenuItem: NSMenuItem!
     
@@ -94,21 +96,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func openFiles() {
-        let myFileDialog: NSOpenPanel = NSOpenPanel()
-        myFileDialog.allowsMultipleSelection = true
-        myFileDialog.allowedFileTypes = VALID_FILE_TYPES
-        myFileDialog.canChooseDirectories = true
-        let modalResult = myFileDialog.runModal()
-        if modalResult == NSFileHandlingPanelOKButton {
-            let directoryCrawlResult = databaseManager!.getMediaURLsInDirectoryURLs(myFileDialog.urls)
-            let urls = directoryCrawlResult.0
-            var errors = directoryCrawlResult.1
-            let errorResults = addURLsToLibrary(urls)
-            errors.append(contentsOf: errorResults)
-            showImportErrors(errors)
-            UserDefaults.standard.set(true, forKey: "hasMusic")
-            self.mainWindowController?.hasMusic = true
-        }
+        self.addToLibraryViewController = AddFilesWindowController(windowNibName: "AddFilesWindowController")
+        self.addToLibraryViewController?.showWindow(self)
     }
     
     func showImportErrors(_ errors: [FileAddToDatabaseError]) {
@@ -120,8 +109,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func addURLsToLibrary(_ urls: [URL], library: Library) -> [FileAddToDatabaseError] {
-        let result = databaseManager?.addTracksFromURLs(urls, library: library)
-        return result
+        let result = databaseManager?.addTracksFromURLs(urls, to: library)
+        return result!
     }
     
     func initializeProgressBarWindow() {
