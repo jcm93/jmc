@@ -172,7 +172,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             initializeLibraryAndShowMainWindow()
         }
         self.locationManager = LocationManager()
-        let array = ["/Volumes/Macintosh HD/CS/test/"] as! CFArray
+        let array = ["/Volumes/Macintosh HD/CS/test/"]
         self.locationManager?.createEventStream(paths: array, lastID: nil)
     }
 

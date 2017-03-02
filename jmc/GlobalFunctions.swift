@@ -39,7 +39,7 @@ var managedContext = (NSApplication.shared().delegate as! AppDelegate).managedOb
 
 var globalRootLibrary = {() -> Library? in
     let fetchReq = NSFetchRequest<NSFetchRequestResult>(entityName: "Library")
-    let predicate = NSPredicate(format: "is_root == true")
+    let predicate = NSPredicate(format: "parent == nil")
     fetchReq.predicate = predicate
     do {
         let result = try managedContext.fetch(fetchReq)[0] as! Library
