@@ -43,7 +43,7 @@ class LocationManager: NSObject {
             fcntl(fileDescriptor, F_GETPATH, &newPath)
             let newPathString = String(cString: newPath)
             
-            //change the library's library_location, update the activeMonitoringURLs and libraryURLDictionary, then re-initialize the stream
+            //change the library's library_location, update the activeMonitoringURLs and libraryURLDictionary, posix close open file descriptors, then re-initialize the stream
             
             let oldURL = URL(fileURLWithPath: path)
             let library = libraryURLDictionary[oldURL]
@@ -59,6 +59,13 @@ class LocationManager: NSObject {
             
             activeMonitoringURLs.remove(oldURL)
             activeMonitoringURLs.update(with: newURL)
+            
+            //close file descriptors
+            
+            for fileDes in activeMonitoringFileDescriptors.values {
+                close(fileDes)
+            }
+            activeMonitoringFileDescriptors.removeAll()
             
             //re-initialize stream
             

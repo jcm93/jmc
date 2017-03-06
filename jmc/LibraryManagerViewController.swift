@@ -10,9 +10,9 @@ import Cocoa
 import DiskArbitration
 
 class TrackNotFound: NSObject {
-    let path: String?
+    var path: String?
     let track: Track
-    let trackDescription: String
+    var trackDescription: String
     init(path: String?, track: Track) {
         self.path = path
         self.track = track
@@ -26,10 +26,13 @@ class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
     var databaseManager = DatabaseManager()
     var library: Library?
     var missingTracks: [Track]?
+    var newMediaURLs: [URL]?
     
     //sheets
     var addSourceSheet: NewSourceSheetController?
     var verifyLocationsSheet: LocationVerifierSheetController?
+    var mediaScannerSheet: MediaScannerSheet?
+    
     var managedContext = (NSApplication.shared().delegate as! AppDelegate).managedObjectContext
     @IBOutlet weak var sourceTableView: NSTableView!
     
@@ -61,7 +64,16 @@ class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
     }
     
     @IBAction func changeSourceLocationButtonPressed(_ sender: Any) {
-        
+        let openPanel = NSOpenPanel()
+        openPanel.allowsMultipleSelection = false
+        openPanel.canChooseDirectories = true
+        openPanel.canChooseFiles = false
+        openPanel.runModal()
+        if openPanel.urls.count > 0 {
+            let newURL = openPanel.urls[0]
+            self.library?.library_location = newURL.absoluteString
+            initializeForLibrary(library: self.library!)
+        }
     }
     
     func sourceSelectionDidChange() {
@@ -124,6 +136,7 @@ class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
     }
     
     //location manager
+    @IBOutlet weak var lostTracksTableView: NSTableView!
     @IBOutlet weak var trackLocationStatusText: NSTextField!
     @IBOutlet weak var verifyLocationsButton: NSButton!
     @IBOutlet weak var libraryLocationStatusImageView: NSImageView!
@@ -163,6 +176,9 @@ class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
     
     @IBAction func locateTrackButtonPressed(_ sender: Any) {
         print("locate pressed")
+        let row = lostTracksTableView.row(for: (sender as! NSTableCellView))
+        let trackContainer = (tracksNotFoundArrayController.arrangedObjects as! [TrackNotFound])[row]
+        let track = trackContainer.track
         let fileDialog = NSOpenPanel()
         fileDialog.allowsMultipleSelection = false
         fileDialog.canChooseDirectories = false
@@ -170,13 +186,37 @@ class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
         fileDialog.runModal()
         if fileDialog.urls.count > 0 {
             let url = fileDialog.urls[0]
-            
+            track.location = url.absoluteString
+            tracksNotFoundArrayController.removeObject(trackContainer)
+            databaseManager.fixInfoForTrack(track: track)
+            missingTracks!.remove(at: missingTracks!.index(of: track)!)
+            lostTracksTableView.reloadData()
         }
     }
     
     //dir scanner
+    @IBOutlet weak var newMediaTableView: NSTableView!
+    @IBOutlet weak var dirScanStatusTextField: NSTextField!
+    
     @IBAction func scanSourceButtonPressed(_ sender: Any) {
-        
+        self.mediaScannerSheet = MediaScannerSheet(windowNibName: "MediaScannerSheet")
+        self.window?.beginSheet(self.mediaScannerSheet!.window!, completionHandler: scanMediaModalComplete)
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async {
+            self.newMediaURLs = self.databaseManager.scanForNewMedia(visualUpdateHandler: self.mediaScannerSheet, library: self.library!)
+            DispatchQueue.main.async {
+                self.scanMediaModalComplete(response: 1)
+            }
+        }
+    }
+    
+    func scanMediaModalComplete(response: NSModalResponse) {
+        if self.newMediaURLs!.count > 0{
+            newTracksArrayController.content = self.newMediaURLs
+            dirScanStatusTextField.stringValue = "\(self.newMediaURLs!.count) new media files found."
+            newMediaTableView.reloadData()
+        } else {
+            dirScanStatusTextField.stringValue = "No new media found."
+        }
     }
     
     

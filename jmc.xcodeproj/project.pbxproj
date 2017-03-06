@@ -59,6 +59,8 @@
 		0D84EDE81DA326BD0057411F /* NetworkTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D84EDE41DA326BD0057411F /* NetworkTrack.swift */; };
 		0D8AFE541E6CB3E7004AC584 /* LocationVerifierSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8AFE521E6CB3E7004AC584 /* LocationVerifierSheetController.swift */; };
 		0D8AFE551E6CB3E7004AC584 /* LocationVerifierSheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */; };
+		0D8AFE581E6D136D004AC584 /* MediaScannerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */; };
+		0D8AFE591E6D136D004AC584 /* MediaScannerSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8AFE571E6D136D004AC584 /* MediaScannerSheet.xib */; };
 		0D8B7E2C1DF8C9240018E242 /* IntermediateTrackRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8B7E2B1DF8C9240018E242 /* IntermediateTrackRepresentation.swift */; };
 		0D8D4A171D90868500FA1603 /* LocationManagerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8D4A151D90868500FA1603 /* LocationManagerController.swift */; };
 		0D8D4A181D90868500FA1603 /* LocationManagerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8D4A161D90868500FA1603 /* LocationManagerController.xib */; };
@@ -233,6 +235,8 @@
 		0D87867C1E3EFC000091785B /* jmc-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "jmc-Bridging-Header.h"; sourceTree = "<group>"; };
 		0D8AFE521E6CB3E7004AC584 /* LocationVerifierSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationVerifierSheetController.swift; sourceTree = "<group>"; };
 		0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationVerifierSheetController.xib; sourceTree = "<group>"; };
+		0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaScannerSheet.swift; sourceTree = "<group>"; };
+		0D8AFE571E6D136D004AC584 /* MediaScannerSheet.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MediaScannerSheet.xib; sourceTree = "<group>"; };
 		0D8B7E2B1DF8C9240018E242 /* IntermediateTrackRepresentation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntermediateTrackRepresentation.swift; sourceTree = "<group>"; };
 		0D8D4A151D90868500FA1603 /* LocationManagerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManagerController.swift; sourceTree = "<group>"; };
 		0D8D4A161D90868500FA1603 /* LocationManagerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationManagerController.xib; sourceTree = "<group>"; };
@@ -547,6 +551,8 @@
 				0D01D4131E5E50DA002B352D /* NewSourceSheetController.xib */,
 				0D8AFE521E6CB3E7004AC584 /* LocationVerifierSheetController.swift */,
 				0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */,
+				0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */,
+				0D8AFE571E6D136D004AC584 /* MediaScannerSheet.xib */,
 			);
 			name = "Library Manager Sheets";
 			sourceTree = "<group>";
@@ -916,6 +922,7 @@
 				0DD0DB081E53A8EE00807CAC /* index.html in Resources */,
 				0DD0DB091E53A8EE00807CAC /* license.html in Resources */,
 				0DAB30991CFBA3340028928F /* MainMenu.xib in Resources */,
+				0D8AFE591E6D136D004AC584 /* MediaScannerSheet.xib in Resources */,
 				0D8D4A181D90868500FA1603 /* LocationManagerController.xib in Resources */,
 				0DD274ED1D30462F0055C43B /* PreferencesWindowController.xib in Resources */,
 				0DD0DAFA1E53A8EE00807CAC /* documentation_bugs.html in Resources */,
@@ -1046,6 +1053,7 @@
 				0D3878B61DD10258004CC3C1 /* TrackView.swift in Sources */,
 				0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */,
 				0D1BDFA51D0F44A70092FBA0 /* AudioModule.swift in Sources */,
+				0D8AFE581E6D136D004AC584 /* MediaScannerSheet.swift in Sources */,
 				0DD274EF1D3190360055C43B /* GlobalFunctions.swift in Sources */,
 				0D299B1F1DF151220009CF7A /* LibraryTableViewController.swift in Sources */,
 				0D3878BC1DD125E9004CC3C1 /* StupidNumberFormatter.swift in Sources */,

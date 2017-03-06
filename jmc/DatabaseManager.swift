@@ -225,6 +225,7 @@ class DatabaseManager: NSObject {
     }
     
     func handleDirectoryEnumerationError(_ url: URL, error: Error) -> Bool {
+        print("directory enumeration error: \(error)")
         print("this is bad! returning true anyway")
         return true
     }
@@ -771,6 +772,67 @@ class DatabaseManager: NSObject {
             print(error)
         }
         return nil
+    }
+    
+    func scanForNewMedia(visualUpdateHandler: MediaScannerSheet?, library: Library) -> [URL] {
+        //create o(1) data structure for current locations
+        let request = NSFetchRequest<Track>(entityName: "Track")
+        let predicate = library != globalRootLibrary ? NSPredicate(format: "(is_network == false or is_network == nil) and library == %@", library) : NSPredicate(format: "is_network == false or is_network == nil")
+        request.predicate = predicate
+        var locations: Set<String>
+        do {
+            let tracks = try managedContext.fetch(request)
+            if visualUpdateHandler != nil {
+                DispatchQueue.main.async {
+                    visualUpdateHandler!.initializeForSetCreation()
+                }
+            }
+            locations = Set(tracks.flatMap({return $0.location}))
+        } catch {
+            print(error)
+            return [URL]()
+        }
+        //scan the directory recursively for media
+        if visualUpdateHandler != nil {
+            DispatchQueue.main.async {
+                visualUpdateHandler!.initializeForDirectoryParsing()
+            }
+        }
+        let libraryURL = URL(string: library.library_location!)!
+        let mediaURLs = getMediaURLsInDirectoryURLs([libraryURL]).0
+        //diff the sets
+        if visualUpdateHandler != nil {
+            DispatchQueue.main.async {
+                visualUpdateHandler!.initializeForFiltering(count: mediaURLs.count)
+            }
+        }
+        var count = 0
+        let updateCount = mediaURLs.count / 1000
+        let filteredURLs = mediaURLs.filter({(url: URL) -> Bool in
+            count += 1
+            if count % updateCount == 0 {
+                if visualUpdateHandler != nil {
+                    DispatchQueue.main.async {
+                        visualUpdateHandler!.filteringCallback(numFilesChecked: count)
+                    }
+                }
+            }
+            if locations.contains(url.absoluteString) {
+                return false
+            } else {
+                return true
+            }
+        })
+        if visualUpdateHandler != nil {
+            DispatchQueue.main.async {
+                visualUpdateHandler!.doneFiltering()
+            }
+        }
+        return filteredURLs
+    }
+    
+    func fixInfoForTrack(track: Track) {
+        //update file format, metadata for track
     }
     
     func saveStreamingNetworkTrack(_ track: Track, data: Data) {
