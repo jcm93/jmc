@@ -10,20 +10,26 @@ import Cocoa
 import DiskArbitration
 
 class TrackNotFound: NSObject {
-    let url: URL
+    let path: String?
     let track: Track
-    init(url: URL, track: Track) {
-        self.url = url
+    let trackDescription: String
+    init(path: String?, track: Track) {
+        self.path = path
         self.track = track
+        self.trackDescription = "\(track.artist?.name) - \(track.album?.name) - \(track.name)"
     }
 }
 
 class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
     
     var fileManager = FileManager.default
+    var databaseManager = DatabaseManager()
+    var library: Library?
+    var missingTracks: [Track]?
     
     //sheets
     var addSourceSheet: NewSourceSheetController?
+    var verifyLocationsSheet: LocationVerifierSheetController?
     var managedContext = (NSApplication.shared().delegate as! AppDelegate).managedObjectContext
     @IBOutlet weak var sourceTableView: NSTableView!
     
@@ -60,7 +66,7 @@ class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
     
     func sourceSelectionDidChange() {
         print("doingus")
-        let library = initializeForLibrary(library: self.libraryArrayController.selectedObjects[0] as! Library)
+        initializeForLibrary(library: self.libraryArrayController.selectedObjects[0] as! Library)
     }
     
     
@@ -70,6 +76,7 @@ class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
     }
     
     func initializeForLibrary(library: Library) {
+        self.library = library
         sourceTitleLabel.stringValue = ("Information for \(library.name!):")
         sourceNameField.stringValue = library.name!
         let sourceLocationURL = URL(string: library.library_location!)!
@@ -117,14 +124,54 @@ class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
     }
     
     //location manager
+    @IBOutlet weak var trackLocationStatusText: NSTextField!
     @IBOutlet weak var verifyLocationsButton: NSButton!
     @IBOutlet weak var libraryLocationStatusImageView: NSImageView!
     
+    
+    
     @IBAction func verifyLocationsButtonPressed(_ sender: Any) {
-        
+        self.verifyLocationsSheet = LocationVerifierSheetController(windowNibName: "LocationVerifierSheetController")
+        self.window?.beginSheet(self.verifyLocationsSheet!.window!, completionHandler: verifyLocationsModalComplete)
+        DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async {
+            self.missingTracks = self.databaseManager.verifyTrackLocations(visualUpdateHandler: self.verifyLocationsSheet, library: self.library!)
+            DispatchQueue.main.async {
+                self.verifyLocationsModalComplete(response: 1)
+            }
+        }
     }
+    
+    func verifyLocationsModalComplete(response: NSModalResponse) {
+        guard response != NSModalResponseCancel else {return}
+        if self.missingTracks!.count > 0 {
+            let trackNotFoundArray = self.missingTracks!.map({(track: Track) -> TrackNotFound in
+                if let location = track.location {
+                    if let url = URL(string: location) {
+                        return TrackNotFound(path: url.path, track: track)
+                    } else {
+                        return TrackNotFound(path: location, track: track)
+                    }
+                } else {
+                    return TrackNotFound(path: nil, track: track)
+                }
+            })
+            self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
+            self.trackLocationStatusText.stringValue = "\(self.missingTracks!.count) tracks not found."
+            tracksNotFoundArrayController.content = trackNotFoundArray
+        }
+    }
+    
     @IBAction func locateTrackButtonPressed(_ sender: Any) {
-        
+        print("locate pressed")
+        let fileDialog = NSOpenPanel()
+        fileDialog.allowsMultipleSelection = false
+        fileDialog.canChooseDirectories = false
+        fileDialog.allowedFileTypes = VALID_FILE_TYPES
+        fileDialog.runModal()
+        if fileDialog.urls.count > 0 {
+            let url = fileDialog.urls[0]
+            
+        }
     }
     
     //dir scanner

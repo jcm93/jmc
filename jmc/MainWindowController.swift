@@ -810,7 +810,14 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         progressBar.isDisplayedWhenStopped = true
         progressBarView.progressBar = progressBar
         progressBarView.mainWindowController = self
+        //vintage playback view
         theBox.contentView?.isHidden = true
+        theBox.boxType = .custom
+        theBox.borderType = .bezelBorder
+        theBox.borderWidth = 1.1
+        theBox.cornerRadius = 3
+        theBox.fillColor = NSColor(patternImage: NSImage(named: "Gradient")!)
+        
         searchField.delegate = self
         self.currentTableViewController = libraryTableViewController
         self.delegate?.audioModule.addObserver(self, forKeyPath: "track_changed", options: .new, context: &my_context)

@@ -727,6 +727,52 @@ class DatabaseManager: NSObject {
         return true
     }
     
+    func verifyTrackLocations(visualUpdateHandler: LocationVerifierSheetController?, library: Library) -> [Track]? {
+        let request = NSFetchRequest<Track>(entityName: "Track")
+        let predicate = library != globalRootLibrary ? NSPredicate(format: "(is_network == false or is_network == nil) and library == %@", library) : NSPredicate(format: "is_network == false or is_network == nil")
+        let fileManager = FileManager.default
+        request.predicate = predicate
+        do {
+            let tracks = try managedContext.fetch(request)
+            let count = tracks.count
+            if visualUpdateHandler != nil {
+                DispatchQueue.main.async {
+                    visualUpdateHandler!.initialize(count: count)
+                }
+            }
+            let countUpdate = count / 1000
+            var numTracksChecked = 0
+            var missingTracks = [Track]()
+            for track in tracks {
+                numTracksChecked += 1
+                if let location = track.location, let url = URL(string: location), fileManager.fileExists(atPath: url.path) {
+                    
+                } else {
+                    missingTracks.append(track)
+                }
+                if numTracksChecked % countUpdate == 0 {
+                    if visualUpdateHandler != nil {
+                        DispatchQueue.main.async {
+                            visualUpdateHandler!.visualUpdateHandlerCallback(numTracksChecked: numTracksChecked)
+                        }
+                    }
+                }
+                if numTracksChecked >= count {
+                    if visualUpdateHandler != nil {
+                        DispatchQueue.main.async {
+                            visualUpdateHandler!.completionHandler()
+                        }
+                    }
+                }
+            }
+            print(missingTracks.count)
+            return missingTracks
+        } catch {
+            print(error)
+        }
+        return nil
+    }
+    
     func saveStreamingNetworkTrack(_ track: Track, data: Data) {
         let fileName = {() -> String in
             switch UserDefaults.standard.bool(forKey: DEFAULTS_RENAMES_FILES_STRING) {

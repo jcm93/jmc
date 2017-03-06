@@ -11,5 +11,4 @@
 #import <Foundation/Foundation.h>
 #include "1.3.2/include/FLAC/stream_decoder.h"
 
-
 #endif /* jmc_Bridging_Header_h */

@@ -57,6 +57,8 @@
 		0D84EDE61DA326BD0057411F /* SongCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D84EDE21DA326BD0057411F /* SongCollection.swift */; };
 		0D84EDE71DA326BD0057411F /* NetworkTrack+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D84EDE31DA326BD0057411F /* NetworkTrack+CoreDataProperties.swift */; };
 		0D84EDE81DA326BD0057411F /* NetworkTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D84EDE41DA326BD0057411F /* NetworkTrack.swift */; };
+		0D8AFE541E6CB3E7004AC584 /* LocationVerifierSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8AFE521E6CB3E7004AC584 /* LocationVerifierSheetController.swift */; };
+		0D8AFE551E6CB3E7004AC584 /* LocationVerifierSheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */; };
 		0D8B7E2C1DF8C9240018E242 /* IntermediateTrackRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8B7E2B1DF8C9240018E242 /* IntermediateTrackRepresentation.swift */; };
 		0D8D4A171D90868500FA1603 /* LocationManagerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8D4A151D90868500FA1603 /* LocationManagerController.swift */; };
 		0D8D4A181D90868500FA1603 /* LocationManagerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8D4A161D90868500FA1603 /* LocationManagerController.xib */; };
@@ -229,6 +231,8 @@
 		0D84EDE31DA326BD0057411F /* NetworkTrack+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NetworkTrack+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D84EDE41DA326BD0057411F /* NetworkTrack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkTrack.swift; sourceTree = "<group>"; };
 		0D87867C1E3EFC000091785B /* jmc-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "jmc-Bridging-Header.h"; sourceTree = "<group>"; };
+		0D8AFE521E6CB3E7004AC584 /* LocationVerifierSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationVerifierSheetController.swift; sourceTree = "<group>"; };
+		0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationVerifierSheetController.xib; sourceTree = "<group>"; };
 		0D8B7E2B1DF8C9240018E242 /* IntermediateTrackRepresentation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntermediateTrackRepresentation.swift; sourceTree = "<group>"; };
 		0D8D4A151D90868500FA1603 /* LocationManagerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManagerController.swift; sourceTree = "<group>"; };
 		0D8D4A161D90868500FA1603 /* LocationManagerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationManagerController.xib; sourceTree = "<group>"; };
@@ -541,6 +545,8 @@
 			children = (
 				0D01D4121E5E50DA002B352D /* NewSourceSheetController.swift */,
 				0D01D4131E5E50DA002B352D /* NewSourceSheetController.xib */,
+				0D8AFE521E6CB3E7004AC584 /* LocationVerifierSheetController.swift */,
+				0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */,
 			);
 			name = "Library Manager Sheets";
 			sourceTree = "<group>";
@@ -933,6 +939,7 @@
 				0D299B201DF151220009CF7A /* LibraryTableViewController.xib in Resources */,
 				0D01AD921D7079D900F9211F /* EqualizerWindowController.xib in Resources */,
 				0DC397AC1E5282920009792B /* LibraryManagerViewController.xib in Resources */,
+				0D8AFE551E6CB3E7004AC584 /* LocationVerifierSheetController.xib in Resources */,
 				0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */,
 				0D299B181DF111490009CF7A /* AlbumArtViewController.xib in Resources */,
 				0DD0DB051E53A8EE00807CAC /* id.html in Resources */,
@@ -1015,6 +1022,7 @@
 				0D299B231DF158A60009CF7A /* AdvancedFilterViewController.swift in Sources */,
 				0DF4BEEE1CFBE4CB00AC5824 /* iTunesLibraryParser.swift in Sources */,
 				0DEF66C41D383A8700EA3ADC /* Property+CoreDataProperties.swift in Sources */,
+				0D8AFE541E6CB3E7004AC584 /* LocationVerifierSheetController.swift in Sources */,
 				0D0E5FAA1D38444B009E0FA3 /* Track.swift in Sources */,
 				0D0E5FA91D38444B009E0FA3 /* Track+CoreDataProperties.swift in Sources */,
 				0D3878BA1DD12530004CC3C1 /* SampleRateFormatter.swift in Sources */,
