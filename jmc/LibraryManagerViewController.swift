@@ -20,6 +20,15 @@ class TrackNotFound: NSObject {
     }
 }
 
+class NewMediaURL: NSObject {
+    let url: URL
+    var toImport: Bool
+    init(url: URL) {
+        self.url = url
+        self.toImport = true
+    }
+}
+
 class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
     
     var fileManager = FileManager.default
@@ -176,7 +185,7 @@ class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
     
     @IBAction func locateTrackButtonPressed(_ sender: Any) {
         print("locate pressed")
-        let row = lostTracksTableView.row(for: (sender as! NSTableCellView))
+        let row = lostTracksTableView.row(for: (sender as! NSButton).superview as! NSTableCellView)
         let trackContainer = (tracksNotFoundArrayController.arrangedObjects as! [TrackNotFound])[row]
         let track = trackContainer.track
         let fileDialog = NSOpenPanel()
@@ -211,7 +220,8 @@ class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
     
     func scanMediaModalComplete(response: NSModalResponse) {
         if self.newMediaURLs!.count > 0{
-            newTracksArrayController.content = self.newMediaURLs
+            newTracksArrayController.content = self.newMediaURLs!.map({return NewMediaURL(url: $0)})
+            
             dirScanStatusTextField.stringValue = "\(self.newMediaURLs!.count) new media files found."
             newMediaTableView.reloadData()
         } else {
@@ -219,6 +229,29 @@ class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
         }
     }
     
+    @IBAction func importSelectedPressed(_ sender: Any) {
+        let mediaURLsToAdd = (newTracksArrayController.arrangedObjects as! [NewMediaURL]).filter({return $0.toImport == true}).map({return $0.url})
+        let errors = databaseManager.addTracksFromURLs(mediaURLsToAdd, to: self.library!)
+        for url in mediaURLsToAdd {
+            newMediaURLs!.remove(at: newMediaURLs!.index(of: url)!)
+        }
+        newTracksArrayController.content = self.newMediaURLs!.map({return NewMediaURL(url: $0)})
+        newMediaTableView.reloadData()
+    }
+    
+    @IBAction func selectAllPressed(_ sender: Any) {
+        for trackContainer in (newTracksArrayController.arrangedObjects as! [NewMediaURL]) {
+            trackContainer.toImport = true
+        }
+        newMediaTableView.reloadData()
+    }
+    
+    @IBAction func selectNonePressed(_ sender: Any) {
+        for trackContainer in (newTracksArrayController.arrangedObjects as! [NewMediaURL]) {
+            trackContainer.toImport = false
+        }
+        newMediaTableView.reloadData()
+    }
     
     override func windowDidLoad() {
         super.windowDidLoad()

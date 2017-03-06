@@ -419,7 +419,7 @@
                                                                         <rect key="frame" x="345" y="1" width="391" height="40"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
-                                                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" ambiguous="YES" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vm4-3R-yY7">
+                                                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vm4-3R-yY7">
                                                                                 <rect key="frame" x="0.0" y="23" width="248" height="17"/>
                                                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="KGg-Fp-Oah">
                                                                                     <font key="font" metaFont="system"/>
@@ -430,8 +430,11 @@
                                                                                     <binding destination="T8c-YA-7Pi" name="value" keyPath="objectValue.path" id="f1Z-ZF-fhh"/>
                                                                                 </connections>
                                                                             </textField>
-                                                                            <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SsU-Uc-D80">
+                                                                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SsU-Uc-D80">
                                                                                 <rect key="frame" x="261" y="22" width="71" height="16"/>
+                                                                                <constraints>
+                                                                                    <constraint firstAttribute="width" constant="69" id="7tb-fK-0yx"/>
+                                                                                </constraints>
                                                                                 <buttonCell key="cell" type="push" title="Locate" bezelStyle="rounded" alignment="center" controlSize="mini" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mqn-H4-Hqh">
                                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                                     <font key="font" metaFont="miniSystem"/>
@@ -442,7 +445,7 @@
                                                                             </button>
                                                                         </subviews>
                                                                         <constraints>
-                                                                            <constraint firstItem="SsU-Uc-D80" firstAttribute="leading" secondItem="vm4-3R-yY7" secondAttribute="trailing" constant="8" id="HlP-Le-QUo"/>
+                                                                            <constraint firstItem="SsU-Uc-D80" firstAttribute="leading" secondItem="vm4-3R-yY7" secondAttribute="trailing" constant="3" id="FnJ-GX-1m2"/>
                                                                             <constraint firstItem="SsU-Uc-D80" firstAttribute="top" secondItem="T8c-YA-7Pi" secondAttribute="top" constant="1" id="TmE-Qb-0GI"/>
                                                                             <constraint firstAttribute="trailing" secondItem="SsU-Uc-D80" secondAttribute="trailing" constant="3" id="Zfe-TE-rGQ"/>
                                                                             <constraint firstItem="vm4-3R-yY7" firstAttribute="leading" secondItem="T8c-YA-7Pi" secondAttribute="leading" constant="2" id="auJ-6j-GMf"/>
@@ -498,10 +501,13 @@
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="134" id="ALv-fP-UFO"/>
                                             </constraints>
-                                            <buttonCell key="cell" type="push" title="Import Checked" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="DqB-hM-94S">
+                                            <buttonCell key="cell" type="push" title="Import Selected" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="DqB-hM-94S">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="importSelectedPressed:" target="-2" id="a1y-po-Xsp"/>
+                                            </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="igI-Wk-SuU">
                                             <rect key="frame" x="11" y="356" width="216" height="32"/>
@@ -529,7 +535,7 @@
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
-                                                            <tableColumn width="601" minWidth="40" maxWidth="1000" id="Fse-oA-scC">
+                                                            <tableColumn width="601" minWidth="40" maxWidth="5000" id="Fse-oA-scC">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="URL">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -552,16 +558,19 @@
                                                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                                     <font key="font" metaFont="system"/>
                                                                                 </buttonCell>
+                                                                                <connections>
+                                                                                    <binding destination="Jp9-Pm-MAL" name="value" keyPath="objectValue.toImport" id="3LM-ai-HAx"/>
+                                                                                </connections>
                                                                             </button>
                                                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3w6-jU-kv2">
                                                                                 <rect key="frame" x="27" y="3" width="100" height="17"/>
-                                                                                <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="tw8-Ud-zDs">
+                                                                                <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Table View Cell" id="tw8-Ud-zDs">
                                                                                     <font key="font" metaFont="system"/>
                                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                 </textFieldCell>
                                                                                 <connections>
-                                                                                    <binding destination="Jp9-Pm-MAL" name="value" keyPath="objectValue.path" id="jOr-dF-SwF"/>
+                                                                                    <binding destination="Jp9-Pm-MAL" name="value" keyPath="objectValue.url.path" id="2cH-MT-WOA"/>
                                                                                 </connections>
                                                                             </textField>
                                                                         </subviews>
@@ -577,7 +586,7 @@
                                                                     </tableCellView>
                                                                 </prototypeCellViews>
                                                                 <connections>
-                                                                    <binding destination="4Ry-w4-cNJ" name="value" keyPath="arrangedObjects.path" id="o4C-Z9-5w2"/>
+                                                                    <binding destination="4Ry-w4-cNJ" name="value" keyPath="arrangedObjects.url.path" id="nyM-Vc-3Ft"/>
                                                                 </connections>
                                                             </tableColumn>
                                                         </tableColumns>
@@ -605,10 +614,13 @@
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="134" id="Frg-au-33X"/>
                                             </constraints>
-                                            <buttonCell key="cell" type="push" title="Import All" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="QXA-Rl-6St">
+                                            <buttonCell key="cell" type="push" title="Select All" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="QXA-Rl-6St">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="selectAllPressed:" target="-2" id="FJB-LN-c1F"/>
+                                            </connections>
                                         </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fjN-ki-pkX">
                                             <rect key="frame" x="15" y="338" width="610" height="17"/>
@@ -618,13 +630,28 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Oe2-iM-0gx">
+                                            <rect key="frame" x="191" y="10" width="146" height="32"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="134" id="rkQ-ai-c6v"/>
+                                            </constraints>
+                                            <buttonCell key="cell" type="push" title="Select None" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="IOh-cQ-54w">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="selectNonePressed:" target="-2" id="d9l-cB-c2G"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="b9e-mC-MA4" firstAttribute="top" secondItem="shC-H0-9Ho" secondAttribute="bottom" constant="20" id="0fC-DJ-PLb"/>
                                         <constraint firstAttribute="bottom" secondItem="bNI-3C-UK3" secondAttribute="bottom" constant="17" id="Kud-Ht-60v"/>
                                         <constraint firstAttribute="bottom" secondItem="b9e-mC-MA4" secondAttribute="bottom" constant="17" id="LaB-sW-ySV"/>
                                         <constraint firstAttribute="trailing" secondItem="shC-H0-9Ho" secondAttribute="trailing" constant="17" id="NVe-Dt-Uml"/>
+                                        <constraint firstAttribute="bottom" secondItem="Oe2-iM-0gx" secondAttribute="bottom" constant="17" id="Ypx-YV-dDw"/>
                                         <constraint firstItem="shC-H0-9Ho" firstAttribute="leading" secondItem="hcG-11-571" secondAttribute="leading" constant="17" id="dRO-dV-TU6"/>
+                                        <constraint firstItem="b9e-mC-MA4" firstAttribute="leading" secondItem="Oe2-iM-0gx" secondAttribute="trailing" constant="12" id="fV3-FW-Nnt"/>
                                         <constraint firstAttribute="trailing" secondItem="bNI-3C-UK3" secondAttribute="trailing" constant="17" id="gD6-kf-IZV"/>
                                         <constraint firstItem="igI-Wk-SuU" firstAttribute="top" secondItem="hcG-11-571" secondAttribute="top" constant="18" id="i1e-eW-YY9"/>
                                         <constraint firstItem="igI-Wk-SuU" firstAttribute="leading" secondItem="hcG-11-571" secondAttribute="leading" constant="17" id="iA1-vx-aMJ"/>
@@ -810,7 +837,7 @@ Gw
             </connections>
         </arrayController>
         <arrayController objectClassName="TrackNotFound" id="Pf8-pz-DPL"/>
-        <arrayController objectClassName="URL" id="4Ry-w4-cNJ"/>
+        <arrayController objectClassName="NewMediaURL" id="4Ry-w4-cNJ"/>
     </objects>
     <resources>
         <image name="Master Library" width="15.75" height="13.5"/>

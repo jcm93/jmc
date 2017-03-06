@@ -787,7 +787,7 @@ class DatabaseManager: NSObject {
                     visualUpdateHandler!.initializeForSetCreation()
                 }
             }
-            locations = Set(tracks.flatMap({return $0.location}))
+            locations = Set(tracks.flatMap({return $0.location?.lowercased()}))
         } catch {
             print(error)
             return [URL]()
@@ -817,7 +817,7 @@ class DatabaseManager: NSObject {
                     }
                 }
             }
-            if locations.contains(url.absoluteString) {
+            if locations.contains(url.absoluteString.lowercased()) {
                 return false
             } else {
                 return true
