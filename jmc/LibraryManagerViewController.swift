@@ -29,20 +29,14 @@ class NewMediaURL: NSObject {
     }
 }
 
-class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
+class LibraryManagerViewController: NSViewController, NSTableViewDelegate {
     
     var fileManager = FileManager.default
     var databaseManager = DatabaseManager()
     var library: Library?
     var missingTracks: [Track]?
     var newMediaURLs: [URL]?
-    
-    //sheets
-    var addSourceSheet: NewSourceSheetController?
-    var verifyLocationsSheet: LocationVerifierSheetController?
-    var mediaScannerSheet: MediaScannerSheet?
-    
-    var managedContext = (NSApplication.shared().delegate as! AppDelegate).managedObjectContext
+
     @IBOutlet weak var sourceTableView: NSTableView!
     
     //data controllers
@@ -59,15 +53,6 @@ class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
     @IBOutlet weak var sourceMonitorStatusTextField: NSTextField!
     @IBOutlet weak var sourceLocationField: NSTextField!
     
-    @IBAction func addSourceButtonPressed(_ sender: Any) {
-        self.addSourceSheet = NewSourceSheetController(windowNibName: "NewSourceSheetController")
-        self.window?.beginSheet(self.addSourceSheet!.window!, completionHandler: addSourceModalComplete)
-    }
-    
-    func addSourceModalComplete(response: NSModalResponse) {
-        
-    }
-    
     @IBAction func removeSourceButtonPressed(_ sender: Any) {
         
     }
@@ -83,17 +68,6 @@ class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
             self.library?.library_location = newURL.absoluteString
             initializeForLibrary(library: self.library!)
         }
-    }
-    
-    func sourceSelectionDidChange() {
-        print("doingus")
-        initializeForLibrary(library: self.libraryArrayController.selectedObjects[0] as! Library)
-    }
-    
-    
-    func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
-        sourceSelectionDidChange()
-        return true
     }
     
     func initializeForLibrary(library: Library) {
@@ -151,18 +125,17 @@ class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
     @IBOutlet weak var libraryLocationStatusImageView: NSImageView!
     
     
-    
-    @IBAction func verifyLocationsButtonPressed(_ sender: Any) {
-        self.verifyLocationsSheet = LocationVerifierSheetController(windowNibName: "LocationVerifierSheetController")
-        self.window?.beginSheet(self.verifyLocationsSheet!.window!, completionHandler: verifyLocationsModalComplete)
+    @IBAction func verifyLocationsPressed(_ sender: Any) {
+        let parent = self.view.window?.windowController as! LibraryManagerSourceSelector
+        parent.verifyLocationsSheet = LocationVerifierSheetController(windowNibName: "LocationVerifierSheetController")
+        parent.window?.beginSheet(parent.verifyLocationsSheet!.window!, completionHandler: verifyLocationsModalComplete)
         DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async {
-            self.missingTracks = self.databaseManager.verifyTrackLocations(visualUpdateHandler: self.verifyLocationsSheet, library: self.library!)
+            self.missingTracks = self.databaseManager.verifyTrackLocations(visualUpdateHandler: parent.verifyLocationsSheet, library: self.library!)
             DispatchQueue.main.async {
                 self.verifyLocationsModalComplete(response: 1)
             }
         }
     }
-    
     func verifyLocationsModalComplete(response: NSModalResponse) {
         guard response != NSModalResponseCancel else {return}
         if self.missingTracks!.count > 0 {
@@ -208,10 +181,11 @@ class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
     @IBOutlet weak var dirScanStatusTextField: NSTextField!
     
     @IBAction func scanSourceButtonPressed(_ sender: Any) {
-        self.mediaScannerSheet = MediaScannerSheet(windowNibName: "MediaScannerSheet")
-        self.window?.beginSheet(self.mediaScannerSheet!.window!, completionHandler: scanMediaModalComplete)
+        let parent = self.view.window?.windowController as! LibraryManagerSourceSelector
+        parent.mediaScannerSheet = MediaScannerSheet(windowNibName: "MediaScannerSheet")
+        parent.window?.beginSheet(parent.mediaScannerSheet!.window!, completionHandler: scanMediaModalComplete)
         DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async {
-            self.newMediaURLs = self.databaseManager.scanForNewMedia(visualUpdateHandler: self.mediaScannerSheet, library: self.library!)
+            self.newMediaURLs = self.databaseManager.scanForNewMedia(visualUpdateHandler: parent.mediaScannerSheet, library: self.library!)
             DispatchQueue.main.async {
                 self.scanMediaModalComplete(response: 1)
             }
@@ -253,10 +227,8 @@ class LibraryManagerViewController: NSWindowController, NSTableViewDelegate {
         newMediaTableView.reloadData()
     }
     
-    override func windowDidLoad() {
-        super.windowDidLoad()
-        sourceTableView.delegate = self
-        // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+    override func viewDidLoad() {
+        super.viewDidLoad()
     }
     
 }

@@ -18,9 +18,8 @@
       "scale" : "1x"
     },
     {
-      "size" : "32x32",
       "idiom" : "mac",
-      "filename" : "jmc_icon_32.png",
+      "size" : "32x32",
       "scale" : "2x"
     },
     {

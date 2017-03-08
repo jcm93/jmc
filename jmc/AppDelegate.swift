@@ -27,7 +27,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let fileHandler = FileManager.default
     var serviceBrowser: ConnectivityManager?
     var importErrorWindowController: ImportErrorWindowController?
-    var libraryManagerWindowController: LibraryManagerViewController?
+    var libraryManagerSourceSelector: LibraryManagerSourceSelector?
     var addToLibraryViewController: AddFilesWindowController?
     
     @IBOutlet weak var shuffleMenuItem: NSMenuItem!
@@ -82,8 +82,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @IBAction func openLibraryManager(_ sender: Any) {
-        self.libraryManagerWindowController = LibraryManagerViewController(windowNibName: "LibraryManagerViewController")
-        self.libraryManagerWindowController?.showWindow(self)
+        self.libraryManagerSourceSelector = LibraryManagerSourceSelector(windowNibName: "LibraryManagerSourceSelector")
+        self.libraryManagerSourceSelector?.showWindow(self)
     }
     @IBAction func openImportWindow(_ sender: AnyObject) {
         importWindowController = ImportWindowController(windowNibName: "ImportWindowController")

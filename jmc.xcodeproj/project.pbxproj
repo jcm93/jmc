@@ -61,6 +61,8 @@
 		0D8AFE551E6CB3E7004AC584 /* LocationVerifierSheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */; };
 		0D8AFE581E6D136D004AC584 /* MediaScannerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */; };
 		0D8AFE591E6D136D004AC584 /* MediaScannerSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8AFE571E6D136D004AC584 /* MediaScannerSheet.xib */; };
+		0D8AFE5C1E6F4FEB004AC584 /* LibraryManagerSourceSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8AFE5A1E6F4FEB004AC584 /* LibraryManagerSourceSelector.swift */; };
+		0D8AFE5D1E6F4FEB004AC584 /* LibraryManagerSourceSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8AFE5B1E6F4FEB004AC584 /* LibraryManagerSourceSelector.xib */; };
 		0D8B7E2C1DF8C9240018E242 /* IntermediateTrackRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8B7E2B1DF8C9240018E242 /* IntermediateTrackRepresentation.swift */; };
 		0D8D4A171D90868500FA1603 /* LocationManagerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8D4A151D90868500FA1603 /* LocationManagerController.swift */; };
 		0D8D4A181D90868500FA1603 /* LocationManagerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8D4A161D90868500FA1603 /* LocationManagerController.xib */; };
@@ -237,6 +239,8 @@
 		0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationVerifierSheetController.xib; sourceTree = "<group>"; };
 		0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaScannerSheet.swift; sourceTree = "<group>"; };
 		0D8AFE571E6D136D004AC584 /* MediaScannerSheet.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MediaScannerSheet.xib; sourceTree = "<group>"; };
+		0D8AFE5A1E6F4FEB004AC584 /* LibraryManagerSourceSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryManagerSourceSelector.swift; sourceTree = "<group>"; };
+		0D8AFE5B1E6F4FEB004AC584 /* LibraryManagerSourceSelector.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LibraryManagerSourceSelector.xib; sourceTree = "<group>"; };
 		0D8B7E2B1DF8C9240018E242 /* IntermediateTrackRepresentation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntermediateTrackRepresentation.swift; sourceTree = "<group>"; };
 		0D8D4A151D90868500FA1603 /* LocationManagerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManagerController.swift; sourceTree = "<group>"; };
 		0D8D4A161D90868500FA1603 /* LocationManagerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationManagerController.xib; sourceTree = "<group>"; };
@@ -453,9 +457,7 @@
 			children = (
 				0DB60F8E1E62341500105766 /* AddFilesWindowController.swift */,
 				0DB60F8F1E62341500105766 /* AddFilesWindowController.xib */,
-				0D01D40F1E5E507F002B352D /* Library Manager Sheets */,
-				0DC397A91E5282920009792B /* LibraryManagerViewController.swift */,
-				0DC397AA1E5282920009792B /* LibraryManagerViewController.xib */,
+				0D01D40F1E5E507F002B352D /* Library Manager */,
 				0DC7127A1E2F115A0054ECE6 /* ImportErrorWindowController.swift */,
 				0DC7127B1E2F115A0054ECE6 /* ImportErrorWindowController.xib */,
 				0D01AD8F1D7079D900F9211F /* EqualizerWindowController.swift */,
@@ -544,9 +546,13 @@
 			name = "Core Data Shit";
 			sourceTree = "<group>";
 		};
-		0D01D40F1E5E507F002B352D /* Library Manager Sheets */ = {
+		0D01D40F1E5E507F002B352D /* Library Manager */ = {
 			isa = PBXGroup;
 			children = (
+				0DC397A91E5282920009792B /* LibraryManagerViewController.swift */,
+				0DC397AA1E5282920009792B /* LibraryManagerViewController.xib */,
+				0D8AFE5A1E6F4FEB004AC584 /* LibraryManagerSourceSelector.swift */,
+				0D8AFE5B1E6F4FEB004AC584 /* LibraryManagerSourceSelector.xib */,
 				0D01D4121E5E50DA002B352D /* NewSourceSheetController.swift */,
 				0D01D4131E5E50DA002B352D /* NewSourceSheetController.xib */,
 				0D8AFE521E6CB3E7004AC584 /* LocationVerifierSheetController.swift */,
@@ -554,7 +560,7 @@
 				0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */,
 				0D8AFE571E6D136D004AC584 /* MediaScannerSheet.xib */,
 			);
-			name = "Library Manager Sheets";
+			name = "Library Manager";
 			sourceTree = "<group>";
 		};
 		0DAB30841CFBA3340028928F = {
@@ -951,6 +957,7 @@
 				0D299B181DF111490009CF7A /* AlbumArtViewController.xib in Resources */,
 				0DD0DB051E53A8EE00807CAC /* id.html in Resources */,
 				0DD0DAFD1E53A8EE00807CAC /* documentation_tools.html in Resources */,
+				0D8AFE5D1E6F4FEB004AC584 /* LibraryManagerSourceSelector.xib in Resources */,
 				0DD0DAF51E53A8EE00807CAC /* libFLAC.m4 in Resources */,
 				0DD0DB061E53A8EE00807CAC /* logo.svg in Resources */,
 			);
@@ -1064,6 +1071,7 @@
 				0D40A9F21D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift in Sources */,
 				0D8D4A171D90868500FA1603 /* LocationManagerController.swift in Sources */,
 				0DEF66BA1D383A8700EA3ADC /* Artist+CoreDataProperties.swift in Sources */,
+				0D8AFE5C1E6F4FEB004AC584 /* LibraryManagerSourceSelector.swift in Sources */,
 				0DEF66BD1D383A8700EA3ADC /* Composer.swift in Sources */,
 				0D2EEFB61DB97DEC0065B0B3 /* CachedOrder+CoreDataProperties.swift in Sources */,
 				0DEF66D41D383A8700EA3ADC /* Genre+CoreDataProperties.swift in Sources */,

@@ -48,10 +48,7 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kaf-2J-5XR">
-                                                        <rect key="frame" x="0.0" y="1" width="145" height="14"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="141" id="t75-Oc-6C9"/>
-                                                        </constraints>
+                                                        <rect key="frame" x="0.0" y="1" width="263" height="14"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" enabled="NO" sendsActionOnEndEditing="YES" title="HEADER CELL" id="ihf-hT-hIl">
                                                             <font key="font" metaFont="smallSystemBold"/>
                                                             <color key="textColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -63,8 +60,10 @@
                                                     </textField>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="kaf-2J-5XR" firstAttribute="centerY" secondItem="Yru-yJ-LkU" secondAttribute="centerY" id="H7u-sE-NBy"/>
-                                                    <constraint firstItem="kaf-2J-5XR" firstAttribute="leading" secondItem="Yru-yJ-LkU" secondAttribute="leading" constant="2" id="b8R-XQ-L9j"/>
+                                                    <constraint firstItem="kaf-2J-5XR" firstAttribute="leading" secondItem="Yru-yJ-LkU" secondAttribute="leading" constant="2" id="7HX-ZV-mb2"/>
+                                                    <constraint firstItem="kaf-2J-5XR" firstAttribute="top" secondItem="Yru-yJ-LkU" secondAttribute="top" constant="2" id="NQQ-Of-NqK"/>
+                                                    <constraint firstAttribute="bottom" secondItem="kaf-2J-5XR" secondAttribute="bottom" constant="1" id="ahT-6l-bJA"/>
+                                                    <constraint firstAttribute="trailing" secondItem="kaf-2J-5XR" secondAttribute="trailing" constant="3" id="bWV-6e-Vne"/>
                                                 </constraints>
                                                 <connections>
                                                     <outlet property="textField" destination="kaf-2J-5XR" id="wn3-5X-Xnq"/>
@@ -77,14 +76,12 @@
                                                     <imageView translatesAutoresizingMaskIntoConstraints="NO" id="txS-Ph-ERe">
                                                         <rect key="frame" x="3" y="0.0" width="17" height="17"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="17" id="4Dk-gY-aZX"/>
                                                             <constraint firstAttribute="width" constant="17" id="Dzy-T6-OBT"/>
                                                             <constraint firstAttribute="height" constant="17" id="PfN-p4-fbJ"/>
-                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="17" id="eXd-wv-0gh"/>
                                                         </constraints>
                                                         <imageCell key="cell" refusesFirstResponder="YES" imageScaling="proportionallyDown" image="Playlist" id="Y53-Hp-uHs"/>
                                                     </imageView>
-                                                    <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sfk-Kp-dc9">
+                                                    <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sfk-Kp-dc9">
                                                         <rect key="frame" x="25" y="0.0" width="120" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="left" title="Playlist Cell" id="cEh-Qp-Y8F">
                                                             <font key="font" metaFont="system"/>
@@ -97,11 +94,12 @@
                                                     </textField>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="txS-Ph-ERe" firstAttribute="top" secondItem="GsE-ap-csx" secondAttribute="top" id="UXf-bg-APv"/>
-                                                    <constraint firstItem="sfk-Kp-dc9" firstAttribute="leading" secondItem="txS-Ph-ERe" secondAttribute="trailing" constant="7" id="Uex-99-FAq"/>
-                                                    <constraint firstItem="sfk-Kp-dc9" firstAttribute="leading" secondItem="txS-Ph-ERe" secondAttribute="trailing" constant="7" id="WHe-em-Vnc"/>
-                                                    <constraint firstAttribute="trailing" secondItem="sfk-Kp-dc9" secondAttribute="trailing" constant="3" id="cs2-Jh-Mig"/>
-                                                    <constraint firstItem="txS-Ph-ERe" firstAttribute="leading" secondItem="GsE-ap-csx" secondAttribute="leading" constant="3" id="ovM-7N-RH6"/>
+                                                    <constraint firstItem="txS-Ph-ERe" firstAttribute="top" secondItem="GsE-ap-csx" secondAttribute="top" id="Fdu-i5-sKJ"/>
+                                                    <constraint firstItem="sfk-Kp-dc9" firstAttribute="leading" secondItem="txS-Ph-ERe" secondAttribute="trailing" constant="7" id="KQP-jK-diA"/>
+                                                    <constraint firstAttribute="bottom" secondItem="sfk-Kp-dc9" secondAttribute="bottom" id="LFS-Ep-rAr"/>
+                                                    <constraint firstAttribute="trailing" secondItem="sfk-Kp-dc9" secondAttribute="trailing" constant="3" id="MF6-JB-0q4"/>
+                                                    <constraint firstItem="txS-Ph-ERe" firstAttribute="leading" secondItem="GsE-ap-csx" secondAttribute="leading" constant="3" id="mVa-AA-v8P"/>
+                                                    <constraint firstItem="sfk-Kp-dc9" firstAttribute="top" secondItem="GsE-ap-csx" secondAttribute="top" id="tkV-BH-yng"/>
                                                 </constraints>
                                                 <connections>
                                                     <outlet property="imageView" destination="txS-Ph-ERe" id="Yrk-KD-1AU"/>
