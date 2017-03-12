@@ -271,17 +271,6 @@
                             <real value="3.4028234663852886e+38"/>
                         </customSpacing>
                     </stackView>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FOU-Bi-82q">
-                        <rect key="frame" x="822" y="364" width="37" height="17"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="0RK-jx-N7Q">
-                            <font key="font" metaFont="smallSystem"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                        <connections>
-                            <binding destination="-2" name="value" keyPath="self.infoString" id="pea-7J-Wc9"/>
-                        </connections>
-                    </textField>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qNB-cP-szA">
                         <rect key="frame" x="20" y="4" width="44" height="25"/>
                         <constraints>
@@ -364,6 +353,17 @@
                             <outlet property="menu" destination="WAr-lr-0sM" id="tZk-Ww-b2z"/>
                         </connections>
                     </segmentedControl>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FOU-Bi-82q">
+                        <rect key="frame" x="823" y="8" width="37" height="17"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="0RK-jx-N7Q">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <binding destination="-2" name="value" keyPath="self.infoString" id="pea-7J-Wc9"/>
+                        </connections>
+                    </textField>
                 </subviews>
                 <constraints>
                     <constraint firstItem="wUv-cJ-CeL" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="3" id="9dD-af-Zpw"/>
@@ -386,6 +386,7 @@
                     <constraint firstAttribute="bottom" secondItem="rfk-1e-A3X" secondAttribute="bottom" constant="6" id="iY8-FC-3Ai"/>
                     <constraint firstAttribute="trailing" secondItem="gzN-xP-Utz" secondAttribute="trailing" constant="19" id="kdg-jL-mMW"/>
                     <constraint firstItem="wxs-uU-bSr" firstAttribute="top" secondItem="r3P-eO-TmU" secondAttribute="bottom" id="lLX-1l-4Ka"/>
+                    <constraint firstItem="FOU-Bi-82q" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="0eg-hu-JdK" secondAttribute="trailing" constant="10" id="ldx-ru-g4E"/>
                     <constraint firstItem="FOU-Bi-82q" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="mfK-fT-Eft"/>
                     <constraint firstItem="eg4-23-xqc" firstAttribute="top" secondItem="r3P-eO-TmU" secondAttribute="bottom" constant="6" id="qpU-t1-OEz"/>
                     <constraint firstAttribute="bottom" secondItem="eg4-23-xqc" secondAttribute="bottom" constant="6" id="sd9-Vy-rms"/>
