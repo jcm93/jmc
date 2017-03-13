@@ -13,42 +13,24 @@ class FlacDecoder {
     
     var decoder: FLAC__StreamDecoder?
     var blockBuffer = [Int32]()
+    var sampleRate: UInt32?
+    var channels: UInt32?
+    var bitsPerSample: UInt32?
+    var totalFrames: UInt64?
     
     private var my_client_data = 0
     
-    
-    let flacReadCallback: @convention(c) (Optional<UnsafePointer<FLAC__StreamDecoder>>, Optional<UnsafeMutablePointer<UInt8>>, Optional<UnsafeMutablePointer<Int>>, Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderReadStatus = { (decoder: Optional<UnsafePointer<FLAC__StreamDecoder>>, blockBuffer: Optional<UnsafeMutablePointer<UInt8>>, bytes: Optional<UnsafeMutablePointer<Int>>, client_data: Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderReadStatus in
-        print("flac read callback")
-        return FLAC__STREAM_DECODER_READ_STATUS_CONTINUE
-    }
-    
-    let flacSeekCallback: @convention(c) (Optional<UnsafePointer<FLAC__StreamDecoder>>, UInt64, Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderSeekStatus = { (decoder: Optional<UnsafePointer<FLAC__StreamDecoder>>, absolute_byte_offset: UInt64, client_data: Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderSeekStatus in
-    }
-    
-    let flacTellCallback: @convention(c) (Optional<UnsafePointer<FLAC__StreamDecoder>>, Optional<UnsafeMutablePointer<UInt64>>, Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderTellStatus = { (decoder: Optional<UnsafePointer<FLAC__StreamDecoder>>, absolute_byte_offset: Optional<UnsafeMutablePointer<UInt64>>, client_data: Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderTellStatus in
-        
-    }
-    
-    let flacEOFCallback: @convention(c) (Optional<UnsafePointer<FLAC__StreamDecoder>>, Optional<UnsafeMutableRawPointer>) -> Int32 = { (decoder: Optional<UnsafePointer<FLAC__StreamDecoder>>, client_data: Optional<UnsafeMutableRawPointer>) -> Int32 in
-        
-        
-    }
-    
-    let flacLengthCallback: @convention(c) (Optional<UnsafePointer<FLAC__StreamDecoder>>, Optional<UnsafeMutablePointer<UInt64>>, Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderLengthStatus = { (decoder: Optional<UnsafePointer<FLAC__StreamDecoder>>, stream_length: Optional<UnsafeMutablePointer<UInt64>>, client_data: Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderLengthStatus in
-        
-    }
     
     let flacWriteCallback: @convention(c) (Optional<UnsafePointer<FLAC__StreamDecoder>>, Optional<UnsafePointer<FLAC__Frame>>, Optional<UnsafePointer<Optional<UnsafePointer<Int32>>>>, Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderWriteStatus = {
         (decoder: Optional<UnsafePointer<FLAC__StreamDecoder>>, frame: Optional<UnsafePointer<FLAC__Frame>>, buffer: Optional<UnsafePointer<Optional<UnsafePointer<Int32>>>>, client_data: Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderWriteStatus in
         
         let flacDecoder = Unmanaged<FlacDecoder>.fromOpaque(client_data!).takeUnretainedValue()
-        let blockBuffer = flacDecoder.blockBuffer
         
         let numSamples = frame!.pointee.header.blocksize
         let numChannels = frame!.pointee.header.channels
-        for sampleIndex in 0...numSamples {
-            for channelIndex in 0...numChannels {
-                blockBuffer.append(buffer![channelIndex]![sampleIndex])
+        for sampleIndex in 0..<numSamples {
+            for channelIndex in 0..<numChannels {
+                flacDecoder.blockBuffer.append(buffer![Int(channelIndex)]![Int(sampleIndex)])
             }
         }
         return FLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE
@@ -56,6 +38,18 @@ class FlacDecoder {
     
     let flacMetadataCallback: @convention(c) (Optional<UnsafePointer<FLAC__StreamDecoder>>, Optional<UnsafePointer<FLAC__StreamMetadata>>, Optional<UnsafeMutableRawPointer>) -> () = {
         (decoder: Optional<UnsafePointer<FLAC__StreamDecoder>>, metadata: Optional<UnsafePointer<FLAC__StreamMetadata>>, client_data: Optional<UnsafeMutableRawPointer>) in
+        let flacDecoder = Unmanaged<FlacDecoder>.fromOpaque(client_data!).takeUnretainedValue()
+        let meta = metadata!.pointee
+        switch meta.type {
+        case FLAC__METADATA_TYPE_STREAMINFO:
+            flacDecoder.channels = meta.data.stream_info.channels
+            flacDecoder.sampleRate = meta.data.stream_info.sample_rate
+            flacDecoder.bitsPerSample = meta.data.stream_info.bits_per_sample
+            flacDecoder.totalFrames = meta.data.stream_info.total_samples
+        default:
+            print("doingus")
+        }
+        
         
     }
     
@@ -80,14 +74,17 @@ class FlacDecoder {
         }
     }
     
-    func readFLAC(file: URL) -> NSData? {
+    func readFLAC(file: URL) -> AVAudioPCMBuffer? {
         if createFLACStreamDecoder(file: file) == true {
+            FLAC__stream_decoder_process_until_end_of_metadata(&self.decoder!)
+            let buffer = AVAudioPCMBuffer(pcmFormat: AVAudioFormat.init(commonFormat: AVAudioCommonFormat.pcmFormatInt32, sampleRate: Double(self.sampleRate!), channels: self.channels!, interleaved: true), frameCapacity: AVAudioFrameCount(self.totalFrames! * UInt64(self.channels!)))
             FLAC__stream_decoder_process_until_end_of_stream(&self.decoder!)
-            let buffer = AVAudioPCMBuffer(pcmFormat: AVAudioFormat.init(commonFormat: AVAudioCommonFormat.pcmFormatInt32, sampleRate: <#T##Double#>, channels: <#T##AVAudioChannelCount#>, interleaved: <#T##Bool#>), frameCapacity: <#T##AVAudioFrameCount#>)
+            buffer.int32ChannelData!.pointee.initialize(from: self.blockBuffer)
+            buffer.frameLength = buffer.frameCapacity
+            return buffer
         } else {
             print("failure")
             return nil
         }
-        
     }
 }

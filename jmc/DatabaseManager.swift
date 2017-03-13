@@ -294,9 +294,14 @@ class DatabaseManager: NSObject {
             if bitRateCheck != nil {
                 track.bit_rate = bitRateCheck!/1000 as NSNumber
             } else {
-                managedContext.delete(track.view!)
-                managedContext.delete(track)
-                continue
+                //check if it's a format not supported by apple
+                if url.pathExtension.lowercased() != "flac" {
+                    managedContext.delete(track.view!)
+                    managedContext.delete(track)
+                    errors.append(FileAddToDatabaseError(url: url.absoluteString, error: "error validating audio file"))
+                    print("bit rate check error")
+                    continue
+                }
             }
             track.id = globalRootLibrary?.next_track_id
             globalRootLibrary?.next_track_id = Int(globalRootLibrary!.next_track_id!) + 1 as NSNumber

@@ -50,7 +50,7 @@ var globalRootLibrary = {() -> Library? in
 }()
 
 func getAllLibraries() -> [Library]? {
-    let request = NSFetchRequest<Library>()
+    let request = NSFetchRequest<Library>(entityName: "Library")
     do {
         let result = try managedContext.fetch(request)
         return result
@@ -61,7 +61,7 @@ func getAllLibraries() -> [Library]? {
 }
 
 func getLibrary(withName name: String) -> [Library]? {
-    let request = NSFetchRequest<Library>()
+    let request = NSFetchRequest<Library>(entityName: "Library")
     let predicate = NSPredicate(format: "name == %@", name)
     request.predicate = predicate
     do {
@@ -143,7 +143,7 @@ func purgeCurrentlyPlaying() {
 }
 
 let VALID_ARTWORK_TYPE_EXTENSIONS = ["jpg", "png", "tiff", "gif", "pdf"]
-let VALID_FILE_TYPES = ["aac", "adts", "ac3", "aif", "aiff", "aifc", "caf", "mp3", "mp4", "m4a", "snd", "au", "sd2", "wav", "alac"]
+let VALID_FILE_TYPES = ["aac", "adts", "ac3", "aif", "aiff", "aifc", "caf", "mp3", "mp4", "m4a", "snd", "au", "sd2", "wav", "alac", "flac"]
 
 let fieldsToCachedOrdersDictionary: NSDictionary = [
     "date_added" : "Date Added",
@@ -341,7 +341,7 @@ extension Track {
                         }
                         return self_name!.localizedStandardCompare(other_name!)
                     } else {
-                        return self_track_num!.compare(other_track_num!)
+                        return track_num_comparison
                     }
                 } else {
                     return disc_num_comparison
@@ -398,7 +398,7 @@ extension Track {
                         }
                         return self_name!.localizedStandardCompare(other_name!)
                     } else {
-                        return self_track_num!.compare(other_track_num!)
+                        return track_num_comparison
                     }
                 } else {
                     return disc_num_comparison
@@ -454,7 +454,7 @@ extension Track {
                         }
                         return self_name!.localizedStandardCompare(other_name!)
                     } else {
-                        return self_track_num!.compare(other_track_num!)
+                        return track_num_comparison
                     }
                 } else {
                     return disc_num_comparison

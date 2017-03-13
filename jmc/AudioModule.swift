@@ -36,6 +36,7 @@ class AudioModule: NSObject {
     //todo consistent naming
     dynamic var trackQueue = [Track]()
     dynamic var currentTrackLocation: String?
+    var flacDecoder = FlacDecoder()
     var networkFlag = false
     
     let verbotenFileTypes = ["m4v", "m4p"]
@@ -88,6 +89,7 @@ class AudioModule: NSObject {
     }()
     var curFile: AVAudioFile?
     var audioEngine = AVAudioEngine()
+    var flacBuffer: AVAudioPCMBuffer?
     
     dynamic var is_initialized = false
     dynamic var track_changed = false
@@ -295,6 +297,10 @@ class AudioModule: NSObject {
                 audioEngine.connect(curNode, to: equalizer, format: nil)
                 let location = currentTrackLocation!
                 let url = URL(string: location)
+                if url?.pathExtension.lowercased() == "flac" {
+                    initializeFLACPlayback()
+                    return
+                }
                 if verbotenFileTypes.contains(url!.pathExtension) {
                     return
                 }
@@ -310,6 +316,41 @@ class AudioModule: NSObject {
                 }
                 is_initialized = true
                 self.track_frame_offset = 0
+            }
+            catch {
+                print("audio player error: \(error)")
+            }
+        }
+    }
+    
+    func initializeFLACPlayback() {
+        if currentTrackLocation == nil {
+            return
+        } else {
+            do {
+                print("initializing flac playback for new thing, resetting node")
+                self.total_offset_frames = 0
+                self.total_offset_seconds = 0
+                self.audioEngine.stop()
+                self.audioEngine.detach(curNode)
+                self.curNode = AVAudioPlayerNode()
+                self.audioEngine.attach(curNode)
+                self.audioEngine.connect(curNode, to: equalizer, format: nil)
+                let location = self.currentTrackLocation!
+                let url = URL(string: location)!
+                if let buffer = self.flacDecoder.readFLAC(file: url) {
+                    self.flacBuffer = buffer
+                    self.curNode.scheduleBuffer(buffer, at: nil, completionHandler: handleCompletion)
+                    print(buffer.format)
+                    print(self.audioEngine.outputNode)
+                    //audioEngine.connect(curNode, to: audioEngine.mainMixerNode, format: curFile?.processingFormat)
+                    resetValues()
+                    if (audioEngine.isRunning == false) {
+                        try audioEngine.start()
+                    }
+                    is_initialized = true
+                    self.track_frame_offset = 0
+                }
             }
             catch {
                 print("audio player error: \(error)")
@@ -363,6 +404,9 @@ class AudioModule: NSObject {
         //if this is the result of a scheduleFile or scheduleSegment operation, it is called after the last segment of the buffer is scheduled, not played. this is not the case for scheduleBuffer operations
         //this can probably crash all over the place if the database can't be accessed for any reason
         print("handle completion called")
+        if self.flacBuffer != nil {
+            return
+        }
         switch currentHandlerType {
         case .natural:
             tryGetMoreTracks()
@@ -376,11 +420,13 @@ class AudioModule: NSObject {
                 do {
                     let location = currentTrackLocation!
                     let url = URL(string: location)
-                    let gapless_duration = AVAudioTime(sampleTime: curFile!.length - Int64(track_frame_offset!), atRate: curFile!.processingFormat.sampleRate)
+                    let sampleRate = curFile?.processingFormat.sampleRate ?? self.flacBuffer!.format.sampleRate
+                    let length = curFile?.length ?? Int64(self.flacBuffer!.frameLength)
+                    let gapless_duration = AVAudioTime(sampleTime: length - Int64(track_frame_offset!), atRate: sampleRate)
                     total_offset_frames += gapless_duration.sampleTime
-                    total_offset_seconds = total_offset_frames / Int64(curFile!.processingFormat.sampleRate)
+                    total_offset_seconds = total_offset_frames / Int64(sampleRate)
                     curFile = try AVAudioFile(forReading: url!)
-                    let time = AVAudioTime(sampleTime: total_offset_frames, atRate: curFile!.processingFormat.sampleRate)
+                    let time = AVAudioTime(sampleTime: total_offset_frames, atRate: sampleRate)
                     curNode.scheduleFile(curFile!, at: time, completionHandler: handleCompletion)
                     delay = ((Double(gapless_duration.sampleTime) / gapless_duration.sampleRate) - (Double(curNode.lastRenderTime!.sampleTime - Int64(track_frame_offset!))/(curNode.lastRenderTime?.sampleRate)!))
                     print("delay set to \(delay)")
@@ -481,8 +527,11 @@ class AudioModule: NSObject {
     
     func resetValues() {
         if (curFile != nil) {
-            duration_seconds = Double((curFile?.length)!) / (curFile?.processingFormat.sampleRate)!
-            duration_frames = curFile?.length
+            self.duration_seconds = Double((curFile?.length)!) / (curFile?.processingFormat.sampleRate)!
+            self.duration_frames = curFile?.length
+        } else if self.flacBuffer != nil {
+            self.duration_seconds = Double(self.flacBuffer!.frameLength) / self.flacBuffer!.format.sampleRate
+            self.duration_frames = Int64(self.flacBuffer!.frameLength)
         }
     }
     
