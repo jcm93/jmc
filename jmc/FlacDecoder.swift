@@ -12,11 +12,14 @@ import AVFoundation
 class FlacDecoder {
     
     var decoder: FLAC__StreamDecoder?
-    var blockBuffer = [Int32]()
+    var blockBuffer = [[Int16]]()
     var sampleRate: UInt32?
     var channels: UInt32?
     var bitsPerSample: UInt32?
     var totalFrames: UInt64?
+    var currentSampleIndex: UInt32?
+    
+    
     
     private var my_client_data = 0
     
@@ -28,9 +31,11 @@ class FlacDecoder {
         
         let numSamples = frame!.pointee.header.blocksize
         let numChannels = frame!.pointee.header.channels
-        for sampleIndex in 0..<numSamples {
-            for channelIndex in 0..<numChannels {
-                flacDecoder.blockBuffer.append(buffer![Int(channelIndex)]![Int(sampleIndex)])
+        
+        for sample in 0..<numSamples {
+            for chan in 0..<numChannels {
+                let value = Int16(buffer![Int(chan)]![Int(sample)])
+                flacDecoder.blockBuffer[Int(chan)].append(value)
             }
         }
         return FLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE
@@ -45,7 +50,11 @@ class FlacDecoder {
             flacDecoder.channels = meta.data.stream_info.channels
             flacDecoder.sampleRate = meta.data.stream_info.sample_rate
             flacDecoder.bitsPerSample = meta.data.stream_info.bits_per_sample
+            print("bits per sample \(flacDecoder.bitsPerSample!)")
             flacDecoder.totalFrames = meta.data.stream_info.total_samples
+            for chan in 0..<flacDecoder.channels! {
+                flacDecoder.blockBuffer.append([Int16]())
+            }
         default:
             print("doingus")
         }
@@ -77,10 +86,19 @@ class FlacDecoder {
     func readFLAC(file: URL) -> AVAudioPCMBuffer? {
         if createFLACStreamDecoder(file: file) == true {
             FLAC__stream_decoder_process_until_end_of_metadata(&self.decoder!)
-            let buffer = AVAudioPCMBuffer(pcmFormat: AVAudioFormat.init(commonFormat: AVAudioCommonFormat.pcmFormatInt32, sampleRate: Double(self.sampleRate!), channels: self.channels!, interleaved: true), frameCapacity: AVAudioFrameCount(self.totalFrames! * UInt64(self.channels!)))
+            let format = AVAudioFormat.init(commonFormat: AVAudioCommonFormat., sampleRate: <#T##Double#>, channels: <#T##AVAudioChannelCount#>, interleaved: <#T##Bool#>)
+            let buffer = AVAudioPCMBuffer(pcmFormat: AVAudioFormat.init(commonFormat: AVAudioCommonFormat.pcmFormatInt16, sampleRate: Double(self.sampleRate!), channels: self.channels!, interleaved: false), frameCapacity: AVAudioFrameCount(self.totalFrames!))
             FLAC__stream_decoder_process_until_end_of_stream(&self.decoder!)
-            buffer.int32ChannelData!.pointee.initialize(from: self.blockBuffer)
+            for sample in 0..<self.blockBuffer[0].count {
+                for channel in 0..<self.channels! {
+                    buffer.int16ChannelData![Int(channel)][Int(sample)] = self.blockBuffer[Int(channel)][Int(sample)]
+                }
+            }
             buffer.frameLength = buffer.frameCapacity
+            print(self.blockBuffer[0].max())
+            print(self.blockBuffer[0].min())
+            print(self.blockBuffer[1].max())
+            print(self.blockBuffer[1].min())
             return buffer
         } else {
             print("failure")

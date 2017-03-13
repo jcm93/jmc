@@ -404,9 +404,6 @@ class AudioModule: NSObject {
         //if this is the result of a scheduleFile or scheduleSegment operation, it is called after the last segment of the buffer is scheduled, not played. this is not the case for scheduleBuffer operations
         //this can probably crash all over the place if the database can't be accessed for any reason
         print("handle completion called")
-        if self.flacBuffer != nil {
-            return
-        }
         switch currentHandlerType {
         case .natural:
             tryGetMoreTracks()
