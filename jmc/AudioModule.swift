@@ -331,14 +331,15 @@ class AudioModule: NSObject {
                 print("initializing flac playback for new thing, resetting node")
                 self.total_offset_frames = 0
                 self.total_offset_seconds = 0
+                self.audioEngine.reset()
                 self.audioEngine.stop()
                 self.audioEngine.detach(curNode)
                 self.curNode = AVAudioPlayerNode()
                 self.audioEngine.attach(curNode)
-                self.audioEngine.connect(curNode, to: equalizer, format: nil)
                 let location = self.currentTrackLocation!
                 let url = URL(string: location)!
                 if let buffer = self.flacDecoder.readFLAC(file: url) {
+                    self.audioEngine.connect(curNode, to: self.equalizer, format: nil)
                     self.flacBuffer = buffer
                     self.curNode.scheduleBuffer(buffer, at: nil, completionHandler: handleCompletion)
                     print(buffer.format)

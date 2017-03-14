@@ -12,17 +12,12 @@ import AVFoundation
 class FlacDecoder {
     
     var decoder: FLAC__StreamDecoder?
-    var blockBuffer = [[Int16]]()
+    var blockBuffer = [[Float32]]()
     var sampleRate: UInt32?
     var channels: UInt32?
     var bitsPerSample: UInt32?
     var totalFrames: UInt64?
     var currentSampleIndex: UInt32?
-    
-    
-    
-    private var my_client_data = 0
-    
     
     let flacWriteCallback: @convention(c) (Optional<UnsafePointer<FLAC__StreamDecoder>>, Optional<UnsafePointer<FLAC__Frame>>, Optional<UnsafePointer<Optional<UnsafePointer<Int32>>>>, Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderWriteStatus = {
         (decoder: Optional<UnsafePointer<FLAC__StreamDecoder>>, frame: Optional<UnsafePointer<FLAC__Frame>>, buffer: Optional<UnsafePointer<Optional<UnsafePointer<Int32>>>>, client_data: Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderWriteStatus in
@@ -31,10 +26,12 @@ class FlacDecoder {
         
         let numSamples = frame!.pointee.header.blocksize
         let numChannels = frame!.pointee.header.channels
+        let one: UInt32 = 1
+        let scaleFactor =  Float32(one << ((((frame!.pointee.header.bits_per_sample + 7) / 8) * 8) - 1))
         
         for sample in 0..<numSamples {
             for chan in 0..<numChannels {
-                let value = Int16(buffer![Int(chan)]![Int(sample)])
+                let value = Float32(buffer![Int(chan)]![Int(sample)]) / scaleFactor
                 flacDecoder.blockBuffer[Int(chan)].append(value)
             }
         }
@@ -53,7 +50,7 @@ class FlacDecoder {
             print("bits per sample \(flacDecoder.bitsPerSample!)")
             flacDecoder.totalFrames = meta.data.stream_info.total_samples
             for chan in 0..<flacDecoder.channels! {
-                flacDecoder.blockBuffer.append([Int16]())
+                flacDecoder.blockBuffer.append([Float32]())
             }
         default:
             print("doingus")
@@ -85,20 +82,25 @@ class FlacDecoder {
     
     func readFLAC(file: URL) -> AVAudioPCMBuffer? {
         if createFLACStreamDecoder(file: file) == true {
-            FLAC__stream_decoder_process_until_end_of_metadata(&self.decoder!)
-            let format = AVAudioFormat.init(commonFormat: AVAudioCommonFormat., sampleRate: <#T##Double#>, channels: <#T##AVAudioChannelCount#>, interleaved: <#T##Bool#>)
-            let buffer = AVAudioPCMBuffer(pcmFormat: AVAudioFormat.init(commonFormat: AVAudioCommonFormat.pcmFormatInt16, sampleRate: Double(self.sampleRate!), channels: self.channels!, interleaved: false), frameCapacity: AVAudioFrameCount(self.totalFrames!))
+            FLAC__stream_decoder_process_until_end_of_metadata(&self.decoder!)//populates self.sampleRate, self.channels, self.bitsPerSample
+            let commonFormat = {() -> AVAudioCommonFormat? in
+                if self.bitsPerSample == 16 {
+                    return AVAudioCommonFormat.pcmFormatInt16
+                } else {
+                    return nil
+                }
+                
+            }()
+            let format = AVAudioFormat.init(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: Double(self.sampleRate!), channels: self.channels!, interleaved: false)
+            print(format.formatDescription)
+            let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(self.totalFrames!))
             FLAC__stream_decoder_process_until_end_of_stream(&self.decoder!)
             for sample in 0..<self.blockBuffer[0].count {
                 for channel in 0..<self.channels! {
-                    buffer.int16ChannelData![Int(channel)][Int(sample)] = self.blockBuffer[Int(channel)][Int(sample)]
+                    buffer.floatChannelData![Int(channel)][Int(sample)] = self.blockBuffer[Int(channel)][Int(sample)]
                 }
             }
             buffer.frameLength = buffer.frameCapacity
-            print(self.blockBuffer[0].max())
-            print(self.blockBuffer[0].min())
-            print(self.blockBuffer[1].max())
-            print(self.blockBuffer[1].min())
             return buffer
         } else {
             print("failure")
