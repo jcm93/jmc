@@ -488,8 +488,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         self.isDoneWithSkipBackOperation = false
         self.currentTrack?.is_playing = false
         timer?.invalidate()
-        let nodeTime = delegate?.audioModule.curNode.lastRenderTime
-        let playerTime = delegate?.audioModule.curNode.playerTime(forNodeTime: nodeTime!)
+        let nodeTime = delegate?.audioModule.curPlayerNode.lastRenderTime
+        let playerTime = delegate?.audioModule.curPlayerNode.playerTime(forNodeTime: nodeTime!)
         var offset_thing: Double?
         if delegate?.audioModule.track_frame_offset == nil {
             offset_thing = 0
@@ -632,8 +632,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     
     func updateValuesUnsafe() {
         print("unsafe called")
-        let nodeTime = delegate?.audioModule.curNode.lastRenderTime
-        let playerTime = delegate?.audioModule.curNode.playerTime(forNodeTime: nodeTime!)
+        let nodeTime = delegate?.audioModule.curPlayerNode.lastRenderTime
+        let playerTime = delegate?.audioModule.curPlayerNode.playerTime(forNodeTime: nodeTime!)
         print("unsafe update times")
         print(nodeTime)
         print(playerTime)
