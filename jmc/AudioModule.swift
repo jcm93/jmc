@@ -260,9 +260,6 @@ class AudioModule: NSObject {
         if (is_paused == false || is_paused == nil) {
             print("reached play clause")
             play()
-            DispatchQueue.global(qos: .default).async {
-                self.currentFileBufferer?.fillNextBuffer()
-            }
         }
         print(audioEngine)
         currentHandlerType = .natural
@@ -337,6 +334,10 @@ class AudioModule: NSObject {
                 let initialBuffer = self.currentFileBufferer!.prepareFirstBuffer()
                 file_buffer_frames += Int64(initialBuffer!.frameLength)
                 self.curPlayerNode.scheduleBuffer(initialBuffer!, completionHandler: fileBuffererCompletion)
+                DispatchQueue.global(qos: .default).async {
+                    self.finalBuffer = false
+                    self.currentFileBufferer?.fillNextBuffer()
+                }
                 print("scheduling initial buffer of length \(initialBuffer!.frameLength)")
                 print("file_buffer_frames is \(self.file_buffer_frames)")
                 print(curFile?.processingFormat)
@@ -431,6 +432,7 @@ class AudioModule: NSObject {
         print("file_buffer_frames: \(file_buffer_frames)")
         if isFinalBuffer == true {
             self.finalBuffer = true
+            handleCompletion()
             //schedule next file
         }
     }
@@ -463,6 +465,10 @@ class AudioModule: NSObject {
                     let time = AVAudioTime(sampleTime: total_offset_frames, atRate: sampleRate)
                     print("scheduling at frame \(total_offset_frames)")
                     curPlayerNode.scheduleBuffer(initialBuffer!, at: time, options: .init(rawValue: 0), completionHandler: fileBuffererCompletion)
+                    DispatchQueue.global(qos: .default).async {
+                        self.finalBuffer = false
+                        self.currentFileBufferer?.fillNextBuffer()
+                    }
                     delay = ((Double(gapless_duration.sampleTime) / gapless_duration.sampleRate) - (Double(curPlayerNode.lastRenderTime!.sampleTime - Int64(track_frame_offset!))/(curPlayerNode.lastRenderTime?.sampleRate)!))
                     print("delay set to \(delay)")
                     self.track_frame_offset = 0
