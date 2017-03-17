@@ -28,6 +28,7 @@ class FlacDecoder: FileBufferer {
     let NUM_FRAMES_IN_ADVANCE_TO_SCHEDULE_NEXT_FILE: UInt32 = 10
     var audioModule: AudioModule
     var hasScheduled: Bool? = false
+    var flac_buffer_frames = 0
     
     init?(file: URL, audioModule: AudioModule) {
         self.audioModule = audioModule
@@ -118,6 +119,10 @@ class FlacDecoder: FileBufferer {
                 FLAC__stream_decoder_process_single(&self.decoder!)
             }
             let finalBuffer = self.currentTrackSampleIndex! >= self.totalFrames
+            //todo must be responsible for moderating frame length
+            if finalBuffer {
+                self.currentDecodeBuffer.frameLength = self.currentBufferSampleIndex!
+            }
             self.audioModule.fileBuffererDecodeCallback(isFinalBuffer: finalBuffer)
         }
     }

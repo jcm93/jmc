@@ -37,9 +37,7 @@ class AudioModule: NSObject {
   
     graph structure:
   
-    player nodes
-        |
-    pre-EQ mixer
+    player node
         |
     equalizer
         |
@@ -140,21 +138,6 @@ class AudioModule: NSObject {
                             mScope: kAudioObjectPropertyScopeGlobal,
                             mElement: kAudioObjectPropertyElementMaster))
         
-        /*
-         
-         graph structure:
-         
-         player nodes
-            |
-         pre-EQ mixer
-            |
-         equalizer
-            |
-         mainMixerNode (for volume control)
-            |
-         outputNode
-         
-         */
         audioEngine.attach(curPlayerNode)
         audioEngine.attach(self.equalizer)
         
@@ -405,6 +388,7 @@ class AudioModule: NSObject {
             do {
                 let newFile = try AVAudioFile(forReading: url)
                 self.currentFileBufferer = AVAudioFileBufferer(file: newFile, audioModule: self)
+                self.fileBuffererDictionary[url] = self.currentFileBufferer
             } catch {
                 print(error)
             }
@@ -413,27 +397,34 @@ class AudioModule: NSObject {
     
     func fileBuffererCompletion() {
         //swap decode buffer
+        print("buffer completion called, finalBuffer is \(self.finalBuffer)")
         if self.finalBuffer == true {
-            print("just finished a buffer, but deciding we don't need to fill it up because the current buffer is the last one")
+            //skip filling next buffer, because initial buffer of next track is already scheduled
+            self.finalBuffer = false
         } else {
-            self.currentFileBufferer!.fillNextBuffer()
+             self.currentFileBufferer!.fillNextBuffer()
         }
     }
     
     func fileBuffererDecodeCallback(isFinalBuffer: Bool) {
+        print("decode callback called")
         //called when a buffer is decoded. always schedule the buffer after the end of the current one
         let newBuffer = self.currentFileBufferer!.currentDecodeBuffer
         let currentBuffer = self.currentFileBufferer!.currentDecodeBuffer == self.currentFileBufferer!.bufferA ? self.currentFileBufferer!.bufferB : self.currentFileBufferer!.bufferA
         let frameToScheduleAt = file_buffer_frames
         let time = AVAudioTime(sampleTime: frameToScheduleAt, atRate: currentBuffer.format.sampleRate)
         curPlayerNode.scheduleBuffer(newBuffer, at: time, options: .init(rawValue: 0), completionHandler: fileBuffererCompletion)
-        print("scheduling a buffer at frame \(frameToScheduleAt)")
-        file_buffer_frames += Int64(newBuffer.frameLength)
-        print("file_buffer_frames: \(file_buffer_frames)")
+        print("scheduling new buffer at frame \(frameToScheduleAt)")
         if isFinalBuffer == true {
+            file_buffer_frames += Int64(newBuffer.frameLength)
+            print("file_buffer_frames: \(file_buffer_frames)")
             self.finalBuffer = true
+            print(self.finalBuffer)
             handleCompletion()
             //schedule next file
+        } else {
+            file_buffer_frames += Int64(newBuffer.frameLength)
+            print("file_buffer_frames: \(file_buffer_frames)")
         }
     }
     
@@ -462,13 +453,10 @@ class AudioModule: NSObject {
                     total_offset_seconds = total_offset_frames / Int64(sampleRate)
                     createFileBufferer(url: url!)
                     let initialBuffer = self.currentFileBufferer!.prepareFirstBuffer()
+                    file_buffer_frames += Int64(initialBuffer!.frameLength)
                     let time = AVAudioTime(sampleTime: total_offset_frames, atRate: sampleRate)
-                    print("scheduling at frame \(total_offset_frames)")
+                    print("scheduling initial buffer at frame \(total_offset_frames)")
                     curPlayerNode.scheduleBuffer(initialBuffer!, at: time, options: .init(rawValue: 0), completionHandler: fileBuffererCompletion)
-                    DispatchQueue.global(qos: .default).async {
-                        self.finalBuffer = false
-                        self.currentFileBufferer?.fillNextBuffer()
-                    }
                     delay = ((Double(gapless_duration.sampleTime) / gapless_duration.sampleRate) - (Double(curPlayerNode.lastRenderTime!.sampleTime - Int64(track_frame_offset!))/(curPlayerNode.lastRenderTime?.sampleRate)!))
                     print("delay set to \(delay)")
                     self.track_frame_offset = 0
