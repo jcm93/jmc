@@ -47,6 +47,8 @@
 		0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */; };
 		0D5A55E71DDAA80F00E46F08 /* sourceListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5A55E61DDAA80F00E46F08 /* sourceListDataSource.swift */; };
 		0D5A55E91DDBE16600E46F08 /* SourceListCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */; };
+		0D606EF61E7B4C21007AE152 /* FileBufferer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D606EF51E7B4C21007AE152 /* FileBufferer.swift */; };
+		0D606EF91E7B4DB0007AE152 /* AVAudioFileBufferer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */; };
 		0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */; };
 		0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */; };
 		0D76F6A81D24B9AC00C6E70F /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */; };
@@ -224,6 +226,8 @@
 		0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListThatYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
 		0D5A55E61DDAA80F00E46F08 /* sourceListDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sourceListDataSource.swift; sourceTree = "<group>"; };
 		0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListCellView.swift; sourceTree = "<group>"; };
+		0D606EF51E7B4C21007AE152 /* FileBufferer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBufferer.swift; sourceTree = "<group>"; };
+		0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVAudioFileBufferer.swift; sourceTree = "<group>"; };
 		0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagEditorWindow.swift; sourceTree = "<group>"; };
 		0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagEditorWindow.xib; sourceTree = "<group>"; };
 		0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
@@ -398,10 +402,9 @@
 		0D01AD931D707CE400F9211F /* Backend */ = {
 			isa = PBXGroup;
 			children = (
-				0DD0DB0D1E54425800807CAC /* FlacDecoder.swift */,
+				0D606EF71E7B4C2A007AE152 /* Audio */,
 				0D23CA6C1E03242400CAF529 /* PeerBrowser.swift */,
 				0DD274EE1D3190360055C43B /* GlobalFunctions.swift */,
-				0D1BDFA41D0F44A70092FBA0 /* AudioModule.swift */,
 				0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */,
 				0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */,
 				0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */,
@@ -561,6 +564,17 @@
 				0D8AFE571E6D136D004AC584 /* MediaScannerSheet.xib */,
 			);
 			name = "Library Manager";
+			sourceTree = "<group>";
+		};
+		0D606EF71E7B4C2A007AE152 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				0DD0DB0D1E54425800807CAC /* FlacDecoder.swift */,
+				0D1BDFA41D0F44A70092FBA0 /* AudioModule.swift */,
+				0D606EF51E7B4C21007AE152 /* FileBufferer.swift */,
+				0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */,
+			);
+			name = Audio;
 			sourceTree = "<group>";
 		};
 		0DAB30841CFBA3340028928F = {
@@ -1018,6 +1032,7 @@
 				0D76F6A81D24B9AC00C6E70F /* DatabaseManager.swift in Sources */,
 				0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */,
 				0D2E66471DC00B7F00CC174E /* TableColumnVisibilityController.swift in Sources */,
+				0D606EF91E7B4DB0007AE152 /* AVAudioFileBufferer.swift in Sources */,
 				0DA8D0401D1B1128009FEC28 /* ProgressBarView.swift in Sources */,
 				0DB8EFEA1DC4FC4D00009900 /* MainTableViewDataSource.swift in Sources */,
 				0D9CE6711D334F97004FA8CB /* ImportWindowController.swift in Sources */,
@@ -1041,6 +1056,7 @@
 				0D0E5FA91D38444B009E0FA3 /* Track+CoreDataProperties.swift in Sources */,
 				0D3878BA1DD12530004CC3C1 /* SampleRateFormatter.swift in Sources */,
 				0DF4BEF31CFD0D4E00AC5824 /* MainWindowController.swift in Sources */,
+				0D606EF61E7B4C21007AE152 /* FileBufferer.swift in Sources */,
 				0DD274EC1D30462F0055C43B /* PreferencesWindowController.swift in Sources */,
 				0D2EEFB71DB97DEC0065B0B3 /* CachedOrder.swift in Sources */,
 				0D84EDE61DA326BD0057411F /* SongCollection.swift in Sources */,

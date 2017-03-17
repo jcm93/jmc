@@ -9,25 +9,43 @@
 import Foundation
 import AVFoundation
 
-class FlacDecoder {
+class FlacDecoder: FileBufferer {
     
     var decoder: FLAC__StreamDecoder?
     var blockBuffer = [[Float32]]()
     var sampleRate: UInt32?
     var channels: UInt32?
     var bitsPerSample: UInt32?
-    var totalFrames: UInt64?
+    var totalFrames: UInt32 = 0
     var currentBufferSampleIndex: UInt32?
     var currentTrackSampleIndex: UInt32?
     var blockSize: UInt32?
     //uses twin buffers for FLAC decoding, one for playing, and one for filling with the next frames of decoded audio
-    var bufferA: AVAudioPCMBuffer?
-    var bufferB: AVAudioPCMBuffer?
-    var currentDecodeBuffer: AVAudioPCMBuffer?
-    let FLAC_DECODER_TWIN_BUFFER_NUM_FRAMES: UInt32 = 15
+    var bufferA: AVAudioPCMBuffer = AVAudioPCMBuffer()
+    var bufferB: AVAudioPCMBuffer = AVAudioPCMBuffer()
+    var currentDecodeBuffer: AVAudioPCMBuffer = AVAudioPCMBuffer()
+    var bufferFrameLength: UInt32 = 15
     let NUM_FRAMES_IN_ADVANCE_TO_SCHEDULE_NEXT_FILE: UInt32 = 10
-    var audioModule: AudioModule?
+    var audioModule: AudioModule
     var hasScheduled: Bool? = false
+    
+    init?(file: URL, audioModule: AudioModule) {
+        self.audioModule = audioModule
+        
+        if createFLACStreamDecoder(file: file) == true {
+            FLAC__stream_decoder_process_until_end_of_metadata(&self.decoder!)//populates self.sampleRate, self.channels, self.bitsPerSample
+            let format = AVAudioFormat.init(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: Double(self.sampleRate!), channels: self.channels!, interleaved: false)
+            print(format.formatDescription)
+            self.bufferA = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(self.bufferFrameLength) * self.blockSize!)
+            self.bufferA.frameLength = self.bufferA.frameCapacity
+            self.bufferB = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(self.bufferFrameLength) * self.blockSize!)
+            self.bufferB.frameLength = self.bufferB.frameCapacity
+            self.currentDecodeBuffer = self.bufferA
+            self.audioModule = audioModule
+        } else {
+            return nil
+        }
+    }
     
     
     let flacWriteCallback: @convention(c) (Optional<UnsafePointer<FLAC__StreamDecoder>>, Optional<UnsafePointer<FLAC__Frame>>, Optional<UnsafePointer<Optional<UnsafePointer<Int32>>>>, Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderWriteStatus = {
@@ -49,15 +67,10 @@ class FlacDecoder {
         for sample in 0..<numSamples {
             for chan in 0..<numChannels {
                 let value = Float32(buffer![Int(chan)]![Int(sample)]) / scaleFactor
-                flacDecoder.currentDecodeBuffer!.floatChannelData![Int(chan)][Int(flacDecoder.currentBufferSampleIndex!)] = value
+                flacDecoder.currentDecodeBuffer.floatChannelData![Int(chan)][Int(flacDecoder.currentBufferSampleIndex!)] = value
             }
             flacDecoder.currentBufferSampleIndex! += 1
             flacDecoder.currentTrackSampleIndex! += 1
-        }
-        if flacDecoder.currentTrackSampleIndex! >= (UInt32(flacDecoder.totalFrames!) - flacDecoder.NUM_FRAMES_IN_ADVANCE_TO_SCHEDULE_NEXT_FILE * flacDecoder.blockSize!) && flacDecoder.hasScheduled != true {
-            print("getting ready to schedule next file")
-            flacDecoder.audioModule!.completionTest()
-            flacDecoder.hasScheduled = true
         }
         return FLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE
     }
@@ -75,7 +88,7 @@ class FlacDecoder {
             print("min block sie \(meta.data.stream_info.min_blocksize)")
             flacDecoder.blockSize = meta.data.stream_info.max_blocksize
             print("bits per sample \(flacDecoder.bitsPerSample!)")
-            flacDecoder.totalFrames = meta.data.stream_info.total_samples
+            flacDecoder.totalFrames = UInt32(meta.data.stream_info.total_samples)
             for chan in 0..<flacDecoder.channels! {
                 flacDecoder.blockBuffer.append([Float32]())
             }
@@ -85,7 +98,7 @@ class FlacDecoder {
     }
     
     func seek(point: Float) {
-        let frame = UInt64((point / 100) * Float(self.totalFrames!))
+        let frame = UInt64((point / 100) * Float(self.totalFrames))
         FLAC__stream_decoder_seek_absolute(&self.decoder!, frame)
     }
     
@@ -101,14 +114,11 @@ class FlacDecoder {
         self.currentBufferSampleIndex = 0
         self.currentDecodeBuffer = self.currentDecodeBuffer == self.bufferA ? self.bufferB : self.bufferA
         DispatchQueue.global(qos: .default).async {
-            for _ in 1...self.FLAC_DECODER_TWIN_BUFFER_NUM_FRAMES {
+            for _ in 1...self.bufferFrameLength {
                 FLAC__stream_decoder_process_single(&self.decoder!)
             }
-            if UInt64(self.currentTrackSampleIndex!) >= self.totalFrames! {
-                self.currentDecodeBuffer?.frameLength = (UInt32(self.totalFrames!) % self.currentDecodeBuffer!.frameLength)
-                print("last decoded sample index: \(self.currentTrackSampleIndex!), total number of frames: \(self.totalFrames!)")
-            }
-            self.audioModule!.flacBufferDecodeCallback()
+            let finalBuffer = self.currentTrackSampleIndex! >= self.totalFrames
+            self.audioModule.fileBuffererDecodeCallback(isFinalBuffer: finalBuffer)
         }
     }
     
@@ -120,7 +130,6 @@ class FlacDecoder {
         let pointerToSelf = Unmanaged.passRetained(self).toOpaque()
         let initResult = FLAC__stream_decoder_init_file(flacStreamDecoder, file.path, flacWriteCallback, flacMetadataCallback, flacErrorCallback, pointerToSelf)
         if initResult == FLAC__STREAM_DECODER_INIT_STATUS_OK {
-            FLAC__stream_decoder_process_until_end_of_metadata(flacStreamDecoder)
             return true
         } else {
             print(initResult)
@@ -128,26 +137,11 @@ class FlacDecoder {
         }
     }
     
-    func readFLAC(file: URL) -> Bool {
-        if createFLACStreamDecoder(file: file) == true {
-            FLAC__stream_decoder_process_until_end_of_metadata(&self.decoder!)//populates self.sampleRate, self.channels, self.bitsPerSample
-            let format = AVAudioFormat.init(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: Double(self.sampleRate!), channels: self.channels!, interleaved: false)
-            print(format.formatDescription)
-            self.bufferA = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(self.FLAC_DECODER_TWIN_BUFFER_NUM_FRAMES) * self.blockSize!)
-            self.bufferA!.frameLength = self.bufferA!.frameCapacity
-            self.bufferB = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(self.FLAC_DECODER_TWIN_BUFFER_NUM_FRAMES) * self.blockSize!)
-            self.bufferB!.frameLength = self.bufferB!.frameCapacity
-            self.currentDecodeBuffer = self.bufferA
-            for i in 1...FLAC_DECODER_TWIN_BUFFER_NUM_FRAMES {
-                FLAC__stream_decoder_process_single(&self.decoder!)
-            }
-            DispatchQueue.global(qos: .default).async {
-                self.fillNextBuffer()
-            }
-            return true
-        } else {
-            print("failure")
-            return false
+    func prepareFirstBuffer() -> AVAudioPCMBuffer? {
+        self.currentBufferSampleIndex = 0
+        for _ in 1...self.bufferFrameLength {
+            FLAC__stream_decoder_process_single(&self.decoder!)
         }
+        return self.currentDecodeBuffer
     }
 }
