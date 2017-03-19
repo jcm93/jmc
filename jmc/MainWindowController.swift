@@ -67,7 +67,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     var otherLocalTableViewControllers = NSMutableDictionary()
     var otherSharedTableViewControllers = NSMutableDictionary()
     var currentTableViewController: LibraryTableViewController?
-    var libraryTableViewController: LibraryTableViewController?
     var albumArtViewController: AlbumArtViewController?
     var advancedFilterViewController: AdvancedFilterViewController?
     
@@ -211,33 +210,37 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         currentTableViewController?.hasInitialized = false
         trackQueueViewController?.currentSourceListItem = item
         currentSourceListItem = item
-        let id = item.playlist?.id
-        if id != nil {
-            currentTableViewController?.view.removeFromSuperview()
-        } else {
-            switchToLibrary()
-            return
-        }
-        if otherLocalTableViewControllers.object(forKey: id!) != nil && item.is_network != true {
-            let playlistViewController = otherLocalTableViewControllers.object(forKey: id!) as! LibraryTableViewController
+        let objectID = item.objectID
+        currentTableViewController?.view.removeFromSuperview()
+        if otherLocalTableViewControllers.object(forKey: objectID) != nil && item.is_network != true {
+            let playlistViewController = otherLocalTableViewControllers.object(forKey: objectID) as! LibraryTableViewController
             librarySplitView.addArrangedSubview(playlistViewController.view)
             currentTableViewController = playlistViewController
-            currentTableViewController?.initializeForPlaylist()
+            if currentTableViewController?.playlist != nil {
+                currentTableViewController?.initializeForPlaylist()
+            } else {
+                currentTableViewController?.initializeForLibrary()
+            }
             updateInfo()
         }
-        else if otherSharedTableViewControllers.object(forKey: id!) != nil && item.is_network == true {
-            let playlistViewController = otherSharedTableViewControllers.object(forKey: id!) as! LibraryTableViewController
+        else if otherSharedTableViewControllers.object(forKey: objectID) != nil && item.is_network == true {
+            let playlistViewController = otherSharedTableViewControllers.object(forKey: objectID) as! LibraryTableViewController
             librarySplitView.addArrangedSubview(playlistViewController.view)
             currentTableViewController = playlistViewController
             currentTableViewController?.initializeForPlaylist()
+            if currentTableViewController?.playlist != nil {
+                currentTableViewController?.initializeForPlaylist()
+            } else {
+                currentTableViewController?.initializeForLibrary()
+            }
             updateInfo()
         }
         else {
             let newPlaylistViewController = createPlaylistViewController(item)
             if item.is_network == true {
-                self.otherSharedTableViewControllers[id!] = newPlaylistViewController
+                self.otherSharedTableViewControllers[objectID] = newPlaylistViewController
             } else {
-                self.otherLocalTableViewControllers[id!] = newPlaylistViewController
+                self.otherLocalTableViewControllers[objectID] = newPlaylistViewController
             }
             librarySplitView.addArrangedSubview(newPlaylistViewController.view)
             addObserversAndInitializeNewTableView(newPlaylistViewController, item: item)
@@ -262,23 +265,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     
     func jumpToCurrentSong() {
         currentTableViewController?.jumpToCurrentSong(currentTrack)
-    }
-    
-    func switchToLibrary() {
-        if !librarySplitView.arrangedSubviews.contains(libraryTableViewController!.view) {
-            print("adding library view to split view")
-            currentTableViewController?.view.removeFromSuperview()
-            librarySplitView.addArrangedSubview(libraryTableViewController!.view)
-            currentTableViewController = libraryTableViewController
-            if currentTableViewController?.advancedFilterVisible == true {
-                showAdvancedFilter()
-            } else {
-                hideAdvancedFilter()
-            }
-            populateSearchBar()
-            currentTableViewController?.tableView.reloadData()
-            updateInfo()
-        }
     }
     
     @IBAction func volumeDidChange(_ sender: AnyObject) {
@@ -800,9 +786,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         NSLayoutConstraint.activate(trackQueueLayoutConstraints)
         self.trackQueueViewController?.mainWindowController = self
         //self.libraryTableViewController = LibraryTableViewController(nibName: "LibraryTableViewController", bundle: nil)
-        self.libraryTableViewController = LibraryTableViewControllerCellBased(nibName: "LibraryTableViewControllerCellBased", bundle: nil)
-        self.libraryTableViewController?.mainWindowController = self
-        self.librarySplitView.addArrangedSubview(libraryTableViewController!.view)
         numberFormatter.numberStyle = NumberFormatter.Style.decimal
         dateFormatter.unitsStyle = DateComponentsFormatter.UnitsStyle.full
         print(hasMusic)
@@ -819,13 +802,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         theBox.fillColor = NSColor(patternImage: NSImage(named: "Gradient")!)
         
         searchField.delegate = self
-        self.currentTableViewController = libraryTableViewController
         self.delegate?.audioModule.addObserver(self, forKeyPath: "track_changed", options: .new, context: &my_context)
         self.delegate?.audioModule.addObserver(self, forKeyPath: "done_playing", options: .new, context: &my_context)
-        self.libraryTableViewController?.trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .new, context: &my_context)
-        self.libraryTableViewController?.trackViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .new, context: &my_context)
-        self.libraryTableViewController?.trackViewArrayController.addObserver(self, forKeyPath: "sortDescriptors", options: .new, context: &my_context)
-        self.libraryTableViewController?.trackViewArrayController.fetchPredicate = NSPredicate(format: "is_network == nil or is_network == false")
         self.albumArtViewController?.addObserver(self, forKeyPath: "albumArtworkAdded", options: .new, context: &my_context)
         trackQueueViewController?.mainWindowController = self
         volumeSlider.isContinuous = true

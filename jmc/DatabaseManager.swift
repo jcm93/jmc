@@ -812,7 +812,8 @@ class DatabaseManager: NSObject {
             }
         }
         var count = 0
-        let updateCount = mediaURLs.count / 1000
+        var updateCount = mediaURLs.count / 1000
+        if updateCount == 0 {updateCount = 1}
         let filteredURLs = mediaURLs.filter({(url: URL) -> Bool in
             count += 1
             if count % updateCount == 0 {

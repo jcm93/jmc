@@ -375,6 +375,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     }
     
     func initializePlayOrderObject() {
+        print("creating play order object")
         let currentIDArray = (self.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
         let newPoo = PlaylistOrderObject(sli: self.item!)
         var shuffledArray = currentIDArray
@@ -436,7 +437,25 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         trackViewArrayController.fetchPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
     }
     
+    func initializeForLibrary() {
+        if self.item?.library?.parent != nil {
+            trackViewArrayController.fetchPredicate = NSPredicate(format: "track.library == %@", self.item!.library!)
+        } else {
+            let activeLibraries = { () -> [Library] in
+                let fetch = NSFetchRequest<Library>(entityName: "Library")
+                fetch.predicate = NSPredicate(format: "is_active == %@", NSNumber(booleanLiteral: true))
+                do {
+                    return try managedContext.fetch(fetch)
+                } catch {
+                    return [Library]()
+                }
+            }()
+            trackViewArrayController.fetchPredicate = NSPredicate(format: "track.library in %@", activeLibraries)
+        }
+    }
+    
     override func viewDidLoad() {
+        print("view did load")
         trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .new, context: &my_context)
         trackViewArrayController.tableViewController = self
         tableView.doubleAction = #selector(tableViewDoubleClick)
@@ -465,6 +484,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                     tableView.sortDescriptors = sortDescriptors as! [NSSortDescriptor]
                 }
             }
+            initializeForLibrary()
         }
         super.viewDidLoad()
         // Do view setup here.

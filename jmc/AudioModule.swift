@@ -325,7 +325,6 @@ class AudioModule: NSObject {
                 print("file_buffer_frames is \(self.file_buffer_frames)")
                 print(curFile?.processingFormat)
                 print(audioEngine.outputNode)
-                //audioEngine.connect(curPlayerNode, to: audioEngine.mainpostEQMixerNode, format: curFile?.processingFormat)
                 resetValues()
                 if (audioEngine.isRunning == false) {
                     try audioEngine.start()
@@ -397,7 +396,6 @@ class AudioModule: NSObject {
     
     func fileBuffererCompletion() {
         //swap decode buffer
-        print("buffer completion called, finalBuffer is \(self.finalBuffer)")
         if self.finalBuffer == true {
             //skip filling next buffer, because initial buffer of next track is already scheduled
             self.finalBuffer = false
@@ -407,24 +405,20 @@ class AudioModule: NSObject {
     }
     
     func fileBuffererDecodeCallback(isFinalBuffer: Bool) {
-        print("decode callback called")
         //called when a buffer is decoded. always schedule the buffer after the end of the current one
         let newBuffer = self.currentFileBufferer!.currentDecodeBuffer
         let currentBuffer = self.currentFileBufferer!.currentDecodeBuffer == self.currentFileBufferer!.bufferA ? self.currentFileBufferer!.bufferB : self.currentFileBufferer!.bufferA
         let frameToScheduleAt = file_buffer_frames
         let time = AVAudioTime(sampleTime: frameToScheduleAt, atRate: currentBuffer.format.sampleRate)
         curPlayerNode.scheduleBuffer(newBuffer, at: time, options: .init(rawValue: 0), completionHandler: fileBuffererCompletion)
-        print("scheduling new buffer at frame \(frameToScheduleAt)")
         if isFinalBuffer == true {
             file_buffer_frames += Int64(newBuffer.frameLength)
-            print("file_buffer_frames: \(file_buffer_frames)")
             self.finalBuffer = true
             print(self.finalBuffer)
             handleCompletion()
             //schedule next file
         } else {
             file_buffer_frames += Int64(newBuffer.frameLength)
-            print("file_buffer_frames: \(file_buffer_frames)")
         }
     }
     

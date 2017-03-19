@@ -134,13 +134,20 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             return count
         }
         let source = item as! SourceListNode
+        if source.item.name == "All Sources" {
+            print("poony")
+        }
         return source.children.count
     }
+    
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         let source = item as! SourceListNode
+        print(source.item.name)
         if source.children.count > 0 {
+            print("true")
             return true
         } else {
+            print("false")
             return false
         }
     }
@@ -375,6 +382,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         let source = (item as! SourceListNode).item
         if source.is_header == true {
             return false
+        } else if source.children?.count > 0 && source.library != nil {
+            return true
         } else if source.children?.count > 0 && source.is_folder != true {
             return false
         } else {
@@ -418,11 +427,20 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             view.textField?.isEditable = true
             return view
         } else if source.item.library != nil {
-            let view = outlineView.make(withIdentifier: "MasterPlaylistCell", owner: self) as! SourceListCellView
-            view.node = source
-            view.textField?.stringValue = source.item.name!
-            view.textField?.isEditable = false
-            return view
+            if source.item.children?.count > 0 {
+                let view = outlineView.make(withIdentifier: "MasterLibraryCell", owner: self) as! SourceListCellView
+                view.node = source
+                view.textField?.stringValue = "All Sources"
+                source.item.name = "All Sources"
+                view.textField?.isEditable = false
+                return view
+            } else {
+                let view = outlineView.make(withIdentifier: "MasterPlaylistCell", owner: self) as! SourceListCellView
+                view.node = source
+                view.textField?.stringValue = source.item.name!
+                view.textField?.isEditable = false
+                return view
+            }
         } else {
             let view = outlineView.make(withIdentifier: "PlaylistCell", owner: self) as! SourceListCellView
             view.node = source
@@ -430,6 +448,16 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             view.textField?.delegate = self
             return view
         }
+    }
+    
+    @IBAction func checkBoxPressed(_ sender: Any) {
+        print("check box pressed")
+        let checkBox = sender as! NSButton
+        let checkBoxState = checkBox.state
+        let cellView = checkBox.superview as! SourceListCellView
+        let sourceListNode = cellView.node
+        let library = sourceListNode?.item.library
+        library?.is_active = checkBoxState == NSOnState ? true : false
     }
     
     func getNetworkPlaylist(_ id: Int) -> SourceListItem? {
@@ -566,7 +594,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     func selectStuff() {
         let indexSet = IndexSet(integer: 1)
         sourceList.selectRowIndexes(indexSet, byExtendingSelection: false)
-        mainWindowController?.libraryTableViewController?.item = libraryHeaderNode?.children[0].item
+        mainWindowController?.currentTableViewController?.item = libraryHeaderNode?.children[0].item
     }
     
     override func viewDidLoad() {

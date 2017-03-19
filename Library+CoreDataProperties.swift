@@ -2,7 +2,7 @@
 //  Library+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 3/1/17.
+//  Created by John Moody on 3/18/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 
@@ -17,6 +17,7 @@ extension Library {
     }
 
     @NSManaged public var is_network: NSNumber?
+    @NSManaged public var last_fs_event: NSNumber?
     @NSManaged public var library_location: String?
     @NSManaged public var name: String?
     @NSManaged public var next_album_artwork_collection_id: NSNumber?
@@ -29,7 +30,7 @@ extension Library {
     @NSManaged public var next_track_id: NSNumber?
     @NSManaged public var peer: NSObject?
     @NSManaged public var uuid: String?
-    @NSManaged public var last_fs_event: NSNumber?
+    @NSManaged public var is_active: NSNumber?
     @NSManaged public var cached_orders: NSSet?
     @NSManaged public var children: NSSet?
     @NSManaged public var local_items: NSOrderedSet?

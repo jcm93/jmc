@@ -97,9 +97,18 @@ class InitialSetupWindowController: NSWindowController {
     
     func setupForNilLibrary() {
         print("nil library")
+        //create glob root library
         let newLibrary = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
-        newLibrary.library_location = libraryPathControl.url!.absoluteString
         newLibrary.name = NSUserName() + "'s library"
+        newLibrary.parent = nil
+        //create actual library
+        let newActualLibrary = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
+        newActualLibrary.library_location = libraryPathControl.url!.absoluteString
+        newActualLibrary.name = libraryPathControl.url?.lastPathComponent
+        newActualLibrary.parent = newLibrary
+        let newActualLibrarySLI = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
+        newActualLibrarySLI.library = newActualLibrary
+        newActualLibrarySLI.name = newActualLibrary.name
         //create dummy source list item as root of source list
         let source_list_root = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         source_list_root.is_root = true
@@ -126,6 +135,8 @@ class InitialSetupWindowController: NSWindowController {
         cd_library_master_playlist_source_item.parent = cd_library_header
         cd_library_master_playlist_source_item.name = "Music"
         cd_library_master_playlist_source_item.library = newLibrary
+        
+        newActualLibrarySLI.parent = cd_library_master_playlist_source_item
         
         //create cached orders
         let cachedArtistOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: managedContext) as! CachedOrder

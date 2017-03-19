@@ -111,15 +111,15 @@ class FlacDecoder: FileBufferer {
     }
     
     func fillNextBuffer() {
-        //swap decode buffer
         self.currentBufferSampleIndex = 0
+        //swap decode buffer
         self.currentDecodeBuffer = self.currentDecodeBuffer == self.bufferA ? self.bufferB : self.bufferA
         DispatchQueue.global(qos: .default).async {
             for _ in 1...self.bufferFrameLength {
                 FLAC__stream_decoder_process_single(&self.decoder!)
             }
             let finalBuffer = self.currentTrackSampleIndex! >= self.totalFrames
-            //todo must be responsible for moderating frame length
+            //must be responsible for moderating frame length
             if finalBuffer {
                 self.currentDecodeBuffer.frameLength = self.currentBufferSampleIndex!
             }

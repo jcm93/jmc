@@ -166,7 +166,7 @@ DQ
             </connections>
             <point key="canvasLocation" x="234" y="174.5"/>
         </window>
-        <arrayController mode="entity" entityName="Library" automaticallyPreparesContent="YES" id="1Mz-0t-FCS">
+        <arrayController mode="entity" entityName="Library" fetchPredicateFormat="parent != nil" automaticallyPreparesContent="YES" id="1Mz-0t-FCS">
             <connections>
                 <binding destination="-2" name="managedObjectContext" keyPath="self.managedContext" id="Eg9-rM-wPH"/>
             </connections>

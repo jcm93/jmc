@@ -106,7 +106,7 @@
                                                     <outlet property="textField" destination="sfk-Kp-dc9" id="gLZ-Aw-Kcq"/>
                                                 </connections>
                                             </tableCellView>
-                                            <tableCellView identifier="MasterPlaylistCell" id="VzQ-q9-Y9W" customClass="SourceListCellView" customModule="jmc" customModuleProvider="target">
+                                            <tableCellView identifier="MasterLibraryCell" id="VzQ-q9-Y9W" customClass="SourceListCellView" customModule="jmc" customModuleProvider="target">
                                                 <rect key="frame" x="1" y="39" width="264" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
@@ -148,7 +148,7 @@
                                                 <rect key="frame" x="1" y="58" width="264" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <imageView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VtN-DP-g9q">
+                                                    <imageView ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VtN-DP-g9q">
                                                         <rect key="frame" x="24" y="0.0" width="17" height="17"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="17" id="3ME-gC-fKS"/>
@@ -156,11 +156,8 @@
                                                         </constraints>
                                                         <imageCell key="cell" refusesFirstResponder="YES" imageScaling="proportionallyDown" image="Master Library" id="hvs-tw-jyW"/>
                                                     </imageView>
-                                                    <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6ee-9J-eFa">
+                                                    <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6ee-9J-eFa">
                                                         <rect key="frame" x="46" y="0.0" width="120" height="17"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="116" id="cfz-oy-7Cy"/>
-                                                        </constraints>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Master Playlist Cell" id="RQ2-UQ-Txu">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -170,28 +167,45 @@
                                                             <binding destination="SW6-47-Uly" name="value" keyPath="objectValue.item.name" id="XxL-6T-KPT"/>
                                                         </connections>
                                                     </textField>
-                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e3p-jR-9sl">
+                                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="e3p-jR-9sl">
                                                         <rect key="frame" x="246" y="1" width="15" height="15"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="15" id="7JJ-KG-J77"/>
+                                                            <constraint firstAttribute="width" constant="15" id="GQA-zJ-v1a"/>
+                                                        </constraints>
                                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAdvanced" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="pra-Zw-8uS">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
                                                     </button>
-                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cDA-dr-Fuy">
+                                                    <button ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cDA-dr-Fuy">
                                                         <rect key="frame" x="1" y="-2" width="19" height="20"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" controlSize="small" state="on" inset="2" id="EAE-8l-FHF">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
+                                                        <connections>
+                                                            <action selector="checkBoxPressed:" target="-2" id="9VA-YI-hp8"/>
+                                                            <binding destination="SW6-47-Uly" name="value" keyPath="objectValue.node.item.library.is_active" id="w2N-ol-is2">
+                                                                <dictionary key="options">
+                                                                    <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                                </dictionary>
+                                                            </binding>
+                                                        </connections>
                                                     </button>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="VtN-DP-g9q" firstAttribute="leading" secondItem="SW6-47-Uly" secondAttribute="leading" constant="3" id="gjm-rx-hge"/>
+                                                    <constraint firstItem="e3p-jR-9sl" firstAttribute="leading" secondItem="6ee-9J-eFa" secondAttribute="trailing" constant="3" id="5Xm-Zu-8wR"/>
+                                                    <constraint firstItem="6ee-9J-eFa" firstAttribute="leading" secondItem="VtN-DP-g9q" secondAttribute="trailing" constant="7" id="8vm-uA-VRZ"/>
+                                                    <constraint firstItem="cDA-dr-Fuy" firstAttribute="leading" secondItem="SW6-47-Uly" secondAttribute="leading" constant="4" id="Zk8-TY-tyD"/>
                                                     <constraint firstItem="6ee-9J-eFa" firstAttribute="leading" secondItem="VtN-DP-g9q" secondAttribute="trailing" constant="7" id="hmm-7L-DjW"/>
+                                                    <constraint firstItem="VtN-DP-g9q" firstAttribute="leading" secondItem="cDA-dr-Fuy" secondAttribute="trailing" constant="6" id="kij-Zh-PdZ"/>
                                                     <constraint firstItem="VtN-DP-g9q" firstAttribute="top" secondItem="6ee-9J-eFa" secondAttribute="top" id="t0K-pp-6wF"/>
+                                                    <constraint firstItem="e3p-jR-9sl" firstAttribute="top" secondItem="SW6-47-Uly" secondAttribute="top" constant="1" id="tJP-Ag-DdD"/>
+                                                    <constraint firstItem="VtN-DP-g9q" firstAttribute="leading" secondItem="cDA-dr-Fuy" secondAttribute="trailing" constant="6" id="uH3-Vb-31s"/>
                                                     <constraint firstItem="VtN-DP-g9q" firstAttribute="centerY" secondItem="SW6-47-Uly" secondAttribute="centerY" id="vjB-rA-wEF"/>
+                                                    <constraint firstItem="cDA-dr-Fuy" firstAttribute="top" secondItem="SW6-47-Uly" secondAttribute="top" constant="2" id="vtD-DV-sDq"/>
+                                                    <constraint firstAttribute="trailing" secondItem="e3p-jR-9sl" secondAttribute="trailing" constant="3" id="xzE-gq-TSn"/>
                                                 </constraints>
                                                 <connections>
                                                     <outlet property="imageView" destination="VtN-DP-g9q" id="Gby-M5-4SX"/>
@@ -353,6 +367,9 @@
                                         </prototypeCellViews>
                                     </tableColumn>
                                 </tableColumns>
+                                <connections>
+                                    <outlet property="delegate" destination="-2" id="0jI-p7-ivH"/>
+                                </connections>
                             </outlineView>
                         </subviews>
                         <nil key="backgroundColor"/>
