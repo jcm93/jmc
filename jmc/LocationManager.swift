@@ -8,13 +8,29 @@
 
 import Foundation
 import CoreServices
+import CoreData
+
+struct TrackFirstRenameEvent {
+    let track: Track?
+    let initialPath: String
+    let id: UInt64
+    let flags: FSEventStreamEventFlags
+    init(path: String, id: UInt64, flags: FSEventStreamEventFlags, track: Track?) {
+        self.initialPath = path
+        self.id = id
+        self.flags = flags
+        self.track = track
+    }
+}
 
 class LocationManager: NSObject {
     
     var activeMonitoringURLs = Set<URL>()
     var activeMonitoringFileDescriptors = [String : Int32]()
-    var libraryURLDictionary = [URL: Library]()
+    var libraryURLDictionary = [URL : Library]()
     var fileManager = FileManager.default
+    var withinDirRenameEvents = [String : TrackFirstRenameEvent?]()
+    var databaseManager = DatabaseManager()
     
     var eventStreamRef: FSEventStreamRef?
     
@@ -77,11 +93,54 @@ class LocationManager: NSObject {
             //verify the directory
             do {
                 let contentsOfDir = try fileManager.contentsOfDirectory(atPath: path)
+                ///uhh
             } catch {
                 
             }
-            //hmm
             
+        } else if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemCreated)) > 0 {
+            print("item created")
+        } else if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemRenamed)) > 0 {
+            let rootDirectoryPaths = activeMonitoringFileDescriptors.keys.filter({path.lowercased().hasPrefix($0)})
+            guard rootDirectoryPaths.count == 1 else {return}
+            let rootDirectoryPath = rootDirectoryPaths.first!
+            if withinDirRenameEvents[rootDirectoryPath]??.id == id - 1 {
+                //this is definitely the second half of another rename event
+                let firstEvent = withinDirRenameEvents[rootDirectoryPath]!
+                if firstEvent!.track != nil {
+                    firstEvent!.track!.location = URL(fileURLWithPath: path).absoluteString
+                }
+                withinDirRenameEvents[rootDirectoryPath] = nil
+            } else {
+                //either this location is valid and a new file was added, or...
+                if fileManager.fileExists(atPath: path) {
+                    if UserDefaults.standard.bool(forKey: DEFAULTS_WATCHES_DIRECTORIES_FOR_NEW_FILES) {
+                        let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
+                        databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library)
+                        //ignores errors :(
+                    }
+                } else {
+                    //...or this is the first half of a rename event
+                    let track = {() -> Track? in
+                        let fr = NSFetchRequest<Track>(entityName: "Track")
+                        fr.predicate = NSPredicate(format: "location contains[c] %@", URL(fileURLWithPath: path).absoluteString)
+                        do {
+                            let track = try managedContext.fetch(fr)
+                            if track.count == 1 {
+                                return track[0]
+                            } else {
+                                return nil
+                            }
+                        } catch {
+                            print(error)
+                        }
+                        return nil
+                    }()
+                    let newFirstHalfEvent = TrackFirstRenameEvent(path: path, id: id, flags: flags, track: track)
+                    withinDirRenameEvents[rootDirectoryPath] = newFirstHalfEvent
+                }
+            }
+            print("item renamed")
         }
     }
     

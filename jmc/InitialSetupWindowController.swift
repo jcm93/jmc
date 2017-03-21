@@ -106,6 +106,7 @@ class InitialSetupWindowController: NSWindowController {
         newActualLibrary.library_location = libraryPathControl.url!.absoluteString
         newActualLibrary.name = libraryPathControl.url?.lastPathComponent
         newActualLibrary.parent = newLibrary
+        newActualLibrary.is_active = true
         let newActualLibrarySLI = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         newActualLibrarySLI.library = newActualLibrary
         newActualLibrarySLI.name = newActualLibrary.name

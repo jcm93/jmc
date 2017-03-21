@@ -9,7 +9,7 @@
 import Foundation
 import AVFoundation
 
-class FlacDecoder: FileBufferer {
+class FlacDecoder: NSObject, FileBufferer {
     
     var decoder: FLAC__StreamDecoder?
     var blockBuffer = [[Float32]]()
@@ -17,6 +17,7 @@ class FlacDecoder: FileBufferer {
     var channels: UInt32?
     var bitsPerSample: UInt32?
     var totalFrames: UInt32 = 0
+    var file: URL
     var currentBufferSampleIndex: UInt32?
     var currentTrackSampleIndex: UInt32?
     var blockSize: UInt32?
@@ -32,7 +33,10 @@ class FlacDecoder: FileBufferer {
     
     init?(file: URL, audioModule: AudioModule) {
         self.audioModule = audioModule
-        
+        self.file = file
+    }
+    
+    func actualInitTest() {
         if createFLACStreamDecoder(file: file) == true {
             FLAC__stream_decoder_process_until_end_of_metadata(&self.decoder!)//populates self.sampleRate, self.channels, self.bitsPerSample
             let format = AVAudioFormat.init(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: Double(self.sampleRate!), channels: self.channels!, interleaved: false)
@@ -42,9 +46,6 @@ class FlacDecoder: FileBufferer {
             self.bufferB = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(self.bufferFrameLength) * self.blockSize!)
             self.bufferB.frameLength = self.bufferB.frameCapacity
             self.currentDecodeBuffer = self.bufferA
-            self.audioModule = audioModule
-        } else {
-            return nil
         }
     }
     

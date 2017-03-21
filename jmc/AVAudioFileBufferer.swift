@@ -9,7 +9,7 @@
 import Cocoa
 import AVFoundation
 
-class AVAudioFileBufferer: FileBufferer {
+class AVAudioFileBufferer: NSObject, FileBufferer {
     
     var bufferA: AVAudioPCMBuffer
     var bufferB: AVAudioPCMBuffer
@@ -37,10 +37,13 @@ class AVAudioFileBufferer: FileBufferer {
         DispatchQueue.global(qos: .default).async {
             do {
                 //determine if final buffer
-                try self.file.read(into: self.currentDecodeBuffer, frameCount: self.bufferFrameLength)
-                self.lastFrameDecoded += self.bufferFrameLength
-                let lastBuffer = self.lastFrameDecoded >= UInt32(self.file.length)
-                self.audioModule.fileBuffererDecodeCallback(isFinalBuffer: lastBuffer)
+                if self.audioModule.currentFileBufferer! as! AVAudioFileBufferer == self {
+                    try self.file.read(into: self.currentDecodeBuffer, frameCount: self.bufferFrameLength)
+                    print("actual reading of file from completion has completed, about to call decode callback")
+                    self.lastFrameDecoded += self.bufferFrameLength
+                    let lastBuffer = self.lastFrameDecoded >= UInt32(self.file.length)
+                    self.audioModule.fileBuffererDecodeCallback(isFinalBuffer: lastBuffer)
+                }
             } catch {
                 print(error)
             }

@@ -33,22 +33,24 @@ class LibraryManagerSourceSelector: NSWindowController, NSTableViewDelegate {
     
     
     
-    func sourceSelectionDidChange() {
+    func sourceSelectionDidChange(row: Int) {
         print("doingus")
-        initializeForLibrary(library: self.sourceArrayController.selectedObjects[0] as! Library)
+        initializeForLibrary(library: (self.sourceArrayController.arrangedObjects as! [Library])[row])
     }
     
     
     func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
-        sourceSelectionDidChange()
+        sourceSelectionDidChange(row: row)
         return true
     }
     
     func initializeForLibrary(library: Library) {
-        libraryManagerView.subviews = [NSView]()
+        if libraryManagerView.subviews.count > 0 {
+            libraryManagerView.removeArrangedSubview(libraryManagerView.subviews[0])
+        }
         let newView = LibraryManagerViewController(nibName: "LibraryManagerViewController", bundle: nil)
         libraryManagerView.addSubview(newView!.view)
-        newView?.initializeForLibrary(library: library)
+        newView!.initializeForLibrary(library: library)
         self.currentLibrary = library
         libraryViews[library] = newView!
     }

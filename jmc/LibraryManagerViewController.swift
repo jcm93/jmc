@@ -71,6 +71,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate {
     }
     
     func initializeForLibrary(library: Library) {
+        print("init for \(library.name)")
         self.library = library
         sourceTitleLabel.stringValue = ("Information for \(library.name!):")
         sourceNameField.stringValue = library.name!

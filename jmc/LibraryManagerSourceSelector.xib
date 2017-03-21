@@ -36,6 +36,9 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="addSourceButtonPressed:" target="-2" id="FHG-9D-MMA"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lM2-H4-gFg">
                         <rect key="frame" x="53" y="19" width="25" height="27"/>

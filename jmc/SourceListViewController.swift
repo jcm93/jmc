@@ -458,6 +458,9 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         let sourceListNode = cellView.node
         let library = sourceListNode?.item.library
         library?.is_active = checkBoxState == NSOnState ? true : false
+        if mainWindowController?.currentTableViewController?.playlist == nil {
+            mainWindowController?.currentTableViewController?.initializeForLibrary()
+        }
     }
     
     func getNetworkPlaylist(_ id: Int) -> SourceListItem? {

@@ -37,6 +37,8 @@ class NewSourceSheetController: NSWindowController {
         if newSourcePathControl.url != nil {
             databaseManager.addNewSource(url: newSourcePathControl.url!)
         }
+        self.window?.close()
+        (NSApplication.shared().delegate as! AppDelegate).mainWindowController?.sourceListViewController?.createTree()
     }
     
     override func windowDidLoad() {

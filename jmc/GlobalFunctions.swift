@@ -49,6 +49,18 @@ var globalRootLibrary = {() -> Library? in
     }
 }()
 
+var globalRootLibrarySourceListItem = {() -> SourceListItem? in
+    let fetchReq = NSFetchRequest<NSFetchRequestResult>(entityName: "SourceListItem")
+    let predicate = NSPredicate(format: "library == %@", globalRootLibrary!)
+    fetchReq.predicate = predicate
+    do {
+        let result = try managedContext.fetch(fetchReq)[0] as! SourceListItem
+        return result
+    } catch {
+        return nil
+    }
+}()
+
 func getAllLibraries() -> [Library]? {
     let request = NSFetchRequest<Library>(entityName: "Library")
     do {
@@ -98,6 +110,7 @@ let DEFAULTS_PLAYLIST_SORT_DESCRIPTOR_STRING = "defaultPlaylistSortDescriptor"
 let DEFAULTS_LIBRARY_SORT_DESCRIPTOR_STRING = "defaultsLibrarySortDescriptor"
 let DEFAULTS_SHARING_STRING = "sharesLibrary"
 let DEFAULTS_IS_EQ_ENABLED_STRING = "isEQEnabled?"
+let DEFAULTS_WATCHES_DIRECTORIES_FOR_NEW_FILES = "watchesDirectories"
 
 //other constants
 var LIBRARY_MOVES_DESCRIPTION = "Added media will be moved into a subdirectory of this directory"

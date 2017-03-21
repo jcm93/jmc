@@ -262,6 +262,14 @@ class DatabaseManager: NSObject {
         library.library_location = url.absoluteString
         library.name = url.lastPathComponent
         library.parent = globalRootLibrary
+        library.is_active = true
+        let librarySourceListItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
+        librarySourceListItem.library = library
+        librarySourceListItem.name = library.name
+        librarySourceListItem.parent = globalRootLibrarySourceListItem
+        let newNode = SourceListNode(item: librarySourceListItem)
+        newNode.parent = globalRootLibrarySourceListItem?.node
+        globalRootLibrarySourceListItem?.node?.children.append(newNode)
         let mediaURLs = getMediaURLsInDirectoryURLs([url]).0
         addTracksFromURLs(mediaURLs, to: library)
     }
@@ -746,7 +754,8 @@ class DatabaseManager: NSObject {
                     visualUpdateHandler!.initialize(count: count)
                 }
             }
-            let countUpdate = count / 1000
+            var countUpdate = count / 1000
+            if countUpdate == 0 {countUpdate = 1}
             var numTracksChecked = 0
             var missingTracks = [Track]()
             for track in tracks {
