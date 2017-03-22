@@ -48,11 +48,16 @@ class LibraryManagerSourceSelector: NSWindowController, NSTableViewDelegate {
         if libraryManagerView.subviews.count > 0 {
             libraryManagerView.removeArrangedSubview(libraryManagerView.subviews[0])
         }
-        let newView = LibraryManagerViewController(nibName: "LibraryManagerViewController", bundle: nil)
-        libraryManagerView.addSubview(newView!.view)
-        newView!.initializeForLibrary(library: library)
-        self.currentLibrary = library
-        libraryViews[library] = newView!
+        if libraryViews[library] == nil {
+            let newView = LibraryManagerViewController(nibName: "LibraryManagerViewController", bundle: nil)
+            libraryManagerView.addSubview(newView!.view)
+            newView!.initializeForLibrary(library: library)
+            self.currentLibrary = library
+            libraryViews[library] = newView!
+        } else {
+            libraryManagerView.addSubview(libraryViews[library]!.view)
+            self.currentLibrary = library
+        }
     }
     
     override func windowDidLoad() {

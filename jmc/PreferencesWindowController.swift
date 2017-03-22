@@ -49,6 +49,7 @@ class PreferencesWindowController: NSWindowController {
     
     @IBOutlet weak var browseButton: NSButton!
     
+    
     @IBAction func organizationCheckAction(_ sender: AnyObject) {
         if organizeLibraryCheck.state == NSOnState {
             moveRadio.isEnabled = true
@@ -80,8 +81,8 @@ class PreferencesWindowController: NSWindowController {
     func initializeFields() {
         let defaults = UserDefaults.standard
         
-        libraryNameField.stringValue = defaults.string(forKey: DEFAULTS_LIBRARY_NAME_STRING) != nil ? defaults.string(forKey: DEFAULTS_LIBRARY_NAME_STRING)! : ""
-        let organization = defaults.integer(forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
+        libraryNameField.stringValue = globalRootLibrary?.name ?? ""
+        let organization = globalRootLibrary?.organization_type as! Int
         if organization == NO_ORGANIZATION_TYPE {
             organizeLibraryCheck.state = NSOffState
             mediaFolderPath.stringValue = ""
@@ -113,7 +114,7 @@ class PreferencesWindowController: NSWindowController {
         let checkDir = defaults.bool(forKey: DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING)
         checkAlbumDirectoryCheck.state = checkDir == true ? NSOnState : NSOffState
         
-        mediaFolderPath.stringValue = defaults.string(forKey: DEFAULTS_LIBRARY_PATH_STRING)!
+        mediaFolderPath.stringValue = globalRootLibrary!.library_location!
         
         
     }
@@ -125,7 +126,7 @@ class PreferencesWindowController: NSWindowController {
     @IBAction func okAction(_ sender: AnyObject) {
         print("ok action on preferences")
         let defaults = UserDefaults.standard
-        defaults.set(libraryNameField.stringValue, forKey: DEFAULTS_LIBRARY_NAME_STRING)
+        globalRootLibrary?.name = libraryNameField.stringValue
         let sharingBool = sharingCheck.state != 0
         let artBool = checkEmbeddedArtworkCheck.state != 0
         let artDirectoryBool = checkAlbumDirectoryCheck.state != 0
@@ -133,15 +134,15 @@ class PreferencesWindowController: NSWindowController {
         defaults.set(artBool, forKey: DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING)
         defaults.set(artDirectoryBool, forKey: DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING)
         if organizeLibraryCheck.state == NSOffState {
-            defaults.set(NO_ORGANIZATION_TYPE, forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
+            globalRootLibrary?.organization_type = NO_ORGANIZATION_TYPE as NSNumber
         } else {
             if mediaFolderPath.stringValue != "/" && mediaFolderPath.stringValue != "" {
-                defaults.set(mediaFolderPath.stringValue, forKey: DEFAULTS_LIBRARY_PATH_STRING)
+                globalRootLibrary?.library_location = URL(fileURLWithPath: mediaFolderPath.stringValue).absoluteString
             }
             if moveRadio.state == NSOnState {
-                defaults.set(MOVE_ORGANIZATION_TYPE, forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
+                globalRootLibrary?.organization_type = MOVE_ORGANIZATION_TYPE as NSNumber
             } else if copyRadio.state == NSOnState {
-                defaults.set(COPY_ORGANIZATION_TYPE, forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
+                globalRootLibrary?.organization_type = COPY_ORGANIZATION_TYPE as NSNumber
             }
         }
         self.window?.close()

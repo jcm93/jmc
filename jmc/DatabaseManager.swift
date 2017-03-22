@@ -171,7 +171,7 @@ class DatabaseManager: NSObject {
     
     //OK -- discrete
     func moveFileAfterEdit(_ track: Track) {
-        let organizationType = UserDefaults.standard.object(forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING) as! Int
+        let organizationType = track.library?.organization_type as! Int
         guard organizationType != NO_ORGANIZATION_TYPE else {return}
         let artistFolderName = track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING
         let albumFolderName = track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING
@@ -257,12 +257,16 @@ class DatabaseManager: NSObject {
         return (mediaURLs, errors)
     }
     
-    func addNewSource(url: URL) {
+    func addNewSource(url: URL, organize: Bool) {
         let library = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
         library.library_location = url.absoluteString
         library.name = url.lastPathComponent
         library.parent = globalRootLibrary
         library.is_active = true
+        library.renames_files = organize as NSNumber
+        library.organization_type = organize == true ? 2 as NSNumber : 0 as NSNumber
+        library.watches_directories = true
+        library.monitors_directories_for_new = true
         let librarySourceListItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         librarySourceListItem.library = library
         librarySourceListItem.name = library.name
@@ -293,6 +297,7 @@ class DatabaseManager: NSObject {
             let trackView = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: managedContext) as! TrackView
             trackView.track = track
             track.library = library
+            track.location = url.absoluteString
             var art: Data?
             track.sample_rate = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioSampleRate" as CFString) as? Int as NSNumber?
             track.date_added = Date()
@@ -437,7 +442,7 @@ class DatabaseManager: NSObject {
     
     func moveFileToAppropriateLocationForTrack(_ track: Track, currentURL: URL) -> URL? {
         let fileName = {() -> String in
-            switch UserDefaults.standard.bool(forKey: DEFAULTS_RENAMES_FILES_STRING) {
+            switch track.library?.renames_files as! Bool {
             case true:
                 return validateStringForFilename(self.formFilenameForTrack(track))
             default:
@@ -446,7 +451,7 @@ class DatabaseManager: NSObject {
         }()
         var albumDirectoryURL: URL?
         var fileURL: URL?
-        let orgType = UserDefaults.standard.object(forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)! as! Int
+        let orgType = track.library?.organization_type! as! Int
         if orgType == NO_ORGANIZATION_TYPE {
             track.location = currentURL.deletingLastPathComponent().appendingPathComponent(fileName).absoluteString
             fileURL = currentURL
@@ -477,7 +482,7 @@ class DatabaseManager: NSObject {
     
     func moveFileForNetworkTrackToAppropriateLocationWithData(_ track: Track, data: Data) -> Bool {
         let fileName = {() -> String in
-            switch UserDefaults.standard.bool(forKey: DEFAULTS_RENAMES_FILES_STRING) {
+            switch track.library?.renames_files as! Bool {
             case true:
                 return self.formFilenameForTrack(track)
             default:
@@ -486,7 +491,7 @@ class DatabaseManager: NSObject {
         }()
         var albumDirectoryURL: URL?
         var fileURL: URL?
-        let libraryPathURL = URL(fileURLWithPath: UserDefaults.standard.object(forKey: DEFAULTS_LIBRARY_PATH_STRING) as! String)
+        let libraryPathURL = URL(fileURLWithPath: track.library!.library_location!)
         let albumArtist = validateStringForFilename(track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING)
         let album = validateStringForFilename(track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING)
         albumDirectoryURL = libraryPathURL.appendingPathComponent(albumArtist).appendingPathComponent(album)
@@ -852,7 +857,7 @@ class DatabaseManager: NSObject {
     
     func saveStreamingNetworkTrack(_ track: Track, data: Data) {
         let fileName = {() -> String in
-            switch UserDefaults.standard.bool(forKey: DEFAULTS_RENAMES_FILES_STRING) {
+            switch globalRootLibrary?.renames_files as! Bool {
             case true:
                 return self.formFilenameForTrack(track)
             default:
@@ -861,7 +866,7 @@ class DatabaseManager: NSObject {
         }()
         var albumDirectoryURL: URL?
         var fileURL: URL?
-        let libraryPathURL = URL(fileURLWithPath: UserDefaults.standard.object(forKey: DEFAULTS_LIBRARY_PATH_STRING) as! String)
+        let libraryPathURL = URL(fileURLWithPath: globalRootLibrary!.library_location!)
         let albumArtist = track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING
         let album = track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING
         albumDirectoryURL = libraryPathURL.appendingPathComponent("tmp").appendingPathComponent(albumArtist).appendingPathComponent(album)

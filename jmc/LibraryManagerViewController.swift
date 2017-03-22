@@ -33,6 +33,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate {
     
     var fileManager = FileManager.default
     var databaseManager = DatabaseManager()
+    var locationManager = (NSApplication.shared().delegate as! AppDelegate).locationManager!
     var library: Library?
     var missingTracks: [Track]?
     var newMediaURLs: [URL]?
@@ -53,10 +54,31 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate {
     @IBOutlet weak var sourceMonitorStatusTextField: NSTextField!
     @IBOutlet weak var sourceLocationField: NSTextField!
     
+    @IBOutlet weak var automaticallyAddFilesCheck: NSButton!
+    @IBOutlet weak var enableDirectoryMonitoringCheck: NSButton!
     @IBAction func removeSourceButtonPressed(_ sender: Any) {
         
     }
     
+    @IBAction func enableMonitoringCheckAction(_ sender: Any) {
+        if enableDirectoryMonitoringCheck.state == NSOnState {
+            library?.watches_directories = true as NSNumber
+        } else {
+            library?.watches_directories = false as NSNumber
+        }
+        initializeForLibrary(library: library!)
+        self.locationManager.reinitializeEventStream()
+        
+    }
+    @IBAction func automaticallyAddCheckAction(_ sender: Any) {
+        library?.monitors_directories_for_new = automaticallyAddFilesCheck.state == NSOnState ? true as NSNumber : false as NSNumber
+    }
+    @IBAction func sourceNameWasEdited(_ sender: Any) {
+        if let textField = sender as? NSTextField, textField.stringValue != "" {
+            library?.name = textField.stringValue
+            initializeForLibrary(library: library!)
+        }
+    }
     @IBAction func changeSourceLocationButtonPressed(_ sender: Any) {
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = false
@@ -85,7 +107,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate {
             sourceLocationStatusImage.image = NSImage(named: "NSStatusUnavailable")
             sourceLocationStatusTextField.stringValue = "Source cannot be located."
         }
-        if let session = DASessionCreate(kCFAllocatorDefault) {
+        if let session = DASessionCreate(kCFAllocatorDefault), library.watches_directories == true {
             var volumeURL: AnyObject?
             do {
                 try (sourceLocationURL as NSURL).getResourceValue(&volumeURL, forKey: URLResourceKey.volumeURLKey)
@@ -112,10 +134,16 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate {
                             sourceMonitorStatusTextField.stringValue = "Directory watch status unknown!"
                         }
                     }
+                    automaticallyAddFilesCheck.isEnabled = true
                 }
             } catch {
                 print(error)
             }
+        } else {
+            enableDirectoryMonitoringCheck.state = NSOffState
+            sourceMonitorStatusTextField.stringValue = "Directory monitoring inactive."
+            sourceMonitorStatusImageView.image = NSImage(named: "NSStatusUnavailable")
+            automaticallyAddFilesCheck.isEnabled = false
         }
     }
     
@@ -154,6 +182,9 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate {
             self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
             self.trackLocationStatusText.stringValue = "\(self.missingTracks!.count) tracks not found."
             tracksNotFoundArrayController.content = trackNotFoundArray
+        } else {
+            self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusAvailable")
+            self.trackLocationStatusText.stringValue = "All tracks located."
         }
     }
     

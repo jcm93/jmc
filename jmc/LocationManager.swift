@@ -101,11 +101,12 @@ class LocationManager: NSObject {
         } else if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemCreated)) > 0 {
             print("item created")
         } else if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemRenamed)) > 0 {
-            let rootDirectoryPaths = activeMonitoringFileDescriptors.keys.filter({path.lowercased().hasPrefix($0)})
+            print("item renamed")
+            let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
             guard rootDirectoryPaths.count == 1 else {return}
             let rootDirectoryPath = rootDirectoryPaths.first!
             if withinDirRenameEvents[rootDirectoryPath]??.id == id - 1 {
-                //this is definitely the second half of another rename event
+                //this is definitely the second half of another rename event, which we may or may not care about
                 let firstEvent = withinDirRenameEvents[rootDirectoryPath]!
                 if firstEvent!.track != nil {
                     firstEvent!.track!.location = URL(fileURLWithPath: path).absoluteString
@@ -114,13 +115,12 @@ class LocationManager: NSObject {
             } else {
                 //either this location is valid and a new file was added, or...
                 if fileManager.fileExists(atPath: path) {
-                    if UserDefaults.standard.bool(forKey: DEFAULTS_WATCHES_DIRECTORIES_FOR_NEW_FILES) {
-                        let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
-                        databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library)
-                        //ignores errors :(
+                    let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
+                    if library.monitors_directories_for_new as! Bool {
+                        databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library) //ignores errors :(
                     }
                 } else {
-                    //...or this is the first half of a rename event
+                    //...or this is the first half of a rename event, which we may or may not care about
                     let track = {() -> Track? in
                         let fr = NSFetchRequest<Track>(entityName: "Track")
                         fr.predicate = NSPredicate(format: "location contains[c] %@", URL(fileURLWithPath: path).absoluteString)
@@ -140,7 +140,6 @@ class LocationManager: NSObject {
                     withinDirRenameEvents[rootDirectoryPath] = newFirstHalfEvent
                 }
             }
-            print("item renamed")
         }
     }
     
@@ -148,10 +147,17 @@ class LocationManager: NSObject {
         globalRootLibrary?.last_fs_event = FSEventStreamGetLatestEventId(self.eventStreamRef!) as NSNumber?
     }
     
+    func reinitializeEventStream() {
+        if eventStreamRef != nil {
+            closeEventStream(eventStream: self.eventStreamRef!)
+        }
+        initializeEventStream(libraries: getAllLibraries()!)
+    }
+    
     func initializeEventStream(libraries: [Library]) {
         let lastEventID = globalRootLibrary!.last_fs_event as! FSEventStreamEventId
         let urls = libraries.flatMap({ (library: Library) -> URL? in
-            if let url = URL(string: library.library_location!) {
+            if let url = URL(string: library.library_location!), library.watches_directories == true {
                 self.libraryURLDictionary[url] = library
                 return url
             } else {
@@ -167,15 +173,20 @@ class LocationManager: NSObject {
         let flag = kFSEventStreamCreateFlagIgnoreSelf | kFSEventStreamCreateFlagFileEvents | kFSEventStreamCreateFlagUseCFTypes | kFSEventStreamCreateFlagWatchRoot
         let pathsCFArrayWrapper = paths as CFArray
         var streamContext = FSEventStreamContext(version: 0, info: Unmanaged.passRetained(self).toOpaque(), retain: nil, release: nil, copyDescription: nil)
-        if let newEventStream = FSEventStreamCreate(kCFAllocatorDefault, callback, &streamContext, pathsCFArrayWrapper, FSEventStreamEventId(kFSEventStreamEventIdSinceNow), 1, FSEventStreamCreateFlags(flag)) {
-            for path in paths {
-                let fileDescriptor = open(path, O_RDONLY, 0)
-                activeMonitoringFileDescriptors[path] = fileDescriptor
+        if paths.count > 0 {
+            if let newEventStream = FSEventStreamCreate(kCFAllocatorDefault, callback, &streamContext, pathsCFArrayWrapper, FSEventStreamEventId(kFSEventStreamEventIdSinceNow), 1, FSEventStreamCreateFlags(flag)) {
+                for path in paths {
+                    let fileDescriptor = open(path, O_RDONLY, 0)
+                    activeMonitoringFileDescriptors[path] = fileDescriptor
+                }
+                let poop = CFRunLoopMode.defaultMode.rawValue
+                FSEventStreamScheduleWithRunLoop(newEventStream, CFRunLoopGetCurrent(), poop)
+                FSEventStreamStart(newEventStream)
+                self.eventStreamRef = newEventStream
+                print("event stream created")
+            } else {
+                print("event stream creation failure")
             }
-            let poop = CFRunLoopMode.defaultMode.rawValue
-            FSEventStreamScheduleWithRunLoop(newEventStream, CFRunLoopGetCurrent(), poop)
-            FSEventStreamStart(newEventStream)
-            self.eventStreamRef = newEventStream
         }
     }
     

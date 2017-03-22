@@ -211,7 +211,7 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
         let playlistPayloadDictionary = NSMutableDictionary()
         playlistPayloadDictionary["type"] = "payload"
         playlistPayloadDictionary["payload"] = "playlist"
-        playlistPayloadDictionary["library"] = UserDefaults.standard.string(forKey: DEFAULTS_LIBRARY_NAME_STRING)
+        playlistPayloadDictionary["library"] = globalRootLibrary?.name
         playlistPayloadDictionary["id"] = playlistID
         playlistPayloadDictionary["playlist"] = playlist
         var serializedDict: Data!
@@ -257,7 +257,7 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
     }
     
     func sendPeerLibraryName(_ peer: MCPeerID) {
-        let libraryName = UserDefaults.standard.string(forKey: DEFAULTS_LIBRARY_NAME_STRING)
+        let libraryName = globalRootLibrary?.name
         let libraryNameDictionary = NSMutableDictionary()
         libraryNameDictionary["type"] = "payload"
         libraryNameDictionary["payload"] = "name"

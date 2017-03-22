@@ -172,8 +172,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             initializeLibraryAndShowMainWindow()
         }
         self.locationManager = LocationManager()
-        let array = ["/Volumes/Macintosh HD/CS/test"]
-        self.locationManager?.createEventStream(paths: array, lastID: nil)
+        self.locationManager?.initializeEventStream(libraries: getAllLibraries()!)
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

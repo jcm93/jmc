@@ -9,7 +9,10 @@
         <customObject id="-2" userLabel="File's Owner" customClass="NewSourceSheetController" customModule="jmc" customModuleProvider="target">
             <connections>
                 <outlet property="addSourceButton" destination="HhI-JF-9tK" id="t6Z-9v-wnE"/>
+                <outlet property="cancelButton" destination="7dr-98-3ep" id="aXc-V6-IRr"/>
+                <outlet property="importAsIsRadio" destination="M9d-Tc-iOo" id="lRj-4V-gbs"/>
                 <outlet property="newSourcePathControl" destination="Zfp-IY-l1h" id="woY-xf-k8a"/>
+                <outlet property="organizeRadio" destination="g8V-R7-f9c" id="hw3-pu-zdo"/>
                 <outlet property="sourceAddProgressBar" destination="ohI-Wm-wTG" id="W81-eM-iZ0"/>
                 <outlet property="sourceAddStatusText" destination="9yL-qZ-y54" id="WYr-EM-pPH"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
@@ -82,6 +85,36 @@ DQ
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7dr-98-3ep">
+                        <rect key="frame" x="216" y="13" width="104" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7Bp-QP-oSD">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="cancelButtonPressed:" target="-2" id="ZDh-Yv-NNx"/>
+                        </connections>
+                    </button>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g8V-R7-f9c">
+                        <rect key="frame" x="19" y="79" width="117" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="radio" title="Organize media" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Gum-th-U2X">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M9d-Tc-iOo">
+                        <rect key="frame" x="141" y="79" width="96" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="radio" title="Import as-is" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="AeB-UK-mLp">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
                 </subviews>
             </view>
             <connections>

@@ -63,6 +63,7 @@ var globalRootLibrarySourceListItem = {() -> SourceListItem? in
 
 func getAllLibraries() -> [Library]? {
     let request = NSFetchRequest<Library>(entityName: "Library")
+    request.predicate = NSPredicate(format: "parent != nil")
     do {
         let result = try managedContext.fetch(request)
         return result
@@ -91,16 +92,12 @@ var artistSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_art
 var artistSortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "artist_order", ascending: true)
 var artistDescendingSortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "artist_descending_order", ascending: true)
 
-//mark user defaults
+//global user defaults
 let DEFAULTS_SAVED_COLUMNS_STRING = "savedColumns"
-let DEFAULTS_LIBRARY_PATH_STRING = "libraryPath"
-let DEFAULTS_LIBRARY_NAME_STRING = "libraryName"
 let DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING = "checkForArt"
 let DEFAULTS_DATE_SORT_GRANULARITY = 500.0
-let DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING = "organizationType"
 let DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING = "checkEmbeddedArtwork"
 let DEFAULTS_ARE_INITIALIZED_STRING = "importantDefaultsAreInitialized"
-let DEFAULTS_RENAMES_FILES_STRING = "renamesFiles"
 let DEFAULTS_SHUFFLE_STRING = "shuffle"
 let DEFAULTS_REPEAT_STRING = "willRepeat"
 let DEFAULTS_NEW_NETWORK_TRACK = "newNetworkTrack"
@@ -110,7 +107,18 @@ let DEFAULTS_PLAYLIST_SORT_DESCRIPTOR_STRING = "defaultPlaylistSortDescriptor"
 let DEFAULTS_LIBRARY_SORT_DESCRIPTOR_STRING = "defaultsLibrarySortDescriptor"
 let DEFAULTS_SHARING_STRING = "sharesLibrary"
 let DEFAULTS_IS_EQ_ENABLED_STRING = "isEQEnabled?"
-let DEFAULTS_WATCHES_DIRECTORIES_FOR_NEW_FILES = "watchesDirectories"
+
+//library-specific user defaults
+//destroy all of these, make them attributes of library in CD
+/*let DEFAULTS_WATCHES_DIRECTORIES_FOR_NEW_FILES = "watchesDirectories"
+let DEFAULTS_MONITORS_DIRECTORIES_GENERALLY = "monitorsDirectories"
+let DEFAULTS_RENAMES_FILES_STRING = "renamesFiles"
+let DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING = "organizationType"
+let DEFAULTS_LIBRARY_PATH_STRING = "libraryPath"
+let DEFAULTS_LIBRARY_NAME_STRING = "libraryName"
+*/
+
+
 
 //other constants
 var LIBRARY_MOVES_DESCRIPTION = "Added media will be moved into a subdirectory of this directory"

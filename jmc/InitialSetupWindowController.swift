@@ -99,7 +99,7 @@ class InitialSetupWindowController: NSWindowController {
         print("nil library")
         //create glob root library
         let newLibrary = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
-        newLibrary.name = NSUserName() + "'s library"
+        newLibrary.name = NSFullUserName() + "'s library"
         newLibrary.parent = nil
         //create actual library
         let newActualLibrary = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
@@ -107,6 +107,8 @@ class InitialSetupWindowController: NSWindowController {
         newActualLibrary.name = libraryPathControl.url?.lastPathComponent
         newActualLibrary.parent = newLibrary
         newActualLibrary.is_active = true
+        newActualLibrary.renames_files = modifyMetadata as NSNumber
+        newActualLibrary.organization_type = organizationType.rawValue as NSNumber
         let newActualLibrarySLI = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         newActualLibrarySLI.library = newActualLibrary
         newActualLibrarySLI.name = newActualLibrary.name
@@ -183,13 +185,11 @@ class InitialSetupWindowController: NSWindowController {
     
     @IBAction func OKPressed(_ sender: AnyObject) {
         UserDefaults.standard.set(true, forKey: DEFAULTS_ARE_INITIALIZED_STRING)
-        UserDefaults.standard.set(modifyMetadata, forKey: DEFAULTS_RENAMES_FILES_STRING)
-        UserDefaults.standard.set(organizationType.rawValue, forKey: DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING)
-        UserDefaults.standard.set(directoryURL?.path, forKey: DEFAULTS_LIBRARY_PATH_STRING)
+
         UserDefaults.standard.set(false, forKey: DEFAULTS_SHUFFLE_STRING)
         UserDefaults.standard.set(1.0, forKey: DEFAULTS_VOLUME_STRING)
         UserDefaults.standard.set(1, forKey: DEFAULTS_IS_EQ_ENABLED_STRING)
-        UserDefaults.standard.set("\(NSFullUserName())'s Library", forKey: DEFAULTS_LIBRARY_NAME_STRING)
+        
         UserDefaults.standard.set(true, forKey: DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING)
         UserDefaults.standard.set(true, forKey: DEFAULTS_SHARING_STRING)
         if self.library == nil {
