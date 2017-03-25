@@ -37,7 +37,6 @@ class LocationManager: NSObject {
     let callback: @convention(c) (OpaquePointer, Optional<UnsafeMutableRawPointer>, Int, UnsafeMutableRawPointer, Optional<UnsafePointer<UInt32>>, Optional<UnsafePointer<UInt64>>) -> () = {
         (streamRef: ConstFSEventStreamRef, clientCallBackInfo: UnsafeMutableRawPointer?, numEvents: Int, eventPaths: UnsafeMutableRawPointer, eventFlags: UnsafePointer<FSEventStreamEventFlags>?, eventIds: UnsafePointer<FSEventStreamEventId>?) -> () in
         let currentLocationManagerInstance: LocationManager = Unmanaged<LocationManager>.fromOpaque(clientCallBackInfo!).takeUnretainedValue()
-        currentLocationManagerInstance.updateLastEventID()
         let pathsArray = Unmanaged<NSArray>.fromOpaque(eventPaths).takeUnretainedValue()
         print("number of events: \(numEvents)")
         print("")
@@ -47,11 +46,13 @@ class LocationManager: NSObject {
             print("path: \(pathsArray[i])")
             print("eventID: \(eventIds![i])")
             print("")
+            currentLocationManagerInstance.updateLastEventID()
         }
     }
     
     func handleEvent(path: String, flags: FSEventStreamEventFlags, id: UInt64) {
         if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagRootChanged)) > 0 {
+            print("root changed")
             //relocate directory
             
             let fileDescriptor = activeMonitoringFileDescriptors[path]!
@@ -61,10 +62,10 @@ class LocationManager: NSObject {
             
             //change the library's library_location, update the activeMonitoringURLs and libraryURLDictionary, posix close open file descriptors, then re-initialize the stream
             
-            let oldURL = URL(fileURLWithPath: path)
+            let oldURL = URL(fileURLWithPath: "\(path)/")
             let library = libraryURLDictionary[oldURL]
             let newURL = URL(fileURLWithPath: newPathString)
-            library?.library_location = newURL.absoluteString
+            changeLibraryLocation(library: library!, newLocation: newURL)
             
             //libraryURLDictionary
             
@@ -85,9 +86,7 @@ class LocationManager: NSObject {
             
             //re-initialize stream
             
-            closeEventStream(eventStream: self.eventStreamRef!)
-            let libraries = getAllLibraries()!
-            initializeEventStream(libraries: libraries)
+            reinitializeEventStream()
         }
         if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagMustScanSubDirs)) > 0 {
             //verify the directory
@@ -143,10 +142,6 @@ class LocationManager: NSObject {
         }
     }
     
-    func updateLastEventID() {
-        globalRootLibrary?.last_fs_event = FSEventStreamGetLatestEventId(self.eventStreamRef!) as NSNumber?
-    }
-    
     func reinitializeEventStream() {
         if eventStreamRef != nil {
             closeEventStream(eventStream: self.eventStreamRef!)
@@ -154,8 +149,12 @@ class LocationManager: NSObject {
         initializeEventStream(libraries: getAllLibraries()!)
     }
     
+    func updateLastEventID() {
+        globalRootLibrary?.last_fs_event = FSEventStreamGetLatestEventId(self.eventStreamRef!) as NSNumber?
+    }
+    
     func initializeEventStream(libraries: [Library]) {
-        let lastEventID = globalRootLibrary!.last_fs_event as! FSEventStreamEventId
+        let lastEventID = globalRootLibrary!.last_fs_event as? FSEventStreamEventId
         let urls = libraries.flatMap({ (library: Library) -> URL? in
             if let url = URL(string: library.library_location!), library.watches_directories == true {
                 self.libraryURLDictionary[url] = library
@@ -173,8 +172,9 @@ class LocationManager: NSObject {
         let flag = kFSEventStreamCreateFlagIgnoreSelf | kFSEventStreamCreateFlagFileEvents | kFSEventStreamCreateFlagUseCFTypes | kFSEventStreamCreateFlagWatchRoot
         let pathsCFArrayWrapper = paths as CFArray
         var streamContext = FSEventStreamContext(version: 0, info: Unmanaged.passRetained(self).toOpaque(), retain: nil, release: nil, copyDescription: nil)
+        let lastEventID = lastID ?? FSEventStreamEventId(kFSEventStreamEventIdSinceNow)
         if paths.count > 0 {
-            if let newEventStream = FSEventStreamCreate(kCFAllocatorDefault, callback, &streamContext, pathsCFArrayWrapper, FSEventStreamEventId(kFSEventStreamEventIdSinceNow), 1, FSEventStreamCreateFlags(flag)) {
+            if let newEventStream = FSEventStreamCreate(kCFAllocatorDefault, callback, &streamContext, pathsCFArrayWrapper, lastEventID, 1, FSEventStreamCreateFlags(flag)) {
                 for path in paths {
                     let fileDescriptor = open(path, O_RDONLY, 0)
                     activeMonitoringFileDescriptors[path] = fileDescriptor

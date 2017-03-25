@@ -193,6 +193,12 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         return index
     }
     
+    func reloadData() {
+        let selection = sourceList.selectedRowIndexes
+        sourceList.reloadData()
+        sourceList.selectRowIndexes(selection, byExtendingSelection: false)
+    }
+    
     func createPlaylistFolder(_ nodes: [SourceListNode]?) {
         let playlistFolderItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         playlistFolderItem.is_folder = true
@@ -241,7 +247,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             index += 1
         }
         sortTree()
-        sourceList.reloadData()
+        reloadData()
     }
     
     func createPlaylist(_ tracks: [Int]?, smart_criteria: SmartCriteria?) {
@@ -285,7 +291,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         self.rootNode?.children[1].children.append(newSourceListNode)
         sharedLibraryIdentifierDictionary[peer] = newSourceListNode
         DispatchQueue.main.async {
-            self.sourceList.reloadData()
+            self.reloadData()
         }
         print("wrote \(peer) to shared library identifier dictionary")
     }
@@ -330,7 +336,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         } catch {
             print(error)
         }
-        sourceList.reloadData()
+        self.reloadData()
     }
     
     func addSourcesForNetworkedLibrary(_ sourceData: [NSDictionary], peer: MCPeerID) {
@@ -374,7 +380,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             playlistsItemNode.children.append(sourceNode)
         }
         DispatchQueue.main.async {
-            self.sourceList.reloadData()
+            self.reloadData()
         }
     }
     
@@ -384,6 +390,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             return false
         } else if source.children?.count > 0 && source.library != nil {
             return true
+        } else if source.library != nil && !libraryIsAvailable(library: source.library!) {
+            return false
         } else if source.children?.count > 0 && source.is_folder != true {
             return false
         } else {
@@ -435,11 +443,18 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
                 view.textField?.isEditable = false
                 return view
             } else {
-                let view = outlineView.make(withIdentifier: "MasterPlaylistCell", owner: self) as! SourceListCellView
-                view.node = source
-                view.textField?.stringValue = source.item.name!
-                view.textField?.isEditable = false
-                return view
+                if libraryIsAvailable(library: source.item.library!) {
+                    let view = outlineView.make(withIdentifier: "MasterPlaylistCell", owner: self) as! SourceListCellView
+                    view.node = source
+                    view.textField?.stringValue = source.item.library!.name ?? ""
+                    view.textField?.isEditable = false
+                    return view
+                } else {
+                    let view = outlineView.make(withIdentifier: "MasterPlaylistCellDisabled", owner: self) as! SourceListCellView
+                    view.node = source
+                    view.textField?.stringValue = source.item.library!.name ?? ""
+                    return view
+                }
             }
         } else {
             let view = outlineView.make(withIdentifier: "PlaylistCell", owner: self) as! SourceListCellView
@@ -546,7 +561,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             }
             makeNodesSubnodesOfNode(draggedNodes!, parentNode: item as! SourceListNode, index: fixedIndex)
             draggedNodes = nil
-            sourceList.reloadData()
+            self.reloadData()
             return true
         } else if info.draggingPasteboard().data(forType: "Track") != nil {
             print("doing stuff")

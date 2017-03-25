@@ -449,7 +449,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                 } catch {
                     return [Library]()
                 }
-            }()
+                }().filter({(library: Library) in return libraryIsAvailable(library: library)})
             trackViewArrayController.fetchPredicate = NSPredicate(format: "track.library in %@", activeLibraries)
         }
     }

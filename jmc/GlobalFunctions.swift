@@ -183,6 +183,31 @@ func validateStringForFilename(_ string: String) -> String {
     return newString
 }
 
+func libraryIsAvailable(library: Library) -> Bool {
+    let fileManager = FileManager.default
+    let libraryPath = URL(string: library.library_location!)!.path
+    var isDirectory = ObjCBool(booleanLiteral: false)
+    if fileManager.fileExists(atPath: libraryPath, isDirectory: &isDirectory) && isDirectory.boolValue {
+        library.is_available = true
+        return true
+    } else {
+        library.is_available = false
+        return false
+    }
+}
+
+func changeLibraryLocation(library: Library, newLocation: URL) {
+    let oldPath = URL(string: library.library_location!)!.absoluteString
+    let newPath = newLocation.absoluteString
+    var badLocationCount = 0
+    for track in (library.tracks! as! Set<Track>) {
+        guard track.location!.hasPrefix(oldPath) else {badLocationCount += 1; continue}
+        track.location = track.location?.replacingOccurrences(of: oldPath, with: newPath, options: .anchored, range: nil)
+    }
+    print("number of invalid locations: \(badLocationCount)")
+    library.library_location = newLocation.absoluteString
+}
+
 func getImageExtension(_ uti: CFString) -> String? {
     if UTTypeConformsTo(uti, kUTTypeImage) {
         if UTTypeConformsTo(uti, kUTTypeJPEG) {

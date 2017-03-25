@@ -212,8 +212,71 @@
                                                     <outlet property="textField" destination="6ee-9J-eFa" id="Dua-wd-FkA"/>
                                                 </connections>
                                             </tableCellView>
-                                            <tableCellView identifier="SmartPlaylistCell" id="Mcv-Eg-DSQ" customClass="SourceListCellView" customModule="jmc" customModuleProvider="target">
+                                            <tableCellView identifier="MasterPlaylistCellDisabled" id="LSn-2b-aog" customClass="SourceListCellView" customModule="jmc" customModuleProvider="target">
                                                 <rect key="frame" x="1" y="77" width="264" height="17"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <imageView ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="stS-ty-3x5">
+                                                        <rect key="frame" x="24" y="0.0" width="17" height="17"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="17" id="T2D-0v-766"/>
+                                                            <constraint firstAttribute="width" constant="17" id="wSf-CX-leS"/>
+                                                        </constraints>
+                                                        <imageCell key="cell" enabled="NO" refusesFirstResponder="YES" imageScaling="proportionallyDown" image="Master Library" id="cIq-3b-KZP"/>
+                                                    </imageView>
+                                                    <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T1a-RQ-kYh">
+                                                        <rect key="frame" x="46" y="0.0" width="120" height="17"/>
+                                                        <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Master Playlist Cell" id="djp-HJ-Qua">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                        <connections>
+                                                            <binding destination="LSn-2b-aog" name="value" keyPath="objectValue.item.name" id="j9S-Ey-esD"/>
+                                                        </connections>
+                                                    </textField>
+                                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="Zsh-bp-LZy">
+                                                        <rect key="frame" x="246" y="1" width="15" height="15"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="15" id="Yrf-5b-eW4"/>
+                                                            <constraint firstAttribute="height" constant="15" id="lCa-M7-Bzi"/>
+                                                        </constraints>
+                                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAdvanced" imagePosition="only" alignment="center" enabled="NO" imageScaling="proportionallyUpOrDown" inset="2" id="0aa-k1-Rm5">
+                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                    </button>
+                                                    <button ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i7p-C7-Fd1">
+                                                        <rect key="frame" x="1" y="-2" width="19" height="20"/>
+                                                        <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" controlSize="small" enabled="NO" state="on" inset="2" id="Peg-Sq-MNj">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="smallSystem"/>
+                                                        </buttonCell>
+                                                        <connections>
+                                                            <action selector="checkBoxPressed:" target="-2" id="S4J-Gb-sl1"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="Zsh-bp-LZy" secondAttribute="trailing" constant="3" id="5Nx-9d-Yty"/>
+                                                    <constraint firstItem="Zsh-bp-LZy" firstAttribute="top" secondItem="LSn-2b-aog" secondAttribute="top" constant="1" id="Eht-sc-QdU"/>
+                                                    <constraint firstItem="T1a-RQ-kYh" firstAttribute="leading" secondItem="stS-ty-3x5" secondAttribute="trailing" constant="7" id="FlR-Jw-tO2"/>
+                                                    <constraint firstItem="T1a-RQ-kYh" firstAttribute="leading" secondItem="stS-ty-3x5" secondAttribute="trailing" constant="7" id="IjH-fu-71H"/>
+                                                    <constraint firstItem="stS-ty-3x5" firstAttribute="centerY" secondItem="LSn-2b-aog" secondAttribute="centerY" id="LqT-gf-WJA"/>
+                                                    <constraint firstItem="i7p-C7-Fd1" firstAttribute="leading" secondItem="LSn-2b-aog" secondAttribute="leading" constant="4" id="ViC-oh-ogo"/>
+                                                    <constraint firstItem="stS-ty-3x5" firstAttribute="top" secondItem="T1a-RQ-kYh" secondAttribute="top" id="YNT-hC-O3Y"/>
+                                                    <constraint firstItem="Zsh-bp-LZy" firstAttribute="leading" secondItem="T1a-RQ-kYh" secondAttribute="trailing" constant="3" id="aP6-gG-m7v"/>
+                                                    <constraint firstItem="stS-ty-3x5" firstAttribute="leading" secondItem="i7p-C7-Fd1" secondAttribute="trailing" constant="6" id="dza-Kb-sVi"/>
+                                                    <constraint firstItem="i7p-C7-Fd1" firstAttribute="top" secondItem="LSn-2b-aog" secondAttribute="top" constant="2" id="gfn-GV-w1y"/>
+                                                    <constraint firstItem="stS-ty-3x5" firstAttribute="leading" secondItem="i7p-C7-Fd1" secondAttribute="trailing" constant="6" id="nMI-yU-t9E"/>
+                                                </constraints>
+                                                <connections>
+                                                    <outlet property="imageView" destination="stS-ty-3x5" id="tH8-UO-QeA"/>
+                                                    <outlet property="textField" destination="T1a-RQ-kYh" id="cTP-SH-tBL"/>
+                                                </connections>
+                                            </tableCellView>
+                                            <tableCellView identifier="SmartPlaylistCell" id="Mcv-Eg-DSQ" customClass="SourceListCellView" customModule="jmc" customModuleProvider="target">
+                                                <rect key="frame" x="1" y="96" width="264" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView translatesAutoresizingMaskIntoConstraints="NO" id="beH-Cf-Y5y">
@@ -250,7 +313,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <tableCellView identifier="PlaylistFolderCell" id="7GM-a4-aIQ" customClass="SourceListCellView" customModule="jmc" customModuleProvider="target">
-                                                <rect key="frame" x="1" y="96" width="264" height="17"/>
+                                                <rect key="frame" x="1" y="115" width="264" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView translatesAutoresizingMaskIntoConstraints="NO" id="VXA-EN-ZCh">
@@ -287,7 +350,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <tableCellView identifier="NetworkLibraryCell" id="yxo-Wm-CPQ" customClass="SourceListCellView" customModule="jmc" customModuleProvider="target">
-                                                <rect key="frame" x="1" y="115" width="264" height="17"/>
+                                                <rect key="frame" x="1" y="134" width="264" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView translatesAutoresizingMaskIntoConstraints="NO" id="Izg-TZ-85e">
@@ -322,7 +385,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <tableCellView identifier="UnconfirmedNetworkLibraryCell" id="7FF-he-Du6" customClass="SourceListCellView" customModule="jmc" customModuleProvider="target">
-                                                <rect key="frame" x="1" y="134" width="264" height="17"/>
+                                                <rect key="frame" x="1" y="153" width="264" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView translatesAutoresizingMaskIntoConstraints="NO" id="MOd-A0-xgb">

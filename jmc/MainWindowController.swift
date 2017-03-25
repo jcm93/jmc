@@ -375,6 +375,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     func playSong(_ track: Track, row: Int?) {
+        //maybe not the best place to handle this, but must check somewhere.
+        guard fileManager.fileExists(atPath: URL(string: track.location!)!.path) else {sourceListViewController!.reloadData(); return}
         if track.is_network == true {
             self.is_streaming = true
             initializeInterfaceForNetworkTrack()
@@ -397,7 +399,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             unpause()
         }
         trackQueueViewController?.createPlayOrderArray(track, row: row)
-        //trackQueueViewController?.addTrackToQueue(track, context: currentSourceListItem!.name!, tense: 2)
         delegate?.audioModule.playImmediately(track.location!)
         trackQueueViewController?.changeCurrentTrack(track)
         paused = false

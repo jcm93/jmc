@@ -49,6 +49,7 @@
 		0D5A55E91DDBE16600E46F08 /* SourceListCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */; };
 		0D606EF61E7B4C21007AE152 /* FileBufferer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D606EF51E7B4C21007AE152 /* FileBufferer.swift */; };
 		0D606EF91E7B4DB0007AE152 /* AVAudioFileBufferer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */; };
+		0D60F5261E86F77900CA5420 /* TimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D60F5251E86F77900CA5420 /* TimeFormatter.swift */; };
 		0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */; };
 		0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */; };
 		0D76F6A81D24B9AC00C6E70F /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */; };
@@ -228,6 +229,7 @@
 		0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListCellView.swift; sourceTree = "<group>"; };
 		0D606EF51E7B4C21007AE152 /* FileBufferer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBufferer.swift; sourceTree = "<group>"; };
 		0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVAudioFileBufferer.swift; sourceTree = "<group>"; };
+		0D60F5251E86F77900CA5420 /* TimeFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeFormatter.swift; sourceTree = "<group>"; };
 		0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagEditorWindow.swift; sourceTree = "<group>"; };
 		0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagEditorWindow.xib; sourceTree = "<group>"; };
 		0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
@@ -409,7 +411,6 @@
 				0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */,
 				0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */,
 				0DE74A521D7D9457005211E6 /* SharedLibraryRequestHandler.swift */,
-				0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */,
 				0D79409E1D13D2D5008AA167 /* stupidPlaybackObserver.swift */,
 				0D116B841E5800FD00C759FD /* LocationManager.swift */,
 			);
@@ -419,6 +420,7 @@
 		0D01AD941D707CFB00F9211F /* Data Controllers and Interface Subclasses */ = {
 			isa = PBXGroup;
 			children = (
+				0D60F5271E86F78300CA5420 /* Formatters */,
 				0D299B211DF158A60009CF7A /* AdvancedFilterViewController.swift */,
 				0D299B221DF158A60009CF7A /* AdvancedFilterViewController.xib */,
 				0D388AAC1E1F2C8800D25A7D /* AddPlaylistButton.swift */,
@@ -434,9 +436,6 @@
 				0D299B111DF10FFF0009CF7A /* SourceListViewController.swift */,
 				0D299B121DF10FFF0009CF7A /* SourceListViewController.xib */,
 				0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */,
-				0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */,
-				0D3878BB1DD125E9004CC3C1 /* StupidNumberFormatter.swift */,
-				0D3878B91DD12530004CC3C1 /* SampleRateFormatter.swift */,
 				0D2E66461DC00B7F00CC174E /* TableColumnVisibilityController.swift */,
 				0DA8D03D1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift */,
 				0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */,
@@ -575,6 +574,18 @@
 				0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */,
 			);
 			name = Audio;
+			sourceTree = "<group>";
+		};
+		0D60F5271E86F78300CA5420 /* Formatters */ = {
+			isa = PBXGroup;
+			children = (
+				0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */,
+				0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */,
+				0D60F5251E86F77900CA5420 /* TimeFormatter.swift */,
+				0D3878BB1DD125E9004CC3C1 /* StupidNumberFormatter.swift */,
+				0D3878B91DD12530004CC3C1 /* SampleRateFormatter.swift */,
+			);
+			name = Formatters;
 			sourceTree = "<group>";
 		};
 		0DAB30841CFBA3340028928F = {
@@ -1046,6 +1057,7 @@
 				0DC2E8F51E0110D200671D83 /* MTTextFieldCell.swift in Sources */,
 				0D299B171DF111490009CF7A /* AlbumArtViewController.swift in Sources */,
 				0DEF66C31D383A8700EA3ADC /* ViewCoordinator.swift in Sources */,
+				0D60F5261E86F77900CA5420 /* TimeFormatter.swift in Sources */,
 				0D3878B81DD11926004CC3C1 /* BitRateFormatter.swift in Sources */,
 				0DD7D6DB1D3F3A350035BAD8 /* AlbumArtwork.swift in Sources */,
 				0D299B231DF158A60009CF7A /* AdvancedFilterViewController.swift in Sources */,

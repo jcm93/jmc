@@ -21,6 +21,10 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
             } else {
                 (cell as! NSImageCell).image = nil
             }
+        } else if (self.arrangedObjects as! [TrackView])[row].track?.library?.is_available == false {
+            (cell as! NSCell).isEnabled = false
+        } else {
+            (cell as! NSCell).isEnabled = true
         }
     }
     
@@ -102,7 +106,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
             tableView.setDropRow(-1, dropOperation: NSTableViewDropOperation.on)
             return .copy
         }
-        if draggedRowIndexes != nil && dropOperation == .above && tableView.sortDescriptors == [tableView.tableColumns[1].sortDescriptorPrototype!] && tableViewController?.playlist?.smart_criteria == nil {
+        if draggedRowIndexes != nil && dropOperation == .above && tableView.sortDescriptors.first == tableView.tableColumns[1].sortDescriptorPrototype! && tableViewController?.playlist?.smart_criteria == nil {
             return .move
         } else {
             return NSDragOperation()

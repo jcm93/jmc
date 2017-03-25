@@ -29,7 +29,7 @@ class NewMediaURL: NSObject {
     }
 }
 
-class LibraryManagerViewController: NSViewController, NSTableViewDelegate {
+class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTabViewDelegate {
     
     var fileManager = FileManager.default
     var databaseManager = DatabaseManager()
@@ -38,6 +38,8 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate {
     var missingTracks: [Track]?
     var newMediaURLs: [URL]?
 
+    @IBOutlet weak var findNewMediaTabItem: NSTabViewItem!
+    @IBOutlet weak var locationManagerTabItem: NSTabViewItem!
     @IBOutlet weak var sourceTableView: NSTableView!
     
     //data controllers
@@ -79,6 +81,18 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate {
             initializeForLibrary(library: library!)
         }
     }
+    
+    func tabView(_ tabView: NSTabView, shouldSelect tabViewItem: NSTabViewItem?) -> Bool {
+        if libraryIsAvailable(library: self.library!) {
+            return true
+        } else {
+            if tabViewItem! == locationManagerTabItem || tabViewItem! == findNewMediaTabItem {
+                return false
+            } else {
+                return true
+            }
+        }
+    }
     @IBAction func changeSourceLocationButtonPressed(_ sender: Any) {
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = false
@@ -87,7 +101,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate {
         openPanel.runModal()
         if openPanel.urls.count > 0 {
             let newURL = openPanel.urls[0]
-            self.library?.library_location = newURL.absoluteString
+            changeLibraryLocation(library: self.library!, newLocation: newURL)
             initializeForLibrary(library: self.library!)
         }
     }
@@ -100,47 +114,53 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate {
         let sourceLocationURL = URL(string: library.library_location!)!
         sourceLocationField.stringValue = sourceLocationURL.path
         var isDirectory = ObjCBool(Bool(0))
-        if fileManager.fileExists(atPath: sourceLocationURL.path, isDirectory: &isDirectory) && isDirectory.boolValue {
+        if libraryIsAvailable(library: library) {
             sourceLocationStatusImage.image = NSImage(named: "NSStatusAvailable")
             sourceLocationStatusTextField.stringValue = "Source is located and available."
+            enableDirectoryMonitoringCheck.isEnabled = true
+            if let session = DASessionCreate(kCFAllocatorDefault), library.watches_directories == true {
+                var volumeURL: AnyObject?
+                do {
+                    try (sourceLocationURL as NSURL).getResourceValue(&volumeURL, forKey: URLResourceKey.volumeURLKey)
+                    if let disk = DADiskCreateFromVolumePath(kCFAllocatorDefault, session, volumeURL as! NSURL) {
+                        let diskInformation = DADiskCopyDescription(disk) as! [String: AnyObject]
+                        if diskInformation[kDADiskDescriptionMediaRemovableKey as String] != nil {
+                            let removable = diskInformation[kDADiskDescriptionMediaRemovableKey as String] as! CFBoolean
+                            if removable == kCFBooleanTrue {
+                                sourceMonitorStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
+                                sourceMonitorStatusTextField.stringValue = "Directory is on an external drive. Directory monitoring is active, but if another computer has modified the contents of this directory, you may need to re-verify the locations of media, or re-scan the directory if new media has been added."
+                            }  else {
+                                sourceMonitorStatusImageView.image = NSImage(named: "NSStatusAvailable")
+                                sourceMonitorStatusTextField.stringValue = "Directory monitoring is active."
+                            }
+                        } else {
+                            if diskInformation[kDADiskDescriptionVolumeNetworkKey as String] != nil {
+                                let networkStatus = diskInformation[kDADiskDescriptionVolumeNetworkKey as String] as! CFBoolean
+                                if networkStatus == kCFBooleanTrue {
+                                    sourceMonitorStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
+                                    sourceMonitorStatusTextField.stringValue = "Directory is remote. Directory monitoring is active, but if another computer has modified the contents of this directory, you may need to re-verify the locations of media, or re-scan the directory if new media has been added."
+                                }
+                            } else {
+                                sourceMonitorStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
+                                sourceMonitorStatusTextField.stringValue = "Directory watch status unknown!"
+                            }
+                        }
+                        automaticallyAddFilesCheck.isEnabled = true
+                        automaticallyAddFilesCheck.state = library.monitors_directories_for_new == true ? NSOnState : NSOffState
+                    }
+                } catch {
+                    print(error)
+                }
+            } else {
+                enableDirectoryMonitoringCheck.state = NSOffState
+                sourceMonitorStatusTextField.stringValue = "Directory monitoring inactive."
+                sourceMonitorStatusImageView.image = NSImage(named: "NSStatusUnavailable")
+                automaticallyAddFilesCheck.isEnabled = false
+            }
         } else {
             sourceLocationStatusImage.image = NSImage(named: "NSStatusUnavailable")
             sourceLocationStatusTextField.stringValue = "Source cannot be located."
-        }
-        if let session = DASessionCreate(kCFAllocatorDefault), library.watches_directories == true {
-            var volumeURL: AnyObject?
-            do {
-                try (sourceLocationURL as NSURL).getResourceValue(&volumeURL, forKey: URLResourceKey.volumeURLKey)
-                if let disk = DADiskCreateFromVolumePath(kCFAllocatorDefault, session, volumeURL as! NSURL) {
-                    let diskInformation = DADiskCopyDescription(disk) as! [String: AnyObject]
-                    if diskInformation[kDADiskDescriptionMediaRemovableKey as String] != nil {
-                        let removable = diskInformation[kDADiskDescriptionMediaRemovableKey as String] as! CFBoolean
-                        if removable == kCFBooleanTrue {
-                            sourceMonitorStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
-                            sourceMonitorStatusTextField.stringValue = "Directory is on an external drive. Directory monitoring is active, but if another computer has modified the contents of this directory, you may need to re-verify the locations of media, or re-scan the directory if new media has been added."
-                        }  else {
-                            sourceMonitorStatusImageView.image = NSImage(named: "NSStatusAvailable")
-                            sourceMonitorStatusTextField.stringValue = "Directory monitoring is active."
-                        }
-                    } else {
-                        if diskInformation[kDADiskDescriptionVolumeNetworkKey as String] != nil {
-                            let networkStatus = diskInformation[kDADiskDescriptionVolumeNetworkKey as String] as! CFBoolean
-                            if networkStatus == kCFBooleanTrue {
-                                sourceMonitorStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
-                                sourceMonitorStatusTextField.stringValue = "Directory is remote. Directory monitoring is active, but if another computer has modified the contents of this directory, you may need to re-verify the locations of media, or re-scan the directory if new media has been added."
-                            }
-                        } else {
-                            sourceMonitorStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
-                            sourceMonitorStatusTextField.stringValue = "Directory watch status unknown!"
-                        }
-                    }
-                    automaticallyAddFilesCheck.isEnabled = true
-                }
-            } catch {
-                print(error)
-            }
-        } else {
-            enableDirectoryMonitoringCheck.state = NSOffState
+            enableDirectoryMonitoringCheck.isEnabled = false
             sourceMonitorStatusTextField.stringValue = "Directory monitoring inactive."
             sourceMonitorStatusImageView.image = NSImage(named: "NSStatusUnavailable")
             automaticallyAddFilesCheck.isEnabled = false
@@ -194,7 +214,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate {
         let trackContainer = (tracksNotFoundArrayController.arrangedObjects as! [TrackNotFound])[row]
         let track = trackContainer.track
         let fileDialog = NSOpenPanel()
-        fileDialog.allowsMultipleSelection = false
+        fileDialog.allowsMultipleSelection =  false
         fileDialog.canChooseDirectories = false
         fileDialog.allowedFileTypes = VALID_FILE_TYPES
         fileDialog.runModal()

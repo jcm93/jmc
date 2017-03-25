@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="LibraryTableViewController" customModule="minimalTunes" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="LibraryTableViewController" customModule="jmc" customModuleProvider="target">
             <connections>
                 <outlet property="columnVisibilityMenu" destination="H0B-Bf-KKf" id="R0f-rd-LmK"/>
                 <outlet property="tableView" destination="bX0-m9-9Ad" id="TyF-Pm-wnq"/>
@@ -24,7 +25,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="3922" height="512"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView canDrawConcurrently="YES" verticalHuggingPriority="750" placeholderIntrinsicWidth="833" placeholderIntrinsicHeight="583" allowsExpansionToolTips="YES" columnAutoresizingStyle="none" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveName="poop" rowHeight="20" headerView="x7Z-Ii-Jp5" id="bX0-m9-9Ad" userLabel="Library Table View" customClass="TableViewYouCanPressSpacebarOn" customModule="minimalTunes" customModuleProvider="target">
+                            <tableView canDrawConcurrently="YES" verticalHuggingPriority="750" placeholderIntrinsicWidth="833" placeholderIntrinsicHeight="583" allowsExpansionToolTips="YES" columnAutoresizingStyle="none" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveName="poop" rowHeight="20" headerView="x7Z-Ii-Jp5" id="bX0-m9-9Ad" userLabel="Library Table View" customClass="TableViewYouCanPressSpacebarOn" customModule="jmc" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="3922" height="489"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
@@ -98,17 +99,14 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" title="Text Cell" id="c2u-8I-wVk">
+                                            <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" groupingSize="0" minimumIntegerDigits="0" maximumIntegerDigits="42" id="Wah-f4-Cjf" customClass="TimeFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.time" id="oau-dH-2tX">
-                                                <dictionary key="options">
-                                                    <string key="NSValueTransformerName">AssTransform</string>
-                                                </dictionary>
-                                            </binding>
+                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.time" id="SY2-Z3-iAF"/>
                                         </connections>
                                     </tableColumn>
                                     <tableColumn identifier="artist" width="221.515625" minWidth="40" maxWidth="1000" id="ois-tu-0mi">
@@ -169,7 +167,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="mXz-Q9-Tss">
-                                            <customFormatter key="formatter" id="Bbi-j2-hdc" customClass="BitRateFormatter" customModule="minimalTunes" customModuleProvider="target"/>
+                                            <customFormatter key="formatter" id="Bbi-j2-hdc" customClass="BitRateFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -203,7 +201,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="X4R-8m-Yfb">
-                                            <customFormatter key="formatter" id="qGZ-Bl-5Tq" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
+                                            <customFormatter key="formatter" id="qGZ-Bl-5Tq" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -319,7 +317,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="8VR-c1-KJQ">
-                                            <customFormatter key="formatter" id="AIb-5G-jTw" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
+                                            <customFormatter key="formatter" id="AIb-5G-jTw" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -402,7 +400,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="OSa-Oo-svg">
-                                            <customFormatter key="formatter" id="Nud-KY-pef" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
+                                            <customFormatter key="formatter" id="Nud-KY-pef" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -419,7 +417,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="UZa-8d-XJX">
-                                            <customFormatter key="formatter" id="1xr-bN-jPn" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
+                                            <customFormatter key="formatter" id="1xr-bN-jPn" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -436,7 +434,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="qG3-K0-uCz">
-                                            <customFormatter key="formatter" id="Fpf-zm-uOd" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
+                                            <customFormatter key="formatter" id="Fpf-zm-uOd" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -453,7 +451,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="AC3-BK-Gx3">
-                                            <customFormatter key="formatter" id="FXj-G5-uam" customClass="SampleRateFormatter" customModule="minimalTunes" customModuleProvider="target"/>
+                                            <customFormatter key="formatter" id="FXj-G5-uam" customClass="SampleRateFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -470,7 +468,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="VQc-zH-7I1">
-                                            <customFormatter key="formatter" id="EYz-ja-2fc" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
+                                            <customFormatter key="formatter" id="EYz-ja-2fc" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -595,7 +593,7 @@
             </constraints>
             <point key="canvasLocation" x="1847" y="198"/>
         </customView>
-        <arrayController mode="entity" entityName="TrackView" automaticallyPreparesContent="YES" id="6rv-dK-iy8" customClass="DragAndDropArrayController" customModule="minimalTunes" customModuleProvider="target">
+        <arrayController mode="entity" entityName="TrackView" automaticallyPreparesContent="YES" id="6rv-dK-iy8" customClass="DragAndDropArrayController" customModule="jmc" customModuleProvider="target">
             <connections>
                 <binding destination="-2" name="managedObjectContext" keyPath="self.managedContext" id="L8y-Me-vAn"/>
             </connections>

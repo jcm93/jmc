@@ -118,6 +118,7 @@ class PreferencesWindowController: NSWindowController {
         
         
     }
+    
     @IBAction func cancelAction(_ sender: AnyObject) {
         print("cancel action on preferences")
         self.window?.close()

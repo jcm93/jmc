@@ -11,7 +11,9 @@
                 <outlet property="automaticallyAddFilesCheck" destination="8r8-tc-b9V" id="bil-YH-aic"/>
                 <outlet property="dirScanStatusTextField" destination="cne-IQ-5GZ" id="Nn5-pd-VE9"/>
                 <outlet property="enableDirectoryMonitoringCheck" destination="z11-19-8Af" id="JlC-vW-qYj"/>
+                <outlet property="findNewMediaTabItem" destination="jUU-OL-6Zu" id="Vc1-CP-sQs"/>
                 <outlet property="libraryLocationStatusImageView" destination="I1c-gk-V84" id="tdd-Wx-rBo"/>
+                <outlet property="locationManagerTabItem" destination="07U-Hu-8Mt" id="c5I-7h-6gl"/>
                 <outlet property="lostTracksTableView" destination="1rH-JT-oaU" id="KrD-iI-iRa"/>
                 <outlet property="newMediaTableView" destination="cjf-jD-81c" id="gzd-4k-bmf"/>
                 <outlet property="newTracksArrayController" destination="4Ry-w4-cNJ" id="Sfb-4f-ipr"/>
@@ -81,19 +83,19 @@ Gw
                     <tabViewItems>
                         <tabViewItem label="Source Information" identifier="1" id="Bov-je-tBh">
                             <view key="view" id="ZCg-e7-Yu8">
-                                <rect key="frame" x="10" y="33" width="806" height="451"/>
+                                <rect key="frame" x="10" y="33" width="846" height="483"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Doq-Pc-N0O">
-                                        <rect key="frame" x="15" y="431" width="630" height="17"/>
+                                        <rect key="frame" x="15" y="463" width="630" height="17"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Information for SOURCE_TITLE:" id="Se8-5a-P8n">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HWV-ag-XYf">
-                                        <rect key="frame" x="15" y="374" width="102" height="17"/>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HWV-ag-XYf">
+                                        <rect key="frame" x="15" y="406" width="102" height="17"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Source location:" id="jOc-Fn-Tml">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -101,7 +103,7 @@ Gw
                                         </textFieldCell>
                                     </textField>
                                     <textField verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dlg-X9-bth">
-                                        <rect key="frame" x="123" y="371" width="271" height="22"/>
+                                        <rect key="frame" x="123" y="403" width="271" height="22"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="NZt-Nf-kGz">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -109,7 +111,7 @@ Gw
                                         </textFieldCell>
                                     </textField>
                                     <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pvi-rp-51x">
-                                        <rect key="frame" x="115" y="401" width="212" height="22"/>
+                                        <rect key="frame" x="115" y="433" width="212" height="22"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="2zZ-Fv-6u9">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -120,7 +122,7 @@ Gw
                                         </connections>
                                     </textField>
                                     <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yrb-Za-uGm">
-                                        <rect key="frame" x="396" y="364" width="154" height="32"/>
+                                        <rect key="frame" x="396" y="396" width="154" height="32"/>
                                         <buttonCell key="cell" type="push" title="Change Location..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="3qJ-yL-PRG">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -129,16 +131,16 @@ Gw
                                             <action selector="changeSourceLocationButtonPressed:" target="-2" id="1ld-R2-vip"/>
                                         </connections>
                                     </button>
-                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8ey-1w-mcb">
-                                        <rect key="frame" x="16" y="339" width="16" height="16"/>
+                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8ey-1w-mcb">
+                                        <rect key="frame" x="16" y="371" width="16" height="16"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="16" id="Ky6-n6-fLw"/>
                                             <constraint firstAttribute="height" constant="16" id="tzY-dY-npm"/>
                                         </constraints>
                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusAvailable" id="erQ-Sh-fPN"/>
                                     </imageView>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BMb-co-OrQ">
-                                        <rect key="frame" x="33" y="340" width="195" height="17"/>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BMb-co-OrQ">
+                                        <rect key="frame" x="33" y="372" width="195" height="17"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Source is located and available." id="KYm-pj-DxO">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -146,7 +148,7 @@ Gw
                                         </textFieldCell>
                                     </textField>
                                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aow-qR-cwG">
-                                        <rect key="frame" x="15" y="283" width="16" height="16"/>
+                                        <rect key="frame" x="15" y="315" width="16" height="16"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="16" id="Ngd-ck-alT"/>
                                             <constraint firstAttribute="width" constant="16" id="T7u-0l-BP7"/>
@@ -154,7 +156,10 @@ Gw
                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusPartiallyAvailable" id="sok-rC-N18"/>
                                     </imageView>
                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0tx-lw-QR4">
-                                        <rect key="frame" x="34" y="249" width="511" height="51"/>
+                                        <rect key="frame" x="34" y="281" width="511" height="51"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="507" id="HTC-Qm-CBo"/>
+                                        </constraints>
                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" id="LEZ-j6-NEU">
                                             <font key="font" metaFont="system"/>
                                             <string key="title">Directory is on an external drive. If another computer has modified the contents of this directory, you may need to re-verify the locations of media, or re-scan the directory if new media has been added.</string>
@@ -162,16 +167,16 @@ Gw
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cUP-gH-z2b">
-                                        <rect key="frame" x="15" y="404" width="88" height="17"/>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cUP-gH-z2b">
+                                        <rect key="frame" x="15" y="436" width="88" height="17"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Source name:" id="pTX-6B-NZy">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z11-19-8Af">
-                                        <rect key="frame" x="15" y="310" width="190" height="18"/>
+                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="z11-19-8Af">
+                                        <rect key="frame" x="15" y="342" width="190" height="18"/>
                                         <buttonCell key="cell" type="check" title="Enable directory monitoring" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="3go-Ju-4es">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -180,8 +185,8 @@ Gw
                                             <action selector="enableMonitoringCheckAction:" target="-2" id="vj8-1Q-hVG"/>
                                         </connections>
                                     </button>
-                                    <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8r8-tc-b9V">
-                                        <rect key="frame" x="15" y="222" width="372" height="18"/>
+                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="8r8-tc-b9V">
+                                        <rect key="frame" x="15" y="254" width="372" height="18"/>
                                         <buttonCell key="cell" type="check" title="Automatically detect new files and add them to the library" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="SsK-FL-8u5">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -640,6 +645,9 @@ Gw
                             </view>
                         </tabViewItem>
                     </tabViewItems>
+                    <connections>
+                        <outlet property="delegate" destination="-2" id="V4b-Eg-rRg"/>
+                    </connections>
                 </tabView>
             </subviews>
             <constraints>
