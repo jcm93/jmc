@@ -50,6 +50,7 @@ var globalRootLibrary = {() -> Library? in
 }()
 
 var globalRootLibrarySourceListItem = {() -> SourceListItem? in
+    print("creating global root library source list item")
     let fetchReq = NSFetchRequest<NSFetchRequestResult>(entityName: "SourceListItem")
     let predicate = NSPredicate(format: "library == %@", globalRootLibrary!)
     fetchReq.predicate = predicate

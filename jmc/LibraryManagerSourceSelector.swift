@@ -13,8 +13,10 @@ class LibraryManagerSourceSelector: NSWindowController, NSTableViewDelegate {
     var addSourceSheet: NewSourceSheetController?
     var verifyLocationsSheet: LocationVerifierSheetController?
     var mediaScannerSheet: MediaScannerSheet?
+    var removeSourceSheet: RemoveSourceSheetController?
     var currentLibrary: Library?
     var libraryViews = [Library : LibraryManagerViewController]()
+    var delegate: AppDelegate?
 
     @IBOutlet var sourceArrayController: NSArrayController!
     
@@ -25,6 +27,25 @@ class LibraryManagerSourceSelector: NSWindowController, NSTableViewDelegate {
     @IBAction func addSourceButtonPressed(_ sender: Any) {
         self.addSourceSheet = NewSourceSheetController(windowNibName: "NewSourceSheetController")
         self.window?.beginSheet(self.addSourceSheet!.window!, completionHandler: addSourceModalComplete)
+    }
+    
+    
+    @IBAction func removeSourceButtonPressed(_ sender: Any) {
+        guard sourceArrayController.selectedObjects.count > 0 else {return}
+        self.removeSourceSheet = RemoveSourceSheetController(windowNibName: "RemoveSourceSheetController")
+        self.removeSourceSheet?.libraryManagerSourceSelector = self
+        self.window?.beginSheet(self.removeSourceSheet!.window!, completionHandler: removeSourceModalComplete)
+    }
+    
+    func removeLibrary() {
+        let databaseManager = DatabaseManager()
+        databaseManager.removeSource(library: self.currentLibrary!)
+    }
+    
+    
+    func removeSourceModalComplete(response: NSModalResponse) {
+        print("remove source modal complete called")
+        delegate?.reinitializeInterfaceForRemovedSource()
     }
     
     func addSourceModalComplete(response: NSModalResponse) {
@@ -50,6 +71,7 @@ class LibraryManagerSourceSelector: NSWindowController, NSTableViewDelegate {
         }
         if libraryViews[library] == nil {
             let newView = LibraryManagerViewController(nibName: "LibraryManagerViewController", bundle: nil)
+            newView?.delegate = self.delegate
             libraryManagerView.addSubview(newView!.view)
             newView!.initializeForLibrary(library: library)
             self.currentLibrary = library

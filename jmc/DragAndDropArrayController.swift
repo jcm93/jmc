@@ -84,20 +84,21 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
             }
             appDelegate.showImportErrors(errors)
             return true
+        } else {
+            //if we've reached this point, we must be in a playlist with a valid track id list, and the table must be sorted by playlist order
+            var track_id_list = tableViewController!.playlist!.track_id_list as! [Int]
+            var ids = [Int]()
+            for index in draggedRowIndexes!.reversed() {
+                ids.append(track_id_list[index])
+                track_id_list.remove(at: index)
+            }
+            ids = ids.reversed()
+            track_id_list.insert(contentsOf: ids, at: row)
+            tableViewController!.playlist!.track_id_list = track_id_list as NSObject?
+            tableViewController?.initializeForPlaylist()
+            draggedRowIndexes = nil
+            return true
         }
-        //if we've reached this point, we must be in a playlist with a valid track id list, and the table must be sorted by playlist order
-        var track_id_list = tableViewController!.playlist!.track_id_list as! [Int]
-        var ids = [Int]()
-        for index in draggedRowIndexes!.reversed() {
-            ids.append(track_id_list[index])
-            track_id_list.remove(at: index)
-        }
-        ids = ids.reversed()
-        track_id_list.insert(contentsOf: ids, at: row)
-        tableViewController!.playlist!.track_id_list = track_id_list as NSObject?
-        tableViewController?.initializeForPlaylist()
-        draggedRowIndexes = nil
-        return true
     }
     
     func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {

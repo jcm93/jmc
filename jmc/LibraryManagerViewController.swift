@@ -37,6 +37,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     var library: Library?
     var missingTracks: [Track]?
     var newMediaURLs: [URL]?
+    var delegate: AppDelegate?
 
     @IBOutlet weak var findNewMediaTabItem: NSTabViewItem!
     @IBOutlet weak var locationManagerTabItem: NSTabViewItem!
@@ -114,7 +115,9 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         let sourceLocationURL = URL(string: library.library_location!)!
         sourceLocationField.stringValue = sourceLocationURL.path
         var isDirectory = ObjCBool(Bool(0))
-        if libraryIsAvailable(library: library) {
+        let libraryWasAvailable = library.is_available
+        let libraryIsNowAvailable = libraryIsAvailable(library: library)
+        if libraryIsNowAvailable {
             sourceLocationStatusImage.image = NSImage(named: "NSStatusAvailable")
             sourceLocationStatusTextField.stringValue = "Source is located and available."
             enableDirectoryMonitoringCheck.isEnabled = true
@@ -164,6 +167,9 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             sourceMonitorStatusTextField.stringValue = "Directory monitoring inactive."
             sourceMonitorStatusImageView.image = NSImage(named: "NSStatusUnavailable")
             automaticallyAddFilesCheck.isEnabled = false
+        }
+        if libraryIsNowAvailable != (libraryWasAvailable as? Bool) {
+            delegate?.mainWindowController?.sourceListViewController?.reloadData()
         }
     }
     

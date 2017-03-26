@@ -270,12 +270,37 @@ class DatabaseManager: NSObject {
         let librarySourceListItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         librarySourceListItem.library = library
         librarySourceListItem.name = library.name
-        librarySourceListItem.parent = globalRootLibrarySourceListItem
+        globalRootLibrarySourceListItem!.addToChildren(librarySourceListItem)
         let newNode = SourceListNode(item: librarySourceListItem)
-        newNode.parent = globalRootLibrarySourceListItem?.node
-        globalRootLibrarySourceListItem?.node?.children.append(newNode)
+        newNode.parent = globalRootLibrarySourceListItem!.node
+        globalRootLibrarySourceListItem!.node!.children.append(newNode)
         let mediaURLs = getMediaURLsInDirectoryURLs([url]).0
         addTracksFromURLs(mediaURLs, to: library)
+    }
+    
+    func removeSource(library: Library) {
+        guard library != globalRootLibrary else {return}
+        for track in (library.tracks! as! Set<Track>) {
+            managedContext.delete(track.view!)
+            if track.artist?.tracks?.count != nil && track.artist!.tracks!.count <= 1 {
+                managedContext.delete(track.artist!)
+            }
+            if track.album?.tracks?.count != nil && track.album!.tracks!.count <= 1 {
+                managedContext.delete(track.album!)
+            }
+            managedContext.delete(track)
+        }
+        if library.local_items != nil {
+            for item in library.local_items! {
+                managedContext.delete(item as! NSManagedObject)
+            }
+        }
+        managedContext.delete(library)
+        do {
+            try managedContext.save()
+        } catch {
+            print(error)
+        }
     }
     
     func addTracksFromURLs(_ mediaURLs: [URL], to library: Library) -> [FileAddToDatabaseError] {

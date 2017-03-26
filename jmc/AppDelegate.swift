@@ -83,9 +83,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         audioModule.toggleEqualizer(defaultsEQOnState)
     }
     
+    func reinitializeInterfaceForRemovedSource() {
+        mainWindowController?.sourceListViewController?.server = nil
+        self.serviceBrowser = nil
+        mainWindowController?.window?.close()
+        audioModule.resetEngineCompletely()
+        initializeLibraryAndShowMainWindow()
+        //source was removed
+        
+    }
+    
     @IBAction func openLibraryManager(_ sender: Any) {
         self.libraryManagerSourceSelector = LibraryManagerSourceSelector(windowNibName: "LibraryManagerSourceSelector")
         self.libraryManagerSourceSelector?.showWindow(self)
+        self.libraryManagerSourceSelector?.delegate = self
     }
     @IBAction func openImportWindow(_ sender: AnyObject) {
         importWindowController = ImportWindowController(windowNibName: "ImportWindowController")

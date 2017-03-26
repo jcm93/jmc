@@ -142,12 +142,9 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         let source = item as! SourceListNode
-        print(source.item.name)
         if source.children.count > 0 {
-            print("true")
             return true
         } else {
-            print("false")
             return false
         }
     }
@@ -194,6 +191,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     func reloadData() {
+        print("reload data called")
         let selection = sourceList.selectedRowIndexes
         sourceList.reloadData()
         sourceList.selectRowIndexes(selection, byExtendingSelection: false)
@@ -613,6 +611,14 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         let indexSet = IndexSet(integer: 1)
         sourceList.selectRowIndexes(indexSet, byExtendingSelection: false)
         mainWindowController?.currentTableViewController?.item = libraryHeaderNode?.children[0].item
+    }
+    
+    func recreateTree() {
+        self.createTree()
+        self.sortTree()
+        libraryHeaderNode = rootNode?.children[0]
+        sharedHeaderNode = rootNode?.children[1]
+        playlistHeaderNode = rootNode?.children[2]
     }
     
     override func viewDidLoad() {

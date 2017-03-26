@@ -52,7 +52,8 @@ class NewSourceSheetController: NSWindowController {
             databaseManager.addNewSource(url: newSourcePathControl.url!, organize: organize)
         }
         self.window?.close()
-        (NSApplication.shared().delegate as! AppDelegate).mainWindowController?.sourceListViewController?.createTree()
+        (NSApplication.shared().delegate as! AppDelegate).mainWindowController?.sourceListViewController?.recreateTree()
+        (NSApplication.shared().delegate as! AppDelegate).mainWindowController?.sourceListViewController?.reloadData()
     }
     
     override func windowDidLoad() {

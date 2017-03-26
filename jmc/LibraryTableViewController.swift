@@ -187,7 +187,18 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     }
 
     func getUpcomingIDsForPlayEvent(_ shuffleState: Int, id: Int, row: Int?) -> Int {
-        let idArray = (trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
+        let libraries = Set((trackViewArrayController.arrangedObjects as! [TrackView]).flatMap({return $0.track?.library}))
+        var count = 0
+        for library in libraries {
+            if (library.is_available as! Bool) != libraryIsAvailable(library: library) {
+                count += 1
+            }
+        }
+        if count > 0 {
+            print("library status has changed, reloading data")
+            mainWindowController?.sourceListViewController?.reloadData()
+        }
+        let idArray = (trackViewArrayController.arrangedObjects as! [TrackView]).filter({return $0.track?.library?.is_available == true}).map({return Int($0.track!.id!)})
         if shuffleState == NSOnState {
             //secretly adjust the shuffled array such that it behaves mysteriously like a ring buffer. ssshhhh
             let currentShuffleArray = self.item!.playOrderObject!.shuffled_play_order!

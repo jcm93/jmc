@@ -41,28 +41,6 @@ enum TrackQueueViewType {
     case source
 }
 
-class PlaylistOrderObject: Equatable, Hashable {
-    
-    var shuffled_play_order: [Int]?
-    var current_play_order: [Int]?
-    var sourceListItem: SourceListItem
-    var inorderNeedsUpdate: Bool?
-    
-    init(sli: SourceListItem) {
-        self.sourceListItem = sli
-    }
-    
-    var hashValue: Int {
-        get {
-            return self.sourceListItem.hashValue
-        }
-    }
-}
-
-func ==(lpoo: PlaylistOrderObject, rpoo: PlaylistOrderObject) -> Bool {
-    return lpoo.sourceListItem == rpoo.sourceListItem
-}
-
 class TrackQueueView: NSObject {
     
     var track: Track?
@@ -100,6 +78,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     var numPastTracks = 0
     var numPastTracksToShow = 3
     var globalOffset = 0
+    var fileManager = FileManager.default
     var showAllTracks = false
     var temporaryPooForDragging: PlaylistOrderObject?
     var temporaryPooIndexForDragging: Int?
@@ -335,6 +314,22 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                     next_track = getNetworkTrackWithID(id!)
                 } else {
                     next_track = getTrackWithID(id!)
+                }
+                if !fileManager.fileExists(atPath: URL(string: next_track!.location!)!.path) {
+                    //are we on the main queue?
+                    self.currentAudioSource?.playOrderObject?.libraryStatusNeedsUpdate()
+                    self.currentSourceIndex = self.currentAudioSource?.playOrderObject?.current_play_order?.index(of: Int(self.currentTrack!.id!))
+                    if currentAudioSource!.playOrderObject!.current_play_order!.count <= currentSourceIndex! + 1 {
+                        currentAudioSource = nil
+                        return nil
+                    } else {
+                        id = currentAudioSource!.playOrderObject!.current_play_order![currentSourceIndex! + 1]
+                    }
+                    if currentAudioSource?.is_network == true {
+                        next_track = getNetworkTrackWithID(id!)
+                    } else {
+                        next_track = getTrackWithID(id!)
+                    }
                 }
                 addTrackToQueue(next_track!, context: self.currentAudioSource!.name!, tense: 2, manually: false)
                 return next_track

@@ -301,7 +301,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         if repeatButton.state == NSOnState {
             return currentTrack
         } else {
-            track = trackQueueViewController?.getNextTrack()
+            track = trackQueueViewController?.getNextTrack()//this function might change the interface around
             if trackQueueViewController?.currentAudioSource?.is_network == true {
                 delegate?.serviceBrowser?.askPeerForSong(trackQueueViewController!.currentAudioSource!.library!.peer as! MCPeerID, id: Int(track!.id!))
                 DispatchQueue.main.async {
@@ -372,6 +372,10 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         delegate?.audioModule.playNetworkImmediately(self.currentTrack!)
         //initializeInterfaceForNewTrack()
         paused = false
+    }
+    
+    func handleTrackMissing(track: Track) {
+        
     }
     
     func playSong(_ track: Track, row: Int?) {

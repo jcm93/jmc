@@ -11,7 +11,7 @@ import MultipeerConnectivity
 
 class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate, MCSessionDelegate {
     
-    let serviceIdentifier = "j-tunes"
+    let serviceIdentifier = "jmc"
     let thisPeerID = MCPeerID(displayName: Host.current().localizedName!)
     let serviceAdvertiser: MCNearbyServiceAdvertiser
     let serviceBrowser: MCNearbyServiceBrowser

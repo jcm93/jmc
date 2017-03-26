@@ -115,7 +115,7 @@ class LocationManager: NSObject {
                 //either this location is valid and a new file was added, or...
                 if fileManager.fileExists(atPath: path) {
                     let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
-                    if library.monitors_directories_for_new as! Bool {
+                    if library.monitors_directories_for_new as? Bool == true {
                         databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library) //ignores errors :(
                     }
                 } else {

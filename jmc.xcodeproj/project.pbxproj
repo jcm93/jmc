@@ -50,6 +50,9 @@
 		0D606EF61E7B4C21007AE152 /* FileBufferer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D606EF51E7B4C21007AE152 /* FileBufferer.swift */; };
 		0D606EF91E7B4DB0007AE152 /* AVAudioFileBufferer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */; };
 		0D60F5261E86F77900CA5420 /* TimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D60F5251E86F77900CA5420 /* TimeFormatter.swift */; };
+		0D60F5291E8720A300CA5420 /* PlaylistOrderObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */; };
+		0D60F52C1E87372D00CA5420 /* RemoveSourceSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D60F52A1E87372D00CA5420 /* RemoveSourceSheetController.swift */; };
+		0D60F52D1E87372D00CA5420 /* RemoveSourceSheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D60F52B1E87372D00CA5420 /* RemoveSourceSheetController.xib */; };
 		0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */; };
 		0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */; };
 		0D76F6A81D24B9AC00C6E70F /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */; };
@@ -230,6 +233,9 @@
 		0D606EF51E7B4C21007AE152 /* FileBufferer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBufferer.swift; sourceTree = "<group>"; };
 		0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVAudioFileBufferer.swift; sourceTree = "<group>"; };
 		0D60F5251E86F77900CA5420 /* TimeFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeFormatter.swift; sourceTree = "<group>"; };
+		0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistOrderObject.swift; sourceTree = "<group>"; };
+		0D60F52A1E87372D00CA5420 /* RemoveSourceSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoveSourceSheetController.swift; sourceTree = "<group>"; };
+		0D60F52B1E87372D00CA5420 /* RemoveSourceSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RemoveSourceSheetController.xib; sourceTree = "<group>"; };
 		0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagEditorWindow.swift; sourceTree = "<group>"; };
 		0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagEditorWindow.xib; sourceTree = "<group>"; };
 		0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
@@ -430,6 +436,7 @@
 				0D015AC31E00A30900EBAB6E /* LibraryTableViewControllerCellBased.xib */,
 				0DC2E8F41E0110D200671D83 /* MTTextFieldCell.swift */,
 				0D299B191DF11F140009CF7A /* TrackQueueViewController.swift */,
+				0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */,
 				0D299B1A1DF11F140009CF7A /* TrackQueueViewController.xib */,
 				0D299B151DF111490009CF7A /* AlbumArtViewController.swift */,
 				0D299B161DF111490009CF7A /* AlbumArtViewController.xib */,
@@ -561,6 +568,8 @@
 				0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */,
 				0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */,
 				0D8AFE571E6D136D004AC584 /* MediaScannerSheet.xib */,
+				0D60F52A1E87372D00CA5420 /* RemoveSourceSheetController.swift */,
+				0D60F52B1E87372D00CA5420 /* RemoveSourceSheetController.xib */,
 			);
 			name = "Library Manager";
 			sourceTree = "<group>";
@@ -950,6 +959,7 @@
 				0DD0DAE81E53A8EE00807CAC /* flac in Resources */,
 				0DD0DAE61E53A8EE00807CAC /* flac.rb in Resources */,
 				0DD0DAF11E53A8EE00807CAC /* flac++.pc in Resources */,
+				0D60F52D1E87372D00CA5420 /* RemoveSourceSheetController.xib in Resources */,
 				0DD0DB081E53A8EE00807CAC /* index.html in Resources */,
 				0DD0DB091E53A8EE00807CAC /* license.html in Resources */,
 				0DAB30991CFBA3340028928F /* MainMenu.xib in Resources */,
@@ -1034,6 +1044,7 @@
 				0DB60F901E62341500105766 /* AddFilesWindowController.swift in Sources */,
 				0DEF66BC1D383A8700EA3ADC /* Composer+CoreDataProperties.swift in Sources */,
 				0DEF66BF1D383A8700EA3ADC /* SharedLibrary.swift in Sources */,
+				0D60F5291E8720A300CA5420 /* PlaylistOrderObject.swift in Sources */,
 				0D3878B51DD10258004CC3C1 /* TrackView+CoreDataProperties.swift in Sources */,
 				0DEF66BB1D383A8700EA3ADC /* Artist.swift in Sources */,
 				0DD7D6D91D3F3A350035BAD8 /* AlbumArtworkCollection.swift in Sources */,
@@ -1102,6 +1113,7 @@
 				0D8AFE5C1E6F4FEB004AC584 /* LibraryManagerSourceSelector.swift in Sources */,
 				0DEF66BD1D383A8700EA3ADC /* Composer.swift in Sources */,
 				0D2EEFB61DB97DEC0065B0B3 /* CachedOrder+CoreDataProperties.swift in Sources */,
+				0D60F52C1E87372D00CA5420 /* RemoveSourceSheetController.swift in Sources */,
 				0DEF66D41D383A8700EA3ADC /* Genre+CoreDataProperties.swift in Sources */,
 				0DEF66D51D383A8700EA3ADC /* Genre.swift in Sources */,
 			);
