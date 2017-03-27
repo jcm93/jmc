@@ -55,12 +55,28 @@ class ImportWindowController: NSWindowController {
             pathURL = pathURL.deletingLastPathComponent()
             pathURL = pathURL.appendingPathComponent("iTunes Media", isDirectory: true)
         }
-        UserDefaults.standard.set(pathURL.path, forKey: "libraryPath")
         let appDelegate = (NSApplication.shared().delegate as! AppDelegate)
+        let library = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
+        library.library_location = pathURL.absoluteString
+        library.name = pathURL.lastPathComponent
+        library.parent = globalRootLibrary
+        library.is_active = true
+        library.renames_files = 0 as NSNumber
+        library.organization_type = 0 as NSNumber
+        library.watches_directories = true
+        library.monitors_directories_for_new = true
+        let librarySourceListItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
+        librarySourceListItem.library = library
+        librarySourceListItem.name = library.name
+        globalRootLibrarySourceListItem!.addToChildren(librarySourceListItem)
+        let newNode = SourceListNode(item: librarySourceListItem)
+        newNode.parent = globalRootLibrarySourceListItem!.node
+        globalRootLibrarySourceListItem!.node!.children.append(newNode)
+
         appDelegate.iTunesParser = self.iTunesParser
         appDelegate.initializeProgressBarWindow()
         print("made it here")
-        appDelegate.importProgressBar?.doStuff()
+        appDelegate.importProgressBar?.doStuff(library: library)
         iTunesParser?.addObserver(self, forKeyPath: "doneEverything", options: .new, context: &my_special_context)
     }
     

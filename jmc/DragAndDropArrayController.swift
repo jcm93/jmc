@@ -11,23 +11,91 @@ import Cocoa
 class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTableViewDelegate {
     
     var mainWindow: MainWindowController?
-    var tableViewController: LibraryTableViewController?
+    var tableViewController: LibraryTableViewControllerCellBased?
     var draggedRowIndexes: IndexSet?
+    var countTest = 0
+    var hasInitialized = false
+    var actualArrangedObjects: [TrackView]?
     
-    func tableView(_ tableView: NSTableView, willDisplayCell cell: Any, for tableColumn: NSTableColumn?, row: Int) {
-        if tableColumn == tableView.tableColumns[0] {
-            if (self.arrangedObjects as! [TrackView])[row].track?.is_playing == true {
-                (cell as! NSImageCell).image = NSImage(named: "NSAudioOutputVolumeMedTemplate")
-            } else {
-                (cell as! NSImageCell).image = nil
-            }
-        } else if (self.arrangedObjects as! [TrackView])[row].track?.library?.is_available == false {
-            (cell as! NSCell).isEnabled = false
-        } else {
-            (cell as! NSCell).isEnabled = true
+    func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
+        let track = (self.actualArrangedObjects!)[row].track!
+        let status = track.library?.is_available as? Bool ?? true
+        let value = { () -> Any? in
+        switch tableColumn! {
+        case tableViewController!.isPlayingColumn:
+            return nil
+        case tableViewController!.playlistNumberColumn:
+            return track.view?.playlist_order
+        case tableViewController!.isEnabledColumn:
+            return track.status
+        case tableViewController!.nameColumn:
+            return track.name
+        case tableViewController!.timeColumn:
+            return track.time
+        case tableViewController!.artistColumn:
+            return track.artist?.name
+        case tableViewController!.albumColumn:
+            return track.album?.name
+        case tableViewController!.kindColumn:
+            return track.file_kind
+        case tableViewController!.bitRateColumn:
+            return track.bit_rate
+        case tableViewController!.sizeColumn:
+            return track.size
+        case tableViewController!.trackNumColumn:
+            return track.track_num
+        case tableViewController!.dateAddedColumn:
+            return track.date_added
+        case tableViewController!.genreColumn:
+            return track.genre?.name
+        case tableViewController!.dateModifiedColumn:
+            return track.date_modified
+        case tableViewController!.dateReleasedColumn:
+            return track.album?.release_date
+        case tableViewController!.commentsColumn:
+            return track.comments
+        case tableViewController!.composerColumn:
+            return track.composer?.name
+        case tableViewController!.discNumberColumn:
+            return track.disc_number
+        case tableViewController!.equalizerColumn:
+            return track.equalizer_preset
+        case tableViewController!.lastPlayedColumn:
+            return track.date_last_played
+        case tableViewController!.lastSkippedColumn:
+            return track.date_last_skipped
+        case tableViewController!.movementNameColumn:
+            return track.movement_name
+        case tableViewController!.movementNumColumn:
+            return track.movement_number
+        case tableViewController!.playCountColumn:
+            return track.play_count
+        case tableViewController!.ratingColumn:
+            return track.rating
+        case tableViewController!.sampleRateColumn:
+            return track.sample_rate
+        case tableViewController!.skipCountColumn:
+            return track.skip_count
+        case tableViewController!.sortAlbumColumn:
+            return track.sort_album
+        case tableViewController!.sortAlbumArtistColumn:
+            return track.sort_album_artist
+        case tableViewController!.sortArtistColumn:
+            return track.sort_artist
+        case tableViewController!.sortComposerColumn:
+            return track.sort_composer
+        case tableViewController!.sortNameColumn:
+            return track.sort_name
+        default:
+            return ""
         }
+        }()
+        return (value, status)
     }
     
+    func tableView(_ tableView: NSTableView, willDisplayCell cell: Any, for tableColumn: NSTableColumn?, row: Int) {
+        
+    }
     
     func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
         print("sort descriptors did change called")

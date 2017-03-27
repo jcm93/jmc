@@ -6,10 +6,42 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="LibraryTableViewController" customModule="jmc" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="LibraryTableViewControllerCellBased" customModule="jmc" customModuleProvider="target">
             <connections>
+                <outlet property="albumColumn" destination="FDo-TA-EDz" id="LKi-Yn-Wg1"/>
+                <outlet property="artistColumn" destination="ois-tu-0mi" id="bLc-cG-wyu"/>
+                <outlet property="bitRateColumn" destination="LHQ-sH-EgW" id="pL3-si-X0Y"/>
                 <outlet property="columnVisibilityMenu" destination="H0B-Bf-KKf" id="R0f-rd-LmK"/>
+                <outlet property="commentsColumn" destination="xDe-V0-AuH" id="E0k-9b-KIT"/>
+                <outlet property="composerColumn" destination="79h-OO-O9Q" id="zUn-9i-fLp"/>
+                <outlet property="dateAddedColumn" destination="Ruz-xG-tmM" id="IAS-mR-1Ay"/>
+                <outlet property="dateModifiedColumn" destination="AC9-ib-KCM" id="Mfx-CY-7NQ"/>
+                <outlet property="dateReleasedColumn" destination="0XQ-xd-Lm9" id="bWK-Av-EMR"/>
+                <outlet property="discNumberColumn" destination="xsM-jc-5Eo" id="Mt9-fC-r8f"/>
+                <outlet property="equalizerColumn" destination="fx4-cm-3X9" id="7lp-4D-Imp"/>
+                <outlet property="genreColumn" destination="Nl7-dl-GwI" id="7eD-dB-v70"/>
+                <outlet property="isEnabledColumn" destination="iUR-0q-5H7" id="1ZW-FE-Srw"/>
+                <outlet property="isPlayingColumn" destination="GIT-ep-Wwj" id="MCD-zu-0N0"/>
+                <outlet property="kindColumn" destination="5dZ-BN-JWr" id="Dda-ER-3Rl"/>
+                <outlet property="lastPlayedColumn" destination="das-ju-aG7" id="O5J-o7-sMb"/>
+                <outlet property="lastSkippedColumn" destination="6aD-ae-eFf" id="ReW-Gn-KYe"/>
+                <outlet property="movementNameColumn" destination="dqs-Iw-GO8" id="33x-hw-90v"/>
+                <outlet property="movementNumColumn" destination="HSA-ds-msU" id="MU2-my-Y5e"/>
+                <outlet property="nameColumn" destination="qUc-Bo-Owx" id="PBm-UQ-bhD"/>
+                <outlet property="playCountColumn" destination="cCk-8Q-he4" id="6Vz-kS-KJq"/>
+                <outlet property="playlistNumberColumn" destination="6iL-fo-xZs" id="0eA-7F-guL"/>
+                <outlet property="ratingColumn" destination="yfD-2g-r2o" id="nZ7-CG-jmU"/>
+                <outlet property="sampleRateColumn" destination="JpS-3R-m2w" id="ApK-eM-iHC"/>
+                <outlet property="sizeColumn" destination="fbs-bA-3rx" id="Hso-7T-eyW"/>
+                <outlet property="skipCountColumn" destination="8SU-in-oF0" id="faS-r3-WwP"/>
+                <outlet property="sortAlbumArtistColumn" destination="s6e-Qu-gNO" id="2vz-4i-Jpd"/>
+                <outlet property="sortAlbumColumn" destination="bSp-01-bTE" id="u4C-Sn-XKJ"/>
+                <outlet property="sortArtistColumn" destination="Hwd-Kw-cOe" id="cyI-NR-H3P"/>
+                <outlet property="sortComposerColumn" destination="WWR-OI-OTi" id="UDL-AH-Jw5"/>
+                <outlet property="sortNameColumn" destination="CyQ-Xo-pr8" id="EK6-Ya-LQI"/>
                 <outlet property="tableView" destination="bX0-m9-9Ad" id="TyF-Pm-wnq"/>
+                <outlet property="timeColumn" destination="eXL-My-fyv" id="bAe-Hh-SXt"/>
+                <outlet property="trackNumColumn" destination="NsF-KX-H3W" id="05i-eq-kqb"/>
                 <outlet property="trackViewArrayController" destination="6rv-dK-iy8" id="at9-fo-Nnf"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
@@ -38,7 +70,7 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <imageCell key="dataCell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="2JN-sp-G6r"/>
+                                        <imageCell key="dataCell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="2JN-sp-G6r" customClass="MTImageCell" customModule="jmc" customModuleProvider="target"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
                                     <tableColumn identifier="playlist_number" width="17.07421875" minWidth="10" maxWidth="3.4028234663852886e+38" hidden="YES" id="6iL-fo-xZs" userLabel="PlaylistNumber">
@@ -47,15 +79,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="avI-yg-Dv8">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="avI-yg-Dv8" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
+                                        <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="playlist_order"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.playlist_order" id="Mrr-eM-oPr"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="is_enabled" width="17.07421875" minWidth="10" maxWidth="3.4028234663852886e+38" id="iUR-0q-5H7" userLabel="isEnabled">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="✓">
@@ -63,7 +93,7 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <buttonCell key="dataCell" type="check" title="Check" bezelStyle="regularSquare" imagePosition="left" controlSize="small" inset="2" id="xb8-NW-uac">
+                                        <buttonCell key="dataCell" type="check" title="Check" bezelStyle="regularSquare" imagePosition="left" controlSize="small" inset="2" id="xb8-NW-uac" customClass="MTButtonCell" customModule="jmc" customModuleProvider="target">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="smallSystem"/>
                                         </buttonCell>
@@ -82,15 +112,12 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" refusesFirstResponder="YES" title="Text Cell" id="6tX-3v-3dG">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" refusesFirstResponder="YES" title="Text Cell" id="6tX-3v-3dG" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.name" id="OIU-Zb-hbU"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="time" width="52" minWidth="10" maxWidth="3.4028234663852886e+38" id="eXL-My-fyv" userLabel="Time">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Time">
@@ -98,16 +125,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" title="Text Cell" id="c2u-8I-wVk">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" title="Text Cell" id="c2u-8I-wVk" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" groupingSize="0" minimumIntegerDigits="0" maximumIntegerDigits="42" id="Wah-f4-Cjf" customClass="TimeFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.time" id="SY2-Z3-iAF"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="artist" width="221.515625" minWidth="40" maxWidth="1000" id="ois-tu-0mi">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Artist">
@@ -115,16 +139,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="PlC-3Y-8lx">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="PlC-3Y-8lx" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="artist_order"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.artist.name" id="z7f-SE-QOZ"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="album" width="208.56640625" minWidth="10" maxWidth="3.4028234663852886e+38" id="FDo-TA-EDz">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Album">
@@ -132,16 +153,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="9Pd-9q-BoV">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="9Pd-9q-BoV" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="album_order"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.album.name" id="JAI-F8-hKV"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="file_kind" width="90" minWidth="10" maxWidth="3.4028234663852886e+38" id="5dZ-BN-JWr" userLabel="Kind">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Kind">
@@ -149,16 +167,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="wTi-ot-6rL">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="wTi-ot-6rL" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="kind_order"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.file_kind" id="QgF-tf-jWX"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="bit_rate" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="LHQ-sH-EgW" userLabel="Bit Rate">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Bit Rate">
@@ -166,16 +181,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="mXz-Q9-Tss">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="mXz-Q9-Tss" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="Bbi-j2-hdc" customClass="BitRateFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.bit_rate" id="UAy-Qr-a0z"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="size" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="fbs-bA-3rx">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Size">
@@ -183,16 +195,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="5ik-8J-6nt">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="5ik-8J-6nt" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <byteCountFormatter key="formatter" id="hK1-LV-tV2"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.size" id="nmn-vj-C5N"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="track_num" width="45" minWidth="10" maxWidth="3.4028234663852886e+38" id="NsF-KX-H3W">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Track #">
@@ -200,16 +209,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="X4R-8m-Yfb">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="X4R-8m-Yfb" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="qGZ-Bl-5Tq" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.track_num" id="dcm-3i-3eI"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="date_added" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="Ruz-xG-tmM">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Added">
@@ -217,16 +223,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="dcq-tQ-T9h">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="dcq-tQ-T9h" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" id="xt6-G0-jSn"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.date_added" id="jnm-3P-elK"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="genre" width="80" minWidth="10" maxWidth="3.4028234663852886e+38" id="Nl7-dl-GwI">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Genre">
@@ -234,15 +237,12 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="ZfF-Zb-eGm">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="ZfF-Zb-eGm" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.genre.name" id="Wkr-jW-IjG"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="date_modified" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="AC9-ib-KCM">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Modified">
@@ -250,16 +250,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="nhH-xB-aIO">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="nhH-xB-aIO" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" id="h3L-u7-Cxm"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.date_modified" id="Zkv-pe-bDH"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="date_released" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="0XQ-xd-Lm9">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Released">
@@ -267,16 +264,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="dYe-xo-ZcP">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="dYe-xo-ZcP" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" id="yZP-oZ-PwJ"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.album.release_date" id="J2g-r7-ICO"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="comments" width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="xDe-V0-AuH">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Comments">
@@ -284,15 +278,12 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="abB-lO-tuS">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="abB-lO-tuS" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.comments" id="84F-4U-jrJ"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="composer" width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="79h-OO-O9Q">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Composer">
@@ -300,15 +291,12 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="6bQ-qG-ujk">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="6bQ-qG-ujk" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.composer.name" id="iLx-iB-Mh9"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="disc_number" width="40" minWidth="10" maxWidth="3.4028234663852886e+38" id="xsM-jc-5Eo">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Disc #">
@@ -316,16 +304,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="8VR-c1-KJQ">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="8VR-c1-KJQ" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="AIb-5G-jTw" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.disc_number" id="8xq-Pa-Rem"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="equalizer_preset" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="fx4-cm-3X9" userLabel="Equalizer">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Equalizer">
@@ -333,15 +318,12 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="eF3-c0-cMT">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="eF3-c0-cMT" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.equalizer_preset" id="3pn-8Y-i11"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="date_last_played" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="das-ju-aG7">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Last Played">
@@ -349,16 +331,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="xae-pC-hvr">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="xae-pC-hvr" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" id="NDn-L6-Ngx"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.date_last_played" id="QRn-Y0-7Nm"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="date_last_skipped" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="6aD-ae-eFf">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Last Skipped">
@@ -366,16 +345,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="xLA-zd-b4j">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="xLA-zd-b4j" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" id="TEx-JI-bvx"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.date_last_skipped" id="puH-xT-qQW"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="movement_name" width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="dqs-Iw-GO8">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Movement Name">
@@ -383,15 +359,12 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="yQ6-uV-0wl">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="yQ6-uV-0wl" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.movement_name" id="BjI-ph-d5m"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="movement_number" width="70" minWidth="10" maxWidth="3.4028234663852886e+38" id="HSA-ds-msU">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Movement #">
@@ -399,16 +372,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="OSa-Oo-svg">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="OSa-Oo-svg" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="Nud-KY-pef" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.movement_number" id="wfc-3p-DL1"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="play_count" width="40" minWidth="10" maxWidth="3.4028234663852886e+38" id="cCk-8Q-he4">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Plays">
@@ -416,16 +386,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="UZa-8d-XJX">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="UZa-8d-XJX" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="1xr-bN-jPn" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.play_count" id="KEi-NT-P2i"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="rating" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="yfD-2g-r2o">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Rating">
@@ -433,16 +400,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="qG3-K0-uCz">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="qG3-K0-uCz" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="Fpf-zm-uOd" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.rating" id="YQ8-fM-Pj7"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="sample_rate" width="80" minWidth="10" maxWidth="3.4028234663852886e+38" id="JpS-3R-m2w">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sample Rate">
@@ -450,16 +414,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="AC3-BK-Gx3">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="AC3-BK-Gx3" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="FXj-G5-uam" customClass="SampleRateFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.sample_rate" id="yla-cK-9iz"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="skip_count" width="40" minWidth="10" maxWidth="3.4028234663852886e+38" id="8SU-in-oF0">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Skips">
@@ -467,16 +428,13 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="VQc-zH-7I1">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="VQc-zH-7I1" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="EYz-ja-2fc" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.skip_count" id="l4h-MQ-pas"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="sort_album" width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="bSp-01-bTE">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sort Album">
@@ -484,15 +442,12 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="yEc-xF-LkN">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="yEc-xF-LkN" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.sort_album" id="Aoj-0C-vmX"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="sort_album_artist" width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="s6e-Qu-gNO">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sort Album Artist">
@@ -500,15 +455,12 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="cS1-7y-Lyu">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="cS1-7y-Lyu" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.sort_album_artist" id="CLW-yn-9f5"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="sort_artist" width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="Hwd-Kw-cOe">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sort Artist">
@@ -516,15 +468,12 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="iKg-PX-qMW">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="iKg-PX-qMW" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.sort_artist" id="1Nn-Hz-inL"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="sort_composer" width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="WWR-OI-OTi">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sort Composer">
@@ -532,15 +481,12 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="yiZ-Vh-4nC">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="yiZ-Vh-4nC" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.sort_composer" id="7Lh-dl-Fpo"/>
-                                        </connections>
                                     </tableColumn>
                                     <tableColumn identifier="sort_name" width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="CyQ-Xo-pr8">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sort Name">
@@ -548,15 +494,12 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="vEP-DR-YFo">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="vEP-DR-YFo" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.sort_name" id="Sqz-bk-juW"/>
-                                        </connections>
                                     </tableColumn>
                                 </tableColumns>
                                 <connections>

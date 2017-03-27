@@ -13,6 +13,8 @@
 		0D01AD921D7079D900F9211F /* EqualizerWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D01AD901D7079D900F9211F /* EqualizerWindowController.xib */; };
 		0D01D4141E5E50DA002B352D /* NewSourceSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D01D4121E5E50DA002B352D /* NewSourceSheetController.swift */; };
 		0D01D4151E5E50DA002B352D /* NewSourceSheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D01D4131E5E50DA002B352D /* NewSourceSheetController.xib */; };
+		0D0C2AA71E88D8DA00CA82C3 /* MTImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0C2AA61E88D8DA00CA82C3 /* MTImageCell.swift */; };
+		0D0C2AA91E88D8FF00CA82C3 /* MTButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0C2AA81E88D8FF00CA82C3 /* MTButtonCell.swift */; };
 		0D0E5FA91D38444B009E0FA3 /* Track+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FA51D38444B009E0FA3 /* Track+CoreDataProperties.swift */; };
 		0D0E5FAA1D38444B009E0FA3 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FA61D38444B009E0FA3 /* Track.swift */; };
 		0D0E5FAF1D3E909D009E0FA3 /* DragAndDropImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */; };
@@ -196,6 +198,8 @@
 		0D01AD901D7079D900F9211F /* EqualizerWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EqualizerWindowController.xib; sourceTree = "<group>"; };
 		0D01D4121E5E50DA002B352D /* NewSourceSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewSourceSheetController.swift; sourceTree = "<group>"; };
 		0D01D4131E5E50DA002B352D /* NewSourceSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewSourceSheetController.xib; sourceTree = "<group>"; };
+		0D0C2AA61E88D8DA00CA82C3 /* MTImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTImageCell.swift; sourceTree = "<group>"; };
+		0D0C2AA81E88D8FF00CA82C3 /* MTButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTButtonCell.swift; sourceTree = "<group>"; };
 		0D0E5FA51D38444B009E0FA3 /* Track+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Track+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D0E5FA61D38444B009E0FA3 /* Track.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragAndDropImageView.swift; sourceTree = "<group>"; };
@@ -428,13 +432,9 @@
 			children = (
 				0D60F5271E86F78300CA5420 /* Formatters */,
 				0D299B211DF158A60009CF7A /* AdvancedFilterViewController.swift */,
+				0D5514941E8879090034D742 /* Main Table View */,
 				0D299B221DF158A60009CF7A /* AdvancedFilterViewController.xib */,
 				0D388AAC1E1F2C8800D25A7D /* AddPlaylistButton.swift */,
-				0D299B1D1DF151220009CF7A /* LibraryTableViewController.swift */,
-				0D299B1E1DF151220009CF7A /* LibraryTableViewController.xib */,
-				0D015AC51E00A31C00EBAB6E /* LibraryTableViewControllerCellBased.swift */,
-				0D015AC31E00A30900EBAB6E /* LibraryTableViewControllerCellBased.xib */,
-				0DC2E8F41E0110D200671D83 /* MTTextFieldCell.swift */,
 				0D299B191DF11F140009CF7A /* TrackQueueViewController.swift */,
 				0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */,
 				0D299B1A1DF11F140009CF7A /* TrackQueueViewController.xib */,
@@ -447,10 +447,8 @@
 				0DA8D03D1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift */,
 				0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */,
 				0DD7D6DC1D3F3E270035BAD8 /* AlbumArtArrayController.swift */,
-				0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */,
 				0DC2E8F61E01E47900671D83 /* SpecialScrollView.swift */,
 				0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */,
-				0D76F6A91D270EB900C6E70F /* DragAndDropArrayController.swift */,
 				0D76F6AB1D28581900C6E70F /* DragAndDropTreeController.swift */,
 				0D5A55E61DDAA80F00E46F08 /* sourceListDataSource.swift */,
 				0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */,
@@ -572,6 +570,22 @@
 				0D60F52B1E87372D00CA5420 /* RemoveSourceSheetController.xib */,
 			);
 			name = "Library Manager";
+			sourceTree = "<group>";
+		};
+		0D5514941E8879090034D742 /* Main Table View */ = {
+			isa = PBXGroup;
+			children = (
+				0D299B1D1DF151220009CF7A /* LibraryTableViewController.swift */,
+				0D299B1E1DF151220009CF7A /* LibraryTableViewController.xib */,
+				0D015AC51E00A31C00EBAB6E /* LibraryTableViewControllerCellBased.swift */,
+				0DC2E8F41E0110D200671D83 /* MTTextFieldCell.swift */,
+				0D0C2AA61E88D8DA00CA82C3 /* MTImageCell.swift */,
+				0D015AC31E00A30900EBAB6E /* LibraryTableViewControllerCellBased.xib */,
+				0D0C2AA81E88D8FF00CA82C3 /* MTButtonCell.swift */,
+				0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */,
+				0D76F6A91D270EB900C6E70F /* DragAndDropArrayController.swift */,
+			);
+			name = "Main Table View";
 			sourceTree = "<group>";
 		};
 		0D606EF71E7B4C2A007AE152 /* Audio */ = {
@@ -1039,6 +1053,7 @@
 				0DD7D6DD1D3F3E270035BAD8 /* AlbumArtArrayController.swift in Sources */,
 				0D5A55E71DDAA80F00E46F08 /* sourceListDataSource.swift in Sources */,
 				0DC84C601DBAD0C100E8877C /* NewCachedOrder.swift in Sources */,
+				0D0C2AA71E88D8DA00CA82C3 /* MTImageCell.swift in Sources */,
 				0DC397AB1E5282920009792B /* LibraryManagerViewController.swift in Sources */,
 				0DA8D03E1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift in Sources */,
 				0DB60F901E62341500105766 /* AddFilesWindowController.swift in Sources */,
@@ -1094,6 +1109,7 @@
 				0DC2E8F71E01E47900671D83 /* SpecialScrollView.swift in Sources */,
 				0DC84C5F1DBAD0C100E8877C /* NewCachedOrder+CoreDataProperties.swift in Sources */,
 				0DEF66C71D383A8700EA3ADC /* SourceListItem.swift in Sources */,
+				0D0C2AA91E88D8FF00CA82C3 /* MTButtonCell.swift in Sources */,
 				0D0E5FAF1D3E909D009E0FA3 /* DragAndDropImageView.swift in Sources */,
 				0D388AAA1E1DBB4800D25A7D /* SmartCriteria+CoreDataProperties.swift in Sources */,
 				0D3878B61DD10258004CC3C1 /* TrackView.swift in Sources */,

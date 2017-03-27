@@ -93,19 +93,8 @@ class iTunesLibraryParser: NSObject {
         }
     }
     
-    func makeLibrary() {
+    func makeLibrary(library: Library?) {
         print("itunes parser here about to do stuff")
-        let library = {() -> Library? in
-            let fetchReq = NSFetchRequest<NSFetchRequestResult>(entityName: "Library")
-            let predicate = NSPredicate(format: "is_network == nil OR is_network == false")
-            fetchReq.predicate = predicate
-            do {
-                let result = try managedContext.fetch(fetchReq)[0] as! Library
-                return result
-            } catch {
-                return nil
-            }
-        }()
         managedContext.undoManager?.beginUndoGrouping()
         print("3")
         for item in self.XMLMasterPlaylistTrackArray {
@@ -119,7 +108,7 @@ class iTunesLibraryParser: NSObject {
             var status, compilation: Bool
             var placeholderArtist: Artist?
             var placeholderAlbum: Album?
-            
+            cd_track.library = library
             if ((XMLTrackDict! as AnyObject).object(forKey: "Track ID") != nil) {
                 track_id = (XMLTrackDict! as AnyObject).object(forKey: "Track ID") as! Int
                 cd_track.id = track_id as NSNumber?

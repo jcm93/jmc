@@ -53,7 +53,7 @@ class ImportProgressBar: NSWindowController {
         }
     }
     
-    func doStuff() {
+    func doStuff(library: Library) {
         print("doing stuff as a progress bar")
         DispatchQueue.main.async {
             self.progressString.stringValue = "Importing songs..."
@@ -61,7 +61,7 @@ class ImportProgressBar: NSWindowController {
         self.progressIndicator.bind("value", to: iTunesParser!, withKeyPath: "numImportedSongs", options: nil)
         self.progressIndicator.bind("maxValue", to: iTunesParser!, withKeyPath: "numSongs", options: nil)
         self.iTunesParser?.numImportedSongs = 0
-        self.iTunesParser!.makeLibrary()
+        self.iTunesParser!.makeLibrary(library: library)
     }
     
     override func windowDidLoad() {
