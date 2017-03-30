@@ -35,6 +35,7 @@ class FlacDecoder: NSObject, FileBufferer {
     var backgroundDecoderShouldBreak = false
     var seekGuardCheckThing = false
     var decoderBroke = false
+    var frameShouldSeekTo: Int64 = 0
     
     init?(file: URL, audioModule: AudioModule) {
         self.audioModule = audioModule
@@ -109,15 +110,16 @@ class FlacDecoder: NSObject, FileBufferer {
     
     func seek(to frame: Int64) {
         self.isSeeking = true
-        self.seekGuardCheckThing = true
-        FLAC__stream_decoder_seek_absolute(&self.decoder!, FLAC__uint64(frame))
-        self.seekGuardCheckThing = false
-        self.currentTrackSampleIndex = UInt32(frame)
         if self.bufferCurrentlyDecoding == true {
             print("buffer currently decoding, setting break")
+            self.frameShouldSeekTo = frame
             self.backgroundDecoderShouldBreak = true
         } else {
             print("buffer not currently decoding, proceeding directly to co-opt decode buffer")
+            self.seekGuardCheckThing = true
+            FLAC__stream_decoder_seek_absolute(&self.decoder!, FLAC__uint64(frame))
+            self.seekGuardCheckThing = false
+            self.currentTrackSampleIndex = UInt32(frame)
             fillNextBufferSynchronously()
             self.isSeeking = false
         }
@@ -127,6 +129,10 @@ class FlacDecoder: NSObject, FileBufferer {
         print("background decoder broke, filling next buffer synchronously")
         self.backgroundDecoderShouldBreak = false
         self.decoderBroke = true
+        self.seekGuardCheckThing = true
+        FLAC__stream_decoder_seek_absolute(&self.decoder!, FLAC__uint64(self.frameShouldSeekTo))
+        self.seekGuardCheckThing = false
+        self.frameShouldSeekTo = 0
         self.fillNextBufferSynchronously()
         self.isSeeking = false
     }
@@ -161,24 +167,26 @@ class FlacDecoder: NSObject, FileBufferer {
         //swap decode buffer
         self.currentDecodeBuffer = self.currentDecodeBuffer == self.bufferA ? self.bufferB : self.bufferA
         DispatchQueue.global(qos: .default).async {
-            self.bufferCurrentlyDecoding = true
-            for _ in 1...self.bufferFrameLength {
-                if self.decoderBroke != true && self.isSeeking != true {
-                    FLAC__stream_decoder_process_single(&self.decoder!)
-                } else {
-                    self.decoderBroke = false
-                    self.bufferCurrentlyDecoding = false
-                    return
+            if self.bufferCurrentlyDecoding != true {
+                self.bufferCurrentlyDecoding = true
+                for _ in 1...self.bufferFrameLength {
+                    if self.decoderBroke != true && self.isSeeking != true {
+                        FLAC__stream_decoder_process_single(&self.decoder!)
+                    } else {
+                        self.decoderBroke = false
+                        self.bufferCurrentlyDecoding = false
+                        return
+                    }
                 }
+                self.decoderBroke = false
+                self.bufferCurrentlyDecoding = false
+                let finalBuffer = self.currentTrackSampleIndex! >= self.totalFrames
+                //must be responsible for moderating frame length
+                if finalBuffer {
+                    self.currentDecodeBuffer.frameLength = self.currentBufferSampleIndex!
+                }
+                self.audioModule.fileBuffererDecodeCallback(isFinalBuffer: finalBuffer)
             }
-            self.decoderBroke = false
-            self.bufferCurrentlyDecoding = false
-            let finalBuffer = self.currentTrackSampleIndex! >= self.totalFrames
-            //must be responsible for moderating frame length
-            if finalBuffer {
-                self.currentDecodeBuffer.frameLength = self.currentBufferSampleIndex!
-            }
-            self.audioModule.fileBuffererDecodeCallback(isFinalBuffer: finalBuffer)
         }
     }
     
