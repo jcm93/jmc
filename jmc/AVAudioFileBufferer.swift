@@ -52,7 +52,14 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
     }
     
     func seek(to frame: Int64) {
+        self.isSeeking = true
         do {
+            let url = self.file.url
+            self.bufferA = AVAudioPCMBuffer(pcmFormat: file.processingFormat, frameCapacity: bufferFrameLength)
+            self.bufferB = AVAudioPCMBuffer(pcmFormat: file.processingFormat, frameCapacity: bufferFrameLength)
+            self.currentDecodeBuffer = bufferA
+            self.file = try AVAudioFile(forReading: url)
+            self.totalFrames = UInt32(file.length)
             self.currentBufferSampleIndex = 0
             self.file.framePosition = frame
             try self.file.read(into: self.currentDecodeBuffer, frameCount: self.bufferFrameLength)
@@ -62,8 +69,7 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
         } catch {
             print(error)
         }
-        
-        
+        self.isSeeking = false
     }
     
     func prepareFirstBuffer() -> AVAudioPCMBuffer? {
