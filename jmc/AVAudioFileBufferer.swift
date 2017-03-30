@@ -21,6 +21,9 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
     var totalFrames: UInt32
     var audioModule: AudioModule
     var isSeeking = false
+    var isCurrentlyDecoding = false
+    var needsSeek = false
+    var frameToSeekTo: Int64 = 0
     
     init(file: AVAudioFile, audioModule: AudioModule) {
         self.bufferA = AVAudioPCMBuffer(pcmFormat: file.processingFormat, frameCapacity: bufferFrameLength)
@@ -38,8 +41,14 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
         DispatchQueue.global(qos: .default).async {
             do {
                 //determine if final buffer
-                if self.audioModule.currentFileBufferer! as! AVAudioFileBufferer == self && self.isSeeking != true {
+                if self.audioModule.currentFileBufferer! as! AVAudioFileBufferer == self && self.isSeeking != true && self.needsSeek != true && self.isCurrentlyDecoding != true {
+                    self.isCurrentlyDecoding = true
                     try self.file.read(into: self.currentDecodeBuffer, frameCount: self.bufferFrameLength)
+                    self.isCurrentlyDecoding = false
+                    if self.needsSeek == true {
+                        print("calling needs seek callback")
+                        self.needsSeekCallback()
+                    }
                     print("actual reading of file from completion has completed, about to call decode callback")
                     self.lastFrameDecoded += self.bufferFrameLength
                     let lastBuffer = self.lastFrameDecoded >= UInt32(self.file.length)
@@ -51,32 +60,40 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
         }
     }
     
+    func needsSeekCallback() {
+        seek(to: self.frameToSeekTo)
+        self.needsSeek = false
+    }
+    
     func seek(to frame: Int64) {
         self.isSeeking = true
+        print("seeking")
         do {
-            let url = self.file.url
-            self.bufferA = AVAudioPCMBuffer(pcmFormat: file.processingFormat, frameCapacity: bufferFrameLength)
-            self.bufferB = AVAudioPCMBuffer(pcmFormat: file.processingFormat, frameCapacity: bufferFrameLength)
-            self.currentDecodeBuffer = bufferA
-            self.file = try AVAudioFile(forReading: url)
-            self.totalFrames = UInt32(file.length)
-            self.currentBufferSampleIndex = 0
-            self.file.framePosition = frame
-            try self.file.read(into: self.currentDecodeBuffer, frameCount: self.bufferFrameLength)
-            self.lastFrameDecoded = UInt32(frame)
-            let lastBuffer = self.lastFrameDecoded >= UInt32(self.file.length)
-            self.audioModule.fileBuffererSeekDecodeCallback(isFinalBuffer: lastBuffer)
+            if self.isCurrentlyDecoding == false {
+                print("not currently decoding, co-opting buffer")
+                self.file.framePosition = frame
+                try self.file.read(into: self.currentDecodeBuffer, frameCount: self.bufferFrameLength)
+                self.lastFrameDecoded = UInt32(frame)
+                let lastBuffer = self.lastFrameDecoded >= UInt32(self.file.length)
+                self.audioModule.fileBuffererSeekDecodeCallback(isFinalBuffer: lastBuffer)
+                self.isSeeking = false
+            } else {
+                print("currently decoding, setting seek break")
+                self.needsSeek = true
+                self.frameToSeekTo = frame
+            }
         } catch {
             print(error)
         }
-        self.isSeeking = false
     }
     
     func prepareFirstBuffer() -> AVAudioPCMBuffer? {
         self.currentBufferSampleIndex = 0
         self.currentDecodeBuffer = self.currentDecodeBuffer == self.bufferA ? self.bufferB : self.bufferA
         do {
+            self.isCurrentlyDecoding = true
             try self.file.read(into: self.currentDecodeBuffer, frameCount: self.bufferFrameLength)
+            self.isCurrentlyDecoding = false
             self.lastFrameDecoded += self.bufferFrameLength
             return currentDecodeBuffer
         } catch {
