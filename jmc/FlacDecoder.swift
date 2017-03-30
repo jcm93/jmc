@@ -119,6 +119,7 @@ class FlacDecoder: NSObject, FileBufferer {
         } else {
             print("buffer not currently decoding, proceeding directly to co-opt decode buffer")
             fillNextBufferSynchronously()
+            self.isSeeking = false
         }
     }
     
@@ -127,6 +128,7 @@ class FlacDecoder: NSObject, FileBufferer {
         self.backgroundDecoderShouldBreak = false
         self.decoderBroke = true
         self.fillNextBufferSynchronously()
+        self.isSeeking = false
     }
     
     let flacErrorCallback: @convention(c) (Optional<UnsafePointer<FLAC__StreamDecoder>>, FLAC__StreamDecoderErrorStatus, Optional<UnsafeMutableRawPointer>) -> () = {
@@ -161,8 +163,12 @@ class FlacDecoder: NSObject, FileBufferer {
         DispatchQueue.global(qos: .default).async {
             self.bufferCurrentlyDecoding = true
             for _ in 1...self.bufferFrameLength {
-                if self.decoderBroke != true {
+                if self.decoderBroke != true && self.isSeeking != true {
                     FLAC__stream_decoder_process_single(&self.decoder!)
+                } else {
+                    self.decoderBroke = false
+                    self.bufferCurrentlyDecoding = false
+                    return
                 }
             }
             self.decoderBroke = false
