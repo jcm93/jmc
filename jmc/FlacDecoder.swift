@@ -25,7 +25,7 @@ class FlacDecoder: NSObject, FileBufferer {
     var bufferA: AVAudioPCMBuffer = AVAudioPCMBuffer()
     var bufferB: AVAudioPCMBuffer = AVAudioPCMBuffer()
     var currentDecodeBuffer: AVAudioPCMBuffer = AVAudioPCMBuffer()
-    var bufferFrameLength: UInt32 = 25
+    var bufferFrameLength: UInt32 = 13
     let NUM_FRAMES_IN_ADVANCE_TO_SCHEDULE_NEXT_FILE: UInt32 = 10
     var audioModule: AudioModule
     var hasScheduled: Bool? = false

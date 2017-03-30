@@ -38,7 +38,7 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
         DispatchQueue.global(qos: .default).async {
             do {
                 //determine if final buffer
-                if self.audioModule.currentFileBufferer! as! AVAudioFileBufferer == self {
+                if self.audioModule.currentFileBufferer! as! AVAudioFileBufferer == self && self.isSeeking != true {
                     try self.file.read(into: self.currentDecodeBuffer, frameCount: self.bufferFrameLength)
                     print("actual reading of file from completion has completed, about to call decode callback")
                     self.lastFrameDecoded += self.bufferFrameLength
@@ -52,7 +52,18 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
     }
     
     func seek(to frame: Int64) {
-        print("poop")
+        do {
+            self.currentBufferSampleIndex = 0
+            self.file.framePosition = frame
+            try self.file.read(into: self.currentDecodeBuffer, frameCount: self.bufferFrameLength)
+            self.lastFrameDecoded = UInt32(frame)
+            let lastBuffer = self.lastFrameDecoded >= UInt32(self.file.length)
+            self.audioModule.fileBuffererSeekDecodeCallback(isFinalBuffer: lastBuffer)
+        } catch {
+            print(error)
+        }
+        
+        
     }
     
     func prepareFirstBuffer() -> AVAudioPCMBuffer? {
