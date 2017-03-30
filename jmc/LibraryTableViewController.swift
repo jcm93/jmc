@@ -407,11 +407,8 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                 mainWindowController?.trackQueueViewController?.activePlayOrders.append(self.item!.playOrderObject!)
                 self.item!.tableViewController = self
                 print("initialized poo for new view")
-                self.trackViewArrayController.actualArrangedObjects = self.trackViewArrayController.arrangedObjects as? [TrackView]
                 self.hasCreatedPlayOrder = true
                 self.trackViewArrayController.hasInitialized = true
-            } else {
-                self.trackViewArrayController.actualArrangedObjects = self.trackViewArrayController.arrangedObjects as? [TrackView]
             }
         }
     }

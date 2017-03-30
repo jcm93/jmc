@@ -11,7 +11,15 @@ import Cocoa
 class StupidNumberFormatter: Formatter {
 
     override func string(for obj: Any?) -> String? {
-        return (obj as! NSNumber).int32Value > 0 ? String(describing: obj) : ""
+        if obj != nil {
+            if let thing = obj as? NSNumber {
+                return (obj as! NSNumber).int32Value > 0 ? String(describing: obj) : ""
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
     }
     
     func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AutoreleasingUnsafeMutablePointer<AnyObject?>>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<AutoreleasingUnsafeMutablePointer<NSString?>>?) -> Bool {

@@ -8,6 +8,7 @@
 
 import Cocoa
 import DiskArbitration
+import IOKit
 
 class TrackNotFound: NSObject {
     var path: String?

@@ -54,6 +54,7 @@ class AudioModule: NSObject {
     var fileBuffererDictionary = [URL : FileBufferer]()
     var currentFileBufferer: FileBufferer?
     var trackTransitionBufferGuardStop = false
+    var fileManager = FileManager.default
     
     let verbotenFileTypes = ["m4v", "m4p"]
     
@@ -117,6 +118,7 @@ class AudioModule: NSObject {
     var track_frame_offset: Double?
     var is_paused: Bool?
     var finalBuffer: Bool?
+    var isSeeking = false
     
     var total_offset_frames: Int64 = 0
     var total_offset_seconds: Int64 = 0
@@ -413,14 +415,48 @@ class AudioModule: NSObject {
     
     func fileBuffererCompletion() {
         //swap decode buffer
+        let bufferThatCompleted = currentFileBufferer?.currentDecodeBuffer == currentFileBufferer?.bufferA ? currentFileBufferer?.bufferA : currentFileBufferer?.bufferB
+        print("buffer that just played is \(bufferThatCompleted)")
         print("file bufferer completion called, finalBuffer is \(finalBuffer) and trackTransitionBufferGuardStop is \(trackTransitionBufferGuardStop)")
+        if self.isSeeking == true {
+            print("is seeking, file bufferer completion finished")
+            return
+        }
         if self.finalBuffer == true {
             //skip filling next buffer, because initial buffer of next track is already scheduled
             self.finalBuffer = false
         } else if self.trackTransitionBufferGuardStop != true {
+            print("filling next buffer")
              self.currentFileBufferer!.fillNextBuffer()
         }
         print("file bufferer completion finished")
+    }
+    
+    func fileBuffererSeekDecodeCallback(isFinalBuffer: Bool) {
+        print("beginning of file seek buffer decode callback")
+        let newBuffer = self.currentFileBufferer!.currentDecodeBuffer
+        self.currentHandlerType = .seek
+        curPlayerNode.stop()
+        curPlayerNode.reset()
+        curPlayerNode.scheduleBuffer(newBuffer, at: nil, options: .interrupts, completionHandler: fileBuffererCompletion)
+        curPlayerNode.play()
+        self.currentHandlerType = .natural
+        print(curPlayerNode.lastRenderTime)
+        print("scheduled buffer \(newBuffer)")
+        if isFinalBuffer == true {
+            print("is final buffer")
+            file_buffer_frames += Int64(newBuffer.frameLength)
+            self.finalBuffer = true
+            print(self.finalBuffer)
+            handleCompletion()
+            //schedule next file
+        } else {
+            print("is not final buffer")
+            file_buffer_frames += Int64(newBuffer.frameLength)
+        }
+        self.isSeeking = false
+        currentFileBufferer?.fillNextBuffer()
+        print("end of file seek buffer decode callback")
     }
     
     func fileBuffererDecodeCallback(isFinalBuffer: Bool) {
@@ -429,6 +465,7 @@ class AudioModule: NSObject {
         let newBuffer = self.currentFileBufferer!.currentDecodeBuffer
         let currentBuffer = self.currentFileBufferer!.currentDecodeBuffer == self.currentFileBufferer!.bufferA ? self.currentFileBufferer!.bufferB : self.currentFileBufferer!.bufferA
         let frameToScheduleAt = file_buffer_frames
+        print("scheduling buffer \(newBuffer) at frame \(frameToScheduleAt)")
         let time = AVAudioTime(sampleTime: frameToScheduleAt, atRate: currentBuffer.format.sampleRate)
         print(time)
         curPlayerNode.scheduleBuffer(newBuffer, at: time, options: .init(rawValue: 0), completionHandler: fileBuffererCompletion)
@@ -557,15 +594,13 @@ class AudioModule: NSObject {
     }
     
     func seek(_ frac: Double) {
+        guard isSeeking != true else {return}
+        self.isSeeking = true
         let frame = Int64(frac * Double(duration_frames!))
+        self.file_buffer_frames = 0
         track_frame_offset = Double(frame)
         currentHandlerType = .seek
-        curPlayerNode.stop()
-        curPlayerNode.scheduleSegment(curFile!, startingFrame: frame, frameCount: UInt32(duration_frames!)-UInt32(frame), at: nil, completionHandler: handleCompletion)
-        if (is_paused == false) {
-            curPlayerNode.play()
-            
-        }
+        currentFileBufferer!.seek(to: frame)
         total_offset_frames = 0
         total_offset_seconds = 0
         currentHandlerType = .natural
@@ -583,6 +618,7 @@ class AudioModule: NSObject {
     
     
     func play() {
+        guard fileManager.fileExists(atPath: URL(string: currentTrackLocation!)!.path) else {return}
         is_paused = false
         if audioEngine.isRunning == true {
             curPlayerNode.play()

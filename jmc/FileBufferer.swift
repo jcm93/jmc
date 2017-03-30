@@ -17,9 +17,12 @@ protocol FileBufferer {
     var audioModule: AudioModule { get set }
     var bufferFrameLength: UInt32 { get set }
     var totalFrames: UInt32 { get set }
+    var isSeeking: Bool { get set }
     
     func fillNextBuffer() -> Void
     
     func prepareFirstBuffer() -> AVAudioPCMBuffer?
+    
+    func seek(to frame: Int64) -> Void
     
 }

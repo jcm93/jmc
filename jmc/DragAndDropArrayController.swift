@@ -15,15 +15,19 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     var draggedRowIndexes: IndexSet?
     var countTest = 0
     var hasInitialized = false
-    var actualArrangedObjects: [TrackView]?
     
     func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
-        let track = (self.actualArrangedObjects!)[row].track!
+        //cast to NSArray to avoid typechecking every single object in array, as in when we cast to [TrackView]
+        let track = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!
         let status = track.library?.is_available as? Bool ?? true
         let value = { () -> Any? in
         switch tableColumn! {
         case tableViewController!.isPlayingColumn:
-            return nil
+            if track.is_playing == true {
+                return NSImage(named: "NSAudioOutputVolumeMedTemplate")
+            } else {
+                return nil
+            }
         case tableViewController!.playlistNumberColumn:
             return track.view?.playlist_order
         case tableViewController!.isEnabledColumn:
@@ -93,10 +97,6 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         return (value, status)
     }
     
-    func tableView(_ tableView: NSTableView, willDisplayCell cell: Any, for tableColumn: NSTableColumn?, row: Int) {
-        
-    }
-    
     func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
         print("sort descriptors did change called")
         let archivedSortDescriptor = NSKeyedArchiver.archivedData(withRootObject: tableView.sortDescriptors)
@@ -110,7 +110,6 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
         print("table view writerows called")
         let rows = NSMutableArray()
-        
         for index in rowIndexes {
             let trackView = (self.arrangedObjects as! [TrackView])[index]
             rows.add(trackView.track!.objectID.uriRepresentation())

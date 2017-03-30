@@ -14,12 +14,13 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
     var bufferA: AVAudioPCMBuffer
     var bufferB: AVAudioPCMBuffer
     var currentDecodeBuffer: AVAudioPCMBuffer
-    var bufferFrameLength: UInt32 = 45000
+    var bufferFrameLength: UInt32 = 90000
     var file: AVAudioFile
     var currentBufferSampleIndex = 0
     var lastFrameDecoded: UInt32 = 0
     var totalFrames: UInt32
     var audioModule: AudioModule
+    var isSeeking = false
     
     init(file: AVAudioFile, audioModule: AudioModule) {
         self.bufferA = AVAudioPCMBuffer(pcmFormat: file.processingFormat, frameCapacity: bufferFrameLength)
@@ -48,6 +49,10 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
                 print(error)
             }
         }
+    }
+    
+    func seek(to frame: Int64) {
+        print("poop")
     }
     
     func prepareFirstBuffer() -> AVAudioPCMBuffer? {
