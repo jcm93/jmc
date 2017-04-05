@@ -36,6 +36,7 @@ class FlacDecoder: NSObject, FileBufferer {
     var seekGuardCheckThing = false
     var decoderBroke = false
     var frameShouldSeekTo: Int64 = 0
+    var metadataDictionary = NSMutableDictionary()
     
     init?(file: URL, audioModule: AudioModule) {
         self.audioModule = audioModule
@@ -89,7 +90,7 @@ class FlacDecoder: NSObject, FileBufferer {
     let flacMetadataCallback: @convention(c) (Optional<UnsafePointer<FLAC__StreamDecoder>>, Optional<UnsafePointer<FLAC__StreamMetadata>>, Optional<UnsafeMutableRawPointer>) -> () = {
         (decoder: Optional<UnsafePointer<FLAC__StreamDecoder>>, metadata: Optional<UnsafePointer<FLAC__StreamMetadata>>, client_data: Optional<UnsafeMutableRawPointer>) in
         let flacDecoder = Unmanaged<FlacDecoder>.fromOpaque(client_data!).takeUnretainedValue()
-        let meta = metadata!.pointee
+        let meta = metadata!.pointee as! FLAC__StreamMetadata
         switch meta.type {
         case FLAC__METADATA_TYPE_STREAMINFO:
             flacDecoder.channels = meta.data.stream_info.channels
@@ -102,6 +103,14 @@ class FlacDecoder: NSObject, FileBufferer {
             flacDecoder.totalFrames = UInt32(meta.data.stream_info.total_samples)
             for chan in 0..<flacDecoder.channels! {
                 flacDecoder.blockBuffer.append([Float32]())
+            }
+        case FLAC__METADATA_TYPE_VORBIS_COMMENT:
+            let comment = meta.data.vorbis_comment
+            let count = comment.num_comments
+            let comments = comment.comments!
+            for commentIndex in 0..<count {
+                let commentValue = String(cString: comments[Int(commentIndex)].entry)
+                print(commentValue)
             }
         default:
             print("doingus")
@@ -117,11 +126,12 @@ class FlacDecoder: NSObject, FileBufferer {
         } else {
             print("buffer not currently decoding, proceeding directly to co-opt decode buffer")
             self.seekGuardCheckThing = true
+            self.currentTrackSampleIndex = UInt32(frame)
             FLAC__stream_decoder_seek_absolute(&self.decoder!, FLAC__uint64(frame))
             self.seekGuardCheckThing = false
-            self.currentTrackSampleIndex = UInt32(frame)
             fillNextBufferSynchronously()
             self.isSeeking = false
+            self.audioModule.seekCallback()
         }
     }
     
@@ -130,11 +140,13 @@ class FlacDecoder: NSObject, FileBufferer {
         self.backgroundDecoderShouldBreak = false
         self.decoderBroke = true
         self.seekGuardCheckThing = true
+        self.currentTrackSampleIndex = UInt32(self.frameShouldSeekTo)
         FLAC__stream_decoder_seek_absolute(&self.decoder!, FLAC__uint64(self.frameShouldSeekTo))
         self.seekGuardCheckThing = false
         self.frameShouldSeekTo = 0
         self.fillNextBufferSynchronously()
         self.isSeeking = false
+        self.audioModule.seekCallback()
     }
     
     let flacErrorCallback: @convention(c) (Optional<UnsafePointer<FLAC__StreamDecoder>>, FLAC__StreamDecoderErrorStatus, Optional<UnsafeMutableRawPointer>) -> () = {
@@ -154,20 +166,19 @@ class FlacDecoder: NSObject, FileBufferer {
             }
             self.bufferCurrentlyDecoding = false
             let finalBuffer = self.currentTrackSampleIndex! >= self.totalFrames
+            print("current track sample index \(self.currentTrackSampleIndex), total frames \(self.totalFrames), finalBuffer \(finalBuffer)")
             //must be responsible for moderating frame length
-            if finalBuffer {
-                self.currentDecodeBuffer.frameLength = self.currentBufferSampleIndex!
-            }
+            self.currentDecodeBuffer.frameLength = self.currentBufferSampleIndex!
             self.audioModule.fileBuffererSeekDecodeCallback(isFinalBuffer: finalBuffer)
         }
     }
     
     func fillNextBuffer() {
-        self.currentBufferSampleIndex = 0
         //swap decode buffer
         self.currentDecodeBuffer = self.currentDecodeBuffer == self.bufferA ? self.bufferB : self.bufferA
         DispatchQueue.global(qos: .default).async {
             if self.bufferCurrentlyDecoding != true {
+                self.currentBufferSampleIndex = 0
                 self.bufferCurrentlyDecoding = true
                 for _ in 1...self.bufferFrameLength {
                     if self.decoderBroke != true && self.isSeeking != true {
@@ -181,6 +192,7 @@ class FlacDecoder: NSObject, FileBufferer {
                 self.decoderBroke = false
                 self.bufferCurrentlyDecoding = false
                 let finalBuffer = self.currentTrackSampleIndex! >= self.totalFrames
+                print("current track sample index \(self.currentTrackSampleIndex), total frames \(self.totalFrames), finalBuffer \(finalBuffer)")
                 //must be responsible for moderating frame length
                 if finalBuffer {
                     self.currentDecodeBuffer.frameLength = self.currentBufferSampleIndex!

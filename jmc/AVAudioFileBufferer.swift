@@ -52,6 +52,7 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
                     print("actual reading of file from completion has completed, about to call decode callback")
                     self.lastFrameDecoded += self.bufferFrameLength
                     let lastBuffer = self.lastFrameDecoded >= UInt32(self.file.length)
+                    print("lastBuffer is \(lastBuffer)")
                     self.audioModule.fileBuffererDecodeCallback(isFinalBuffer: lastBuffer)
                 }
             } catch {
@@ -70,13 +71,16 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
         print("seeking")
         do {
             if self.isCurrentlyDecoding == false {
-                print("not currently decoding, co-opting buffer")
+                print("not currently decoding, co-opting buffer, seeking to frame \(frame) of \(self.totalFrames)")
                 self.file.framePosition = frame
-                try self.file.read(into: self.currentDecodeBuffer, frameCount: self.bufferFrameLength)
                 self.lastFrameDecoded = UInt32(frame)
-                let lastBuffer = self.lastFrameDecoded >= UInt32(self.file.length)
-                self.audioModule.fileBuffererSeekDecodeCallback(isFinalBuffer: lastBuffer)
+                try self.file.read(into: self.currentDecodeBuffer, frameCount: self.bufferFrameLength)
                 self.isSeeking = false
+                self.lastFrameDecoded += self.bufferFrameLength
+                let lastBuffer = self.lastFrameDecoded >= UInt32(self.file.length)
+                print("lastBuffer is \(lastBuffer)")
+                self.audioModule.fileBuffererSeekDecodeCallback(isFinalBuffer: lastBuffer)
+                self.audioModule.seekCallback()
             } else {
                 print("currently decoding, setting seek break")
                 self.needsSeek = true
@@ -89,7 +93,6 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
     
     func prepareFirstBuffer() -> AVAudioPCMBuffer? {
         self.currentBufferSampleIndex = 0
-        self.currentDecodeBuffer = self.currentDecodeBuffer == self.bufferA ? self.bufferB : self.bufferA
         do {
             self.isCurrentlyDecoding = true
             try self.file.read(into: self.currentDecodeBuffer, frameCount: self.bufferFrameLength)

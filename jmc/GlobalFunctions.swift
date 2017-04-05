@@ -167,6 +167,28 @@ func purgeCurrentlyPlaying() {
 let VALID_ARTWORK_TYPE_EXTENSIONS = ["jpg", "png", "tiff", "gif", "pdf"]
 let VALID_FILE_TYPES = ["aac", "adts", "ac3", "aif", "aiff", "aifc", "caf", "mp3", "mp4", "m4a", "snd", "au", "sd2", "wav", "alac", "flac"]
 
+//sample FLAC metadata dictionary
+
+/*
+ ENCODER=X Lossless Decoder 20141129
+ TITLE=Eclectrocution
+ ARTIST=Bill Fox
+ ALBUM=I Stayed Up All Night Listening To Records
+ GENRE=Indie Rock
+ TRACKNUMBER=2
+ TRACKTOTAL=25
+ TOTALTRACKS=25
+ DISCNUMBER=1
+ DISCTOTAL=1
+ TOTALDISCS=1
+ DATE=1998
+ COMPILATION=1
+ iTunes_CDDB_1=75103619+311472+25+150+9731+23810+36286+50728+66415+81858+91382+107925+122484+146228+161584+166009+176768+187971+208201+215013+222961+225471+248084+257280+264597+276543+287590+301997
+ REPLAYGAIN_TRACK_GAIN=-9.94 dB
+ REPLAYGAIN_TRACK_PEAK=0.99163818
+
+ */
+
 let fieldsToCachedOrdersDictionary: NSDictionary = [
     "date_added" : "Date Added",
     "date_released" : "Date Released",

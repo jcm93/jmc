@@ -38,7 +38,6 @@ class ProgressBarView: NSView {
             Swift.print("strating timer from seek")
             self.mainWindowController?.startTimer()
         }
-        self.mainWindowController?.updateValuesUnsafe()
     }
     
     override func mouseUp(with theEvent: NSEvent) {
@@ -49,7 +48,6 @@ class ProgressBarView: NSView {
             Swift.print("starting timer from seek")
             self.mainWindowController?.startTimer()
         }
-        self.mainWindowController?.updateValuesUnsafe()
     }
 
     

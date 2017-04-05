@@ -464,6 +464,15 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         delegate?.audioModule.seek(frac)
     }
     
+    func seekCompleted() {
+        DispatchQueue.main.async {
+            self.updateValuesUnsafe()
+            self.timer?.invalidate()
+            self.timer = nil
+            self.startTimer()
+        }
+    }
+    
     func skip() {
         guard trackQueueViewController!.currentTrack != nil else {return}
         guard self.isDoneWithSkipOperation else {print("can't skip");return}
