@@ -39,6 +39,8 @@ class AudioModule: NSObject {
   
     player node
         |
+    mixer (for sample rate conversion)
+        |
     equalizer
         |
     mainMixerNode (for volume control)
@@ -61,6 +63,7 @@ class AudioModule: NSObject {
     let verbotenFileTypes = ["m4v", "m4p"]
     
     var curPlayerNode = AVAudioPlayerNode()
+    var sampleRateMixer = AVAudioMixerNode()
     var equalizer: AVAudioUnitEQ = {
         let doingle = AVAudioUnitEQ(numberOfBands: 10)
         let bands = doingle.bands
@@ -120,18 +123,24 @@ class AudioModule: NSObject {
     var track_frame_offset: Double?
     var is_paused: Bool?
     var finalBuffer: Bool?
+    var finalBufferQueued: Bool?
     var isSeeking = false
     var seekInterrupted = false
     var didSeek = false
     var seekFinalCount = 0
     var changeTrackEventCounter: Int = 0
-    var currentValidChangeTrackEventID = 0
+    var currentValidChangeTrackEventID: Int = 0
     var lastRenderedFrame: AVAudioFramePosition? = 0
     var isFirstPlayback = true
+    var queueNextTrackEventCounter: Int = 0
+    var currentValidQueueEventID: Int = 0
+    var differentFileScheduleTime: AVAudioTime?
     
     var total_offset_frames: Int64 = 0
-    var total_offset_seconds: Int64 = 0
+    var total_offset_seconds: Double = 0
     var nextBufferStartFrame: Int64 = 0
+    var nextFileIsDifferentFormat = false
+    var nextFileInitialBuffer: AVAudioPCMBuffer?
     
     var mainWindowController: MainWindowController?
     
@@ -154,15 +163,17 @@ class AudioModule: NSObject {
     
     func doInitialization() {
         audioEngine.attach(curPlayerNode)
+        audioEngine.attach(self.sampleRateMixer)
         audioEngine.attach(self.equalizer)
-        
-        audioEngine.connect(curPlayerNode, to: equalizer, format: nil)
+        audioEngine.connect(curPlayerNode, to: sampleRateMixer, format: nil)
+        audioEngine.connect(sampleRateMixer, to: equalizer, format: nil)
         audioEngine.connect(equalizer, to: audioEngine.mainMixerNode, format: nil)
     }
     
     func resetEngineCompletely() {
         self.audioEngine.stop() //hmm
         audioEngine.detach(curPlayerNode)
+        audioEngine.detach(self.sampleRateMixer)
         audioEngine.detach(self.equalizer)
         self.curPlayerNode = AVAudioPlayerNode()
         self.curPlayerNode.reset()
@@ -241,6 +252,7 @@ class AudioModule: NSObject {
     }
     
     func playNetworkImmediately(_ track: Track) {
+        self.isFirstPlayback = true
         currentHandlerType = .destroy
         currentTrackLocation = track.location
         print("paused value is \(is_paused)")
@@ -249,6 +261,7 @@ class AudioModule: NSObject {
         print(audioEngine)
         currentHandlerType = .natural
         changeTrack(changeEventID: self.currentValidChangeTrackEventID)
+        self.isFirstPlayback = false
     }
     
     func stopForNetworkTrack() {
@@ -256,6 +269,7 @@ class AudioModule: NSObject {
     }
     
     func playImmediately(_ trackLocation: String) {
+        self.isFirstPlayback = true
         currentHandlerType = .destroy
         print("paused value is \(is_paused)")
         currentTrackLocation = trackLocation
@@ -339,6 +353,8 @@ class AudioModule: NSObject {
                 self.currentFileBufferer = createFileBufferer(url: url!)
                 let initialBuffer = self.currentFileBufferer!.prepareFirstBuffer()
                 nextBufferStartFrame += Int64(initialBuffer!.frameLength)
+                audioEngine.disconnectNodeInput(sampleRateMixer)
+                audioEngine.connect(curPlayerNode, to: sampleRateMixer, format: currentFileBufferer?.format)
                 self.curPlayerNode.scheduleBuffer(initialBuffer!, at: nil, options: .interrupts, completionHandler: fileBuffererCompletion)
                 DispatchQueue.global(qos: .default).async {
                     print("dispatching second buffer fill for new track")
@@ -362,6 +378,10 @@ class AudioModule: NSObject {
         }
     }
     
+    func prepareEngineForNewFormat(_ format: AVAudioFormat) {
+        
+    }
+    
     func changeTrack(changeEventID: Int) {
         print("changeTrack called")
         if (changeEventID != self.currentValidChangeTrackEventID) {
@@ -381,6 +401,30 @@ class AudioModule: NSObject {
             } else {
                 let frameLastPlayed = self.curPlayerNode.playerTime(forNodeTime: self.curPlayerNode.lastRenderTime!)?.sampleTime ?? self.lastRenderedFrame ?? 0//uh
                 if frameLastPlayed >= self.endOfCurrentTrackFrame! {
+                    if self.nextFileIsDifferentFormat != false {
+                        print("different format thingy change")
+                        audioEngine.disconnectNodeInput(sampleRateMixer)
+                        audioEngine.connect(curPlayerNode, to: sampleRateMixer, format: nextFileInitialBuffer!.format)
+                        let time = curPlayerNode.playerTime(forNodeTime: AVAudioTime(sampleTime: self.endOfCurrentTrackFrame!, atRate: self.currentFileBufferer!.format.sampleRate))
+                        curPlayerNode.scheduleBuffer(self.nextFileInitialBuffer!, at: time, options: .interrupts, completionHandler: fileBuffererCompletion)
+                        self.nextBufferStartFrame = Int64(nextFileInitialBuffer!.frameLength)
+                        self.nextFileIsDifferentFormat = false
+                        self.nextFileInitialBuffer = nil
+                        self.differentFileScheduleTime = nil
+                        curPlayerNode.play()
+                        total_offset_frames = 0
+                        total_offset_seconds = 0
+                        track_frame_offset = 0
+                    } else {
+                        print("total offset frames \(self.total_offset_frames)")
+                        print("duration frames \(self.duration_frames)")
+                        print("track frame offset \(self.track_frame_offset)")
+                        let new_frames = (self.duration_frames! - Int64(self.track_frame_offset!))
+                        let new_seconds = Double(new_frames) / self.currentFileBufferer!.currentDecodeBuffer.format.sampleRate
+                        self.total_offset_frames += new_frames
+                        print("new total offset frames \(self.total_offset_frames)")
+                        self.total_offset_seconds += new_seconds
+                    }
                     DispatchQueue.main.async {
                         if self.upcomingTrackURL != nil {
                             self.currentFileBufferer = self.fileBuffererDictionary[self.upcomingTrackURL!]
@@ -402,7 +446,7 @@ class AudioModule: NSObject {
                         //do nothing, we'll catch it when we unpause
                     } else {
                         let length = self.duration_frames!
-                        let gapless_duration = AVAudioTime(sampleTime: length - Int64(self.track_frame_offset!), atRate: self.currentFileBufferer!.currentDecodeBuffer.format.sampleRate)
+                        let gapless_duration = AVAudioTime(sampleTime: length - Int64(self.track_frame_offset!) + self.total_offset_frames, atRate: self.currentFileBufferer!.currentDecodeBuffer.format.sampleRate)
                         let secondsPlayed = Double(self.curPlayerNode.playerTime(forNodeTime: self.curPlayerNode.lastRenderTime!)!.sampleTime) / self.curPlayerNode.lastRenderTime!.sampleRate
                         let delay = ((Double(gapless_duration.sampleTime) / gapless_duration.sampleRate) - secondsPlayed)
                         print("delay set to \(delay)")
@@ -459,7 +503,7 @@ class AudioModule: NSObject {
             return fileBufferer
         } else {
             do {
-                let newFile = try AVAudioFile(forReading: url)
+                let newFile = try AVAudioFile(forReading: url, commonFormat: .pcmFormatFloat32, interleaved: false)
                 let fileBufferer = AVAudioFileBufferer(file: newFile, audioModule: self)
                 self.fileBuffererDictionary[url] = fileBufferer
                 print("end create file bufferer")
@@ -483,8 +527,10 @@ class AudioModule: NSObject {
             print("is seeking, file bufferer completion finished")
             return
         }
-        if self.finalBuffer == true {
+        if self.finalBufferQueued == true {
             //skip filling next buffer, because initial buffer of next track is already scheduled
+            self.finalBuffer = true
+        } else if self.finalBuffer == true {
             self.finalBuffer = false
         } else if self.trackTransitionBufferGuardStop != true {
             print("filling next buffer")
@@ -506,7 +552,7 @@ class AudioModule: NSObject {
         audioEngine.detach(self.curPlayerNode)
         self.curPlayerNode = AVAudioPlayerNode()
         audioEngine.attach(self.curPlayerNode)
-        audioEngine.connect(self.curPlayerNode, to: self.equalizer, format: nil)
+        audioEngine.connect(self.curPlayerNode, to: self.sampleRateMixer, format: self.currentFileBufferer!.format)
         do {try audioEngine.start()} catch {print(error);return}
         self.total_offset_frames = 0
         self.total_offset_seconds = 0
@@ -521,12 +567,18 @@ class AudioModule: NSObject {
         self.isSeeking = false
         if isFinalBuffer == true {
             self.finalBuffer = true
+            self.finalBufferQueued = false
             print("is final buffer")
             nextBufferStartFrame += Int64(newBuffer.frameLength)
-            handleCompletion()
+            //handle this differently..
+            let thisQueueEventID = self.queueNextTrackEventCounter
+            self.queueNextTrackEventCounter += 1
+            self.currentValidQueueEventID = thisQueueEventID
+            handleCompletion(optionalID: thisQueueEventID)
             //schedule next file
         } else {
             self.finalBuffer = false
+            self.finalBufferQueued = false
             print("is not final buffer")
             nextBufferStartFrame += Int64(newBuffer.frameLength)
             self.currentFileBufferer?.fillNextBuffer()
@@ -548,21 +600,24 @@ class AudioModule: NSObject {
         print(time)
         curPlayerNode.scheduleBuffer(newBuffer, at: time, options: .init(rawValue: 0), completionHandler: fileBuffererCompletion)
         if isFinalBuffer == true {
-            self.finalBuffer = true
+            self.finalBufferQueued = true
+            self.finalBuffer = false
             nextBufferStartFrame += Int64(newBuffer.frameLength)
-            handleCompletion()
+            handleCompletion(optionalID: nil)
             //schedule next file
         } else {
+            self.finalBufferQueued = false
             self.finalBuffer = false
             nextBufferStartFrame += Int64(newBuffer.frameLength)
         }
         print("end of file buffer decode callback")
     }
     
-    func setUpNextFile() {
+    func setUpNextFile(asyncID: Int?) {
         if self.isSeeking != true {
             DispatchQueue.main.async {
                 if self.isSeeking != true {
+                    guard asyncID == nil || asyncID == self.currentValidQueueEventID else {print("async ID invalid; returning");return}
                     let location = self.currentTrackLocation!
                     let url = URL(string: location)
                     if self.seekInterrupted == true {
@@ -571,12 +626,19 @@ class AudioModule: NSObject {
                     let fileBufferer = self.createFileBufferer(url: url!)//modify
                     let sampleRate = self.curFile?.processingFormat.sampleRate ?? self.currentFileBufferer!.currentDecodeBuffer.format.sampleRate
                     let length = self.curFile?.length ?? (Int64(self.currentFileBufferer!.totalFrames))
-                    let gapless_duration = AVAudioTime(sampleTime: length - Int64(self.track_frame_offset!), atRate: sampleRate)
+                    let gapless_duration = AVAudioTime(sampleTime: length - Int64(self.track_frame_offset!) + self.total_offset_frames, atRate: sampleRate)
                     let initialBuffer = fileBufferer!.prepareFirstBuffer()
                     self.nextBufferStartFrame += Int64(initialBuffer!.frameLength)
                     print("scheduling initial buffer at frame \(gapless_duration)")
                     self.endOfCurrentTrackFrame = gapless_duration.sampleTime
-                    self.curPlayerNode.scheduleBuffer(initialBuffer!, at: gapless_duration, options: .init(rawValue: 0), completionHandler: self.fileBuffererCompletion)
+                    if initialBuffer!.format != self.curPlayerNode.outputFormat(forBus: 0) {
+                        print("setting different format")
+                        self.nextFileIsDifferentFormat = true
+                        self.nextFileInitialBuffer = initialBuffer
+                        self.differentFileScheduleTime = gapless_duration
+                    } else {
+                        self.curPlayerNode.scheduleBuffer(initialBuffer!, at: gapless_duration, options: .init(rawValue: 0), completionHandler: self.fileBuffererCompletion)
+                    }
                     let secondsPlayed = Double(self.curPlayerNode.playerTime(forNodeTime: self.curPlayerNode.lastRenderTime!)!.sampleTime) / self.curPlayerNode.lastRenderTime!.sampleRate
                     let delay = ((Double(gapless_duration.sampleTime) / gapless_duration.sampleRate) - secondsPlayed)
                     print("delay set to \(delay)")
@@ -593,7 +655,7 @@ class AudioModule: NSObject {
         }
     }
     
-    func handleCompletion() {
+    func handleCompletion(optionalID: Int?) {
         //called any time the playback node is stopped, whether for a seek, skip, or natural playback operation ending
         //if this is the result of a scheduleFile or scheduleSegment operation, it is called after the last segment of the buffer is scheduled, not played. this is not the case for scheduleBuffer operations
         //this can probably crash all over the place if the database can't be accessed for any reason
@@ -607,7 +669,7 @@ class AudioModule: NSObject {
             }
             if (currentTrackLocation != nil) {
                 print("natural next track")
-                setUpNextFile()
+                setUpNextFile(asyncID: optionalID)
             }
             else {
                 print("natural next track, no new tracks")
@@ -682,9 +744,18 @@ class AudioModule: NSObject {
     }
     
     func seek(_ frac: Double) {
-        guard isSeeking != true else {return}
+        guard isSeeking != true else {
+            print("is seeking;returning");
+            return
+        }
         self.isSeeking = true
-        let frame = Int64(frac * Double(duration_frames!))
+        var frame = Int64(frac * Double(duration_frames!))
+        if frame >= self.duration_frames! {
+            frame = duration_frames! - 1
+        }
+        if frame <= 0 {
+            frame = 1
+        }
         print("seeking to frame \(frame) of \(duration_frames)")
         track_frame_offset = Double(frame)
         currentHandlerType = .seek

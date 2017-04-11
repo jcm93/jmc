@@ -2,7 +2,7 @@
 //  Track+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 2/22/17.
+//  Created by John Moody on 4/10/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 
@@ -13,16 +13,16 @@ import CoreData
 extension Track {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Track> {
-        return NSFetchRequest<Track>(entityName: "Track");
+        return NSFetchRequest<Track>(entityName: "Track")
     }
 
     @NSManaged public var bit_rate: NSNumber?
     @NSManaged public var bpm: NSNumber?
     @NSManaged public var comments: String?
-    @NSManaged public var date_added: Date?
-    @NSManaged public var date_last_played: Date?
-    @NSManaged public var date_last_skipped: Date?
-    @NSManaged public var date_modified: Date?
+    @NSManaged public var date_added: NSDate?
+    @NSManaged public var date_last_played: NSDate?
+    @NSManaged public var date_last_skipped: NSDate?
+    @NSManaged public var date_modified: NSDate?
     @NSManaged public var disc_number: NSNumber?
     @NSManaged public var equalizer_preset: String?
     @NSManaged public var file_kind: String?
@@ -47,10 +47,10 @@ extension Track {
     @NSManaged public var status: NSNumber?
     @NSManaged public var time: NSNumber?
     @NSManaged public var track_num: NSNumber?
+    @NSManaged public var genre: String?
     @NSManaged public var album: Album?
     @NSManaged public var artist: Artist?
     @NSManaged public var composer: Composer?
-    @NSManaged public var genre: Genre?
     @NSManaged public var library: Library?
     @NSManaged public var user_defined_properties: NSSet?
     @NSManaged public var view: TrackView?

@@ -117,7 +117,47 @@ let DEFAULTS_RENAMES_FILES_STRING = "renamesFiles"
 let DEFAULTS_LIBRARY_ORGANIZATION_TYPE_STRING = "organizationType"
 let DEFAULTS_LIBRARY_PATH_STRING = "libraryPath"
 let DEFAULTS_LIBRARY_NAME_STRING = "libraryName"
+ 
 */
+
+var kBitRateKey = "bitRate"
+var kBPMKey = "beatsPerMinute"
+var kCommentsKey = "comments"
+var kDateAddedKey = "dateAdded"
+var kDateLastPlayedKey = "dateLastPlayed"
+var kDateLastSkippedKey = "dateLastSkipped"
+var kDateModifiedKey = "dateModified"
+var kDiscNumberKey = "discNumber"
+var kEqualizerPresetKey = "equalizerPreset"
+var kFileKindKey = "fileKind"
+var kGenreKey = "genre"
+var kIDKey = "id"
+var kIsNetworkKey = "isNetwork"
+var kIsPlayingKey = "isPlaying"
+var kLocationKey = "location"
+var kMovementNameKey = "movementName"
+var kMovementNumKey = "movementNumber"
+var kNameKey = "name"
+var kPlayCountKey = "playCount"
+var kRatingKey = "rating"
+var kSampleRateKey = "sampleRate"
+var kSizeKey = "size"
+var kSkipCountKey = "skipCount"
+var kSortAlbumKey = "sortAlbum"
+var kSortAlbumArtistKey = "sortAlbumArtist"
+var kSortArtistKey = "sortArtist"
+var kSortComposerKey = "sortComposer"
+var kSortNameKey = "sortName"
+var kStatusKey = "status"
+var kTimeKey = "time"
+var kTrackNumKey = "trackNumber"
+//rels
+var kAlbumKey = "album"
+var kArtistKey = "artist"
+var kComposerKey = "composer"
+var kReleaseDateKey = "dateReleased"
+var kIsCompilationKey = "isCompilation"
+var kTotalTracksKey = "totalTracks"
 
 
 
@@ -188,6 +228,10 @@ let VALID_FILE_TYPES = ["aac", "adts", "ac3", "aif", "aiff", "aifc", "caf", "mp3
  REPLAYGAIN_TRACK_PEAK=0.99163818
 
  */
+
+func processVorbisComment(track: Track, item: (key: String, value: String)) {
+    //incomplete
+}
 
 let fieldsToCachedOrdersDictionary: NSDictionary = [
     "date_added" : "Date Added",
@@ -536,8 +580,8 @@ extension Track {
     }
     
     @objc func compareGenre(_ other: Track) -> ComparisonResult {
-        let self_genre_name = self.genre?.name
-        let other_genre_name = other.genre?.name
+        let self_genre_name = self.genre
+        let other_genre_name = other.genre
         let genre_comparison: ComparisonResult
         if self_genre_name == nil || other_genre_name == nil {
             genre_comparison = (self_genre_name == other_genre_name) ? .orderedSame : (other_genre_name != nil) ? .orderedAscending : .orderedDescending
@@ -681,23 +725,6 @@ func checkIfComposerExists(_ name: String) -> Composer? {
     }
 }
 
-func checkIfGenreExists(_ name: String) -> Genre? {
-    let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Genre")
-    let predicate = NSPredicate(format: "name == %@", name)
-    request.predicate = predicate
-    do {
-        let result = try managedContext.fetch(request) as! [Genre]
-        if result.count > 0 {
-            return result[0]
-        } else {
-            return nil
-        }
-    } catch {
-        print("error checking genre: \(error)")
-        return nil
-    }
-}
-
 func checkIfCachedOrderExists(_ name: String) -> CachedOrder? {
     let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CachedOrder")
     let predicate = NSPredicate(format: "order == %@", name)
@@ -801,11 +828,6 @@ func addIDsAndMakeNonNetwork(_ track: Track) {
         track.composer?.id = library?.next_composer_id
         library!.next_composer_id = Int(library!.next_composer_id!) + 1 as NSNumber
     }
-    if track.genre?.is_network == true {
-        track.genre?.is_network = false
-        track.genre?.id = library?.next_genre_id
-        library!.next_genre_id = Int(library!.next_genre_id!) + 1 as NSNumber
-    }
 }
 
 func getInstanceWithHighestIDForEntity(_ entityName: String) -> NSManagedObject? {
@@ -873,25 +895,6 @@ func editComposer(_ tracks: [Track]?, composerName: String) {
             if sortComposerName != composerName {
                 track.sort_composer = sortComposerName
             }
-        }
-    }
-}
-
-func editGenre(_ tracks: [Track]?, genreName: String) {
-    print(genreName)
-    let managedContext: NSManagedObjectContext = {
-        return (NSApplication.shared().delegate
-            as? AppDelegate)?.managedObjectContext }()!
-    let genreCheck = checkIfGenreExists(genreName)
-    if genreCheck != nil {
-        for track in tracks! {
-            track.genre = genreCheck!
-        }
-    } else {
-        let new_genre = NSEntityDescription.insertNewObject(forEntityName: "Genre", into: managedContext) as! Genre
-        new_genre.name = genreName
-        for track in tracks! {
-            track.genre = new_genre
         }
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16D32" minimumToolsVersion="Xcode 7.3" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16D32" minimumToolsVersion="Xcode 7.3" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Album" representedClassName=".Album" syncable="YES">
         <attribute name="disc_count" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -52,13 +52,6 @@
         <relationship name="properties" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Property" inverseName="composer" inverseEntity="Property" syncable="YES"/>
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="composer" inverseEntity="Track" syncable="YES"/>
     </entity>
-    <entity name="Genre" representedClassName=".Genre" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="properties" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Property" inverseName="genre" inverseEntity="Property" syncable="YES"/>
-        <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="genre" inverseEntity="Track" syncable="YES"/>
-    </entity>
     <entity name="Library" representedClassName=".Library" syncable="YES">
         <attribute name="is_active" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_available" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
@@ -96,7 +89,6 @@
         <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="properties" inverseEntity="Album" syncable="YES"/>
         <relationship name="artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="properties" inverseEntity="Artist" syncable="YES"/>
         <relationship name="composer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Composer" inverseName="properties" inverseEntity="Composer" syncable="YES"/>
-        <relationship name="genre" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Genre" inverseName="properties" inverseEntity="Genre" syncable="YES"/>
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="user_defined_properties" inverseEntity="Track" syncable="YES"/>
     </entity>
     <entity name="SharedLibrary" syncable="YES">
@@ -149,6 +141,7 @@
         <attribute name="disc_number" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="equalizer_preset" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="file_kind" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="genre" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
         <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_playing" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
@@ -173,7 +166,6 @@
         <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="tracks" inverseEntity="Album" syncable="YES"/>
         <relationship name="artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="tracks" inverseEntity="Artist" syncable="YES"/>
         <relationship name="composer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Composer" inverseName="tracks" inverseEntity="Composer" syncable="YES"/>
-        <relationship name="genre" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Genre" inverseName="tracks" inverseEntity="Genre" syncable="YES"/>
         <relationship name="library" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="tracks" inverseEntity="Library" syncable="YES"/>
         <relationship name="user_defined_properties" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Property" inverseName="tracks" inverseEntity="Property" syncable="YES"/>
         <relationship name="view" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackView" inverseName="track" inverseEntity="TrackView" syncable="YES"/>
@@ -202,9 +194,8 @@
         <element name="Artist" positionX="-1323" positionY="117" width="128" height="148"/>
         <element name="CachedOrder" positionX="-1262" positionY="-45" width="128" height="120"/>
         <element name="Composer" positionX="-1539" positionY="375" width="128" height="133"/>
-        <element name="Genre" positionX="-1532" positionY="542" width="128" height="120"/>
         <element name="Library" positionX="-801" positionY="-45" width="128" height="435"/>
-        <element name="Property" positionX="-1251" positionY="660" width="128" height="193"/>
+        <element name="Property" positionX="-1251" positionY="660" width="128" height="180"/>
         <element name="SharedLibrary" positionX="-1557" positionY="99" width="128" height="60"/>
         <element name="SmartCriteria" positionX="-1557" positionY="99" width="128" height="120"/>
         <element name="SongCollection" positionX="-864" positionY="174" width="128" height="193"/>

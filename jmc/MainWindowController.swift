@@ -632,38 +632,40 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     
     func updateValuesUnsafe() {
         print("unsafe called")
-        let nodeTime = delegate?.audioModule.curPlayerNode.lastRenderTime
-        let playerTime = delegate?.audioModule.curPlayerNode.playerTime(forNodeTime: nodeTime!)
-        print("unsafe update times")
-        print(nodeTime)
-        print(playerTime)
-        var offset_thing: Double?
-        if delegate?.audioModule.track_frame_offset == nil {
-            offset_thing = 0
-        }
-        else {
-            offset_thing  = delegate?.audioModule.track_frame_offset!
-            print(offset_thing)
-        }
-        print(delegate?.audioModule.total_offset_seconds)
-        print(delegate?.audioModule.total_offset_frames)
-        let seconds = ((Double((playerTime?.sampleTime)!) + offset_thing!) / (playerTime?.sampleRate)!) - Double(delegate!.audioModule.total_offset_seconds)
-        let seconds_string = getTimeAsString(seconds)
-        if (timer?.isValid == true) {
-            print("within valid clause")
-            currentTimeLabel.stringValue = seconds_string!
-            print(seconds_string)
-            progressBar.doubleValue = (seconds * 100) / duration!
-            if self.durationShowsTimeRemaining {
-                durationLabel.stringValue = "-\(getTimeAsString(duration! - secsPlayed)!)"
+        if self.delegate?.audioModule.isSeeking != true {
+            let nodeTime = delegate?.audioModule.curPlayerNode.lastRenderTime
+            let playerTime = delegate?.audioModule.curPlayerNode.playerTime(forNodeTime: nodeTime!)
+            print("unsafe update times")
+            print(nodeTime)
+            print(playerTime)
+            var offset_thing: Double?
+            if delegate?.audioModule.track_frame_offset == nil {
+                offset_thing = 0
             }
+            else {
+                offset_thing  = delegate?.audioModule.track_frame_offset!
+                print(offset_thing)
+            }
+            print(delegate?.audioModule.total_offset_seconds)
+            print(delegate?.audioModule.total_offset_frames)
+            let seconds = ((Double((playerTime?.sampleTime)!) + offset_thing!) / (playerTime?.sampleRate)!) - Double(delegate!.audioModule.total_offset_seconds)
+            let seconds_string = getTimeAsString(seconds)
+            if (timer?.isValid == true) {
+                print("within valid clause")
+                currentTimeLabel.stringValue = seconds_string!
+                print(seconds_string)
+                progressBar.doubleValue = (seconds * 100) / duration!
+                if self.durationShowsTimeRemaining {
+                    durationLabel.stringValue = "-\(getTimeAsString(duration! - secsPlayed)!)"
+                }
+            }
+            else {
+                currentTimeLabel.stringValue = ""
+                progressBar.doubleValue = 0
+            }
+            secsPlayed = seconds
+            lastTimerDate = Date()
         }
-        else {
-            currentTimeLabel.stringValue = ""
-            progressBar.doubleValue = 0
-        }
-        secsPlayed = seconds
-        lastTimerDate = Date()
     }
     
     func updateValuesSafe() {
@@ -712,6 +714,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             if keyPath! == "track_changed" {
                 let before = Date()
                 print("controller detects track change")
+                self.progressBarView.blockSeekEvents()
                 currentTrack?.is_playing = false
                 if currentTrack != nil {
                     currentTableViewController?.reloadNowPlayingForTrack(currentTrack!)
@@ -842,5 +845,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         durationLabel.addGestureRecognizer(clickRecognizer)
         delegate?.shuffleMenuItem.state = shuffleButton.state
         delegate?.repeatMenuItem.state = repeatButton.state
+        self.window?.isMovableByWindowBackground = true
     }
 }

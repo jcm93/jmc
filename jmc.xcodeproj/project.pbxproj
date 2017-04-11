@@ -167,8 +167,6 @@
 		0DEF66C71D383A8700EA3ADC /* SourceListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEF66A71D383A8700EA3ADC /* SourceListItem.swift */; };
 		0DEF66D21D383A8700EA3ADC /* Tag+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEF66B21D383A8700EA3ADC /* Tag+CoreDataProperties.swift */; };
 		0DEF66D31D383A8700EA3ADC /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEF66B31D383A8700EA3ADC /* Tag.swift */; };
-		0DEF66D41D383A8700EA3ADC /* Genre+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEF66B41D383A8700EA3ADC /* Genre+CoreDataProperties.swift */; };
-		0DEF66D51D383A8700EA3ADC /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEF66B51D383A8700EA3ADC /* Genre.swift */; };
 		0DF4BEEE1CFBE4CB00AC5824 /* iTunesLibraryParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */; };
 		0DF4BEF31CFD0D4E00AC5824 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF4BEF11CFD0D4E00AC5824 /* MainWindowController.swift */; };
 		0DF4BEF41CFD0D4E00AC5824 /* MainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DF4BEF21CFD0D4E00AC5824 /* MainWindowController.xib */; };
@@ -373,8 +371,6 @@
 		0DEF66A71D383A8700EA3ADC /* SourceListItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListItem.swift; sourceTree = "<group>"; };
 		0DEF66B21D383A8700EA3ADC /* Tag+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Tag+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0DEF66B31D383A8700EA3ADC /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
-		0DEF66B41D383A8700EA3ADC /* Genre+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Genre+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0DEF66B51D383A8700EA3ADC /* Genre.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 		0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesLibraryParser.swift; sourceTree = "<group>"; };
 		0DF4BEF11CFD0D4E00AC5824 /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
 		0DF4BEF21CFD0D4E00AC5824 /* MainWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindowController.xib; sourceTree = "<group>"; };
@@ -547,8 +543,6 @@
 				0DEF66A71D383A8700EA3ADC /* SourceListItem.swift */,
 				0DEF66B21D383A8700EA3ADC /* Tag+CoreDataProperties.swift */,
 				0DEF66B31D383A8700EA3ADC /* Tag.swift */,
-				0DEF66B41D383A8700EA3ADC /* Genre+CoreDataProperties.swift */,
-				0DEF66B51D383A8700EA3ADC /* Genre.swift */,
 			);
 			name = "Core Data Shit";
 			sourceTree = "<group>";
@@ -1130,8 +1124,6 @@
 				0DEF66BD1D383A8700EA3ADC /* Composer.swift in Sources */,
 				0D2EEFB61DB97DEC0065B0B3 /* CachedOrder+CoreDataProperties.swift in Sources */,
 				0D60F52C1E87372D00CA5420 /* RemoveSourceSheetController.swift in Sources */,
-				0DEF66D41D383A8700EA3ADC /* Genre+CoreDataProperties.swift in Sources */,
-				0DEF66D51D383A8700EA3ADC /* Genre.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

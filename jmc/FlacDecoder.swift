@@ -27,7 +27,7 @@ class FlacDecoder: NSObject, FileBufferer {
     var currentDecodeBuffer: AVAudioPCMBuffer = AVAudioPCMBuffer()
     var bufferFrameLength: UInt32 = 13
     let NUM_FRAMES_IN_ADVANCE_TO_SCHEDULE_NEXT_FILE: UInt32 = 10
-    var audioModule: AudioModule
+    var audioModule: AudioModule?
     var hasScheduled: Bool? = false
     var flac_buffer_frames = 0
     var bufferCurrentlyDecoding = false
@@ -36,15 +36,17 @@ class FlacDecoder: NSObject, FileBufferer {
     var seekGuardCheckThing = false
     var decoderBroke = false
     var frameShouldSeekTo: Int64 = 0
-    var metadataDictionary = NSMutableDictionary()
+    var metadataDictionary = [String : String]()
+    var format: AVAudioFormat
     
-    init?(file: URL, audioModule: AudioModule) {
+    init?(file: URL, audioModule: AudioModule?) {
         self.audioModule = audioModule
         self.file = file
+        self.format = AVAudioFormat()
     }
     
     func actualInitTest() {
-        if createFLACStreamDecoder(file: file) == true {
+        if createFLACStreamDecoder(file: self.file) == true {
             FLAC__stream_decoder_process_until_end_of_metadata(&self.decoder!)//populates self.sampleRate, self.channels, self.bitsPerSample
             let format = AVAudioFormat.init(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: Double(self.sampleRate!), channels: self.channels!, interleaved: false)
             print(format.formatDescription)
@@ -53,6 +55,13 @@ class FlacDecoder: NSObject, FileBufferer {
             self.bufferB = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(self.bufferFrameLength) * self.blockSize!)
             self.bufferB.frameLength = self.bufferB.frameCapacity
             self.currentDecodeBuffer = self.bufferA
+            self.format = format
+        }
+    }
+    
+    func initForMetadata() {
+        if createFLACStreamDecoder(file: self.file) == true {
+            FLAC__stream_decoder_process_until_end_of_metadata(&self.decoder!)
         }
     }
     
@@ -75,7 +84,7 @@ class FlacDecoder: NSObject, FileBufferer {
         
         for sample in 0..<numSamples {
             for chan in 0..<numChannels {
-                guard flacDecoder.backgroundDecoderShouldBreak != true else {print("bailing out");flacDecoder.backgroundDecoderDidBreak();return FLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE}
+                //guard flacDecoder.backgroundDecoderShouldBreak != true else {print("bailing out");flacDecoder.backgroundDecoderDidBreak();return FLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE}
                 let value = Float32(buffer![Int(chan)]![Int(sample)]) / scaleFactor
                 if flacDecoder.seekGuardCheckThing != true {
                     flacDecoder.currentDecodeBuffer.floatChannelData![Int(chan)][Int(flacDecoder.currentBufferSampleIndex!)] = value
@@ -95,7 +104,9 @@ class FlacDecoder: NSObject, FileBufferer {
         case FLAC__METADATA_TYPE_STREAMINFO:
             flacDecoder.channels = meta.data.stream_info.channels
             flacDecoder.sampleRate = meta.data.stream_info.sample_rate
+            flacDecoder.metadataDictionary[kSampleRateKey] = String(describing: flacDecoder.sampleRate!)
             flacDecoder.bitsPerSample = meta.data.stream_info.bits_per_sample
+            
             print("max block size \(meta.data.stream_info.max_blocksize)")
             print("min block sie \(meta.data.stream_info.min_blocksize)")
             flacDecoder.blockSize = meta.data.stream_info.max_blocksize
@@ -105,12 +116,17 @@ class FlacDecoder: NSObject, FileBufferer {
                 flacDecoder.blockBuffer.append([Float32]())
             }
         case FLAC__METADATA_TYPE_VORBIS_COMMENT:
+            
             let comment = meta.data.vorbis_comment
             let count = comment.num_comments
             let comments = comment.comments!
             for commentIndex in 0..<count {
                 let commentValue = String(cString: comments[Int(commentIndex)].entry)
-                print(commentValue)
+                let thing = commentValue.characters.split(separator: "=", maxSplits: 1, omittingEmptySubsequences: true).map({return String($0)})
+                if thing.count > 1 {
+                    flacDecoder.metadataDictionary[thing[0]] = thing[1]
+                }
+                
             }
         default:
             print("doingus")
@@ -131,7 +147,7 @@ class FlacDecoder: NSObject, FileBufferer {
             self.seekGuardCheckThing = false
             fillNextBufferSynchronously()
             self.isSeeking = false
-            self.audioModule.seekCallback()
+            self.audioModule!.seekCallback()
         }
     }
     
@@ -146,7 +162,7 @@ class FlacDecoder: NSObject, FileBufferer {
         self.frameShouldSeekTo = 0
         self.fillNextBufferSynchronously()
         self.isSeeking = false
-        self.audioModule.seekCallback()
+        self.audioModule!.seekCallback()
     }
     
     let flacErrorCallback: @convention(c) (Optional<UnsafePointer<FLAC__StreamDecoder>>, FLAC__StreamDecoderErrorStatus, Optional<UnsafeMutableRawPointer>) -> () = {
@@ -169,7 +185,7 @@ class FlacDecoder: NSObject, FileBufferer {
             print("current track sample index \(self.currentTrackSampleIndex), total frames \(self.totalFrames), finalBuffer \(finalBuffer)")
             //must be responsible for moderating frame length
             self.currentDecodeBuffer.frameLength = self.currentBufferSampleIndex!
-            self.audioModule.fileBuffererSeekDecodeCallback(isFinalBuffer: finalBuffer)
+            self.audioModule!.fileBuffererSeekDecodeCallback(isFinalBuffer: finalBuffer)
         }
     }
     
@@ -181,6 +197,9 @@ class FlacDecoder: NSObject, FileBufferer {
                 self.currentBufferSampleIndex = 0
                 self.bufferCurrentlyDecoding = true
                 for _ in 1...self.bufferFrameLength {
+                    if self.backgroundDecoderShouldBreak == true {
+                        continue
+                    }
                     if self.decoderBroke != true && self.isSeeking != true {
                         FLAC__stream_decoder_process_single(&self.decoder!)
                     } else {
@@ -188,6 +207,10 @@ class FlacDecoder: NSObject, FileBufferer {
                         self.bufferCurrentlyDecoding = false
                         return
                     }
+                }
+                if self.backgroundDecoderShouldBreak == true {
+                    self.backgroundDecoderDidBreak()
+                    return
                 }
                 self.decoderBroke = false
                 self.bufferCurrentlyDecoding = false
@@ -197,7 +220,7 @@ class FlacDecoder: NSObject, FileBufferer {
                 if finalBuffer {
                     self.currentDecodeBuffer.frameLength = self.currentBufferSampleIndex!
                 }
-                self.audioModule.fileBuffererDecodeCallback(isFinalBuffer: finalBuffer)
+                self.audioModule!.fileBuffererDecodeCallback(isFinalBuffer: finalBuffer)
             }
         }
     }

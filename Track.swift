@@ -59,7 +59,7 @@ class Track: NSManagedObject {
             case "equalizer_preset":
                 dict["equalizer_preset"] = self.equalizer_preset
             case "genre":
-                dict["genre"] = self.genre?.name
+                dict["genre"] = self.genre
                 dict["genre_order"] = self.view?.genre_order
             case "file_kind":
                 dict["file_kind"] = self.file_kind

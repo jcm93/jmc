@@ -303,76 +303,120 @@ class DatabaseManager: NSObject {
         }
     }
     
+    func getAudioMetadata(url: URL) -> [String : Any]? {
+        //get the bit rate, sample rate, duration, important id3/vorbis metadata
+        var metadataDictionary = [String : Any]()
+        guard let mediaFileObject = getMDItemFromURL(url) else {return nil}
+        if url.pathExtension.lowercased() == "flac" {
+            
+            let flacReader = FlacDecoder(file: url, audioModule: nil)
+            flacReader!.initForMetadata()
+            
+            metadataDictionary[kSampleRateKey]  = flacReader?.metadataDictionary[kSampleRateKey]
+            let duration_seconds                = Double(flacReader!.totalFrames) / Double(flacReader!.sampleRate!)
+            let bitRate                         = (Double(flacReader!.bitsPerSample!) * Double(flacReader!.totalFrames)) / duration_seconds
+            metadataDictionary[kBitRateKey]     = bitRate
+            metadataDictionary[kTimeKey]        = duration_seconds
+            
+            //format-sensitive metadata
+            for item in flacReader!.metadataDictionary {
+                switch item.key {
+                case "ARTIST":
+                    metadataDictionary[kArtistKey]          = item.value
+                case "ALBUM":
+                    metadataDictionary[kAlbumKey]           = item.value
+                case "COMPOSER":
+                    metadataDictionary[kComposerKey]        = item.value
+                case "DATE":
+                    metadataDictionary[kReleaseDateKey]     = item.value
+                case "DESCRIPTION":
+                    metadataDictionary[kCommentsKey]        = item.value
+                case "GENRE":
+                    metadataDictionary[kGenreKey]           = item.value
+                case "RELEASE DATE":
+                    metadataDictionary[kReleaseDateKey]     = item.value
+                case "TITLE":
+                    metadataDictionary[kNameKey]            = item.value
+                case "TRACKNUMBER":
+                    metadataDictionary[kTrackNumKey]        = item.value
+                case "COMPILATION":
+                    metadataDictionary[kIsCompilationKey]   = item.value
+                case "COMMENT":
+                    metadataDictionary[kCommentsKey]        = item.value
+                case "TOTALTRACKS":
+                    metadataDictionary[kTotalTracksKey]     = item.value
+                case "DISCNUMBER":
+                    metadataDictionary[kDiscNumberKey]      = item.value
+                default: break
+                    
+                }
+            }
+        } else {
+            metadataDictionary[kSampleRateKey]  = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioSampleRate" as CFString) as? Int as NSNumber?
+            metadataDictionary[kBitRateKey]     = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioBitRate" as CFString!) as? Int
+            metadataDictionary[kTimeKey]        = MDItemCopyAttribute(mediaFileObject, "kMDItemDurationSeconds" as CFString!) as? Int
+            metadataDictionary[kTrackNumKey]    = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioTrackNumber" as CFString!) as? Int as NSNumber?
+            metadataDictionary[kGenreKey]       = MDItemCopyAttribute(mediaFileObject, "kMDItemMusicalGenre" as CFString!) as? String
+            metadataDictionary[kNameKey]        = MDItemCopyAttribute(mediaFileObject, "kMDItemTitle" as CFString!) as? String
+            metadataDictionary[kAlbumKey]       = MDItemCopyAttribute(mediaFileObject, "kMDItemAlbum" as CFString!) as? String
+            metadataDictionary[kArtistKey]      = MDItemCopyAttribute(mediaFileObject, "kMDItemAuthors" as CFString!) as? [String]
+            metadataDictionary[kComposerKey]    = MDItemCopyAttribute(mediaFileObject, "kMDItemComposer" as CFString!) as? String
+        }
+        
+        //format-agnostic metadata
+        metadataDictionary[kDateModifiedKey] = MDItemCopyAttribute(mediaFileObject, "kMDItemContentModificationDate" as CFString!) as? Date
+        metadataDictionary[kFileKindKey]     = MDItemCopyAttribute(mediaFileObject, "kMDItemKind" as CFString!) as? String
+        metadataDictionary[kSizeKey]         = MDItemCopyAttribute(mediaFileObject, "kMDItemFSSize" as CFString!) as! Int as NSNumber?
+        //other stuff?
+        
+        return metadataDictionary
+    }
+    
     func addTracksFromURLs(_ mediaURLs: [URL], to library: Library) -> [FileAddToDatabaseError] {
         var errors = [FileAddToDatabaseError]()
         var addedArtists = [String: Artist]()
         var addedAlbums = [String: Album]()
         var addedComposers = [String: Composer]()
-        var addedGenres = [String: Genre]()
         var tracks = [Track]()
         var index = 0
         for url in mediaURLs {
             var addedArtist: Artist?
             var addedAlbum: Album?
             var addedComposer: Composer?
-            var addedGenre: Genre?
             var hasArt = false
-            guard let mediaFileObject = getMDItemFromURL(url) else {errors.append(FileAddToDatabaseError(url: url.absoluteString, error: "Failure getting file metadata"));continue}
+            guard let fileMetadataDictionary = getAudioMetadata(url: url) else {
+                errors.append(FileAddToDatabaseError(url: url.absoluteString, error: "Failure getting file metadata")); continue
+            }
             let track = NSEntityDescription.insertNewObject(forEntityName: "Track", into: managedContext) as! Track
             let trackView = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: managedContext) as! TrackView
             trackView.track = track
             track.library = library
             track.location = url.absoluteString
             var art: Data?
-            track.sample_rate = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioSampleRate" as CFString) as? Int as NSNumber?
+            track.sample_rate = fileMetadataDictionary[kSampleRateKey] as? NSNumber
             track.date_added = Date()
-            track.date_modified = MDItemCopyAttribute(mediaFileObject, "kMDItemContentModificationDate" as CFString!) as? Date
-            track.file_kind = MDItemCopyAttribute(mediaFileObject, "kMDItemKind" as CFString!) as? String
-            let bitRateCheck = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioBitRate" as CFString!) as? Int
-            if bitRateCheck != nil {
-                track.bit_rate = bitRateCheck!/1000 as NSNumber
-            } else {
-                //check if it's a format not supported by apple
-                if url.pathExtension.lowercased() != "flac" {
-                    //managedContext.delete(track.view!)
-                    //managedContext.delete(track)
-                    //errors.append(FileAddToDatabaseError(url: url.absoluteString, error: "error validating audio file"))
-                    //print("bit rate check error")
-                    //continue
-                }
-            }
+            track.date_modified = fileMetadataDictionary[kDateModifiedKey] as? NSDate
+            track.file_kind = fileMetadataDictionary[kFileKindKey] as? String
             track.id = globalRootLibrary?.next_track_id
             globalRootLibrary?.next_track_id = Int(globalRootLibrary!.next_track_id!) + 1 as NSNumber
             track.status = 0
             track.time = {
-                if let time = (MDItemCopyAttribute(mediaFileObject, "kMDItemDurationSeconds" as CFString!) as? Int) {
+                if let time =  {
                     return time * 1000 as NSNumber
                 } else {
                     return nil
                 }
             }()
-            track.size = MDItemCopyAttribute(mediaFileObject, "kMDItemFSSize" as CFString!) as! Int as NSNumber?
-            let name = MDItemCopyAttribute(mediaFileObject, "kMDItemTitle" as CFString!) as? String
+            track.size = fileMetadataDictionary[kSizeKey] as? Int
+            let name =
             if name != nil {
                 track.name = name
             } else {
                 track.name = url.deletingPathExtension().lastPathComponent
             }
-            track.track_num = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioTrackNumber" as CFString!) as? Int as NSNumber?
-            if let genreCheck = MDItemCopyAttribute(mediaFileObject, "kMDItemMusicalGenre" as CFString!) as? String {
-                if let alreadyAddedGenre = addedGenres[genreCheck] {
-                    track.genre = alreadyAddedGenre
-                } else {
-                    let newGenre = NSEntityDescription.insertNewObject(forEntityName: "Genre", into: managedContext) as! Genre
-                    newGenre.name = genreCheck
-                    newGenre.id = globalRootLibrary?.next_genre_id
-                    globalRootLibrary?.next_genre_id = Int(globalRootLibrary!.next_genre_id!) + 1 as NSNumber
-                    track.genre = newGenre
-                    addedGenres[genreCheck] = newGenre
-                    addedGenre = newGenre
-                }
-            }
-            if let albumCheck = MDItemCopyAttribute(mediaFileObject, "kMDItemAlbum" as CFString!) as? String {
+            track.track_num = fileMetadataDictionary[kTrackNumKey] as? NSNumber
+            track.genre = fileMetadataDictionary[kGenreKey] as? String
+            if let albumCheck =
                 if let alreadyAddedAlbum = addedAlbums[albumCheck] {
                     track.album = alreadyAddedAlbum
                 } else {
@@ -385,7 +429,7 @@ class DatabaseManager: NSObject {
                     addedAlbum = newAlbum
                 }
             }
-            if let artistCheck = MDItemCopyAttribute(mediaFileObject, "kMDItemAuthors" as CFString!) as? [String] {
+            if  {
                 let mainArtistCheck = artistCheck[0]
                 if let alreadyAddedArtist = addedArtists[mainArtistCheck] {
                     track.artist = alreadyAddedArtist
@@ -399,7 +443,7 @@ class DatabaseManager: NSObject {
                     addedArtist = newArtist
                 }
             }
-            if let composerCheck = MDItemCopyAttribute(mediaFileObject, "kMDItemComposer" as CFString!) as? String {
+            if let composerCheck =  {
                 if let alreadyAddedComposer = addedComposers[composerCheck] {
                     track.composer = alreadyAddedComposer
                 } else {
@@ -436,9 +480,6 @@ class DatabaseManager: NSObject {
                     if addedArtist != nil {
                         managedContext.delete(addedArtist!)
                     }
-                    if addedGenre != nil {
-                        managedContext.delete(addedGenre!)
-                    }
                     if addedComposer != nil {
                         managedContext.delete(addedComposer!)
                     }
@@ -450,7 +491,6 @@ class DatabaseManager: NSObject {
             print(index)
             addedArtist = nil
             addedAlbum = nil
-            addedGenre = nil
             addedComposer = nil
             index += 1
         }
@@ -577,7 +617,6 @@ class DatabaseManager: NSObject {
         var addedArtist: Artist?
         var addedAlbum: Album?
         var addedComposer: Composer?
-        var addedGenre: Genre?
         var addedAlbumArtist: Artist?
         for field in trackMetadata.allKeys as! [String] {
             switch field {
@@ -651,23 +690,8 @@ class DatabaseManager: NSObject {
             case "disc_number":
                 newTrack.disc_number = trackMetadata["disc_number"] as? Int as NSNumber?
             case "genre":
-                let genreName = trackMetadata["genre"] as! String
-                let genre: Genre = {
-                    let genreCheck = checkIfGenreExists(genreName)
-                    if genreCheck == nil {
-                        let genre = NSEntityDescription.insertNewObject(forEntityName: "Genre", into: managedContext) as! Genre
-                        addedGenre = genre
-                        genre.name = genreName
-                        genre.id = globalRootLibrary?.next_genre_id
-                        globalRootLibrary?.next_genre_id = Int(globalRootLibrary!.next_genre_id!) + 1 as NSNumber
-                        return genre
-                    } else {
-                        genreCheck?.is_network = nil
-                        return genreCheck!
-                    }
-                }()
-                newTrack.genre = genre
-                newTrackView.genre_order = trackMetadata["genre_order"] as? Int as NSNumber?
+                let genreName = trackMetadata["genre"] as? String
+                newTrack.genre = genreName
             case "file_kind":
                 newTrack.file_kind = trackMetadata["file_kind"] as? String
                 newTrackView.kind_order = trackMetadata["kind_order"] as? Int as NSNumber?
@@ -734,9 +758,6 @@ class DatabaseManager: NSObject {
             managedContext.delete(newTrackView)
             if addedArtist != nil {
                 managedContext.delete(addedArtist!)
-            }
-            if addedGenre != nil {
-                managedContext.delete(addedGenre!)
             }
             if addedComposer != nil {
                 managedContext.delete(addedComposer!)
@@ -1034,27 +1055,8 @@ class DatabaseManager: NSObject {
                 case "equalizer_preset":
                     newTrack.equalizer_preset = track["equalizer_preset"] as? String
                 case "genre":
-                    let genreName = track["genre"] as! String
-                    let genre: Genre = {
-                        if addedComposers[genreName] != nil {
-                            return addedGenres[genreName] as! Genre
-                        } else {
-                            let genreCheck = checkIfGenreExists(genreName)
-                            if genreCheck == nil {
-                                let genre = NSEntityDescription.insertNewObject(forEntityName: "Genre", into: managedContext) as! Genre
-                                genre.name = genreName
-                                genre.id = globalRootLibrary?.next_genre_id
-                                globalRootLibrary?.next_genre_id = Int(globalRootLibrary!.next_genre_id!) + 1 as NSNumber
-                                genre.is_network = true
-                                addedGenres[genreName] = genre
-                                return genre
-                            } else {
-                                return genreCheck!
-                            }
-                        }
-                    }()
-                    newTrack.genre = genre
-                    newTrackView.genre_order = track["genre_order"] as? Int as NSNumber?
+                    let genreName = track["genre"] as? String
+                    newTrack.genre = genreName
                 case "file_kind":
                     newTrack.file_kind = track["file_kind"] as? String
                     newTrackView.kind_order = track["kind_order"] as? Int as NSNumber?
