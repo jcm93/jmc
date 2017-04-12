@@ -119,14 +119,15 @@ class FlacDecoder: NSObject, FileBufferer {
             
             let comment = meta.data.vorbis_comment
             let count = comment.num_comments
-            let comments = comment.comments!
-            for commentIndex in 0..<count {
-                let commentValue = String(cString: comments[Int(commentIndex)].entry)
-                let thing = commentValue.characters.split(separator: "=", maxSplits: 1, omittingEmptySubsequences: true).map({return String($0)})
-                if thing.count > 1 {
-                    flacDecoder.metadataDictionary[thing[0]] = thing[1]
+            let comments = comment.comments
+            if comments != nil {
+                for commentIndex in 0..<count {
+                    let commentValue = String(cString: comments![Int(commentIndex)].entry)
+                    let thing = commentValue.characters.split(separator: "=", maxSplits: 1, omittingEmptySubsequences: true).map({return String($0)})
+                    if thing.count > 1 {
+                        flacDecoder.metadataDictionary[thing[0]] = thing[1]
+                    }
                 }
-                
             }
         default:
             print("doingus")

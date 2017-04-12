@@ -154,6 +154,7 @@ var kTrackNumKey = "trackNumber"
 //rels
 var kAlbumKey = "album"
 var kArtistKey = "artist"
+var kAlbumArtistKey = "albumArtist"
 var kComposerKey = "composer"
 var kReleaseDateKey = "dateReleased"
 var kIsCompilationKey = "isCompilation"
@@ -183,12 +184,11 @@ let TRACK_VIEW_FETCH_REQUEST = NSFetchRequest<NSFetchRequestResult>(entityName: 
 let ALBUM_FETCH_REQUEST = NSFetchRequest<NSFetchRequestResult>(entityName: "Album")
 let ARTIST_FETCH_REQUEST = NSFetchRequest<NSFetchRequestResult>(entityName: "Artist")
 let COMPOSER_FETCH_REQUEST = NSFetchRequest<NSFetchRequestResult>(entityName: "Composer")
-let GENRE_FETCH_REQUEST = NSFetchRequest<NSFetchRequestResult>(entityName: "Genre")
 let SONG_COLLECTION_FETCH_REQUEST = NSFetchRequest<NSFetchRequestResult>(entityName: "SongCollection")
 
 let IS_NETWORK_PREDICATE = NSPredicate(format: "is_network == %@", NSNumber(booleanLiteral: true))
 
-let BATCH_PURGE_NETWORK_FETCH_REQUESTS: [NSFetchRequest<NSFetchRequestResult>] = [GENRE_FETCH_REQUEST, COMPOSER_FETCH_REQUEST, ARTIST_FETCH_REQUEST, ALBUM_FETCH_REQUEST, TRACK_VIEW_FETCH_REQUEST, TRACK_FETCH_REQUEST, SOURCE_FETCH_REQUEST, SONG_COLLECTION_FETCH_REQUEST]
+let BATCH_PURGE_NETWORK_FETCH_REQUESTS: [NSFetchRequest<NSFetchRequestResult>] = [COMPOSER_FETCH_REQUEST, ARTIST_FETCH_REQUEST, ALBUM_FETCH_REQUEST, TRACK_VIEW_FETCH_REQUEST, TRACK_FETCH_REQUEST, SOURCE_FETCH_REQUEST, SONG_COLLECTION_FETCH_REQUEST]
 
 func purgeCurrentlyPlaying() {
     let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Track")
@@ -229,10 +229,6 @@ let VALID_FILE_TYPES = ["aac", "adts", "ac3", "aif", "aiff", "aifc", "caf", "mp3
 
  */
 
-func processVorbisComment(track: Track, item: (key: String, value: String)) {
-    //incomplete
-}
-
 let fieldsToCachedOrdersDictionary: NSDictionary = [
     "date_added" : "Date Added",
     "date_released" : "Date Released",
@@ -244,6 +240,7 @@ let fieldsToCachedOrdersDictionary: NSDictionary = [
 ]
 
 func validateStringForFilename(_ string: String) -> String {
+    //needed?
     let newString = String(string.characters.map({
         $0 == "/" ? ":" : $0
     }))
@@ -269,7 +266,7 @@ func changeLibraryLocation(library: Library, newLocation: URL) {
     var badLocationCount = 0
     for track in (library.tracks! as! Set<Track>) {
         guard track.location!.hasPrefix(oldPath) else {badLocationCount += 1; continue}
-        track.location = track.location?.replacingOccurrences(of: oldPath, with: newPath, options: .anchored, range: nil)
+        track.location = track.location!.replacingOccurrences(of: oldPath, with: newPath, options: .anchored, range: nil)
     }
     print("number of invalid locations: \(badLocationCount)")
     library.library_location = newLocation.absoluteString
@@ -742,17 +739,8 @@ func checkIfCachedOrderExists(_ name: String) -> CachedOrder? {
     }
 }
 
-class MeTunesDate {
-    var date: Date
-    var is_ambiguous: Bool
-    init(date: Date, is_ambiguous: Bool) {
-        self.date = date
-        self.is_ambiguous = is_ambiguous
-    }
-}
 
 func getSortName(_ name: String?) -> String? {
-    //todo fix for defaults
     var sortName = name
     if name != nil {
         for prefix in defaultSortPrefixDictionary.allKeys {
@@ -763,7 +751,7 @@ func getSortName(_ name: String?) -> String? {
             }
         }
     }
-    return sortName
+    return nil
 }
 
 func getTimeAsString(_ time: TimeInterval) -> String? {
@@ -1006,6 +994,14 @@ func editComments(_ tracks: [Track]?, comments: String) {
     if tracks != nil {
         for track in tracks! {
             track.comments = comments
+        }
+    }
+}
+
+func editGenre(_ tracks: [Track]?, genre: String) {
+    if tracks != nil {
+        for track in tracks! {
+            track.genre = genre
         }
     }
 }

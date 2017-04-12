@@ -114,7 +114,7 @@ class PreferencesWindowController: NSWindowController {
         let checkDir = defaults.bool(forKey: DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING)
         checkAlbumDirectoryCheck.state = checkDir == true ? NSOnState : NSOffState
         
-        mediaFolderPath.stringValue = globalRootLibrary!.library_location!
+        mediaFolderPath.stringValue = globalRootLibrary!.library_location ?? ""
         
         
     }

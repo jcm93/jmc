@@ -23,6 +23,5 @@ extension Property {
     @NSManaged var artist: Artist?
     @NSManaged var composer: Composer?
     @NSManaged var tracks: NSSet?
-    @NSManaged var genre: Genre?
 
 }

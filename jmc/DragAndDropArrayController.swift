@@ -51,7 +51,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         case tableViewController!.dateAddedColumn:
             return track.date_added
         case tableViewController!.genreColumn:
-            return track.genre?.name
+            return track.genre
         case tableViewController!.dateModifiedColumn:
             return track.date_modified
         case tableViewController!.dateReleasedColumn:

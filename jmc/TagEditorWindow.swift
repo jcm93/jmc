@@ -94,7 +94,7 @@ class TagEditorWindow: NSWindowController {
             editComposer(selectedTracks, composerName: composerField.stringValue)
         }
         if genreField.stringValue.isEmpty == false {
-            editGenre(selectedTracks, genreName: genreField.stringValue)
+            editGenre(selectedTracks, genre: genreField.stringValue)
         }
         if trackNumField.stringValue.isEmpty == false {
             editTrackNum(selectedTracks, num: Int(trackNumField.stringValue)!)
@@ -258,7 +258,7 @@ class TagEditorWindow: NSWindowController {
                 discNumOfField.stringValue = String(describing: disc_counts[0]!)
             }
         }
-        let genres = selectedTracks!.map({return $0.genre?.name})
+        let genres = selectedTracks!.map({return $0.genre})
         if allEqual(genres) {
             if genres[0] != nil {
                 genreField.stringValue = genres[0]!

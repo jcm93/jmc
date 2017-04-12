@@ -199,6 +199,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         mainWindowController = MainWindowController(windowNibName: "MainWindowController")
         mainWindowController!.showWindow(self)
     }
+    
+    func application(_ sender: NSApplication, openFiles filenames: [String]) {
+        let library = globalRootLibrary!.children!.allObjects[0] as! Library
+        databaseManager!.addTracksFromURLs(filenames.map({return URL(fileURLWithPath: $0)}), to: library)
+    }
 
     // MARK: - Core Data stack
 

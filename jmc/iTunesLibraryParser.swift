@@ -131,7 +131,7 @@ class iTunesLibraryParser: NSObject {
             }
             if ((XMLTrackDict! as AnyObject).object(forKey: "Skip Date") != nil) {
                 date_last_skipped = (XMLTrackDict! as AnyObject).object(forKey: "Skip Date") as! Date
-                cd_track.date_last_skipped = date_last_skipped
+                cd_track.date_last_skipped = date_last_skipped as NSDate
             }
             if ((XMLTrackDict! as AnyObject).object(forKey: "Sample Rate") != nil) {
                 sample_rate = (XMLTrackDict! as AnyObject).object(forKey: "Sample Rate") as! Int
@@ -147,15 +147,15 @@ class iTunesLibraryParser: NSObject {
             }
             if ((XMLTrackDict! as AnyObject).object(forKey: "Play Date UTC") != nil) {
                 date_last_played = (XMLTrackDict! as AnyObject).object(forKey: "Play Date UTC") as! Date
-                cd_track.date_last_played = date_last_played
+                cd_track.date_last_played = date_last_played as NSDate
             }
             else if ((XMLTrackDict! as AnyObject).object(forKey: "Play Date") != nil) {
                 date_last_played = (XMLTrackDict! as AnyObject).object(forKey: "Play Date") as! Date
-                cd_track.date_last_played = date_last_played
+                cd_track.date_last_played = date_last_played as NSDate
             }
             if ((XMLTrackDict! as AnyObject).object(forKey: "Date Added") != nil) {
                 date_added = (XMLTrackDict! as AnyObject).object(forKey: "Date Added") as! Date
-                cd_track.date_added = date_added
+                cd_track.date_added = date_added as NSDate
             }
             if ((XMLTrackDict! as AnyObject).object(forKey: "Size") != nil) {
                 size = (XMLTrackDict! as AnyObject).object(forKey: "Size") as! Int
@@ -246,7 +246,7 @@ class iTunesLibraryParser: NSObject {
             }
             if ((XMLTrackDict! as AnyObject).object(forKey: "Date Modified") != nil) {
                 date_modified = (XMLTrackDict! as AnyObject).object(forKey: "Date Modified") as! Date
-                cd_track.date_modified = date_modified
+                cd_track.date_modified = date_modified as NSDate
             }
             if ((XMLTrackDict! as AnyObject).object(forKey: "Sort Album") != nil) {
                 sort_album = (XMLTrackDict! as AnyObject).object(forKey: "Sort Album") as! String
@@ -254,18 +254,7 @@ class iTunesLibraryParser: NSObject {
             }
             if ((XMLTrackDict! as AnyObject).object(forKey: "Genre") != nil) {
                 genre = (XMLTrackDict! as AnyObject).object(forKey: "Genre") as! String
-                if self.addedGenres.object(forKey: genre) != nil {
-                    let the_genre = self.addedGenres.object(forKey: genre)
-                    cd_track.genre = the_genre as! Genre
-                }
-                else {
-                    let new_genre = NSEntityDescription.insertNewObject(forEntityName: "Genre", into: managedContext) as! Genre
-                    new_genre.name = genre
-                    cd_track.genre = new_genre
-                    new_genre.id = library?.next_genre_id
-                    library?.next_genre_id = Int(library!.next_genre_id!) + 1 as NSNumber
-                    self.addedGenres.setValue(new_genre, forKey: genre)
-                }
+                cd_track.genre = genre
             }
             if ((XMLTrackDict! as AnyObject).object(forKey: "Rating") != nil) {
                 rating = (XMLTrackDict! as AnyObject).object(forKey: "Rating") as! Int

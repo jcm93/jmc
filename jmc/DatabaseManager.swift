@@ -307,6 +307,12 @@ class DatabaseManager: NSObject {
         //get the bit rate, sample rate, duration, important id3/vorbis metadata
         var metadataDictionary = [String : Any]()
         guard let mediaFileObject = getMDItemFromURL(url) else {return nil}
+        
+        //format-agnostic metadata
+        metadataDictionary[kDateModifiedKey] = MDItemCopyAttribute(mediaFileObject, "kMDItemContentModificationDate" as CFString!) as? Date
+        metadataDictionary[kFileKindKey]     = MDItemCopyAttribute(mediaFileObject, "kMDItemKind" as CFString!) as? String
+        metadataDictionary[kSizeKey]         = MDItemCopyAttribute(mediaFileObject, "kMDItemFSSize" as CFString!) as! Int as NSNumber?
+        
         if url.pathExtension.lowercased() == "flac" {
             
             let flacReader = FlacDecoder(file: url, audioModule: nil)
@@ -314,9 +320,9 @@ class DatabaseManager: NSObject {
             
             metadataDictionary[kSampleRateKey]  = flacReader?.metadataDictionary[kSampleRateKey]
             let duration_seconds                = Double(flacReader!.totalFrames) / Double(flacReader!.sampleRate!)
-            let bitRate                         = (Double(flacReader!.bitsPerSample!) * Double(flacReader!.totalFrames)) / duration_seconds
+            let bitRate                         = ((Double(metadataDictionary[kSizeKey] as! Int) * 8) / 1000) / duration_seconds
             metadataDictionary[kBitRateKey]     = bitRate
-            metadataDictionary[kTimeKey]        = duration_seconds
+            metadataDictionary[kTimeKey]        = duration_seconds * 1000
             
             //format-sensitive metadata
             for item in flacReader!.metadataDictionary {
@@ -347,26 +353,23 @@ class DatabaseManager: NSObject {
                     metadataDictionary[kTotalTracksKey]     = item.value
                 case "DISCNUMBER":
                     metadataDictionary[kDiscNumberKey]      = item.value
+                case "ALBUMARTIST":
+                    metadataDictionary[kAlbumArtistKey]     = item.value
                 default: break
-                    
                 }
             }
         } else {
             metadataDictionary[kSampleRateKey]  = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioSampleRate" as CFString) as? Int as NSNumber?
-            metadataDictionary[kBitRateKey]     = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioBitRate" as CFString!) as? Int
-            metadataDictionary[kTimeKey]        = MDItemCopyAttribute(mediaFileObject, "kMDItemDurationSeconds" as CFString!) as? Int
+            metadataDictionary[kBitRateKey]     = (MDItemCopyAttribute(mediaFileObject, "kMDItemAudioBitRate" as CFString!) as! Double) / 1000
+            metadataDictionary[kTimeKey]        = (MDItemCopyAttribute(mediaFileObject, "kMDItemDurationSeconds" as CFString!) as! Double) * 1000
             metadataDictionary[kTrackNumKey]    = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioTrackNumber" as CFString!) as? Int as NSNumber?
             metadataDictionary[kGenreKey]       = MDItemCopyAttribute(mediaFileObject, "kMDItemMusicalGenre" as CFString!) as? String
             metadataDictionary[kNameKey]        = MDItemCopyAttribute(mediaFileObject, "kMDItemTitle" as CFString!) as? String
             metadataDictionary[kAlbumKey]       = MDItemCopyAttribute(mediaFileObject, "kMDItemAlbum" as CFString!) as? String
-            metadataDictionary[kArtistKey]      = MDItemCopyAttribute(mediaFileObject, "kMDItemAuthors" as CFString!) as? [String]
+            metadataDictionary[kArtistKey]      = (MDItemCopyAttribute(mediaFileObject, "kMDItemAuthors" as CFString!) as? [String])?[0]
             metadataDictionary[kComposerKey]    = MDItemCopyAttribute(mediaFileObject, "kMDItemComposer" as CFString!) as? String
         }
         
-        //format-agnostic metadata
-        metadataDictionary[kDateModifiedKey] = MDItemCopyAttribute(mediaFileObject, "kMDItemContentModificationDate" as CFString!) as? Date
-        metadataDictionary[kFileKindKey]     = MDItemCopyAttribute(mediaFileObject, "kMDItemKind" as CFString!) as? String
-        metadataDictionary[kSizeKey]         = MDItemCopyAttribute(mediaFileObject, "kMDItemFSSize" as CFString!) as! Int as NSNumber?
         //other stuff?
         
         return metadataDictionary
@@ -380,44 +383,48 @@ class DatabaseManager: NSObject {
         var tracks = [Track]()
         var index = 0
         for url in mediaURLs {
-            var addedArtist: Artist?
-            var addedAlbum: Album?
-            var addedComposer: Composer?
-            var hasArt = false
             guard let fileMetadataDictionary = getAudioMetadata(url: url) else {
                 errors.append(FileAddToDatabaseError(url: url.absoluteString, error: "Failure getting file metadata")); continue
             }
+            var addedArtist: Artist?
+            var addedAlbum: Album?
+            var addedComposer: Composer?
+            var addedAlbumArtist: Artist?
+            
+            //create track and track view objects
             let track = NSEntityDescription.insertNewObject(forEntityName: "Track", into: managedContext) as! Track
             let trackView = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: managedContext) as! TrackView
             trackView.track = track
-            track.library = library
             track.location = url.absoluteString
-            var art: Data?
-            track.sample_rate = fileMetadataDictionary[kSampleRateKey] as? NSNumber
-            track.date_added = Date()
-            track.date_modified = fileMetadataDictionary[kDateModifiedKey] as? NSDate
-            track.file_kind = fileMetadataDictionary[kFileKindKey] as? String
+            track.date_added = Date() as NSDate
             track.id = globalRootLibrary?.next_track_id
             globalRootLibrary?.next_track_id = Int(globalRootLibrary!.next_track_id!) + 1 as NSNumber
             track.status = 0
-            track.time = {
-                if let time =  {
-                    return time * 1000 as NSNumber
-                } else {
-                    return nil
-                }
-            }()
-            track.size = fileMetadataDictionary[kSizeKey] as? Int
-            let name =
-            if name != nil {
+            
+            //associate track with library
+            track.library = library
+            
+            //populate metadata from getAudioMetadata
+            track.bit_rate      = fileMetadataDictionary[kBitRateKey] as? NSNumber
+            track.disc_number   = fileMetadataDictionary[kDiscNumberKey] as? NSNumber
+            track.sample_rate   = fileMetadataDictionary[kSampleRateKey] as? NSNumber
+            track.date_modified = fileMetadataDictionary[kDateModifiedKey] as? NSDate
+            track.file_kind     = fileMetadataDictionary[kFileKindKey] as? String
+            track.time          = fileMetadataDictionary[kTimeKey] as! Double as NSNumber
+            track.size          = fileMetadataDictionary[kSizeKey] as! Int as NSNumber
+            track.track_num     = fileMetadataDictionary[kTrackNumKey] as? NSNumber
+            track.genre         = fileMetadataDictionary[kGenreKey] as? String
+            if let name         = fileMetadataDictionary[kNameKey] as? String {
                 track.name = name
             } else {
                 track.name = url.deletingPathExtension().lastPathComponent
             }
-            track.track_num = fileMetadataDictionary[kTrackNumKey] as? NSNumber
-            track.genre = fileMetadataDictionary[kGenreKey] as? String
-            if let albumCheck =
+            
+            //populate artist, album, composer
+            if let albumCheck = fileMetadataDictionary[kAlbumKey] as? String {
                 if let alreadyAddedAlbum = addedAlbums[albumCheck] {
+                    track.album = alreadyAddedAlbum
+                } else if let alreadyAddedAlbum = checkIfAlbumExists(albumCheck) {
                     track.album = alreadyAddedAlbum
                 } else {
                     let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
@@ -429,24 +436,27 @@ class DatabaseManager: NSObject {
                     addedAlbum = newAlbum
                 }
             }
-            if  {
-                let mainArtistCheck = artistCheck[0]
-                if let alreadyAddedArtist = addedArtists[mainArtistCheck] {
+            if let artistCheck = fileMetadataDictionary[kArtistKey] as? String {
+                if let alreadyAddedArtist = addedArtists[artistCheck] {
+                    track.artist = alreadyAddedArtist
+                } else if let alreadyAddedArtist = checkIfArtistExists(artistCheck) {
                     track.artist = alreadyAddedArtist
                 } else {
                     let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
-                    newArtist.name = mainArtistCheck
+                    newArtist.name = artistCheck
                     newArtist.id = globalRootLibrary?.next_artist_id
                     globalRootLibrary?.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
                     track.artist = newArtist
-                    addedArtists[mainArtistCheck] = newArtist
+                    addedArtists[artistCheck] = newArtist
                     addedArtist = newArtist
                 }
             }
-            if let composerCheck =  {
+            if let composerCheck = fileMetadataDictionary[kComposerKey] as? String {
                 if let alreadyAddedComposer = addedComposers[composerCheck] {
                     track.composer = alreadyAddedComposer
-                } else {
+                } else if let alreadyAddedComposer = checkIfComposerExists(composerCheck) {
+                    track.composer = alreadyAddedComposer
+                }  else {
                     let newComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: managedContext) as! Composer
                     newComposer.name = composerCheck
                     newComposer.id = globalRootLibrary?.next_composer_id
@@ -456,52 +466,77 @@ class DatabaseManager: NSObject {
                     addedComposer = newComposer
                 }
             }
+            //handle album artist
+            if let albumArtistName  = fileMetadataDictionary[kAlbumArtistKey] as? String {
+                if let alreadyAddedArtist = addedArtists[albumArtistName] {
+                    track.album?.album_artist = alreadyAddedArtist
+                } else if let alreadyAddedArtist = checkIfArtistExists(albumArtistName) {
+                    track.album?.album_artist = alreadyAddedArtist
+                } else {
+                    let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
+                    newArtist.name = albumArtistName
+                    newArtist.id = globalRootLibrary?.next_artist_id
+                    globalRootLibrary?.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
+                    track.album?.album_artist = newArtist
+                    addedArtists[albumArtistName] = newArtist
+                    addedAlbumArtist = newArtist
+                }
+            }
+            
             //add sort values
             addSortValues(track)
+            
+            //deal with artwork
+            var art: Data?
+            var hasArt = false
             autoreleasepool {
-                /*var otherMetadataForAlbumArt = AVAsset(URL: url).commonMetadata
-                otherMetadataForAlbumArt = otherMetadataForAlbumArt.filter({return $0.commonKey == "artwork"})
-                if otherMetadataForAlbumArt.count > 0 {
-                    art = otherMetadataForAlbumArt[0].value as? NSData
-                    if art != nil {
-                        hasArt = true
-                    }
-                }*/
-                if moveFileToAppropriateLocationForTrack(track, currentURL: url) != nil {
-                    /*if hasArt == true {
-                        addPrimaryArtForTrack(track, art: art!)
-                    }*/
-                    tracks.append(track)
-                } else {
-                    print("error moving")
-                    errors.append(FileAddToDatabaseError(url: url.absoluteString, error: "Couldn't move/copy file to album directory"))
-                    managedContext.delete(track)
-                    managedContext.delete(trackView)
-                    if addedArtist != nil {
-                        managedContext.delete(addedArtist!)
-                    }
-                    if addedComposer != nil {
-                        managedContext.delete(addedComposer!)
-                    }
-                    if addedAlbum != nil {
-                        managedContext.delete(addedAlbum!)
+                if UserDefaults.standard.bool(forKey: DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING) {
+                    var otherMetadataForAlbumArt = AVAsset(url: url).commonMetadata
+                    otherMetadataForAlbumArt = otherMetadataForAlbumArt.filter({return $0.commonKey == "artwork"})
+                    if otherMetadataForAlbumArt.count > 0 {
+                        art = otherMetadataForAlbumArt[0].value as? Data
+                        if art != nil {
+                            hasArt = true
+                        }
                     }
                 }
             }
-            print(index)
-            addedArtist = nil
-            addedAlbum = nil
-            addedComposer = nil
+            
+            //move file to the appropriate location, if we're organizing
+            if moveFileToAppropriateLocationForTrack(track, currentURL: url) != nil {
+                if hasArt == true {
+                    addPrimaryArtForTrack(track, art: art!)
+                }
+                tracks.append(track)
+            } else {
+                print("error moving")
+                errors.append(FileAddToDatabaseError(url: url.absoluteString, error: "Couldn't move/copy file to album directory"))
+                managedContext.delete(track)
+                managedContext.delete(trackView)
+                if addedArtist != nil {
+                    managedContext.delete(addedArtist!)
+                }
+                if addedComposer != nil {
+                    managedContext.delete(addedComposer!)
+                }
+                if addedAlbum != nil {
+                    managedContext.delete(addedAlbum!)
+                }
+            }
             index += 1
         }
+        
+        //insert new tracks to necessary sort caches
         for order in cachedOrders! {
             reorderForTracks(tracks, cachedOrder: order)
         }
+        
         do {
             try managedContext.save()
         } catch {
             print(error)
         }
+        
         return errors
     }
     
@@ -509,7 +544,7 @@ class DatabaseManager: NSObject {
         let fileName = {() -> String in
             switch track.library?.renames_files as! Bool {
             case true:
-                return validateStringForFilename(self.formFilenameForTrack(track))
+                return validateStringForFilename(self.formFilenameForTrack(track, url: currentURL))
             default:
                 return currentURL.lastPathComponent
             }
@@ -549,7 +584,7 @@ class DatabaseManager: NSObject {
         let fileName = {() -> String in
             switch track.library?.renames_files as! Bool {
             case true:
-                return self.formFilenameForTrack(track)
+                return self.formFilenameForTrack(track, url: nil)
             default:
                 return URL(string: track.location!)!.lastPathComponent
             }
@@ -567,9 +602,9 @@ class DatabaseManager: NSObject {
             return false
         }
         do {
-            fileURL = albumDirectoryURL?.appendingPathComponent(fileName)
+            fileURL = albumDirectoryURL!.appendingPathComponent(fileName)
             try data.write(to: fileURL!, options: NSData.WritingOptions.atomic)
-            track.location = fileURL?.absoluteString
+            track.location = fileURL!.absoluteString
         } catch {
             print("error while moving/copying files: \(error)")
             return false
@@ -577,10 +612,10 @@ class DatabaseManager: NSObject {
         return true
     }
     
-    func formFilenameForTrack(_ track: Track) -> String {
-        let discNumberStringRepresentation: String
+    func formFilenameForTrack(_ track: Track, url: URL?) -> String {
+        var discNumberStringRepresentation: String
         if track.disc_number != nil {
-            discNumberStringRepresentation = "\(String(describing: track.disc_number))-"
+            discNumberStringRepresentation = "\(String(describing: track.disc_number!))-"
         } else {
             discNumberStringRepresentation = ""
         }
@@ -594,9 +629,10 @@ class DatabaseManager: NSObject {
             }
         } else {
             trackNumberStringRepresentation = ""
+            discNumberStringRepresentation = ""
         }
         let trackNameString = track.name != nil ? track.name! : ""
-        let trackExtension = URL(string: track.location!)!.pathExtension
+        let trackExtension = url?.pathExtension ?? URL(string: track.location!)!.pathExtension
         var filenameString = "\(discNumberStringRepresentation)\(trackNumberStringRepresentation) \(trackNameString).\(trackExtension)"
         if filenameString == " " {
             filenameString = NO_FILENAME_STRING
@@ -662,9 +698,9 @@ class DatabaseManager: NSObject {
                 newTrack.album = album
                 newTrackView.album_order = trackMetadata["album_order"] as? Int as NSNumber?
             case "date_added":
-                newTrack.date_added = Date()
+                newTrack.date_added = Date() as NSDate
             case "date_modified":
-                newTrack.date_modified = dateFormatter.date(from: trackMetadata["date_modified"] as! String)
+                newTrack.date_modified = dateFormatter.date(from: trackMetadata["date_modified"] as! String) as! NSDate
             case "date_released":
                 newTrack.album?.release_date = dateFormatter.date(from: trackMetadata["date_released"] as! String)
                 newTrackView.release_date_order = trackMetadata["release_date_order"] as? Int as NSNumber?
@@ -696,9 +732,9 @@ class DatabaseManager: NSObject {
                 newTrack.file_kind = trackMetadata["file_kind"] as? String
                 newTrackView.kind_order = trackMetadata["kind_order"] as? Int as NSNumber?
             case "date_last_played":
-                newTrack.date_last_played = dateFormatter.date(from: trackMetadata["date_last_played"] as! String)
+                newTrack.date_last_played = dateFormatter.date(from: trackMetadata["date_last_played"] as! String) as! NSDate
             case "date_last_skipped":
-                newTrack.date_last_skipped = dateFormatter.date(from: trackMetadata["date_last_skipped"] as! String)
+                newTrack.date_last_skipped = dateFormatter.date(from: trackMetadata["date_last_skipped"] as! String) as! NSDate
             case "movement_name":
                 newTrack.movement_name = trackMetadata["movement_name"] as? String
             case "movement_number":
@@ -905,7 +941,7 @@ class DatabaseManager: NSObject {
         let fileName = {() -> String in
             switch globalRootLibrary?.renames_files as! Bool {
             case true:
-                return self.formFilenameForTrack(track)
+                return self.formFilenameForTrack(track, url: nil)
             default:
                 return URL(string: track.location!)!.lastPathComponent
             }
@@ -947,7 +983,6 @@ class DatabaseManager: NSObject {
         let addedArtists = NSMutableDictionary()
         let addedAlbums = NSMutableDictionary()
         let addedComposers = NSMutableDictionary()
-        let addedGenres = NSMutableDictionary()
         let addedTracks = NSMutableDictionary()
         var addedTrackViews = [TrackView]()
         let dateFormatter = DateFormatter()
@@ -1020,10 +1055,10 @@ class DatabaseManager: NSObject {
                     newTrack.album = album
                     newTrackView.album_order = track["album_order"] as? Int as NSNumber?
                 case "date_added":
-                    newTrack.date_added = dateFormatter.date(from: track["date_added"] as! String)
+                    newTrack.date_added = dateFormatter.date(from: track["date_added"] as! String) as! NSDate
                     newTrackView.date_added_order = track["date_added_order"] as? Int as NSNumber?
                 case "date_modified":
-                    newTrack.date_modified = dateFormatter.date(from: track["date_modified"] as! String)
+                    newTrack.date_modified = dateFormatter.date(from: track["date_modified"] as! String) as! NSDate
                 case "date_released":
                     newTrack.album?.release_date = dateFormatter.date(from: track["date_released"] as! String)
                     newTrackView.release_date_order = track["release_date_order"] as? Int as NSNumber?
@@ -1061,9 +1096,9 @@ class DatabaseManager: NSObject {
                     newTrack.file_kind = track["file_kind"] as? String
                     newTrackView.kind_order = track["kind_order"] as? Int as NSNumber?
                 case "date_last_played":
-                    newTrack.date_last_played = dateFormatter.date(from: track["date_last_played"] as! String)
+                    newTrack.date_last_played = dateFormatter.date(from: track["date_last_played"] as! String) as! NSDate
                 case "date_last_skipped":
-                    newTrack.date_last_skipped = dateFormatter.date(from: track["date_last_skipped"] as! String)
+                    newTrack.date_last_skipped = dateFormatter.date(from: track["date_last_skipped"] as! String) as! NSDate
                 case "movement_name":
                     newTrack.movement_name = track["movement_name"] as? String
                 case "movement_number":
