@@ -116,7 +116,7 @@ class LocationManager: NSObject {
                 if fileManager.fileExists(atPath: path) {
                     let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
                     if library.monitors_directories_for_new as? Bool == true {
-                        databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library) //ignores errors :(
+                        databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library, visualUpdateHandler: nil) //ignores errors :(
                     }
                 } else {
                     //...or this is the first half of a rename event, which we may or may not care about

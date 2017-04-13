@@ -19,7 +19,7 @@ class AddFilesWindowController: NSWindowController {
     
     @IBAction func okButtonPressed(_ sender: Any) {
         if let libraryName = sourceSelectorPopUpButton.selectedItem?.title, let library = getLibrary(withName: libraryName) {
-            let errors = databaseManager.addTracksFromURLs(self.urls!, to: library[0])
+            let errors = databaseManager.addTracksFromURLs(self.urls!, to: library[0], visualUpdateHandler: nil)
             print(errors)
         } else {
             //some kind of error dialog, or soemthing

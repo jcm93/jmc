@@ -69,7 +69,7 @@ class AlbumArtViewController: NSViewController {
                     let artwork = self.fileHandler.getArtworkFromFile(track.location!)
                     if artwork != nil {
                         DispatchQueue.main.async {
-                            if self.fileHandler.addPrimaryArtForTrack(track, art: artwork!) != nil {
+                            if self.fileHandler.addPrimaryArtForTrack(track, art: artwork!, managedContext: managedContext) != nil {
                                 do {try managedContext.save()}catch {print(error)}
                                 self.initAlbumArt(track)
                                 self.doStupidTogglingForObservers()
@@ -90,7 +90,7 @@ class AlbumArtViewController: NSViewController {
                     let artwork = try? Data(contentsOf: imageURL!)
                     if artwork != nil {
                         DispatchQueue.main.async {
-                            if self.fileHandler.addPrimaryArtForTrack(track, art: artwork!) != nil {
+                            if self.fileHandler.addPrimaryArtForTrack(track, art: artwork!, managedContext: managedContext) != nil {
                                 do {try managedContext.save()}catch {print(error)}
                                 self.initAlbumArt(track)
                                 self.doStupidTogglingForObservers()

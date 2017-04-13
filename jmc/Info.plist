@@ -8,7 +8,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>CFBundleTypeName</key>
-			<string>FLAC Audio</string>
+			<string>FLAC audio file</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.flac</string>
@@ -23,8 +23,6 @@
 			<array>
 				<string>public.audio</string>
 			</array>
-			<key>CFBundleTypeName</key>
-			<string>Audio File</string>
 			<key>LSHandlerRank</key>
 			<string>Default</string>
 		</dict>

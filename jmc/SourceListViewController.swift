@@ -619,6 +619,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         libraryHeaderNode = rootNode?.children[0]
         sharedHeaderNode = rootNode?.children[1]
         playlistHeaderNode = rootNode?.children[2]
+        sourceList.expandItem(libraryHeaderNode, expandChildren: true)
+        sourceList.expandItem(playlistHeaderNode)
     }
     
     override func viewDidLoad() {
@@ -630,7 +632,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         sourceList.delegate = self
         sourceList.dataSource = self
         sourceList.autosaveExpandedItems = true
-        sourceList.expandItem(libraryHeaderNode)
+        sourceList.expandItem(libraryHeaderNode, expandChildren: true)
         sourceList.expandItem(playlistHeaderNode)
         sourceList.reloadData()
         sourceList.allowsEmptySelection = false

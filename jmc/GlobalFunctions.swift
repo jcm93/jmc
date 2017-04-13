@@ -1119,6 +1119,7 @@ func fixIndices(_ set: NSMutableOrderedSet, index: Int, order: String) {
 
 
 func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder) {
+    let actualTracks = tracks.map({return managedContext.object(with: $0.objectID) as! Track})
     print("reordering for tracks for cached order \(cachedOrder.order!)")
     let comparator: (Track) -> (Track) -> ComparisonResult
     switch cachedOrder.order! {
@@ -1141,8 +1142,8 @@ func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder) {
     default:
         comparator = Track.compareArtist
     }
-    if tracks.count > cachedOrder.track_views?.count {
-        let allTracks = (cachedOrder.track_views!.array as! [TrackView]).map({return $0.track!}) + tracks as NSArray
+    if actualTracks.count > cachedOrder.track_views?.count {
+        let allTracks = (cachedOrder.track_views!.array as! [TrackView]).map({return $0.track!}) + actualTracks as NSArray
         let newTracks: NSArray
         let key: String
         switch cachedOrder.order! {
@@ -1182,10 +1183,10 @@ func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder) {
         cachedOrder.track_views = NSOrderedSet(array: newTracks.map({return ($0 as AnyObject).view!}) as! [TrackView])
     } else {
         let mutableVersion = cachedOrder.track_views!.mutableCopy() as! NSMutableOrderedSet
-        for track in tracks {
+        for track in actualTracks {
             mutableVersion.remove(track.view!)
         }
-        for track in tracks {
+        for track in actualTracks {
             let index = insert(mutableVersion, track: track.view!, isGreater: comparator)
             print("index is \(index)")
             mutableVersion.insert(track.view!, at: index)

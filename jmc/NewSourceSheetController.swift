@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class NewSourceSheetController: NSWindowController {
+class NewSourceSheetController: NSWindowController, ProgressBarController {
     
     let databaseManager = DatabaseManager()
 
@@ -19,6 +19,10 @@ class NewSourceSheetController: NSWindowController {
     @IBOutlet weak var cancelButton: NSButton!
     @IBOutlet weak var organizeRadio: NSButton!
     @IBOutlet weak var importAsIsRadio: NSButton!
+    var actionName: String = ""
+    var thingName: String = ""
+    var thingCount: Int = 0
+    
     
     @IBAction func browseButtonPressed(_ sender: Any) {
         let fileDialog = NSOpenPanel()
@@ -49,11 +53,35 @@ class NewSourceSheetController: NSWindowController {
         cancelButton.isEnabled = false
         let organize = importAsIsRadio.state == NSOnState ? false : true
         if newSourcePathControl.url != nil {
-            databaseManager.addNewSource(url: newSourcePathControl.url!, organize: organize)
+            databaseManager.addNewSource(url: newSourcePathControl.url!, organize: organize, visualUpdateHandler: self)
         }
-        self.window?.close()
+    }
+    
+    func prepareForNewTask(actionName: String, thingName: String, thingCount: Int) {
+        self.sourceAddProgressBar.isIndeterminate = false
+        self.actionName = actionName
+        self.thingName = thingName
+        self.thingCount = thingCount
+        self.sourceAddProgressBar.maxValue = Double(thingCount)
+        self.sourceAddProgressBar.doubleValue = 0
+        self.sourceAddStatusText.stringValue = "\(self.actionName) 0 of \(self.thingCount) \(self.thingName)..."
+    }
+    
+    func increment(thingsDone: Int) {
+        self.sourceAddProgressBar.doubleValue = Double(thingsDone)
+        self.sourceAddStatusText.stringValue = "\(self.actionName) \(thingsDone) of \(self.thingCount) \(self.thingName)..."
+    }
+    
+    func makeIndeterminate(actionName: String) {
+        self.sourceAddStatusText.stringValue = "\(actionName)..."
+        self.sourceAddProgressBar.isIndeterminate = true
+        self.sourceAddProgressBar.startAnimation(nil)
+    }
+    
+    func finish() {
         (NSApplication.shared().delegate as! AppDelegate).mainWindowController?.sourceListViewController?.recreateTree()
         (NSApplication.shared().delegate as! AppDelegate).mainWindowController?.sourceListViewController?.reloadData()
+        self.window?.close()
     }
     
     override func windowDidLoad() {

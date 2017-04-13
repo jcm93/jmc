@@ -55,6 +55,7 @@
 		0D60F5291E8720A300CA5420 /* PlaylistOrderObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */; };
 		0D60F52C1E87372D00CA5420 /* RemoveSourceSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D60F52A1E87372D00CA5420 /* RemoveSourceSheetController.swift */; };
 		0D60F52D1E87372D00CA5420 /* RemoveSourceSheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D60F52B1E87372D00CA5420 /* RemoveSourceSheetController.xib */; };
+		0D69659D1EA02EC50050D505 /* ProgressBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D69659C1EA02EC50050D505 /* ProgressBarController.swift */; };
 		0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */; };
 		0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */; };
 		0D76F6A81D24B9AC00C6E70F /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */; };
@@ -238,6 +239,7 @@
 		0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistOrderObject.swift; sourceTree = "<group>"; };
 		0D60F52A1E87372D00CA5420 /* RemoveSourceSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoveSourceSheetController.swift; sourceTree = "<group>"; };
 		0D60F52B1E87372D00CA5420 /* RemoveSourceSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RemoveSourceSheetController.xib; sourceTree = "<group>"; };
+		0D69659C1EA02EC50050D505 /* ProgressBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarController.swift; sourceTree = "<group>"; };
 		0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagEditorWindow.swift; sourceTree = "<group>"; };
 		0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagEditorWindow.xib; sourceTree = "<group>"; };
 		0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
@@ -426,6 +428,7 @@
 		0D01AD941D707CFB00F9211F /* Data Controllers and Interface Subclasses */ = {
 			isa = PBXGroup;
 			children = (
+				0D69659C1EA02EC50050D505 /* ProgressBarController.swift */,
 				0D60F5271E86F78300CA5420 /* Formatters */,
 				0D299B211DF158A60009CF7A /* AdvancedFilterViewController.swift */,
 				0D5514941E8879090034D742 /* Main Table View */,
@@ -1037,6 +1040,7 @@
 				0DEF66C51D383A8700EA3ADC /* Property.swift in Sources */,
 				0D58F7491D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift in Sources */,
 				0D388AAD1E1F2C8800D25A7D /* AddPlaylistButton.swift in Sources */,
+				0D69659D1EA02EC50050D505 /* ProgressBarController.swift in Sources */,
 				0D8B7E2C1DF8C9240018E242 /* IntermediateTrackRepresentation.swift in Sources */,
 				0DE74A531D7D9457005211E6 /* SharedLibraryRequestHandler.swift in Sources */,
 				0DD7D6D61D3F3A350035BAD8 /* Album+CoreDataProperties.swift in Sources */,

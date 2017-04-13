@@ -122,7 +122,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func addURLsToLibrary(_ urls: [URL], library: Library) -> [FileAddToDatabaseError] {
-        let result = databaseManager?.addTracksFromURLs(urls, to: library)
+        let result = databaseManager?.addTracksFromURLs(urls, to: library, visualUpdateHandler: nil)
         return result!
     }
     
@@ -202,7 +202,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func application(_ sender: NSApplication, openFiles filenames: [String]) {
         let library = globalRootLibrary!.children!.allObjects[0] as! Library
-        databaseManager!.addTracksFromURLs(filenames.map({return URL(fileURLWithPath: $0)}), to: library)
+        databaseManager!.addTracksFromURLs(filenames.map({return URL(fileURLWithPath: $0)}), to: library, visualUpdateHandler: nil)
     }
 
     // MARK: - Core Data stack
