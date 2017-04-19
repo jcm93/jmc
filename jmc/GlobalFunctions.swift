@@ -160,6 +160,9 @@ var kReleaseDateKey = "dateReleased"
 var kIsCompilationKey = "isCompilation"
 var kTotalTracksKey = "totalTracks"
 
+//errors
+var kFileAddErrorNoSizeMetadata = "Failure getting file metadata"
+
 
 
 //other constants
@@ -1117,6 +1120,35 @@ func fixIndices(_ set: NSMutableOrderedSet, index: Int, order: String) {
     }
 }
 
+func testFixIndices(_ set: NSMutableOrderedSet, order: String) {
+    let key: String
+    switch order {
+    case "Artist":
+        key = "artist_order"
+    case "Album":
+        key = "album_order"
+    case "Date Added":
+        key = "date_added_order"
+    case "Name":
+        key = "name_order"
+    case "Album Artist":
+        key = "album_artist_order"
+    case "Genre":
+        key = "genre_order"
+    case "Kind":
+        key = "kind_order"
+    case "Date Released":
+        key = "release_date_order"
+    default:
+        key = "poop"
+    }
+    var index = 0
+    for track in set {
+        (track as AnyObject).setValue(index, forKey: key)
+        index += 1
+    }
+}
+
 
 func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder) {
     let actualTracks = tracks.map({return managedContext.object(with: $0.objectID) as! Track})
@@ -1190,8 +1222,9 @@ func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder) {
             let index = insert(mutableVersion, track: track.view!, isGreater: comparator)
             print("index is \(index)")
             mutableVersion.insert(track.view!, at: index)
-            fixIndices(mutableVersion, index: index, order: cachedOrder.order!)
+            //fixIndices(mutableVersion, index: index, order: cachedOrder.order!)
         }
+        testFixIndices(mutableVersion, order: cachedOrder.order!)
         cachedOrder.track_views = mutableVersion.copy() as? NSOrderedSet
     }
 }

@@ -31,6 +31,7 @@ class LocationManager: NSObject {
     var fileManager = FileManager.default
     var withinDirRenameEvents = [String : TrackFirstRenameEvent?]()
     var databaseManager = DatabaseManager()
+    var pendingCreatePaths = [String]()
     
     var eventStreamRef: FSEventStreamRef?
     
@@ -50,7 +51,105 @@ class LocationManager: NSObject {
         }
     }
     
+    func getFSEventFlags(flags: UInt32) -> [String]? {
+        var stringArray = [String]()
+        if UInt32(kFSEventStreamEventFlagNone) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagNone, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagNone, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagMustScanSubDirs) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagMustScanSubDirs, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagMustScanSubDirs, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagUserDropped) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagUserDropped, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagUserDropped, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagKernelDropped) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagKernelDropped, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagKernelDropped, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagEventIdsWrapped) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagEventIdsWrapped, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagEventIdsWrapped, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagHistoryDone) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagHistoryDone, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagHistoryDone, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagRootChanged) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagRootChanged, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagRootChanged, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagMount) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagMount, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagMount, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagUnmount) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagUnmount, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagUnmount, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagItemChangeOwner) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagItemChangeOwner, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagItemChangeOwner, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagItemCreated) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagItemCreated, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagItemCreated, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagItemFinderInfoMod) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagItemFinderInfoMod, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagItemFinderInfoMod, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagItemInodeMetaMod) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagItemInodeMetaMod, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagItemInodeMetaMod, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagItemIsDir) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagItemIsDir, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagItemIsDir, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagItemIsFile) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagItemIsFile, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagItemIsFile, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagItemIsHardlink) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagItemIsHardlink, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagItemIsHardlink, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagItemIsLastHardlink) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagItemIsLastHardlink, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagItemIsLastHardlink, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagItemIsSymlink) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagItemIsSymlink, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagItemIsSymlink, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagItemRemoved) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagItemRemoved, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagItemRemoved, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagItemRenamed) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagItemRenamed, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagItemRenamed, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagItemXattrMod) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagItemXattrMod, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagItemXattrMod, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagItemModified) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagItemModified, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagItemModified, \(d)")
+        }
+        if UInt32(kFSEventStreamEventFlagOwnEvent) & flags > 0 {
+            let d = String(kFSEventStreamEventFlagOwnEvent, radix: 2, uppercase: false)
+            stringArray.append("kFSEventStreamEventFlagOwnEvent, \(d)")
+        }
+        return stringArray
+    }
+    
     func handleEvent(path: String, flags: FSEventStreamEventFlags, id: UInt64) {
+        guard !URL(fileURLWithPath: path).lastPathComponent.hasPrefix(".") else {return}
         if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagRootChanged)) > 0 {
             print("root changed")
             //relocate directory
@@ -97,9 +196,47 @@ class LocationManager: NSObject {
                 
             }
             
-        } else if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemCreated)) > 0 {
-            print("item created")
-        } else if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemRenamed)) > 0 {
+        }
+        if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemCreated)) > 0 {
+            if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemModified)) > 0 {
+                print("item created")
+                let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
+                guard rootDirectoryPaths.count == 1 else {return}
+                let rootDirectoryPath = rootDirectoryPaths.first!
+                let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
+                if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
+                    databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library, visualUpdateHandler: nil)
+                }
+            } else {
+                print("item created")
+                let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
+                guard rootDirectoryPaths.count == 1 else {return}
+                let rootDirectoryPath = rootDirectoryPaths.first!
+                let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
+                if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
+                    let errors = databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library, visualUpdateHandler: nil)
+                    for error in errors {
+                        if error.error == kFileAddErrorNoSizeMetadata {
+                            self.pendingCreatePaths.append(path)
+                        }
+                    }
+                }
+            }
+        }
+        if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemModified)) > 0 {
+            if self.pendingCreatePaths.contains(path) {
+                print("item created after pending")
+                let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
+                guard rootDirectoryPaths.count == 1 else {return}
+                let rootDirectoryPath = rootDirectoryPaths.first!
+                let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
+                if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
+                    databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library, visualUpdateHandler: nil)
+                }
+                self.pendingCreatePaths.remove(at: self.pendingCreatePaths.index(of: path)!)
+            }
+        }
+        if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemRenamed)) > 0 {
             print("item renamed")
             let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
             guard rootDirectoryPaths.count == 1 else {return}
@@ -107,13 +244,18 @@ class LocationManager: NSObject {
             if withinDirRenameEvents[rootDirectoryPath]??.id == id - 1 {
                 //this is definitely the second half of another rename event, which we may or may not care about
                 let firstEvent = withinDirRenameEvents[rootDirectoryPath]!
-                if firstEvent!.track != nil {
+                if firstEvent!.track != nil && firstEvent!.track!.library!.keeps_track_of_files == true {
                     firstEvent!.track!.location = URL(fileURLWithPath: path).absoluteString
+                    do {
+                        try managedContext.save()
+                    } catch {
+                        print(error)
+                    }
                 }
                 withinDirRenameEvents[rootDirectoryPath] = nil
             } else {
                 //either this location is valid and a new file was added, or...
-                if fileManager.fileExists(atPath: path) {
+                if fileManager.fileExists(atPath: path) && path != rootDirectoryPath && VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
                     let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
                     if library.monitors_directories_for_new as? Bool == true {
                         databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library, visualUpdateHandler: nil) //ignores errors :(
@@ -154,15 +296,26 @@ class LocationManager: NSObject {
     }
     
     func initializeEventStream(libraries: [Library]) {
-        let lastEventID = globalRootLibrary!.last_fs_event as? FSEventStreamEventId
-        let urls = libraries.flatMap({ (library: Library) -> URL? in
-            if let url = URL(string: library.library_location!), library.watches_directories == true {
-                self.libraryURLDictionary[url] = library
-                return url
-            } else {
-                return nil
+        var lastEventID = globalRootLibrary!.last_fs_event as? FSEventStreamEventId
+        if lastEventID == 0 {
+            lastEventID = FSEventStreamEventId(kFSEventStreamEventIdSinceNow)
+        }
+        var urls = [URL]()
+        for library in libraries {
+            if library.keeps_track_of_files == true {
+                let url = URL(string: library.library_location!)!
+                urls.append(url)
+                libraryURLDictionary[url] = library
             }
-        })
+            if library.monitors_directories_for_new == true {
+                if let watchURLs = library.watch_dirs as? [URL] {
+                    urls.append(contentsOf: watchURLs)
+                    for url in urls {
+                        self.libraryURLDictionary[url] = library
+                    }
+                }
+            }
+        }
         self.activeMonitoringURLs = Set(urls)
         let urlPaths = urls.map({return $0.path})
         createEventStream(paths: urlPaths, lastID: lastEventID)

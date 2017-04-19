@@ -264,7 +264,7 @@ class DatabaseManager: NSObject {
         library.is_active = true
         library.renames_files = organize as NSNumber
         library.organization_type = organize == true ? 2 as NSNumber : 0 as NSNumber
-        library.watches_directories = true
+        library.keeps_track_of_files = true
         library.monitors_directories_for_new = true
         let librarySourceListItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         librarySourceListItem.library = library
@@ -313,7 +313,8 @@ class DatabaseManager: NSObject {
         //format-agnostic metadata
         metadataDictionary[kDateModifiedKey] = MDItemCopyAttribute(mediaFileObject, "kMDItemContentModificationDate" as CFString!) as? Date
         metadataDictionary[kFileKindKey]     = MDItemCopyAttribute(mediaFileObject, "kMDItemKind" as CFString!) as? String
-        metadataDictionary[kSizeKey]         = MDItemCopyAttribute(mediaFileObject, "kMDItemFSSize" as CFString!) as! Int as NSNumber?
+        guard let size                       = MDItemCopyAttribute(mediaFileObject, "kMDItemFSSize" as CFString!) as? Int else { return nil }
+        metadataDictionary[kSizeKey]         = size as NSNumber?
         
         if url.pathExtension.lowercased() == "flac" {
             
@@ -392,7 +393,7 @@ class DatabaseManager: NSObject {
         }
         for url in mediaURLs {
             guard let fileMetadataDictionary = getAudioMetadata(url: url) else {
-                errors.append(FileAddToDatabaseError(url: url.absoluteString, error: "Failure getting file metadata")); continue
+                errors.append(FileAddToDatabaseError(url: url.absoluteString, error: kFileAddErrorNoSizeMetadata)); continue
             }
             var addedArtist: Artist?
             var addedAlbum: Album?

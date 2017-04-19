@@ -614,13 +614,16 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     func recreateTree() {
+        let selectionIndexes = sourceList.selectedRowIndexes
         self.createTree()
         self.sortTree()
         libraryHeaderNode = rootNode?.children[0]
         sharedHeaderNode = rootNode?.children[1]
         playlistHeaderNode = rootNode?.children[2]
+        sourceList.reloadData()
         sourceList.expandItem(libraryHeaderNode, expandChildren: true)
         sourceList.expandItem(playlistHeaderNode)
+        sourceList.selectRowIndexes(selectionIndexes, byExtendingSelection: false)
     }
     
     override func viewDidLoad() {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -10,6 +10,7 @@
             <connections>
                 <outlet property="libraryManagerView" destination="Yqo-Sk-798" id="kEi-jT-LXP"/>
                 <outlet property="sourceArrayController" destination="1Mz-0t-FCS" id="yAz-ve-kTM"/>
+                <outlet property="tableView" destination="2fg-9a-yP9" id="gNh-Yv-8xd"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -18,14 +19,14 @@
         <window title="Library Manager" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="852" height="513"/>
+            <rect key="contentRect" x="196" y="240" width="978" height="617"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <view key="contentView" wantsLayer="YES" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="852" height="513"/>
+                <rect key="frame" x="0.0" y="0.0" width="978" height="617"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yqo-Sk-798" customClass="NSSplitView">
-                        <rect key="frame" x="178" y="51" width="654" height="442"/>
+                        <rect key="frame" x="178" y="155" width="654" height="442"/>
                     </customView>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Q1i-5t-ljO">
                         <rect key="frame" x="20" y="19" width="25" height="27"/>
@@ -54,13 +55,13 @@
                         </connections>
                     </button>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ryt-VP-MrZ">
-                        <rect key="frame" x="14" y="51" width="156" height="442"/>
+                        <rect key="frame" x="14" y="51" width="156" height="546"/>
                         <clipView key="contentView" id="8wi-lM-Ef4">
-                            <rect key="frame" x="1" y="0.0" width="154" height="441"/>
+                            <rect key="frame" x="1" y="0.0" width="154" height="545"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="vA7-LZ-SHZ" viewBased="YES" id="2fg-9a-yP9">
-                                    <rect key="frame" x="0.0" y="0.0" width="154" height="418"/>
+                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="vA7-LZ-SHZ" viewBased="YES" id="2fg-9a-yP9">
+                                    <rect key="frame" x="0.0" y="0.0" width="154" height="522"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -88,7 +89,7 @@
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="Master Library" id="q5n-kr-y4G"/>
                                                         </imageView>
-                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="veJ-Lg-Lwf">
+                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsExpansionToolTips="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="veJ-Lg-Lwf">
                                                             <rect key="frame" x="25" y="0.0" width="126" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="9gd-rF-vYF">
@@ -136,7 +137,7 @@
                         </tableHeaderView>
                     </scrollView>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Kfa-kG-ITS">
-                        <rect key="frame" x="726" y="13" width="112" height="32"/>
+                        <rect key="frame" x="852" y="13" width="112" height="32"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="100" id="8Xe-cA-WD9"/>
                         </constraints>
@@ -170,7 +171,7 @@ DQ
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="234" y="174.5"/>
+            <point key="canvasLocation" x="297" y="226.5"/>
         </window>
         <arrayController mode="entity" entityName="Library" fetchPredicateFormat="parent != nil" automaticallyPreparesContent="YES" id="1Mz-0t-FCS">
             <connections>

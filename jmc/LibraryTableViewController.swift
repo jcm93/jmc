@@ -387,6 +387,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     func initializePlayOrderObject() {
         print("creating play order object")
+        print((self.trackViewArrayController.arrangedObjects as! NSArray).count)
         let currentIDArray = (self.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
         let newPoo = PlaylistOrderObject(sli: self.item!)
         var shuffledArray = currentIDArray

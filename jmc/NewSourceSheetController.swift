@@ -80,7 +80,7 @@ class NewSourceSheetController: NSWindowController, ProgressBarController {
     
     func finish() {
         (NSApplication.shared().delegate as! AppDelegate).mainWindowController?.sourceListViewController?.recreateTree()
-        (NSApplication.shared().delegate as! AppDelegate).mainWindowController?.sourceListViewController?.reloadData()
+        (NSApplication.shared().delegate as! AppDelegate).mainWindowController?.newSourceAdded()
         self.window?.close()
     }
     

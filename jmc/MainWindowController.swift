@@ -292,6 +292,13 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         tagWindowController?.showWindow(self)
     }
     
+    func newSourceAdded() {
+        if self.currentSourceListItem == globalRootLibrarySourceListItem {
+            self.currentTableViewController?.hasCreatedPlayOrder = false
+            self.currentTableViewController?.initializeForLibrary()
+        }
+    }
+    
     func createPlayOrderForTrackID(_ id: Int, row: Int?) -> Int {
         return currentTableViewController!.getUpcomingIDsForPlayEvent(self.shuffleButton.state, id: id, row: row)
     }

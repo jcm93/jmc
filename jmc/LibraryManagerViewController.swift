@@ -39,36 +39,51 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     var missingTracks: [Track]?
     var newMediaURLs: [URL]?
     var delegate: AppDelegate?
+    var watchFolders = [URL]()
 
     @IBOutlet weak var findNewMediaTabItem: NSTabViewItem!
     @IBOutlet weak var locationManagerTabItem: NSTabViewItem!
-    @IBOutlet weak var sourceTableView: NSTableView!
     
     //data controllers
-    @IBOutlet var libraryArrayController: NSArrayController!
     @IBOutlet var tracksNotFoundArrayController: NSArrayController!
     @IBOutlet var newTracksArrayController: NSArrayController!
+    @IBOutlet var watchFoldersArrayController: NSArrayController!
     
     //source information elements
-    @IBOutlet weak var sourceTitleLabel: NSTextField!
+    @IBOutlet weak var watchFolderTableView: NSTableView!
     @IBOutlet weak var sourceNameField: NSTextField!
     @IBOutlet weak var sourceLocationStatusImage: NSImageView!
     @IBOutlet weak var sourceLocationStatusTextField: NSTextField!
     @IBOutlet weak var sourceMonitorStatusImageView: NSImageView!
     @IBOutlet weak var sourceMonitorStatusTextField: NSTextField!
-    @IBOutlet weak var sourceLocationField: NSTextField!
+    @IBOutlet weak var sourceLocationField: NSPathControl!
+    @IBOutlet weak var doesOrganizeCheck: NSButton!
+    @IBOutlet weak var moveRadio: NSButton!
+    @IBOutlet weak var copyRadio: NSButton!
+    @IBOutlet weak var changeLocationButton: NSButton!
+    @IBOutlet weak var addWatchFolderButton: NSButton!
+    @IBOutlet weak var removeWatchFolderButton: NSButton!
+    @IBOutlet weak var mediaAddBehaviorLabel: NSTextField!
+    @IBOutlet weak var consolidateLibraryButton: NSButton!
+    @IBOutlet weak var watchFoldersLabel: NSTextField!
+    @IBOutlet weak var fileMonitorDescriptionLabel: NSTextField!
     
     @IBOutlet weak var automaticallyAddFilesCheck: NSButton!
     @IBOutlet weak var enableDirectoryMonitoringCheck: NSButton!
+    
     @IBAction func removeSourceButtonPressed(_ sender: Any) {
         
     }
     
     @IBAction func enableMonitoringCheckAction(_ sender: Any) {
         if enableDirectoryMonitoringCheck.state == NSOnState {
-            library?.watches_directories = true as NSNumber
+            library?.keeps_track_of_files = true as NSNumber
+            sourceMonitorStatusImageView.image = NSImage(named: "NSStatusAvailable")
+            sourceMonitorStatusTextField.stringValue = "Directory monitoring is enabled."
         } else {
-            library?.watches_directories = false as NSNumber
+            library?.keeps_track_of_files = false as NSNumber
+            sourceMonitorStatusImageView.image = NSImage(named: "NSStatusUnavailable")
+            sourceMonitorStatusTextField.stringValue = "Directory monitoring inactive."
         }
         initializeForLibrary(library: library!)
         self.locationManager.reinitializeEventStream()
@@ -76,6 +91,15 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     }
     @IBAction func automaticallyAddCheckAction(_ sender: Any) {
         library?.monitors_directories_for_new = automaticallyAddFilesCheck.state == NSOnState ? true as NSNumber : false as NSNumber
+        if automaticallyAddFilesCheck.state == NSOnState {
+            self.watchFolderTableView.isEnabled = true
+            self.addWatchFolderButton.isEnabled = true
+            self.removeWatchFolderButton.isEnabled = true
+        } else {
+            self.watchFolderTableView.isEnabled = false
+            self.addWatchFolderButton.isEnabled = false
+            self.removeWatchFolderButton.isEnabled = false
+        }
     }
     @IBAction func sourceNameWasEdited(_ sender: Any) {
         if let textField = sender as? NSTextField, textField.stringValue != "" {
@@ -100,74 +124,147 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         openPanel.allowsMultipleSelection = false
         openPanel.canChooseDirectories = true
         openPanel.canChooseFiles = false
-        openPanel.runModal()
-        if openPanel.urls.count > 0 {
+        let response = openPanel.runModal()
+        if response == NSFileHandlingPanelOKButton {
             let newURL = openPanel.urls[0]
             changeLibraryLocation(library: self.library!, newLocation: newURL)
             initializeForLibrary(library: self.library!)
         }
     }
     
+    @IBAction func orgBehaviorChecked(_ sender: Any) {
+        if doesOrganizeCheck.state == NSOffState {
+            library?.organization_type = NO_ORGANIZATION_TYPE as NSNumber
+            moveRadio.isEnabled = false
+            copyRadio.isEnabled = false
+        } else {
+            moveRadio.isEnabled = true
+            copyRadio.isEnabled = true
+            orgBehaviorRadioAction(self)
+        }
+    }
+    @IBAction func orgBehaviorRadioAction(_ sender: Any) {
+        if moveRadio.state == NSOnState {
+            library?.organization_type = MOVE_ORGANIZATION_TYPE as NSNumber
+        } else {
+            library?.organization_type = COPY_ORGANIZATION_TYPE as NSNumber
+        }
+    }
+    
+    @IBAction func addWatchFolderPressed(_ sender: Any) {
+        let parent = self.view.window?.windowController as! LibraryManagerSourceSelector
+        parent.watchFolderSheet = AddWatchFolderSheetController(windowNibName: "AddWatchFolderSheetController")
+        parent.watchFolderSheet?.libraryManager = self
+        parent.window?.beginSheet(parent.watchFolderSheet!.window!, completionHandler: nil)
+    }
+    
+    func addWatchFolder(_ watchFolder: URL) {
+        watchFoldersArrayController.addObject(watchFolder)
+        var currentLibraryWatchDirs = self.library?.watch_dirs as? [URL] ?? [URL]()
+        currentLibraryWatchDirs.append(watchFolder)
+        self.library?.watch_dirs = currentLibraryWatchDirs as NSArray
+        self.locationManager.reinitializeEventStream()
+    }
+    
+    @IBAction func removeWatchFolderPressed(_ sender: Any) {
+        guard watchFoldersArrayController.selectedObjects.count > 0 else {return}
+        let watchFolder = watchFoldersArrayController.selectedObjects[0] as! URL
+        self.removeWatchFolder(watchFolder)
+    }
+    
+    func removeWatchFolder(_ watchFolder: URL) {
+        watchFoldersArrayController.removeObject(watchFolder)
+        var currentLibraryWatchDirs = self.library?.watch_dirs as? [URL] ?? [URL]()
+        currentLibraryWatchDirs.remove(at: currentLibraryWatchDirs.index(of: watchFolder)!)
+        self.library?.watch_dirs = currentLibraryWatchDirs as NSObject
+        self.locationManager.reinitializeEventStream()
+    }
+    
+    @IBAction func consolidateLibraryPressed(_ sender: Any) {
+        
+    }
+    
     func initializeForLibrary(library: Library) {
         print("init for \(library.name)")
         self.library = library
-        sourceTitleLabel.stringValue = ("Information for \(library.name!):")
         sourceNameField.stringValue = library.name!
         let sourceLocationURL = URL(string: library.library_location!)!
         sourceLocationField.stringValue = sourceLocationURL.path
-        var isDirectory = ObjCBool(Bool(0))
         let libraryWasAvailable = library.is_available
         let libraryIsNowAvailable = libraryIsAvailable(library: library)
         if libraryIsNowAvailable {
+            doesOrganizeCheck.isEnabled = true
+            moveRadio.isEnabled = true
+            copyRadio.isEnabled = true
+            sourceLocationField.isEnabled = true
+            automaticallyAddFilesCheck.isEnabled = true
+            watchFolderTableView.isEnabled = true
+            addWatchFolderButton.isEnabled = true
+            removeWatchFolderButton.isEnabled = true
+            enableDirectoryMonitoringCheck.isEnabled = true
+            mediaAddBehaviorLabel.isEnabled = true
+            consolidateLibraryButton.isEnabled = true
+            watchFoldersLabel.isEnabled = true
+            fileMonitorDescriptionLabel.isEnabled = true
+            sourceMonitorStatusTextField.isEnabled = true
             sourceLocationStatusImage.image = NSImage(named: "NSStatusAvailable")
             sourceLocationStatusTextField.stringValue = "Source is located and available."
             enableDirectoryMonitoringCheck.isEnabled = true
-            if let session = DASessionCreate(kCFAllocatorDefault), library.watches_directories == true {
-                var volumeURL: AnyObject?
-                do {
-                    try (sourceLocationURL as NSURL).getResourceValue(&volumeURL, forKey: URLResourceKey.volumeURLKey)
-                    if let disk = DADiskCreateFromVolumePath(kCFAllocatorDefault, session, volumeURL as! NSURL) {
-                        let diskInformation = DADiskCopyDescription(disk) as! [String: AnyObject]
-                        if diskInformation[kDADiskDescriptionMediaRemovableKey as String] != nil {
-                            let removable = diskInformation[kDADiskDescriptionMediaRemovableKey as String] as! CFBoolean
-                            if removable == kCFBooleanTrue {
-                                sourceMonitorStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
-                                sourceMonitorStatusTextField.stringValue = "Directory is on an external drive. Directory monitoring is active, but if another computer has modified the contents of this directory, you may need to re-verify the locations of media, or re-scan the directory if new media has been added."
-                            }  else {
-                                sourceMonitorStatusImageView.image = NSImage(named: "NSStatusAvailable")
-                                sourceMonitorStatusTextField.stringValue = "Directory monitoring is active."
-                            }
-                        } else {
-                            if diskInformation[kDADiskDescriptionVolumeNetworkKey as String] != nil {
-                                let networkStatus = diskInformation[kDADiskDescriptionVolumeNetworkKey as String] as! CFBoolean
-                                if networkStatus == kCFBooleanTrue {
-                                    sourceMonitorStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
-                                    sourceMonitorStatusTextField.stringValue = "Directory is remote. Directory monitoring is active, but if another computer has modified the contents of this directory, you may need to re-verify the locations of media, or re-scan the directory if new media has been added."
-                                }
-                            } else {
-                                sourceMonitorStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
-                                sourceMonitorStatusTextField.stringValue = "Directory watch status unknown!"
-                            }
-                        }
-                        automaticallyAddFilesCheck.isEnabled = true
-                        automaticallyAddFilesCheck.state = library.monitors_directories_for_new == true ? NSOnState : NSOffState
-                    }
-                } catch {
-                    print(error)
+            if library.organization_type != nil && Int(library.organization_type!) != NO_ORGANIZATION_TYPE {
+                self.doesOrganizeCheck.state = NSOnState
+                if Int(library.organization_type!) == MOVE_ORGANIZATION_TYPE {
+                    self.moveRadio.state = NSOnState
+                    self.copyRadio.state = NSOffState
+                } else {
+                    self.moveRadio.state = NSOffState
+                    self.copyRadio.state = NSOnState
                 }
             } else {
-                enableDirectoryMonitoringCheck.state = NSOffState
-                sourceMonitorStatusTextField.stringValue = "Directory monitoring inactive."
+                self.doesOrganizeCheck.state = NSOffState
+                self.orgBehaviorChecked(self)
+            }
+            self.automaticallyAddFilesCheck.isEnabled = true
+            if library.monitors_directories_for_new == true {
+                self.automaticallyAddFilesCheck.state = NSOnState
+                if let watchDirs = library.watch_dirs as? NSArray {
+                    self.watchFolders = watchDirs as! [URL]
+                    self.watchFoldersArrayController.content = self.watchFolders
+                }
+            } else if library.monitors_directories_for_new == false {
+                self.automaticallyAddFilesCheck.state = NSOffState
+                self.watchFolderTableView.isEnabled = false
+                self.addWatchFolderButton.isEnabled = false
+                self.removeWatchFolderButton.isEnabled = false
+            }
+            if library.keeps_track_of_files == true {
+                self.enableDirectoryMonitoringCheck.state = NSOnState
+                sourceMonitorStatusImageView.image = NSImage(named: "NSStatusAvailable")
+                sourceMonitorStatusTextField.stringValue = "Directory monitoring is enabled."
+            } else if library.keeps_track_of_files == false {
+                self.enableDirectoryMonitoringCheck.state = NSOffState
                 sourceMonitorStatusImageView.image = NSImage(named: "NSStatusUnavailable")
-                automaticallyAddFilesCheck.isEnabled = false
+                sourceMonitorStatusTextField.stringValue = "Directory monitoring inactive."
             }
         } else {
+            //library isn't located. disable everything
+            doesOrganizeCheck.isEnabled = false
+            moveRadio.isEnabled = false
+            copyRadio.isEnabled = false
+            sourceLocationField.isEnabled = false
+            automaticallyAddFilesCheck.isEnabled = false
+            watchFolderTableView.isEnabled = false
+            addWatchFolderButton.isEnabled = false
+            removeWatchFolderButton.isEnabled = false
+            mediaAddBehaviorLabel.isEnabled = false
+            consolidateLibraryButton.isEnabled = false
+            watchFoldersLabel.isEnabled = false
+            fileMonitorDescriptionLabel.isEnabled = false
+            sourceMonitorStatusTextField.isEnabled = false
             sourceLocationStatusImage.image = NSImage(named: "NSStatusUnavailable")
             sourceLocationStatusTextField.stringValue = "Source cannot be located."
             enableDirectoryMonitoringCheck.isEnabled = false
             sourceMonitorStatusTextField.stringValue = "Directory monitoring inactive."
             sourceMonitorStatusImageView.image = NSImage(named: "NSStatusUnavailable")
-            automaticallyAddFilesCheck.isEnabled = false
         }
         if libraryIsNowAvailable != (libraryWasAvailable as? Bool) {
             delegate?.mainWindowController?.sourceListViewController?.reloadData()
@@ -180,7 +277,6 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     @IBOutlet weak var verifyLocationsButton: NSButton!
     @IBOutlet weak var libraryLocationStatusImageView: NSImageView!
     
-    
     @IBAction func verifyLocationsPressed(_ sender: Any) {
         let parent = self.view.window?.windowController as! LibraryManagerSourceSelector
         parent.verifyLocationsSheet = LocationVerifierSheetController(windowNibName: "LocationVerifierSheetController")
@@ -192,6 +288,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             }
         }
     }
+    
     func verifyLocationsModalComplete(response: NSModalResponse) {
         guard response != NSModalResponseCancel else {return}
         if self.missingTracks!.count > 0 {
@@ -238,6 +335,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     //dir scanner
     @IBOutlet weak var newMediaTableView: NSTableView!
     @IBOutlet weak var dirScanStatusTextField: NSTextField!
+    @IBOutlet weak var directoryPicker: NSPopUpButton!
     
     @IBAction func scanSourceButtonPressed(_ sender: Any) {
         let parent = self.view.window?.windowController as! LibraryManagerSourceSelector

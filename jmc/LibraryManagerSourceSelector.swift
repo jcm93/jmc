@@ -15,9 +15,12 @@ class LibraryManagerSourceSelector: NSWindowController, NSTableViewDelegate {
     var mediaScannerSheet: MediaScannerSheet?
     var removeSourceSheet: RemoveSourceSheetController?
     var currentLibrary: Library?
+    var currentLibraryManagerViewController: LibraryManagerViewController?
     var libraryViews = [Library : LibraryManagerViewController]()
     var delegate: AppDelegate?
-
+    var watchFolderSheet: AddWatchFolderSheetController?
+    
+    @IBOutlet weak var tableView: NSTableView!
     @IBOutlet var sourceArrayController: NSArrayController!
     
     @IBOutlet weak var libraryManagerView: NSSplitView!
@@ -76,15 +79,18 @@ class LibraryManagerSourceSelector: NSWindowController, NSTableViewDelegate {
             newView!.initializeForLibrary(library: library)
             self.currentLibrary = library
             libraryViews[library] = newView!
+            self.currentLibraryManagerViewController = newView
         } else {
             libraryManagerView.addSubview(libraryViews[library]!.view)
             self.currentLibrary = library
+            self.currentLibraryManagerViewController = libraryViews[library]
         }
     }
     
     override func windowDidLoad() {
         super.windowDidLoad()
-        
+        let indexSet = IndexSet(integer: 1)
+        self.tableView.selectRowIndexes(indexSet, byExtendingSelection: false)
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     }
     

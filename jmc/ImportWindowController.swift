@@ -63,7 +63,7 @@ class ImportWindowController: NSWindowController {
         library.is_active = true
         library.renames_files = 0 as NSNumber
         library.organization_type = 0 as NSNumber
-        library.watches_directories = true
+        library.keeps_track_of_files = true
         library.monitors_directories_for_new = true
         let librarySourceListItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         librarySourceListItem.library = library

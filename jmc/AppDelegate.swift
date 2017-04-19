@@ -68,7 +68,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func initializeLibraryAndShowMainWindow() {
         self.locationManager = LocationManager()
-        //self.locationManager?.initializeEventStream(libraries: getAllLibraries()!)
+        self.locationManager?.initializeEventStream(libraries: getAllLibraries()!)
         mainWindowController = MainWindowController(windowNibName: "MainWindowController")
         mainWindowController?.delegate = self
         if UserDefaults.standard.bool(forKey: "hasMusic") == true {
