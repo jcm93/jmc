@@ -163,6 +163,9 @@ var kTotalTracksKey = "totalTracks"
 //errors
 var kFileAddErrorNoSizeMetadata = "Failure getting file metadata"
 
+//other
+var kDeleteEventText = "Are you sure you want to remove the selected tracks from your library?"
+
 
 
 //other constants
@@ -264,12 +267,20 @@ func libraryIsAvailable(library: Library) -> Bool {
 }
 
 func changeLibraryLocation(library: Library, newLocation: URL) {
-    let oldPath = URL(string: library.library_location!)!.absoluteString
+    let oldURL = URL(string: library.library_location!)!
+    let oldPath = oldURL.absoluteString
     let newPath = newLocation.absoluteString
     var badLocationCount = 0
     for track in (library.tracks! as! Set<Track>) {
         guard track.location!.hasPrefix(oldPath) else {badLocationCount += 1; continue}
         track.location = track.location!.replacingOccurrences(of: oldPath, with: newPath, options: .anchored, range: nil)
+    }
+    if var watchDirs = library.watch_dirs as? [URL] {
+        if watchDirs.contains(oldURL) {
+            watchDirs.remove(at: watchDirs.index(of: oldURL)!)
+            watchDirs.append(newLocation)
+            library.watch_dirs = watchDirs as NSArray
+        }
     }
     print("number of invalid locations: \(badLocationCount)")
     library.library_location = newLocation.absoluteString

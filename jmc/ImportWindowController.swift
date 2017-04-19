@@ -64,6 +64,9 @@ class ImportWindowController: NSWindowController {
         library.renames_files = 0 as NSNumber
         library.organization_type = 0 as NSNumber
         library.keeps_track_of_files = true
+        var urlArray = library.watch_dirs as? [URL] ?? [URL]()
+        urlArray.append(pathURL)
+        library.watch_dirs = urlArray as NSArray
         library.monitors_directories_for_new = true
         let librarySourceListItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         librarySourceListItem.library = library

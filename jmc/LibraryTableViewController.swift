@@ -175,7 +175,9 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     }
     
     func interpretDeleteEvent() {
-        
+        guard trackViewArrayController.selectedObjects.count > 0 else {return}
+        let selectedObjects = trackViewArrayController.selectedObjects as! [TrackView]
+        mainWindowController!.interpretDeleteEvent(selectedObjects)
     }
     
     func modifyPlayOrderForSortDescriptors(_ poo: PlaylistOrderObject, trackID: Int) -> Int {

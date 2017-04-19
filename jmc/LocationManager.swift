@@ -49,6 +49,11 @@ class LocationManager: NSObject {
             print("")
             currentLocationManagerInstance.updateLastEventID()
         }
+        do {
+            try managedContext.save()
+        } catch {
+            print(error)
+        }
     }
     
     func getFSEventFlags(flags: UInt32) -> [String]? {
@@ -149,7 +154,8 @@ class LocationManager: NSObject {
     }
     
     func handleEvent(path: String, flags: FSEventStreamEventFlags, id: UInt64) {
-        guard !URL(fileURLWithPath: path).lastPathComponent.hasPrefix(".") else {return}
+        guard !URL(fileURLWithPath: path).lastPathComponent.hasPrefix(".") else {print("ignoring invisible file"); return}
+        guard !(flags & FSEventStreamEventFlags(kFSEventStreamEventFlagOwnEvent) > 0) else {print("ignoring own"); return}
         if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagRootChanged)) > 0 {
             print("root changed")
             //relocate directory
@@ -199,24 +205,23 @@ class LocationManager: NSObject {
         }
         if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemCreated)) > 0 {
             if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemModified)) > 0 {
-                print("item created")
+                print("item created, modified")
                 let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
-                guard rootDirectoryPaths.count == 1 else {return}
-                let rootDirectoryPath = rootDirectoryPaths.first!
-                let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
+                let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})
+                let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath!)]!
                 if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
                     databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library, visualUpdateHandler: nil)
                 }
             } else {
-                print("item created")
+                print("item created, not modified")
                 let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
-                guard rootDirectoryPaths.count == 1 else {return}
-                let rootDirectoryPath = rootDirectoryPaths.first!
+                let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})!
                 let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
                 if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
                     let errors = databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library, visualUpdateHandler: nil)
                     for error in errors {
                         if error.error == kFileAddErrorNoSizeMetadata {
+                            print("creating pending event")
                             self.pendingCreatePaths.append(path)
                         }
                     }
@@ -227,8 +232,7 @@ class LocationManager: NSObject {
             if self.pendingCreatePaths.contains(path) {
                 print("item created after pending")
                 let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
-                guard rootDirectoryPaths.count == 1 else {return}
-                let rootDirectoryPath = rootDirectoryPaths.first!
+                let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})!
                 let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
                 if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
                     databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library, visualUpdateHandler: nil)
@@ -239,8 +243,7 @@ class LocationManager: NSObject {
         if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemRenamed)) > 0 {
             print("item renamed")
             let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
-            guard rootDirectoryPaths.count == 1 else {return}
-            let rootDirectoryPath = rootDirectoryPaths.first!
+            let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})!
             if withinDirRenameEvents[rootDirectoryPath]??.id == id - 1 {
                 //this is definitely the second half of another rename event, which we may or may not care about
                 let firstEvent = withinDirRenameEvents[rootDirectoryPath]!
@@ -302,12 +305,10 @@ class LocationManager: NSObject {
         }
         var urls = [URL]()
         for library in libraries {
-            if library.keeps_track_of_files == true {
+            if library.monitors_directories_for_new == true {
                 let url = URL(string: library.library_location!)!
                 urls.append(url)
                 libraryURLDictionary[url] = library
-            }
-            if library.monitors_directories_for_new == true {
                 if let watchURLs = library.watch_dirs as? [URL] {
                     urls.append(contentsOf: watchURLs)
                     for url in urls {
@@ -322,12 +323,12 @@ class LocationManager: NSObject {
     }
     
     func createEventStream(paths: [String], lastID: FSEventStreamEventId?) {
-        let flag = kFSEventStreamCreateFlagIgnoreSelf | kFSEventStreamCreateFlagFileEvents | kFSEventStreamCreateFlagUseCFTypes | kFSEventStreamCreateFlagWatchRoot
+        let flag = kFSEventStreamCreateFlagMarkSelf | kFSEventStreamCreateFlagFileEvents | kFSEventStreamCreateFlagUseCFTypes | kFSEventStreamCreateFlagWatchRoot
         let pathsCFArrayWrapper = paths as CFArray
         var streamContext = FSEventStreamContext(version: 0, info: Unmanaged.passRetained(self).toOpaque(), retain: nil, release: nil, copyDescription: nil)
         let lastEventID = lastID ?? FSEventStreamEventId(kFSEventStreamEventIdSinceNow)
         if paths.count > 0 {
-            if let newEventStream = FSEventStreamCreate(kCFAllocatorDefault, callback, &streamContext, pathsCFArrayWrapper, lastEventID, 1, FSEventStreamCreateFlags(flag)) {
+            if let newEventStream = FSEventStreamCreate(kCFAllocatorDefault, callback, &streamContext, pathsCFArrayWrapper, lastEventID, 3, FSEventStreamCreateFlags(flag)) {
                 for path in paths {
                     let fileDescriptor = open(path, O_RDONLY, 0)
                     activeMonitoringFileDescriptors[path] = fileDescriptor

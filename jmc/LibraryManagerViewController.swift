@@ -95,10 +95,16 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             self.watchFolderTableView.isEnabled = true
             self.addWatchFolderButton.isEnabled = true
             self.removeWatchFolderButton.isEnabled = true
+            self.watchFolderTableView.tableColumns[0].isHidden = false
+            if let watchDirs = library?.watch_dirs as? NSArray {
+                self.watchFolders = watchDirs as! [URL]
+                self.watchFoldersArrayController.content = self.watchFolders
+            }
         } else {
             self.watchFolderTableView.isEnabled = false
             self.addWatchFolderButton.isEnabled = false
             self.removeWatchFolderButton.isEnabled = false
+            self.watchFolderTableView.tableColumns[0].isHidden = true
         }
     }
     @IBAction func sourceNameWasEdited(_ sender: Any) {
@@ -226,13 +232,17 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             self.automaticallyAddFilesCheck.isEnabled = true
             if library.monitors_directories_for_new == true {
                 self.automaticallyAddFilesCheck.state = NSOnState
+                self.watchFolderTableView.tableColumns[0].isHidden = false
                 if let watchDirs = library.watch_dirs as? NSArray {
                     self.watchFolders = watchDirs as! [URL]
                     self.watchFoldersArrayController.content = self.watchFolders
                 }
+                self.addWatchFolderButton.isEnabled = true
+                self.removeWatchFolderButton.isEnabled = true
             } else if library.monitors_directories_for_new == false {
                 self.automaticallyAddFilesCheck.state = NSOffState
                 self.watchFolderTableView.isEnabled = false
+                self.watchFolderTableView.tableColumns[0].isHidden = true
                 self.addWatchFolderButton.isEnabled = false
                 self.removeWatchFolderButton.isEnabled = false
             }

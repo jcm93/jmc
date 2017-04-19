@@ -162,7 +162,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             //not accepted by NSPredicateEditor
             //let newPredicate = NSPredicate(format: "ANY {track.name, track.artist.name, track.album.name, track.composer.name, track.comments, track.genre.name} contains[cd] %@", token)
             //accepted by NSPredicateEditor
-            let newPredicate = NSPredicate(format: "track.name contains[cd] %@ OR track.artist.name contains[cd] %@ OR track.album.name contains[cd] %@ OR track.composer.name contains[cd] %@ OR track.comments contains[cd] %@ OR track.genre.name contains[cd] %@", token, token, token, token, token, token)
+            let newPredicate = NSPredicate(format: "track.name contains[cd] %@ OR track.artist.name contains[cd] %@ OR track.album.name contains[cd] %@ OR track.composer.name contains[cd] %@ OR track.comments contains[cd] %@ OR track.genre contains[cd] %@", token, token, token, token, token, token)
             subPredicates.append(newPredicate)
         }
         if subPredicates.count > 0 {
@@ -433,6 +433,18 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             }
         } else {
             delegate?.audioModule.skip()
+        }
+    }
+    
+    func interpretDeleteEvent(_ selectedObjects: [TrackView]) {
+        let alert = NSAlert()
+        alert.addButton(withTitle: "OK")
+        alert.addButton(withTitle: "Cancel")
+        alert.messageText = kDeleteEventText
+        let response = alert.runModal()
+        if response == NSAlertFirstButtonReturn {
+            print("deleting tracks")
+            self.delegate?.databaseManager?.removeTracks(selectedObjects.map({return $0.track!}))
         }
     }
     

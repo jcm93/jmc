@@ -265,6 +265,9 @@ class DatabaseManager: NSObject {
         library.renames_files = organize as NSNumber
         library.organization_type = organize == true ? 2 as NSNumber : 0 as NSNumber
         library.keeps_track_of_files = true
+        var urlArray = library.watch_dirs as? [URL] ?? [URL]()
+        urlArray.append(url)
+        library.watch_dirs = urlArray as NSArray
         library.monitors_directories_for_new = true
         let librarySourceListItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         librarySourceListItem.library = library
@@ -313,7 +316,7 @@ class DatabaseManager: NSObject {
         //format-agnostic metadata
         metadataDictionary[kDateModifiedKey] = MDItemCopyAttribute(mediaFileObject, "kMDItemContentModificationDate" as CFString!) as? Date
         metadataDictionary[kFileKindKey]     = MDItemCopyAttribute(mediaFileObject, "kMDItemKind" as CFString!) as? String
-        guard let size                       = MDItemCopyAttribute(mediaFileObject, "kMDItemFSSize" as CFString!) as? Int else { return nil }
+        guard let size                       = MDItemCopyAttribute(mediaFileObject, "kMDItemFSSize" as CFString!) as? Int else { print("couldnt get size"); return nil }
         metadataDictionary[kSizeKey]         = size as NSNumber?
         
         if url.pathExtension.lowercased() == "flac" {
@@ -374,7 +377,6 @@ class DatabaseManager: NSObject {
         }
         
         //other stuff?
-        
         return metadataDictionary
     }
     
@@ -393,6 +395,7 @@ class DatabaseManager: NSObject {
         }
         for url in mediaURLs {
             guard let fileMetadataDictionary = getAudioMetadata(url: url) else {
+                print("failure getting audio metadata, error")
                 errors.append(FileAddToDatabaseError(url: url.absoluteString, error: kFileAddErrorNoSizeMetadata)); continue
             }
             var addedArtist: Artist?
@@ -476,7 +479,7 @@ class DatabaseManager: NSObject {
                 }
             }
             //handle album artist
-            if let albumArtistName  = fileMetadataDictionary[kAlbumArtistKey] as? String {
+            if let albumArtistName = fileMetadataDictionary[kAlbumArtistKey] as? String {
                 if let alreadyAddedArtist = addedArtists[albumArtistName] {
                     track.album?.album_artist = alreadyAddedArtist
                 } else if let alreadyAddedArtist = checkIfArtistExists(albumArtistName) {
@@ -490,6 +493,10 @@ class DatabaseManager: NSObject {
                     addedArtists[albumArtistName] = newArtist
                     addedAlbumArtist = newArtist
                 }
+            }
+            
+            if fileMetadataDictionary[kIsCompilationKey] as? Int == 1 {
+                track.album?.is_compilation = true as NSNumber
             }
             
             //add sort values
@@ -567,6 +574,29 @@ class DatabaseManager: NSObject {
         return errors
     }
     
+    func removeTracks(_ tracks: [Track]) {
+        print("removing tracks")
+        for track in tracks {
+            print("removing track \(track.name)")
+            managedContext.delete(track)
+            managedContext.delete(track.view!)
+            if track.artist != nil && track.artist!.tracks!.count <= 1 {
+                managedContext.delete(track.artist!)
+            }
+            if track.album != nil && track.album!.tracks!.count <= 1 {
+                managedContext.delete(track.album!)
+            }
+            if track.composer != nil && track.composer!.tracks!.count <= 1 {
+                managedContext.delete(track.composer!)
+            }
+        }
+        do {
+            try managedContext.save()
+        } catch {
+            print(error)
+        }
+    }
+    
     func moveFileToAppropriateLocationForTrack(_ track: Track, currentURL: URL) -> URL? {
         let fileName = {() -> String in
             switch track.library?.renames_files as! Bool {
@@ -584,9 +614,15 @@ class DatabaseManager: NSObject {
             fileURL = currentURL
         } else {
             let libraryPathURL = URL(string: track.library!.library_location!)
-            let albumArtist = validateStringForFilename(track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING)
-            let album = validateStringForFilename(track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING)
-            albumDirectoryURL = libraryPathURL?.appendingPathComponent(albumArtist).appendingPathComponent(album)
+            var album, albumArtist: String
+            if track.album?.is_compilation != true {
+                albumArtist = validateStringForFilename(track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING)
+                album = validateStringForFilename(track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING)
+                albumDirectoryURL = libraryPathURL?.appendingPathComponent(albumArtist).appendingPathComponent(album)
+            } else {
+                album = validateStringForFilename(track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING)
+                albumDirectoryURL = libraryPathURL?.appendingPathComponent("Compilations").appendingPathComponent(album)
+            }
             do {
                 try fileManager.createDirectory(at: albumDirectoryURL!, withIntermediateDirectories: true, attributes: nil)
             } catch {
@@ -602,6 +638,7 @@ class DatabaseManager: NSObject {
                 track.location = fileURL?.absoluteString
             } catch {
                 print("error while moving/copying files: \(error)")
+                return nil
             }
         }
         return fileURL
@@ -619,9 +656,15 @@ class DatabaseManager: NSObject {
         var albumDirectoryURL: URL?
         var fileURL: URL?
         let libraryPathURL = URL(fileURLWithPath: track.library!.library_location!)
-        let albumArtist = validateStringForFilename(track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING)
-        let album = validateStringForFilename(track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING)
-        albumDirectoryURL = libraryPathURL.appendingPathComponent(albumArtist).appendingPathComponent(album)
+        var album, albumArtist: String
+        if track.album?.is_compilation != true {
+            albumArtist = validateStringForFilename(track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING)
+            album = validateStringForFilename(track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING)
+            albumDirectoryURL = libraryPathURL.appendingPathComponent(albumArtist).appendingPathComponent(album)
+        } else {
+            album = validateStringForFilename(track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING)
+            albumDirectoryURL = libraryPathURL.appendingPathComponent("Compilations").appendingPathComponent(album)
+        }
         do {
             try fileManager.createDirectory(at: albumDirectoryURL!, withIntermediateDirectories: true, attributes: nil)
         } catch {

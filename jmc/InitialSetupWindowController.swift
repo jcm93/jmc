@@ -108,6 +108,11 @@ class InitialSetupWindowController: NSWindowController {
         newActualLibrary.parent = newLibrary
         newActualLibrary.is_active = true
         newActualLibrary.renames_files = modifyMetadata as NSNumber
+        newActualLibrary.keeps_track_of_files = true
+        var urlArray = [URL]()
+        urlArray.append(libraryPathControl.url!)
+        newActualLibrary.watch_dirs = urlArray as NSArray
+        newActualLibrary.monitors_directories_for_new = false
         newActualLibrary.organization_type = organizationType.rawValue as NSNumber
         let newActualLibrarySLI = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         newActualLibrarySLI.library = newActualLibrary
@@ -202,29 +207,38 @@ class InitialSetupWindowController: NSWindowController {
     override func windowDidLoad() {
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
         moveRadioAction(self)
-        let libraryFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Library")
-        let predicate = NSPredicate(format: "is_network == false or is_network == nil")
-        libraryFetchRequest.predicate = predicate
-        var result: Library?
         do {
-            let libraryResult = try managedContext.fetch(libraryFetchRequest) as? [Library]
-            if libraryResult?.count > 0 {
-                print("has library")
-                result = libraryResult![0]
+            let userMusicDirURL = try FileManager.default.url(for: .musicDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let jmcDirURL = userMusicDirURL.appendingPathComponent("jmc", isDirectory: true)
+            try FileManager.default.createDirectory(atPath: jmcDirURL.path, withIntermediateDirectories: true, attributes: nil)
+            let libraryFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Library")
+            let predicate = NSPredicate(format: "is_network == false or is_network == nil")
+            libraryFetchRequest.predicate = predicate
+            var result: Library?
+            do {
+                let libraryResult = try managedContext.fetch(libraryFetchRequest) as? [Library]
+                if libraryResult?.count > 0 {
+                    print("has library")
+                    result = libraryResult![0]
+                }
+            } catch {
+                print(error)
+            }
+            if result != nil {
+                library = result!
+                let libraryPath = result!.library_location
+                if libraryPath != nil {
+                    let libraryURL = URL(string: libraryPath!)
+                    if libraryURL != nil {
+                        directoryURL = libraryURL
+                        libraryPathControl.url = libraryURL
+                    }
+                }
+            } else {
+                libraryPathControl.url = jmcDirURL
             }
         } catch {
             print(error)
-        }
-        if result != nil {
-            library = result!
-            let libraryPath = result!.library_location
-            if libraryPath != nil {
-                let libraryURL = URL(string: libraryPath!)
-                if libraryURL != nil {
-                    directoryURL = libraryURL
-                    libraryPathControl.url = libraryURL
-                }
-            }
         }
         super.windowDidLoad()
     }
