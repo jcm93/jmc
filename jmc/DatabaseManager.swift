@@ -316,7 +316,11 @@ class DatabaseManager: NSObject {
         //format-agnostic metadata
         metadataDictionary[kDateModifiedKey] = MDItemCopyAttribute(mediaFileObject, "kMDItemContentModificationDate" as CFString!) as? Date
         metadataDictionary[kFileKindKey]     = MDItemCopyAttribute(mediaFileObject, "kMDItemKind" as CFString!) as? String
-        guard let size                       = MDItemCopyAttribute(mediaFileObject, "kMDItemFSSize" as CFString!) as? Int else { print("couldnt get size"); return nil }
+        guard let size                       = MDItemCopyAttribute(mediaFileObject, "kMDItemFSSize" as CFString!) as? Int else {
+                print(MDItemCopyAttribute(mediaFileObject, "kMDItemFSSize" as CFString!))
+                print("doingluskhrejwk")
+                return nil
+        }
         metadataDictionary[kSizeKey]         = size as NSNumber?
         
         if url.pathExtension.lowercased() == "flac" {
@@ -380,7 +384,7 @@ class DatabaseManager: NSObject {
         return metadataDictionary
     }
     
-    func addTracksFromURLs(_ mediaURLs: [URL], to library: Library, visualUpdateHandler: ProgressBarController?) -> [FileAddToDatabaseError] {
+    func addTracksFromURLs(_ mediaURLs: [URL], to library: Library, visualUpdateHandler: ProgressBarController?, callback: (() -> Void)?) -> [FileAddToDatabaseError] {
         let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         subContext.parent = managedContext
         let subContextLibrary = subContext.object(with: library.objectID)
@@ -567,6 +571,9 @@ class DatabaseManager: NSObject {
                         print(error)
                     }
                     visualUpdateHandler?.finish()
+                    if callback != nil {
+                        callback!()
+                    }
                 }
             }
         }

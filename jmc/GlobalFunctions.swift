@@ -622,6 +622,22 @@ extension Track {
         }
     }
     
+    @objc func compareComposer(_ other: Track) -> ComparisonResult {
+        let self_composer_name = self.sort_composer != nil ? self.sort_composer : self.composer?.name
+        let other_composer_name = other.sort_composer != nil ? other.sort_composer : other.composer?.name
+        let composer_comparison: ComparisonResult
+        if self_composer_name == nil || other_composer_name == nil {
+            composer_comparison = (self_composer_name == other_composer_name) ? .orderedSame : (other_composer_name != nil) ? .orderedAscending : .orderedDescending
+        } else {
+            composer_comparison = self_composer_name!.localizedStandardCompare(other_composer_name!)
+        }
+        if composer_comparison == .orderedSame {
+            return self.compareArtist(other)
+        } else {
+            return composer_comparison
+        }
+    }
+    
     @objc func compareDateAdded(_ other: Track) -> ComparisonResult {
         let self_date_added = self.date_added
         let other_date_added = other.date_added
@@ -652,8 +668,8 @@ extension Track {
     }
     
     @objc func compareName(_ other: Track) -> ComparisonResult {
-        let self_name = self.name
-        let other_name = other.name
+        let self_name = self.sort_name != nil ? self.sort_name : self.name
+        let other_name = other.sort_name != nil ? other.sort_name : other.name
         let name_comparison: ComparisonResult
         if self_name == nil || other_name == nil {
             name_comparison = (self_name == other_name) ? .orderedSame : (other_name != nil) ? .orderedAscending : .orderedDescending
@@ -1118,6 +1134,8 @@ func fixIndices(_ set: NSMutableOrderedSet, index: Int, order: String) {
         key = "kind_order"
     case "Date Released":
         key = "release_date_order"
+    case "Composer":
+        key = "composer_order"
     default:
         key = "poop"
     }
@@ -1150,6 +1168,8 @@ func testFixIndices(_ set: NSMutableOrderedSet, order: String) {
         key = "kind_order"
     case "Date Released":
         key = "release_date_order"
+    case "Composer":
+        key = "composer_order"
     default:
         key = "poop"
     }
@@ -1182,6 +1202,8 @@ func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder) {
         comparator = Track.compareGenre
     case "Kind":
         comparator = Track.compareKind
+    case "Composer":
+        comparator = Track.compareComposer
     default:
         comparator = Track.compareArtist
     }
@@ -1214,6 +1236,9 @@ func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder) {
         case "Kind":
             newTracks = allTracks.sortedArray(using: #selector(Track.compareKind)) as NSArray
             key = "kind_order"
+        case "Composer":
+            newTracks = allTracks.sortedArray(using: #selector(Track.compareComposer)) as NSArray
+            key = "composer_order"
         default:
             newTracks = allTracks.sortedArray(using: #selector(Track.compareArtist)) as NSArray
             key = "artist_order"

@@ -106,6 +106,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             self.removeWatchFolderButton.isEnabled = false
             self.watchFolderTableView.tableColumns[0].isHidden = true
         }
+        locationManager.reinitializeEventStream()
     }
     @IBAction func sourceNameWasEdited(_ sender: Any) {
         if let textField = sender as? NSTextField, textField.stringValue != "" {

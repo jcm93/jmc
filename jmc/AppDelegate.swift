@@ -29,6 +29,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var importErrorWindowController: ImportErrorWindowController?
     var libraryManagerSourceSelector: LibraryManagerSourceSelector?
     var addToLibraryViewController: AddFilesWindowController?
+    var backgroundAddFilesHandler: AddFilesProgressSheet?
+    var addFilesQueueLoop: AddFilesQueueLoop?
     
     @IBOutlet weak var shuffleMenuItem: NSMenuItem!
     @IBOutlet weak var repeatMenuItem: NSMenuItem!
@@ -67,7 +69,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func initializeLibraryAndShowMainWindow() {
-        self.locationManager = LocationManager()
+        self.locationManager = LocationManager(self)
+        self.addFilesQueueLoop = AddFilesQueueLoop(self)
         self.locationManager?.initializeEventStream(libraries: getAllLibraries()!)
         mainWindowController = MainWindowController(windowNibName: "MainWindowController")
         mainWindowController?.delegate = self
@@ -81,6 +84,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.serviceBrowser = ConnectivityManager(delegate: self, slvc: mainWindowController!.sourceListViewController!)
         let defaultsEQOnState = UserDefaults.standard.integer(forKey: DEFAULTS_IS_EQ_ENABLED_STRING)
         audioModule.toggleEqualizer(defaultsEQOnState)
+    }
+    
+    func launchAddFilesDialog() {
+        self.backgroundAddFilesHandler = AddFilesProgressSheet(windowNibName: "AddFilesProgressSheet")
+        self.backgroundAddFilesHandler?.showWindow(self)
+        self.backgroundAddFilesHandler?.window?.level = Int(CGWindowLevelForKey(CGWindowLevelKey.floatingWindow))
     }
     
     func reinitializeInterfaceForRemovedSource() {

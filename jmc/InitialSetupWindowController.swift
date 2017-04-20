@@ -171,6 +171,9 @@ class InitialSetupWindowController: NSWindowController {
         let cachedNameOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: managedContext) as! CachedOrder
         cachedNameOrder.order = "Name"
         
+        let cachedComposerOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: managedContext) as! CachedOrder
+        cachedComposerOrder.order = "Composer"
+        
         //set IDs
         library?.next_album_id = 1
         library?.next_track_id = 1

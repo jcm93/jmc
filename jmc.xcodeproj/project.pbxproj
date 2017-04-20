@@ -154,6 +154,9 @@
 		0DE486831EA579FD009B226B /* AddWatchFolderSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE486811EA579FD009B226B /* AddWatchFolderSheetController.swift */; };
 		0DE486841EA579FD009B226B /* AddWatchFolderSheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DE486821EA579FD009B226B /* AddWatchFolderSheetController.xib */; };
 		0DE486861EA58C67009B226B /* JMPathControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE486851EA58C67009B226B /* JMPathControl.swift */; };
+		0DE486911EA83FBA009B226B /* AddFilesProgressSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE4868F1EA83FBA009B226B /* AddFilesProgressSheet.swift */; };
+		0DE486921EA83FBA009B226B /* AddFilesProgressSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DE486901EA83FBA009B226B /* AddFilesProgressSheet.xib */; };
+		0DE486941EA92B78009B226B /* AddFilesQueueLoop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE486931EA92B78009B226B /* AddFilesQueueLoop.swift */; };
 		0DE74A531D7D9457005211E6 /* SharedLibraryRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE74A521D7D9457005211E6 /* SharedLibraryRequestHandler.swift */; };
 		0DEF66B61D383A8700EA3ADC /* Library+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEF66961D383A8700EA3ADC /* Library+CoreDataProperties.swift */; };
 		0DEF66B71D383A8700EA3ADC /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEF66971D383A8700EA3ADC /* Library.swift */; };
@@ -362,6 +365,9 @@
 		0DE486811EA579FD009B226B /* AddWatchFolderSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddWatchFolderSheetController.swift; sourceTree = "<group>"; };
 		0DE486821EA579FD009B226B /* AddWatchFolderSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddWatchFolderSheetController.xib; sourceTree = "<group>"; };
 		0DE486851EA58C67009B226B /* JMPathControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMPathControl.swift; sourceTree = "<group>"; };
+		0DE4868F1EA83FBA009B226B /* AddFilesProgressSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddFilesProgressSheet.swift; sourceTree = "<group>"; };
+		0DE486901EA83FBA009B226B /* AddFilesProgressSheet.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddFilesProgressSheet.xib; sourceTree = "<group>"; };
+		0DE486931EA92B78009B226B /* AddFilesQueueLoop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddFilesQueueLoop.swift; sourceTree = "<group>"; };
 		0DE74A521D7D9457005211E6 /* SharedLibraryRequestHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedLibraryRequestHandler.swift; sourceTree = "<group>"; };
 		0DEF66961D383A8700EA3ADC /* Library+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Library+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0DEF66971D383A8700EA3ADC /* Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Library.swift; sourceTree = "<group>"; };
@@ -422,6 +428,7 @@
 				0D23CA6C1E03242400CAF529 /* PeerBrowser.swift */,
 				0DD274EE1D3190360055C43B /* GlobalFunctions.swift */,
 				0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */,
+				0DE486931EA92B78009B226B /* AddFilesQueueLoop.swift */,
 				0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */,
 				0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */,
 				0DE74A521D7D9457005211E6 /* SharedLibraryRequestHandler.swift */,
@@ -448,6 +455,8 @@
 				0D299B111DF10FFF0009CF7A /* SourceListViewController.swift */,
 				0D299B121DF10FFF0009CF7A /* SourceListViewController.xib */,
 				0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */,
+				0DE4868F1EA83FBA009B226B /* AddFilesProgressSheet.swift */,
+				0DE486901EA83FBA009B226B /* AddFilesProgressSheet.xib */,
 				0D2E66461DC00B7F00CC174E /* TableColumnVisibilityController.swift */,
 				0DA8D03D1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift */,
 				0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */,
@@ -1001,6 +1010,7 @@
 				0DD0DB021E53A8EE00807CAC /* features.html in Resources */,
 				0DD0DAEA1E53A8EE00807CAC /* INSTALL_RECEIPT.json in Resources */,
 				0D9CE6781D3442D3004FA8CB /* Preferences.plist in Resources */,
+				0DE486921EA83FBA009B226B /* AddFilesProgressSheet.xib in Resources */,
 				0DD0DB0B1E53A8EE00807CAC /* flac.1 in Resources */,
 				0D299B141DF10FFF0009CF7A /* SourceListViewController.xib in Resources */,
 				0DD0DAFE1E53A8EE00807CAC /* documentation_tools_flac.html in Resources */,
@@ -1075,6 +1085,7 @@
 				0DA8D03E1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift in Sources */,
 				0DB60F901E62341500105766 /* AddFilesWindowController.swift in Sources */,
 				0DEF66BC1D383A8700EA3ADC /* Composer+CoreDataProperties.swift in Sources */,
+				0DE486941EA92B78009B226B /* AddFilesQueueLoop.swift in Sources */,
 				0DEF66BF1D383A8700EA3ADC /* SharedLibrary.swift in Sources */,
 				0D60F5291E8720A300CA5420 /* PlaylistOrderObject.swift in Sources */,
 				0D3878B51DD10258004CC3C1 /* TrackView+CoreDataProperties.swift in Sources */,
@@ -1090,6 +1101,7 @@
 				0DA8D0401D1B1128009FEC28 /* ProgressBarView.swift in Sources */,
 				0DB8EFEA1DC4FC4D00009900 /* MainTableViewDataSource.swift in Sources */,
 				0D9CE6711D334F97004FA8CB /* ImportWindowController.swift in Sources */,
+				0DE486911EA83FBA009B226B /* AddFilesProgressSheet.swift in Sources */,
 				0D116B851E5800FD00C759FD /* LocationManager.swift in Sources */,
 				0DEF66C61D383A8700EA3ADC /* SourceListItem+CoreDataProperties.swift in Sources */,
 				0DCB81721DCAA45C006FBA9D /* MainTableViewDelegate.swift in Sources */,

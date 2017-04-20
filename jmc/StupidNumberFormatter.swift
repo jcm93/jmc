@@ -13,7 +13,7 @@ class StupidNumberFormatter: Formatter {
     override func string(for obj: Any?) -> String? {
         if obj != nil {
             if let thing = obj as? NSNumber {
-                return (obj as! NSNumber).int32Value > 0 ? String(describing: obj) : ""
+                return (obj as! NSNumber).int32Value > 0 ? String(describing: thing) : ""
             } else {
                 return nil
             }

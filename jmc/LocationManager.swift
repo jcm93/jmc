@@ -9,6 +9,7 @@
 import Foundation
 import CoreServices
 import CoreData
+import Cocoa
 
 struct TrackFirstRenameEvent {
     let track: Track?
@@ -32,6 +33,10 @@ class LocationManager: NSObject {
     var withinDirRenameEvents = [String : TrackFirstRenameEvent?]()
     var databaseManager = DatabaseManager()
     var pendingCreatePaths = [String]()
+    var urlsToAddToDatabase = [Library : [URL]]()
+    var unpopulatedMetadataURLs = [Library: [URL]]()
+    var currentlyAddingFiles = false
+    var delegate: AppDelegate
     
     var eventStreamRef: FSEventStreamRef?
     
@@ -49,10 +54,20 @@ class LocationManager: NSObject {
             print("")
             currentLocationManagerInstance.updateLastEventID()
         }
-        do {
-            try managedContext.save()
-        } catch {
-            print(error)
+        currentLocationManagerInstance.tryAddNewFilesToDatabase()
+    }
+    
+    init(delegate: AppDelegate) {
+        self.delegate = delegate
+    }
+    
+    func tryAddNewFilesToDatabase() {
+        if !self.urlsToAddToDatabase.isEmpty {
+            delegate.addFilesQueueLoop?.addChunksToQueue(urls: self.urlsToAddToDatabase)
+            self.urlsToAddToDatabase = [Library : [URL]]()
+            if delegate.addFilesQueueLoop?.isRunning == false {
+                delegate.addFilesQueueLoop!.start()
+            }
         }
     }
     
@@ -210,7 +225,10 @@ class LocationManager: NSObject {
                 let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})
                 let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath!)]!
                 if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
-                    databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library, visualUpdateHandler: nil)
+                    if self.urlsToAddToDatabase[library] == nil {
+                        self.urlsToAddToDatabase[library] = [URL]()
+                    }
+                    self.urlsToAddToDatabase[library]!.append(URL(fileURLWithPath: path))
                 }
             } else {
                 print("item created, not modified")
@@ -218,13 +236,10 @@ class LocationManager: NSObject {
                 let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})!
                 let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
                 if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
-                    let errors = databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library, visualUpdateHandler: nil)
-                    for error in errors {
-                        if error.error == kFileAddErrorNoSizeMetadata {
-                            print("creating pending event")
-                            self.pendingCreatePaths.append(path)
-                        }
+                    if self.urlsToAddToDatabase[library] == nil {
+                        self.urlsToAddToDatabase[library] = [URL]()
                     }
+                    self.urlsToAddToDatabase[library]!.append(URL(fileURLWithPath: path))
                 }
             }
         }
@@ -235,7 +250,10 @@ class LocationManager: NSObject {
                 let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})!
                 let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
                 if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
-                    databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library, visualUpdateHandler: nil)
+                    if self.urlsToAddToDatabase[library] == nil {
+                        self.urlsToAddToDatabase[library] = [URL]()
+                    }
+                    self.urlsToAddToDatabase[library]!.append(URL(fileURLWithPath: path))
                 }
                 self.pendingCreatePaths.remove(at: self.pendingCreatePaths.index(of: path)!)
             }
@@ -261,7 +279,8 @@ class LocationManager: NSObject {
                 if fileManager.fileExists(atPath: path) && path != rootDirectoryPath && VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
                     let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
                     if library.monitors_directories_for_new as? Bool == true {
-                        databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library, visualUpdateHandler: nil) //ignores errors :(
+                        let errors = databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library, visualUpdateHandler: nil, callback: nil) //ignores errors :(
+                        //metadata should already exist.
                     }
                 } else {
                     //...or this is the first half of a rename event, which we may or may not care about
@@ -305,7 +324,7 @@ class LocationManager: NSObject {
         }
         var urls = [URL]()
         for library in libraries {
-            if library.monitors_directories_for_new == true {
+            if library.monitors_directories_for_new == true || library.keeps_track_of_files == true {
                 let url = URL(string: library.library_location!)!
                 urls.append(url)
                 libraryURLDictionary[url] = library
