@@ -161,7 +161,7 @@ var kIsCompilationKey = "isCompilation"
 var kTotalTracksKey = "totalTracks"
 
 //errors
-var kFileAddErrorNoSizeMetadata = "Failure getting file metadata"
+var kFileAddErrorMetadataNotYetPopulated = "Failure getting file metadata"
 
 //other
 var kDeleteEventText = "Are you sure you want to remove the selected tracks from your library?"

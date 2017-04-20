@@ -279,7 +279,7 @@ class DatabaseManager: NSObject {
         visualUpdateHandler?.makeIndeterminate(actionName: "Getting all media in directory")
         let mediaURLs = getMediaURLsInDirectoryURLs([url]).0
         DispatchQueue.global(qos: .default).async {
-            self.addTracksFromURLs(mediaURLs, to: library, visualUpdateHandler: visualUpdateHandler)
+            self.addTracksFromURLs(mediaURLs, to: library, visualUpdateHandler: visualUpdateHandler, callback: nil)
         }
     }
     
@@ -400,7 +400,7 @@ class DatabaseManager: NSObject {
         for url in mediaURLs {
             guard let fileMetadataDictionary = getAudioMetadata(url: url) else {
                 print("failure getting audio metadata, error")
-                errors.append(FileAddToDatabaseError(url: url.absoluteString, error: kFileAddErrorNoSizeMetadata)); continue
+                errors.append(FileAddToDatabaseError(url: url.absoluteString, error: kFileAddErrorMetadataNotYetPopulated)); continue
             }
             var addedArtist: Artist?
             var addedAlbum: Album?

@@ -21,6 +21,7 @@ class FileAddQueueChunk {
 
 class AddFilesQueueLoop: NSObject {
     
+    //should be thread safe
     var urlsToAddChunks = [FileAddQueueChunk]()
     var databaseManager = DatabaseManager()
     var showsProgressBar = true
@@ -48,11 +49,14 @@ class AddFilesQueueLoop: NSObject {
             if self.showsProgressBar == true {
                 delegate.launchAddFilesDialog()
             }
+            //get errors that indicate we can retry on the current thread, do the rest of the work on the main thread
             let errors = databaseManager.addTracksFromURLs(chunk.urls, to: chunk.library, visualUpdateHandler: delegate.backgroundAddFilesHandler, callback: self.finishedAddingChunkCallback)
-            let retryableErrors = errors.filter({return $0.error == kFileAddErrorNoSizeMetadata})
+            let retryableErrors = errors.filter({return $0.error == kFileAddErrorMetadataNotYetPopulated})
             let retryableURLs = retryableErrors.map({return URL(string: $0.urlString)!})
-            let newChunk = FileAddQueueChunk(library: chunk.library, urls: retryableURLs)
-            self.urlsToAddChunks.append(newChunk)
+            if retryableURLs.count > 0 {
+                let newChunk = FileAddQueueChunk(library: chunk.library, urls: retryableURLs)
+                self.urlsToAddChunks.append(newChunk)
+            }
         } else if self.canAddMoreFiles == true {
             //no urls to add.
             self.consecutiveEmptyLoops += 1

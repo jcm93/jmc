@@ -69,8 +69,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func initializeLibraryAndShowMainWindow() {
-        self.locationManager = LocationManager(self)
-        self.addFilesQueueLoop = AddFilesQueueLoop(self)
+        self.locationManager = LocationManager(delegate: self)
+        self.addFilesQueueLoop = AddFilesQueueLoop(delegate: self)
         self.locationManager?.initializeEventStream(libraries: getAllLibraries()!)
         mainWindowController = MainWindowController(windowNibName: "MainWindowController")
         mainWindowController?.delegate = self
@@ -131,7 +131,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func addURLsToLibrary(_ urls: [URL], library: Library) -> [FileAddToDatabaseError] {
-        let result = databaseManager?.addTracksFromURLs(urls, to: library, visualUpdateHandler: nil)
+        let result = databaseManager?.addTracksFromURLs(urls, to: library, visualUpdateHandler: nil, callback: nil)
         return result!
     }
     
@@ -211,7 +211,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func application(_ sender: NSApplication, openFiles filenames: [String]) {
         let library = globalRootLibrary!.children!.allObjects[0] as! Library
-        databaseManager!.addTracksFromURLs(filenames.map({return URL(fileURLWithPath: $0)}), to: library, visualUpdateHandler: nil)
+        databaseManager!.addTracksFromURLs(filenames.map({return URL(fileURLWithPath: $0)}), to: library, visualUpdateHandler: nil, callback: nil)
     }
 
     // MARK: - Core Data stack
