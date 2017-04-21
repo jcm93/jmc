@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class FileAddQueueChunk {
+class FileAddQueueChunk: NSObject {
     
     var library: Library
     var urls: [URL]
@@ -19,9 +19,8 @@ class FileAddQueueChunk {
     }
 }
 
-class AddFilesQueueLoop: NSObject {
+class AddFilesQueueLoop: NSObject, ProgressBarController {
     
-    //should be thread safe
     var urlsToAddChunks = [FileAddQueueChunk]()
     var databaseManager = DatabaseManager()
     var showsProgressBar = true
@@ -36,40 +35,92 @@ class AddFilesQueueLoop: NSObject {
         super.init()
     }
     
-    func start() {
-        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(loopAction), userInfo: nil, repeats: true)
-        RunLoop.current.add(self.timer!, forMode: RunLoopMode.commonModes)
-        self.isRunning = true
+    var actionName = ""
+    var thingName = ""
+    var thingCount = 0
+    var thingsDone = 0
+    
+    func prepareForNewTask(actionName: String, thingName: String, thingCount: Int) {
+        
     }
     
-    func loopAction() {
-        if urlsToAddChunks.count > 0 && self.canAddMoreFiles == true {
-            self.canAddMoreFiles = false
-            let chunk = urlsToAddChunks.removeFirst()
-            if self.showsProgressBar == true {
-                delegate.launchAddFilesDialog()
+    func increment(thingsDone: Int) {
+        self.thingsDone += 1
+        delegate.backgroundAddFilesHandler?.increment(thingsDone: self.thingsDone)
+    }
+    
+    func makeIndeterminate(actionName: String) {
+        
+    }
+    
+    func finish() {
+        
+    }
+    
+    func start() {
+        print("queue here, starting")
+        DispatchQueue.main.async {
+            self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.loopAction), userInfo: nil, repeats: true)
+            CFRunLoopAddTimer(CFRunLoopGetMain(), self.timer!, CFRunLoopMode.commonModes)
+        }
+    }
+    
+    func getURLsToAdd() -> FileAddQueueChunk {
+        let baseChunk = urlsToAddChunks.removeFirst()
+        //get all other urls for this library in the chunk queue, remove their chunks and harvest their urls
+        var indexesToDelete = [Int]()
+        for (index, otherChunk) in urlsToAddChunks.enumerated() {
+            if otherChunk.library == baseChunk.library {
+                baseChunk.urls.append(contentsOf: otherChunk.urls)
+                indexesToDelete.append(index)
             }
-            //get errors that indicate we can retry on the current thread, do the rest of the work on the main thread
-            let errors = databaseManager.addTracksFromURLs(chunk.urls, to: chunk.library, visualUpdateHandler: delegate.backgroundAddFilesHandler, callback: self.finishedAddingChunkCallback)
-            let retryableErrors = errors.filter({return $0.error == kFileAddErrorMetadataNotYetPopulated})
-            let retryableURLs = retryableErrors.map({return URL(string: $0.urlString)!})
-            if retryableURLs.count > 0 {
-                let newChunk = FileAddQueueChunk(library: chunk.library, urls: retryableURLs)
-                self.urlsToAddChunks.append(newChunk)
-            }
-        } else if self.canAddMoreFiles == true {
-            //no urls to add.
-            self.consecutiveEmptyLoops += 1
-            if self.consecutiveEmptyLoops >= 30 {
-                self.stop()
+        }
+        for index in indexesToDelete.sorted().reversed() {
+            urlsToAddChunks.remove(at: index)
+        }
+        return baseChunk
+    }
+    
+    @objc func loopAction(timer: Timer) {
+        if self.showsProgressBar == true && self.canAddMoreFiles == true && self.urlsToAddChunks.count > 0 {
+            self.delegate.launchAddFilesDialog()
+            self.delegate.backgroundAddFilesHandler?.prepareForNewTask(actionName: "Importing", thingName: "tracks", thingCount: self.thingCount)
+            self.delegate.backgroundAddFilesHandler?.increment(thingsDone: self.thingsDone)
+            self.isRunning = true
+        }
+        DispatchQueue.global(qos: .default).async {
+            if self.urlsToAddChunks.count > 0 && self.canAddMoreFiles == true {
+                self.canAddMoreFiles = false
+                self.consecutiveEmptyLoops = 0
+                //do some chunk optimization
+                let chunk = self.getURLsToAdd()
+                //get errors that indicate we can retry on the current thread, do the rest of the work on the main thread
+                let errors = self.databaseManager.addTracksFromURLs(chunk.urls, to: chunk.library, visualUpdateHandler: self, callback: self.finishedAddingChunkCallback)
+                let retryableErrors = errors.filter({return $0.error == kFileAddErrorMetadataNotYetPopulated})
+                let retryableURLs = retryableErrors.map({return URL(string: $0.urlString)!})
+                if retryableURLs.count > 0 {
+                    let newChunk = FileAddQueueChunk(library: chunk.library, urls: retryableURLs)
+                    self.urlsToAddChunks.append(newChunk)
+                }
+                //has the potential to retry forever, if a file's size metadata is never available.
+            } else if self.canAddMoreFiles == true {
+                //no urls to add.
+                self.consecutiveEmptyLoops += 1
+                if self.consecutiveEmptyLoops >= 5 {
+                    self.stop()
+                }
             }
         }
     }
+    
     
     func addChunksToQueue(urls: [Library : [URL]]) {
         for library in urls.keys {
             let newChunk = FileAddQueueChunk(library: library, urls: urls[library]!)
             self.urlsToAddChunks.append(newChunk)
+            self.thingCount += newChunk.urls.count
+            self.delegate.backgroundAddFilesHandler?.prepareForNewTask(actionName: "Importing", thingName: "tracks", thingCount: self.thingCount)
+            self.delegate.backgroundAddFilesHandler?.increment(thingsDone: self.thingsDone)
         }
     }
     
@@ -78,7 +129,11 @@ class AddFilesQueueLoop: NSObject {
     }
     
     func stop() {
-        self.timer?.invalidate()
-        self.isRunning = false
+        print("stop called")
+        DispatchQueue.main.async {
+            self.timer?.invalidate()
+            self.isRunning = false
+            self.delegate.backgroundAddFilesHandler?.finish()
+        }
     }
 }

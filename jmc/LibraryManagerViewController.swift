@@ -135,6 +135,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         if response == NSFileHandlingPanelOKButton {
             let newURL = openPanel.urls[0]
             changeLibraryLocation(library: self.library!, newLocation: newURL)
+            locationManager.reinitializeEventStream()
             initializeForLibrary(library: self.library!)
         }
     }

@@ -63,9 +63,11 @@ class LocationManager: NSObject {
     
     func tryAddNewFilesToDatabase() {
         if !self.urlsToAddToDatabase.isEmpty {
+            print("adding chunks to queue")
             delegate.addFilesQueueLoop?.addChunksToQueue(urls: self.urlsToAddToDatabase)
             self.urlsToAddToDatabase = [Library : [URL]]()
             if delegate.addFilesQueueLoop?.isRunning == false {
+                print("starting queue loop")
                 delegate.addFilesQueueLoop!.start()
             }
         }
@@ -224,7 +226,7 @@ class LocationManager: NSObject {
                 let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
                 let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})
                 let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath!)]!
-                if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
+                if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) && fileManager.fileExists(atPath: path) {
                     if self.urlsToAddToDatabase[library] == nil {
                         self.urlsToAddToDatabase[library] = [URL]()
                     }
@@ -235,7 +237,7 @@ class LocationManager: NSObject {
                 let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
                 let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})!
                 let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
-                if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
+                if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) && fileManager.fileExists(atPath: path) {
                     if self.urlsToAddToDatabase[library] == nil {
                         self.urlsToAddToDatabase[library] = [URL]()
                     }
@@ -276,10 +278,26 @@ class LocationManager: NSObject {
                 withinDirRenameEvents[rootDirectoryPath] = nil
             } else {
                 //either this location is valid and a new file was added, or...
-                if fileManager.fileExists(atPath: path) && path != rootDirectoryPath && VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
+                var isDirectory = ObjCBool(booleanLiteral: false)
+                if fileManager.fileExists(atPath: path, isDirectory: &isDirectory) && path != rootDirectoryPath {
                     let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
                     if library.monitors_directories_for_new as? Bool == true {
-                        let errors = databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library, visualUpdateHandler: nil, callback: nil) //ignores errors :(
+                        if isDirectory.boolValue == true {
+                            DispatchQueue.global(qos: .default).async {
+                                print("going and getting urls")
+                                let urls = self.databaseManager.getMediaURLsInDirectoryURLs([URL(fileURLWithPath: path)]).0
+                                if self.urlsToAddToDatabase[library] == nil {
+                                    self.urlsToAddToDatabase[library] = [URL]()
+                                }
+                                self.urlsToAddToDatabase[library]!.append(contentsOf: urls)
+                                print("about to add urls to database")
+                                self.tryAddNewFilesToDatabase()
+                            }
+                        } else {
+                            if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
+                                let errors = databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library, visualUpdateHandler: nil, callback: nil) //ignores errors :(
+                            }
+                        }
                         //metadata should already exist.
                     }
                 } else {
@@ -347,7 +365,7 @@ class LocationManager: NSObject {
         var streamContext = FSEventStreamContext(version: 0, info: Unmanaged.passRetained(self).toOpaque(), retain: nil, release: nil, copyDescription: nil)
         let lastEventID = lastID ?? FSEventStreamEventId(kFSEventStreamEventIdSinceNow)
         if paths.count > 0 {
-            if let newEventStream = FSEventStreamCreate(kCFAllocatorDefault, callback, &streamContext, pathsCFArrayWrapper, lastEventID, 3, FSEventStreamCreateFlags(flag)) {
+            if let newEventStream = FSEventStreamCreate(kCFAllocatorDefault, callback, &streamContext, pathsCFArrayWrapper, lastEventID, 1, FSEventStreamCreateFlags(flag)) {
                 for path in paths {
                     let fileDescriptor = open(path, O_RDONLY, 0)
                     activeMonitoringFileDescriptors[path] = fileDescriptor

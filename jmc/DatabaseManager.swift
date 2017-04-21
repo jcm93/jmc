@@ -637,10 +637,12 @@ class DatabaseManager: NSObject {
             }
             do {
                 fileURL = albumDirectoryURL?.appendingPathComponent(fileName)
-                if orgType == MOVE_ORGANIZATION_TYPE {
-                    try fileManager.moveItem(at: currentURL, to: fileURL!)
-                } else {
-                    try fileManager.copyItem(at: currentURL, to: fileURL!)
+                if currentURL != fileURL {
+                    if orgType == MOVE_ORGANIZATION_TYPE {
+                        try fileManager.moveItem(at: currentURL, to: fileURL!)
+                    } else {
+                        try fileManager.copyItem(at: currentURL, to: fileURL!)
+                    }
                 }
                 track.location = fileURL?.absoluteString
             } catch {
