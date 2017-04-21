@@ -9,6 +9,12 @@
 import Cocoa
 
 class MTImageCell: NSImageCell {
+    
+    override func imageRect(forBounds rect: NSRect) -> NSRect {
+        let transform = CGAffineTransform(translationX: 0.0, y: 0.0)
+        return rect.applying(transform)
+    }
+    
     override var objectValue: Any? {
         set(newValue) {
             if let actualValue = newValue as? (Any?, Bool) {

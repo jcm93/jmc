@@ -54,7 +54,9 @@ class LocationManager: NSObject {
             print("")
             currentLocationManagerInstance.updateLastEventID()
         }
-        currentLocationManagerInstance.tryAddNewFilesToDatabase()
+        DispatchQueue.global(qos: .default).async {
+            currentLocationManagerInstance.tryAddNewFilesToDatabase()
+        }
     }
     
     init(delegate: AppDelegate) {

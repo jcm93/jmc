@@ -29,12 +29,14 @@ class AddFilesQueueLoop: NSObject, ProgressBarController {
     var timer: Timer?
     var isRunning = false
     var consecutiveEmptyLoops = 0
+    var addedURLs = Set<URL>()
     
     init(delegate: AppDelegate) {
         self.delegate = delegate
         super.init()
     }
     
+    //progress bar controller protocol vars, methods
     var actionName = ""
     var thingName = ""
     var thingCount = 0
@@ -50,18 +52,24 @@ class AddFilesQueueLoop: NSObject, ProgressBarController {
     }
     
     func makeIndeterminate(actionName: String) {
-        
+        if self.thingsDone == self.thingCount {
+            delegate.backgroundAddFilesHandler?.makeIndeterminate(actionName: actionName)
+        }
     }
     
     func finish() {
-        
+        if self.thingsDone == self.thingCount {
+            delegate.backgroundAddFilesHandler?.finish()
+        }
     }
     
     func start() {
         print("queue here, starting")
         DispatchQueue.main.async {
-            self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.loopAction), userInfo: nil, repeats: true)
-            CFRunLoopAddTimer(CFRunLoopGetMain(), self.timer!, CFRunLoopMode.commonModes)
+            if self.timer == nil {
+                self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.loopAction), userInfo: nil, repeats: true)
+                CFRunLoopAddTimer(CFRunLoopGetMain(), self.timer!, CFRunLoopMode.commonModes)
+            }
         }
     }
     
@@ -82,7 +90,7 @@ class AddFilesQueueLoop: NSObject, ProgressBarController {
     }
     
     @objc func loopAction(timer: Timer) {
-        if self.showsProgressBar == true && self.canAddMoreFiles == true && self.urlsToAddChunks.count > 0 {
+        if self.showsProgressBar == true && self.canAddMoreFiles == true && self.urlsToAddChunks.count > 0 && self.isRunning == false {
             self.delegate.launchAddFilesDialog()
             self.delegate.backgroundAddFilesHandler?.prepareForNewTask(actionName: "Importing", thingName: "tracks", thingCount: self.thingCount)
             self.delegate.backgroundAddFilesHandler?.increment(thingsDone: self.thingsDone)
@@ -116,11 +124,16 @@ class AddFilesQueueLoop: NSObject, ProgressBarController {
     
     func addChunksToQueue(urls: [Library : [URL]]) {
         for library in urls.keys {
-            let newChunk = FileAddQueueChunk(library: library, urls: urls[library]!)
+            let newChunk = FileAddQueueChunk(library: library, urls: urls[library]!.filter({return !self.addedURLs.contains($0)}))
             self.urlsToAddChunks.append(newChunk)
             self.thingCount += newChunk.urls.count
-            self.delegate.backgroundAddFilesHandler?.prepareForNewTask(actionName: "Importing", thingName: "tracks", thingCount: self.thingCount)
-            self.delegate.backgroundAddFilesHandler?.increment(thingsDone: self.thingsDone)
+            for url in newChunk.urls {
+                self.addedURLs.insert(url)
+            }
+            DispatchQueue.main.async {
+                self.delegate.backgroundAddFilesHandler?.prepareForNewTask(actionName: "Importing", thingName: "tracks", thingCount: self.thingCount)
+                self.delegate.backgroundAddFilesHandler?.increment(thingsDone: self.thingsDone)
+            }
         }
     }
     
@@ -131,8 +144,12 @@ class AddFilesQueueLoop: NSObject, ProgressBarController {
     func stop() {
         print("stop called")
         DispatchQueue.main.async {
+            CFRunLoopRemoveTimer(CFRunLoopGetMain(), self.timer, CFRunLoopMode.commonModes)
             self.timer?.invalidate()
+            self.timer = nil
             self.isRunning = false
+            self.thingCount = 0
+            self.thingsDone = 0
             self.delegate.backgroundAddFilesHandler?.finish()
         }
     }

@@ -10,20 +10,36 @@ import Cocoa
 
 class MTTextFieldCell: NSTextFieldCell {
     
+    override func titleRect(forBounds rect: NSRect) -> NSRect {
+        let rectWithConstraints = super.titleRect(forBounds: rect)
+        let newRect = NSRect(x: rect.origin.x, y: rect.origin.y + 1.0, width: rect.width - 4.0, height: rect.height)
+        return newRect
+    }
+    
+    override func drawInterior(withFrame cellFrame: NSRect, in controlView: NSView) {
+        let titleRect = self.titleRect(forBounds: cellFrame)
+        self.attributedStringValue.draw(in: titleRect)
+    }
+    
+    override init(textCell string: String) {
+        super.init(textCell: string)
+        self.font = NSFont.systemFont(ofSize: 12.0)
+    }
+    
+    required init(coder: NSCoder) {
+        super.init(coder: coder)
+        self.font = NSFont.systemFont(ofSize: 12.0)
+    }
+    
     override var objectValue: Any? {
         set(newValue) {
             if let actualValue = newValue as? (Any?, Bool) {
-                if let num = actualValue.0 as? Int {
-                    super.objectValue = num
-                } else {
-                    super.objectValue = String(describing: actualValue.0 ?? "")
-                }
                 self.isEnabled = actualValue.1
+                super.objectValue = actualValue.0
             }
         }
         get {
             return super.objectValue
         }
     }
-    
 }

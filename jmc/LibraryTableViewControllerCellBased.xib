@@ -590,6 +590,10 @@
                         <action selector="getInfoFromTableView:" target="-2" id="YUD-u9-OCb"/>
                     </connections>
                 </menuItem>
+                <menuItem isSeparatorItem="YES" id="u24-lV-AMW"/>
+                <menuItem title="Disable/Enable" id="n06-D6-ewQ">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
             </items>
         </menu>
     </objects>
