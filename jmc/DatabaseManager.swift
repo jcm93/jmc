@@ -256,9 +256,24 @@ class DatabaseManager: NSObject {
         return (mediaURLs, errors)
     }
     
+    func createNewSource(url: URL) {
+        let library = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
+        library.volume_url_string = url.absoluteString
+        library.name = url.lastPathComponent
+        library.parent = globalRootLibrary
+        library.is_active = true
+        let librarySourceListItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
+        librarySourceListItem.library = library
+        librarySourceListItem.name = library.name
+        globalRootLibrarySourceListItem!.addToChildren(librarySourceListItem)
+        let newNode = SourceListNode(item: librarySourceListItem)
+        newNode.parent = globalRootLibrarySourceListItem!.node
+        globalRootLibrarySourceListItem!.node!.children.append(newNode)
+    }
+    
     func addNewSource(url: URL, organize: Bool, visualUpdateHandler: ProgressBarController?) {
         let library = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
-        library.library_location = url.absoluteString
+        library.volume_url_string = url.absoluteString
         library.name = url.lastPathComponent
         library.parent = globalRootLibrary
         library.is_active = true
@@ -620,7 +635,7 @@ class DatabaseManager: NSObject {
             track.location = currentURL.deletingLastPathComponent().appendingPathComponent(fileName).absoluteString
             fileURL = currentURL
         } else {
-            let libraryPathURL = URL(string: track.library!.library_location!)
+            let libraryPathURL = URL(string: track.library!.central_media_folder_url_string!)
             var album, albumArtist: String
             if track.album?.is_compilation != true {
                 albumArtist = validateStringForFilename(track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING)
@@ -664,7 +679,7 @@ class DatabaseManager: NSObject {
         }()
         var albumDirectoryURL: URL?
         var fileURL: URL?
-        let libraryPathURL = URL(fileURLWithPath: track.library!.library_location!)
+        let libraryPathURL = URL(fileURLWithPath: track.library!.central_media_folder_url_string!)
         var album, albumArtist: String
         if track.album?.is_compilation != true {
             albumArtist = validateStringForFilename(track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING)
@@ -978,7 +993,7 @@ class DatabaseManager: NSObject {
                 visualUpdateHandler!.initializeForDirectoryParsing()
             }
         }
-        let libraryURL = URL(string: library.library_location!)!
+        let libraryURL = URL(string: library.central_media_folder_url_string!)!
         let mediaURLs = getMediaURLsInDirectoryURLs([libraryURL]).0
         //diff the sets
         if visualUpdateHandler != nil {
@@ -1027,7 +1042,7 @@ class DatabaseManager: NSObject {
         }()
         var albumDirectoryURL: URL?
         var fileURL: URL?
-        let libraryPathURL = URL(fileURLWithPath: globalRootLibrary!.library_location!)
+        let libraryPathURL = URL(fileURLWithPath: globalRootLibrary!.central_media_folder_url_string!)
         let albumArtist = track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING
         let album = track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING
         albumDirectoryURL = libraryPathURL.appendingPathComponent("tmp").appendingPathComponent(albumArtist).appendingPathComponent(album)

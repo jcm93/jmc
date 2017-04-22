@@ -92,6 +92,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     var is_initialized = false
     var shuffle: Bool = UserDefaults.standard.bool(forKey: DEFAULTS_SHUFFLE_STRING)
     var will_repeat: Bool = UserDefaults.standard.bool(forKey: DEFAULTS_REPEAT_STRING)
+    var showsArtwork: Bool = UserDefaults.standard.bool(forKey: DEFAULTS_SHOWS_ARTWORK_STRING)
     var currentTrack: Track?
     var currentTrackView: TrackView?
     var currentNetworkTrack: Track?
@@ -362,10 +363,16 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     //player stuff
+    @IBOutlet weak var artToggle: NSButton!
     
-    var artworkToggle: NSButton?
     @IBAction func toggleArtwork(_ sender: AnyObject) {
-        albumArtViewController!.toggleHidden(artworkToggle!.state)
+        if artToggle.state == NSOnState {
+            UserDefaults.standard.set(true, forKey: DEFAULTS_SHOWS_ARTWORK_STRING)
+            self.artworkTargetView.isHidden = false
+        } else {
+            UserDefaults.standard.set(false, forKey: DEFAULTS_SHOWS_ARTWORK_STRING)
+            self.artworkTargetView.isHidden = true
+        }
     }
 
     func playNetworkSongCallback() {
@@ -836,8 +843,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         theBox.borderWidth = 1.1
         theBox.cornerRadius = 3
         theBox.fillColor = NSColor(patternImage: NSImage(named: "Gradient")!)
-        
         searchField.delegate = self
+        //searchField.drawsBackground = false
         self.delegate?.audioModule.addObserver(self, forKeyPath: "track_changed", options: .new, context: &my_context)
         self.delegate?.audioModule.addObserver(self, forKeyPath: "done_playing", options: .new, context: &my_context)
         self.albumArtViewController?.addObserver(self, forKeyPath: "albumArtworkAdded", options: .new, context: &my_context)
@@ -865,5 +872,10 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         delegate?.shuffleMenuItem.state = shuffleButton.state
         delegate?.repeatMenuItem.state = repeatButton.state
         self.window?.isMovableByWindowBackground = true
+        if UserDefaults.standard.bool(forKey: jmcDarkAppearanceOption) {
+            self.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+            theBox.fillColor = NSColor(patternImage: NSImage(named: "Inverted Gradient")!)
+        }
+        //self.window?.invalidateShadow()
     }
 }

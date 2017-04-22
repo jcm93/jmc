@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="AdvancedFilterViewController" customModule="minimalTunes" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="AdvancedFilterViewController" customModule="jmc" customModuleProvider="target">
             <connections>
                 <outlet property="createSmartPlaylistButton" destination="Eoa-Ns-eJT" id="HuX-ZJ-SXe"/>
                 <outlet property="itemLimitField" destination="uih-3t-llx" id="cd2-zt-Zq7"/>
@@ -31,13 +32,10 @@
                             <view misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DBS-Qu-nqM">
                                 <rect key="frame" x="0.0" y="714" width="1063" height="855"/>
                                 <subviews>
-                                    <box verticalHuggingPriority="750" misplaced="YES" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="nX7-9b-EWU">
+                                    <box verticalHuggingPriority="750" misplaced="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="nX7-9b-EWU">
                                         <rect key="frame" x="481" y="-2" width="34" height="5"/>
-                                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <font key="titleFont" metaFont="system"/>
                                     </box>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gzy-68-YXg">
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gzy-68-YXg">
                                         <rect key="frame" x="303" y="112" width="149" height="17"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="24" id="5Vj-Bh-OZ9"/>
@@ -90,7 +88,7 @@
                                             <action selector="lengthDeterminantChanged:" target="-2" id="lJ3-MH-edR"/>
                                         </connections>
                                     </popUpButton>
-                                    <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uih-3t-llx">
+                                    <textField verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uih-3t-llx">
                                         <rect key="frame" x="465" y="5" width="33" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="33" id="8av-JT-YzS"/>
@@ -102,7 +100,7 @@
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Uwd-Rw-Gqo">
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uwd-Rw-Gqo">
                                         <rect key="frame" x="583" y="8" width="81" height="17"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="77" id="FxW-82-bZ2"/>
@@ -618,7 +616,7 @@
                                             <predicateEditorRowTemplate rowType="simple" id="8nu-1t-Xwz" userLabel="Genre Row Template">
                                                 <array key="leftExpressionObject">
                                                     <expression type="keyPath">
-                                                        <string key="keyPath">track.genre.name</string>
+                                                        <string key="keyPath">track.genre</string>
                                                     </expression>
                                                 </array>
                                                 <integer key="rightExpressionObject" value="700"/>
@@ -628,7 +626,7 @@
                                                         <items>
                                                             <menuItem title="Genre" state="on" id="XQX-Lz-OYA">
                                                                 <expression key="representedObject" type="keyPath">
-                                                                    <string key="keyPath">track.genre.name</string>
+                                                                    <string key="keyPath">track.genre</string>
                                                                 </expression>
                                                             </menuItem>
                                                         </items>

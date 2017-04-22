@@ -35,6 +35,8 @@
 		0D2E66471DC00B7F00CC174E /* TableColumnVisibilityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2E66461DC00B7F00CC174E /* TableColumnVisibilityController.swift */; };
 		0D2EEFB61DB97DEC0065B0B3 /* CachedOrder+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2EEFB41DB97DEC0065B0B3 /* CachedOrder+CoreDataProperties.swift */; };
 		0D2EEFB71DB97DEC0065B0B3 /* CachedOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2EEFB51DB97DEC0065B0B3 /* CachedOrder.swift */; };
+		0D3756C01EAADBD700016136 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3756BE1EAADBD700016136 /* PreferencesWindowController.swift */; };
+		0D3756C11EAADBD700016136 /* PreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D3756BF1EAADBD700016136 /* PreferencesWindowController.xib */; };
 		0D3878B51DD10258004CC3C1 /* TrackView+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3878B31DD10258004CC3C1 /* TrackView+CoreDataProperties.swift */; };
 		0D3878B61DD10258004CC3C1 /* TrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3878B41DD10258004CC3C1 /* TrackView.swift */; };
 		0D3878B81DD11926004CC3C1 /* BitRateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */; };
@@ -141,8 +143,6 @@
 		0DD0DB0B1E53A8EE00807CAC /* flac.1 in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAE41E53A8EE00807CAC /* flac.1 */; };
 		0DD0DB0C1E53A8EE00807CAC /* metaflac.1 in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAE51E53A8EE00807CAC /* metaflac.1 */; };
 		0DD0DB0E1E54425800807CAC /* FlacDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD0DB0D1E54425800807CAC /* FlacDecoder.swift */; };
-		0DD274EC1D30462F0055C43B /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD274EA1D30462F0055C43B /* PreferencesWindowController.swift */; };
-		0DD274ED1D30462F0055C43B /* PreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DD274EB1D30462F0055C43B /* PreferencesWindowController.xib */; };
 		0DD274EF1D3190360055C43B /* GlobalFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD274EE1D3190360055C43B /* GlobalFunctions.swift */; };
 		0DD7D6D61D3F3A350035BAD8 /* Album+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD7D6D01D3F3A350035BAD8 /* Album+CoreDataProperties.swift */; };
 		0DD7D6D71D3F3A350035BAD8 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD7D6D11D3F3A350035BAD8 /* Album.swift */; };
@@ -225,6 +225,8 @@
 		0D2E66461DC00B7F00CC174E /* TableColumnVisibilityController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableColumnVisibilityController.swift; sourceTree = "<group>"; };
 		0D2EEFB41DB97DEC0065B0B3 /* CachedOrder+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CachedOrder+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D2EEFB51DB97DEC0065B0B3 /* CachedOrder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachedOrder.swift; sourceTree = "<group>"; };
+		0D3756BE1EAADBD700016136 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
+		0D3756BF1EAADBD700016136 /* PreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesWindowController.xib; sourceTree = "<group>"; };
 		0D3878B31DD10258004CC3C1 /* TrackView+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TrackView+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D3878B41DD10258004CC3C1 /* TrackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackView.swift; sourceTree = "<group>"; };
 		0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitRateFormatter.swift; sourceTree = "<group>"; };
@@ -352,8 +354,6 @@
 		0DD0DAE41E53A8EE00807CAC /* flac.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = flac.1; sourceTree = "<group>"; };
 		0DD0DAE51E53A8EE00807CAC /* metaflac.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = metaflac.1; sourceTree = "<group>"; };
 		0DD0DB0D1E54425800807CAC /* FlacDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlacDecoder.swift; sourceTree = "<group>"; };
-		0DD274EA1D30462F0055C43B /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
-		0DD274EB1D30462F0055C43B /* PreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesWindowController.xib; sourceTree = "<group>"; };
 		0DD274EE1D3190360055C43B /* GlobalFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalFunctions.swift; sourceTree = "<group>"; };
 		0DD7D6D01D3F3A350035BAD8 /* Album+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Album+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0DD7D6D11D3F3A350035BAD8 /* Album.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
@@ -448,8 +448,8 @@
 				0D299B221DF158A60009CF7A /* AdvancedFilterViewController.xib */,
 				0D388AAC1E1F2C8800D25A7D /* AddPlaylistButton.swift */,
 				0D299B191DF11F140009CF7A /* TrackQueueViewController.swift */,
-				0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */,
 				0D299B1A1DF11F140009CF7A /* TrackQueueViewController.xib */,
+				0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */,
 				0D299B151DF111490009CF7A /* AlbumArtViewController.swift */,
 				0D299B161DF111490009CF7A /* AlbumArtViewController.xib */,
 				0D299B111DF10FFF0009CF7A /* SourceListViewController.swift */,
@@ -476,6 +476,8 @@
 		0D01AD951D707D2600F9211F /* Other Windows */ = {
 			isa = PBXGroup;
 			children = (
+				0D3756BE1EAADBD700016136 /* PreferencesWindowController.swift */,
+				0D3756BF1EAADBD700016136 /* PreferencesWindowController.xib */,
 				0DB60F8E1E62341500105766 /* AddFilesWindowController.swift */,
 				0DB60F8F1E62341500105766 /* AddFilesWindowController.xib */,
 				0D01D40F1E5E507F002B352D /* Library Manager */,
@@ -483,8 +485,6 @@
 				0DC7127B1E2F115A0054ECE6 /* ImportErrorWindowController.xib */,
 				0D01AD8F1D7079D900F9211F /* EqualizerWindowController.swift */,
 				0D01AD901D7079D900F9211F /* EqualizerWindowController.xib */,
-				0DD274EA1D30462F0055C43B /* PreferencesWindowController.swift */,
-				0DD274EB1D30462F0055C43B /* PreferencesWindowController.xib */,
 				0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */,
 				0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */,
 				0D9CE6791D34A7DF004FA8CB /* ImportProgressBar.swift */,
@@ -992,6 +992,7 @@
 				0DAB30961CFBA3340028928F /* Assets.xcassets in Resources */,
 				0DD0DAF81E53A8EE00807CAC /* developers.html in Resources */,
 				0DD0DAF31E53A8EE00807CAC /* README in Resources */,
+				0D3756C11EAADBD700016136 /* PreferencesWindowController.xib in Resources */,
 				0DD0DB071E53A8EE00807CAC /* logo130.gif in Resources */,
 				0DF4BEF41CFD0D4E00AC5824 /* MainWindowController.xib in Resources */,
 				0DD0DAE81E53A8EE00807CAC /* flac in Resources */,
@@ -1003,7 +1004,6 @@
 				0DAB30991CFBA3340028928F /* MainMenu.xib in Resources */,
 				0D8AFE591E6D136D004AC584 /* MediaScannerSheet.xib in Resources */,
 				0D8D4A181D90868500FA1603 /* LocationManagerController.xib in Resources */,
-				0DD274ED1D30462F0055C43B /* PreferencesWindowController.xib in Resources */,
 				0DD0DAFA1E53A8EE00807CAC /* documentation_bugs.html in Resources */,
 				0DD0DB0A1E53A8EE00807CAC /* ogg_mapping.html in Resources */,
 				0DB60F911E62341500105766 /* AddFilesWindowController.xib in Resources */,
@@ -1106,6 +1106,7 @@
 				0DEF66C61D383A8700EA3ADC /* SourceListItem+CoreDataProperties.swift in Sources */,
 				0DCB81721DCAA45C006FBA9D /* MainTableViewDelegate.swift in Sources */,
 				0DEF66C21D383A8700EA3ADC /* ViewCoordinator+CoreDataProperties.swift in Sources */,
+				0D3756C01EAADBD700016136 /* PreferencesWindowController.swift in Sources */,
 				0DAB30911CFBA3340028928F /* AppDelegate.swift in Sources */,
 				0D299B1B1DF11F140009CF7A /* TrackQueueViewController.swift in Sources */,
 				0D76F6AA1D270EB900C6E70F /* DragAndDropArrayController.swift in Sources */,
@@ -1124,7 +1125,6 @@
 				0D3878BA1DD12530004CC3C1 /* SampleRateFormatter.swift in Sources */,
 				0DF4BEF31CFD0D4E00AC5824 /* MainWindowController.swift in Sources */,
 				0D606EF61E7B4C21007AE152 /* FileBufferer.swift in Sources */,
-				0DD274EC1D30462F0055C43B /* PreferencesWindowController.swift in Sources */,
 				0D2EEFB71DB97DEC0065B0B3 /* CachedOrder.swift in Sources */,
 				0D84EDE61DA326BD0057411F /* SongCollection.swift in Sources */,
 				0D388AAB1E1DBB4800D25A7D /* SmartCriteria.swift in Sources */,

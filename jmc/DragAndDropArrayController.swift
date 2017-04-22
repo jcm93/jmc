@@ -24,7 +24,11 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         switch tableColumn! {
         case tableViewController!.isPlayingColumn:
             if track.is_playing == true {
-                return NSImage(named: "NSAudioOutputVolumeMedTemplate")
+                if mainWindow?.paused == true {
+                    return NSImage(named: "NSAudioOutputVolumeOffTemplate")
+                } else {
+                    return NSImage(named: "NSAudioOutputVolumeMedTemplate")
+                }
             } else {
                 return nil
             }

@@ -11,7 +11,7 @@ import Cocoa
 class MTImageCell: NSImageCell {
     
     override func imageRect(forBounds rect: NSRect) -> NSRect {
-        let transform = CGAffineTransform(translationX: 0.0, y: 0.0)
+        let transform = CGAffineTransform(translationX: 6.0, y: 0.0)
         return rect.applying(transform)
     }
     

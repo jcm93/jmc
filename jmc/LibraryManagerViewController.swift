@@ -67,6 +67,8 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     @IBOutlet weak var consolidateLibraryButton: NSButton!
     @IBOutlet weak var watchFoldersLabel: NSTextField!
     @IBOutlet weak var fileMonitorDescriptionLabel: NSTextField!
+    @IBOutlet weak var volumePathControl: JMPathControl!
+    @IBOutlet weak var locateVolumeButton: NSButton!
     
     @IBOutlet weak var automaticallyAddFilesCheck: NSButton!
     @IBOutlet weak var enableDirectoryMonitoringCheck: NSButton!
@@ -111,6 +113,11 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     @IBAction func sourceNameWasEdited(_ sender: Any) {
         if let textField = sender as? NSTextField, textField.stringValue != "" {
             library?.name = textField.stringValue
+            do {
+                try managedContext.save()
+            } catch {
+                print(error)
+            }
             initializeForLibrary(library: library!)
         }
     }
@@ -196,90 +203,69 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         print("init for \(library.name)")
         self.library = library
         sourceNameField.stringValue = library.name!
-        let sourceLocationURL = URL(string: library.library_location!)!
-        sourceLocationField.stringValue = sourceLocationURL.path
+        let volumeURL = URL(string: library.volume_url_string!)!
+        volumePathControl.url = volumeURL
         let libraryWasAvailable = library.is_available
         let libraryIsNowAvailable = libraryIsAvailable(library: library)
         if libraryIsNowAvailable {
+            //enable options
             doesOrganizeCheck.isEnabled = true
-            moveRadio.isEnabled = true
-            copyRadio.isEnabled = true
-            sourceLocationField.isEnabled = true
+            changeLocationButton.isEnabled = true
             automaticallyAddFilesCheck.isEnabled = true
-            watchFolderTableView.isEnabled = true
             addWatchFolderButton.isEnabled = true
             removeWatchFolderButton.isEnabled = true
             enableDirectoryMonitoringCheck.isEnabled = true
-            mediaAddBehaviorLabel.isEnabled = true
-            consolidateLibraryButton.isEnabled = true
-            watchFoldersLabel.isEnabled = true
-            fileMonitorDescriptionLabel.isEnabled = true
-            sourceMonitorStatusTextField.isEnabled = true
-            sourceLocationStatusImage.image = NSImage(named: "NSStatusAvailable")
-            sourceLocationStatusTextField.stringValue = "Source is located and available."
-            enableDirectoryMonitoringCheck.isEnabled = true
-            if library.organization_type != nil && Int(library.organization_type!) != NO_ORGANIZATION_TYPE {
-                self.doesOrganizeCheck.state = NSOnState
-                if Int(library.organization_type!) == MOVE_ORGANIZATION_TYPE {
-                    self.moveRadio.state = NSOnState
-                    self.copyRadio.state = NSOffState
-                } else {
-                    self.moveRadio.state = NSOffState
-                    self.copyRadio.state = NSOnState
+            locateVolumeButton.isHidden = true
+            if let centralMediaFolderURLString = library.central_media_folder_url_string, let centralMediaFolderURL = URL(string: centralMediaFolderURLString) {
+                sourceLocationField.stringValue = centralMediaFolderURL.path
+            } else {
+                sourceLocationField.url = nil
+            }
+            if library.organization_type != nil && library.organization_type != 0 {
+                copyRadio.isEnabled = true
+                moveRadio.isEnabled = true
+                changeLocationButton.isEnabled = true
+                doesOrganizeCheck.state = NSOnState
+                if library.organization_type?.intValue == MOVE_ORGANIZATION_TYPE {
+                    orgBehaviorRadioAction(moveRadio)
+                } else if library.organization_type?.intValue == COPY_ORGANIZATION_TYPE {
+                    orgBehaviorRadioAction(copyRadio)
                 }
             } else {
-                self.doesOrganizeCheck.state = NSOffState
-                self.orgBehaviorChecked(self)
+                doesOrganizeCheck.state = NSOffState
+                copyRadio.isEnabled = false
+                moveRadio.isEnabled = false
+                changeLocationButton.isEnabled = false
             }
-            self.automaticallyAddFilesCheck.isEnabled = true
             if library.monitors_directories_for_new == true {
-                self.automaticallyAddFilesCheck.state = NSOnState
-                self.watchFolderTableView.tableColumns[0].isHidden = false
-                if let watchDirs = library.watch_dirs as? NSArray {
-                    self.watchFolders = watchDirs as! [URL]
-                    self.watchFoldersArrayController.content = self.watchFolders
+                automaticallyAddFilesCheck.state = NSOnState
+                if let watchDirs = library.watch_dirs as? [URL] {
+                    self.watchFolders = watchDirs
                 }
-                self.addWatchFolderButton.isEnabled = true
-                self.removeWatchFolderButton.isEnabled = true
-            } else if library.monitors_directories_for_new == false {
-                self.automaticallyAddFilesCheck.state = NSOffState
-                self.watchFolderTableView.isEnabled = false
-                self.watchFolderTableView.tableColumns[0].isHidden = true
-                self.addWatchFolderButton.isEnabled = false
-                self.removeWatchFolderButton.isEnabled = false
+            } else {
+                automaticallyAddFilesCheck.state = NSOffState
+                self.watchFolders = [URL]()
             }
             if library.keeps_track_of_files == true {
-                self.enableDirectoryMonitoringCheck.state = NSOnState
+                enableDirectoryMonitoringCheck.state = NSOnState
                 sourceMonitorStatusImageView.image = NSImage(named: "NSStatusAvailable")
-                sourceMonitorStatusTextField.stringValue = "Directory monitoring is enabled."
-            } else if library.keeps_track_of_files == false {
-                self.enableDirectoryMonitoringCheck.state = NSOffState
+                sourceMonitorStatusTextField.stringValue = "Directory monitoring is active."
+            } else {
+                enableDirectoryMonitoringCheck.state = NSOffState
                 sourceMonitorStatusImageView.image = NSImage(named: "NSStatusUnavailable")
                 sourceMonitorStatusTextField.stringValue = "Directory monitoring inactive."
             }
         } else {
-            //library isn't located. disable everything
+            //disable options, except volume locator
             doesOrganizeCheck.isEnabled = false
-            moveRadio.isEnabled = false
-            copyRadio.isEnabled = false
-            sourceLocationField.isEnabled = false
+            changeLocationButton.isEnabled = false
             automaticallyAddFilesCheck.isEnabled = false
-            watchFolderTableView.isEnabled = false
             addWatchFolderButton.isEnabled = false
             removeWatchFolderButton.isEnabled = false
-            mediaAddBehaviorLabel.isEnabled = false
-            consolidateLibraryButton.isEnabled = false
-            watchFoldersLabel.isEnabled = false
-            fileMonitorDescriptionLabel.isEnabled = false
-            sourceMonitorStatusTextField.isEnabled = false
-            sourceLocationStatusImage.image = NSImage(named: "NSStatusUnavailable")
-            sourceLocationStatusTextField.stringValue = "Source cannot be located."
             enableDirectoryMonitoringCheck.isEnabled = false
-            sourceMonitorStatusTextField.stringValue = "Directory monitoring inactive."
-            sourceMonitorStatusImageView.image = NSImage(named: "NSStatusUnavailable")
-        }
-        if libraryIsNowAvailable != (libraryWasAvailable as? Bool) {
-            delegate?.mainWindowController?.sourceListViewController?.reloadData()
+            locateVolumeButton.isHidden = false
+            sourceLocationStatusImage.image = NSImage(named: "NSStatusUnavailable")
+            sourceLocationStatusTextField.stringValue = "Volume is unavailable."
         }
     }
     

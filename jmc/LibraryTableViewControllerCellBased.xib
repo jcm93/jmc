@@ -178,12 +178,12 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
                                     <tableColumn identifier="bit_rate" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="LHQ-sH-EgW" userLabel="Bit Rate">
-                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Bit Rate">
+                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Bit Rate">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="mXz-Q9-Tss" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" id="mXz-Q9-Tss" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="Bbi-j2-hdc" customClass="BitRateFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -193,12 +193,12 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
                                     <tableColumn identifier="size" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="fbs-bA-3rx">
-                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Size">
+                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Size">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="5ik-8J-6nt" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" title="Text Cell" id="5ik-8J-6nt" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <byteCountFormatter key="formatter" id="hK1-LV-tV2"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -208,12 +208,12 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
                                     <tableColumn identifier="track_num" width="45" minWidth="10" maxWidth="3.4028234663852886e+38" id="NsF-KX-H3W">
-                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Track #">
+                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Track #">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="X4R-8m-Yfb" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" id="X4R-8m-Yfb" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="qGZ-Bl-5Tq" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -315,7 +315,7 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="8VR-c1-KJQ" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" id="8VR-c1-KJQ" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="AIb-5G-jTw" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -383,12 +383,12 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
                                     <tableColumn identifier="movement_number" width="70" minWidth="10" maxWidth="3.4028234663852886e+38" id="HSA-ds-msU">
-                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Movement #">
+                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Movement #">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="OSa-Oo-svg" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" id="OSa-Oo-svg" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="Nud-KY-pef" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -398,12 +398,12 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
                                     <tableColumn identifier="play_count" width="40" minWidth="10" maxWidth="3.4028234663852886e+38" id="cCk-8Q-he4">
-                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Plays">
+                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Plays">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="UZa-8d-XJX" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" id="UZa-8d-XJX" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="1xr-bN-jPn" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -428,12 +428,12 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
                                     <tableColumn identifier="sample_rate" width="80" minWidth="10" maxWidth="3.4028234663852886e+38" id="JpS-3R-m2w">
-                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sample Rate">
+                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Sample Rate">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="AC3-BK-Gx3" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" id="AC3-BK-Gx3" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="FXj-G5-uam" customClass="SampleRateFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -443,12 +443,12 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
                                     <tableColumn identifier="skip_count" width="40" minWidth="10" maxWidth="3.4028234663852886e+38" id="8SU-in-oF0">
-                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Skips">
+                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Skips">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="VQc-zH-7I1" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" id="VQc-zH-7I1" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="EYz-ja-2fc" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -591,7 +591,7 @@
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="u24-lV-AMW"/>
-                <menuItem title="Disable/Enable" id="n06-D6-ewQ">
+                <menuItem title="Toggle Enabled/Disabled" id="n06-D6-ewQ">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
             </items>

@@ -345,7 +345,7 @@ class LocationManager: NSObject {
         var urls = [URL]()
         for library in libraries {
             if library.monitors_directories_for_new == true || library.keeps_track_of_files == true {
-                let url = URL(string: library.library_location!)!
+                let url = URL(string: library.central_media_folder_url_string!)!
                 urls.append(url)
                 libraryURLDictionary[url] = library
                 if let watchURLs = library.watch_dirs as? [URL] {

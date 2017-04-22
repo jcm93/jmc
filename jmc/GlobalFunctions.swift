@@ -37,6 +37,14 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 var managedContext = (NSApplication.shared().delegate as! AppDelegate).managedObjectContext
 
+func saveContext() {
+    do {
+        try managedContext.save()
+    } catch {
+        print(error)
+    }
+}
+
 var globalRootLibrary = {() -> Library? in
     let fetchReq = NSFetchRequest<NSFetchRequestResult>(entityName: "Library")
     let predicate = NSPredicate(format: "parent == nil")
@@ -108,6 +116,7 @@ let DEFAULTS_PLAYLIST_SORT_DESCRIPTOR_STRING = "defaultPlaylistSortDescriptor"
 let DEFAULTS_LIBRARY_SORT_DESCRIPTOR_STRING = "defaultsLibrarySortDescriptor"
 let DEFAULTS_SHARING_STRING = "sharesLibrary"
 let DEFAULTS_IS_EQ_ENABLED_STRING = "isEQEnabled?"
+let DEFAULTS_SHOWS_ARTWORK_STRING = "showsArtwork"
 
 //library-specific user defaults
 //destroy all of these, make them attributes of library in CD
@@ -165,6 +174,7 @@ var kFileAddErrorMetadataNotYetPopulated = "Failure getting file metadata"
 
 //other
 var kDeleteEventText = "Are you sure you want to remove the selected tracks from your library?"
+var jmcDarkAppearanceOption = "isDark"
 
 
 
@@ -255,7 +265,7 @@ func validateStringForFilename(_ string: String) -> String {
 
 func libraryIsAvailable(library: Library) -> Bool {
     let fileManager = FileManager.default
-    let libraryPath = URL(string: library.library_location!)!.path
+    let libraryPath = URL(string: library.volume_url_string!)!.path
     var isDirectory = ObjCBool(booleanLiteral: false)
     if fileManager.fileExists(atPath: libraryPath, isDirectory: &isDirectory) && isDirectory.boolValue {
         library.is_available = true
@@ -267,7 +277,7 @@ func libraryIsAvailable(library: Library) -> Bool {
 }
 
 func changeLibraryLocation(library: Library, newLocation: URL) {
-    let oldURL = URL(string: library.library_location!)!
+    let oldURL = URL(string: library.volume_url_string!)!
     let oldPath = oldURL.absoluteString
     let newPath = newLocation.absoluteString
     var badLocationCount = 0
@@ -283,7 +293,7 @@ func changeLibraryLocation(library: Library, newLocation: URL) {
         }
     }
     print("number of invalid locations: \(badLocationCount)")
-    library.library_location = newLocation.absoluteString
+    library.volume_url_string = newLocation.absoluteString
 }
 
 func getImageExtension(_ uti: CFString) -> String? {

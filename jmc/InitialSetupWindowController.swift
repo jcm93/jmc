@@ -103,7 +103,16 @@ class InitialSetupWindowController: NSWindowController {
         newLibrary.parent = nil
         //create actual library
         let newActualLibrary = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
-        newActualLibrary.library_location = libraryPathControl.url!.absoluteString
+        newActualLibrary.central_media_folder_url_string = libraryPathControl.url!.absoluteString
+        do {
+            let key = URLResourceKey.volumeURLKey
+            let resourceValues = try libraryPathControl.url!.resourceValues(forKeys: Set([key]))
+            let url = resourceValues.volume
+            newActualLibrary.volume_url_string = url!.absoluteString
+        } catch {
+            print(error)
+            fatalError()
+        }
         newActualLibrary.name = libraryPathControl.url?.lastPathComponent
         newActualLibrary.parent = newLibrary
         newActualLibrary.is_active = true
@@ -197,6 +206,7 @@ class InitialSetupWindowController: NSWindowController {
         UserDefaults.standard.set(false, forKey: DEFAULTS_SHUFFLE_STRING)
         UserDefaults.standard.set(1.0, forKey: DEFAULTS_VOLUME_STRING)
         UserDefaults.standard.set(1, forKey: DEFAULTS_IS_EQ_ENABLED_STRING)
+        UserDefaults.standard.set(true, forKey: DEFAULTS_SHOWS_ARTWORK_STRING)
         
         UserDefaults.standard.set(true, forKey: DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING)
         UserDefaults.standard.set(true, forKey: DEFAULTS_SHARING_STRING)
@@ -229,7 +239,7 @@ class InitialSetupWindowController: NSWindowController {
             }
             if result != nil {
                 library = result!
-                let libraryPath = result!.library_location
+                let libraryPath = result!.central_media_folder_url_string
                 if libraryPath != nil {
                     let libraryURL = URL(string: libraryPath!)
                     if libraryURL != nil {

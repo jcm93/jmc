@@ -271,17 +271,20 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                     mainWindowController?.currentTrack?.is_playing = false
                     mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                     mainWindowController?.currentTrack = nil
+                    self.currentTrack = nil
                     self.currentAudioSource = nil
                     mainWindowController?.delegate?.audioModule.currentTrackLocation = nil
                     mainWindowController?.delegate?.audioModule.skip_backward()
                     currentTrackIndex = nil
                 }
             } else {
+                print("uninitializing track queue")
                 uninitializeTrackQueue()
                 mainWindowController?.currentTrack?.is_playing = false
                 mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                 mainWindowController?.currentTrack = nil
                 self.currentAudioSource = nil
+                self.currentTrack = nil
                 mainWindowController?.delegate?.audioModule.currentTrackLocation = nil
                 mainWindowController?.delegate?.audioModule.skip_backward()
             }

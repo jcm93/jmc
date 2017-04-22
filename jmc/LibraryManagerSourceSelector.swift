@@ -29,6 +29,7 @@ class LibraryManagerSourceSelector: NSWindowController, NSTableViewDelegate {
     
     @IBAction func addSourceButtonPressed(_ sender: Any) {
         self.addSourceSheet = NewSourceSheetController(windowNibName: "NewSourceSheetController")
+        self.addSourceSheet?.libSelector = self
         self.window?.beginSheet(self.addSourceSheet!.window!, completionHandler: addSourceModalComplete)
     }
     
@@ -52,7 +53,7 @@ class LibraryManagerSourceSelector: NSWindowController, NSTableViewDelegate {
     }
     
     func addSourceModalComplete(response: NSModalResponse) {
-        
+        tableView.reloadData()
     }
     
     

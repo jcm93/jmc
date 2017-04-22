@@ -57,7 +57,7 @@ class ImportWindowController: NSWindowController {
         }
         let appDelegate = (NSApplication.shared().delegate as! AppDelegate)
         let library = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
-        library.library_location = pathURL.absoluteString
+        library.central_media_folder_url_string = pathURL.absoluteString
         library.name = pathURL.lastPathComponent
         library.parent = globalRootLibrary
         library.is_active = true

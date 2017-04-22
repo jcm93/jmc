@@ -154,8 +154,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     override func controlTextDidEndEditing(_ obj: Notification) {
-        let node = sourceList.item(atRow: sourceList.row(for: obj.object as! NSTextField)) as! SourceListNode
-        node.item.name = (obj.object as! NSTextField).stringValue
+        let node = sourceList.item(atRow: sourceList.row(for: obj.object as! NSTextField)) as? SourceListNode
+        node?.item.name = (obj.object as! NSTextField).stringValue
     }
     
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
@@ -392,6 +392,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             return false
         } else if source.children?.count > 0 && source.is_folder != true {
             return false
+        } else if source.is_folder == true {
+            return false
         } else {
             return true
         }
@@ -469,8 +471,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         let checkBoxState = checkBox.state
         let cellView = checkBox.superview as! SourceListCellView
         let sourceListNode = cellView.node
-        let library = sourceListNode?.item.library
-        library?.is_active = checkBoxState == NSOnState ? true : false
+        let library = sourceListNode!.item.library
+        library!.is_active = checkBoxState == NSOnState ? true : false
         if mainWindowController?.currentTableViewController?.playlist == nil {
             mainWindowController?.currentTableViewController?.initializeForLibrary()
         }
@@ -624,6 +626,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         sourceList.expandItem(libraryHeaderNode, expandChildren: true)
         sourceList.expandItem(playlistHeaderNode)
         sourceList.selectRowIndexes(selectionIndexes, byExtendingSelection: false)
+        saveContext()
     }
     
     override func viewDidLoad() {
