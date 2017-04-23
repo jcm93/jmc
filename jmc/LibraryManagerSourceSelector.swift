@@ -19,6 +19,8 @@ class LibraryManagerSourceSelector: NSWindowController, NSTableViewDelegate {
     var libraryViews = [Library : LibraryManagerViewController]()
     var delegate: AppDelegate?
     var watchFolderSheet: AddWatchFolderSheetController?
+    var changeFolderSheet: ChangePrimaryFolderSheetController?
+    var consolidateSheet: ConsolidateLibrarySheetController?
     
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet var sourceArrayController: NSArrayController!

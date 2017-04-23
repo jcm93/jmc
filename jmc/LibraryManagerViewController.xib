@@ -28,6 +28,7 @@
                 <outlet property="newMediaTableView" destination="cjf-jD-81c" id="gzd-4k-bmf"/>
                 <outlet property="newTracksArrayController" destination="4Ry-w4-cNJ" id="Sfb-4f-ipr"/>
                 <outlet property="removeWatchFolderButton" destination="YxN-YA-YBq" id="4bH-fr-8W2"/>
+                <outlet property="renamesFilesCheck" destination="o0e-Sb-QOp" id="UXk-sD-G8t"/>
                 <outlet property="sourceLocationField" destination="n1T-9X-h7D" id="k7O-we-ha8"/>
                 <outlet property="sourceLocationStatusImage" destination="8ey-1w-mcb" id="YHK-pi-X9b"/>
                 <outlet property="sourceLocationStatusTextField" destination="BMb-co-OrQ" id="sOB-Jr-Wvz"/>
@@ -279,7 +280,7 @@ Gw
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                         <connections>
-                                            <action selector="changeSourceLocationButtonPressed:" target="-2" id="nsm-2c-7H7"/>
+                                            <action selector="changeSourceCentralMediaFolderButtonPressed:" target="-2" id="Y9q-PD-wS1"/>
                                         </connections>
                                     </button>
                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YKI-6G-hKb">
@@ -304,12 +305,11 @@ Gw
                                     <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="oNl-LD-A9F">
                                         <rect key="frame" x="17" y="215" width="812" height="5"/>
                                     </box>
-                                    <pathControl verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n1T-9X-h7D">
+                                    <pathControl verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n1T-9X-h7D" customClass="JMPathControl" customModule="jmc" customModuleProvider="target">
                                         <rect key="frame" x="152" y="429" width="536" height="20"/>
                                         <pathCell key="cell" controlSize="small" selectable="YES" alignment="left" id="5GR-Xv-PI6">
                                             <font key="font" metaFont="smallSystem"/>
                                             <url key="url" string="file:///Users/johnmoody/Music/jmc/"/>
-                                            <color key="backgroundColor" red="0.89803921568627454" green="0.92549019607843142" blue="0.97254901960784312" alpha="1" colorSpace="deviceRGB"/>
                                         </pathCell>
                                     </pathControl>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ysf-8d-R25">
@@ -404,6 +404,19 @@ Gw
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
+                                        <connections>
+                                            <action selector="changeSourceLocationButtonPressed:" target="-2" id="Khy-CK-Bwi"/>
+                                        </connections>
+                                    </button>
+                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="o0e-Sb-QOp">
+                                        <rect key="frame" x="425" y="403" width="160" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Rename files if needed" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="kcO-mN-Rbu">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="renamesFilesChecked:" target="-2" id="6yN-q1-IEx"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
@@ -416,6 +429,7 @@ Gw
                                     <constraint firstItem="6vp-tQ-c95" firstAttribute="leading" secondItem="ZCg-e7-Yu8" secondAttribute="leading" constant="17" id="6Wh-vN-hsd"/>
                                     <constraint firstItem="CeJ-Wl-DSi" firstAttribute="leading" secondItem="ZCg-e7-Yu8" secondAttribute="leading" constant="17" id="7Gq-oY-mDF"/>
                                     <constraint firstItem="BMb-co-OrQ" firstAttribute="leading" secondItem="8ey-1w-mcb" secondAttribute="trailing" constant="3" id="7rs-AL-6PU"/>
+                                    <constraint firstItem="o0e-Sb-QOp" firstAttribute="leading" secondItem="Tc9-NX-a0t" secondAttribute="trailing" constant="28" id="8yn-NI-jkL"/>
                                     <constraint firstItem="HWV-ag-XYf" firstAttribute="top" secondItem="8r8-tc-b9V" secondAttribute="bottom" constant="9" id="9Rs-4U-u4i"/>
                                     <constraint firstAttribute="trailing" secondItem="oNl-LD-A9F" secondAttribute="trailing" constant="17" id="AGY-lr-xsK"/>
                                     <constraint firstItem="oDw-f5-hTq" firstAttribute="leading" secondItem="ZCg-e7-Yu8" secondAttribute="leading" constant="17" id="Anb-HE-jOF"/>
@@ -443,6 +457,7 @@ Gw
                                     <constraint firstItem="cUP-gH-z2b" firstAttribute="leading" secondItem="ZCg-e7-Yu8" secondAttribute="leading" constant="17" id="ZUv-9L-PMe"/>
                                     <constraint firstItem="Tc9-NX-a0t" firstAttribute="top" secondItem="n1T-9X-h7D" secondAttribute="bottom" constant="9" id="bCP-EA-Gl4"/>
                                     <constraint firstAttribute="trailing" secondItem="EYr-io-jRU" secondAttribute="trailing" constant="17" id="bps-vE-Per"/>
+                                    <constraint firstItem="o0e-Sb-QOp" firstAttribute="top" secondItem="n1T-9X-h7D" secondAttribute="bottom" constant="10" id="cOB-bN-xfT"/>
                                     <constraint firstItem="3Yz-pm-nmY" firstAttribute="top" secondItem="P7g-tb-aOA" secondAttribute="bottom" constant="11" id="dIi-KQ-Qfw"/>
                                     <constraint firstItem="z11-19-8Af" firstAttribute="leading" secondItem="ZCg-e7-Yu8" secondAttribute="leading" constant="17" id="dg2-8C-rGj"/>
                                     <constraint firstItem="HWV-ag-XYf" firstAttribute="leading" secondItem="ZCg-e7-Yu8" secondAttribute="leading" constant="17" id="dz5-mb-LUa"/>
@@ -492,7 +507,7 @@ Gw
                                         <rect key="frame" x="17" y="17" width="812" height="448"/>
                                         <clipView key="contentView" drawsBackground="NO" id="dQk-LC-xZW">
                                             <rect key="frame" x="1" y="0.0" width="810" height="447"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="9yz-tg-h6A" viewBased="YES" id="1rH-JT-oaU">
                                                     <rect key="frame" x="0.0" y="0.0" width="885" height="424"/>

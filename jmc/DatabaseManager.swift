@@ -619,6 +619,38 @@ class DatabaseManager: NSObject {
         }
     }
     
+    func batchMoveTracks(tracks: [Track], visualUpdateHandler: ProgressBarController?) {
+        let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        subContext.parent = managedContext
+        let subContextTracks = tracks.map({return subContext.object(with: $0.objectID) as! Track})
+        DispatchQueue.global(qos: .default).async {
+            var index = 0
+            for track in subContextTracks {
+                self.moveFileToAppropriateLocationForTrack(track, currentURL: URL(string: track.location!)!)
+                index += 1
+                DispatchQueue.main.async {
+                    visualUpdateHandler?.increment(thingsDone: index)
+                }
+            }
+            DispatchQueue.main.async {
+                visualUpdateHandler?.makeIndeterminate(actionName: "")
+            }
+            do {
+                try subContext.save()
+            } catch {
+                print("error saving subcontext")
+            }
+            DispatchQueue.main.async {
+                do {
+                    try managedContext.save()
+                } catch {
+                    print("error saving subcontext")
+                }
+                visualUpdateHandler?.finish()
+            }
+        }
+    }
+    
     func moveFileToAppropriateLocationForTrack(_ track: Track, currentURL: URL) -> URL? {
         let fileName = {() -> String in
             switch track.library?.renames_files as! Bool {

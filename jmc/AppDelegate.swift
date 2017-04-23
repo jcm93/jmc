@@ -182,6 +182,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         purgeCurrentlyPlaying()
         // Insert code here to initialize your application
+        let dumbTransform = TransformerURLStringToURL()
+        ValueTransformer.setValueTransformer(dumbTransform, forName: NSValueTransformerName("TransformURLStringToURL"))
         let fuckTransform = TransformerIntegerToTimestamp()
         databaseManager = DatabaseManager()
         ValueTransformer.setValueTransformer(fuckTransform, forName: NSValueTransformerName("AssTransform"))

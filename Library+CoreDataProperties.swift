@@ -16,12 +16,12 @@ extension Library {
         return NSFetchRequest<Library>(entityName: "Library")
     }
 
+    @NSManaged public var central_media_folder_url_string: String?
     @NSManaged public var is_active: NSNumber?
     @NSManaged public var is_available: NSNumber?
     @NSManaged public var is_network: NSNumber?
     @NSManaged public var keeps_track_of_files: NSNumber?
     @NSManaged public var last_fs_event: NSNumber?
-    @NSManaged public var volume_url_string: String?
     @NSManaged public var monitors_directories_for_new: NSNumber?
     @NSManaged public var name: String?
     @NSManaged public var next_album_artwork_collection_id: NSNumber?
@@ -36,8 +36,8 @@ extension Library {
     @NSManaged public var peer: NSObject?
     @NSManaged public var renames_files: NSNumber?
     @NSManaged public var uuid: String?
+    @NSManaged public var volume_url_string: String?
     @NSManaged public var watch_dirs: NSObject?
-    @NSManaged public var central_media_folder_url_string: String?
     @NSManaged public var cached_orders: NSSet?
     @NSManaged public var children: NSSet?
     @NSManaged public var local_items: NSOrderedSet?

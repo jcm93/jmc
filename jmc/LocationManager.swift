@@ -343,15 +343,15 @@ class LocationManager: NSObject {
             lastEventID = FSEventStreamEventId(kFSEventStreamEventIdSinceNow)
         }
         var urls = [URL]()
-        for library in libraries {
-            if library.monitors_directories_for_new == true || library.keeps_track_of_files == true {
-                let url = URL(string: library.central_media_folder_url_string!)!
+        for libraryInList in libraries {
+            if libraryInList.monitors_directories_for_new == true || libraryInList.keeps_track_of_files == true {
+                let url = URL(string: libraryInList.central_media_folder_url_string!)!
                 urls.append(url)
-                libraryURLDictionary[url] = library
-                if let watchURLs = library.watch_dirs as? [URL] {
+                libraryURLDictionary[url] = libraryInList
+                if let watchURLs = libraryInList.watch_dirs as? [URL] {
                     urls.append(contentsOf: watchURLs)
-                    for url in urls {
-                        self.libraryURLDictionary[url] = library
+                    for url in watchURLs {
+                        self.libraryURLDictionary[url] = libraryInList
                     }
                 }
             }

@@ -56,7 +56,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     @IBOutlet weak var sourceLocationStatusTextField: NSTextField!
     @IBOutlet weak var sourceMonitorStatusImageView: NSImageView!
     @IBOutlet weak var sourceMonitorStatusTextField: NSTextField!
-    @IBOutlet weak var sourceLocationField: NSPathControl!
+    @IBOutlet weak var sourceLocationField: JMPathControl!
     @IBOutlet weak var doesOrganizeCheck: NSButton!
     @IBOutlet weak var moveRadio: NSButton!
     @IBOutlet weak var copyRadio: NSButton!
@@ -69,12 +69,20 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     @IBOutlet weak var fileMonitorDescriptionLabel: NSTextField!
     @IBOutlet weak var volumePathControl: JMPathControl!
     @IBOutlet weak var locateVolumeButton: NSButton!
+    @IBOutlet weak var renamesFilesCheck: NSButton!
     
     @IBOutlet weak var automaticallyAddFilesCheck: NSButton!
     @IBOutlet weak var enableDirectoryMonitoringCheck: NSButton!
     
     @IBAction func removeSourceButtonPressed(_ sender: Any) {
         
+    }
+    @IBAction func renamesFilesChecked(_ sender: Any) {
+        if renamesFilesCheck.state == NSOnState {
+            library?.renames_files = true
+        } else {
+            library?.renames_files = false
+        }
     }
     
     @IBAction func enableMonitoringCheckAction(_ sender: Any) {
@@ -110,6 +118,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         }
         locationManager.reinitializeEventStream()
     }
+    
     @IBAction func sourceNameWasEdited(_ sender: Any) {
         if let textField = sender as? NSTextField, textField.stringValue != "" {
             library?.name = textField.stringValue
@@ -133,6 +142,15 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             }
         }
     }
+    
+    @IBAction func changeSourceCentralMediaFolderButtonPressed(_ sender: Any) {
+        let parent = self.view.window?.windowController as! LibraryManagerSourceSelector
+        parent.changeFolderSheet = ChangePrimaryFolderSheetController(windowNibName: "ChangePrimaryFolderSheetController")
+        parent.changeFolderSheet?.libraryManager = self
+        parent.window?.beginSheet(parent.changeFolderSheet!.window!, completionHandler: nil)
+        
+    }
+    
     @IBAction func changeSourceLocationButtonPressed(_ sender: Any) {
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = false
@@ -152,9 +170,17 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             library?.organization_type = NO_ORGANIZATION_TYPE as NSNumber
             moveRadio.isEnabled = false
             copyRadio.isEnabled = false
+            renamesFilesCheck.isEnabled = false
         } else {
             moveRadio.isEnabled = true
             copyRadio.isEnabled = true
+            renamesFilesCheck.isEnabled = true
+            changeLocationButton.isEnabled = true
+            if library?.central_media_folder_url_string != nil {
+                sourceLocationField.url = URL(string: library!.central_media_folder_url_string!)
+            } else {
+                sourceLocationField.url = URL(string: library!.volume_url_string!)
+            }
             orgBehaviorRadioAction(self)
         }
     }
@@ -196,7 +222,10 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     }
     
     @IBAction func consolidateLibraryPressed(_ sender: Any) {
-        
+        let parent = self.view.window?.windowController as! LibraryManagerSourceSelector
+        parent.consolidateSheet = ConsolidateLibrarySheetController(windowNibName: "ConsolidateLibrarySheetController")
+        parent.consolidateSheet?.libraryManager = self
+        parent.window?.beginSheet(parent.consolidateSheet!.window!, completionHandler: nil)
     }
     
     func initializeForLibrary(library: Library) {
@@ -215,15 +244,22 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             addWatchFolderButton.isEnabled = true
             removeWatchFolderButton.isEnabled = true
             enableDirectoryMonitoringCheck.isEnabled = true
+            renamesFilesCheck.isEnabled = true
             locateVolumeButton.isHidden = true
             if let centralMediaFolderURLString = library.central_media_folder_url_string, let centralMediaFolderURL = URL(string: centralMediaFolderURLString) {
                 sourceLocationField.stringValue = centralMediaFolderURL.path
             } else {
-                sourceLocationField.url = nil
+                sourceLocationField.url = URL(string: library.volume_url_string!)
             }
             if library.organization_type != nil && library.organization_type != 0 {
                 copyRadio.isEnabled = true
                 moveRadio.isEnabled = true
+                renamesFilesCheck.isEnabled = true
+                if library.renames_files != true {
+                    renamesFilesCheck.state = NSOffState
+                } else {
+                    renamesFilesCheck.state = NSOnState
+                }
                 changeLocationButton.isEnabled = true
                 doesOrganizeCheck.state = NSOnState
                 if library.organization_type?.intValue == MOVE_ORGANIZATION_TYPE {
@@ -232,6 +268,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
                     orgBehaviorRadioAction(copyRadio)
                 }
             } else {
+                renamesFilesCheck.isEnabled = false
                 doesOrganizeCheck.state = NSOffState
                 copyRadio.isEnabled = false
                 moveRadio.isEnabled = false
@@ -262,6 +299,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             automaticallyAddFilesCheck.isEnabled = false
             addWatchFolderButton.isEnabled = false
             removeWatchFolderButton.isEnabled = false
+            renamesFilesCheck.isEnabled = false
             enableDirectoryMonitoringCheck.isEnabled = false
             locateVolumeButton.isHidden = false
             sourceLocationStatusImage.image = NSImage(named: "NSStatusUnavailable")

@@ -71,7 +71,7 @@
         <attribute name="next_track_id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="organization_type" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="peer" optional="YES" attributeType="Transformable" syncable="YES"/>
-        <attribute name="renames_files" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="renames_files" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="volume_url_string" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="watch_dirs" optional="YES" attributeType="Transformable" syncable="YES"/>

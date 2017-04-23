@@ -276,6 +276,20 @@ func libraryIsAvailable(library: Library) -> Bool {
     }
 }
 
+func getTracksOutsideHomeDirectory(library: Library) -> [Track] {
+    let centralFolderURL = URL(string: library.central_media_folder_url_string!)
+    let result = library.tracks!.flatMap({(member: Any) -> Track? in
+        let track = member as! Track
+        let currentURL = URL(string: track.location!)
+        if !currentURL!.path.hasPrefix(centralFolderURL!.path) {
+            return track
+        } else {
+            return nil
+        }
+    })
+    return result
+}
+
 func changeLibraryLocation(library: Library, newLocation: URL) {
     let oldURL = URL(string: library.volume_url_string!)!
     let oldPath = oldURL.absoluteString
@@ -294,6 +308,31 @@ func changeLibraryLocation(library: Library, newLocation: URL) {
     }
     print("number of invalid locations: \(badLocationCount)")
     library.volume_url_string = newLocation.absoluteString
+}
+
+func changeLibraryCentralMediaFolder(library: Library, newLocation: URL) {
+    var watchDirs = library.watch_dirs as? [URL] ?? [URL]()
+    if library.central_media_folder_url_string != nil {
+        let oldURL = URL(string: library.central_media_folder_url_string!)!
+        if watchDirs.contains(oldURL) {
+            watchDirs.remove(at: watchDirs.index(of: oldURL)!)
+        }
+    }
+    watchDirs.append(newLocation)
+    library.watch_dirs = watchDirs as NSArray
+    library.central_media_folder_url_string = newLocation.absoluteString
+}
+
+func getVolumeOfURL(url: URL) -> URL {
+    do {
+        let key = URLResourceKey.volumeURLKey
+        let resourceValues = try url.resourceValues(forKeys: Set([key]))
+        let volURL = resourceValues.volume
+        return volURL!
+    } catch {
+        print(error)
+        fatalError()
+    }
 }
 
 func getImageExtension(_ uti: CFString) -> String? {
