@@ -11,7 +11,7 @@
 import Cocoa
 import CoreServices
 
-class TagEditorWindow: NSWindowController {
+class TagEditorWindow: NSWindowController, NSTextFieldDelegate {
     
     lazy var managedContext: NSManagedObjectContext = {
         return (NSApplication.shared().delegate
@@ -29,7 +29,15 @@ class TagEditorWindow: NSWindowController {
     
     var mainWindowController: MainWindowController?
     
-    @IBOutlet weak var tabView: NSTabView!
+    @IBOutlet weak var tabView: JMTabView!
+    @IBOutlet weak var segControl: NSSegmentedControl!
+    
+    @IBAction func segControlAction(_ sender: Any) {
+        guard let control = sender as? NSSegmentedControl else {
+            return
+        }
+        tabView.selectTabViewItem(at: control.selectedSegment)
+    }
     
     //mark tag view
     @IBOutlet weak var discNumOfField: NSTextField!
@@ -41,10 +49,8 @@ class TagEditorWindow: NSWindowController {
     @IBOutlet weak var confirmButton: NSButton!
     @IBOutlet weak var previousTrackButton: NSButton!
     @IBOutlet weak var nextTrackButton: NSButton!
-    @IBOutlet weak var addCustomFieldButton: NSButton!
     @IBOutlet weak var writeTagsButton: NSButton!
     @IBOutlet weak var compilationButton: NSButton!
-    @IBOutlet weak var ratingField: NSTextField!
     @IBOutlet weak var commentsField: NSTextField!
     @IBOutlet weak var composerField: NSTextField!
     @IBOutlet weak var releaseDatePicker: NSDatePicker!
@@ -58,6 +64,7 @@ class TagEditorWindow: NSWindowController {
     let fileSizeFormatter = ByteCountFormatter()
     let bitRateFormatter = BitRateFormatter()
     let sampleRateFormatter = SampleRateFormatter()
+    let databaseManager = DatabaseManager()
     
     
     //mark artwork view
@@ -71,6 +78,69 @@ class TagEditorWindow: NSWindowController {
     //mark the rest
     var selectedTracks: [Track]?
     var currentTrack: Track?
+    
+    @IBAction func nameEdited(_ sender: Any) {
+        managedContext.undoManager?.beginUndoGrouping()
+        editName(self.selectedTracks, name: self.nameField.stringValue)
+        let nameOrder = cachedOrders!["Name"]
+        reorderForTracks(self.selectedTracks!, cachedOrder: nameOrder!)
+        for track in selectedTracks! {
+            databaseManager.moveFileAfterEdit(track)
+        }
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Name")
+    }
+    
+    @IBAction func artistEdited(_ sender: Any) {
+        managedContext.undoManager?.beginUndoGrouping()
+        editArtist(self.selectedTracks, artistName: self.artistField.stringValue)
+        let artistOrder = cachedOrders!["Artist"]
+        reorderForTracks(self.selectedTracks!, cachedOrder: artistOrder!)
+        for track in selectedTracks! {
+            databaseManager.moveFileAfterEdit(track)
+        }
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Artist")
+    }
+    
+    @IBAction func albumArtistEdited(_ sender: Any) {
+        editAlbumArtist(self.selectedTracks, albumArtistName: self.albumArtistField.stringValue)
+    }
+    
+    @IBAction func albumEdited(_ sender: Any) {
+        editAlbum(self.selectedTracks, albumName: self.albumField.stringValue)
+    }
+    
+    @IBAction func trackNumEdited(_ sender: Any) {
+        editTrackNum(self.selectedTracks, num: self.trackNumField.integerValue)
+    }
+    
+    @IBAction func trackNumOfEdited(_ sender: Any) {
+        editTrackNumOf(self.selectedTracks, num: self.trackNumOfField.integerValue)
+    }
+    
+    @IBAction func discNumEdited(_ sender: Any) {
+        editDiscNum(self.selectedTracks, num: self.discNumField.integerValue)
+    }
+    
+    @IBAction func totalDiscsEdited(_ sender: Any) {
+        editDiscNumOf(self.selectedTracks, num: self.discNumOfField.integerValue)
+    }
+    
+    @IBAction func composerEdited(_ sender: Any) {
+        editComposer(self.selectedTracks, composerName: self.composerField.stringValue)
+    }
+    
+    @IBAction func genreEdited(_ sender: Any) {
+        editGenre(self.selectedTracks, genre: self.genreField.stringValue)
+    }
+    
+    @IBAction func compilationChanged(_ sender: Any) {
+        
+    }
+    
+    @IBAction func commentsEdited(_ sender: Any) {
+    }
     
     func commitEdits() {
         print("committing edits")
@@ -110,9 +180,6 @@ class TagEditorWindow: NSWindowController {
         }
         if commentsField.stringValue.isEmpty == false {
             editComments(selectedTracks, comments: commentsField.stringValue)
-        }
-        if ratingField.stringValue.isEmpty == false {
-            editRating(selectedTracks, rating: Int(ratingField.stringValue)!)
         }
         if sortingNameSortAsField.stringValue.isEmpty == false {
             editSortName(selectedTracks, sortName: sortingNameSortAsField.stringValue)
@@ -271,11 +338,6 @@ class TagEditorWindow: NSWindowController {
             }
         }
         let ratings = selectedTracks!.map({return $0.rating})
-        if allEqual(ratings) {
-            if ratings[0] != nil && ratings[0] != 0 {
-                ratingField.stringValue = String(describing: ratings[0]!)
-            }
-        }
         let sortNames = selectedTracks!.flatMap({return $0.sort_name})
         let sortNamesSet = Set(sortNames)
         if sortNamesSet.count == 1 && sortNames.count == selectedTracks?.count {
@@ -319,6 +381,9 @@ class TagEditorWindow: NSWindowController {
                 self.window?.title = "Edit Info"
             }
         }
+    }
+    @IBAction func cancelAction(_ sender: Any) {
+        self.window?.close()
     }
     @IBAction func previousTrackAction(_ sender: AnyObject) {
         
@@ -409,6 +474,9 @@ class TagEditorWindow: NSWindowController {
         super.windowDidLoad()
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
         initForSelection()
+        tabView.drawsBackground = false
+        self.window?.titlebarAppearsTransparent = true
+        self.window!.titleVisibility = .hidden
     }
     
 }

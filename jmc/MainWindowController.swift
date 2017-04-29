@@ -28,7 +28,7 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 
-class MainWindowController: NSWindowController, NSSearchFieldDelegate {
+class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowDelegate {
     
     
     //target views
@@ -121,17 +121,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     var isDoneWithSkipBackOperation = true
     var durationShowsTimeRemaining = false
     var viewHasLoaded = false
-    
-    lazy var cachedOrders: [CachedOrder]? = {
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CachedOrder")
-        do {
-            let result = try managedContext.fetch(request) as! [CachedOrder]
-            return result
-        } catch {
-            print(error)
-            return nil
-        }
-    }()
     
     //initialize managed object context
     
@@ -290,7 +279,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
         self.tagWindowController = TagEditorWindow(windowNibName: "TagEditorWindow")
         self.tagWindowController?.mainWindowController = self
         self.tagWindowController?.selectedTracks = tracks
-        tagWindowController?.showWindow(self)
+        self.window?.addChildWindow(self.tagWindowController!.window!, ordered: .above)
     }
     
     func newSourceAdded() {
@@ -323,6 +312,10 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
             }
             return track
         }
+    }
+    
+    func windowWillReturnUndoManager(_ window: NSWindow) -> UndoManager? {
+        return managedContext.undoManager!
     }
     
     @IBAction func repeatButtonPressed(_ sender: AnyObject) {
@@ -393,7 +386,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate {
     }
     
     func playSong(_ track: Track, row: Int?) {
-        //maybe not the best place to handle this, but must check somewhere.
         guard fileManager.fileExists(atPath: URL(string: track.location!)!.path) else {sourceListViewController!.reloadData(); return}
         if track.is_network == true {
             self.is_streaming = true

@@ -52,7 +52,9 @@ class TrackQueueView: NSObject {
     
 }
 
-class TrackNameTableCell: NSTableCellView {}
+class TrackNameTableCell: NSTableCellView {
+    
+}
 
 class NowPlayingCell: NSTableCellView {}
 
@@ -341,11 +343,22 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     }
     
     func modifyPlayOrderArrayForQueuedTracks(_ tracks: [Track]) {
-        for track in tracks {
-            if Int(track.id!) != currentAudioSource!.playOrderObject?.current_play_order![currentSourceIndex!] {
-                self.currentAudioSource!.playOrderObject?.current_play_order = self.currentAudioSource!.playOrderObject?.current_play_order?.filter({$0 != Int(track.id!)})
+        let idSet = Set(tracks.map({return Int($0.id!)}))
+        var indicesToRemove = [Int]()
+        var amountToOffsetCurrentSourceIndex = 0
+        for (index, id) in currentAudioSource!.playOrderObject!.current_play_order!.enumerated() {
+            if idSet.contains(id) && id != currentAudioSource!.playOrderObject?.current_play_order![currentSourceIndex!] {
+                indicesToRemove.append(index)
+                if index == currentSourceIndex {print("trying to remove from queue at currentSourceIndex")}
+                if index < currentSourceIndex! {
+                    amountToOffsetCurrentSourceIndex -= 1
+                }
             }
         }
+        for index in indicesToRemove.sorted().reversed() {
+            currentAudioSource?.playOrderObject?.current_play_order?.remove(at: index)
+        }
+        currentSourceIndex! += amountToOffsetCurrentSourceIndex
     }
     
     func makePlayOrderChangesIfNecessaryForQueuedTracks(_ tracks: [Track]) {
@@ -594,7 +607,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             switch object.viewType! {
             case .pastTrack:
                 let result = tableView.make(withIdentifier: "pastTrack", owner: nil) as! PastTrackCell
-                (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
+                (result.subviews[3] as! NSTextField).stringValue = object.track!.name!
                 var artist_aa_string = ""
                 if object.track!.artist != nil {
                     artist_aa_string += object.track!.artist!.name!
@@ -602,21 +615,22 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 if object.track!.album != nil {
                     artist_aa_string += " - " + object.track!.album!.name!
                 }
-                (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
+                (result.subviews[2] as! NSTextField).stringValue = artist_aa_string
                 if object.track!.album?.primary_art != nil {
                     let art = object.track?.album?.primary_art
                     let path = art?.artwork_location!
                     let url = URL(string: path!)
                     let image = NSImage(contentsOf: url!)
-                    (result.subviews[0] as! NSImageView).image = image
+                    (result.subviews[1] as! NSImageView).image = image
                 }
                 else {
-                    (result.subviews[0] as! NSImageView).image = nil
+                    (result.subviews[1] as! NSImageView).image = nil
                 }
+                (result.subviews[0] as! NSImageView).image = nil
                 return result
             case .currentTrack:
                 let result = tableView.make(withIdentifier: "futureTrack", owner: nil) as! TrackNameTableCell
-                (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
+                (result.subviews[3] as! NSTextField).stringValue = object.track!.name!
                 var artist_aa_string = ""
                 if object.track!.artist != nil {
                     artist_aa_string += object.track!.artist!.name!
@@ -624,16 +638,21 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 if object.track!.album != nil {
                     artist_aa_string += " - " + object.track!.album!.name!
                 }
-                (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
+                (result.subviews[2] as! NSTextField).stringValue = artist_aa_string
                 if object.track!.album?.primary_art != nil {
                     let art = object.track?.album?.primary_art
                     let path = art?.artwork_location!
                     let url = URL(string: path!)
                     let image = NSImage(contentsOf: url!)
-                    (result.subviews[0] as! NSImageView).image = image
+                    (result.subviews[1] as! NSImageView).image = image
                 }
                 else {
-                    (result.subviews[0] as! NSImageView).image = nil
+                    (result.subviews[1] as! NSImageView).image = nil
+                }
+                if mainWindowController?.paused == true {
+                    (result.subviews[0] as! NSImageView).image = NSImage(named: "NSTouchBarAudioOutputVolumeOffTemplate")
+                } else {
+                    (result.subviews[0] as! NSImageView).image = NSImage(named: "NSTouchBarAudioOutputVolumeMediumTemplate")
                 }
                 return result
             case .source:
@@ -642,7 +661,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 return result
             case .futureTrack:
                 let result = tableView.make(withIdentifier: "futureTrack", owner: nil) as! TrackNameTableCell
-                (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
+                (result.subviews[3] as! NSTextField).stringValue = object.track!.name!
                 var artist_aa_string = ""
                 if object.track!.artist != nil {
                     artist_aa_string += object.track!.artist!.name!
@@ -650,21 +669,22 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 if object.track!.album != nil {
                     artist_aa_string += " - " + object.track!.album!.name!
                 }
-                (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
+                (result.subviews[2] as! NSTextField).stringValue = artist_aa_string
                 if object.track!.album?.primary_art != nil {
                     let art = object.track?.album?.primary_art
                     let path = art?.artwork_location!
                     let url = URL(string: path!)
                     let image = NSImage(contentsOf: url!)
-                    (result.subviews[0] as! NSImageView).image = image
+                    (result.subviews[1] as! NSImageView).image = image
                 }
                 else {
-                    (result.subviews[0] as! NSImageView).image = nil
+                    (result.subviews[1] as! NSImageView).image = nil
                 }
+                (result.subviews[0] as! NSImageView).image = nil
                 return result
             case .transient:
                 let result = tableView.make(withIdentifier: "futureTrack", owner: nil) as! TrackNameTableCell
-                (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
+                (result.subviews[3] as! NSTextField).stringValue = object.track!.name!
                 var artist_aa_string = ""
                 if object.track!.artist != nil {
                     artist_aa_string += object.track!.artist!.name!
@@ -672,17 +692,18 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 if object.track!.album != nil {
                     artist_aa_string += " - " + object.track!.album!.name!
                 }
-                (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
+                (result.subviews[2] as! NSTextField).stringValue = artist_aa_string
                 if object.track!.album?.primary_art != nil {
                     let art = object.track?.album?.primary_art
                     let path = art?.artwork_location!
                     let url = URL(string: path!)
                     let image = NSImage(contentsOf: url!)
-                    (result.subviews[0] as! NSImageView).image = image
+                    (result.subviews[1] as! NSImageView).image = image
                 }
                 else {
-                    (result.subviews[0] as! NSImageView).image = nil
+                    (result.subviews[1] as! NSImageView).image = nil
                 }
+                (result.subviews[0] as! NSImageView).image = nil
                 return result
             }
         }

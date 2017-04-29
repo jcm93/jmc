@@ -296,9 +296,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let coordinator = self.persistentStoreCoordinator
         var managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
+        managedObjectContext.undoManager = UndoManager()
         return managedObjectContext
         
     }()
+    
 
     // MARK: - Core Data Saving and Undo support
 
@@ -316,7 +318,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
     }
-
+    
+    func undo(_ sender: Any) {
+        managedObjectContext.undoManager!.undo()
+        mainWindowController?.currentTableViewController?.trackViewArrayController.fetch(nil)
+    }
+    
     func windowWillReturnUndoManager(_ window: NSWindow) -> UndoManager? {
         // Returns the NSUndoManager for the application. In this case, the manager returned is that of the managed object context for the application.
         return managedObjectContext.undoManager
