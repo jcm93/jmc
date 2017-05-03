@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="OpenViewController" customModule="jmc" customModuleProvider="target">
+            <connections>
+                <outlet property="comboBox" destination="wak-Xn-Ses" id="uPn-Bz-4uY"/>
+                <outlet property="copyRadio" destination="5ej-gT-3PE" id="MEl-W1-Egc"/>
+                <outlet property="moveRadio" destination="mzw-kk-ORi" id="6lZ-NK-fly"/>
+                <outlet property="orgCheck" destination="lGe-gK-2ng" id="zkR-xp-1Vb"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="480" height="85"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MiU-pF-Leu">
+                    <rect key="frame" x="18" y="48" width="93" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Add to source:" id="x1D-02-eTJ">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wak-Xn-Ses">
+                    <rect key="frame" x="115" y="41" width="201" height="26"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="196" id="wGC-iU-Mfh"/>
+                    </constraints>
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="Sjk-gt-ibt">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" id="LZv-yn-sys"/>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="comboBoxChangedSelection:" target="-2" id="O7j-Kg-FeG"/>
+                    </connections>
+                </popUpButton>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="lGe-gK-2ng">
+                    <rect key="frame" x="30" y="18" width="244" height="18"/>
+                    <buttonCell key="cell" type="check" title="Organize files in central media folder" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="PxP-Jr-rzi">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="orgChecked:" target="-2" id="Ckc-r7-miQ"/>
+                    </connections>
+                </button>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="mzw-kk-ORi">
+                    <rect key="frame" x="376" y="18" width="84" height="18"/>
+                    <buttonCell key="cell" type="radio" title="Move files" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="9GN-yK-NGQ">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="radioAction:" target="-2" id="ZQf-Cc-GoJ"/>
+                    </connections>
+                </button>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="5ej-gT-3PE">
+                    <rect key="frame" x="288" y="18" width="83" height="18"/>
+                    <buttonCell key="cell" type="radio" title="Copy files" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="bcM-qB-hSR">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="radioAction:" target="-2" id="PFS-Yn-0TT"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="mzw-kk-ORi" firstAttribute="leading" secondItem="5ej-gT-3PE" secondAttribute="trailing" constant="8" symbolic="YES" id="Ax1-OE-izd"/>
+                <constraint firstAttribute="bottom" secondItem="lGe-gK-2ng" secondAttribute="bottom" constant="20" symbolic="YES" id="GJ1-bX-fez"/>
+                <constraint firstItem="MiU-pF-Leu" firstAttribute="baseline" secondItem="wak-Xn-Ses" secondAttribute="baseline" id="WUW-jf-Tui"/>
+                <constraint firstItem="wak-Xn-Ses" firstAttribute="leading" secondItem="MiU-pF-Leu" secondAttribute="trailing" constant="8" symbolic="YES" id="Wxf-V7-5qD"/>
+                <constraint firstItem="wak-Xn-Ses" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="20" symbolic="YES" id="XEJ-rI-Hhj"/>
+                <constraint firstItem="lGe-gK-2ng" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="32" id="j6k-8A-B1o"/>
+                <constraint firstItem="MiU-pF-Leu" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" symbolic="YES" id="mlc-1t-j83"/>
+                <constraint firstItem="5ej-gT-3PE" firstAttribute="leading" secondItem="lGe-gK-2ng" secondAttribute="trailing" constant="17" id="rNw-hH-mzb"/>
+                <constraint firstItem="5ej-gT-3PE" firstAttribute="baseline" secondItem="mzw-kk-ORi" secondAttribute="baseline" id="rYN-9e-6Be"/>
+                <constraint firstItem="lGe-gK-2ng" firstAttribute="baseline" secondItem="5ej-gT-3PE" secondAttribute="baseline" id="vFh-e7-hp5"/>
+            </constraints>
+            <point key="canvasLocation" x="139" y="75.5"/>
+        </customView>
+    </objects>
+</document>

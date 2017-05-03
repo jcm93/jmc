@@ -77,14 +77,15 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate {
     
     //mark the rest
     var selectedTracks: [Track]?
-    var currentTrack: Track?
+    dynamic var currentTrack: Track?
     
     @IBAction func nameEdited(_ sender: Any) {
         managedContext.undoManager?.beginUndoGrouping()
+        managedContext.undoManager!.registerUndo(withTarget: self.databaseManager, selector: #selector(self.databaseManager.undoOperationThatMovedFiles), object: self.selectedTracks!)
         editName(self.selectedTracks, name: self.nameField.stringValue)
         let nameOrder = cachedOrders!["Name"]
         reorderForTracks(self.selectedTracks!, cachedOrder: nameOrder!)
-        for track in selectedTracks! {
+        for track in self.selectedTracks! {
             databaseManager.moveFileAfterEdit(track)
         }
         managedContext.undoManager?.endUndoGrouping()
@@ -93,10 +94,11 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate {
     
     @IBAction func artistEdited(_ sender: Any) {
         managedContext.undoManager?.beginUndoGrouping()
+        managedContext.undoManager!.registerUndo(withTarget: self.databaseManager, selector: #selector(self.databaseManager.undoOperationThatMovedFiles), object: self.selectedTracks!)
         editArtist(self.selectedTracks, artistName: self.artistField.stringValue)
         let artistOrder = cachedOrders!["Artist"]
         reorderForTracks(self.selectedTracks!, cachedOrder: artistOrder!)
-        for track in selectedTracks! {
+        for track in self.selectedTracks! {
             databaseManager.moveFileAfterEdit(track)
         }
         managedContext.undoManager?.endUndoGrouping()
@@ -104,115 +106,99 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate {
     }
     
     @IBAction func albumArtistEdited(_ sender: Any) {
+        managedContext.undoManager?.beginUndoGrouping()
+        managedContext.undoManager!.registerUndo(withTarget: self.databaseManager, selector: #selector(self.databaseManager.undoOperationThatMovedFiles), object: self.selectedTracks!)
         editAlbumArtist(self.selectedTracks, albumArtistName: self.albumArtistField.stringValue)
+        let albumArtistOrder  = cachedOrders![jmcAlbumArtistCachedOrderName]
+        reorderForTracks(self.selectedTracks!, cachedOrder: albumArtistOrder!)
+        for track in self.selectedTracks! {
+            databaseManager.moveFileAfterEdit(track)
+        }
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Album Artist")
     }
     
     @IBAction func albumEdited(_ sender: Any) {
+        managedContext.undoManager!.registerUndo(withTarget: self.databaseManager, selector: #selector(self.databaseManager.undoOperationThatMovedFiles), object: self.selectedTracks!)
+        managedContext.undoManager?.beginUndoGrouping()
         editAlbum(self.selectedTracks, albumName: self.albumField.stringValue)
+        let albumOrder = cachedOrders![jmcAlbumCachedOrderName]
+        reorderForTracks(self.selectedTracks!, cachedOrder: albumOrder!)
+        for track in self.selectedTracks! {
+            databaseManager.moveFileAfterEdit(track)
+        }
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Album")
     }
     
     @IBAction func trackNumEdited(_ sender: Any) {
+        managedContext.undoManager!.registerUndo(withTarget: self.databaseManager, selector: #selector(self.databaseManager.undoOperationThatMovedFiles), object: self.selectedTracks!)
+        managedContext.undoManager?.beginUndoGrouping()
         editTrackNum(self.selectedTracks, num: self.trackNumField.integerValue)
+        for track in self.selectedTracks! {
+            databaseManager.moveFileAfterEdit(track)
+        }
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Track Number")
     }
     
     @IBAction func trackNumOfEdited(_ sender: Any) {
+        managedContext.undoManager?.beginUndoGrouping()
         editTrackNumOf(self.selectedTracks, num: self.trackNumOfField.integerValue)
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Total Tracks")
     }
     
     @IBAction func discNumEdited(_ sender: Any) {
+        managedContext.undoManager!.registerUndo(withTarget: self.databaseManager, selector: #selector(self.databaseManager.undoOperationThatMovedFiles), object: self.selectedTracks!)
+        managedContext.undoManager?.beginUndoGrouping()
         editDiscNum(self.selectedTracks, num: self.discNumField.integerValue)
+        for track in self.selectedTracks! {
+            databaseManager.moveFileAfterEdit(track)
+        }
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Disc Number")
     }
     
     @IBAction func totalDiscsEdited(_ sender: Any) {
+        managedContext.undoManager?.beginUndoGrouping()
         editDiscNumOf(self.selectedTracks, num: self.discNumOfField.integerValue)
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Total Discs")
     }
     
     @IBAction func composerEdited(_ sender: Any) {
+        managedContext.undoManager?.beginUndoGrouping()
         editComposer(self.selectedTracks, composerName: self.composerField.stringValue)
+        let composerOrder = cachedOrders![jmcComposerCachedOrderName]
+        reorderForTracks(self.selectedTracks!, cachedOrder: composerOrder!)
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Composer")
     }
     
     @IBAction func genreEdited(_ sender: Any) {
+        managedContext.undoManager?.beginUndoGrouping()
         editGenre(self.selectedTracks, genre: self.genreField.stringValue)
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Genre")
     }
     
     @IBAction func compilationChanged(_ sender: Any) {
-        
+        managedContext.undoManager?.beginUndoGrouping()
+        managedContext.undoManager!.registerUndo(withTarget: self.databaseManager, selector: #selector(self.databaseManager.undoOperationThatMovedFiles), object: self.selectedTracks!)
+        editIsComp(self.selectedTracks!, isComp: self.compilationButton.state != 0)
+        for track in self.selectedTracks! {
+            databaseManager.moveFileAfterEdit(track)
+        }
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Compilation")
     }
     
     @IBAction func commentsEdited(_ sender: Any) {
-    }
-    
-    func commitEdits() {
-        print("committing edits")
-        let fileHandler = DatabaseManager()
-        //comments, composer, release date, track num, album artist, name, album, artist, disc number, 
-        for track in selectedTracks! {
-            if nameField.stringValue.isEmpty == false {
-                track.name = nameField.stringValue
-            }
-        }
-        if artistField.stringValue.isEmpty == false {
-            editArtist(selectedTracks, artistName: artistField.stringValue)
-        }
-        if albumField.stringValue.isEmpty == false {
-            editAlbum(selectedTracks, albumName: albumField.stringValue)
-        }
-        if albumArtistField.stringValue.isEmpty == false {
-            editAlbumArtist(selectedTracks, albumArtistName: albumArtistField.stringValue)
-        }
-        if composerField.stringValue.isEmpty == false {
-            editComposer(selectedTracks, composerName: composerField.stringValue)
-        }
-        if genreField.stringValue.isEmpty == false {
-            editGenre(selectedTracks, genre: genreField.stringValue)
-        }
-        if trackNumField.stringValue.isEmpty == false {
-            editTrackNum(selectedTracks, num: Int(trackNumField.stringValue)!)
-        }
-        if trackNumOfField.stringValue.isEmpty == false {
-            editTrackNumOf(selectedTracks, num: Int(trackNumOfField.stringValue)!)
-        }
-        if discNumField.stringValue.isEmpty == false {
-            editDiscNum(selectedTracks, num: Int(discNumField.stringValue)!)
-        }
-        if discNumOfField.stringValue.isEmpty == false {
-            editDiscNumOf(selectedTracks, num: Int(discNumOfField.stringValue)!)
-        }
-        if commentsField.stringValue.isEmpty == false {
-            editComments(selectedTracks, comments: commentsField.stringValue)
-        }
-        if sortingNameSortAsField.stringValue.isEmpty == false {
-            editSortName(selectedTracks, sortName: sortingNameSortAsField.stringValue)
-        }
-        if sortingArtistSortAsField.stringValue.isEmpty == false {
-            editSortArtist(selectedTracks, sortArtist: sortingArtistSortAsField.stringValue)
-        }
-        if sortingAlbumSortAsField.stringValue.isEmpty == false {
-            editSortAlbum(selectedTracks, sortAlbum: sortingAlbumSortAsField.stringValue)
-        }
-        if sortingAlbumArtistSortAsField.stringValue.isEmpty == false {
-            editSortAlbumArtist(selectedTracks, sortAlbumArtist: sortingAlbumArtistSortAsField.stringValue)
-        }
-        if sortingComposerSortAsField.stringValue.isEmpty == false {
-            editSortComposer(selectedTracks, sortComposer: sortingComposerSortAsField.stringValue)
-        }
-        for order in mainWindowController!.cachedOrders! {
-            reorderForTracks(self.selectedTracks!, cachedOrder: order)
-        }
-        for track in selectedTracks! {
-            fileHandler.moveFileAfterEdit(track)
-        }
-        do {
-            try managedContext.save()
-        } catch {
-            print("error saving context")
-        }
-    }
-    
-    @IBAction func confirmPressed(_ sender: AnyObject) {
-        commitEdits()
-        self.window?.close()
-        self.mainWindowController?.currentTableViewController?.trackViewArrayController.rearrangeObjects()
+        managedContext.undoManager?.beginUndoGrouping()
+        editComments(self.selectedTracks!, comments: self.commentsField.stringValue)
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Comments")
     }
     
     @IBAction func releaseDateChecked(_ sender: AnyObject) {
@@ -382,9 +368,11 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate {
             }
         }
     }
+    
     @IBAction func cancelAction(_ sender: Any) {
         self.window?.close()
     }
+    
     @IBAction func previousTrackAction(_ sender: AnyObject) {
         
     }
@@ -392,6 +380,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate {
     @IBAction func nextTrackAction(_ sender: AnyObject) {
         
     }
+    
     func initForSelection() {
         if selectedTracks!.count > 1 {
             nextTrackButton.isHidden = true

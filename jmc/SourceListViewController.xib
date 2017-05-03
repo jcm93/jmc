@@ -189,7 +189,6 @@
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="checkBoxPressed:" target="-2" id="9VA-YI-hp8"/>
-                                                            <binding destination="SW6-47-Uly" name="value" keyPath="objectValue.node.item.library.is_active" id="vES-WI-Dqe"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>

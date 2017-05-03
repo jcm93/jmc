@@ -261,16 +261,22 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                     }
                     mainWindowController?.delegate?.audioModule.currentTrackLocation = track.track?.location
                     mainWindowController?.delegate?.audioModule.skip_backward()
-                    mainWindowController?.currentTrack?.is_playing = false
+                    notEnablingUndo {
+                        self.mainWindowController?.currentTrack?.is_playing = false
+                    }
                     mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                     mainWindowController?.currentTrack = track.track
                     mainWindowController?.timer?.invalidate()
                     mainWindowController?.initializeInterfaceForNewTrack()
-                    mainWindowController?.currentTrack?.is_playing = true
+                    notEnablingUndo {
+                        self.mainWindowController?.currentTrack?.is_playing = true
+                    }
                     mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                     mainWindowController?.delegate?.audioModule.trackQueue.insert(newFutureTrack.track!, at: 0)
                 } else {
-                    mainWindowController?.currentTrack?.is_playing = false
+                    notEnablingUndo {
+                        self.mainWindowController?.currentTrack?.is_playing = false
+                    }
                     mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                     mainWindowController?.currentTrack = nil
                     self.currentTrack = nil
@@ -282,7 +288,9 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             } else {
                 print("uninitializing track queue")
                 uninitializeTrackQueue()
-                mainWindowController?.currentTrack?.is_playing = false
+                notEnablingUndo {
+                    self.mainWindowController?.currentTrack?.is_playing = false
+                }
                 mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                 mainWindowController?.currentTrack = nil
                 self.currentAudioSource = nil

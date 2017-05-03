@@ -306,7 +306,7 @@
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
-                                        <sortDescriptor key="sortDescriptorPrototype" selector="localizedStandardCompare:" sortKey="track.composer.name"/>
+                                        <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="composer_order"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
                                     <tableColumn identifier="disc_number" width="40" minWidth="10" maxWidth="3.4028234663852886e+38" id="xsM-jc-5Eo">

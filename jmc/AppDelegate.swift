@@ -118,8 +118,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func openFiles() {
-        self.addToLibraryViewController = AddFilesWindowController(windowNibName: "AddFilesWindowController")
-        self.addToLibraryViewController?.showWindow(self)
+        let panel = NSOpenPanel()
+        let accessoryView = OpenViewController(nibName: "OpenViewController", bundle: nil)
+        panel.allowedFileTypes = VALID_FILE_TYPES
+        panel.allowsMultipleSelection = true
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = true
+        panel.accessoryView = accessoryView?.view
+        panel.isAccessoryViewDisclosed = true
+        let modalResponse = panel.runModal()
+        if modalResponse == NSFileHandlingPanelOKButton {
+            let orgType = accessoryView?.orgType
+            let urls = self.databaseManager?.getMediaURLsInDirectoryURLs(panel.urls).0
+            self.launchAddFilesDialog()
+            self.addFilesQueueLoop?.addChunksToQueue(urls: [accessoryView!.currentLibrary! : urls!])
+            self.addFilesQueueLoop?.start()
+        }
+        
     }
     
     func showImportErrors(_ errors: [FileAddToDatabaseError]) {
@@ -195,6 +210,41 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             initializeLibraryAndShowMainWindow()
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(undoHappened), name: Notification.Name.NSUndoManagerDidUndoChange, object: managedObjectContext.undoManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidChangeDebug), name: Notification.Name.NSManagedObjectContextObjectsDidChange, object: managedObjectContext)
+    }
+    
+    func managedObjectsDidChangeDebug(_ notification: Notification) {
+        let userInfo = notification.userInfo!
+        if let updated = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject>, updated.count > 0 {
+            print("UPDATED")
+            for object in updated {
+                print(object.objectSpecifier)
+                print(object.changedValuesForCurrentEvent())
+            }
+            print("-------")
+        }
+        if let inserted = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>, inserted.count > 0 {
+            print("INSERTED")
+            for object in inserted {
+                print(object.objectSpecifier)
+                print(object.changedValuesForCurrentEvent())
+            }
+            print("-------")
+        }
+        if let deleted = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>, deleted.count > 0 {
+            print("DELETED")
+            for object in deleted {
+                print(object.objectSpecifier)
+                print(object.changedValuesForCurrentEvent())
+            }
+            print("-------")
+        }
+        print("DONE")
+    }
+    
+    func undoHappened(_ notification: Notification) {
+        let thing = notification.userInfo
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

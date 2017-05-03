@@ -66,6 +66,7 @@ class DatabaseManager: NSObject {
     
     var organizesMedia: Bool = true
     let fileManager = FileManager.default
+    var undoFileLocations = [Track : [String]]()
     
     lazy var cachedOrders: [CachedOrder]? = {
         let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "CachedOrder")
@@ -112,6 +113,18 @@ class DatabaseManager: NSObject {
         } catch {
             print("error looking in album directory for art: \(error)")
             return nil
+        }
+    }
+    
+    func undoOperationThatMovedFiles(for tracks: [Track]) {
+        print("undoing a move operation")
+        for track in tracks {
+            let currentFileLocation = self.undoFileLocations[track]!.removeLast()
+            do {
+                try fileManager.moveItem(at: URL(string: currentFileLocation)!, to: URL(string: track.location!)!)
+            } catch {
+                print("error undoing move \(error)")
+            }
         }
     }
     
@@ -170,22 +183,18 @@ class DatabaseManager: NSObject {
     
     //OK -- discrete
     func moveFileAfterEdit(_ track: Track) {
+        print("moving file after edit")
+        print("current track location: \(track.location)")
         let organizationType = track.library?.organization_type as! Int
-        guard organizationType != NO_ORGANIZATION_TYPE else {return}
+        guard organizationType != NO_ORGANIZATION_TYPE else {managedContext.processPendingChanges(); managedContext.undoManager?.enableUndoRegistration(); return}
         let artistFolderName = track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING
         let albumFolderName = track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING
-        let trackName: String
-        if track.track_num != nil {
-            trackName = "\(track.track_num!) \(track.name!)"
-        } else {
-            trackName = "\(track.name!)"
-        }
+        let trackName = validateStringForFilename(formFilenameForTrack(track, url: nil))
         let currentLocationURL = URL(string: track.location!)
-        let fileExtension = currentLocationURL?.pathExtension
         let oldAlbumDirectoryURL = currentLocationURL?.deletingLastPathComponent()
         let newArtistDirectoryURL = ((currentLocationURL as NSURL?)?.deletingLastPathComponent as NSURL?)?.deletingLastPathComponent?.deletingLastPathComponent().appendingPathComponent(artistFolderName)
         let newAlbumDirectoryURL = newArtistDirectoryURL?.appendingPathComponent(albumFolderName)
-        let newLocationURL = ((currentLocationURL as NSURL?)?.deletingLastPathComponent as NSURL?)?.deletingLastPathComponent?.deletingLastPathComponent().appendingPathComponent(artistFolderName).appendingPathComponent(albumFolderName).appendingPathComponent(trackName).appendingPathExtension(fileExtension!)
+        let newLocationURL = ((currentLocationURL as NSURL?)?.deletingLastPathComponent as NSURL?)?.deletingLastPathComponent?.deletingLastPathComponent().appendingPathComponent(artistFolderName).appendingPathComponent(albumFolderName).appendingPathComponent(trackName)
         //check if directories already exist
         do {
             try fileManager.createDirectory(at: newAlbumDirectoryURL!, withIntermediateDirectories: true, attributes: nil)
@@ -208,6 +217,10 @@ class DatabaseManager: NSObject {
             print("error checking directory: \(error)")
         }
         print("moved \(currentLocationURL) to \(track.location!)")
+        if self.undoFileLocations[track] == nil {
+            self.undoFileLocations[track] = [String]()
+        }
+        self.undoFileLocations[track]!.append(track.location!)
     }
     
     func getMDItemFromURL(_ url: URL) -> MDItem? {

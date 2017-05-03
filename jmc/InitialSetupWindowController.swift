@@ -201,20 +201,22 @@ class InitialSetupWindowController: NSWindowController {
     }
     
     @IBAction func OKPressed(_ sender: AnyObject) {
-        UserDefaults.standard.set(true, forKey: DEFAULTS_ARE_INITIALIZED_STRING)
-
-        UserDefaults.standard.set(false, forKey: DEFAULTS_SHUFFLE_STRING)
-        UserDefaults.standard.set(1.0, forKey: DEFAULTS_VOLUME_STRING)
-        UserDefaults.standard.set(1, forKey: DEFAULTS_IS_EQ_ENABLED_STRING)
-        UserDefaults.standard.set(true, forKey: DEFAULTS_SHOWS_ARTWORK_STRING)
-        
-        UserDefaults.standard.set(true, forKey: DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING)
-        UserDefaults.standard.set(true, forKey: DEFAULTS_SHARING_STRING)
-        if self.library == nil {
-            setupForNilLibrary()
+        notEnablingUndo {
+            UserDefaults.standard.set(true, forKey: DEFAULTS_ARE_INITIALIZED_STRING)
+            
+            UserDefaults.standard.set(false, forKey: DEFAULTS_SHUFFLE_STRING)
+            UserDefaults.standard.set(1.0, forKey: DEFAULTS_VOLUME_STRING)
+            UserDefaults.standard.set(1, forKey: DEFAULTS_IS_EQ_ENABLED_STRING)
+            UserDefaults.standard.set(true, forKey: DEFAULTS_SHOWS_ARTWORK_STRING)
+            
+            UserDefaults.standard.set(true, forKey: DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING)
+            UserDefaults.standard.set(true, forKey: DEFAULTS_SHARING_STRING)
+            if self.library == nil {
+                setupForNilLibrary()
+            }
+            (NSApplication.shared().delegate as! AppDelegate).initializeLibraryAndShowMainWindow()
+            self.window?.close()
         }
-        (NSApplication.shared().delegate as! AppDelegate).initializeLibraryAndShowMainWindow()
-        self.window?.close()
     }
     
     override func windowDidLoad() {

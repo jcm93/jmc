@@ -176,6 +176,27 @@ var kFileAddErrorMetadataNotYetPopulated = "Failure getting file metadata"
 var kDeleteEventText = "Are you sure you want to remove the selected tracks from your library?"
 var jmcDarkAppearanceOption = "isDark"
 
+var jmcNameCachedOrderName = "Name"
+var jmcArtistCachedOrderName = "Artist"
+var jmcDateAddedCachedOrderName = "Date Added"
+var jmcDateReleasedCachedOrderName = "Date Released"
+var jmcAlbumCachedOrderName = "Album"
+var jmcKindCachedOrderName = "Kind"
+var jmcGenreCachedOrderName = "Genre"
+var jmcAlbumArtistCachedOrderName = "Album Artist"
+var jmcComposerCachedOrderName = "Composer"
+
+
+let fieldsToCachedOrdersDictionary: NSDictionary = [
+    "date_added" : "Date Added",
+    "date_released" : "Date Released",
+    "artist" : "Artist",
+    "album" : "Album",
+    "album_artist" : "Album Artist",
+    "kind" : "Kind",
+    "genre" : "Genre"
+]
+
 
 
 //other constants
@@ -260,16 +281,6 @@ var cachedOrders: [String : CachedOrder]? = {
     }
 }()
 
-let fieldsToCachedOrdersDictionary: NSDictionary = [
-    "date_added" : "Date Added",
-    "date_released" : "Date Released",
-    "artist" : "Artist",
-    "album" : "Album",
-    "album_artist" : "Album Artist",
-    "kind" : "Kind",
-    "genre" : "Genre"
-]
-
 func validateStringForFilename(_ string: String) -> String {
     //needed?
     let newString = String(string.characters.map({
@@ -279,16 +290,20 @@ func validateStringForFilename(_ string: String) -> String {
 }
 
 func libraryIsAvailable(library: Library) -> Bool {
-    let fileManager = FileManager.default
-    let libraryPath = URL(string: library.volume_url_string!)!.path
-    var isDirectory = ObjCBool(booleanLiteral: false)
-    if fileManager.fileExists(atPath: libraryPath, isDirectory: &isDirectory) && isDirectory.boolValue {
-        library.is_available = true
-        return true
-    } else {
-        library.is_available = false
-        return false
+    var isAvailable: Bool = false
+    notEnablingUndo {
+        let fileManager = FileManager.default
+        let libraryPath = URL(string: library.volume_url_string!)!.path
+        var isDirectory = ObjCBool(booleanLiteral: false)
+        if fileManager.fileExists(atPath: libraryPath, isDirectory: &isDirectory) && isDirectory.boolValue {
+            library.is_available = true
+            isAvailable = true
+        } else {
+            library.is_available = false
+            isAvailable = false
+        }
     }
+    return isAvailable
 }
 
 func getTracksOutsideHomeDirectory(library: Library) -> [Track] {
@@ -607,8 +622,6 @@ func getTimeAsString(_ time: TimeInterval) -> String? {
 }
 
 func editName(_ tracks: [Track]?, name: String) {
-    managedContext.processPendingChanges()
-    managedContext.undoManager?.beginUndoGrouping()
     let sortName = getSortName(name)
     for track in tracks! {
         track.name = name
@@ -616,8 +629,6 @@ func editName(_ tracks: [Track]?, name: String) {
             track.sort_name = sortName
         }
     }
-    managedContext.undoManager?.endUndoGrouping()
-    managedContext.undoManager?.setActionName("Edit Name")
 }
 
 func addIDsAndMakeNonNetwork(_ track: Track) {
@@ -720,7 +731,6 @@ func editComposer(_ tracks: [Track]?, composerName: String) {
 
 func editAlbum(_ tracks: [Track]?, albumName: String) {
     print(albumName)
-    managedContext.undoManager?.beginUndoGrouping()
     var album: Album?
     let albumCheck = checkIfAlbumExists(albumName)
     if albumCheck != nil {
@@ -749,12 +759,9 @@ func editAlbum(_ tracks: [Track]?, albumName: String) {
         }
         album = new_album
     }
-    managedContext.undoManager?.endUndoGrouping()
-    managedContext.undoManager?.setActionName("Edit Album")
 }
 
 func editAlbumArtist(_ tracks: [Track]?, albumArtistName: String) {
-    managedContext.undoManager?.beginUndoGrouping()
     print(albumArtistName)
     let artistCheck = checkIfArtistExists(albumArtistName)
     if artistCheck != nil {
@@ -782,8 +789,14 @@ func editAlbumArtist(_ tracks: [Track]?, albumArtistName: String) {
             }
         }
     }
-    managedContext.undoManager?.endUndoGrouping()
-    managedContext.undoManager?.setActionName("Edit Album Artist")
+}
+
+func notEnablingUndo(stuff: (Void) -> Void) {
+    managedContext.processPendingChanges()
+    managedContext.undoManager?.disableUndoRegistration()
+    stuff()
+    managedContext.processPendingChanges()
+    managedContext.undoManager?.enableUndoRegistration()
 }
 
 func editTrackNum(_ tracks: [Track]?, num: Int) {

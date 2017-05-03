@@ -65,6 +65,8 @@
 		0D60F5291E8720A300CA5420 /* PlaylistOrderObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */; };
 		0D60F52C1E87372D00CA5420 /* RemoveSourceSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D60F52A1E87372D00CA5420 /* RemoveSourceSheetController.swift */; };
 		0D60F52D1E87372D00CA5420 /* RemoveSourceSheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D60F52B1E87372D00CA5420 /* RemoveSourceSheetController.xib */; };
+		0D6802171EB7D73200D03923 /* OpenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6802151EB7D73200D03923 /* OpenViewController.swift */; };
+		0D6802181EB7D73200D03923 /* OpenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D6802161EB7D73200D03923 /* OpenViewController.xib */; };
 		0D69659D1EA02EC50050D505 /* ProgressBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D69659C1EA02EC50050D505 /* ProgressBarController.swift */; };
 		0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */; };
 		0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */; };
@@ -263,6 +265,8 @@
 		0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistOrderObject.swift; sourceTree = "<group>"; };
 		0D60F52A1E87372D00CA5420 /* RemoveSourceSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoveSourceSheetController.swift; sourceTree = "<group>"; };
 		0D60F52B1E87372D00CA5420 /* RemoveSourceSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RemoveSourceSheetController.xib; sourceTree = "<group>"; };
+		0D6802151EB7D73200D03923 /* OpenViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenViewController.swift; sourceTree = "<group>"; };
+		0D6802161EB7D73200D03923 /* OpenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OpenViewController.xib; sourceTree = "<group>"; };
 		0D69659C1EA02EC50050D505 /* ProgressBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarController.swift; sourceTree = "<group>"; };
 		0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagEditorWindow.swift; sourceTree = "<group>"; };
 		0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagEditorWindow.xib; sourceTree = "<group>"; };
@@ -470,6 +474,8 @@
 				0D299B161DF111490009CF7A /* AlbumArtViewController.xib */,
 				0D299B111DF10FFF0009CF7A /* SourceListViewController.swift */,
 				0D299B121DF10FFF0009CF7A /* SourceListViewController.xib */,
+				0D6802151EB7D73200D03923 /* OpenViewController.swift */,
+				0D6802161EB7D73200D03923 /* OpenViewController.xib */,
 				0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */,
 				0DE4868F1EA83FBA009B226B /* AddFilesProgressSheet.swift */,
 				0DE486901EA83FBA009B226B /* AddFilesProgressSheet.xib */,
@@ -1021,6 +1027,7 @@
 				0DF4BEF41CFD0D4E00AC5824 /* MainWindowController.xib in Resources */,
 				0DD0DAE81E53A8EE00807CAC /* flac in Resources */,
 				0DD0DAE61E53A8EE00807CAC /* flac.rb in Resources */,
+				0D6802181EB7D73200D03923 /* OpenViewController.xib in Resources */,
 				0DD0DAF11E53A8EE00807CAC /* flac++.pc in Resources */,
 				0D60F52D1E87372D00CA5420 /* RemoveSourceSheetController.xib in Resources */,
 				0DD0DB081E53A8EE00807CAC /* index.html in Resources */,
@@ -1123,6 +1130,7 @@
 				0D51C8B21EB01731002F6182 /* JMTabView.swift in Sources */,
 				0DEF66BB1D383A8700EA3ADC /* Artist.swift in Sources */,
 				0DD7D6D91D3F3A350035BAD8 /* AlbumArtworkCollection.swift in Sources */,
+				0D6802171EB7D73200D03923 /* OpenViewController.swift in Sources */,
 				0D84EDE71DA326BD0057411F /* NetworkTrack+CoreDataProperties.swift in Sources */,
 				0D01AD911D7079D900F9211F /* EqualizerWindowController.swift in Sources */,
 				0D9CE67B1D34A7DF004FA8CB /* ImportProgressBar.swift in Sources */,

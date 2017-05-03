@@ -30,7 +30,6 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowDelegate {
     
-    
     //target views
     //@IBOutlet weak var libraryTableTargetView: NSView!
     @IBOutlet weak var trackQueueTargetView: NSView!
@@ -394,7 +393,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             delegate?.audioModule.stopForNetworkTrack()
             delegate?.serviceBrowser?.getTrack(Int(track.id!), peer: peer)
             if self.currentTrack != nil {
-                currentTrack?.is_playing = false
+                notEnablingUndo {
+                    currentTrack?.is_playing = false
+                }
                 currentTableViewController?.reloadNowPlayingForTrack(self.currentTrack!)
             }
             currentTrack = track
@@ -495,7 +496,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         guard trackQueueViewController!.currentTrack != nil else {return}
         guard self.isDoneWithSkipOperation else {print("can't skip");return}
         self.isDoneWithSkipOperation = false
-        self.currentTrack?.is_playing = false
+        notEnablingUndo {
+            self.currentTrack?.is_playing = false
+        }
         timer?.invalidate()
         delegate?.audioModule.skip()
     }
@@ -504,7 +507,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         guard trackQueueViewController!.currentTrack != nil else {return}
         guard self.isDoneWithSkipBackOperation else {print("can't skip backward");return}
         self.isDoneWithSkipBackOperation = false
-        self.currentTrack?.is_playing = false
+        notEnablingUndo {
+            self.currentTrack?.is_playing = false
+        }
         timer?.invalidate()
         let nodeTime = delegate?.audioModule.curPlayerNode.lastRenderTime
         let playerTime = delegate?.audioModule.curPlayerNode.playerTime(forNodeTime: nodeTime!)
@@ -733,7 +738,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
                 let before = Date()
                 print("controller detects track change")
                 self.progressBarView.blockSeekEvents()
-                currentTrack?.is_playing = false
+                notEnablingUndo {
+                    self.currentTrack?.is_playing = false
+                }
                 if currentTrack != nil {
                     currentTableViewController?.reloadNowPlayingForTrack(currentTrack!)
                 }
@@ -746,7 +753,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
                 }
                 timer?.invalidate()
                 initializeInterfaceForNewTrack()
-                currentTrack?.is_playing = true
+                notEnablingUndo {
+                    self.currentTrack?.is_playing = true
+                }
                 currentTableViewController?.reloadNowPlayingForTrack(currentTrack!)
                 let after = Date()
                 let since = after.timeIntervalSince(before)

@@ -334,7 +334,9 @@ class LocationManager: NSObject {
     }
     
     func updateLastEventID() {
-        globalRootLibrary?.last_fs_event = FSEventStreamGetLatestEventId(self.eventStreamRef!) as NSNumber?
+        notEnablingUndo {
+            globalRootLibrary?.last_fs_event = FSEventStreamGetLatestEventId(self.eventStreamRef!) as NSNumber?
+        }
     }
     
     func initializeEventStream(libraries: [Library]) {

@@ -23,7 +23,6 @@ class JMTagNumberTextField: NSTextField {
             let constraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0.0, constant: textWidth + 10.0)
             NSLayoutConstraint.activate([constraint])
         }
-        self.complete(nil)
     }
 
     override func draw(_ dirtyRect: NSRect) {

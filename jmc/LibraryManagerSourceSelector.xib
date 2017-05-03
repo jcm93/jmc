@@ -25,8 +25,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="978" height="617"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yqo-Sk-798" customClass="NSSplitView">
-                        <rect key="frame" x="178" y="155" width="654" height="442"/>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="Yqo-Sk-798" customClass="NSSplitView">
+                        <rect key="frame" x="178" y="20" width="780" height="577"/>
                     </customView>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Q1i-5t-ljO">
                         <rect key="frame" x="20" y="19" width="25" height="27"/>
@@ -136,32 +136,17 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </tableHeaderView>
                     </scrollView>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Kfa-kG-ITS">
-                        <rect key="frame" x="852" y="13" width="112" height="32"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="100" id="8Xe-cA-WD9"/>
-                        </constraints>
-                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="G67-rA-NhU">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                            <string key="keyEquivalent" base64-UTF8="YES">
-DQ
-</string>
-                        </buttonCell>
-                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="ryt-VP-MrZ" secondAttribute="bottom" constant="51" id="1jl-Is-cKM"/>
-                    <constraint firstAttribute="trailing" secondItem="Kfa-kG-ITS" secondAttribute="trailing" constant="20" id="7vQ-6j-DgB"/>
                     <constraint firstItem="ryt-VP-MrZ" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="20" id="Bwq-HF-m7N"/>
                     <constraint firstAttribute="bottom" secondItem="Q1i-5t-ljO" secondAttribute="bottom" constant="20" id="DNE-2R-OdK"/>
-                    <constraint firstItem="Kfa-kG-ITS" firstAttribute="top" secondItem="Yqo-Sk-798" secondAttribute="bottom" constant="20" id="FVF-mk-IkA"/>
                     <constraint firstAttribute="trailing" secondItem="Yqo-Sk-798" secondAttribute="trailing" constant="20" id="L43-Y3-UTi"/>
                     <constraint firstItem="Yqo-Sk-798" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="20" id="McP-AZ-llH"/>
                     <constraint firstItem="Yqo-Sk-798" firstAttribute="leading" secondItem="ryt-VP-MrZ" secondAttribute="trailing" constant="8" id="WB2-b8-Cxh"/>
                     <constraint firstItem="lM2-H4-gFg" firstAttribute="leading" secondItem="Q1i-5t-ljO" secondAttribute="trailing" constant="8" id="Z4L-83-Rzo"/>
                     <constraint firstItem="Q1i-5t-ljO" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="bhs-vA-xB4"/>
-                    <constraint firstAttribute="bottom" secondItem="Kfa-kG-ITS" secondAttribute="bottom" constant="20" id="ij2-mD-z11"/>
+                    <constraint firstAttribute="bottom" secondItem="Yqo-Sk-798" secondAttribute="bottom" constant="20" id="gg6-8C-HXG"/>
                     <constraint firstItem="Q1i-5t-ljO" firstAttribute="top" secondItem="ryt-VP-MrZ" secondAttribute="bottom" constant="6" id="ivT-45-ESJ"/>
                     <constraint firstAttribute="bottom" secondItem="lM2-H4-gFg" secondAttribute="bottom" constant="20" id="nG0-3e-Nez"/>
                     <constraint firstItem="ryt-VP-MrZ" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="14" id="rqt-tZ-SEe"/>

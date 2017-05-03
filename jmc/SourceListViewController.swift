@@ -439,12 +439,17 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
                 let view = outlineView.make(withIdentifier: "MasterLibraryCell", owner: self) as! SourceListCellView
                 view.node = source
                 view.textField?.stringValue = "All Sources"
-                source.item.name = "All Sources"
                 view.textField?.isEditable = false
                 return view
             } else {
                 if libraryIsAvailable(library: source.item.library!) {
                     let view = outlineView.make(withIdentifier: "MasterPlaylistCell", owner: self) as! SourceListCellView
+                    view.subviews[2].bind("value", to: source.item.library!, withKeyPath: "is_active", options: [NSContinuouslyUpdatesValueBindingOption : true])
+                    /*if source.item.library?.is_active == true {
+                        (view.subviews[2] as! NSButton).state = NSOnState
+                    } else {
+                        (view.subviews[2] as! NSButton).state = NSOffState
+                    }*/
                     view.node = source
                     view.textField?.stringValue = source.item.library!.name ?? ""
                     view.textField?.isEditable = false
@@ -466,13 +471,17 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     @IBAction func checkBoxPressed(_ sender: Any) {
-        print("check box pressed")
+        /*print("check box pressed")
         let checkBox = sender as! NSButton
         let checkBoxState = checkBox.state
         let cellView = checkBox.superview as! SourceListCellView
         let sourceListNode = cellView.node
         let library = sourceListNode!.item.library
-        library!.is_active = checkBoxState == NSOnState ? true : false
+        if checkBoxState == NSOnState {
+            library!.is_active = 1 as NSNumber?
+        } else {
+            library!.is_active = 0 as NSNumber?
+        }*/
         if mainWindowController?.currentTableViewController?.playlist == nil {
             mainWindowController?.currentTableViewController?.initializeForLibrary()
         }
