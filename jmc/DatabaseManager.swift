@@ -49,10 +49,6 @@ func getArt(_ name: String) -> AlbumArtworkCollection? {
     }
 }
 
-struct FSError {
-    var whichError: Int
-}
-
 class FileAddToDatabaseError: NSObject {
     var urlString: String
     var error: String
@@ -67,17 +63,6 @@ class DatabaseManager: NSObject {
     var organizesMedia: Bool = true
     let fileManager = FileManager.default
     var undoFileLocations = [Track : [String]]()
-    
-    lazy var cachedOrders: [CachedOrder]? = {
-        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "CachedOrder")
-        do {
-            let res = try managedContext.fetch(fr) as! [CachedOrder]
-            return res
-        } catch {
-            print(error)
-            return nil
-        }
-    }()
     
     func getArtworkFromFile(_ urlString: String) -> Data? {
         print("checking for art in file")
@@ -588,8 +573,8 @@ class DatabaseManager: NSObject {
             //nesting async statements seems only reliable way to make progress bars actually update
             visualUpdateHandler?.makeIndeterminate(actionName: "Repopulating sort cache...")
             DispatchQueue.main.async {
-                for order in self.cachedOrders! {
-                    reorderForTracks(tracks, cachedOrder: order)
+                for order in cachedOrders! {
+                    reorderForTracks(tracks, cachedOrder: order.value)
                 }
                 visualUpdateHandler?.makeIndeterminate(actionName: "Committing changes...")
                 DispatchQueue.main.async {
@@ -630,6 +615,128 @@ class DatabaseManager: NSObject {
         } catch {
             print(error)
         }
+    }
+    
+    func nameEdited(tracks: [Track], value: String) {
+        managedContext.undoManager?.beginUndoGrouping()
+        managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        editName(tracks, name: value)
+        let nameOrder = cachedOrders!["Name"]
+        reorderForTracks(tracks, cachedOrder: nameOrder!)
+        for track in tracks {
+            moveFileAfterEdit(track)
+        }
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Name")
+    }
+    
+    func artistEdited(tracks: [Track], value: String) {
+        managedContext.undoManager?.beginUndoGrouping()
+        managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        editArtist(tracks, artistName: value)
+        let artistOrder = cachedOrders!["Artist"]
+        reorderForTracks(tracks, cachedOrder: artistOrder!)
+        for track in tracks {
+            moveFileAfterEdit(track)
+        }
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Artist")
+    }
+    
+    func albumArtistEdited(tracks: [Track], value: String) {
+        managedContext.undoManager?.beginUndoGrouping()
+        managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        editAlbumArtist(tracks, albumArtistName: value)
+        let albumArtistOrder  = cachedOrders![jmcAlbumArtistCachedOrderName]
+        reorderForTracks(tracks, cachedOrder: albumArtistOrder!)
+        for track in tracks {
+            moveFileAfterEdit(track)
+        }
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Album Artist")
+    }
+    
+    func albumEdited(tracks: [Track], value: String) {
+        managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        managedContext.undoManager?.beginUndoGrouping()
+        editAlbum(tracks, albumName: value)
+        let albumOrder = cachedOrders![jmcAlbumCachedOrderName]
+        reorderForTracks(tracks, cachedOrder: albumOrder!)
+        for track in tracks {
+            moveFileAfterEdit(track)
+        }
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Album")
+    }
+    
+    func trackNumEdited(tracks: [Track], value: Int) {
+        managedContext.undoManager?.beginUndoGrouping()
+        managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        editTrackNum(tracks, num: value)
+        for track in tracks {
+            moveFileAfterEdit(track)
+        }
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Track Number")
+    }
+    
+    func trackNumOfEdited(tracks: [Track], value: Int) {
+        managedContext.undoManager?.beginUndoGrouping()
+        editTrackNumOf(tracks, num: value)
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Total Tracks")
+    }
+    
+    func discNumEdited(tracks: [Track], value: Int) {
+        managedContext.undoManager?.beginUndoGrouping()
+        managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        editDiscNum(tracks, num: value)
+        for track in tracks {
+            moveFileAfterEdit(track)
+        }
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Disc Number")
+    }
+    
+    func totalDiscsEdited(tracks: [Track], value: Int) {
+        managedContext.undoManager?.beginUndoGrouping()
+        editDiscNumOf(tracks, num: value)
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Total Discs")
+    }
+    
+    func composerEdited(tracks: [Track], value: String) {
+        managedContext.undoManager?.beginUndoGrouping()
+        editComposer(tracks, composerName: value)
+        let composerOrder = cachedOrders![jmcComposerCachedOrderName]
+        reorderForTracks(tracks, cachedOrder: composerOrder!)
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Composer")
+    }
+    
+    func genreEdited(tracks: [Track], value: String) {
+        managedContext.undoManager?.beginUndoGrouping()
+        editGenre(tracks, genre: value)
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Genre")
+    }
+    
+    func compilationChanged(tracks: [Track], value: Bool) {
+        managedContext.undoManager?.beginUndoGrouping()
+        managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        editIsComp(tracks, isComp: value)
+        for track in tracks {
+            moveFileAfterEdit(track)
+        }
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Compilation")
+    }
+    
+    func commentsEdited(tracks: [Track], value: String) {
+        managedContext.undoManager?.beginUndoGrouping()
+        editComments(tracks, comments: value)
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Comments")
     }
     
     func batchMoveTracks(tracks: [Track], visualUpdateHandler: ProgressBarController?) {
@@ -926,7 +1033,7 @@ class DatabaseManager: NSObject {
         }
         if moveFileForNetworkTrackToAppropriateLocationWithData(newTrack, data: data) == true {
             for order in cachedOrders! {
-                reorderForTracks([newTrack], cachedOrder: order)
+                reorderForTracks([newTrack], cachedOrder: order.value)
             }
         } else {
             managedContext.delete(newTrack)

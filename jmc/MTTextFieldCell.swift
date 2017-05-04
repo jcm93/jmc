@@ -11,7 +11,6 @@ import Cocoa
 class MTTextFieldCell: NSTextFieldCell {
     
     override func titleRect(forBounds rect: NSRect) -> NSRect {
-        let rectWithConstraints = super.titleRect(forBounds: rect)
         let newRect = NSRect(x: rect.origin.x, y: rect.origin.y + 1.0, width: rect.width - 4.0, height: rect.height)
         return newRect
     }
@@ -36,6 +35,8 @@ class MTTextFieldCell: NSTextFieldCell {
             if let actualValue = newValue as? (Any?, Bool) {
                 self.isEnabled = actualValue.1
                 super.objectValue = actualValue.0
+            } else {
+                super.objectValue = newValue
             }
         }
         get {

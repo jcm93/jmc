@@ -101,6 +101,11 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         return (value, status)
     }
     
+    func tableView(_ tableView: NSTableView, setObjectValue object: Any?, for tableColumn: NSTableColumn?, row: Int) {
+        print("set object value for table column called")
+        //todo get property to edit from tableColumn and call edit function
+    }
+    
     func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
         print("sort descriptors did change called")
         let archivedSortDescriptor = NSKeyedArchiver.archivedData(withRootObject: tableView.sortDescriptors)

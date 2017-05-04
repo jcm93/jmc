@@ -80,125 +80,51 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate {
     dynamic var currentTrack: Track?
     
     @IBAction func nameEdited(_ sender: Any) {
-        managedContext.undoManager?.beginUndoGrouping()
-        managedContext.undoManager!.registerUndo(withTarget: self.databaseManager, selector: #selector(self.databaseManager.undoOperationThatMovedFiles), object: self.selectedTracks!)
-        editName(self.selectedTracks, name: self.nameField.stringValue)
-        let nameOrder = cachedOrders!["Name"]
-        reorderForTracks(self.selectedTracks!, cachedOrder: nameOrder!)
-        for track in self.selectedTracks! {
-            databaseManager.moveFileAfterEdit(track)
-        }
-        managedContext.undoManager?.endUndoGrouping()
-        managedContext.undoManager?.setActionName("Edit Name")
+        databaseManager.nameEdited(tracks: self.selectedTracks!, value: self.nameField.stringValue)
     }
     
     @IBAction func artistEdited(_ sender: Any) {
-        managedContext.undoManager?.beginUndoGrouping()
-        managedContext.undoManager!.registerUndo(withTarget: self.databaseManager, selector: #selector(self.databaseManager.undoOperationThatMovedFiles), object: self.selectedTracks!)
-        editArtist(self.selectedTracks, artistName: self.artistField.stringValue)
-        let artistOrder = cachedOrders!["Artist"]
-        reorderForTracks(self.selectedTracks!, cachedOrder: artistOrder!)
-        for track in self.selectedTracks! {
-            databaseManager.moveFileAfterEdit(track)
-        }
-        managedContext.undoManager?.endUndoGrouping()
-        managedContext.undoManager?.setActionName("Edit Artist")
+        databaseManager.artistEdited(tracks: self.selectedTracks!, value: self.artistField.stringValue)
     }
     
     @IBAction func albumArtistEdited(_ sender: Any) {
-        managedContext.undoManager?.beginUndoGrouping()
-        managedContext.undoManager!.registerUndo(withTarget: self.databaseManager, selector: #selector(self.databaseManager.undoOperationThatMovedFiles), object: self.selectedTracks!)
-        editAlbumArtist(self.selectedTracks, albumArtistName: self.albumArtistField.stringValue)
-        let albumArtistOrder  = cachedOrders![jmcAlbumArtistCachedOrderName]
-        reorderForTracks(self.selectedTracks!, cachedOrder: albumArtistOrder!)
-        for track in self.selectedTracks! {
-            databaseManager.moveFileAfterEdit(track)
-        }
-        managedContext.undoManager?.endUndoGrouping()
-        managedContext.undoManager?.setActionName("Edit Album Artist")
+        databaseManager.albumArtistEdited(tracks: self.selectedTracks!, value: self.albumArtistField.stringValue)
     }
     
     @IBAction func albumEdited(_ sender: Any) {
-        managedContext.undoManager!.registerUndo(withTarget: self.databaseManager, selector: #selector(self.databaseManager.undoOperationThatMovedFiles), object: self.selectedTracks!)
-        managedContext.undoManager?.beginUndoGrouping()
-        editAlbum(self.selectedTracks, albumName: self.albumField.stringValue)
-        let albumOrder = cachedOrders![jmcAlbumCachedOrderName]
-        reorderForTracks(self.selectedTracks!, cachedOrder: albumOrder!)
-        for track in self.selectedTracks! {
-            databaseManager.moveFileAfterEdit(track)
-        }
-        managedContext.undoManager?.endUndoGrouping()
-        managedContext.undoManager?.setActionName("Edit Album")
+        databaseManager.albumEdited(tracks: self.selectedTracks!, value: self.albumField.stringValue)
     }
     
     @IBAction func trackNumEdited(_ sender: Any) {
-        managedContext.undoManager!.registerUndo(withTarget: self.databaseManager, selector: #selector(self.databaseManager.undoOperationThatMovedFiles), object: self.selectedTracks!)
-        managedContext.undoManager?.beginUndoGrouping()
-        editTrackNum(self.selectedTracks, num: self.trackNumField.integerValue)
-        for track in self.selectedTracks! {
-            databaseManager.moveFileAfterEdit(track)
-        }
-        managedContext.undoManager?.endUndoGrouping()
-        managedContext.undoManager?.setActionName("Edit Track Number")
+        databaseManager.trackNumEdited(tracks: self.selectedTracks!, value: self.trackNumField.integerValue)
     }
     
     @IBAction func trackNumOfEdited(_ sender: Any) {
-        managedContext.undoManager?.beginUndoGrouping()
-        editTrackNumOf(self.selectedTracks, num: self.trackNumOfField.integerValue)
-        managedContext.undoManager?.endUndoGrouping()
-        managedContext.undoManager?.setActionName("Edit Total Tracks")
+        databaseManager.trackNumOfEdited(tracks: self.selectedTracks!, value: self.trackNumOfField.integerValue)
     }
     
     @IBAction func discNumEdited(_ sender: Any) {
-        managedContext.undoManager!.registerUndo(withTarget: self.databaseManager, selector: #selector(self.databaseManager.undoOperationThatMovedFiles), object: self.selectedTracks!)
-        managedContext.undoManager?.beginUndoGrouping()
-        editDiscNum(self.selectedTracks, num: self.discNumField.integerValue)
-        for track in self.selectedTracks! {
-            databaseManager.moveFileAfterEdit(track)
-        }
-        managedContext.undoManager?.endUndoGrouping()
-        managedContext.undoManager?.setActionName("Edit Disc Number")
+        databaseManager.discNumEdited(tracks: self.selectedTracks!, value: self.discNumField.integerValue)
     }
     
     @IBAction func totalDiscsEdited(_ sender: Any) {
-        managedContext.undoManager?.beginUndoGrouping()
-        editDiscNumOf(self.selectedTracks, num: self.discNumOfField.integerValue)
-        managedContext.undoManager?.endUndoGrouping()
-        managedContext.undoManager?.setActionName("Edit Total Discs")
+        databaseManager.totalDiscsEdited(tracks: self.selectedTracks!, value: self.discNumOfField.integerValue)
     }
     
     @IBAction func composerEdited(_ sender: Any) {
-        managedContext.undoManager?.beginUndoGrouping()
-        editComposer(self.selectedTracks, composerName: self.composerField.stringValue)
-        let composerOrder = cachedOrders![jmcComposerCachedOrderName]
-        reorderForTracks(self.selectedTracks!, cachedOrder: composerOrder!)
-        managedContext.undoManager?.endUndoGrouping()
-        managedContext.undoManager?.setActionName("Edit Composer")
+        databaseManager.composerEdited(tracks: self.selectedTracks!, value: self.composerField.stringValue)
     }
     
     @IBAction func genreEdited(_ sender: Any) {
-        managedContext.undoManager?.beginUndoGrouping()
-        editGenre(self.selectedTracks, genre: self.genreField.stringValue)
-        managedContext.undoManager?.endUndoGrouping()
-        managedContext.undoManager?.setActionName("Edit Genre")
+        databaseManager.genreEdited(tracks: self.selectedTracks!, value: self.genreField.stringValue)
     }
     
     @IBAction func compilationChanged(_ sender: Any) {
-        managedContext.undoManager?.beginUndoGrouping()
-        managedContext.undoManager!.registerUndo(withTarget: self.databaseManager, selector: #selector(self.databaseManager.undoOperationThatMovedFiles), object: self.selectedTracks!)
-        editIsComp(self.selectedTracks!, isComp: self.compilationButton.state != 0)
-        for track in self.selectedTracks! {
-            databaseManager.moveFileAfterEdit(track)
-        }
-        managedContext.undoManager?.endUndoGrouping()
-        managedContext.undoManager?.setActionName("Edit Compilation")
+        databaseManager.compilationChanged(tracks: self.selectedTracks!, value: self.compilationButton.state != 0)
     }
     
     @IBAction func commentsEdited(_ sender: Any) {
-        managedContext.undoManager?.beginUndoGrouping()
-        editComments(self.selectedTracks!, comments: self.commentsField.stringValue)
-        managedContext.undoManager?.endUndoGrouping()
-        managedContext.undoManager?.setActionName("Edit Comments")
+        databaseManager.commentsEdited(tracks: self.selectedTracks!, value: self.commentsField.stringValue)
     }
     
     @IBAction func releaseDateChecked(_ sender: AnyObject) {

@@ -473,6 +473,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         print("view did load")
         trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .new, context: &my_context)
         trackViewArrayController.tableViewController = self as! LibraryTableViewControllerCellBased
+        tableView.target = self
         tableView.doubleAction = #selector(tableViewDoubleClick)
         columnVisibilityMenu.delegate = self
         //self.initializeColumnVisibilityMenu(self.tableView)

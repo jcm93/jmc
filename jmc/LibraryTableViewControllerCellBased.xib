@@ -126,7 +126,7 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" title="Text Cell" id="c2u-8I-wVk" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" alignment="right" title="Text Cell" id="c2u-8I-wVk" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" groupingSize="0" minimumIntegerDigits="0" maximumIntegerDigits="42" id="Wah-f4-Cjf" customClass="TimeFormatter" customModule="jmc" customModuleProvider="target"/>
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -163,7 +163,7 @@
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="album_order"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="file_kind" width="90" minWidth="10" maxWidth="3.4028234663852886e+38" id="5dZ-BN-JWr" userLabel="Kind">
+                                    <tableColumn identifier="file_kind" editable="NO" width="90" minWidth="10" maxWidth="3.4028234663852886e+38" id="5dZ-BN-JWr" userLabel="Kind">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Kind">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -177,7 +177,7 @@
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="kind_order"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="bit_rate" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="LHQ-sH-EgW" userLabel="Bit Rate">
+                                    <tableColumn identifier="bit_rate" editable="NO" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="LHQ-sH-EgW" userLabel="Bit Rate">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Bit Rate">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -192,7 +192,7 @@
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.bit_rate"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="size" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="fbs-bA-3rx">
+                                    <tableColumn identifier="size" editable="NO" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="fbs-bA-3rx">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Size">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -222,7 +222,7 @@
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.track_num"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="date_added" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="Ruz-xG-tmM">
+                                    <tableColumn identifier="date_added" editable="NO" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="Ruz-xG-tmM">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Added">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -251,7 +251,7 @@
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.genre"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="date_modified" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="AC9-ib-KCM">
+                                    <tableColumn identifier="date_modified" editable="NO" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="AC9-ib-KCM">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Modified">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -266,7 +266,7 @@
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.date_modified"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="date_released" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="0XQ-xd-Lm9">
+                                    <tableColumn identifier="date_released" editable="NO" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="0XQ-xd-Lm9">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Released">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -324,7 +324,7 @@
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.disc_number"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="equalizer_preset" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="fx4-cm-3X9" userLabel="Equalizer">
+                                    <tableColumn identifier="equalizer_preset" editable="NO" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="fx4-cm-3X9" userLabel="Equalizer">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Equalizer">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -338,7 +338,7 @@
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.equalizer_preset"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="date_last_played" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="das-ju-aG7">
+                                    <tableColumn identifier="date_last_played" editable="NO" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="das-ju-aG7">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Last Played">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -353,7 +353,7 @@
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.date_last_played"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="date_last_skipped" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="6aD-ae-eFf">
+                                    <tableColumn identifier="date_last_skipped" editable="NO" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="6aD-ae-eFf">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Last Skipped">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -397,7 +397,7 @@
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.movement_number"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="play_count" width="40" minWidth="10" maxWidth="3.4028234663852886e+38" id="cCk-8Q-he4">
+                                    <tableColumn identifier="play_count" editable="NO" width="40" minWidth="10" maxWidth="3.4028234663852886e+38" id="cCk-8Q-he4">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Plays">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -412,7 +412,7 @@
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.play_count"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="rating" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="yfD-2g-r2o">
+                                    <tableColumn identifier="rating" editable="NO" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="yfD-2g-r2o">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Rating">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -427,7 +427,7 @@
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.rating"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="sample_rate" width="80" minWidth="10" maxWidth="3.4028234663852886e+38" id="JpS-3R-m2w">
+                                    <tableColumn identifier="sample_rate" editable="NO" width="80" minWidth="10" maxWidth="3.4028234663852886e+38" id="JpS-3R-m2w">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Sample Rate">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -442,7 +442,7 @@
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.sample_rate"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="skip_count" width="40" minWidth="10" maxWidth="3.4028234663852886e+38" id="8SU-in-oF0">
+                                    <tableColumn identifier="skip_count" editable="NO" width="40" minWidth="10" maxWidth="3.4028234663852886e+38" id="8SU-in-oF0">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Skips">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
