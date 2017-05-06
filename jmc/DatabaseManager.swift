@@ -290,6 +290,10 @@ class DatabaseManager: NSObject {
         }
     }
     
+    func removeNetworkedLibrary(_ library: Library) {
+        removeSource(library: library)
+    }
+    
     func removeSource(library: Library) {
         guard library != globalRootLibrary else {return}
         for track in (library.tracks! as! Set<Track>) {
