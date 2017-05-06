@@ -631,6 +631,18 @@ func editName(_ tracks: [Track]?, name: String) {
     }
 }
 
+func editMovementName(_ tracks: [Track]?, name: String) {
+    for track in tracks! {
+        track.movement_name = name
+    }
+}
+
+func editMovementNum(_ tracks: [Track]?, num: Int) {
+    for track in tracks! {
+        track.movement_number = num as NSNumber
+    }
+}
+
 func addIDsAndMakeNonNetwork(_ track: Track) {
     let library = {() -> Library? in
         let fetchReq = NSFetchRequest<NSFetchRequestResult>(entityName: "Library")

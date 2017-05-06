@@ -23,7 +23,6 @@ class SourceListItem: NSManagedObject {
         return dict
     }
     
-    var node: SourceListNode?
     var playOrderObject: PlaylistOrderObject?
     var tableViewController: LibraryTableViewController?
 }

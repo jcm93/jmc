@@ -59,6 +59,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     @IBOutlet weak var searchField: NSSearchField!
     @IBOutlet var artCollectionArrayController: NSArrayController!
     @IBOutlet weak var infoField: NSTextField!
+    @IBOutlet weak var barViewToggle: NSView!
     
     //subview controllers
     var sourceListViewController: SourceListViewController?
@@ -607,6 +608,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         self.artistAlbumLabel.stringValue = ""
         self.durationLabel.stringValue = ""
         self.currentTimeLabel.stringValue = ""
+        barViewToggle.isHidden = true
     }
     
     func initializeInterfaceForNewTrack() {
@@ -626,6 +628,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
                 aa_string += (" - " + (the_track.album! as Album).name!)
             }
         }
+        barViewToggle.isHidden = true
         timer?.invalidate()
         theBox.contentView!.isHidden = false
         songNameLabel.stringValue = name_string
@@ -766,6 +769,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             else if keyPath! == "done_playing" {
                 print("controller detects finished playing")
                 cleanUpBar()
+                trackQueueViewController?.cleanUp()
             }
             else if keyPath! == "sortDescriptors" {
                 self.trackQueueViewController!.modifyPlayOrderForSortDescriptorChange()
@@ -877,6 +881,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             self.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
             theBox.fillColor = NSColor(patternImage: NSImage(named: "Inverted Gradient")!)
         }
+        barViewToggle.isHidden = true
         //self.window?.invalidateShadow()
     }
 }

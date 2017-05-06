@@ -10,7 +10,7 @@ import Cocoa
 
 class SourceListCellView: NSTableCellView {
     
-    var node: SourceListNode?
+    var node: SourceListItem?
 
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)

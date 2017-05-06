@@ -104,6 +104,37 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     func tableView(_ tableView: NSTableView, setObjectValue object: Any?, for tableColumn: NSTableColumn?, row: Int) {
         print("set object value for table column called")
         //todo get property to edit from tableColumn and call edit function
+        switch tableColumn! {
+        case tableViewController!.nameColumn:
+            mainWindow?.delegate?.databaseManager?.nameEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
+        case tableViewController!.artistColumn:
+            mainWindow?.delegate?.databaseManager?.artistEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
+        case tableViewController!.albumColumn:
+            mainWindow?.delegate?.databaseManager?.albumEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
+        case tableViewController!.trackNumColumn:
+            mainWindow?.delegate?.databaseManager?.trackNumEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as? Int ?? 0)
+        case tableViewController!.commentsColumn:
+            mainWindow?.delegate?.databaseManager?.commentsEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
+        case tableViewController!.composerColumn:
+            mainWindow?.delegate?.databaseManager?.composerEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
+        case tableViewController!.discNumberColumn:
+            mainWindow?.delegate?.databaseManager?.discNumEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as? Int ?? 0)
+        case tableViewController!.movementNameColumn:
+            mainWindow?.delegate?.databaseManager?.movementNameEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
+        case tableViewController!.movementNumColumn:
+            mainWindow?.delegate?.databaseManager?.movementNumEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as? Int ?? 0)
+        case tableViewController!.sortAlbumColumn:
+            mainWindow?.delegate?.databaseManager?.sortAlbumEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
+        case tableViewController!.sortAlbumArtistColumn:
+            mainWindow?.delegate?.databaseManager?.sortAlbumArtistEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
+        case tableViewController!.sortArtistColumn:
+            mainWindow?.delegate?.databaseManager?.sortArtistEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
+        case tableViewController!.sortComposerColumn:
+            mainWindow?.delegate?.databaseManager?.sortComposerEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
+        case tableViewController!.sortNameColumn:
+            mainWindow?.delegate?.databaseManager?.sortNameEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
+        default: break
+        }
     }
     
     func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {

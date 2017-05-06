@@ -11,7 +11,7 @@
 import Cocoa
 import CoreServices
 
-class TagEditorWindow: NSWindowController, NSTextFieldDelegate {
+class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate {
     
     lazy var managedContext: NSManagedObjectContext = {
         return (NSApplication.shared().delegate
@@ -78,6 +78,10 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate {
     //mark the rest
     var selectedTracks: [Track]?
     dynamic var currentTrack: Track?
+    
+    func windowWillReturnUndoManager(_ window: NSWindow) -> UndoManager? {
+        return managedContext.undoManager
+    }
     
     @IBAction func nameEdited(_ sender: Any) {
         databaseManager.nameEdited(tracks: self.selectedTracks!, value: self.nameField.stringValue)

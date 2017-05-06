@@ -72,9 +72,6 @@ class ImportWindowController: NSWindowController {
         librarySourceListItem.library = library
         librarySourceListItem.name = library.name
         globalRootLibrarySourceListItem!.addToChildren(librarySourceListItem)
-        let newNode = SourceListNode(item: librarySourceListItem)
-        newNode.parent = globalRootLibrarySourceListItem!.node
-        globalRootLibrarySourceListItem!.node!.children.append(newNode)
 
         appDelegate.iTunesParser = self.iTunesParser
         appDelegate.initializeProgressBarWindow()

@@ -15,6 +15,7 @@
                 <outlet property="artToggle" destination="aLT-7j-MYS" id="GYM-BS-7lJ"/>
                 <outlet property="artistAlbumLabel" destination="WNx-p0-gWl" id="MpA-ce-7KD"/>
                 <outlet property="artworkTargetView" destination="M4o-nI-Oef" id="yz5-8p-vw5"/>
+                <outlet property="barViewToggle" destination="d8i-aO-ImS" id="aEJ-fr-bck"/>
                 <outlet property="currentTimeLabel" destination="Adc-jG-fc7" id="q4N-D3-xDy"/>
                 <outlet property="durationLabel" destination="R9m-ID-EYY" id="iGY-Vm-qjm"/>
                 <outlet property="infoField" destination="FOU-Bi-82q" id="Fss-pL-ynq"/>
@@ -43,30 +44,30 @@
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="0.0" y="341" width="1683" height="1050"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
-            <view key="contentView" misplaced="YES" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="1751" height="1050"/>
+            <view key="contentView" id="se5-gp-TjO">
+                <rect key="frame" x="0.0" y="0.0" width="1683" height="1050"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <splitView arrangesAllSubviews="NO" autosaveName="Parent Split View" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r3P-eO-TmU">
-                        <rect key="frame" x="0.0" y="36" width="1751" height="954"/>
+                        <rect key="frame" x="0.0" y="36" width="1683" height="954"/>
                         <subviews>
                             <splitView fixedFrame="YES" arrangesAllSubviews="NO" autosaveName="Source Area Split View" dividerStyle="thin" id="cpq-tS-fYo" userLabel="Source Area Split View">
-                                <rect key="frame" x="0.0" y="0.0" width="250" height="954"/>
+                                <rect key="frame" x="0.0" y="0.0" width="251" height="954"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <box verticalHuggingPriority="750" misplaced="YES" boxType="separator" id="NCt-3z-jDe">
-                                        <rect key="frame" x="0.0" y="-2" width="250" height="5"/>
+                                        <rect key="frame" x="0.0" y="-2" width="251" height="5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" id="Cl8-AN-f4P"/>
                                         </constraints>
                                     </box>
                                     <customView fixedFrame="YES" id="NBm-y3-IWU" userLabel="Source List Target View">
-                                        <rect key="frame" x="0.0" y="2" width="250" height="704"/>
+                                        <rect key="frame" x="0.0" y="2" width="251" height="704"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     </customView>
                                     <customView misplaced="YES" id="M4o-nI-Oef" userLabel="Artwork Target View">
-                                        <rect key="frame" x="0.0" y="707" width="250" height="247"/>
+                                        <rect key="frame" x="0.0" y="707" width="251" height="247"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="M4o-nI-Oef" secondAttribute="height" multiplier="1:1" id="MEG-4N-o0r"/>
@@ -87,11 +88,11 @@
                                 </holdingPriorities>
                             </splitView>
                             <splitView fixedFrame="YES" placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="568" arrangesAllSubviews="NO" autosaveName="Library Split View" dividerStyle="thin" id="wUo-rb-c1E" userLabel="Library Split View">
-                                <rect key="frame" x="251" y="0.0" width="1247" height="954"/>
+                                <rect key="frame" x="252" y="0.0" width="1177" height="954"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </splitView>
                             <customView fixedFrame="YES" id="267-Gg-sLE">
-                                <rect key="frame" x="1499" y="0.0" width="252" height="954"/>
+                                <rect key="frame" x="1430" y="0.0" width="253" height="954"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </customView>
                         </subviews>
@@ -105,7 +106,7 @@
                         <rect key="frame" x="353" y="378" width="96" height="5"/>
                     </box>
                     <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="50" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" misplaced="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wUv-cJ-CeL">
-                        <rect key="frame" x="98" y="1006" width="1626" height="53"/>
+                        <rect key="frame" x="98" y="1006" width="1558" height="53"/>
                         <subviews>
                             <stackView distribution="fillProportionally" orientation="horizontal" alignment="centerY" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Y7p-Ma-CIP">
                                 <rect key="frame" x="0.0" y="13" width="122" height="28"/>
@@ -162,7 +163,7 @@
                                 </customSpacing>
                             </stackView>
                             <slider verticalHuggingPriority="750" horizontalCompressionResistancePriority="500" translatesAutoresizingMaskIntoConstraints="NO" id="ELy-ib-2qL">
-                                <rect key="frame" x="170" y="17" width="124" height="19"/>
+                                <rect key="frame" x="170" y="17" width="211" height="19"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="C6a-At-bc6"/>
                                     <constraint firstAttribute="width" priority="150" constant="200" id="afQ-27-aRs"/>
@@ -173,19 +174,19 @@
                                 </connections>
                             </slider>
                             <box wantsLayer="YES" boxType="secondary" borderType="bezel" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="rTW-GT-cjN">
-                                <rect key="frame" x="339" y="-4" width="949" height="59"/>
+                                <rect key="frame" x="426" y="-4" width="706" height="59"/>
                                 <view key="contentView" wantsLayer="YES" id="7Pq-FN-rew" userLabel="Box View">
-                                    <rect key="frame" x="3" y="3" width="943" height="53"/>
+                                    <rect key="frame" x="3" y="3" width="700" height="53"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <stackView distribution="fillProportionally" orientation="horizontal" alignment="top" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wpf-eB-C6g">
-                                            <rect key="frame" x="0.0" y="0.0" width="943" height="53"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="700" height="53"/>
                                             <subviews>
                                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="zmB-ix-rEk">
-                                                    <rect key="frame" x="0.0" y="0.0" width="928" height="53"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="700" height="53"/>
                                                     <subviews>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WDF-BI-DbQ">
-                                                            <rect key="frame" x="444" y="32" width="41" height="17"/>
+                                                            <rect key="frame" x="330" y="32" width="41" height="17"/>
                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Label" placeholderString="PLacehohadjkldr" usesSingleLineMode="YES" id="aIO-ox-2oB">
                                                                 <font key="font" metaFont="system"/>
                                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -193,7 +194,7 @@
                                                             </textFieldCell>
                                                         </textField>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WNx-p0-gWl">
-                                                            <rect key="frame" x="446" y="16" width="37" height="14"/>
+                                                            <rect key="frame" x="332" y="16" width="37" height="14"/>
                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Label" usesSingleLineMode="YES" id="Ps7-RC-7YD">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -212,10 +213,10 @@
                                                             </textFieldCell>
                                                         </textField>
                                                         <customView autoresizesSubviews="NO" focusRingType="none" appearanceType="aqua" translatesAutoresizingMaskIntoConstraints="NO" id="ErT-xb-uP3" customClass="ProgressBarView" customModule="jmc" customModuleProvider="target">
-                                                            <rect key="frame" x="2" y="0.0" width="924" height="13"/>
+                                                            <rect key="frame" x="2" y="0.0" width="696" height="13"/>
                                                             <subviews>
                                                                 <progressIndicator wantsLayer="YES" maxValue="100" displayedWhenStopped="NO" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="c8A-nk-1SH">
-                                                                    <rect key="frame" x="0.0" y="3" width="924" height="8"/>
+                                                                    <rect key="frame" x="0.0" y="3" width="696" height="8"/>
                                                                 </progressIndicator>
                                                             </subviews>
                                                             <constraints>
@@ -227,7 +228,7 @@
                                                             </constraints>
                                                         </customView>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R9m-ID-EYY">
-                                                            <rect key="frame" x="871" y="13" width="53" height="11"/>
+                                                            <rect key="frame" x="643" y="13" width="53" height="11"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="49" id="4am-RW-lR0"/>
                                                             </constraints>
@@ -255,8 +256,8 @@
                                                         <constraint firstAttribute="bottom" secondItem="ErT-xb-uP3" secondAttribute="bottom" id="zry-e8-Q8k"/>
                                                     </constraints>
                                                 </customView>
-                                                <customView translatesAutoresizingMaskIntoConstraints="NO" id="d8i-aO-ImS">
-                                                    <rect key="frame" x="928" y="0.0" width="15" height="53"/>
+                                                <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d8i-aO-ImS">
+                                                    <rect key="frame" x="0.0" y="0.0" width="15" height="53"/>
                                                     <subviews>
                                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="viN-xV-kI3">
                                                             <rect key="frame" x="0.0" y="27" width="17" height="27"/>
@@ -313,7 +314,7 @@
                                 </constraints>
                             </box>
                             <searchField wantsLayer="YES" verticalHuggingPriority="750" horizontalCompressionResistancePriority="500" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="S7Y-RM-UHH">
-                                <rect key="frame" x="1335" y="16" width="291" height="22"/>
+                                <rect key="frame" x="1179" y="16" width="379" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="width" priority="100" constant="300" id="OlZ-nl-m1p"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="190" id="eDT-FI-f4Q"/>
@@ -376,7 +377,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gzN-xP-Utz" userLabel="Queue Button">
-                        <rect key="frame" x="1688" y="4" width="44" height="25"/>
+                        <rect key="frame" x="1620" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="hy6-BX-4Jm"/>
                         </constraints>
@@ -526,9 +527,9 @@
         <image name="NSRevealFreestandingTemplate" width="14" height="14"/>
         <image name="NSSkipAheadTemplate" width="27" height="15"/>
         <image name="NSSkipBackTemplate" width="27" height="15"/>
-        <image name="NSTouchBarGoDownTemplate" width="128" height="128"/>
-        <image name="NSTouchBarGoUpTemplate" width="128" height="128"/>
-        <image name="NSTouchBarUserTemplate" width="128" height="128"/>
+        <image name="NSTouchBarGoDownTemplate" width="16" height="30"/>
+        <image name="NSTouchBarGoUpTemplate" width="16" height="30"/>
+        <image name="NSTouchBarUserTemplate" width="17" height="30"/>
         <image name="Queue" width="200" height="231"/>
         <image name="Queue Alternate" width="200" height="231"/>
         <image name="Repeat" width="176" height="214"/>

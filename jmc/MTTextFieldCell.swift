@@ -34,6 +34,9 @@ class MTTextFieldCell: NSTextFieldCell {
         set(newValue) {
             if let actualValue = newValue as? (Any?, Bool) {
                 self.isEnabled = actualValue.1
+                if self.isEnabled == false {
+                    self.isEditable = false
+                }
                 super.objectValue = actualValue.0
             } else {
                 super.objectValue = newValue

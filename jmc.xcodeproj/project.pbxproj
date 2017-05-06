@@ -57,7 +57,6 @@
 		0D51C8B21EB01731002F6182 /* JMTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C8B11EB01731002F6182 /* JMTabView.swift */; };
 		0D58F7491D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */; };
 		0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */; };
-		0D5A55E71DDAA80F00E46F08 /* sourceListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5A55E61DDAA80F00E46F08 /* sourceListDataSource.swift */; };
 		0D5A55E91DDBE16600E46F08 /* SourceListCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */; };
 		0D606EF61E7B4C21007AE152 /* FileBufferer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D606EF51E7B4C21007AE152 /* FileBufferer.swift */; };
 		0D606EF91E7B4DB0007AE152 /* AVAudioFileBufferer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */; };
@@ -257,7 +256,6 @@
 		0D51C8B11EB01731002F6182 /* JMTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTabView.swift; sourceTree = "<group>"; };
 		0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
 		0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListThatYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
-		0D5A55E61DDAA80F00E46F08 /* sourceListDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sourceListDataSource.swift; sourceTree = "<group>"; };
 		0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListCellView.swift; sourceTree = "<group>"; };
 		0D606EF51E7B4C21007AE152 /* FileBufferer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBufferer.swift; sourceTree = "<group>"; };
 		0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVAudioFileBufferer.swift; sourceTree = "<group>"; };
@@ -486,7 +484,6 @@
 				0DC2E8F61E01E47900671D83 /* SpecialScrollView.swift */,
 				0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */,
 				0D76F6AB1D28581900C6E70F /* DragAndDropTreeController.swift */,
-				0D5A55E61DDAA80F00E46F08 /* sourceListDataSource.swift */,
 				0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */,
 				0DB8EFE91DC4FC4D00009900 /* MainTableViewDataSource.swift */,
 				0DCB81711DCAA45C006FBA9D /* MainTableViewDelegate.swift */,
@@ -1112,7 +1109,6 @@
 				0D299B131DF10FFF0009CF7A /* SourceListViewController.swift in Sources */,
 				0DD7D6DD1D3F3E270035BAD8 /* AlbumArtArrayController.swift in Sources */,
 				0DE486861EA58C67009B226B /* JMPathControl.swift in Sources */,
-				0D5A55E71DDAA80F00E46F08 /* sourceListDataSource.swift in Sources */,
 				0DC84C601DBAD0C100E8877C /* NewCachedOrder.swift in Sources */,
 				0D0C2AA71E88D8DA00CA82C3 /* MTImageCell.swift in Sources */,
 				0D447BB91EB2B73F00372A80 /* JMTextField.swift in Sources */,

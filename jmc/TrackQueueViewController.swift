@@ -236,6 +236,11 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         tableView?.reloadData()
     }
     
+    func cleanUp() {
+        trackQueue[currentTrackIndex!].viewType = .pastTrack
+        self.reloadData()
+    }
+    
     func uninitializeTrackQueue() {
         trackQueue.remove(at: 0)
         currentTrackIndex = nil
@@ -583,6 +588,24 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         //print(self.trackQueue)
         //print(self.mainWindowController?.trackQueue)
         tableView.reloadData()
+    }
+    
+    func refreshForChangedData() {
+        var deletedIndices = [Int]()
+        for (index, view) in self.trackQueue.enumerated() {
+            if view.track?.isDeleted == true {
+                deletedIndices.append(index)
+                if self.currentTrackIndex != nil && index < self.currentTrackIndex {
+                    self.currentTrackIndex! -= 1
+                    self.globalOffset -= 1
+                    self.numPastTracks -= 1
+                }
+            }
+        }
+        for index in deletedIndices {
+            self.trackQueue.remove(at: index)
+        }
+        self.reloadData()
     }
     
     func numberOfRows(in tableView: NSTableView) -> Int {

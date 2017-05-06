@@ -123,12 +123,12 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
         askPeerForSong(peer, id: id)
     }
     
-    func getDataForPlaylist(_ item: SourceListNode) {
+    func getDataForPlaylist(_ item: SourceListItem) {
         print("about to ask peer for playlist")
-        let peer = item.item.library!.peer as! MCPeerID
+        let peer = item.library!.peer as! MCPeerID
         let visibleColumns = UserDefaults.standard.object(forKey: DEFAULTS_SAVED_COLUMNS_STRING) as! NSDictionary
         let visibleColumnsArray = visibleColumns.allKeys(for: false) as! [String]
-        let id = item.item.playlist!.id! as Int
+        let id = item.playlist!.id! as Int
         askPeerForPlaylist(peer, id: id, visibleColumns: visibleColumnsArray)
     }
     
