@@ -171,7 +171,7 @@ class DatabaseManager: NSObject {
         print("moving file after edit")
         print("current track location: \(track.location)")
         let organizationType = track.library?.organization_type as! Int
-        guard organizationType != NO_ORGANIZATION_TYPE else {managedContext.processPendingChanges(); managedContext.undoManager?.enableUndoRegistration(); return}
+        guard organizationType != NO_ORGANIZATION_TYPE else {return}
         let artistFolderName = track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING
         let albumFolderName = track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING
         let trackName = validateStringForFilename(formFilenameForTrack(track, url: nil))
@@ -1028,7 +1028,7 @@ class DatabaseManager: NSObject {
             case "date_modified":
                 newTrack.date_modified = dateFormatter.date(from: trackMetadata["date_modified"] as! String) as! NSDate
             case "date_released":
-                newTrack.album?.release_date = dateFormatter.date(from: trackMetadata["date_released"] as! String)
+                newTrack.album?.release_date = dateFormatter.date(from: trackMetadata["date_released"] as! String) as! NSDate
                 newTrackView.release_date_order = trackMetadata["release_date_order"] as? Int as NSNumber?
             case "comments":
                 newTrack.comments = trackMetadata["comments"] as? String
@@ -1386,7 +1386,7 @@ class DatabaseManager: NSObject {
                 case "date_modified":
                     newTrack.date_modified = dateFormatter.date(from: track["date_modified"] as! String) as! NSDate
                 case "date_released":
-                    newTrack.album?.release_date = dateFormatter.date(from: track["date_released"] as! String)
+                    newTrack.album?.release_date = dateFormatter.date(from: track["date_released"] as! String) as! NSDate
                     newTrackView.release_date_order = track["release_date_order"] as? Int as NSNumber?
                 case "comments":
                     newTrack.comments = track["comments"] as? String

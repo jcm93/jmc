@@ -5,7 +5,7 @@
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_compilation" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="release_date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="track_count" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="album_artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="albums" inverseEntity="Artist" syncable="YES"/>
@@ -31,7 +31,7 @@
     <entity name="Artist" representedClassName=".Artist" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
         <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="albums" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Album" inverseName="album_artist" inverseEntity="Album" syncable="YES"/>
         <relationship name="composers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Composer" inverseName="artists" inverseEntity="Composer" syncable="YES"/>
         <relationship name="properties" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Property" inverseName="artist" inverseEntity="Property" syncable="YES"/>
@@ -47,7 +47,7 @@
     <entity name="Composer" representedClassName=".Composer" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" attributeType="String" syncable="YES"/>
         <relationship name="artists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Artist" inverseName="composers" inverseEntity="Artist" syncable="YES"/>
         <relationship name="properties" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Property" inverseName="composer" inverseEntity="Property" syncable="YES"/>
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="composer" inverseEntity="Track" syncable="YES"/>
@@ -151,7 +151,7 @@
         <attribute name="misc_search_field" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="movement_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="movement_number" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="play_count" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
         <attribute name="rating" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
         <attribute name="sample_rate" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
@@ -191,12 +191,12 @@
         <relationship name="track" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Track" inverseName="view" inverseEntity="Track" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Album" positionX="-1548" positionY="126" width="128" height="223"/>
+        <element name="Album" positionX="-1548" positionY="126" width="128" height="225"/>
         <element name="AlbumArtwork" positionX="-1757" positionY="81" width="128" height="135"/>
         <element name="AlbumArtworkCollection" positionX="-1764" positionY="243" width="128" height="103"/>
-        <element name="Artist" positionX="-1323" positionY="117" width="128" height="148"/>
+        <element name="Artist" positionX="-1323" positionY="117" width="128" height="150"/>
         <element name="CachedOrder" positionX="-1262" positionY="-45" width="128" height="120"/>
-        <element name="Composer" positionX="-1539" positionY="375" width="128" height="133"/>
+        <element name="Composer" positionX="-1539" positionY="375" width="128" height="135"/>
         <element name="Library" positionX="-801" positionY="-45" width="128" height="465"/>
         <element name="Property" positionX="-1251" positionY="660" width="128" height="180"/>
         <element name="SharedLibrary" positionX="-1557" positionY="99" width="128" height="60"/>

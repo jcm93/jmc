@@ -190,7 +190,7 @@ class iTunesLibraryParser: NSObject {
                 album = (XMLTrackDict! as AnyObject).object(forKey: "Album") as! String
                 if (self.addedAlbums.object(forKey: album) != nil) {
                     let the_album = self.addedAlbums.object(forKey: album)
-                    placeholderArtist?.addAlbumsObject(the_album as! Album)
+                    placeholderArtist?.addToAlbums(the_album as! Album)
                     placeholderAlbum = the_album as! Album
                     cd_track.album = the_album as! Album
                     
@@ -266,13 +266,13 @@ class iTunesLibraryParser: NSObject {
             }
             if ((XMLTrackDict! as AnyObject).object(forKey: "Release Date") != nil) {
                 date_released = (XMLTrackDict! as AnyObject).object(forKey: "Release Date") as! Date
-                cd_track.album?.release_date = date_released
+                cd_track.album?.release_date = date_released as NSDate
             }
             if ((XMLTrackDict! as AnyObject).object(forKey: "Year") != nil) {
                 year = (XMLTrackDict! as AnyObject).object(forKey: "Year") as! Int
                 var date = DateComponents()
                 date.year = year
-                cd_track.album?.release_date = (date as NSDateComponents).date
+                cd_track.album?.release_date = (date as NSDateComponents).date as! NSDate
             }
             if ((XMLTrackDict! as AnyObject).object(forKey: "Composer") != nil) {
                 composer = (XMLTrackDict! as AnyObject).object(forKey: "Composer") as! String

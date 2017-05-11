@@ -2,7 +2,7 @@
 //  Track+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 4/10/17.
+//  Created by John Moody on 5/11/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 
@@ -26,6 +26,7 @@ extension Track {
     @NSManaged public var disc_number: NSNumber?
     @NSManaged public var equalizer_preset: String?
     @NSManaged public var file_kind: String?
+    @NSManaged public var genre: String?
     @NSManaged public var id: NSNumber?
     @NSManaged public var is_network: NSNumber?
     @NSManaged public var is_playing: NSNumber?
@@ -47,14 +48,12 @@ extension Track {
     @NSManaged public var status: NSNumber?
     @NSManaged public var time: NSNumber?
     @NSManaged public var track_num: NSNumber?
-    @NSManaged public var genre: String?
     @NSManaged public var album: Album?
     @NSManaged public var artist: Artist?
     @NSManaged public var composer: Composer?
     @NSManaged public var library: Library?
     @NSManaged public var user_defined_properties: NSSet?
     @NSManaged public var view: TrackView?
-    
     
     @objc func compareArtist(_ other: Track) -> ComparisonResult {
         let self_artist_name = (self.sort_artist != nil) ? self.sort_artist : self.artist?.name
@@ -317,6 +316,7 @@ extension Track {
             return name_comparison
         }
     }
+
 }
 
 // MARK: Generated accessors for user_defined_properties

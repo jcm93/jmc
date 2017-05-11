@@ -176,7 +176,8 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         newSourceView.source = context
         newSourceView.viewType = .source
         trackQueue.append(newSourceView)
-        tableView!.reloadData()
+        print("reloading for last three indices")
+        tableView.reloadData()
     }
     
     
@@ -195,17 +196,18 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 newTrackView.wasQueuedManually = true
             }
             trackQueue.insert(newTrackView, at: index)
+            let indices = [index, index + 1]
+            tableView.reloadData()
         }
         else {
             addTrackToQueue(track, context: context, tense: 1, manually: manually)
         }
-        tableView?.reloadData()
     }
     
     func advanceScroll() {
         print("scroll value \(scrollView.verticalScroller?.floatValue)")
-        print("minimum value for scrolling to bottom \((tableView.frame.height - 92) / tableView.frame.height)")
-        if CGFloat(scrollView!.verticalScroller!.floatValue) >= ((tableView.frame.height - 92) / tableView.frame.height) || tableView.frame.height <= scrollView.frame.height {
+        print("minimum value for scrolling to bottom \((tableView.frame.height - 137) / tableView.frame.height)")
+        if CGFloat(scrollView!.verticalScroller!.floatValue) >= ((tableView.frame.height - 137) / tableView.frame.height) || tableView.frame.height <= scrollView.frame.height {
             print("scrolling to bottom")
             NSAnimationContext.runAnimationGroup({ $0.allowsImplicitAnimation = true; tableView.scroll(NSPoint(x: 0, y: tableView.frame.height))}, completionHandler: nil)
         } else {
@@ -217,6 +219,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         print("next track in track queue called")
         if currentTrackIndex != nil && trackQueue.count > 0 && ((trackQueue[currentTrackIndex! + 1]).viewType == .futureTrack || trackQueue[currentTrackIndex! + 1].viewType == .transient) {
             (trackQueue[currentTrackIndex!]).viewType = .pastTrack
+            tableView.reloadData(forRowIndexes: IndexSet(integer: currentTrackIndex!), columnIndexes: IndexSet(integer: 0))
             currentTrackIndex! += 1
             if (trackQueue.count > currentTrackIndex! + 1) {
                 print("detected queued tracks")
@@ -230,6 +233,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 self.currentTrack = trackQueue[currentTrackIndex!].track
             }
         }
+        tableView.reloadData(forRowIndexes: IndexSet(integer: currentTrackIndex!), columnIndexes: IndexSet(integer: 0))
         advanceScroll()
     }
     
@@ -327,7 +331,6 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                     next_track = getTrackWithID(id!)
                 }
                 if !fileManager.fileExists(atPath: URL(string: next_track!.location!)!.path) {
-                    //are we on the main queue?
                     self.currentAudioSource?.playOrderObject?.libraryStatusNeedsUpdate()
                     self.currentSourceIndex = self.currentAudioSource?.playOrderObject?.current_play_order?.index(of: Int(self.currentTrack!.id!))
                     if currentAudioSource!.playOrderObject!.current_play_order!.count <= currentSourceIndex! + 1 {
@@ -355,7 +358,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         for (index, id) in currentAudioSource!.playOrderObject!.current_play_order!.enumerated() {
             if idSet.contains(id) && id != currentAudioSource!.playOrderObject?.current_play_order![currentSourceIndex!] {
                 indicesToRemove.append(index)
-                if index == currentSourceIndex {print("trying to remove from queue at currentSourceIndex")}
+                if index == currentSourceIndex { print("trying to remove from queue at currentSourceIndex") }
                 if index < currentSourceIndex! {
                     amountToOffsetCurrentSourceIndex -= 1
                 }

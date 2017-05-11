@@ -1,24 +1,77 @@
 //
 //  Composer+CoreDataProperties.swift
-//  minimalTunes
+//  jmc
 //
-//  Created by John Moody on 10/26/16.
-//  Copyright © 2016 John Moody. All rights reserved.
-//
-//  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
-//  to delete and recreate this implementation file for your updated model.
+//  Created by John Moody on 5/11/17.
+//  Copyright © 2017 John Moody. All rights reserved.
 //
 
 import Foundation
 import CoreData
 
+
 extension Composer {
 
-    @NSManaged var id: NSNumber?
-    @NSManaged var name: String?
-    @NSManaged var is_network: NSNumber?
-    @NSManaged var artists: NSSet?
-    @NSManaged var properties: NSSet?
-    @NSManaged var tracks: NSSet?
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Composer> {
+        return NSFetchRequest<Composer>(entityName: "Composer")
+    }
+
+    @NSManaged public var id: NSNumber?
+    @NSManaged public var is_network: NSNumber?
+    @NSManaged public var name: String?
+    @NSManaged public var artists: NSSet?
+    @NSManaged public var properties: NSSet?
+    @NSManaged public var tracks: NSSet?
+
+}
+
+// MARK: Generated accessors for artists
+extension Composer {
+
+    @objc(addArtistsObject:)
+    @NSManaged public func addToArtists(_ value: Artist)
+
+    @objc(removeArtistsObject:)
+    @NSManaged public func removeFromArtists(_ value: Artist)
+
+    @objc(addArtists:)
+    @NSManaged public func addToArtists(_ values: NSSet)
+
+    @objc(removeArtists:)
+    @NSManaged public func removeFromArtists(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for properties
+extension Composer {
+
+    @objc(addPropertiesObject:)
+    @NSManaged public func addToProperties(_ value: Property)
+
+    @objc(removePropertiesObject:)
+    @NSManaged public func removeFromProperties(_ value: Property)
+
+    @objc(addProperties:)
+    @NSManaged public func addToProperties(_ values: NSSet)
+
+    @objc(removeProperties:)
+    @NSManaged public func removeFromProperties(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for tracks
+extension Composer {
+
+    @objc(addTracksObject:)
+    @NSManaged public func addToTracks(_ value: Track)
+
+    @objc(removeTracksObject:)
+    @NSManaged public func removeFromTracks(_ value: Track)
+
+    @objc(addTracks:)
+    @NSManaged public func addToTracks(_ values: NSSet)
+
+    @objc(removeTracks:)
+    @NSManaged public func removeFromTracks(_ values: NSSet)
 
 }

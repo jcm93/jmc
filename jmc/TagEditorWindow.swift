@@ -65,6 +65,20 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     let bitRateFormatter = BitRateFormatter()
     let sampleRateFormatter = SampleRateFormatter()
     let databaseManager = DatabaseManager()
+    let kMultipleThingsString = "Multiple"
+    
+    var nameIfAllEqual: String?
+    var artistNameIfAllEqual: String?
+    var albumNameIfAllEqual: String?
+    var albumArtistNameIfAllEqual: String?
+    var composerNameIfAllEqual: String?
+    var genreNameIfAllEqual: String?
+    var commentsIfAllEqual: String?
+    var sortNameIfAllEqual: String?
+    var sortArtistIfAllEqual: String?
+    var sortAlbumIfAllEqual: String?
+    var sortAlbumArtistIfAllEqual: String?
+    var sortComposerIfAllEqual: String?
     
     
     //mark artwork view
@@ -84,18 +98,22 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     }
     
     @IBAction func nameEdited(_ sender: Any) {
+        guard self.nameField.stringValue != nameIfAllEqual && (self.nameField.stringValue != "" && self.nameIfAllEqual == nil) else { return }
         databaseManager.nameEdited(tracks: self.selectedTracks!, value: self.nameField.stringValue)
     }
     
     @IBAction func artistEdited(_ sender: Any) {
+        guard self.artistField.stringValue != artistNameIfAllEqual && (self.artistField.stringValue != "" && self.artistNameIfAllEqual == nil) else { return }
         databaseManager.artistEdited(tracks: self.selectedTracks!, value: self.artistField.stringValue)
     }
     
     @IBAction func albumArtistEdited(_ sender: Any) {
+        guard self.albumArtistField.stringValue != albumArtistNameIfAllEqual && (self.albumArtistField.stringValue != "" && self.albumArtistNameIfAllEqual == nil) else { return }
         databaseManager.albumArtistEdited(tracks: self.selectedTracks!, value: self.albumArtistField.stringValue)
     }
     
     @IBAction func albumEdited(_ sender: Any) {
+        guard self.albumField.stringValue != albumNameIfAllEqual && (self.albumField.stringValue != "" && self.albumNameIfAllEqual == nil) else { return }
         databaseManager.albumEdited(tracks: self.selectedTracks!, value: self.albumField.stringValue)
     }
     
@@ -116,10 +134,12 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     }
     
     @IBAction func composerEdited(_ sender: Any) {
+        guard composerField.stringValue != composerNameIfAllEqual && (self.composerField.stringValue != "" && self.composerNameIfAllEqual == nil) else { return }
         databaseManager.composerEdited(tracks: self.selectedTracks!, value: self.composerField.stringValue)
     }
     
     @IBAction func genreEdited(_ sender: Any) {
+        guard genreField.stringValue != genreNameIfAllEqual && (self.genreField.stringValue != "" && self.genreNameIfAllEqual == nil) else { return }
         databaseManager.genreEdited(tracks: self.selectedTracks!, value: self.genreField.stringValue)
     }
     
@@ -128,6 +148,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     }
     
     @IBAction func commentsEdited(_ sender: Any) {
+        guard commentsField.stringValue != commentsIfAllEqual && (self.commentsField.stringValue != "" && self.commentsIfAllEqual == nil) else { return }
         databaseManager.commentsEdited(tracks: self.selectedTracks!, value: self.commentsField.stringValue)
     }
     
@@ -160,42 +181,61 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
         var album: String?
         var albumArtist: String?
         var composer: String?
-        let names = selectedTracks!.map( { return $0.name } )
-        if allEqual(names) == true {
-            if names[0] != nil {
-                nameField.stringValue = names[0]!
-                sortingNameField.stringValue = names[0]!
-            }
+        let names = Set(selectedTracks!.map( { return $0.name! } ))
+        if names.count == 1 {
+            nameField.stringValue = names.first!
+            self.nameIfAllEqual = names.first!
+            sortingNameField.stringValue = names.first!
+        } else {
+            nameField.placeholderString = kMultipleThingsString
         }
         let artist_names = selectedTracks!.map( { return $0.artist?.name } )
         if allEqual(artist_names) == true {
             if artist_names[0] != nil {
                 artist = artist_names[0]!
                 artistField.stringValue = artist_names[0]!
+                artistNameIfAllEqual = artist
                 sortingArtistField.stringValue = artist_names[0]!
             }
+        } else {
+            artistField.placeholderString = kMultipleThingsString
         }
         let album_names = selectedTracks!.map( { return $0.album?.name } )
         if allEqual(album_names) == true {
             if album_names[0] != nil {
                 album = album_names[0]!
                 albumField.stringValue = album_names[0]!
+                albumNameIfAllEqual = album
                 sortingAlbumField.stringValue = album_names[0]!
             }
             populateArtwork()
+        } else {
+            if album_names.count > 1 {
+                albumField.placeholderString = kMultipleThingsString
+            }
         }
         let album_artist_names = selectedTracks!.map( { return $0.album?.album_artist?.name } )
         if allEqual(album_artist_names) == true {
             if album_artist_names[0] != nil {
                 albumArtist = album_artist_names[0]!
                 albumArtistField.stringValue = album_artist_names[0]!
+                albumArtistNameIfAllEqual = albumArtist
                 sortingAlbumArtistField.stringValue = album_artist_names[0]!
+            }
+        } else {
+            if album_artist_names.count > 1 {
+                albumArtistField.placeholderString = kMultipleThingsString
             }
         }
         let comments = selectedTracks!.map( { return $0.comments } )
         if allEqual(comments) == true {
             if comments[0] != nil {
                 commentsField.stringValue = comments[0]!
+                commentsIfAllEqual = comments[0]!
+            }
+        } else {
+            if comments.count > 1 {
+                commentsField.placeholderString = kMultipleThingsString
             }
         }
         let composers = selectedTracks!.map( { return $0.composer?.name } )
@@ -204,6 +244,11 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
                 composerField.stringValue = composers[0]!
                 sortingComposerField.stringValue = composers[0]!
                 composer = composers[0]!
+                composerNameIfAllEqual = composer
+            }
+        } else {
+            if composers.count > 1 {
+                composerField.placeholderString = kMultipleThingsString
             }
         }
         let release_dates = selectedTracks!.map({ return $0.album?.release_date })
@@ -246,6 +291,10 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
             if genres[0] != nil {
                 genreField.stringValue = genres[0]!
             }
+        } else {
+            if genres.count > 1 {
+                genreField.placeholderString = kMultipleThingsString
+            }
         }
         let is_compilations = selectedTracks!.map({return $0.album?.is_compilation})
         if allEqual(is_compilations) {
@@ -258,26 +307,51 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
         let sortNamesSet = Set(sortNames)
         if sortNamesSet.count == 1 && sortNames.count == selectedTracks?.count {
             sortingNameSortAsField.stringValue = sortNames.first!
+            sortNameIfAllEqual = sortNames.first!
+        } else {
+            if sortNames.count > 1 {
+                sortingNameSortAsField.placeholderString = kMultipleThingsString
+            }
         }
         let sortAlbums = selectedTracks!.flatMap({return $0.sort_album})
         let sortAlbumsSet = Set(sortAlbums)
         if sortAlbumsSet.count == 1 && sortAlbums.count == selectedTracks?.count {
             sortingAlbumSortAsField.stringValue = sortAlbums.first!
+            sortAlbumIfAllEqual = sortAlbums.first!
+        } else {
+            if sortAlbums.count > 1 {
+                sortingAlbumSortAsField.placeholderString = kMultipleThingsString
+            }
         }
         let sortArtists = selectedTracks!.flatMap({return $0.sort_artist})
         let sortArtistsSet = Set(sortArtists)
         if sortArtistsSet.count == 1 && sortArtists.count == selectedTracks?.count {
             sortingArtistSortAsField.stringValue = sortArtists.first!
+            sortArtistIfAllEqual = sortArtists.first!
+        } else {
+            if sortArtists.count > 1 {
+                sortingArtistSortAsField.placeholderString = kMultipleThingsString
+            }
         }
         let sortAlbumArtists = selectedTracks!.flatMap({return $0.sort_album_artist})
         let sortAlbumArtistsSet = Set(sortAlbumArtists)
         if sortAlbumArtistsSet.count == 1 && sortAlbumArtists.count == selectedTracks?.count {
             sortingAlbumArtistSortAsField.stringValue = sortAlbumArtists.first!
+            sortAlbumArtistIfAllEqual = sortAlbumArtists.first!
+        } else {
+            if sortAlbumArtists.count > 1 {
+                sortingAlbumArtistSortAsField.placeholderString = kMultipleThingsString
+            }
         }
         let sortComposers = selectedTracks!.flatMap({return $0.sort_composer})
         let sortComposersSet = Set(sortComposers)
         if sortComposersSet.count == 1 && sortComposers.count == selectedTracks?.count{
             sortingComposerSortAsField.stringValue = sortComposers.first!
+            sortComposerIfAllEqual = sortComposers.first!
+        } else {
+            if sortComposers.count > 1 {
+                sortingComposerSortAsField.placeholderString = kMultipleThingsString
+            }
         }
         var titleString = ""
         if albumArtist != nil {
