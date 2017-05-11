@@ -87,10 +87,12 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         if item == nil {
             //at root
-            if sharedHeaderNode?.children?.count > 1 {
+            if sharedHeaderNode?.children?.count > 0 {
                 return 3
-            } else {
+            } else if playlistHeaderNode?.children?.count > 0 {
                 return 2
+            } else {
+                return 1
             }
         } else {
             return (item as? SourceListItem)?.children?.count ?? 0
@@ -111,8 +113,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     override func controlTextDidEndEditing(_ obj: Notification) {
-        let item = sourceList.item(atRow: sourceList.row(for: obj.object as! NSTextField)) as? SourceListItem
-        item!.name = (obj.object as! NSTextField).stringValue
+        let item = sourceList.item(atRow: sourceList.row(for: (obj.object as! NSTextField))) as? SourceListItem
+        item?.name = (obj.object as! NSTextField).stringValue
     }
     
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
@@ -141,6 +143,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         sourceList.selectRowIndexes(selection, byExtendingSelection: false)
         DispatchQueue.main.async {
             self.sourceList.expandItem(self.libraryHeaderNode, expandChildren: true)
+            self.sourceList.expandItem(self.playlistHeaderNode)
         }
     }
     
@@ -148,34 +151,23 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         let playlistFolderItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         playlistFolderItem.is_folder = true
         playlistFolderItem.name = "New Playlist Folder"
-        playlistFolderItem.parent = playlistHeaderNode!
         if items != nil {
             makeItemsChildrenOfItem(items!, parentItem: playlistFolderItem, index: 0)
         }
-        playlistHeaderNode?.addToChildren(playlistFolderItem)
+        playlistHeaderNode?.insertIntoChildren(playlistFolderItem, at: 0)
         sourceList.reloadData()
-        let newPlaylistIndex = IndexSet(integer: sourceList.row(forItem: playlistHeaderNode))
+        sourceList.expandItem(self.playlistHeaderNode)
+        let newPlaylistIndex = IndexSet(integer: sourceList.row(forItem: playlistFolderItem))
         sourceList.selectRowIndexes(newPlaylistIndex, byExtendingSelection: false)
         sourceList.editColumn(0, row: sourceList.selectedRow, with: nil, select: true)
     }
     
     func makeItemsChildrenOfItem(_ items: [SourceListItem], parentItem: SourceListItem, index: Int) {
-        let newItemChildren: NSMutableOrderedSet = parentItem.children?.count > 0 ? parentItem.children?.mutableCopy() as! NSMutableOrderedSet : NSMutableOrderedSet()
-        var mutableIndex = index
         for item in items {
-            guard item != parentItem else {continue}
-            let currentParentItem = item.parent!
-            //remove from sibling sets for both items and nodes, then reset parents
-            let currentItemSiblingsMutableCopy = currentParentItem.children!.mutableCopy() as! NSMutableOrderedSet
-            currentItemSiblingsMutableCopy.remove(item)
-            currentParentItem.children = currentItemSiblingsMutableCopy as NSOrderedSet
-            item.parent = parentItem
-            //insert into new sibling sets at appropriate index
-            newItemChildren.insert(item, at: mutableIndex)
+            item.parent = nil
         }
-        parentItem.children = newItemChildren as NSOrderedSet
-        var index = 0
-        reloadData()
+        let indices = IndexSet(integersIn: index..<index+items.count)
+        parentItem.mutableOrderedSetValue(forKey: "children").insert(items, at: indices)
     }
     
     func createPlaylist(_ tracks: [Int]?, smart_criteria: SmartCriteria?) {
@@ -184,7 +176,6 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         let playlistItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         playlistItem.playlist = playlist
         playlistItem.name = "New Playlist"
-        playlistItem.parent = playlistHeaderNode
         if tracks != nil {
             playlist.track_id_list = tracks! as NSObject?
         }
@@ -195,8 +186,10 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         playlist.id = globalRootLibrary?.next_playlist_id
         globalRootLibrary?.next_playlist_id = Int(globalRootLibrary!.next_playlist_id!) + 1 as NSNumber
         //create node
+        playlistHeaderNode?.insertIntoChildren(playlistItem, at: 0)
         sourceList.reloadData()
-        let newPlaylistIndex = IndexSet(integer: sourceList.row(forItem: playlistHeaderNode))
+        sourceList.expandItem(self.playlistHeaderNode)
+        let newPlaylistIndex = IndexSet(integer: sourceList.row(forItem: playlistItem))
         sourceList.selectRowIndexes(newPlaylistIndex, byExtendingSelection: false)
         sourceList.editColumn(0, row: sourceList.selectedRow, with: nil, select: true)
     }
@@ -268,8 +261,6 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         } else if source.library != nil && !libraryIsAvailable(library: source.library!) {
             return false
         } else if source.children?.count > 0 && source.is_folder != true {
-            return false
-        } else if source.is_folder == true {
             return false
         } else {
             return true
@@ -348,17 +339,6 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     @IBAction func checkBoxPressed(_ sender: Any) {
-        /*print("check box pressed")
-        let checkBox = sender as! NSButton
-        let checkBoxState = checkBox.state
-        let cellView = checkBox.superview as! SourceListCellView
-        let sourceListNode = cellView.node
-        let library = sourceListNode!.item.library
-        if checkBoxState == NSOnState {
-            library!.is_active = 1 as NSNumber?
-        } else {
-            library!.is_active = 0 as NSNumber?
-        }*/
         if mainWindowController?.currentTableViewController?.playlist == nil {
             mainWindowController?.currentTableViewController?.initializeForLibrary()
         }

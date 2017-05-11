@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TrackQueueViewController" customModule="jmc" customModuleProvider="target">
             <connections>
+                <outlet property="scrollView" destination="oqK-4y-cGi" id="ig0-1a-bFz"/>
                 <outlet property="tableView" destination="gSK-sJ-i5V" id="6KD-ZS-C6a"/>
                 <outlet property="view" destination="Kij-wZ-mx8" id="GZc-Cc-t9g"/>
             </connections>
@@ -23,7 +24,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="648" height="795"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" autosaveColumns="NO" rowHeight="43" headerView="viv-dq-AXN" viewBased="YES" id="gSK-sJ-i5V" customClass="TableViewYouCanPressSpacebarOn" customModule="jmc" customModuleProvider="target">
+                            <tableView verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" autosaveColumns="NO" rowHeight="43" headerView="viv-dq-AXN" viewBased="YES" id="gSK-sJ-i5V" customClass="TrackQueueTableView" customModule="jmc" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="648" height="772"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
@@ -47,16 +48,8 @@
                                                 <rect key="frame" x="1" y="1" width="645" height="43"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <imageView identifier="nowplaying" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4xO-l6-d0K">
-                                                        <rect key="frame" x="0.0" y="0.0" width="43" height="43"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="43" id="8RC-rb-8tb"/>
-                                                            <constraint firstAttribute="width" constant="43" id="Rdo-xi-pF8"/>
-                                                        </constraints>
-                                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSTouchBarAudioOutputVolumeMediumTemplate" id="y5Z-Fa-sMC"/>
-                                                    </imageView>
                                                     <imageView identifier="art" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="OKH-sx-S0D">
-                                                        <rect key="frame" x="40" y="3" width="36" height="36"/>
+                                                        <rect key="frame" x="4" y="3" width="36" height="36"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="30" id="3Pq-69-tRJ"/>
                                                             <constraint firstAttribute="height" constant="30" id="8Tj-I4-LuX"/>
@@ -64,15 +57,15 @@
                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="photo" image="Playlist" id="gCj-I0-yu6"/>
                                                     </imageView>
                                                     <textField identifier="artistalbum" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3AU-ta-3bk">
-                                                        <rect key="frame" x="79" y="5" width="565" height="14"/>
+                                                        <rect key="frame" x="43" y="5" width="601" height="14"/>
                                                         <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="QyV-A2-Yq1">
                                                             <font key="font" metaFont="smallSystem"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField identifier="title" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BTD-Mb-ZoQ">
-                                                        <rect key="frame" x="79" y="22" width="565" height="17"/>
+                                                        <rect key="frame" x="43" y="22" width="601" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="wly-fV-wmL">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -83,34 +76,77 @@
                                                 <constraints>
                                                     <constraint firstItem="OKH-sx-S0D" firstAttribute="top" secondItem="TmM-Ar-R6f" secondAttribute="top" constant="7" id="IVO-NY-HZE"/>
                                                     <constraint firstAttribute="trailing" secondItem="BTD-Mb-ZoQ" secondAttribute="trailing" constant="3" id="SG7-Mk-QhB"/>
-                                                    <constraint firstItem="OKH-sx-S0D" firstAttribute="leading" secondItem="4xO-l6-d0K" secondAttribute="trailing" id="Say-F1-dD3"/>
                                                     <constraint firstItem="3AU-ta-3bk" firstAttribute="top" secondItem="BTD-Mb-ZoQ" secondAttribute="bottom" constant="3" id="cII-gm-kyW"/>
                                                     <constraint firstItem="BTD-Mb-ZoQ" firstAttribute="leading" secondItem="OKH-sx-S0D" secondAttribute="trailing" constant="8" id="k3r-QM-x6E"/>
                                                     <constraint firstItem="3AU-ta-3bk" firstAttribute="leading" secondItem="OKH-sx-S0D" secondAttribute="trailing" constant="8" id="k8x-C4-5L4"/>
-                                                    <constraint firstItem="4xO-l6-d0K" firstAttribute="leading" secondItem="TmM-Ar-R6f" secondAttribute="leading" id="mhK-zU-QTe"/>
                                                     <constraint firstItem="BTD-Mb-ZoQ" firstAttribute="top" secondItem="TmM-Ar-R6f" secondAttribute="top" constant="4" id="sVN-hb-b7z"/>
-                                                    <constraint firstItem="4xO-l6-d0K" firstAttribute="top" secondItem="TmM-Ar-R6f" secondAttribute="top" id="uG1-ai-UXS"/>
                                                     <constraint firstAttribute="trailing" secondItem="3AU-ta-3bk" secondAttribute="trailing" constant="3" id="wAJ-lw-Y7E"/>
+                                                    <constraint firstItem="OKH-sx-S0D" firstAttribute="leading" secondItem="TmM-Ar-R6f" secondAttribute="leading" constant="7" id="xlO-SP-OEF"/>
                                                 </constraints>
                                                 <connections>
                                                     <outlet property="imageView" destination="OKH-sx-S0D" id="YtX-iJ-p9e"/>
                                                     <outlet property="textField" destination="BTD-Mb-ZoQ" id="eER-SU-md2"/>
                                                 </connections>
                                             </tableCellView>
-                                            <tableCellView identifier="pastTrack" id="it0-V9-i3R" customClass="PastTrackCell" customModule="jmc" customModuleProvider="target">
+                                            <tableCellView identifier="currentTrack" id="HBE-h4-V2x" customClass="TrackNameTableCell" customModule="jmc" customModuleProvider="target">
                                                 <rect key="frame" x="1" y="46" width="645" height="43"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <imageView identifier="nowplaying" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FWN-mC-r8l">
-                                                        <rect key="frame" x="0.0" y="0.0" width="43" height="43"/>
+                                                    <imageView identifier="art" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HOb-pU-AVM">
+                                                        <rect key="frame" x="4" y="3" width="36" height="36"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="43" id="GtZ-Qf-Xun"/>
-                                                            <constraint firstAttribute="height" constant="43" id="Y9H-xU-2Xn"/>
+                                                            <constraint firstAttribute="width" constant="30" id="2DG-tY-Sj7"/>
+                                                            <constraint firstAttribute="height" constant="30" id="ACW-h9-YBR"/>
                                                         </constraints>
-                                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSAudioOutputVolumeMedTemplate" id="Kyn-Et-RCA"/>
+                                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="photo" image="Playlist" id="ta8-zS-UKr"/>
                                                     </imageView>
+                                                    <textField identifier="artistalbum" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fbV-Vm-b65">
+                                                        <rect key="frame" x="43" y="5" width="550" height="14"/>
+                                                        <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="9Wv-yE-Kof">
+                                                            <font key="font" metaFont="smallSystem"/>
+                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <textField identifier="title" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eUV-fJ-Gcr">
+                                                        <rect key="frame" x="43" y="22" width="550" height="17"/>
+                                                        <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="hrf-RM-Oj2">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q8r-Ig-ogA">
+                                                        <rect key="frame" x="594" y="-2" width="48" height="48"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="48" id="1uZ-u1-uq1"/>
+                                                            <constraint firstAttribute="width" constant="48" id="k7o-BS-Iig"/>
+                                                        </constraints>
+                                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="dmz-s7-42D"/>
+                                                    </imageView>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="Q8r-Ig-ogA" firstAttribute="leading" secondItem="fbV-Vm-b65" secondAttribute="trailing" constant="3" id="0IB-U0-U6A"/>
+                                                    <constraint firstItem="Q8r-Ig-ogA" firstAttribute="leading" secondItem="eUV-fJ-Gcr" secondAttribute="trailing" constant="3" id="9wA-Ne-BgZ"/>
+                                                    <constraint firstItem="fbV-Vm-b65" firstAttribute="leading" secondItem="HOb-pU-AVM" secondAttribute="trailing" constant="8" id="DE9-CG-8IU"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Q8r-Ig-ogA" secondAttribute="trailing" constant="3" id="G4f-NP-Top"/>
+                                                    <constraint firstItem="fbV-Vm-b65" firstAttribute="top" secondItem="eUV-fJ-Gcr" secondAttribute="bottom" constant="3" id="cge-P6-LsC"/>
+                                                    <constraint firstItem="eUV-fJ-Gcr" firstAttribute="leading" secondItem="HOb-pU-AVM" secondAttribute="trailing" constant="8" id="iG1-JW-Plt"/>
+                                                    <constraint firstItem="HOb-pU-AVM" firstAttribute="leading" secondItem="HBE-h4-V2x" secondAttribute="leading" constant="7" id="ixG-hT-dAA"/>
+                                                    <constraint firstItem="eUV-fJ-Gcr" firstAttribute="top" secondItem="HBE-h4-V2x" secondAttribute="top" constant="4" id="qir-Pf-Uup"/>
+                                                    <constraint firstItem="HOb-pU-AVM" firstAttribute="top" secondItem="HBE-h4-V2x" secondAttribute="top" constant="7" id="sjp-Gq-cni"/>
+                                                </constraints>
+                                                <connections>
+                                                    <outlet property="imageView" destination="HOb-pU-AVM" id="rfM-Y9-es8"/>
+                                                    <outlet property="textField" destination="eUV-fJ-Gcr" id="sub-Ax-pAe"/>
+                                                </connections>
+                                            </tableCellView>
+                                            <tableCellView identifier="pastTrack" id="it0-V9-i3R" customClass="PastTrackCell" customModule="jmc" customModuleProvider="target">
+                                                <rect key="frame" x="1" y="91" width="645" height="43"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
                                                     <imageView identifier="art" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4Pg-GL-q9T">
-                                                        <rect key="frame" x="40" y="3" width="36" height="36"/>
+                                                        <rect key="frame" x="4" y="3" width="36" height="36"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="30" id="M4l-vl-t5X"/>
                                                             <constraint firstAttribute="height" constant="30" id="bEt-Ob-daw"/>
@@ -118,7 +154,7 @@
                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="photo" image="Playlist" id="NK3-qH-8ss"/>
                                                     </imageView>
                                                     <textField identifier="artistalbum" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SmY-oH-TSA">
-                                                        <rect key="frame" x="79" y="5" width="565" height="14"/>
+                                                        <rect key="frame" x="43" y="5" width="601" height="14"/>
                                                         <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="K7O-T2-ZMV">
                                                             <font key="font" metaFont="smallSystem"/>
                                                             <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
@@ -126,7 +162,7 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField identifier="title" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3RI-wo-bjd">
-                                                        <rect key="frame" x="79" y="22" width="565" height="17"/>
+                                                        <rect key="frame" x="43" y="22" width="601" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="7tb-Qi-nN5">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
@@ -135,13 +171,11 @@
                                                     </textField>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="4Pg-GL-q9T" firstAttribute="leading" secondItem="FWN-mC-r8l" secondAttribute="trailing" id="3fc-4L-m2g"/>
                                                     <constraint firstItem="3RI-wo-bjd" firstAttribute="leading" secondItem="4Pg-GL-q9T" secondAttribute="trailing" constant="8" id="Gqc-IP-fTt"/>
                                                     <constraint firstItem="3RI-wo-bjd" firstAttribute="top" secondItem="it0-V9-i3R" secondAttribute="top" constant="4" id="Nsn-Nn-DZy"/>
-                                                    <constraint firstItem="FWN-mC-r8l" firstAttribute="top" secondItem="it0-V9-i3R" secondAttribute="top" id="PJS-16-FSp"/>
                                                     <constraint firstAttribute="trailing" secondItem="3RI-wo-bjd" secondAttribute="trailing" constant="3" id="TVQ-pG-z5P"/>
                                                     <constraint firstItem="SmY-oH-TSA" firstAttribute="top" secondItem="3RI-wo-bjd" secondAttribute="bottom" constant="3" id="TeB-Qs-c5J"/>
-                                                    <constraint firstItem="FWN-mC-r8l" firstAttribute="leading" secondItem="it0-V9-i3R" secondAttribute="leading" id="Tyk-ad-2RV"/>
+                                                    <constraint firstItem="4Pg-GL-q9T" firstAttribute="leading" secondItem="it0-V9-i3R" secondAttribute="leading" constant="7" id="wdL-u1-Rz3"/>
                                                     <constraint firstItem="4Pg-GL-q9T" firstAttribute="top" secondItem="it0-V9-i3R" secondAttribute="top" constant="7" id="wqa-7R-V7e"/>
                                                     <constraint firstItem="SmY-oH-TSA" firstAttribute="leading" secondItem="4Pg-GL-q9T" secondAttribute="trailing" constant="8" id="y4i-OS-ZnB"/>
                                                     <constraint firstAttribute="trailing" secondItem="SmY-oH-TSA" secondAttribute="trailing" constant="3" id="zSK-mx-Rd9"/>
@@ -152,7 +186,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <tableCellView identifier="source" id="NOH-DP-nJy" customClass="FromSourceCell" customModule="jmc" customModuleProvider="target">
-                                                <rect key="frame" x="1" y="91" width="645" height="43"/>
+                                                <rect key="frame" x="1" y="136" width="645" height="43"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" allowsExpansionToolTips="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2g4-Yh-6Zs">
@@ -240,7 +274,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="ljj-Ui-lvw"/>
-                <menuItem title="Shuffle" id="jwt-jW-MQB">
+                <menuItem title="Shuffle Upcoming" id="jwt-jW-MQB">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem title="Clear" id="1Ry-7D-3RY">
@@ -250,8 +284,6 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
         </menu>
     </objects>
     <resources>
-        <image name="NSAudioOutputVolumeMedTemplate" width="128" height="128"/>
-        <image name="NSTouchBarAudioOutputVolumeMediumTemplate" width="128" height="128"/>
         <image name="Playlist" width="20" height="20"/>
     </resources>
 </document>

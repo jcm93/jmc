@@ -88,7 +88,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     var cur_view_title = "Music"
     var cur_source_title = "Music"
     var duration: Double?
-    var paused: Bool? = true
+    dynamic var paused: Bool = true
     var is_initialized = false
     var shuffle: Bool = UserDefaults.standard.bool(forKey: DEFAULTS_SHUFFLE_STRING)
     var will_repeat: Bool = UserDefaults.standard.bool(forKey: DEFAULTS_REPEAT_STRING)
@@ -785,6 +785,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             } else if keyPath! == "albumArtworkAdded" {
                 self.trackQueueViewController?.reloadData()
                 print("reloaded data")
+            } else if keyPath! == "paused" {
+                self.trackQueueViewController?.reloadCurrentTrack()
             }
         }
     }
@@ -852,6 +854,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         //searchField.drawsBackground = false
         self.delegate?.audioModule.addObserver(self, forKeyPath: "track_changed", options: .new, context: &my_context)
         self.delegate?.audioModule.addObserver(self, forKeyPath: "done_playing", options: .new, context: &my_context)
+        self.addObserver(self, forKeyPath: "paused", options: .new, context: &my_context)
         self.albumArtViewController?.addObserver(self, forKeyPath: "albumArtworkAdded", options: .new, context: &my_context)
         trackQueueViewController?.mainWindowController = self
         volumeSlider.isContinuous = true

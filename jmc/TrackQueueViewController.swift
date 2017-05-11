@@ -71,17 +71,14 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     var trackQueue: [TrackQueueView] = [TrackQueueView]()
     var mainWindowController: MainWindowController?
     
-    @IBOutlet weak var tableView: TableViewYouCanPressSpacebarOn!
+    @IBOutlet weak var tableView: TrackQueueTableView!
     
     var dragTypes = ["Track", "public.TrackQueueView"]
     
+    @IBOutlet weak var scrollView: NSScrollView!
     var currentContext: String?
     var currentTrackIndex: Int?
-    var numPastTracks = 0
-    var numPastTracksToShow = 3
-    var globalOffset = 0
     var fileManager = FileManager.default
-    var showAllTracks = false
     var temporaryPooForDragging: PlaylistOrderObject?
     var temporaryPooIndexForDragging: Int?
     var currentAudioSource: SourceListItem?
@@ -179,17 +176,10 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         newSourceView.source = context
         newSourceView.viewType = .source
         trackQueue.append(newSourceView)
+        tableView!.reloadData()
     }
     
-    @IBAction func togglePastTracks(_ sender: AnyObject) {
-        if showAllTracks == true {
-            showAllTracks = false
-        }
-        else if showAllTracks == false {
-            showAllTracks = true
-        }
-        tableView?.reloadData()
-    }
+    
     @IBAction func makePlaylistFromTrackQueueSelection(_ sender: AnyObject) {
         makePlaylistFromSelection()
     }
@@ -212,15 +202,22 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         tableView?.reloadData()
     }
     
+    func advanceScroll() {
+        print("scroll value \(scrollView.verticalScroller?.floatValue)")
+        print("minimum value for scrolling to bottom \((tableView.frame.height - 92) / tableView.frame.height)")
+        if CGFloat(scrollView!.verticalScroller!.floatValue) >= ((tableView.frame.height - 92) / tableView.frame.height) || tableView.frame.height <= scrollView.frame.height {
+            print("scrolling to bottom")
+            NSAnimationContext.runAnimationGroup({ $0.allowsImplicitAnimation = true; tableView.scroll(NSPoint(x: 0, y: tableView.frame.height))}, completionHandler: nil)
+        } else {
+            print("not scrolling to bottom")
+        }
+    }
+    
     func nextTrack() {
         print("next track in track queue called")
         if currentTrackIndex != nil && trackQueue.count > 0 && ((trackQueue[currentTrackIndex! + 1]).viewType == .futureTrack || trackQueue[currentTrackIndex! + 1].viewType == .transient) {
             (trackQueue[currentTrackIndex!]).viewType = .pastTrack
             currentTrackIndex! += 1
-            numPastTracks += 1
-            if numPastTracks >= numPastTracksToShow {
-                globalOffset += 1
-            }
             if (trackQueue.count > currentTrackIndex! + 1) {
                 print("detected queued tracks")
                 trackQueue[currentTrackIndex!].viewType = .currentTrack
@@ -233,7 +230,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 self.currentTrack = trackQueue[currentTrackIndex!].track
             }
         }
-        tableView?.reloadData()
+        advanceScroll()
     }
     
     func cleanUp() {
@@ -260,10 +257,6 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                     newFutureTrack.viewType = .transient
                     trackQueue[currentTrackIndex! - 1].viewType = .currentTrack
                     currentTrackIndex! -= 1
-                    numPastTracks -= 1
-                    if numPastTracks >= numPastTracksToShow - 1 {
-                        globalOffset -= 1
-                    }
                     mainWindowController?.delegate?.audioModule.currentTrackLocation = track.track?.location
                     mainWindowController?.delegate?.audioModule.skip_backward()
                     notEnablingUndo {
@@ -449,14 +442,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     }
     
     func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
-        let actualRow: Int
-        switch showAllTracks {
-        case true:
-            actualRow = row
-        default:
-            actualRow = row + globalOffset
-        }
-        if actualRow <= currentTrackIndex {
+        if row <= currentTrackIndex {
             return NSDragOperation()
         }
         else {
@@ -466,49 +452,28 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     
     func makePlaylistFromSelection() {
         var track_id_list = [Int]()
-        let select_offset: Int
-        switch showAllTracks {
-        case true:
-            select_offset = 0
-        default:
-            select_offset = globalOffset
-        }
         let thing = self.tableView!.selectedRowIndexes
         for (index, value) in thing.enumerated() {
-            let id = self.trackQueue[index + select_offset].track!.id
+            let id = self.trackQueue[index].track!.id
             track_id_list.append(Int(id!))
         }
         mainWindowController?.createPlaylistFromTracks(track_id_list)
     }
     
     func addTracksToQueue(_ row: Int?, tracks: [Track]) {
-        var actualRow: Int
-        let theRow = row == nil ? self.tableView.numberOfRows : row!
-        switch showAllTracks {
-        case true:
-            actualRow = theRow
-        default:
-            actualRow = theRow + globalOffset
-        }
+        var theRow = row == nil ? self.tableView.numberOfRows : row!
         for track in tracks {
-            insertTrackInQueue(track, index: actualRow, context: currentSourceListItem!.name!, manually: true)
-            let queueIndex = currentTrackIndex == nil ? actualRow : actualRow - currentTrackIndex! - 1
-            print("queue index \(queueIndex), actualRow \(actualRow), currentIndex \(currentTrackIndex)")
+            insertTrackInQueue(track, index: theRow, context: currentSourceListItem!.name!, manually: true)
+            let queueIndex = currentTrackIndex == nil ? theRow : theRow - currentTrackIndex! - 1
+            print("queue index \(theRow), actualRow \(theRow), currentIndex \(currentTrackIndex)")
             mainWindowController?.delegate?.audioModule.addTrackToQueue(track, index: queueIndex)
-            actualRow += 1
+            theRow += 1
         }
         modifyPlayOrderArrayForQueuedTracks(tracks)
         tableView.reloadData()
     }
     
     func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
-        var actualRow: Int
-        switch showAllTracks {
-        case true:
-            actualRow = row
-        default:
-            actualRow = row + globalOffset
-        }
         print("accept drop")
         if (info.draggingPasteboard().types!.contains("Track")) {
             let thing = info.draggingPasteboard().data(forType: "Track")
@@ -532,11 +497,12 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             var index_offset = 0
             let flippedRows = rows.reversed().map({return $0})
             for (index, element) in flippedRows.enumerated() {
+                //not working properly when showing all tracks
                 tableView.moveRow(at: element + item_offset, to: row + index_offset)
-                let tqv = trackQueue.remove(at: element + item_offset + globalOffset)
-                trackQueue.insert(tqv, at: row + index_offset + globalOffset)
-                let t = self.mainWindowController!.delegate!.audioModule.trackQueue.remove(at: element + item_offset + globalOffset - currentTrackIndex! - 1)
-                self.mainWindowController?.delegate?.audioModule.trackQueue.insert(t, at: row + index_offset + globalOffset - currentTrackIndex! - 1)
+                let tqv = trackQueue.remove(at: element + item_offset)
+                trackQueue.insert(tqv, at: row + index_offset)
+                let t = self.mainWindowController!.delegate!.audioModule.trackQueue.remove(at: element + item_offset - currentTrackIndex! - 1)
+                self.mainWindowController?.delegate?.audioModule.trackQueue.insert(t, at: row + index_offset - currentTrackIndex! - 1)
                 if index + 1 < flippedRows.count && flippedRows[index + 1] >= row {
                     item_offset += 1
                 } else {
@@ -562,13 +528,6 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     
     func interpretDeleteEvent() {
         guard tableView.selectedRow > -1 else {return}
-        let select_offset: Int
-        switch showAllTracks {
-        case true:
-            select_offset = 0
-        default:
-            select_offset = globalOffset
-        }
         //terrible/slow implementation
         var indices = [Int]()
         for index in tableView.selectedRowIndexes {
@@ -577,9 +536,9 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         indices.sort()
         indices = indices.reversed()
         for index in indices {
-            print("index is \(index), glos is \(select_offset)")
-            self.trackQueue.remove(at: index + select_offset)
-            var newIndex: Int = index + select_offset
+            print("index is \(index)")
+            self.trackQueue.remove(at: index)
+            var newIndex: Int = index
             if self.currentTrackIndex != nil {
                 newIndex -= self.currentTrackIndex!
             }
@@ -597,8 +556,6 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 deletedIndices.append(index)
                 if self.currentTrackIndex != nil && index < self.currentTrackIndex {
                     self.currentTrackIndex! -= 1
-                    self.globalOffset -= 1
-                    self.numPastTracks -= 1
                 }
             }
         }
@@ -609,23 +566,12 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     }
     
     func numberOfRows(in tableView: NSTableView) -> Int {
-        switch showAllTracks {
-        case true:
-            return trackQueue.count
-        default:
-            return trackQueue.count - globalOffset
-        }
+        return trackQueue.count
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         //uses cell.subviews[x] because IB can't connect outlets from elements to nstablecellview subclasses using .xibs, apparently
-        var object: TrackQueueView
-        switch showAllTracks {
-        case true:
-            object = trackQueue[row]
-        default:
-            object = trackQueue[row + globalOffset]
-        }
+        var object = trackQueue[row]
         if tableColumn?.identifier == "Is Playing" {
             switch object.viewType! {
             case .currentTrack:
@@ -638,7 +584,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             switch object.viewType! {
             case .pastTrack:
                 let result = tableView.make(withIdentifier: "pastTrack", owner: nil) as! PastTrackCell
-                (result.subviews[3] as! NSTextField).stringValue = object.track!.name!
+                (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
                 var artist_aa_string = ""
                 if object.track!.artist != nil {
                     artist_aa_string += object.track!.artist!.name!
@@ -646,22 +592,21 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 if object.track!.album != nil {
                     artist_aa_string += " - " + object.track!.album!.name!
                 }
-                (result.subviews[2] as! NSTextField).stringValue = artist_aa_string
+                (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
                 if object.track!.album?.primary_art != nil {
                     let art = object.track?.album?.primary_art
                     let path = art?.artwork_location!
                     let url = URL(string: path!)
                     let image = NSImage(contentsOf: url!)
-                    (result.subviews[1] as! NSImageView).image = image
+                    (result.subviews[0] as! NSImageView).image = image
                 }
                 else {
-                    (result.subviews[1] as! NSImageView).image = nil
+                    (result.subviews[0] as! NSImageView).image = nil
                 }
-                (result.subviews[0] as! NSImageView).image = nil
                 return result
             case .currentTrack:
-                let result = tableView.make(withIdentifier: "futureTrack", owner: nil) as! TrackNameTableCell
-                (result.subviews[3] as! NSTextField).stringValue = object.track!.name!
+                let result = tableView.make(withIdentifier: "currentTrack", owner: nil) as! TrackNameTableCell
+                (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
                 var artist_aa_string = ""
                 if object.track!.artist != nil {
                     artist_aa_string += object.track!.artist!.name!
@@ -669,21 +614,21 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 if object.track!.album != nil {
                     artist_aa_string += " - " + object.track!.album!.name!
                 }
-                (result.subviews[2] as! NSTextField).stringValue = artist_aa_string
+                (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
                 if object.track!.album?.primary_art != nil {
                     let art = object.track?.album?.primary_art
                     let path = art?.artwork_location!
                     let url = URL(string: path!)
                     let image = NSImage(contentsOf: url!)
-                    (result.subviews[1] as! NSImageView).image = image
+                    (result.subviews[0] as! NSImageView).image = image
                 }
                 else {
-                    (result.subviews[1] as! NSImageView).image = nil
+                    (result.subviews[0] as! NSImageView).image = nil
                 }
-                if mainWindowController?.paused == true {
-                    (result.subviews[0] as! NSImageView).image = NSImage(named: "NSTouchBarAudioOutputVolumeOffTemplate")
+                if mainWindowController?.paused != true {
+                    (result.subviews[3] as! NSImageView).image = NSImage(named: "NSTouchBarAudioOutputVolumeMedTemplate")
                 } else {
-                    (result.subviews[0] as! NSImageView).image = NSImage(named: "NSTouchBarAudioOutputVolumeMediumTemplate")
+                    (result.subviews[3] as! NSImageView).image = NSImage(named: "NSTouchBarAudioOutputVolumeOffTemplate")
                 }
                 return result
             case .source:
@@ -692,7 +637,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 return result
             case .futureTrack:
                 let result = tableView.make(withIdentifier: "futureTrack", owner: nil) as! TrackNameTableCell
-                (result.subviews[3] as! NSTextField).stringValue = object.track!.name!
+                (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
                 var artist_aa_string = ""
                 if object.track!.artist != nil {
                     artist_aa_string += object.track!.artist!.name!
@@ -700,22 +645,21 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 if object.track!.album != nil {
                     artist_aa_string += " - " + object.track!.album!.name!
                 }
-                (result.subviews[2] as! NSTextField).stringValue = artist_aa_string
+                (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
                 if object.track!.album?.primary_art != nil {
                     let art = object.track?.album?.primary_art
                     let path = art?.artwork_location!
                     let url = URL(string: path!)
                     let image = NSImage(contentsOf: url!)
-                    (result.subviews[1] as! NSImageView).image = image
+                    (result.subviews[0] as! NSImageView).image = image
                 }
                 else {
-                    (result.subviews[1] as! NSImageView).image = nil
+                    (result.subviews[0] as! NSImageView).image = nil
                 }
-                (result.subviews[0] as! NSImageView).image = nil
                 return result
             case .transient:
                 let result = tableView.make(withIdentifier: "futureTrack", owner: nil) as! TrackNameTableCell
-                (result.subviews[3] as! NSTextField).stringValue = object.track!.name!
+                (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
                 var artist_aa_string = ""
                 if object.track!.artist != nil {
                     artist_aa_string += object.track!.artist!.name!
@@ -723,21 +667,25 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 if object.track!.album != nil {
                     artist_aa_string += " - " + object.track!.album!.name!
                 }
-                (result.subviews[2] as! NSTextField).stringValue = artist_aa_string
+                (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
                 if object.track!.album?.primary_art != nil {
                     let art = object.track?.album?.primary_art
                     let path = art?.artwork_location!
                     let url = URL(string: path!)
                     let image = NSImage(contentsOf: url!)
-                    (result.subviews[1] as! NSImageView).image = image
+                    (result.subviews[0] as! NSImageView).image = image
                 }
                 else {
-                    (result.subviews[1] as! NSImageView).image = nil
+                    (result.subviews[0] as! NSImageView).image = nil
                 }
-                (result.subviews[0] as! NSImageView).image = nil
                 return result
             }
         }
+    }
+    
+    func reloadCurrentTrack() {
+        let indexSet = IndexSet(integer: self.currentTrackIndex!)
+        self.tableView.reloadData(forRowIndexes: indexSet, columnIndexes: IndexSet(integer: 0))
     }
     
     override func viewDidLoad() {
@@ -747,6 +695,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         tableView!.register(forDraggedTypes: ["Track", "public.TrackQueueView"])
         tableView.trackQueueViewController = self
         // Do view setup here.
+        tableView.scroll(NSPoint(x: 0, y: tableView.frame.height))
     }
 
     

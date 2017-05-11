@@ -2,7 +2,7 @@
 //  SourceListItem+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 3/25/17.
+//  Created by John Moody on 5/6/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 
@@ -13,7 +13,7 @@ import CoreData
 extension SourceListItem {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<SourceListItem> {
-        return NSFetchRequest<SourceListItem>(entityName: "SourceListItem");
+        return NSFetchRequest<SourceListItem>(entityName: "SourceListItem")
     }
 
     @NSManaged public var is_folder: NSNumber?

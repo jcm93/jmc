@@ -52,22 +52,22 @@
                         <rect key="frame" x="0.0" y="36" width="1683" height="954"/>
                         <subviews>
                             <splitView fixedFrame="YES" arrangesAllSubviews="NO" autosaveName="Source Area Split View" dividerStyle="thin" id="cpq-tS-fYo" userLabel="Source Area Split View">
-                                <rect key="frame" x="0.0" y="0.0" width="251" height="954"/>
+                                <rect key="frame" x="0.0" y="0.0" width="250" height="954"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <box verticalHuggingPriority="750" misplaced="YES" boxType="separator" id="NCt-3z-jDe">
-                                        <rect key="frame" x="0.0" y="-2" width="251" height="5"/>
+                                        <rect key="frame" x="0.0" y="-2" width="250" height="5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" id="Cl8-AN-f4P"/>
                                         </constraints>
                                     </box>
                                     <customView fixedFrame="YES" id="NBm-y3-IWU" userLabel="Source List Target View">
-                                        <rect key="frame" x="0.0" y="2" width="251" height="704"/>
+                                        <rect key="frame" x="0.0" y="2" width="250" height="704"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     </customView>
-                                    <customView misplaced="YES" id="M4o-nI-Oef" userLabel="Artwork Target View">
-                                        <rect key="frame" x="0.0" y="707" width="251" height="247"/>
+                                    <customView id="M4o-nI-Oef" userLabel="Artwork Target View">
+                                        <rect key="frame" x="0.0" y="707" width="250" height="247"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="M4o-nI-Oef" secondAttribute="height" multiplier="1:1" id="MEG-4N-o0r"/>
@@ -88,11 +88,11 @@
                                 </holdingPriorities>
                             </splitView>
                             <splitView fixedFrame="YES" placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="568" arrangesAllSubviews="NO" autosaveName="Library Split View" dividerStyle="thin" id="wUo-rb-c1E" userLabel="Library Split View">
-                                <rect key="frame" x="252" y="0.0" width="1177" height="954"/>
+                                <rect key="frame" x="251" y="0.0" width="1179" height="954"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </splitView>
                             <customView fixedFrame="YES" id="267-Gg-sLE">
-                                <rect key="frame" x="1430" y="0.0" width="253" height="954"/>
+                                <rect key="frame" x="1431" y="0.0" width="252" height="954"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </customView>
                         </subviews>
@@ -187,7 +187,7 @@
                                                     <subviews>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WDF-BI-DbQ">
                                                             <rect key="frame" x="330" y="32" width="41" height="17"/>
-                                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Label" placeholderString="PLacehohadjkldr" usesSingleLineMode="YES" id="aIO-ox-2oB">
+                                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Label" placeholderString="" usesSingleLineMode="YES" id="aIO-ox-2oB">
                                                                 <font key="font" metaFont="system"/>
                                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

@@ -186,6 +186,7 @@
 		0DF4BEEE1CFBE4CB00AC5824 /* iTunesLibraryParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */; };
 		0DF4BEF31CFD0D4E00AC5824 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF4BEF11CFD0D4E00AC5824 /* MainWindowController.swift */; };
 		0DF4BEF41CFD0D4E00AC5824 /* MainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DF4BEF21CFD0D4E00AC5824 /* MainWindowController.xib */; };
+		0DFE2E5A1EC0DAB6007EEF04 /* TrackQueueTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFE2E591EC0DAB6007EEF04 /* TrackQueueTableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -406,6 +407,7 @@
 		0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesLibraryParser.swift; sourceTree = "<group>"; };
 		0DF4BEF11CFD0D4E00AC5824 /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
 		0DF4BEF21CFD0D4E00AC5824 /* MainWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindowController.xib; sourceTree = "<group>"; };
+		0DFE2E591EC0DAB6007EEF04 /* TrackQueueTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackQueueTableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -466,6 +468,7 @@
 				0D299B221DF158A60009CF7A /* AdvancedFilterViewController.xib */,
 				0D388AAC1E1F2C8800D25A7D /* AddPlaylistButton.swift */,
 				0D299B191DF11F140009CF7A /* TrackQueueViewController.swift */,
+				0DFE2E591EC0DAB6007EEF04 /* TrackQueueTableView.swift */,
 				0D299B1A1DF11F140009CF7A /* TrackQueueViewController.xib */,
 				0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */,
 				0D299B151DF111490009CF7A /* AlbumArtViewController.swift */,
@@ -1194,6 +1197,7 @@
 				0DEF66BA1D383A8700EA3ADC /* Artist+CoreDataProperties.swift in Sources */,
 				0D8AFE5C1E6F4FEB004AC584 /* LibraryManagerSourceSelector.swift in Sources */,
 				0DEF66BD1D383A8700EA3ADC /* Composer.swift in Sources */,
+				0DFE2E5A1EC0DAB6007EEF04 /* TrackQueueTableView.swift in Sources */,
 				0D2EEFB61DB97DEC0065B0B3 /* CachedOrder+CoreDataProperties.swift in Sources */,
 				0D60F52C1E87372D00CA5420 /* RemoveSourceSheetController.swift in Sources */,
 			);
