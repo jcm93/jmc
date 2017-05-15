@@ -177,7 +177,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
             }
         }
         let archivedSortDescriptor = NSKeyedArchiver.archivedData(withRootObject: tableView.sortDescriptors)
-        if tableViewController?.playlist?.track_id_list != nil {
+        if tableViewController?.playlist != nil {
             UserDefaults.standard.set(archivedSortDescriptor, forKey: DEFAULTS_PLAYLIST_SORT_DESCRIPTOR_STRING)
         } else {
             UserDefaults.standard.set(archivedSortDescriptor, forKey: DEFAULTS_LIBRARY_SORT_DESCRIPTOR_STRING)
@@ -230,15 +230,16 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
             return true
         } else {
             //if we've reached this point, we must be in a playlist with a valid track id list, and the table must be sorted by playlist order
-            var track_id_list = tableViewController!.playlist!.track_id_list as! [Int]
-            var ids = [Int]()
-            for index in draggedRowIndexes!.reversed() {
-                ids.append(track_id_list[index])
-                track_id_list.remove(at: index)
+            let currentPlaylistOrder = tableViewController?.playlist?.tracks?.mutableCopy() as! NSMutableOrderedSet
+            let objects = currentPlaylistOrder.objects(at: draggedRowIndexes!)
+            var rowAtWhichToInsert = row
+            for index in draggedRowIndexes! {
+                if index < row {
+                    rowAtWhichToInsert -= 1
+                }
             }
-            ids = ids.reversed()
-            track_id_list.insert(contentsOf: ids, at: row)
-            tableViewController!.playlist!.track_id_list = track_id_list as NSObject?
+            currentPlaylistOrder.removeObjects(at: draggedRowIndexes!)
+            currentPlaylistOrder.insert(objects, at: IndexSet(integersIn: rowAtWhichToInsert..<rowAtWhichToInsert + objects.count))
             tableViewController?.initializeForPlaylist()
             draggedRowIndexes = nil
             return true

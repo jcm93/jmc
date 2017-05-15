@@ -49,6 +49,7 @@ class iTunesLibraryParser: NSObject {
             let cd_track = NSEntityDescription.insertNewObject(forEntityName: "Track", into: subContext) as! Track
             let new_track_view = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: subContext) as! TrackView
             cd_track.view = new_track_view
+            cd_track.library = library
             if let trackDict = value as? NSDictionary {
                 cd_track.id                 = (trackDict[iTunesImporterTrackIDKey] as! NSNumber)
                 self.addedTracks[cd_track.id!.intValue] = cd_track
@@ -143,30 +144,17 @@ class iTunesLibraryParser: NSObject {
                     dateComponents .calendar = Calendar(identifier: .gregorian)
                     cd_track.album?.release_date = dateComponents.date! as NSDate
                 }
-                cd_track.album?.release_date = trackDict[iTunesImporterReleaseDateKey] as? NSDate
+                if let releaseDate              = trackDict[iTunesImporterReleaseDateKey] as? NSDate {
+                    if cd_track.album?.release_date == nil {
+                        cd_track.album?.release_date = releaseDate
+                    }
+                }
                 cd_track.album?.is_compilation = trackDict[iTunesImporterCompilationKey] as? NSNumber
                 DispatchQueue.main.async {
                     visualUpdateHandler?.increment(thingsDone: index)
                 }
                 index += 1
             }
-        }
-        do {
-            try subContext.save()
-        } catch {
-            print(error)
-        }
-        let trackArray = Array(addedTracks.values)
-        DispatchQueue.main.async {
-            visualUpdateHandler?.prepareForNewTask(actionName: "Reordering", thingName: "sort caches", thingCount: cachedOrders!.count)
-        }
-        index = 0
-        for order in cachedOrders!.values.map({return subContext.object(with: $0.objectID) as! CachedOrder}) {
-            reorderForTracksiTunesImporter(trackArray, cachedOrder: order)
-            DispatchQueue.main.async {
-                visualUpdateHandler?.increment(thingsDone: index)
-            }
-            index += 1
         }
         
         //create playlists
@@ -200,7 +188,7 @@ class iTunesLibraryParser: NSObject {
                 }
             }
             
-
+            
             //create source list item for playlist
             let cd_playlist_source_list_item = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: subContext) as! SourceListItem
             cd_playlist_source_list_item.parent = playlistsHeader!
@@ -212,30 +200,44 @@ class iTunesLibraryParser: NSObject {
             index += 1
         }
         
-        
-        visualUpdateHandler?.makeIndeterminate(actionName: "Committing changes...")
-        
         do {
             try subContext.save()
-            print("done saving subcontext")
         } catch {
-            print("error: \(error)")
+            print(error)
         }
-        
+        let trackArray = Array(addedTracks.values)
         DispatchQueue.main.async {
-            do {
-                try managedContext.save()
-                print("done saving main context")
-            } catch {
-                print("error: \(error)")
+            visualUpdateHandler?.prepareForNewTask(actionName: "Reordering", thingName: "sort caches", thingCount: cachedOrders!.count)
+        }
+        index = 0
+        for order in cachedOrders!.values.map({return subContext.object(with: $0.objectID) as! CachedOrder}){
+            reorderForTracks(trackArray, cachedOrder: order, subContext: subContext)
+            DispatchQueue.main.async {
+                visualUpdateHandler?.increment(thingsDone: index)
             }
-            //get requisite next IDs
-            let highestTrackID = (getInstanceWithHighestIDForEntity("Track") as! Track).id
-            library?.next_track_id = highestTrackID
-            
-            let highestPlaylistID = (getInstanceWithHighestIDForEntity("SongCollection") as! SongCollection).id
-            library?.next_playlist_id = highestPlaylistID
-            visualUpdateHandler?.finish()
+            index += 1
+        }
+        do {
+            try subContext.save()
+        } catch {
+            print(error)
+        }
+        DispatchQueue.main.async {
+            visualUpdateHandler?.makeIndeterminate(actionName: "Committing changes...")
+            DispatchQueue.main.async {
+                do {
+                    try managedContext.save()
+                    print("done saving main context")
+                } catch {
+                    print("error: \(error)")
+                }
+                let highestTrackID = (getInstanceWithHighestIDForEntity("Track") as! Track).id
+                (managedContext.object(with: library!.objectID) as! Library).next_track_id = highestTrackID
+                
+                let highestPlaylistID = (getInstanceWithHighestIDForEntity("SongCollection") as! SongCollection).id
+                (managedContext.object(with: library!.objectID) as! Library).next_playlist_id = highestPlaylistID
+                visualUpdateHandler?.finish()
+            }
         }
     }
 }

@@ -170,14 +170,14 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         parentItem.mutableOrderedSetValue(forKey: "children").insert(items, at: indices)
     }
     
-    func createPlaylist(_ tracks: [Int]?, smart_criteria: SmartCriteria?) {
+    func createPlaylist(_ tracks: [Track]?, smart_criteria: SmartCriteria?) {
         //create playlist
         let playlist = NSEntityDescription.insertNewObject(forEntityName: "SongCollection", into: managedContext) as! SongCollection
         let playlistItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         playlistItem.playlist = playlist
         playlistItem.name = "New Playlist"
         if tracks != nil {
-            playlist.track_id_list = tracks! as NSObject?
+            playlist.tracks = NSOrderedSet(array: tracks!)
         }
         if smart_criteria != nil {
             playlist.smart_criteria = smart_criteria
@@ -355,19 +355,19 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     
     func doneAddingNetworkPlaylistCallback(_ item: SourceListItem) {
         guard currentSourceListItem == item else {return}
-        let track_id_list = item.playlist?.track_id_list as? [Int]
-        mainWindowController?.networkPlaylistCallback(Int(item.playlist!.id!), idList: track_id_list!)
+        //let track_id_list = item.playlist?.track_id_list as? [Int]
+        //mainWindowController?.networkPlaylistCallback(Int(item.playlist!.id!), idList: track_id_list!)
     }
     
     func outlineViewSelectionDidChange(_ notification: Notification) {
         if let selection = (sourceList.item(atRow: sourceList.selectedRow) as? SourceListItem) {
             self.currentSourceListItem = selection
-            let track_id_list = selection.playlist?.track_id_list as? [Int]
-            if track_id_list == nil && selection.is_network == true && selection.playlist?.id != nil {
+            //let track_id_list = selection.playlist?.track_id_list as? [Int]
+            /*if track_id_list == nil && selection.is_network == true && selection.playlist?.id != nil {
                 print("outline view detected network playlist")
                 requestedSharedPlaylists[selection.playlist!.id!] = selection
                 self.server!.getDataForPlaylist(selection)
-            }
+            }*/
             mainWindowController?.switchToPlaylist(selection)
         }
     }
@@ -466,16 +466,6 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
                 return result
             }()
             playlist?.addToTracks(NSOrderedSet(array: tracks.map({return $0.view!})))
-            for track in tracks {
-                var id_list: [Int]
-                if playlist!.track_id_list != nil {
-                    id_list = playlist!.track_id_list as! [Int]
-                } else {
-                    id_list = [Int]()
-                }
-                id_list.append(Int(track.id!))
-                playlist?.track_id_list = id_list as NSObject?
-            }
         } else if info.draggingPasteboard().data(forType: "NetworkTrack") != nil {
             print("processing network track transfers")
             let playlistItem = item as! SourceListItem

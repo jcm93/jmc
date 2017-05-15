@@ -109,7 +109,6 @@
         <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_smart" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="track_id_list" optional="YES" attributeType="Transformable" syncable="YES"/>
         <relationship name="if_master_library" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="master_playlist" inverseEntity="Library" syncable="YES"/>
         <relationship name="if_master_list_item" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SourceListItem" inverseName="master_playlist" inverseEntity="SourceListItem" syncable="YES"/>
         <relationship name="list_item" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SourceListItem" inverseName="playlist" inverseEntity="SourceListItem" syncable="YES"/>
@@ -202,7 +201,7 @@
         <element name="Property" positionX="-1251" positionY="660" width="128" height="180"/>
         <element name="SharedLibrary" positionX="-1557" positionY="99" width="128" height="60"/>
         <element name="SmartCriteria" positionX="-1557" positionY="99" width="128" height="120"/>
-        <element name="SongCollection" positionX="-864" positionY="174" width="128" height="195"/>
+        <element name="SongCollection" positionX="-864" positionY="174" width="128" height="180"/>
         <element name="SortOrder" positionX="-1548" positionY="108" width="128" height="75"/>
         <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="210"/>
         <element name="Track" positionX="-1026" positionY="-54" width="128" height="615"/>

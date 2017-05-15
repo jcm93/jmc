@@ -58,9 +58,9 @@ class SharedLibraryRequestHandler {
         print(result)
         guard result != nil else {return nil}
         let playlistSongsRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Track")
-        let id_array = result?.track_id_list
+        let id_array = [Int]()
         guard id_array != nil else {return nil}
-        let playlistSongsPredicate = NSPredicate(format: "id in %@", id_array!)
+        let playlistSongsPredicate = NSPredicate(format: "id in %@", id_array)
         playlistSongsRequest.predicate = playlistSongsPredicate
         let results: [Track]? = {
             do {

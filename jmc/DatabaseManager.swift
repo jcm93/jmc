@@ -574,7 +574,7 @@ class DatabaseManager: NSObject {
             visualUpdateHandler?.makeIndeterminate(actionName: "Repopulating sort cache...")
             DispatchQueue.main.async {
                 for order in cachedOrders! {
-                    reorderForTracks(tracks, cachedOrder: order.value)
+                    reorderForTracks(tracks, cachedOrder: order.value, subContext: nil)
                 }
                 visualUpdateHandler?.makeIndeterminate(actionName: "Committing changes...")
                 DispatchQueue.main.async {
@@ -622,7 +622,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editName(tracks, name: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order)
+            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         for track in tracks {
             moveFileAfterEdit(track)
@@ -636,7 +636,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editArtist(tracks, artistName: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order)
+            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         for track in tracks {
             moveFileAfterEdit(track)
@@ -650,7 +650,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editAlbumArtist(tracks, albumArtistName: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order)
+            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         for track in tracks {
             moveFileAfterEdit(track)
@@ -664,7 +664,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager?.beginUndoGrouping()
         editAlbum(tracks, albumName: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order)
+            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         for track in tracks {
             moveFileAfterEdit(track)
@@ -678,7 +678,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editTrackNum(tracks, num: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order)
+            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         for track in tracks {
             moveFileAfterEdit(track)
@@ -699,7 +699,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editDiscNum(tracks, num: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order)
+            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         for track in tracks {
             moveFileAfterEdit(track)
@@ -719,7 +719,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager?.beginUndoGrouping()
         editComposer(tracks, composerName: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order)
+            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Composer")
@@ -737,7 +737,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editIsComp(tracks, isComp: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order)
+            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         for track in tracks {
             moveFileAfterEdit(track)
@@ -773,7 +773,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager?.beginUndoGrouping()
         editSortAlbum(tracks, sortAlbum: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order)
+            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Sort Album")
@@ -783,7 +783,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager?.beginUndoGrouping()
         editSortAlbumArtist(tracks, sortAlbumArtist: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order)
+            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Sort Album Artist")
@@ -793,7 +793,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager?.beginUndoGrouping()
         editSortArtist(tracks, sortArtist: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order)
+            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Sort Artist")
@@ -803,7 +803,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager?.beginUndoGrouping()
         editSortComposer(tracks, sortComposer: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order)
+            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Sort Composer")
@@ -813,7 +813,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager?.beginUndoGrouping()
         editSortName(tracks, sortName: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order)
+            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Sort Name")
@@ -1115,7 +1115,7 @@ class DatabaseManager: NSObject {
         }
         if moveFileForNetworkTrackToAppropriateLocationWithData(newTrack, data: data) == true {
             for order in cachedOrders! {
-                reorderForTracks([newTrack], cachedOrder: order.value)
+                reorderForTracks([newTrack], cachedOrder: order.value, subContext: nil)
             }
         } else {
             managedContext.delete(newTrack)
@@ -1483,7 +1483,5 @@ class DatabaseManager: NSObject {
             }
             addedTrackViews.append(newTrackView)
         }
-        let track_id_list = addedTrackViews.map({return Int($0.track!.id!)})
-        item.playlist?.track_id_list = track_id_list as NSObject?
     }
 }

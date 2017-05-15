@@ -454,13 +454,8 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     }
     
     func makePlaylistFromSelection() {
-        var track_id_list = [Int]()
-        let thing = self.tableView!.selectedRowIndexes
-        for (index, value) in thing.enumerated() {
-            let id = self.trackQueue[index].track!.id
-            track_id_list.append(Int(id!))
-        }
-        mainWindowController?.createPlaylistFromTracks(track_id_list)
+        let tracks = self.tableView.selectedRowIndexes.map({return self.trackQueue[$0].track!})
+        mainWindowController?.createPlaylistFromTracks(tracks)
     }
     
     func addTracksToQueue(_ row: Int?, tracks: [Track]) {

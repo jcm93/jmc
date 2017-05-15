@@ -1090,8 +1090,8 @@ func testFixIndices(_ set: NSMutableOrderedSet, order: String) {
 }
 
 
-func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder) {
-    let actualTracks = tracks.map({return managedContext.object(with: $0.objectID) as! Track})
+func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder, subContext: NSManagedObjectContext?) {
+    let actualTracks = subContext != nil ? tracks : tracks.map({return managedContext.object(with: $0.objectID) as! Track})
     print("reordering for tracks for cached order \(cachedOrder.order!)")
     let comparator: (Track) -> (Track) -> ComparisonResult
     switch cachedOrder.order! {

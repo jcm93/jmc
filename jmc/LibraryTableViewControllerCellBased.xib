@@ -562,7 +562,7 @@
             </constraints>
             <point key="canvasLocation" x="1847" y="198"/>
         </customView>
-        <arrayController mode="entity" entityName="TrackView" automaticallyPreparesContent="YES" id="6rv-dK-iy8" customClass="DragAndDropArrayController" customModule="jmc" customModuleProvider="target">
+        <arrayController mode="entity" entityName="TrackView" id="6rv-dK-iy8" customClass="DragAndDropArrayController" customModule="jmc" customModuleProvider="target">
             <connections>
                 <binding destination="-2" name="managedObjectContext" keyPath="self.managedContext" id="L8y-Me-vAn"/>
             </connections>

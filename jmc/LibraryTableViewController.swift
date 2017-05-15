@@ -438,6 +438,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                 }().filter({(library: Library) in return libraryIsAvailable(library: library)})
             trackViewArrayController.fetchPredicate = NSPredicate(format: "track.library in %@", activeLibraries)
         }
+        trackViewArrayController.automaticallyPreparesContent = true
     }
     
     override func viewDidLoad() {

@@ -348,8 +348,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         showAdvancedFilter()
     }
     
-    func createPlaylistFromTracks(_ idList: [Int]) {
-        sourceListViewController?.createPlaylist(idList, smart_criteria: nil)
+    func createPlaylistFromTracks(_ tracks: [Track]) {
+        sourceListViewController?.createPlaylist(tracks, smart_criteria: nil)
     }
     func createPlaylistFromSmartCriteria(_ c: SmartCriteria) {
         sourceListViewController?.createPlaylist(nil, smart_criteria: c)

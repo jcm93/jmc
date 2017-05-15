@@ -87,6 +87,7 @@ class ImportWindowController: NSWindowController {
         DispatchQueue.global(qos: .default).async {
             appDelegate.iTunesParser?.makeLibrary(parentLibrary: library, visualUpdateHandler: appDelegate.backgroundAddFilesHandler)
         }
+        self.window?.close()
     }
     
     func openFile() {

@@ -20,7 +20,6 @@ extension SongCollection {
     @NSManaged public var is_network: NSNumber?
     @NSManaged public var is_smart: NSNumber?
     @NSManaged public var name: String?
-    @NSManaged public var track_id_list: NSObject?
     @NSManaged public var if_master_library: Library?
     @NSManaged public var if_master_list_item: SourceListItem?
     @NSManaged public var list_item: SourceListItem?
