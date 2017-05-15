@@ -360,15 +360,16 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     func outlineViewSelectionDidChange(_ notification: Notification) {
-        let selection = (sourceList.item(atRow: sourceList.selectedRow) as! SourceListItem)
-        self.currentSourceListItem = selection
-        let track_id_list = selection.playlist?.track_id_list as? [Int]
-        if track_id_list == nil && selection.is_network == true && selection.playlist?.id != nil {
-            print("outline view detected network playlist")
-            requestedSharedPlaylists[selection.playlist!.id!] = selection
-            self.server!.getDataForPlaylist(selection)
+        if let selection = (sourceList.item(atRow: sourceList.selectedRow) as? SourceListItem) {
+            self.currentSourceListItem = selection
+            let track_id_list = selection.playlist?.track_id_list as? [Int]
+            if track_id_list == nil && selection.is_network == true && selection.playlist?.id != nil {
+                print("outline view detected network playlist")
+                requestedSharedPlaylists[selection.playlist!.id!] = selection
+                self.server!.getDataForPlaylist(selection)
+            }
+            mainWindowController?.switchToPlaylist(selection)
         }
-        mainWindowController?.switchToPlaylist(selection)
     }
     
     func outlineView(_ outlineView: NSOutlineView, draggingSession session: NSDraggingSession, willBeginAt screenPoint: NSPoint, forItems draggedItems: [Any]) {
@@ -381,6 +382,28 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         //for intra-NSOV drags, we do not attach pasteboard data
         pasteboard.setData(nil, forType: "SourceListItem")
         return true
+    }
+    
+    override func keyDown(with event: NSEvent) {
+        if event.charactersIgnoringModifiers == String(Character(UnicodeScalar(NSDeleteCharacter)!)) {
+            deleteSelection()
+        }
+    }
+    
+    func deleteSelection() {
+        let playlistHeaderIndex = sourceList.row(forItem: playlistHeaderNode)
+        var validIndicesToDelete = IndexSet()
+        for index in sourceList.selectedRowIndexes {
+            if index > playlistHeaderIndex {
+                validIndicesToDelete.insert(index)
+            }
+        }
+        let sourceListItems = validIndicesToDelete.map({return sourceList.item(atRow: $0)})
+        for item in sourceListItems {
+            managedContext.delete(item as! NSManagedObject)
+        }
+        let viewIndices = IndexSet(validIndicesToDelete.map({return $0 - playlistHeaderIndex - 1}))
+        sourceList.removeItems(at: viewIndices, inParent: playlistHeaderNode, withAnimation: .effectFade)
     }
     
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
@@ -442,6 +465,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
                 }
                 return result
             }()
+            playlist?.addToTracks(NSOrderedSet(array: tracks.map({return $0.view!})))
             for track in tracks {
                 var id_list: [Int]
                 if playlist!.track_id_list != nil {

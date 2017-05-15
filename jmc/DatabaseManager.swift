@@ -104,11 +104,13 @@ class DatabaseManager: NSObject {
     func undoOperationThatMovedFiles(for tracks: [Track]) {
         print("undoing a move operation")
         for track in tracks {
-            let currentFileLocation = self.undoFileLocations[track]!.removeLast()
-            do {
-                try fileManager.moveItem(at: URL(string: currentFileLocation)!, to: URL(string: track.location!)!)
-            } catch {
-                print("error undoing move \(error)")
+            let currentFileLocation = self.undoFileLocations[track]?.removeLast()
+            if currentFileLocation != nil {
+                do {
+                    try fileManager.moveItem(at: URL(string: currentFileLocation!)!, to: URL(string: track.location!)!)
+                } catch {
+                    print("error undoing move \(error)")
+                }
             }
         }
     }

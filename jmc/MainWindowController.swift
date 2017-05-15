@@ -815,6 +815,15 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         print("break")
     }
     
+    func refreshCurrentSortOrder() {
+        let key = self.currentTableViewController?.tableView.sortDescriptors.first?.key
+        if key != nil, let orderName = keyToCachedOrderDictionary[key!], orderName != nil, let order = cachedOrders![orderName] {
+            print("fixing indices for current order")
+            fixIndicesImmutable(order: order)
+            self.currentTableViewController?.trackViewArrayController.rearrangeObjects()
+        }
+    }
+    
     //mark album art
     
     override func windowDidLoad() {

@@ -325,8 +325,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                 } else {
                     prunedResults = results as! [Track]
                 }
-                let track_id_list = prunedResults.map({return $0.id as! Int})
-                playlist?.track_id_list = track_id_list as NSObject?
+                playlist!.tracks = NSOrderedSet(array: prunedResults.map({return $0.view!}))
             }
         } catch {
             print(error)
@@ -418,38 +417,10 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     func initializeForPlaylist() {
         print("initializing for playlist")
-        var track_id_list: [Int] = []
-        var predicates = [NSPredicate]()
-        if item!.playlist?.track_id_list != nil {
-            track_id_list = item!.playlist!.track_id_list as! [Int]
-            let predicate = NSPredicate(format: "track.id in %@", track_id_list)
-            predicates.append(predicate)
-            
-            let fetchReq = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackView")
-            fetchReq.predicate = predicate
-            do {
-                let results = try managedContext.fetch(fetchReq) as! [TrackView]
-                let trackViewIDDictionary = NSMutableDictionary()
-                for result in results {
-                    trackViewIDDictionary[result.track!.id!] = result
-                }
-                var index = 1
-                for id in track_id_list {
-                    (trackViewIDDictionary[id] as! TrackView).playlist_order = index as NSNumber?
-                    index += 1
-                }
-            } catch {
-                print(error)
-            }
-        } else {
-            predicates.append(NSPredicate(format: "track.id in {}"))
+        trackViewArrayController.content = item!.playlist!.tracks!.array as! [TrackView]
+        for (index, trackView) in item!.playlist!.tracks!.array.enumerated() {
+            (trackView as! TrackView).playlist_order = index + 1 as NSNumber
         }
-        if item!.is_network == true {
-            predicates.append(NSPredicate(format: "track.is_network == true"))
-        } else {
-            predicates.append(NSPredicate(format: "track.is_network == nil or track.is_network == false"))
-        }
-        trackViewArrayController.fetchPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
     }
     
     func initializeForLibrary() {
@@ -484,16 +455,16 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         tableView.register(forDraggedTypes: [NSFilenamesPboardType])
         trackViewArrayController.mainWindow = self.mainWindowController
         if playlist != nil {
+            print("initializing for playlist")
             tableView.register(forDraggedTypes: ["Track"]) //to enable d&d reordering
             tableView.tableColumns[1].isHidden = false
             tableView.sortDescriptors = [tableView.tableColumns[1].sortDescriptorPrototype!]
             if playlist?.smart_criteria != nil {
                 initializeSmartPlaylist()
-            } else if playlist?.track_id_list != nil && self.needsPlaylistRefresh == true {
-                trackViewArrayController.fetchPredicate = NSPredicate(format: "track.id in %@", playlist?.track_id_list as! [Int])
             }
             initializeForPlaylist()
         } else {
+            print("initializing for library")
             tableView.tableColumns[1].isHidden = true
             if let sortData = UserDefaults.standard.object(forKey: DEFAULTS_LIBRARY_SORT_DESCRIPTOR_STRING) {
                 if let sortDescriptors = NSKeyedUnarchiver.unarchiveObject(with: sortData as! Data) {

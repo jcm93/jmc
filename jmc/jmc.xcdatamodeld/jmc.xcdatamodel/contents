@@ -39,6 +39,7 @@
     </entity>
     <entity name="CachedOrder" representedClassName=".CachedOrder" syncable="YES">
         <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="needs_update" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="order" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="filtered_track_views" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TrackView" inverseName="filtered_orders" inverseEntity="TrackView" syncable="YES"/>
         <relationship name="library" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="cached_orders" inverseEntity="Library" syncable="YES"/>
@@ -113,7 +114,7 @@
         <relationship name="if_master_list_item" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SourceListItem" inverseName="master_playlist" inverseEntity="SourceListItem" syncable="YES"/>
         <relationship name="list_item" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SourceListItem" inverseName="playlist" inverseEntity="SourceListItem" syncable="YES"/>
         <relationship name="smart_criteria" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SmartCriteria" inverseName="playlist" inverseEntity="SmartCriteria" syncable="YES"/>
-        <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrackView" inverseName="playlists" inverseEntity="TrackView" syncable="YES"/>
+        <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TrackView" inverseName="playlists" inverseEntity="TrackView" syncable="YES"/>
     </entity>
     <entity name="SortOrder" syncable="YES">
         <attribute name="order" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -195,13 +196,13 @@
         <element name="AlbumArtwork" positionX="-1757" positionY="81" width="128" height="135"/>
         <element name="AlbumArtworkCollection" positionX="-1764" positionY="243" width="128" height="103"/>
         <element name="Artist" positionX="-1323" positionY="117" width="128" height="150"/>
-        <element name="CachedOrder" positionX="-1262" positionY="-45" width="128" height="120"/>
+        <element name="CachedOrder" positionX="-1262" positionY="-45" width="128" height="135"/>
         <element name="Composer" positionX="-1539" positionY="375" width="128" height="135"/>
         <element name="Library" positionX="-801" positionY="-45" width="128" height="465"/>
         <element name="Property" positionX="-1251" positionY="660" width="128" height="180"/>
         <element name="SharedLibrary" positionX="-1557" positionY="99" width="128" height="60"/>
         <element name="SmartCriteria" positionX="-1557" positionY="99" width="128" height="120"/>
-        <element name="SongCollection" positionX="-864" positionY="174" width="128" height="193"/>
+        <element name="SongCollection" positionX="-864" positionY="174" width="128" height="195"/>
         <element name="SortOrder" positionX="-1548" positionY="108" width="128" height="75"/>
         <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="210"/>
         <element name="Track" positionX="-1026" positionY="-54" width="128" height="615"/>

@@ -58,6 +58,15 @@ class ImportWindowController: NSWindowController {
         let appDelegate = (NSApplication.shared().delegate as! AppDelegate)
         let library = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
         library.central_media_folder_url_string = pathURL.absoluteString
+        do {
+            let key = URLResourceKey.volumeURLKey
+            let resourceValues = try pathURL.resourceValues(forKeys: Set([key]))
+            let url = resourceValues.volume
+            library.volume_url_string = url!.absoluteString
+        } catch {
+            print(error)
+            fatalError()
+        }
         library.name = pathURL.lastPathComponent
         library.parent = globalRootLibrary
         library.is_active = true
@@ -74,36 +83,10 @@ class ImportWindowController: NSWindowController {
         globalRootLibrarySourceListItem!.addToChildren(librarySourceListItem)
 
         appDelegate.iTunesParser = self.iTunesParser
-        appDelegate.initializeProgressBarWindow()
-        print("made it here")
-        appDelegate.importProgressBar?.doStuff(library: library)
-        iTunesParser?.addObserver(self, forKeyPath: "doneEverything", options: .new, context: &my_special_context)
-    }
-    
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "doneEverything" {
-            print("window controller here")
-            completionHandler()
+        appDelegate.launchAddFilesDialog()
+        DispatchQueue.global(qos: .default).async {
+            appDelegate.iTunesParser?.makeLibrary(parentLibrary: library, visualUpdateHandler: appDelegate.backgroundAddFilesHandler)
         }
-    }
-    
-    func subContextDidSave(_ notification: Notification) {
-        print("main context merging changes, supposedly")
-        let selector = #selector(NSManagedObjectContext.mergeChanges(fromContextDidSave:))
-        managedContext.performSelector(onMainThread: selector, with: notification, waitUntilDone: true)
-    }
-    
-    func completionHandler() {
-        print("import window done clause")
-        do { try managedContext.save() } catch {print("\(error)")}
-        let appDelegate = (NSApplication.shared().delegate as! AppDelegate)
-        UserDefaults.standard.set(true, forKey: "hasMusic")
-        appDelegate.importProgressBar?.window?.close()
-        self.window?.close()
-        self.mainWindowController?.hasMusic = true
-        //self.mainWindowController?.sourceListTreeController.content = self.mainWindowController?.sourceListHeaderNodes
-        //self.mainWindowController?.windowDidLoad()
-        self.mainWindowController?.sourceListViewController?.viewDidLoad()
     }
     
     func openFile() {
@@ -117,7 +100,6 @@ class ImportWindowController: NSWindowController {
         }
         do {
             iTunesParser = try iTunesLibraryParser(path: path!)
-            NotificationCenter.default.addObserver(self, selector: #selector(subContextDidSave), name: NSNotification.Name.NSManagedObjectContextDidSave, object: nil)
         } catch {
             OKButton.isEnabled = false
         }

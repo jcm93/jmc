@@ -98,58 +98,84 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     }
     
     @IBAction func nameEdited(_ sender: Any) {
-        guard self.nameField.stringValue != nameIfAllEqual && (self.nameField.stringValue != "" && self.nameIfAllEqual == nil) else { return }
+        if self.nameField.stringValue == nameIfAllEqual { return }
+        if self.nameField.stringValue == "" && self.nameIfAllEqual == nil { return }
         databaseManager.nameEdited(tracks: self.selectedTracks!, value: self.nameField.stringValue)
+        self.nameIfAllEqual = self.nameField.stringValue
+        mainWindowController?.refreshCurrentSortOrder()
     }
     
     @IBAction func artistEdited(_ sender: Any) {
-        guard self.artistField.stringValue != artistNameIfAllEqual && (self.artistField.stringValue != "" && self.artistNameIfAllEqual == nil) else { return }
+        if self.artistField.stringValue == artistNameIfAllEqual { return }
+        if self.artistField.stringValue == "" && self.artistNameIfAllEqual == nil { return }
         databaseManager.artistEdited(tracks: self.selectedTracks!, value: self.artistField.stringValue)
+        self.artistNameIfAllEqual = self.artistField.stringValue
+        mainWindowController?.refreshCurrentSortOrder()
     }
     
     @IBAction func albumArtistEdited(_ sender: Any) {
-        guard self.albumArtistField.stringValue != albumArtistNameIfAllEqual && (self.albumArtistField.stringValue != "" && self.albumArtistNameIfAllEqual == nil) else { return }
+        if self.albumArtistField.stringValue == albumArtistNameIfAllEqual { return }
+        if self.albumArtistField.stringValue == "" && self.albumArtistNameIfAllEqual == nil { return }
         databaseManager.albumArtistEdited(tracks: self.selectedTracks!, value: self.albumArtistField.stringValue)
+        self.albumArtistNameIfAllEqual = self.albumArtistField.stringValue
+        mainWindowController?.refreshCurrentSortOrder()
     }
     
     @IBAction func albumEdited(_ sender: Any) {
-        guard self.albumField.stringValue != albumNameIfAllEqual && (self.albumField.stringValue != "" && self.albumNameIfAllEqual == nil) else { return }
+        if self.albumField.stringValue == albumNameIfAllEqual { return }
+        if self.albumField.stringValue == "" && self.albumNameIfAllEqual == nil { return }
         databaseManager.albumEdited(tracks: self.selectedTracks!, value: self.albumField.stringValue)
+        self.albumNameIfAllEqual = self.albumField.stringValue
+        mainWindowController?.refreshCurrentSortOrder()
     }
     
     @IBAction func trackNumEdited(_ sender: Any) {
         databaseManager.trackNumEdited(tracks: self.selectedTracks!, value: self.trackNumField.integerValue)
+        mainWindowController?.refreshCurrentSortOrder()
     }
     
     @IBAction func trackNumOfEdited(_ sender: Any) {
         databaseManager.trackNumOfEdited(tracks: self.selectedTracks!, value: self.trackNumOfField.integerValue)
+        mainWindowController?.refreshCurrentSortOrder()
     }
     
     @IBAction func discNumEdited(_ sender: Any) {
         databaseManager.discNumEdited(tracks: self.selectedTracks!, value: self.discNumField.integerValue)
+        mainWindowController?.refreshCurrentSortOrder()
     }
     
     @IBAction func totalDiscsEdited(_ sender: Any) {
         databaseManager.totalDiscsEdited(tracks: self.selectedTracks!, value: self.discNumOfField.integerValue)
+        mainWindowController?.refreshCurrentSortOrder()
     }
     
     @IBAction func composerEdited(_ sender: Any) {
-        guard composerField.stringValue != composerNameIfAllEqual && (self.composerField.stringValue != "" && self.composerNameIfAllEqual == nil) else { return }
+        if self.composerField.stringValue == composerNameIfAllEqual { return }
+        if self.composerField.stringValue == "" && self.composerNameIfAllEqual == nil { return }
         databaseManager.composerEdited(tracks: self.selectedTracks!, value: self.composerField.stringValue)
+        self.composerNameIfAllEqual = self.composerField.stringValue
+        mainWindowController?.refreshCurrentSortOrder()
     }
     
     @IBAction func genreEdited(_ sender: Any) {
-        guard genreField.stringValue != genreNameIfAllEqual && (self.genreField.stringValue != "" && self.genreNameIfAllEqual == nil) else { return }
+        if self.genreField.stringValue == genreNameIfAllEqual { return }
+        if self.genreField.stringValue == "" && self.genreNameIfAllEqual == nil { return }
         databaseManager.genreEdited(tracks: self.selectedTracks!, value: self.genreField.stringValue)
+        self.genreNameIfAllEqual = self.genreField.stringValue
+        mainWindowController?.refreshCurrentSortOrder()
     }
     
     @IBAction func compilationChanged(_ sender: Any) {
         databaseManager.compilationChanged(tracks: self.selectedTracks!, value: self.compilationButton.state != 0)
+        mainWindowController?.refreshCurrentSortOrder()
     }
     
     @IBAction func commentsEdited(_ sender: Any) {
-        guard commentsField.stringValue != commentsIfAllEqual && (self.commentsField.stringValue != "" && self.commentsIfAllEqual == nil) else { return }
+        if self.commentsField.stringValue == commentsIfAllEqual { return }
+        if self.commentsField.stringValue == "" && self.commentsIfAllEqual == nil { return }
         databaseManager.commentsEdited(tracks: self.selectedTracks!, value: self.commentsField.stringValue)
+        self.commentsIfAllEqual = self.commentsField.stringValue
+        mainWindowController?.refreshCurrentSortOrder()
     }
     
     @IBAction func releaseDateChecked(_ sender: AnyObject) {
@@ -160,6 +186,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
             releaseDatePicker.datePickerElements = NSDatePickerElementFlags(rawValue: 0)
             releaseDatePicker.isEnabled = false
         }
+        mainWindowController?.currentTableViewController?.trackViewArrayController.fetch(nil)
     }
     
     @IBAction func datePickerAction(_ sender: AnyObject) {

@@ -106,39 +106,76 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         //todo get property to edit from tableColumn and call edit function
         switch tableColumn! {
         case tableViewController!.nameColumn:
+            let oldValue = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!.name!
+            guard (object as! String) != oldValue else { return }
             mainWindow?.delegate?.databaseManager?.nameEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
         case tableViewController!.artistColumn:
+            let oldValue = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!.artist?.name ?? ""
+            guard (object as! String) != oldValue else { return }
             mainWindow?.delegate?.databaseManager?.artistEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
         case tableViewController!.albumColumn:
+            let oldValue = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!.album?.name ?? ""
+            guard (object as! String) != oldValue else { return }
             mainWindow?.delegate?.databaseManager?.albumEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
         case tableViewController!.trackNumColumn:
+            let oldValue = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!.track_num
+            guard (object as? NSNumber) != oldValue else { return }
             mainWindow?.delegate?.databaseManager?.trackNumEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as? Int ?? 0)
         case tableViewController!.commentsColumn:
+            let oldValue = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!.comments ?? ""
+            guard (object as! String) != oldValue else { return }
             mainWindow?.delegate?.databaseManager?.commentsEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
         case tableViewController!.composerColumn:
+            let oldValue = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!.composer?.name ?? ""
+            guard (object as! String) != oldValue else { return }
             mainWindow?.delegate?.databaseManager?.composerEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
         case tableViewController!.discNumberColumn:
+            let oldValue = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!.disc_number
+            guard (object as? NSNumber) != oldValue else { return }
             mainWindow?.delegate?.databaseManager?.discNumEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as? Int ?? 0)
         case tableViewController!.movementNameColumn:
+            let oldValue = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!.movement_name ?? ""
+            guard (object as! String) != oldValue else { return }
             mainWindow?.delegate?.databaseManager?.movementNameEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
         case tableViewController!.movementNumColumn:
+            let oldValue = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!.movement_number
+            guard (object as? NSNumber) != oldValue else { return }
             mainWindow?.delegate?.databaseManager?.movementNumEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as? Int ?? 0)
         case tableViewController!.sortAlbumColumn:
+            let oldValue = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!.sort_album ?? ""
+            guard (object as! String) != oldValue else { return }
             mainWindow?.delegate?.databaseManager?.sortAlbumEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
         case tableViewController!.sortAlbumArtistColumn:
+            let oldValue = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!.sort_album_artist ?? ""
+            guard (object as! String) != oldValue else { return }
             mainWindow?.delegate?.databaseManager?.sortAlbumArtistEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
         case tableViewController!.sortArtistColumn:
+            let oldValue = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!.sort_artist ?? ""
+            guard (object as! String) != oldValue else { return }
             mainWindow?.delegate?.databaseManager?.sortArtistEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
         case tableViewController!.sortComposerColumn:
+            let oldValue = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!.sort_composer ?? ""
+            guard (object as! String) != oldValue else { return }
             mainWindow?.delegate?.databaseManager?.sortComposerEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
         case tableViewController!.sortNameColumn:
+            let oldValue = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!.sort_name ?? ""
+            guard (object as! String) != oldValue else { return }
             mainWindow?.delegate?.databaseManager?.sortNameEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
         default: break
         }
+        self.fetch(nil)
     }
     
     func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
         print("sort descriptors did change called")
+        let newDescriptor = tableView.sortDescriptors[0].key
+        let cachedOrderName = keyToCachedOrderDictionary[newDescriptor!]
+        if cachedOrderName != nil {
+            let cachedOrder = cachedOrders![cachedOrderName!]
+            if cachedOrder?.needs_update == true {
+                fixIndicesImmutable(order: cachedOrder!)
+            }
+        }
         let archivedSortDescriptor = NSKeyedArchiver.archivedData(withRootObject: tableView.sortDescriptors)
         if tableViewController?.playlist?.track_id_list != nil {
             UserDefaults.standard.set(archivedSortDescriptor, forKey: DEFAULTS_PLAYLIST_SORT_DESCRIPTOR_STRING)

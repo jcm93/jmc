@@ -13,5 +13,7 @@ import CoreData
 class CachedOrder: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
+    
+    var mutableCachedOrder: NSMutableOrderedSet?
 
 }

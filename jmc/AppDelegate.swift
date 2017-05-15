@@ -20,7 +20,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var setupWindowController: InitialSetupWindowController?
     var equalizerWindowController: EqualizerWindowController?
     var importWindowController: ImportWindowController?
-    var importProgressBar: ImportProgressBar?
     var iTunesParser: iTunesLibraryParser?
     var locationManager: LocationManager?
     var audioModule: AudioModule = AudioModule()
@@ -148,13 +147,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func addURLsToLibrary(_ urls: [URL], library: Library) -> [FileAddToDatabaseError] {
         let result = databaseManager?.addTracksFromURLs(urls, to: library, visualUpdateHandler: nil, callback: nil)
         return result!
-    }
-    
-    func initializeProgressBarWindow() {
-        importProgressBar = ImportProgressBar(windowNibName: "ImportProgressBar")
-        importProgressBar!.iTunesParser = self.iTunesParser!
-        importProgressBar!.initialize()
-        importProgressBar!.showWindow(self)
     }
 
     @IBAction func openPreferences(_ sender: AnyObject) {

@@ -186,6 +186,44 @@ var jmcGenreCachedOrderName = "Genre"
 var jmcAlbumArtistCachedOrderName = "Album Artist"
 var jmcComposerCachedOrderName = "Composer"
 
+let iTunesImporterBPMKey = "BPM"
+let iTunesImporterMovementNameKey = "Movement Name"
+let iTunesImporterMovementNumKey = "Movement Number"
+let iTunesImporterTrackTypeKey = "Track Type"
+let iTunesImporterSkipDateKey = "Skip Date"
+let iTunesImporterSampleRateKey = "Sample Rate"
+let iTunesImporterKindKey = "Kind"
+let iTunesImporterCommentsKey = "Comments"
+let iTunesImporterPlayDateUTCKey = "Play Date UTC"
+let iTunesImporterPlayDateKey = "Play Date"
+let iTunesImporterDateAddedKey = "Date Added"
+let iTunesImporterSizeKey = "Size"
+let iTunesImporterDiscNumberKey = "Disc Number"
+let iTunesImporterLocationKey = "Location"
+let iTunesImporterArtistNameKey = "Artist"
+let iTunesImporterAlbumNameKey = "Album"
+let iTunesImporterTrackNumberKey = "Track Number"
+let iTunesImporterNameKey = "Name"
+let iTunesImporterAlbumArtistKey = "Album Artist"
+let iTunesImporterSkipCountKey = "Skip Count"
+let iTunesImporterPlayCountKey = "Play Count"
+let iTunesImporterBitRateKey = "Bit Rate"
+let iTunesImporterTotalTimeKey = "Total Time"
+let iTunesImporterDateModifiedKey = "Date Modified"
+let iTunesImporterSortAlbumKey = "Sort Album"
+let iTunesImporterGenreKey = "Genre"
+let iTunesImporterRatingKey = "Rating"
+let iTunesImporterSortNameKey = "Sort Name"
+let iTunesImporterReleaseDateKey = "Release Date"
+let iTunesImporterYearKey = "Year"
+let iTunesImporterComposerKey = "Composer"
+let iTunesImporterSortComposerKey = "Sort Composer"
+let iTunesImporterDisabledKey = "Disabled"
+let iTunesImporterSortArtistKey = "Sort Artist"
+let iTunesImporterSortAlbumArtistKey = "Sort Album Artist"
+let iTunesImporterCompilationKey = "Compilation"
+let iTunesImporterTrackIDKey = "Track ID"
+
 
 let fieldsToCachedOrdersDictionary: NSDictionary = [
     "date_added" : "Date Added",
@@ -267,12 +305,14 @@ let VALID_FILE_TYPES = ["aac", "adts", "ac3", "aif", "aiff", "aifc", "caf", "mp3
  */
 
 var cachedOrders: [String : CachedOrder]? = {
+    print("accessing cached orders")
     var result = [String : CachedOrder]()
     let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CachedOrder")
     do {
         let list = try managedContext.fetch(request) as! [CachedOrder]
         for order in list {
             result[order.order!] = order
+            //order.mutableCachedOrder = order.track_views!.mutableCopy() as! NSMutableOrderedSet
         }
         return result
     } catch {
@@ -938,6 +978,50 @@ func insert(_ tracks: NSOrderedSet, track: TrackView, isGreater: ((Track) -> (Tr
     return low
 }
 
+let keyToCachedOrderDictionary = [
+    "artist_order" : "Artist",
+    "album_order" : "Album",
+    "date_added_order": "Date Added",
+    "name_order" : "Name",
+    "album_artist_order" : "Album Artist",
+    "genre_order" : "Genre",
+    "kind_order" : "Kind",
+    "release_date_order" : "Date Released",
+    "composer_order" : "Composer"
+]
+
+func fixIndicesImmutable(order: CachedOrder) {
+    notEnablingUndo {
+        var key: String
+        switch order.order! {
+        case "Artist":
+            key = "artist_order"
+        case "Album":
+            key = "album_order"
+        case "Date Added":
+            key = "date_added_order"
+        case "Name":
+            key = "name_order"
+        case "Album Artist":
+            key = "album_artist_order"
+        case "Genre":
+            key = "genre_order"
+        case "Kind":
+            key = "kind_order"
+        case "Date Released":
+            key = "release_date_order"
+        case "Composer":
+            key = "composer_order"
+        default:
+            key = "poop"
+        }
+        for (index, trackView) in order.track_views!.enumerated() {
+            (trackView as AnyObject).setValue(index, forKey: key)
+        }
+        order.needs_update = false
+    }
+}
+
 func fixIndices(_ set: NSMutableOrderedSet, index: Int, order: String) {
     let trackView = (set[index] as! TrackView)
     var testIndex = index + 1
@@ -1068,25 +1152,18 @@ func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder) {
             newTracks = allTracks.sortedArray(using: #selector(Track.compareArtist)) as NSArray
             key = "artist_order"
         }
-        var index = 0
-        for track in newTracks.map({return ($0 as! Track).view!}) {
-            track.setValue(index, forKey: key)
-            index += 1
-        }
-        cachedOrder.track_views = NSOrderedSet(array: newTracks.map({return ($0 as AnyObject).view!}) as! [TrackView])
+        cachedOrder.needs_update = true
+        cachedOrder.track_views = NSMutableOrderedSet(array: newTracks.map({return ($0 as! Track).view!}))
     } else {
-        let mutableVersion = cachedOrder.track_views!.mutableCopy() as! NSMutableOrderedSet
-        for track in actualTracks {
-            mutableVersion.remove(track.view!)
-        }
+        let mutableVersion = cachedOrder.track_views!
+        mutableVersion.removeObjects(in: actualTracks.map({return $0.view!}))
         for track in actualTracks {
             let index = insert(mutableVersion, track: track.view!, isGreater: comparator)
             print("index is \(index)")
             mutableVersion.insert(track.view!, at: index)
-            //fixIndices(mutableVersion, index: index, order: cachedOrder.order!)
         }
-        testFixIndices(mutableVersion, order: cachedOrder.order!)
-        cachedOrder.track_views = mutableVersion.copy() as? NSOrderedSet
+        cachedOrder.track_views = mutableVersion
+        cachedOrder.needs_update = true
     }
 }
 

@@ -91,8 +91,6 @@
 		0D9CE6751D34128B004FA8CB /* InitialSetupWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */; };
 		0D9CE6761D34128B004FA8CB /* InitialSetupWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D9CE6741D34128B004FA8CB /* InitialSetupWindowController.xib */; };
 		0D9CE6781D3442D3004FA8CB /* Preferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D9CE6771D3442D3004FA8CB /* Preferences.plist */; };
-		0D9CE67B1D34A7DF004FA8CB /* ImportProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9CE6791D34A7DF004FA8CB /* ImportProgressBar.swift */; };
-		0D9CE67C1D34A7DF004FA8CB /* ImportProgressBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D9CE67A1D34A7DF004FA8CB /* ImportProgressBar.xib */; };
 		0DA8D03E1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA8D03D1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift */; };
 		0DA8D0401D1B1128009FEC28 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */; };
 		0DAB30911CFBA3340028928F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30901CFBA3340028928F /* AppDelegate.swift */; };
@@ -292,8 +290,6 @@
 		0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InitialSetupWindowController.swift; sourceTree = "<group>"; };
 		0D9CE6741D34128B004FA8CB /* InitialSetupWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InitialSetupWindowController.xib; sourceTree = "<group>"; };
 		0D9CE6771D3442D3004FA8CB /* Preferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Preferences.plist; sourceTree = "<group>"; };
-		0D9CE6791D34A7DF004FA8CB /* ImportProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportProgressBar.swift; sourceTree = "<group>"; };
-		0D9CE67A1D34A7DF004FA8CB /* ImportProgressBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImportProgressBar.xib; sourceTree = "<group>"; };
 		0DA8D03D1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnBrowserTableViewDelegate.swift; sourceTree = "<group>"; };
 		0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		0DAB308D1CFBA3340028928F /* jmc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = jmc.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -511,8 +507,6 @@
 				0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */,
 				0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */,
 				0D51C8B11EB01731002F6182 /* JMTabView.swift */,
-				0D9CE6791D34A7DF004FA8CB /* ImportProgressBar.swift */,
-				0D9CE67A1D34A7DF004FA8CB /* ImportProgressBar.xib */,
 				0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */,
 				0D9CE6701D334F97004FA8CB /* ImportWindowController.xib */,
 				0D8D4A151D90868500FA1603 /* LocationManagerController.swift */,
@@ -1046,7 +1040,6 @@
 				0DD0DB0B1E53A8EE00807CAC /* flac.1 in Resources */,
 				0D299B141DF10FFF0009CF7A /* SourceListViewController.xib in Resources */,
 				0DD0DAFE1E53A8EE00807CAC /* documentation_tools_flac.html in Resources */,
-				0D9CE67C1D34A7DF004FA8CB /* ImportProgressBar.xib in Resources */,
 				0DD0DB001E53A8EE00807CAC /* faq.html in Resources */,
 				0DD0DAF61E53A8EE00807CAC /* FLAC.tag in Resources */,
 				0D51C8A21EABD74B002F6182 /* ChangePrimaryFolderSheetController.xib in Resources */,
@@ -1132,7 +1125,6 @@
 				0D6802171EB7D73200D03923 /* OpenViewController.swift in Sources */,
 				0D84EDE71DA326BD0057411F /* NetworkTrack+CoreDataProperties.swift in Sources */,
 				0D01AD911D7079D900F9211F /* EqualizerWindowController.swift in Sources */,
-				0D9CE67B1D34A7DF004FA8CB /* ImportProgressBar.swift in Sources */,
 				0D76F6A81D24B9AC00C6E70F /* DatabaseManager.swift in Sources */,
 				0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */,
 				0D2E66471DC00B7F00CC174E /* TableColumnVisibilityController.swift in Sources */,
