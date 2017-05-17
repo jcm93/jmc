@@ -91,7 +91,9 @@ class DatabaseManager: NSObject {
             return true
         } else {
             if let art = getArtworkFromFile(track.location!) {
-                
+                return addArtForTrack(track, fromData: art, managedContext: managedContext)
+            } else {
+                return false
             }
         }
     }
@@ -635,7 +637,7 @@ class DatabaseManager: NSObject {
             //move file to the appropriate location, if we're organizing
             if moveFileToAppropriateLocationForTrack(track, currentURL: url) != nil {
                 if hasArt == true {
-                    addPrimaryArtForTrack(track, art: art!, managedContext: subContext)
+                    addArtForTrack(track, fromData: art!, managedContext: subContext)
                 }
                 tracks.append(track)
             } else {

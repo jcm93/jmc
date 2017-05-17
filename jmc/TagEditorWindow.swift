@@ -434,7 +434,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
             self.imageView.image = NSImage(contentsOf: artURL!)
         }
         if album?.other_art != nil {
-            let artURLs: [URL] = album!.other_art!.art!.map({return URL(string: ($0 as! AlbumArtwork).artwork_location!)!})
+            let artURLs: [URL] = album!.other_art!.map({return URL(string: ($0 as! AlbumArtwork).artwork_location!)!})
             self.artImages = artURLs.map({return NSImage(contentsOf: $0)!})
         }
         print("registering for dragged types")

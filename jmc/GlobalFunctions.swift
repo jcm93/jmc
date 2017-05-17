@@ -1179,36 +1179,3 @@ func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder, subContext: N
         cachedOrder.needs_update = true
     }
 }
-
-func addSecondaryArtForTrack(_ track: Track, art: Data, albumDirectoryPath: String) -> Track {
-    let artHash = art.hashValue
-    let newArtwork = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
-    newArtwork.image_hash = artHash as NSNumber?
-    if track.album!.other_art != nil {
-        let contains: Bool = {
-            for album in track.album!.other_art!.art! {
-                if (album as! AlbumArtwork).image_hash == (artHash as NSNumber) {
-                    return true
-                }
-            }
-            return false
-        }()
-        guard contains != true else {return track}
-        track.album!.other_art!.addArtObject(track.album!.primary_art!)
-    }
-    let thing = "/\(artHash).png"
-    let artFilename = albumDirectoryPath + thing
-    newArtwork.artwork_location = artFilename
-    let artImage = NSImage(data: art)
-    let artTIFF = artImage?.tiffRepresentation
-    let artRep = NSBitmapImageRep(data: artTIFF!)
-    let artPNG = artRep?.representation(using: .PNG, properties: [:])
-    track.album?.primary_art = newArtwork
-    print("writing to \(artFilename)")
-    do {
-        try artPNG?.write(to: URL(fileURLWithPath: artFilename), options: NSData.WritingOptions.atomicWrite)
-    }catch {
-        print("error writing file: \(error)")
-    }
-    return track
-}
