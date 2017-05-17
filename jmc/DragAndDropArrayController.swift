@@ -230,18 +230,23 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
             return true
         } else {
             //if we've reached this point, we must be in a playlist with a valid track id list, and the table must be sorted by playlist order
-            let currentPlaylistOrder = tableViewController?.playlist?.tracks?.mutableCopy() as! NSMutableOrderedSet
-            let objects = currentPlaylistOrder.objects(at: draggedRowIndexes!)
+            managedContext.processPendingChanges()
+            managedContext.undoManager!.beginUndoGrouping()
             var rowAtWhichToInsert = row
             for index in draggedRowIndexes! {
                 if index < row {
                     rowAtWhichToInsert -= 1
                 }
             }
-            currentPlaylistOrder.removeObjects(at: draggedRowIndexes!)
-            currentPlaylistOrder.insert(objects, at: IndexSet(integersIn: rowAtWhichToInsert..<rowAtWhichToInsert + objects.count))
+            let objects = tableViewController!.playlist!.tracks!.objects(at: draggedRowIndexes!)
+            tableViewController?.playlist?.removeFromTracks(at: draggedRowIndexes! as NSIndexSet)
+            let indexSet = IndexSet(integersIn: rowAtWhichToInsert..<rowAtWhichToInsert + objects.count)
+            tableViewController?.playlist?.mutableOrderedSetValue(forKey: "Tracks").insert(objects, at: indexSet)
             tableViewController?.initializeForPlaylist()
             draggedRowIndexes = nil
+            managedContext.processPendingChanges()
+            managedContext.undoManager!.setActionName("Edit Playlist Order")
+            managedContext.undoManager!.endUndoGrouping()
             return true
         }
     }

@@ -10,5 +10,6 @@
 #define jmc_Bridging_Header_h
 #import <Foundation/Foundation.h>
 #include "1.3.2/include/FLAC/stream_decoder.h"
+#import <CommonCrypto/CommonDigest.h>
 
 #endif /* jmc_Bridging_Header_h */

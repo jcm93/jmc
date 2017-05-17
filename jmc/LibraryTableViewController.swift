@@ -421,6 +421,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         for (index, trackView) in item!.playlist!.tracks!.array.enumerated() {
             (trackView as! TrackView).playlist_order = index + 1 as NSNumber
         }
+        trackViewArrayController.rearrangeObjects()
     }
     
     func initializeForLibrary() {
@@ -438,7 +439,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                 }().filter({(library: Library) in return libraryIsAvailable(library: library)})
             trackViewArrayController.fetchPredicate = NSPredicate(format: "track.library in %@", activeLibraries)
         }
-        trackViewArrayController.automaticallyPreparesContent = true
+        trackViewArrayController.fetch(nil)
     }
     
     override func viewDidLoad() {

@@ -202,20 +202,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             initializeLibraryAndShowMainWindow()
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(undoHappened), name: Notification.Name.NSUndoManagerDidUndoChange, object: managedObjectContext.undoManager)
-        NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidChangeDebug), name: Notification.Name.NSManagedObjectContextObjectsDidChange, object: managedObjectContext)
+        //NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidChangeDebug), name: Notification.Name.NSManagedObjectContextObjectsDidChange, object: managedObjectContext)
         NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidUndo), name: Notification.Name.NSUndoManagerDidUndoChange, object: managedObjectContext.undoManager)
     }
     
     func managedObjectsDidUndo() {
         print("managed objects did undo")
         self.mainWindowController?.trackQueueViewController?.refreshForChangedData()
-        self.mainWindowController?.sourceListViewController?.reloadData()
-        self.mainWindowController?.currentTableViewController?.trackViewArrayController.fetch(nil)
+        self.mainWindowController?.currentTableViewController?.trackViewArrayController.rearrangeObjects()
     }
     
     func managedObjectsDidChangeDebug(_ notification: Notification) {
-        /*let userInfo = notification.userInfo!
+        let userInfo = notification.userInfo!
         if let updated = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject>, updated.count > 0 {
             print("UPDATED")
             for object in updated {
@@ -240,11 +238,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             print("-------")
         }
-        print("DONE")*/
-    }
-    
-    func undoHappened(_ notification: Notification) {
-        let thing = notification.userInfo
+        print("DONE")
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -313,7 +307,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         var coordinator: NSPersistentStoreCoordinator? = nil
         if failError == nil {
             coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-            let url = self.applicationDocumentsDirectory.appendingPathComponent("CocoaAppCD.storedata")
+            let url = self.applicationDocumentsDirectory.appendingPathComponent("jmc.db")
             do {
                 var options = [AnyHashable : Any]()
                 options[NSMigratePersistentStoresAutomaticallyOption] = true

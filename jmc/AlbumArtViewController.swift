@@ -13,7 +13,7 @@ class AlbumArtViewController: NSViewController {
     @IBOutlet var albumArtBox: NSBox!
     @IBOutlet weak var albumArtView: DragAndDropImageView!
     
-    var fileHandler = DatabaseManager()
+    var databaseManager = DatabaseManager()
     dynamic var albumArtworkAdded = false
 
     
@@ -30,7 +30,6 @@ class AlbumArtViewController: NSViewController {
         }
     }
     
-    
     func toggleHidden(_ artworkToggle: Int) {
         if artworkToggle == NSOnState {
             albumArtBox.isHidden = false
@@ -41,68 +40,18 @@ class AlbumArtViewController: NSViewController {
     }
 
     func initAlbumArt(_ track: Track) {
-        if track.is_network == true {
-            //todo: implement this
-            return
-        }
-        if track.album == nil {
-            self.albumArtView.image = nil
-            return
-        }
-        if track.album != nil && track.album!.primary_art != nil {
-            print("gonna get sum album art")
-            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async {
-                let art = track.album!.primary_art
-                let path = art?.artwork_location!
-                let url = URL(string: path!)
-                let image = NSImage(contentsOf: url!)
-                DispatchQueue.main.async {
-                    self.albumArtView.image = image
-                }
+        if track.album?.primary_art != nil {
+            let imageURL = URL(string: track.album!.primary_art!.artwork_location!)!
+            let image = NSImage(byReferencing: imageURL)
+            if image.isValid {
+                self.albumArtView.image = image
             }
-            doStupidTogglingForObservers()
-        }
-        else {
-            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async {
-                if UserDefaults.standard.bool(forKey: DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING) == true {
-                    print("checking mp3 for embedded art")
-                    let artwork = self.fileHandler.getArtworkFromFile(track.location!)
-                    if artwork != nil {
-                        DispatchQueue.main.async {
-                            if self.fileHandler.addPrimaryArtForTrack(track, art: artwork!, managedContext: managedContext) != nil {
-                                do {try managedContext.save()}catch {print(error)}
-                                self.initAlbumArt(track)
-                                self.doStupidTogglingForObservers()
-                            } else {
-                                self.albumArtView.image = nil
-                            }
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            self.albumArtView.image = nil
-                        }
-                    }
-                }
-            }
-            if UserDefaults.standard.bool(forKey: DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING) == true {
-                let imageURL = self.fileHandler.searchAlbumDirectoryForArt(track)
-                if imageURL != nil {
-                    let artwork = try? Data(contentsOf: imageURL!)
-                    if artwork != nil {
-                        DispatchQueue.main.async {
-                            if self.fileHandler.addPrimaryArtForTrack(track, art: artwork!, managedContext: managedContext) != nil {
-                                do {try managedContext.save()}catch {print(error)}
-                                self.initAlbumArt(track)
-                                self.doStupidTogglingForObservers()
-                            } else {
-                                self.albumArtView.image = nil
-                            }
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            self.albumArtView.image = nil
-                        }
-                    }
+        } else {
+            if track.library?.finds_artwork == true {
+                let didFindPrimaryArt = databaseManager.tryFindPrimaryArtForTrack(track)
+                if didFindPrimaryArt {
+                    guard track.album?.primary_art != nil else { return }
+                    initAlbumArt(track)
                 }
             }
         }

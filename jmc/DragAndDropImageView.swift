@@ -35,48 +35,20 @@ class DragAndDropImageView: NSImageView {
     
     override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
         //do the album art stuff
-        if let board = sender.draggingPasteboard().propertyList(forType: "NSFilenamesPboardType") as? NSArray,
-            let imagePath = board[0] as? String {
-            let fileManager = FileManager.default
-            let artURL = URL(fileURLWithPath: imagePath)
-            let artImage = NSImage(contentsOf: artURL)
-            if artImage != nil {
-                if mainWindowController?.currentTrack != nil {
-                    let track = mainWindowController?.currentTrack
-                    let location = URL(string: track!.location!)
-                    let albumDirectory = location?.deletingLastPathComponent()
-                    let fileName = artURL.lastPathComponent
-                    let newURL = albumDirectory?.appendingPathComponent(fileName)
-                    do {
-                        try fileManager.copyItem(at: artURL, to: newURL!)
-                    }catch {
-                        Swift.print("error writing file: \(error)")
-                        return false
-                    }
-                    let newArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
-                    newArt.image_hash = artImage!.tiffRepresentation?.hashValue as NSNumber?
-                    newArt.artwork_location = newURL?.absoluteString
-                    if track!.album!.primary_art == nil {
-                        newArt.primary_album = track!.album!
-                    }
-                    else if track!.album!.other_art == nil {
-                        let oldPrimaryArt = track!.album!.primary_art
-                        let newCollection = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtworkCollection", into: managedContext) as! AlbumArtworkCollection
-                        newCollection.album = track!.album!
-                        oldPrimaryArt!.collection = newCollection
-                        oldPrimaryArt?.primary_album = nil
-                        newArt.primary_album = track!.album!
-                    }
-                    else {
-                        let collection = track!.album!.other_art!
-                        newArt.collection = collection
-                    }
-                    self.image = artImage
-                    return true
+        if let board = sender.draggingPasteboard().propertyList(forType: "NSFilenamesPboardType") as? NSArray {
+            let urls = board.map({return URL(fileURLWithPath: $0 as! String)})
+            if mainWindowController?.currentTrack != nil {
+                let databaseManager = DatabaseManager()
+                var results = [Bool]()
+                for url in urls {
+                    results.append(databaseManager.addArtForTrack(mainWindowController!.currentTrack!, from: url, managedContext: managedContext))
                 }
-                else {
-                    return false
+                if results.contains(true) {
+                    mainWindowController?.initAlbumArtwork()
                 }
+            }
+            else {
+                return false
             }
         }
         return false

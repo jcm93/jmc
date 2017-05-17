@@ -114,7 +114,7 @@ class iTunesLibraryParser: NSObject {
                     if let addedArtist = self.addedArtists[albumArtistName] {
                         cd_track.album?.album_artist = addedArtist
                     } else if let artistFromParentContext = checkIfArtistExists(albumArtistName) {
-                        cd_track.album?.album_artist = artistFromParentContext
+                        cd_track.album?.album_artist = subContext.object(with: artistFromParentContext.objectID) as? Artist
                     } else {
                         let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: subContext) as! Artist
                         newArtist.name = albumArtistName

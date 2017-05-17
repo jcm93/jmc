@@ -358,6 +358,12 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     //player stuff
     @IBOutlet weak var artToggle: NSButton!
     
+    func initAlbumArtwork() {
+        if self.currentTrack != nil {
+            albumArtViewController?.initAlbumArt(self.currentTrack!)
+        }
+    }
+    
     @IBAction func toggleArtwork(_ sender: AnyObject) {
         if artToggle.state == NSOnState {
             UserDefaults.standard.set(true, forKey: DEFAULTS_SHOWS_ARTWORK_STRING)

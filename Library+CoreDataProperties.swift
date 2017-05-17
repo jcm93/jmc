@@ -2,7 +2,7 @@
 //  Library+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 4/22/17.
+//  Created by John Moody on 5/16/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 
@@ -38,6 +38,7 @@ extension Library {
     @NSManaged public var uuid: String?
     @NSManaged public var volume_url_string: String?
     @NSManaged public var watch_dirs: NSObject?
+    @NSManaged public var finds_artwork: NSNumber?
     @NSManaged public var cached_orders: NSSet?
     @NSManaged public var children: NSSet?
     @NSManaged public var local_items: NSOrderedSet?

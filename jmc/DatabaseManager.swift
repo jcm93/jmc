@@ -76,28 +76,36 @@ class DatabaseManager: NSObject {
                 art = metadataItem.value as? Data
             }
         }
-        if art != nil {
-            return art
+        return art
+    }
+    
+    func tryFindPrimaryArtForTrack(_ track: Track) -> Bool {
+        //we know primary_art is nil
+        let validImages = searchAlbumDirectoryForArt(track)
+        guard validImages.count > 0 else { return false }
+        var results = [Bool]()
+        for image in validImages {
+            results.append(addArtForTrack(track, from: image, managedContext: managedContext))
         }
-        else {
-            return nil
+        if results.contains(true) {
+            return true
+        } else {
+            if let art = getArtworkFromFile(track.location!) {
+                
+            }
         }
     }
     
-    func searchAlbumDirectoryForArt(_ track: Track) -> URL? {
+    func searchAlbumDirectoryForArt(_ track: Track) -> [URL] {
         let locationURL = URL(string: track.location!)
         let albumDirectoryURL = locationURL!.deletingLastPathComponent()
         do {
             let albumDirectoryContents = try fileManager.contentsOfDirectory(at: albumDirectoryURL, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
-            let potentialImages = albumDirectoryContents.filter({VALID_ARTWORK_TYPE_EXTENSIONS.contains($0.pathExtension.lowercased())})
-            if potentialImages.count > 0 {
-                return potentialImages[0]
-            } else {
-                return nil
-            }
+            let validImages = albumDirectoryContents.filter({return NSImage(byReferencing: $0).isValid})
+            return validImages
         } catch {
             print("error looking in album directory for art: \(error)")
-            return nil
+            return [URL]()
         }
     }
     
@@ -115,57 +123,146 @@ class DatabaseManager: NSObject {
         }
     }
     
-    func addPrimaryArtForTrack(_ track: Track, art: Data, managedContext: NSManagedObjectContext) -> Track? {
-        print("adding new primary album art")
-        let artHash = art.hashValue
-        if let currentPrimaryHash = track.album?.primary_art?.image_hash {
-            if Int(currentPrimaryHash) == artHash {
-                print("artwork collision")
-                return nil
+    func addArtForTrack(_ track: Track, from url: URL, managedContext: NSManagedObjectContext) -> Bool {
+        //returns true if art was successfully added, so a receiver can display the image, if needed
+        guard let album = track.album else { return false }
+        let image = NSImage(byReferencing: url)
+        guard image.isValid else { return false }
+        if track.album?.primary_art?.artwork_location != nil {
+            let currentPrimaryArtURL = URL(string: track.album!.primary_art!.artwork_location!)
+            guard url != currentPrimaryArtURL else { return false }
+        }
+        if track.album?.other_art != nil && track.album!.other_art!.count > 0 {
+            let currentArtURLs = track.album!.other_art!.map({return URL(string: ($0 as! AlbumArtwork).artwork_location!)!})
+            guard !currentArtURLs.contains(url) else { return false }
+        }
+        var artLocation = url
+        if track.library?.organization_type != nil && track.library?.organization_type != 0 {
+            let filename = url.lastPathComponent
+            artLocation = URL(string: track.location!)!.deletingLastPathComponent().appendingPathComponent(filename)
+            do {
+                try fileManager.copyItem(at: url, to: artLocation)
+            } catch {
+                print(error)
+                return false
             }
         }
-        guard let artImage = CGImageSourceCreateWithData(art as CFData, nil) else {return nil}
-        guard let artUTI = CGImageSourceGetType(artImage) else {return nil}
-        guard let artExtension = getImageExtension(artUTI) else {return nil}
-        let newArtwork = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
-        newArtwork.image_hash = artHash as NSNumber?
-        if track.album?.primary_art != nil {
-            let contains: Bool = {
-                if track.album?.primary_art?.image_hash == (artHash as NSNumber) {
-                    return true
+        if track.album?.primary_art == nil {
+            let newPrimaryArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
+            newPrimaryArt.album = album
+            newPrimaryArt.artwork_location = artLocation.absoluteString
+            newPrimaryArt.id = globalRootLibrary?.next_album_artwork_id
+            globalRootLibrary?.next_album_artwork_id = globalRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
+            return true
+        } else {
+            let newOtherArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
+            newOtherArt.album_multiple = album
+            newOtherArt.artwork_location = artLocation.absoluteString
+            newOtherArt.id = globalRootLibrary?.next_album_artwork_id
+            globalRootLibrary?.next_album_artwork_id = globalRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
+            return true
+        }
+    }
+    
+    func addArtForTrack(_ track: Track, fromData data: Data, managedContext: NSManagedObjectContext) -> Bool {
+        //returns true if art was successfully added, so a receiver can display the image, if needed
+        guard let album = track.album else { return false }
+        let hashString = createMD5HashOf(data: data)
+        if let existingPrimaryArt = track.album?.primary_art {
+            var existingHash = ""
+            if existingPrimaryArt.image_hash != nil {
+                existingHash = existingPrimaryArt.image_hash!
+            } else {
+                do {
+                    let url = URL(string: existingPrimaryArt.artwork_location!)!
+                    let data = try Data(contentsOf: url, options: [])
+                    let hash = createMD5HashOf(data: data)
+                    existingPrimaryArt.image_hash = hash
+                    existingHash = hash
+                } catch {
+                    print(error)
                 }
-                else {
-                    return false
-                }
-            }()
-            guard contains != true else {return track}
-            if track.album!.other_art != nil {
-                let contains: Bool = {
-                    for album in track.album!.other_art!.art! {
-                        if (album as! AlbumArtwork).image_hash == (artHash as NSNumber) {
-                            return true
-                        }
+            }
+            guard existingHash != hashString else { return false }
+        }
+        if let existingOtherArtSet = track.album?.other_art, existingOtherArtSet.count > 0 {
+            for setObject in existingOtherArtSet {
+                let existingOtherArt = setObject as! AlbumArtwork
+                var existingHash = ""
+                if existingOtherArt.image_hash != nil {
+                    existingHash = existingOtherArt.image_hash!
+                } else {
+                    do {
+                        let url = URL(string: existingOtherArt.artwork_location!)!
+                        let data = try Data(contentsOf: url, options: [])
+                        let hash = createMD5HashOf(data: data)
+                        existingOtherArt.image_hash = hash
+                        existingHash = hash
+                    } catch {
+                        print(error)
+                        //image from other art cannot be opened. what do?
+                        continue
                     }
-                    return false
-                }()
-                guard contains != true else {return track}
-                track.album!.other_art!.addArtObject(track.album!.primary_art!)
-            }
-            else if track.album!.other_art == nil {
-                let newArtworkCollection = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtworkCollection", into: managedContext) as! AlbumArtworkCollection
-                newArtworkCollection.album = track.album!
-                newArtworkCollection.addArtObject(track.album!.primary_art!)
+                }
+                guard existingHash != hashString else { return false }
             }
         }
-        let artURL = NSURL(string: track.location!)?.deletingLastPathComponent?.appendingPathComponent("\(artHash)").appendingPathExtension(artExtension)
-        newArtwork.artwork_location = artURL!.absoluteString
-        track.album?.primary_art = newArtwork
+        //no matches from current art set
+        //make sure it's a real image
+        guard let fileExtension = getFileType(image: data) else { return false }
+        let albumDirectory = URL(string: track.location!)!.deletingLastPathComponent()
+        let artworkURL = getArtworkFilenameForDirectory(url: albumDirectory, ext: fileExtension)
         do {
-            try art.write(to: artURL!, options: NSData.WritingOptions.atomic)
+            try data.write(to: artworkURL)
         } catch {
-            print("error writing file: \(error)")
+            return false
         }
-        return track
+        if track.album?.primary_art == nil {
+            let newPrimaryArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
+            newPrimaryArt.album = album
+            newPrimaryArt.artwork_location = artworkURL.absoluteString
+            newPrimaryArt.id = globalRootLibrary?.next_album_artwork_id
+            globalRootLibrary?.next_album_artwork_id = globalRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
+            return true
+        } else {
+            let newOtherArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
+            newOtherArt.album_multiple = album
+            newOtherArt.artwork_location = artworkURL.absoluteString
+            newOtherArt.id = globalRootLibrary?.next_album_artwork_id
+            globalRootLibrary?.next_album_artwork_id = globalRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
+            return true
+        }
+    }
+    
+    func getFileType(image: Data) -> String? {
+        guard let imageSource = CGImageSourceCreateWithData(image as NSData, [:] as NSDictionary) else { return nil }
+        guard let uniformTypeIdentifier = CGImageSourceGetType(imageSource) else { return nil }
+        return getImageExtension(uniformTypeIdentifier)
+    }
+    
+    func getArtworkFilenameForDirectory(url: URL, ext: String) -> URL {
+        /*
+        let currentDirectoryContents = try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+        let currentDirectoryImages = currentDirectoryContents.filter({(url: URL) -> Bool in
+            do {
+                let key: Set = [URLResourceKey.typeIdentifierKey]
+                let values = try url.resourceValues(forKeys: key)
+                return UTTypeConformsTo(values.typeIdentifier! as CFString, kUTTypeImage)
+            } catch {
+                return false
+            }
+        })
+        let currentDirectoryImageFilenames = currentDirectoryImages.map({return $0.lastPathComponent}).filter({return $0.hasPrefix("cover")})
+        //this is all totally unecessary
+        */
+        //just brute force search
+        var index: Int = 0
+        var potentialArtworkPath = url.appendingPathComponent("cover\(index != 0 ? String(index) : "").\(ext)")
+        while fileManager.fileExists(atPath: potentialArtworkPath.path) {
+            index += 1
+            potentialArtworkPath = url.appendingPathComponent("cover\(index != 0 ? String(index) : "").\(ext)")
+        }
+        return potentialArtworkPath
     }
     
     //OK -- discrete

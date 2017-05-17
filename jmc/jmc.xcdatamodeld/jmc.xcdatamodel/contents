@@ -9,24 +9,18 @@
         <attribute name="release_date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="track_count" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="album_artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="albums" inverseEntity="Artist" syncable="YES"/>
-        <relationship name="other_art" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AlbumArtworkCollection" inverseName="album" inverseEntity="AlbumArtworkCollection" syncable="YES"/>
-        <relationship name="primary_art" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AlbumArtwork" inverseName="primary_album" inverseEntity="AlbumArtwork" syncable="YES"/>
+        <relationship name="other_art" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AlbumArtwork" inverseName="album_multiple" inverseEntity="AlbumArtwork" syncable="YES"/>
+        <relationship name="primary_art" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AlbumArtwork" inverseName="album" inverseEntity="AlbumArtwork" syncable="YES"/>
         <relationship name="properties" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Property" inverseName="album" inverseEntity="Property" syncable="YES"/>
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="album" inverseEntity="Track" syncable="YES"/>
     </entity>
     <entity name="AlbumArtwork" representedClassName=".AlbumArtwork" syncable="YES">
         <attribute name="artwork_location" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="image_hash" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="image_hash" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
-        <relationship name="collection" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AlbumArtworkCollection" inverseName="art" inverseEntity="AlbumArtworkCollection" syncable="YES"/>
-        <relationship name="primary_album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="primary_art" inverseEntity="Album" syncable="YES"/>
-    </entity>
-    <entity name="AlbumArtworkCollection" representedClassName=".AlbumArtworkCollection" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
-        <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="other_art" inverseEntity="Album" syncable="YES"/>
-        <relationship name="art" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AlbumArtwork" inverseName="collection" inverseEntity="AlbumArtwork" syncable="YES"/>
+        <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="primary_art" inverseEntity="Album" syncable="YES"/>
+        <relationship name="album_multiple" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="other_art" inverseEntity="Album" syncable="YES"/>
     </entity>
     <entity name="Artist" representedClassName=".Artist" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
@@ -55,6 +49,7 @@
     </entity>
     <entity name="Library" representedClassName=".Library" syncable="YES">
         <attribute name="central_media_folder_url_string" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="finds_artwork" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_active" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_available" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
@@ -193,11 +188,10 @@
     <elements>
         <element name="Album" positionX="-1548" positionY="126" width="128" height="225"/>
         <element name="AlbumArtwork" positionX="-1757" positionY="81" width="128" height="135"/>
-        <element name="AlbumArtworkCollection" positionX="-1764" positionY="243" width="128" height="103"/>
         <element name="Artist" positionX="-1323" positionY="117" width="128" height="150"/>
         <element name="CachedOrder" positionX="-1262" positionY="-45" width="128" height="135"/>
         <element name="Composer" positionX="-1539" positionY="375" width="128" height="135"/>
-        <element name="Library" positionX="-801" positionY="-45" width="128" height="465"/>
+        <element name="Library" positionX="-801" positionY="-45" width="128" height="480"/>
         <element name="Property" positionX="-1251" positionY="660" width="128" height="180"/>
         <element name="SharedLibrary" positionX="-1557" positionY="99" width="128" height="60"/>
         <element name="SmartCriteria" positionX="-1557" positionY="99" width="128" height="120"/>

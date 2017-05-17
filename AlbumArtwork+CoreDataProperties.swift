@@ -1,24 +1,26 @@
 //
 //  AlbumArtwork+CoreDataProperties.swift
-//  minimalTunes
+//  jmc
 //
-//  Created by John Moody on 10/26/16.
-//  Copyright © 2016 John Moody. All rights reserved.
-//
-//  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
-//  to delete and recreate this implementation file for your updated model.
+//  Created by John Moody on 5/16/17.
+//  Copyright © 2017 John Moody. All rights reserved.
 //
 
 import Foundation
 import CoreData
 
+
 extension AlbumArtwork {
 
-    @NSManaged var artwork_location: String?
-    @NSManaged var image_hash: NSNumber?
-    @NSManaged var id: NSNumber?
-    @NSManaged var is_network: NSNumber?
-    @NSManaged var collection: AlbumArtworkCollection?
-    @NSManaged var primary_album: Album?
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<AlbumArtwork> {
+        return NSFetchRequest<AlbumArtwork>(entityName: "AlbumArtwork")
+    }
+
+    @NSManaged public var artwork_location: String?
+    @NSManaged public var id: NSNumber?
+    @NSManaged public var image_hash: String?
+    @NSManaged public var is_network: NSNumber?
+    @NSManaged public var album: Album?
+    @NSManaged public var album_multiple: Album?
 
 }

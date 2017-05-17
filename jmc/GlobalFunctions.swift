@@ -427,6 +427,8 @@ func getImageExtension(_ uti: CFString) -> String? {
             return "bmp"
         } else if UTTypeConformsTo(uti, kUTTypeICO) {
             return "ico"
+        } else if UTTypeConformsTo(uti, kUTTypePDF) {
+            return "pdf"
         } else {
             return nil
         }
@@ -553,6 +555,17 @@ func shuffle_array(_ array: inout [Int]) {
         guard i != j else {continue}
         swap(&array[i], &array[j])
     }
+}
+
+func createMD5HashOf(data: Data) -> String {
+    //only used for images, to test data equality
+    var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
+    data.withUnsafeBytes { bytes in
+        CC_MD5(bytes, CC_LONG(data.count), &digest)
+    }
+    let hashData = Data(bytes: digest)
+    let hashString = hashData.base64EncodedString()
+    return hashString
 }
 
 func checkIfArtistExists(_ name: String) -> Artist? {
