@@ -11,7 +11,7 @@
 import Cocoa
 import CoreServices
 
-class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate {
+class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource {
     
     lazy var managedContext: NSManagedObjectContext = {
         return (NSApplication.shared().delegate
@@ -425,6 +425,30 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     }
     
     //mark artwork view
+    @IBOutlet weak var artCollectionView: NSCollectionView!
+    var imageViews = [NSImageView]()
+    
+    func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
+        print("number of items in section, returning \(imageViews.count)")
+        return artImages!.count
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
+        let imageIndex = indexPath.last!
+        let item = collectionView.makeItem(withIdentifier: "ImageCollectionViewItem", for: indexPath)
+        item.imageView!.image = artImages![imageIndex]
+        return item
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, shouldSelectItemsAt indexPaths: Set<IndexPath>) -> Set<IndexPath> {
+        print("should select items called")
+        return indexPaths
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, shouldChangeItemsAt indexPaths: Set<IndexPath>, to highlightState: NSCollectionViewItemHighlightState) -> Set<IndexPath> {
+        print("should change items called")
+        return indexPaths
+    }
     
     func populateArtwork() {
         let album = selectedTracks![0].album
@@ -436,6 +460,15 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
         if album?.other_art != nil {
             let artURLs: [URL] = album!.other_art!.map({return URL(string: ($0 as! AlbumArtwork).artwork_location!)!})
             self.artImages = artURLs.map({return NSImage(contentsOf: $0)!})
+            for image in artImages! {
+                let imageView = NSImageView()
+                imageView.image = image
+                imageViews.append(imageView)
+            }
+            artCollectionView.dataSource = self
+            artCollectionView.delegate = self
+            artCollectionView.register(ImageCollectionViewItem.self, forItemWithIdentifier: "ImageCollectionViewItem")
+            artCollectionView.reloadData()
         }
         print("registering for dragged types")
     }

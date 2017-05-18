@@ -871,6 +871,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         self.delegate?.audioModule.addObserver(self, forKeyPath: "done_playing", options: .new, context: &my_context)
         self.addObserver(self, forKeyPath: "paused", options: .new, context: &my_context)
         self.albumArtViewController?.addObserver(self, forKeyPath: "albumArtworkAdded", options: .new, context: &my_context)
+        self.albumArtViewController?.mainWindow = self
         trackQueueViewController?.mainWindowController = self
         volumeSlider.isContinuous = true
         self.window!.titleVisibility = NSWindowTitleVisibility.hidden

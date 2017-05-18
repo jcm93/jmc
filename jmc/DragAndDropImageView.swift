@@ -10,10 +10,12 @@ import Cocoa
 
 class DragAndDropImageView: NSImageView {
     
-    var mainWindowController: MainWindowController?
+    var viewController: AlbumArtViewController?
+    var mouseDownHappened = false
     
     override func awakeFromNib() {
         self.register(forDraggedTypes: [NSPasteboardTypePNG, NSPasteboardTypeTIFF, NSFilenamesPboardType])
+        self.animates = true
     }
 
     override func draw(_ dirtyRect: NSRect) {
@@ -22,9 +24,19 @@ class DragAndDropImageView: NSImageView {
         // Drawing code here.
     }
     
+    override func mouseDown(with event: NSEvent) {
+        self.mouseDownHappened = true
+    }
+    
+    override func mouseUp(with event: NSEvent) {
+        if self.mouseDownHappened {
+            self.viewController!.loadAlbumArtWindow()
+        }
+    }
+    
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
         Swift.print("called dragging entered")
-        if mainWindowController?.currentTrack != nil {
+        if viewController!.mainWindow!.currentTrack != nil {
             Swift.print("not nil")
             return NSDragOperation.every
         } else {
@@ -37,14 +49,14 @@ class DragAndDropImageView: NSImageView {
         //do the album art stuff
         if let board = sender.draggingPasteboard().propertyList(forType: "NSFilenamesPboardType") as? NSArray {
             let urls = board.map({return URL(fileURLWithPath: $0 as! String)})
-            if mainWindowController?.currentTrack != nil {
+            if viewController?.mainWindow?.currentTrack != nil {
                 let databaseManager = DatabaseManager()
                 var results = [Bool]()
                 for url in urls {
-                    results.append(databaseManager.addArtForTrack(mainWindowController!.currentTrack!, from: url, managedContext: managedContext))
+                    results.append(databaseManager.addArtForTrack(viewController!.mainWindow!.currentTrack!, from: url, managedContext: managedContext))
                 }
                 if results.contains(true) {
-                    mainWindowController?.initAlbumArtwork()
+                    self.viewController?.initAlbumArt(viewController!.mainWindow!.currentTrack!)
                 }
             }
             else {

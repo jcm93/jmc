@@ -91,6 +91,8 @@
 		0D9CE6751D34128B004FA8CB /* InitialSetupWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */; };
 		0D9CE6761D34128B004FA8CB /* InitialSetupWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D9CE6741D34128B004FA8CB /* InitialSetupWindowController.xib */; };
 		0D9CE6781D3442D3004FA8CB /* Preferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D9CE6771D3442D3004FA8CB /* Preferences.plist */; };
+		0DA7E95A1ECC141900719678 /* ImageCollectionViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA7E9581ECC141900719678 /* ImageCollectionViewItem.swift */; };
+		0DA7E95B1ECC141900719678 /* ImageCollectionViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DA7E9591ECC141900719678 /* ImageCollectionViewItem.xib */; };
 		0DA8D03E1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA8D03D1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift */; };
 		0DA8D0401D1B1128009FEC28 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */; };
 		0DAB30911CFBA3340028928F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30901CFBA3340028928F /* AppDelegate.swift */; };
@@ -101,6 +103,8 @@
 		0DB60F901E62341500105766 /* AddFilesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB60F8E1E62341500105766 /* AddFilesWindowController.swift */; };
 		0DB60F911E62341500105766 /* AddFilesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DB60F8F1E62341500105766 /* AddFilesWindowController.xib */; };
 		0DB8EFEA1DC4FC4D00009900 /* MainTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB8EFE91DC4FC4D00009900 /* MainTableViewDataSource.swift */; };
+		0DB996C51ECE233000594939 /* AlbumArtWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB996C31ECE233000594939 /* AlbumArtWindowController.swift */; };
+		0DB996C61ECE233000594939 /* AlbumArtWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DB996C41ECE233000594939 /* AlbumArtWindowController.xib */; };
 		0DC2E8F51E0110D200671D83 /* MTTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC2E8F41E0110D200671D83 /* MTTextFieldCell.swift */; };
 		0DC2E8F71E01E47900671D83 /* SpecialScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC2E8F61E01E47900671D83 /* SpecialScrollView.swift */; };
 		0DC397AB1E5282920009792B /* LibraryManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC397A91E5282920009792B /* LibraryManagerViewController.swift */; };
@@ -290,6 +294,8 @@
 		0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InitialSetupWindowController.swift; sourceTree = "<group>"; };
 		0D9CE6741D34128B004FA8CB /* InitialSetupWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InitialSetupWindowController.xib; sourceTree = "<group>"; };
 		0D9CE6771D3442D3004FA8CB /* Preferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Preferences.plist; sourceTree = "<group>"; };
+		0DA7E9581ECC141900719678 /* ImageCollectionViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewItem.swift; sourceTree = "<group>"; };
+		0DA7E9591ECC141900719678 /* ImageCollectionViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageCollectionViewItem.xib; sourceTree = "<group>"; };
 		0DA8D03D1D1A37C7009FEC28 /* ColumnBrowserTableViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnBrowserTableViewDelegate.swift; sourceTree = "<group>"; };
 		0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		0DAB308D1CFBA3340028928F /* jmc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = jmc.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -306,6 +312,8 @@
 		0DB60F8E1E62341500105766 /* AddFilesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddFilesWindowController.swift; sourceTree = "<group>"; };
 		0DB60F8F1E62341500105766 /* AddFilesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddFilesWindowController.xib; sourceTree = "<group>"; };
 		0DB8EFE91DC4FC4D00009900 /* MainTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTableViewDataSource.swift; sourceTree = "<group>"; };
+		0DB996C31ECE233000594939 /* AlbumArtWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumArtWindowController.swift; sourceTree = "<group>"; };
+		0DB996C41ECE233000594939 /* AlbumArtWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumArtWindowController.xib; sourceTree = "<group>"; };
 		0DC2E8F41E0110D200671D83 /* MTTextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTTextFieldCell.swift; sourceTree = "<group>"; };
 		0DC2E8F61E01E47900671D83 /* SpecialScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecialScrollView.swift; sourceTree = "<group>"; };
 		0DC397A91E5282920009792B /* LibraryManagerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryManagerViewController.swift; sourceTree = "<group>"; };
@@ -506,6 +514,10 @@
 				0D447BB81EB2B73F00372A80 /* JMTextField.swift */,
 				0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */,
 				0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */,
+				0DA7E9581ECC141900719678 /* ImageCollectionViewItem.swift */,
+				0DA7E9591ECC141900719678 /* ImageCollectionViewItem.xib */,
+				0DB996C31ECE233000594939 /* AlbumArtWindowController.swift */,
+				0DB996C41ECE233000594939 /* AlbumArtWindowController.xib */,
 				0D51C8B11EB01731002F6182 /* JMTabView.swift */,
 				0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */,
 				0D9CE6701D334F97004FA8CB /* ImportWindowController.xib */,
@@ -999,6 +1011,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0DD0DAE71E53A8EE00807CAC /* AUTHORS in Resources */,
+				0DB996C61ECE233000594939 /* AlbumArtWindowController.xib in Resources */,
 				0DD0DAFC1E53A8EE00807CAC /* documentation_format_overview.html in Resources */,
 				0D015AC41E00A30900EBAB6E /* LibraryTableViewControllerCellBased.xib in Resources */,
 				0DE486841EA579FD009B226B /* AddWatchFolderSheetController.xib in Resources */,
@@ -1055,6 +1068,7 @@
 				0D8AFE551E6CB3E7004AC584 /* LocationVerifierSheetController.xib in Resources */,
 				0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */,
 				0D299B181DF111490009CF7A /* AlbumArtViewController.xib in Resources */,
+				0DA7E95B1ECC141900719678 /* ImageCollectionViewItem.xib in Resources */,
 				0DD0DB051E53A8EE00807CAC /* id.html in Resources */,
 				0DD0DAFD1E53A8EE00807CAC /* documentation_tools.html in Resources */,
 				0D8AFE5D1E6F4FEB004AC584 /* LibraryManagerSourceSelector.xib in Resources */,
@@ -1130,6 +1144,7 @@
 				0D2E66471DC00B7F00CC174E /* TableColumnVisibilityController.swift in Sources */,
 				0D606EF91E7B4DB0007AE152 /* AVAudioFileBufferer.swift in Sources */,
 				0DA8D0401D1B1128009FEC28 /* ProgressBarView.swift in Sources */,
+				0DA7E95A1ECC141900719678 /* ImageCollectionViewItem.swift in Sources */,
 				0DB8EFEA1DC4FC4D00009900 /* MainTableViewDataSource.swift in Sources */,
 				0D9CE6711D334F97004FA8CB /* ImportWindowController.swift in Sources */,
 				0DE486911EA83FBA009B226B /* AddFilesProgressSheet.swift in Sources */,
@@ -1192,6 +1207,7 @@
 				0DFE2E5A1EC0DAB6007EEF04 /* TrackQueueTableView.swift in Sources */,
 				0D2EEFB61DB97DEC0065B0B3 /* CachedOrder+CoreDataProperties.swift in Sources */,
 				0D60F52C1E87372D00CA5420 /* RemoveSourceSheetController.swift in Sources */,
+				0DB996C51ECE233000594939 /* AlbumArtWindowController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

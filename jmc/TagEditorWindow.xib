@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -10,6 +11,7 @@
             <connections>
                 <outlet property="albumArtistField" destination="JsS-of-p1k" id="8tD-w3-dvo"/>
                 <outlet property="albumField" destination="5HB-Hb-5nM" id="kvw-pd-xq8"/>
+                <outlet property="artCollectionView" destination="b7d-4l-76W" id="wte-h2-fbN"/>
                 <outlet property="artistField" destination="NGA-Ea-5yh" id="05b-uW-FMQ"/>
                 <outlet property="bitRateLabel" destination="ujH-hy-RAp" id="qlh-TX-3Lf"/>
                 <outlet property="cancelButton" destination="7MN-Cx-KgN" id="FVB-pN-ju8"/>
@@ -57,12 +59,11 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" unifiedTitleAndToolbar="YES" fullSizeContentView="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES" unifiedTitleAndToolbar="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="417" height="493"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <value key="minSize" type="size" width="399" height="498"/>
-            <value key="maxSize" type="size" width="399" height="498"/>
             <view key="contentView" id="se5-gp-TjO">
                 <rect key="frame" x="0.0" y="0.0" width="417" height="493"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -471,15 +472,51 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="r7M-zu-ChY">
-                                            <rect key="frame" x="14" y="12" width="389" height="327"/>
+                                            <rect key="frame" x="79" y="90" width="260" height="260"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" secondItem="r7M-zu-ChY" secondAttribute="height" multiplier="1:1" id="yVD-F2-SNR"/>
+                                            </constraints>
                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="qNh-c5-MfJ"/>
                                         </imageView>
+                                        <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="vn8-rZ-1x7">
+                                            <rect key="frame" x="20" y="8" width="377" height="77"/>
+                                            <clipView key="contentView" drawsBackground="NO" id="Les-PR-Bai">
+                                                <rect key="frame" x="1" y="1" width="375" height="75"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <collectionView id="b7d-4l-76W">
+                                                        <rect key="frame" x="0.0" y="0.0" width="375" height="75"/>
+                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" scrollDirection="horizontal" id="j4Q-tt-2kQ">
+                                                            <size key="itemSize" width="50" height="50"/>
+                                                            <edgeInsets key="sectionInset" left="10" right="10" top="10" bottom="10"/>
+                                                        </collectionViewFlowLayout>
+                                                        <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </collectionView>
+                                                </subviews>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </clipView>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="77" id="QfA-NN-MPf"/>
+                                            </constraints>
+                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="fhE-aA-uXc">
+                                                <rect key="frame" x="1" y="60" width="375" height="16"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                            </scroller>
+                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="BdB-Us-PWJ">
+                                                <rect key="frame" x="360" y="1" width="16" height="75"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                            </scroller>
+                                        </scrollView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="r7M-zu-ChY" firstAttribute="top" secondItem="EEb-sb-s8d" secondAttribute="top" constant="27" id="cys-BG-sTj"/>
-                                        <constraint firstAttribute="bottom" secondItem="r7M-zu-ChY" secondAttribute="bottom" constant="15" id="q9X-9u-pcv"/>
-                                        <constraint firstAttribute="trailing" secondItem="r7M-zu-ChY" secondAttribute="trailing" constant="17" id="sjq-Yt-owM"/>
-                                        <constraint firstItem="r7M-zu-ChY" firstAttribute="leading" secondItem="EEb-sb-s8d" secondAttribute="leading" constant="17" id="wji-e0-v2L"/>
+                                        <constraint firstItem="vn8-rZ-1x7" firstAttribute="leading" secondItem="EEb-sb-s8d" secondAttribute="leading" constant="20" id="WIs-DA-GHU"/>
+                                        <constraint firstAttribute="bottom" secondItem="vn8-rZ-1x7" secondAttribute="bottom" constant="8" id="ckh-ey-dDD"/>
+                                        <constraint firstItem="r7M-zu-ChY" firstAttribute="centerX" secondItem="EEb-sb-s8d" secondAttribute="centerX" id="h62-FB-bGb"/>
+                                        <constraint firstItem="vn8-rZ-1x7" firstAttribute="top" secondItem="r7M-zu-ChY" secondAttribute="bottom" constant="8" id="kpL-7b-MLO"/>
+                                        <constraint firstAttribute="trailing" secondItem="vn8-rZ-1x7" secondAttribute="trailing" constant="20" id="l6y-NM-8WD"/>
+                                        <constraint firstItem="r7M-zu-ChY" firstAttribute="top" secondItem="EEb-sb-s8d" secondAttribute="top" constant="16" id="n3f-Zl-AUN"/>
+                                        <constraint firstItem="vn8-rZ-1x7" firstAttribute="centerX" secondItem="EEb-sb-s8d" secondAttribute="centerX" id="vxd-4k-FJn"/>
                                     </constraints>
                                 </view>
                             </tabViewItem>
@@ -738,7 +775,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <box horizontalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="OCA-f3-Gv2">
-                                            <rect key="frame" x="109" y="-64" width="4" height="432"/>
+                                            <rect key="frame" x="109" y="-64" width="5" height="432"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         </box>
                                         <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qER-eJ-sYW">
@@ -1069,8 +1106,8 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
-                    <segmentedControl verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8sQ-DD-DZZ">
-                        <rect key="frame" x="70" y="453" width="259" height="24"/>
+                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8sQ-DD-DZZ">
+                        <rect key="frame" x="79" y="453" width="259" height="24"/>
                         <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="54w-rF-HWP">
                             <font key="font" metaFont="system"/>
                             <segments>
@@ -1103,6 +1140,7 @@ Gw
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="OH7-kc-n0Y" secondAttribute="bottom" constant="20" id="AGn-0x-JwC"/>
+                    <constraint firstItem="8sQ-DD-DZZ" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="Dtf-oL-COc"/>
                     <constraint firstItem="iMY-9P-Lnq" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="OZ2-Rm-3nu"/>
                     <constraint firstAttribute="bottom" secondItem="7MN-Cx-KgN" secondAttribute="bottom" constant="20" id="Ops-uc-WJl"/>
                     <constraint firstAttribute="trailing" secondItem="xIm-g6-ZoO" secondAttribute="trailing" id="Voh-st-qxx"/>

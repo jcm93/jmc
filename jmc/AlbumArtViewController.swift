@@ -13,21 +13,22 @@ class AlbumArtViewController: NSViewController {
     @IBOutlet var albumArtBox: NSBox!
     @IBOutlet weak var albumArtView: DragAndDropImageView!
     
+    var artWindow: AlbumArtWindowController?
+    var mainWindow: MainWindowController?
     var databaseManager = DatabaseManager()
-    dynamic var albumArtworkAdded = false
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
+        self.albumArtView.viewController = self
     }
     
-    func doStupidTogglingForObservers() {
-        if albumArtworkAdded == true {
-            albumArtworkAdded = false
-        } else {
-            albumArtworkAdded = true
-        }
+    func loadAlbumArtWindow() {
+        print("loading album art window")
+        self.artWindow = AlbumArtWindowController(windowNibName: "AlbumArtWindowController")
+        self.artWindow?.track = self.mainWindow?.currentTrack
+        self.artWindow?.showWindow(self)
     }
     
     func toggleHidden(_ artworkToggle: Int) {
@@ -38,6 +39,7 @@ class AlbumArtViewController: NSViewController {
             albumArtBox.isHidden = true
         }
     }
+    
 
     func initAlbumArt(_ track: Track) {
         if track.album?.primary_art != nil {
@@ -50,10 +52,11 @@ class AlbumArtViewController: NSViewController {
             if track.library?.finds_artwork == true {
                 let didFindPrimaryArt = databaseManager.tryFindPrimaryArtForTrack(track)
                 if didFindPrimaryArt {
-                    guard track.album?.primary_art != nil else { return }
+                    guard track.album?.primary_art != nil else { self.albumArtView.image = nil; return }
                     initAlbumArt(track)
                 }
             }
+            self.albumArtView.image = nil
         }
     }
 }
