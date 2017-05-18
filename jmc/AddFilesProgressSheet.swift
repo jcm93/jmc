@@ -1,5 +1,5 @@
 //
-//  AddFilesProgressSheet.swift
+//  GenericProgressBarSheetController.swift
 //  jmc
 //
 //  Created by John Moody on 4/19/17.
@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class AddFilesProgressSheet: NSWindowController, ProgressBarController {
+class GenericProgressBarSheetController: NSWindowController, ProgressBarController {
     
     @IBOutlet weak var progressBar: NSProgressIndicator!
     @IBOutlet weak var progressLabelTextField: NSTextField!

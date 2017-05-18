@@ -6,7 +6,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="AddFilesProgressSheet" customModule="jmc" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="GenericProgressBarSheetController" customModule="jmc" customModuleProvider="target">
             <connections>
                 <outlet property="progressBar" destination="QHN-h3-gNQ" id="bP7-pD-ULL"/>
                 <outlet property="progressLabelTextField" destination="Fba-22-C5d" id="ECH-iD-fSi"/>

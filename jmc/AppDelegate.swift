@@ -28,7 +28,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var importErrorWindowController: ImportErrorWindowController?
     var libraryManagerSourceSelector: LibraryManagerSourceSelector?
     var addToLibraryViewController: AddFilesWindowController?
-    var backgroundAddFilesHandler: AddFilesProgressSheet?
+    var backgroundAddFilesHandler: GenericProgressBarSheetController?
     var addFilesQueueLoop: AddFilesQueueLoop?
     
     @IBOutlet weak var shuffleMenuItem: NSMenuItem!
@@ -86,7 +86,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func launchAddFilesDialog() {
-        self.backgroundAddFilesHandler = AddFilesProgressSheet(windowNibName: "AddFilesProgressSheet")
+        self.backgroundAddFilesHandler = GenericProgressBarSheetController(windowNibName: "GenericProgressBarSheetController")
         self.backgroundAddFilesHandler?.showWindow(self)
         self.backgroundAddFilesHandler?.window?.level = Int(CGWindowLevelForKey(CGWindowLevelKey.floatingWindow))
     }

@@ -10,7 +10,6 @@ import Cocoa
 
 class ProgressBarView: NSView {
     
-    
     var progressBar: NSProgressIndicator?
     var dragOrigin: CGFloat?
     var mainWindowController: MainWindowController?
