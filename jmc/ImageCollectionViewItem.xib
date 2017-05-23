@@ -9,6 +9,8 @@
         <customObject id="-2" userLabel="File's Owner" customClass="ImageCollectionViewItem" customModule="jmc" customModuleProvider="target">
             <connections>
                 <outlet property="imageView" destination="sO9-rl-0ny" id="zCT-oH-fa5"/>
+                <outlet property="shadowView" destination="lkm-vp-hdl" id="D3z-Fq-9lS"/>
+                <outlet property="textField" destination="FKC-O3-q1c" id="XfZ-sc-jai"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
         </customObject>
@@ -18,16 +20,39 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sO9-rl-0ny">
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="lkm-vp-hdl">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
-                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" id="J8S-ay-R4F"/>
-                </imageView>
+                    <subviews>
+                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sO9-rl-0ny">
+                            <rect key="frame" x="7" y="30" width="466" height="235"/>
+                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" id="J8S-ay-R4F"/>
+                        </imageView>
+                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FKC-O3-q1c">
+                            <rect key="frame" x="-2" y="7" width="484" height="23"/>
+                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="VGi-Ec-sLb">
+                                <font key="font" metaFont="system" size="12"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="sO9-rl-0ny" firstAttribute="leading" secondItem="lkm-vp-hdl" secondAttribute="leading" constant="7" id="41t-pK-dVy"/>
+                        <constraint firstAttribute="bottom" secondItem="FKC-O3-q1c" secondAttribute="bottom" constant="7" id="5C7-BT-zIj"/>
+                        <constraint firstItem="FKC-O3-q1c" firstAttribute="top" secondItem="sO9-rl-0ny" secondAttribute="bottom" id="D6l-vH-8B0"/>
+                        <constraint firstAttribute="trailing" secondItem="FKC-O3-q1c" secondAttribute="trailing" id="Wnn-pc-jAZ"/>
+                        <constraint firstItem="FKC-O3-q1c" firstAttribute="leading" secondItem="lkm-vp-hdl" secondAttribute="leading" id="fSM-5P-jQa"/>
+                        <constraint firstItem="sO9-rl-0ny" firstAttribute="top" secondItem="lkm-vp-hdl" secondAttribute="top" constant="7" id="tYp-3O-Sgh"/>
+                        <constraint firstAttribute="trailing" secondItem="sO9-rl-0ny" secondAttribute="trailing" constant="7" id="wVM-YS-FQW"/>
+                        <constraint firstAttribute="bottom" secondItem="sO9-rl-0ny" secondAttribute="bottom" constant="30" id="wuJ-ob-L9D"/>
+                    </constraints>
+                </customView>
             </subviews>
             <constraints>
-                <constraint firstItem="sO9-rl-0ny" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="FfN-9m-blk"/>
-                <constraint firstItem="sO9-rl-0ny" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="Sgf-Qn-sjS"/>
-                <constraint firstAttribute="trailing" secondItem="sO9-rl-0ny" secondAttribute="trailing" id="W6G-l8-kor"/>
-                <constraint firstAttribute="bottom" secondItem="sO9-rl-0ny" secondAttribute="bottom" id="x8n-Wp-MMu"/>
+                <constraint firstAttribute="bottom" secondItem="lkm-vp-hdl" secondAttribute="bottom" id="M8E-Ov-GtD"/>
+                <constraint firstItem="lkm-vp-hdl" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="PMr-gg-3hj"/>
+                <constraint firstItem="lkm-vp-hdl" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="Wsa-JF-aTK"/>
+                <constraint firstAttribute="trailing" secondItem="lkm-vp-hdl" secondAttribute="trailing" id="a6l-s1-S2A"/>
             </constraints>
         </customView>
     </objects>

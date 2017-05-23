@@ -10,17 +10,27 @@ import Cocoa
 
 class ImageCollectionViewItem: NSCollectionViewItem {
     
+    
+    @IBOutlet weak var shadowView: NSView!
+    var imageURL: URL?
+    
     override var isSelected: Bool {
         didSet {
-            view.layer?.borderWidth = isSelected ? 5.0 : 0.0
+            view.layer?.backgroundColor = isSelected ? NSColor.selectedMenuItemColor.cgColor : NSColor.clear.cgColor
+            view.layer?.cornerRadius = 8.0
         }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.wantsLayer = true
-        view.layer?.borderColor = NSColor.gray.cgColor
-        view.layer?.borderWidth = 0.0
+        shadowView?.wantsLayer = true
+        shadowView.layer?.shadowOpacity = 0.8
+        shadowView.layer?.shadowRadius = 5.0
+        shadowView.layer?.shadowColor = NSColor.black.cgColor
+        imageView?.wantsLayer = true
+        textField?.wantsLayer = false
+        textField?.isEditable = true
     }
     
 }

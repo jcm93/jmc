@@ -7,24 +7,31 @@
 //
 
 import Cocoa
+import Quartz
 
 class AlbumArtWindowController: NSWindowController, NSCollectionViewDataSource, NSCollectionViewDelegate {
     
     @IBOutlet weak var otherArtBox: NSBox!
-    @IBOutlet weak var imageView: NSImageView!
-    @IBOutlet weak var collectionView: NSCollectionView!
+    @IBOutlet weak var imageView: AlbumArtImageView!
+    @IBOutlet weak var collectionView: AlbumArtCollectionView!
+    @IBOutlet weak var pdfViewer: AlbumArtPDFView!
     
     var track: Track?
-    var otherArtImages = [NSImage]()
+    var otherArtImages = [AlbumArtwork]()
     var timer: Timer?
+    let defaultImageWidthPixels: CGFloat = 500
     
     func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
         return otherArtImages.count
     }
     func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        let view = collectionView.makeItem(withIdentifier: "image", for: indexPath)
+        let view = collectionView.makeItem(withIdentifier: "image", for: indexPath) as! ImageCollectionViewItem
         let index = indexPath.last
-        view.imageView!.image = otherArtImages[index!]
+        let imageURL = URL(string: otherArtImages[index!].artwork_location!)
+        let image = NSImage(byReferencing: imageURL!)
+        view.imageView!.image = image
+        view.imageURL = imageURL
+        view.textField!.stringValue = otherArtImages[index!].art_name ?? "Art Image"
         return view
     }
     
@@ -48,9 +55,8 @@ class AlbumArtWindowController: NSWindowController, NSCollectionViewDataSource, 
         print("should select items called")
         if indexPaths.count == 1 {
             print("initialzing new primary image")
-            let viewItem = collectionView.item(at: indexPaths.first!)
-            self.imageView.image = viewItem!.imageView!.image!
-            //self.initializePrimaryImage()
+            let viewItem = collectionView.item(at: indexPaths.first!) as! ImageCollectionViewItem
+            changePrimaryImage(imageURL: viewItem.imageURL!)
         }
         return indexPaths
     }
@@ -60,11 +66,42 @@ class AlbumArtWindowController: NSWindowController, NSCollectionViewDataSource, 
         return indexPaths
     }
     
-    func initializePrimaryImage() {
+    func initializePrimaryImageConstraint() {
+        let imageViewConstraints = imageView.constraints
+        let heightConstraint = imageViewConstraints.filter({return $0.firstAttribute == .height && $0.secondAttribute == .width})
+        NSLayoutConstraint.deactivate(heightConstraint)
         let aspectRatio = imageView.image!.size.height / imageView.image!.size.width
-        let constraint = self.imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: aspectRatio)
-        let otherConstraint = NSLayoutConstraint(item: self.imageView, attribute: .width, relatedBy: .equal, toItem: self.window!.contentView, attribute: .width, multiplier: 1.0, constant: 0.0)
-        NSLayoutConstraint.activate([constraint, otherConstraint])
+        let constraint = NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: imageView, attribute: .width, multiplier: aspectRatio, constant: 4.0)
+        //let otherConstraint = NSLayoutConstraint(item: self.imageView, attribute: .width, relatedBy: .equal, toItem: self.window!.frame, attribute: .width, multiplier: 1.0, constant: 0.0)
+        NSLayoutConstraint.activate([constraint])
+        imageView.imageScaling = .scaleProportionallyUpOrDown
+        
+    }
+    
+    func changePrimaryImage(imageURL: URL) {
+        if UTTypeConformsTo(getUTIFrom(url: imageURL)!, kUTTypePDF) {
+            let pdfDocument = PDFDocument(url: imageURL)!
+            pdfViewer.document = pdfDocument
+            self.imageView.isHidden = true
+            self.pdfViewer.isHidden = false
+            let width = pdfViewer.documentView!.frame.width
+            let height = pdfViewer.documentView!.frame.height / CGFloat(pdfDocument.pageCount)
+            let newRect = NSRect(x: window!.frame.origin.x, y: window!.frame.origin.y, width: width, height: 800)
+            self.window!.animator().setFrame(newRect, display: true)
+        } else {
+            let image = NSImage(byReferencing: imageURL)
+            self.imageView.image = image
+            self.imageView.imageScaling = .scaleProportionallyUpOrDown
+            self.pdfViewer.isHidden = true
+            self.imageView.isHidden = false
+            let aspectRatio = image.size.height / image.size.width
+            let heightAddendum = otherArtImages.count > 1 ? otherArtBox.frame.height : 0
+            let newHeight = defaultImageWidthPixels * aspectRatio + heightAddendum
+            let newRect = NSRect(x: window!.frame.origin.x, y: window!.frame.origin.y, width: defaultImageWidthPixels, height: newHeight)
+            initializePrimaryImageConstraint()
+            print("resizing to \(newRect)")
+            self.window!.animator().setFrame(newRect, display: true)
+        }
     }
     
 
@@ -75,34 +112,34 @@ class AlbumArtWindowController: NSWindowController, NSCollectionViewDataSource, 
         self.collectionView.delegate = self
         self.collectionView.register(ImageCollectionViewItem.self, forItemWithIdentifier: "image")
         self.collectionView.wantsLayer = true
-        //self.collectionView.layer?.backgroundColor = NSColor.gray.cgColor
+        self.collectionView.layer?.backgroundColor = NSColor(colorLiteralRed: (242.0/255.0), green: (242.0/255.0), blue: (242.0/255.0), alpha: 1.0).cgColor
         let trackingArea = NSTrackingArea(rect: self.window!.frame, options: [.activeAlways, .inVisibleRect, .mouseEnteredAndExited, .mouseMoved], owner: self, userInfo: nil)
         self.window?.contentView?.addTrackingArea(trackingArea)
+        //self.window?.contentView?.translatesAutoresizingMaskIntoConstraints = false
         self.window?.isMovableByWindowBackground = true
 
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
         if let album = track?.album {
+            var imageURL: URL? = nil
             self.window?.title = album.name!
             if let primaryArt = album.primary_art {
-                let imageURL = URL(string: primaryArt.artwork_location!)!
-                let image = NSImage(byReferencing: imageURL)
-                self.imageView.image = image
-                self.otherArtImages.append(image)
-                initializePrimaryImage()
+                imageURL = URL(string: primaryArt.artwork_location!)!
+                self.otherArtImages.append(primaryArt)
             }
-            
             if let otherArt = album.other_art, otherArt.count > 0 {
                 print("other art count nonzero")
                 otherArtBox.isHidden = false
                 for thing in otherArt {
                     let art = thing as! AlbumArtwork
-                    let imageURL = URL(string: art.artwork_location!)!
-                    let image = NSImage(byReferencing: imageURL)
-                    otherArtImages.append(image)
+                    otherArtImages.append(art)
                 }
                 collectionView.reloadData()
             } else {
                 otherArtBox.isHidden = true
+            }
+            if imageURL != nil {
+                changePrimaryImage(imageURL: imageURL!)
+                initializePrimaryImageConstraint()
             }
         }
     }

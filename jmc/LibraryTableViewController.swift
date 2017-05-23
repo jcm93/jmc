@@ -35,7 +35,7 @@ private var my_context = 0
 
 class LibraryTableViewController: NSViewController, NSMenuDelegate {
 
-    @IBOutlet weak var libraryTableScrollView: SpecialScrollView!
+    @IBOutlet weak var libraryTableScrollView: NSScrollView!
     @IBOutlet var columnVisibilityMenu: NSMenu!
     @IBOutlet var trackViewArrayController: DragAndDropArrayController!
     @IBOutlet weak var tableView: TableViewYouCanPressSpacebarOn!

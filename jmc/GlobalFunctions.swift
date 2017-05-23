@@ -427,11 +427,11 @@ func getImageExtension(_ uti: CFString) -> String? {
             return "bmp"
         } else if UTTypeConformsTo(uti, kUTTypeICO) {
             return "ico"
-        } else if UTTypeConformsTo(uti, kUTTypePDF) {
-            return "pdf"
         } else {
             return nil
         }
+    } else if UTTypeConformsTo(uti, kUTTypePDF) {
+        return "pdf"
     } else {
         return nil
     }
@@ -566,6 +566,32 @@ func createMD5HashOf(data: Data) -> String {
     let hashData = Data(bytes: digest)
     let hashString = hashData.base64EncodedString()
     return hashString
+}
+
+func getFileType(image: Data) -> String? {
+    guard let imageSource = CGImageSourceCreateWithData(image as NSData, [:] as NSDictionary) else { return nil }
+    guard let uniformTypeIdentifier = CGImageSourceGetType(imageSource) else { return nil }
+    return getImageExtension(uniformTypeIdentifier)
+}
+
+func getFileTypeFrom(url: URL) -> String? {
+    guard let imageSource = CGImageSourceCreateWithURL(url as NSURL, [:] as NSDictionary) else {
+        return nil
+    }
+    guard let uniformTypeIdentifier = CGImageSourceGetType(imageSource) else {
+        return nil
+    }
+    return getImageExtension(uniformTypeIdentifier)
+}
+
+func getUTIFrom(url: URL) -> CFString? {
+    guard let imageSource = CGImageSourceCreateWithURL(url as NSURL, [:] as NSDictionary) else {
+        return nil
+    }
+    guard let uniformTypeIdentifier = CGImageSourceGetType(imageSource) else {
+        return nil
+    }
+    return uniformTypeIdentifier
 }
 
 func checkIfArtistExists(_ name: String) -> Artist? {

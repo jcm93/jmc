@@ -441,10 +441,10 @@
         </customView>
         <menu id="CJP-UP-07s">
             <items>
-                <menuItem title="Export Playlist..." id="xFF-0U-KLT">
+                <menuItem title="Remove Playlist" id="R4D-LH-Ydh">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
-                <menuItem title="Item 2" id="PHW-QL-WsT">
+                <menuItem title="Export..." id="xFF-0U-KLT">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem title="Item 3" id="zej-BY-1TH">

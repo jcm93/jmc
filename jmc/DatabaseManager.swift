@@ -236,12 +236,6 @@ class DatabaseManager: NSObject {
         }
     }
     
-    func getFileType(image: Data) -> String? {
-        guard let imageSource = CGImageSourceCreateWithData(image as NSData, [:] as NSDictionary) else { return nil }
-        guard let uniformTypeIdentifier = CGImageSourceGetType(imageSource) else { return nil }
-        return getImageExtension(uniformTypeIdentifier)
-    }
-    
     func getArtworkFilenameForDirectory(url: URL, ext: String) -> URL {
         /*
         let currentDirectoryContents = try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)

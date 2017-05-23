@@ -594,6 +594,9 @@
                 <menuItem title="Toggle Enabled/Disabled" id="n06-D6-ewQ">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
+                <menuItem title="Show in Finder" id="rHt-8y-MTS">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
             </items>
         </menu>
     </objects>

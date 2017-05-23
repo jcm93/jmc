@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="ArtistViewController" customModule="jmc" customModuleProvider="target">
+            <connections>
+                <outlet property="albumsTargetView" destination="9Tw-3g-IQj" id="fIY-4z-BY1"/>
+                <outlet property="artistListTargetView" destination="wrz-1v-wpp" id="Sfb-fK-tDK"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="1049" height="845"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="wrz-1v-wpp" customClass="NSSplitView">
+                    <rect key="frame" x="0.0" y="0.0" width="250" height="845"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="250" id="VDp-eD-h8q"/>
+                    </constraints>
+                </customView>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="9Tw-3g-IQj" customClass="NSSplitView">
+                    <rect key="frame" x="250" y="0.0" width="799" height="845"/>
+                </customView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="wrz-1v-wpp" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="8FB-sW-iHA"/>
+                <constraint firstItem="9Tw-3g-IQj" firstAttribute="leading" secondItem="wrz-1v-wpp" secondAttribute="trailing" id="CoV-fO-f39"/>
+                <constraint firstItem="9Tw-3g-IQj" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="MTN-mh-qVq"/>
+                <constraint firstAttribute="bottom" secondItem="9Tw-3g-IQj" secondAttribute="bottom" id="SlM-5s-Dar"/>
+                <constraint firstItem="wrz-1v-wpp" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="U9k-Gp-0Oy"/>
+                <constraint firstAttribute="trailing" secondItem="9Tw-3g-IQj" secondAttribute="trailing" id="dDh-lN-neX"/>
+                <constraint firstAttribute="bottom" secondItem="wrz-1v-wpp" secondAttribute="bottom" id="qnp-tB-z83"/>
+            </constraints>
+            <point key="canvasLocation" x="424.5" y="397.5"/>
+        </customView>
+    </objects>
+</document>
