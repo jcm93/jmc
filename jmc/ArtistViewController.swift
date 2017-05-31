@@ -11,8 +11,9 @@ import Cocoa
 
 class ArtistViewController: NSViewController {
     
-    @IBOutlet weak var albumsTargetView: NSSplitView!
-    @IBOutlet weak var artistListTargetView: NSSplitView!
+    
+    @IBOutlet weak var splitView: NSSplitView!
+    
     
     var artistListView: ArtistListViewController?
     var albumsView: ArtistViewAlbumViewController?
@@ -22,7 +23,7 @@ class ArtistViewController: NSViewController {
     func newArtistSelected(artist: Artist) {
         albumsView?.view.removeFromSuperview()
         let newAlbumsView = ArtistViewAlbumViewController(nibName: "ArtistViewAlbumViewController", bundle: nil, artist: artist)
-        albumsTargetView.addSubview(newAlbumsView!.view)
+        splitView.addArrangedSubview(newAlbumsView!.view)
         self.albumsView = newAlbumsView
         self.cachedViewControllers[artist] = newAlbumsView
     }
@@ -31,6 +32,6 @@ class ArtistViewController: NSViewController {
         super.viewDidLoad()
         // Do view setup here.
         self.artistListView = ArtistListViewController(nibName: "ArtistListViewController", bundle: nil, artistViewController: self)
-        self.artistListTargetView.addSubview(self.artistListView!.view)
+        self.splitView.addArrangedSubview(artistListView!.view)
     }
 }

@@ -40,6 +40,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     var newMediaURLs: [URL]?
     var delegate: AppDelegate?
     var watchFolders = [URL]()
+    var advancedOrganizationOptionsWindowController: AdvancedOrganizationOptionsWindowController?
 
     @IBOutlet weak var findNewMediaTabItem: NSTabViewItem!
     @IBOutlet weak var locationManagerTabItem: NSTabViewItem!
@@ -52,8 +53,6 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     //source information elements
     @IBOutlet weak var watchFolderTableView: NSTableView!
     @IBOutlet weak var sourceNameField: NSTextField!
-    @IBOutlet weak var sourceLocationStatusImage: NSImageView!
-    @IBOutlet weak var sourceLocationStatusTextField: NSTextField!
     @IBOutlet weak var sourceMonitorStatusImageView: NSImageView!
     @IBOutlet weak var sourceMonitorStatusTextField: NSTextField!
     @IBOutlet weak var sourceLocationField: JMPathControl!
@@ -68,7 +67,6 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     @IBOutlet weak var watchFoldersLabel: NSTextField!
     @IBOutlet weak var fileMonitorDescriptionLabel: NSTextField!
     @IBOutlet weak var volumePathControl: JMPathControl!
-    @IBOutlet weak var locateVolumeButton: NSButton!
     @IBOutlet weak var renamesFilesCheck: NSButton!
     
     @IBOutlet weak var automaticallyAddFilesCheck: NSButton!
@@ -164,6 +162,10 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             initializeForLibrary(library: self.library!)
         }
     }
+    @IBAction func advancedOrganizationPressed(_ sender: Any) {
+        self.advancedOrganizationOptionsWindowController = AdvancedOrganizationOptionsWindowController(windowNibName: "AdvancedOrganizationOptionsWindowController")
+        self.view.window?.addChildWindow(self.advancedOrganizationOptionsWindowController!.window!, ordered: .above)
+    }
     
     @IBAction func orgBehaviorChecked(_ sender: Any) {
         if doesOrganizeCheck.state == NSOffState {
@@ -232,7 +234,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         print("init for \(library.name)")
         self.library = library
         sourceNameField.stringValue = library.name!
-        let volumeURL = URL(string: library.volume_url_string!)!
+        let volumeURL = URL(string: library.volume_url_string ?? "/")!
         volumePathControl.url = volumeURL
         let libraryWasAvailable = library.is_available
         let libraryIsNowAvailable = libraryIsAvailable(library: library)
@@ -245,7 +247,6 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             removeWatchFolderButton.isEnabled = true
             enableDirectoryMonitoringCheck.isEnabled = true
             renamesFilesCheck.isEnabled = true
-            locateVolumeButton.isHidden = true
             if let centralMediaFolderURLString = library.central_media_folder_url_string, let centralMediaFolderURL = URL(string: centralMediaFolderURLString) {
                 sourceLocationField.stringValue = centralMediaFolderURL.path
             } else {
@@ -301,9 +302,6 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             removeWatchFolderButton.isEnabled = false
             renamesFilesCheck.isEnabled = false
             enableDirectoryMonitoringCheck.isEnabled = false
-            locateVolumeButton.isHidden = false
-            sourceLocationStatusImage.image = NSImage(named: "NSStatusUnavailable")
-            sourceLocationStatusTextField.stringValue = "Volume is unavailable."
         }
     }
     

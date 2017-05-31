@@ -13,6 +13,7 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     @IBOutlet weak var tableView: NSTableView!
     var artist: Artist
     var albums = [Album]()
+    var views = [Int : ArtistViewTableCellView]()
     @IBOutlet var albumArrayController: NSArrayController!
     
     init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, artist: Artist) {
@@ -28,7 +29,7 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let view = tableView.make(withIdentifier: "ArtistViewTableCellView", owner: self) as! ArtistViewTableCellView
         view.populateTracksTable((albumArrayController.arrangedObjects as! NSArray)[row] as! Album)
-        print("populated a table row")
+        //self.views[row] = view
         return view
     }
     
@@ -37,8 +38,13 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         return albums.count
     }
     
+    func tableView(_ tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: IndexSet) -> IndexSet {
+        return IndexSet()
+    }
+    
     /*func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        <#code#>
+        let view = views[row]!
+        return CGFloat(view.album!.tracks!.count * 25)
     }*/
     
     override func viewDidLoad() {
@@ -47,6 +53,7 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.albumArrayController.content = self.albums
+        self.tableView.deselectAll(nil)
     }
     
 }

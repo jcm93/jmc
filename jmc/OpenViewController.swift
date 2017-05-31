@@ -8,6 +8,8 @@
 
 import Cocoa
 
+private var my_context = 0
+
 class OpenViewController: NSViewController {
     
     @IBOutlet weak var comboBox: NSPopUpButton!

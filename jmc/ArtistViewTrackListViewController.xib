@@ -8,23 +8,24 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ArtistViewTrackListViewController" customModule="jmc" customModuleProvider="target">
             <connections>
+                <outlet property="tableView" destination="pbd-Pc-vxw" id="TDp-SZ-pGG"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="Hz6-mo-xeY">
-            <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
+            <rect key="frame" x="0.0" y="0.0" width="480" height="29"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="23" horizontalPageScroll="10" verticalLineScroll="23" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oXk-YA-WjZ">
-                    <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
+                    <rect key="frame" x="0.0" y="0.0" width="480" height="29"/>
                     <clipView key="contentView" id="FvD-E5-19U">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="29"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="21" viewBased="YES" id="pbd-Pc-vxw">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="29"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -172,6 +173,7 @@
                 <constraint firstAttribute="trailing" secondItem="oXk-YA-WjZ" secondAttribute="trailing" id="DvV-mt-0bf"/>
                 <constraint firstItem="oXk-YA-WjZ" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="VQa-Mh-FdP"/>
             </constraints>
+            <point key="canvasLocation" x="140" y="47.5"/>
         </customView>
         <arrayController objectClassName="Track" id="biQ-Ut-XhN">
             <connections>

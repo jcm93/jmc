@@ -11,6 +11,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="AlbumArtWindowController" customModule="jmc" customModuleProvider="target">
             <connections>
+                <outlet property="boxView" destination="6Hm-pX-E5U" id="CBv-1i-ueF"/>
                 <outlet property="collectionView" destination="UT7-b0-eVn" id="gvO-Fi-N6V"/>
                 <outlet property="imageView" destination="Kez-vk-IRQ" id="nVX-LV-mXR"/>
                 <outlet property="otherArtBox" destination="rAc-yv-VnU" id="3n7-zW-fRV"/>
@@ -27,50 +28,50 @@
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <value key="minSize" type="size" width="500" height="500"/>
             <value key="maxSize" type="size" width="1500" height="1050"/>
-            <view key="contentView" autoresizesSubviews="NO" wantsLayer="YES" misplaced="YES" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="500" height="610"/>
-                <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" autoresizesSubviews="NO" wantsLayer="YES" id="se5-gp-TjO">
+                <rect key="frame" x="0.0" y="0.0" width="480" height="455"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qFx-fw-DwT">
-                        <rect key="frame" x="0.0" y="0.0" width="500" height="455"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="455"/>
                         <subviews>
                             <pdfView autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rSd-A8-MXh" customClass="AlbumArtPDFView" customModule="jmc" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="455" width="500" height="0.0"/>
+                                <rect key="frame" x="0.0" y="455" width="480" height="0.0"/>
                             </pdfView>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="100" verticalCompressionResistancePriority="100" translatesAutoresizingMaskIntoConstraints="NO" id="Kez-vk-IRQ" customClass="AlbumArtImageView" customModule="jmc" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="110" width="500" height="345"/>
+                                <rect key="frame" x="0.0" y="140" width="480" height="315"/>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyUpOrDown" id="Zkf-Vt-C6K"/>
                             </imageView>
                             <box title="Other Artwork" translatesAutoresizingMaskIntoConstraints="NO" id="rAc-yv-VnU">
-                                <rect key="frame" x="-3" y="-4" width="506" height="114"/>
+                                <rect key="frame" x="-3" y="-4" width="486" height="144"/>
                                 <view key="contentView" id="6Hm-pX-E5U">
-                                    <rect key="frame" x="2" y="2" width="502" height="97"/>
+                                    <rect key="frame" x="2" y="2" width="482" height="127"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <scrollView wantsLayer="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="dIG-Ot-fs4">
-                                            <rect key="frame" x="0.0" y="0.0" width="502" height="97"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="482" height="127"/>
                                             <clipView key="contentView" drawsBackground="NO" id="ZfU-Of-IXV">
-                                                <rect key="frame" x="0.0" y="0.0" width="502" height="97"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="482" height="127"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <collectionView selectable="YES" allowsEmptySelection="NO" id="UT7-b0-eVn" customClass="AlbumArtCollectionView" customModule="jmc" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="502" height="97"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="482" height="127"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" id="Art-GW-CsP">
-                                                            <size key="itemSize" width="76" height="76"/>
+                                                            <size key="itemSize" width="90" height="110"/>
                                                             <edgeInsets key="sectionInset" left="10" right="0.0" top="0.0" bottom="0.0"/>
                                                         </collectionViewFlowLayout>
                                                         <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     </collectionView>
                                                 </subviews>
-                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlDarkShadowColor" catalog="System" colorSpace="catalog"/>
                                             </clipView>
                                             <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Bmh-6D-vsb">
-                                                <rect key="frame" x="0.0" y="59" width="94" height="16"/>
+                                                <rect key="frame" x="0.0" y="81" width="482" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
-                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="AyC-DS-y1H">
-                                                <rect key="frame" x="486" y="0.0" width="16" height="75"/>
+                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="AyC-DS-y1H">
+                                                <rect key="frame" x="466" y="107" width="16" height="0.0"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>
@@ -83,9 +84,8 @@
                                     </constraints>
                                 </view>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="110" id="ExW-kf-qKK"/>
+                                    <constraint firstAttribute="height" constant="140" id="ExW-kf-qKK"/>
                                 </constraints>
-                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                         </subviews>
                         <constraints>

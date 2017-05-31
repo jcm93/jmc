@@ -61,6 +61,7 @@ class LocationManager: NSObject {
     
     init(delegate: AppDelegate) {
         self.delegate = delegate
+        //NSWorkspace.shared().frontmostApplication
     }
     
     func tryAddNewFilesToDatabase() {
@@ -184,7 +185,7 @@ class LocationManager: NSObject {
             fcntl(fileDescriptor, F_GETPATH, &newPath)
             let newPathString = String(cString: newPath)
             
-            //change the library's library_location, update the activeMonitoringURLs and libraryURLDictionary, posix close open file descriptors, then re-initialize the stream
+            //change the library's library_location, update the activeMonitoringURLs and libraryURLDictionary, close all open file descriptors, then re-initialize the stream
             
             let oldURL = URL(fileURLWithPath: "\(path)/")
             let library = libraryURLDictionary[oldURL]

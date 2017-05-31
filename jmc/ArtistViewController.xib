@@ -8,8 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ArtistViewController" customModule="jmc" customModuleProvider="target">
             <connections>
-                <outlet property="albumsTargetView" destination="9Tw-3g-IQj" id="fIY-4z-BY1"/>
-                <outlet property="artistListTargetView" destination="wrz-1v-wpp" id="Sfb-fK-tDK"/>
+                <outlet property="splitView" destination="HBX-91-W9E" id="s05-8Q-puF"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
         </customObject>
@@ -19,24 +18,29 @@
             <rect key="frame" x="0.0" y="0.0" width="1049" height="845"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="wrz-1v-wpp" customClass="NSSplitView">
-                    <rect key="frame" x="0.0" y="0.0" width="250" height="845"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="250" id="VDp-eD-h8q"/>
-                    </constraints>
-                </customView>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="9Tw-3g-IQj" customClass="NSSplitView">
-                    <rect key="frame" x="250" y="0.0" width="799" height="845"/>
-                </customView>
+                <splitView arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HBX-91-W9E">
+                    <rect key="frame" x="-1" y="0.0" width="1051" height="845"/>
+                    <subviews>
+                        <customView fixedFrame="YES" id="aEq-ZI-eqU">
+                            <rect key="frame" x="0.0" y="0.0" width="528" height="845"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </customView>
+                        <customView fixedFrame="YES" id="WuD-2C-cEn">
+                            <rect key="frame" x="529" y="0.0" width="522" height="845"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </customView>
+                    </subviews>
+                    <holdingPriorities>
+                        <real value="250"/>
+                        <real value="250"/>
+                    </holdingPriorities>
+                </splitView>
             </subviews>
             <constraints>
-                <constraint firstItem="wrz-1v-wpp" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="8FB-sW-iHA"/>
-                <constraint firstItem="9Tw-3g-IQj" firstAttribute="leading" secondItem="wrz-1v-wpp" secondAttribute="trailing" id="CoV-fO-f39"/>
-                <constraint firstItem="9Tw-3g-IQj" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="MTN-mh-qVq"/>
-                <constraint firstAttribute="bottom" secondItem="9Tw-3g-IQj" secondAttribute="bottom" id="SlM-5s-Dar"/>
-                <constraint firstItem="wrz-1v-wpp" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="U9k-Gp-0Oy"/>
-                <constraint firstAttribute="trailing" secondItem="9Tw-3g-IQj" secondAttribute="trailing" id="dDh-lN-neX"/>
-                <constraint firstAttribute="bottom" secondItem="wrz-1v-wpp" secondAttribute="bottom" id="qnp-tB-z83"/>
+                <constraint firstItem="HBX-91-W9E" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="-1" id="bcP-Ze-gP0"/>
+                <constraint firstAttribute="trailing" secondItem="HBX-91-W9E" secondAttribute="trailing" constant="-1" id="ifW-ov-0Uc"/>
+                <constraint firstItem="HBX-91-W9E" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="oFd-P5-d1n"/>
+                <constraint firstAttribute="bottom" secondItem="HBX-91-W9E" secondAttribute="bottom" id="rdE-he-SV7"/>
             </constraints>
             <point key="canvasLocation" x="424.5" y="397.5"/>
         </customView>

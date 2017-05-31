@@ -11,6 +11,7 @@ import Quartz
 
 class AlbumArtWindowController: NSWindowController, NSCollectionViewDataSource, NSCollectionViewDelegate {
     
+    @IBOutlet weak var boxView: NSView!
     @IBOutlet weak var otherArtBox: NSBox!
     @IBOutlet weak var imageView: AlbumArtImageView!
     @IBOutlet weak var collectionView: AlbumArtCollectionView!
@@ -34,6 +35,32 @@ class AlbumArtWindowController: NSWindowController, NSCollectionViewDataSource, 
         view.textField!.stringValue = otherArtImages[index!].art_name ?? "Art Image"
         return view
     }
+    
+    func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, index: Int, dropOperation: NSCollectionViewDropOperation) -> Bool {
+        print("accepting drop")
+        return true
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndex proposedDropIndex: UnsafeMutablePointer<Int>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionViewDropOperation>) -> NSDragOperation {
+        print("validating drop")
+        return .move
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
+        print("can drag items")
+        return true
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, writeItemsAt indexes: IndexSet, to pasteboard: NSPasteboard) -> Bool {
+        print("writing ot pasteboard")
+        return true
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
+        let item = collectionView.item(at: indexPath) as! ImageCollectionViewItem
+        return item.imageURL! as NSURL
+    }
+
     
     override func mouseMoved(with event: NSEvent) {
         if self.timer != nil {
@@ -71,7 +98,7 @@ class AlbumArtWindowController: NSWindowController, NSCollectionViewDataSource, 
         let heightConstraint = imageViewConstraints.filter({return $0.firstAttribute == .height && $0.secondAttribute == .width})
         NSLayoutConstraint.deactivate(heightConstraint)
         let aspectRatio = imageView.image!.size.height / imageView.image!.size.width
-        let constraint = NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: imageView, attribute: .width, multiplier: aspectRatio, constant: 4.0)
+        let constraint = NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: imageView, attribute: .width, multiplier: aspectRatio, constant: 5.0)
         //let otherConstraint = NSLayoutConstraint(item: self.imageView, attribute: .width, relatedBy: .equal, toItem: self.window!.frame, attribute: .width, multiplier: 1.0, constant: 0.0)
         NSLayoutConstraint.activate([constraint])
         imageView.imageScaling = .scaleProportionallyUpOrDown
@@ -112,8 +139,12 @@ class AlbumArtWindowController: NSWindowController, NSCollectionViewDataSource, 
         self.collectionView.delegate = self
         self.collectionView.register(ImageCollectionViewItem.self, forItemWithIdentifier: "image")
         self.collectionView.wantsLayer = true
-        self.collectionView.layer?.backgroundColor = NSColor(colorLiteralRed: (242.0/255.0), green: (242.0/255.0), blue: (242.0/255.0), alpha: 1.0).cgColor
+        self.collectionView.register(forDraggedTypes: [NSURLPboardType])
+        self.collectionView.setDraggingSourceOperationMask(.every, forLocal: true)
+        self.collectionView.setDraggingSourceOperationMask(.every, forLocal: false)
         let trackingArea = NSTrackingArea(rect: self.window!.frame, options: [.activeAlways, .inVisibleRect, .mouseEnteredAndExited, .mouseMoved], owner: self, userInfo: nil)
+        self.otherArtBox.wantsLayer = true
+        boxView.wantsLayer = true
         self.window?.contentView?.addTrackingArea(trackingArea)
         //self.window?.contentView?.translatesAutoresizingMaskIntoConstraints = false
         self.window?.isMovableByWindowBackground = true

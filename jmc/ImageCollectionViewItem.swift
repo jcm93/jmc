@@ -11,6 +11,7 @@ import Cocoa
 class ImageCollectionViewItem: NSCollectionViewItem {
     
     
+    @IBOutlet weak var viewContainingElements: NSView!
     @IBOutlet weak var shadowView: NSView!
     var imageURL: URL?
     
@@ -29,8 +30,10 @@ class ImageCollectionViewItem: NSCollectionViewItem {
         shadowView.layer?.shadowRadius = 5.0
         shadowView.layer?.shadowColor = NSColor.black.cgColor
         imageView?.wantsLayer = true
-        textField?.wantsLayer = false
         textField?.isEditable = true
+        viewContainingElements.wantsLayer = true
+        viewContainingElements.layer?.cornerRadius = 7.0
+        viewContainingElements.layer?.backgroundColor = NSColor.lightGray.cgColor
     }
     
 }

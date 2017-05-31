@@ -12,10 +12,15 @@ class ArtistViewTrackListViewController: NSViewController {
     
     var album: Album
     var trackArray = [Track]()
+    @IBOutlet weak var tableView: NSTableView!
     
     init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, album: Album) {
         self.album = album
-        self.trackArray = self.album.tracks!.allObjects as! [Track]
+        self.trackArray = (self.album.tracks!.allObjects as! [Track]).sorted(by: {(t1: Track, t2: Track) -> Bool in
+            let firstValue = t1.track_num?.intValue ?? 0
+            let secondValue = t2.track_num?.intValue ?? 0
+            return firstValue < secondValue
+            })
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     

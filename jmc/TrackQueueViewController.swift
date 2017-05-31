@@ -345,7 +345,9 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                         next_track = getTrackWithID(id!)
                     }
                 }
-                addTrackToQueue(next_track!, context: self.currentAudioSource!.name!, tense: 2, manually: false)
+                DispatchQueue.main.async {
+                    self.addTrackToQueue(next_track!, context: self.currentAudioSource!.name!, tense: 2, manually: false)
+                }
                 return next_track
             }
         }

@@ -32,6 +32,12 @@ class jmcUITests: XCTestCase {
         
         // Use recording to get started writing UI tests.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        let jmcWindow = XCUIApplication().windows["jmc"]
+        jmcWindow.tables.tableRows.containing(.staticText, identifier:"1:11").children(matching: .textField).element(boundBy: 0).click()
+        jmcWindow.click()
+        jmcWindow.outlines.children(matching: .outlineRow).element(boundBy: 0).cells.containing(.disclosureTriangle, identifier:"NSOutlineViewDisclosureButtonKey").element.typeKey(XCUIKeyboardKeyDownArrow, modifierFlags:[])
+        
     }
     
 }

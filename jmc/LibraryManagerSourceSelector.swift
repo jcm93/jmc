@@ -10,10 +10,8 @@ import Cocoa
 
 class LibraryManagerSourceSelector: NSWindowController, NSTableViewDelegate {
     
-    var addSourceSheet: NewSourceSheetController?
     var verifyLocationsSheet: LocationVerifierSheetController?
     var mediaScannerSheet: MediaScannerSheet?
-    var removeSourceSheet: RemoveSourceSheetController?
     var currentLibrary: Library?
     var currentLibraryManagerViewController: LibraryManagerViewController?
     var libraryViews = [Library : LibraryManagerViewController]()
@@ -27,36 +25,7 @@ class LibraryManagerSourceSelector: NSWindowController, NSTableViewDelegate {
     
     @IBOutlet weak var libraryManagerView: NSSplitView!
     
-        var managedContext = (NSApplication.shared().delegate as! AppDelegate).managedObjectContext
-    
-    @IBAction func addSourceButtonPressed(_ sender: Any) {
-        self.addSourceSheet = NewSourceSheetController(windowNibName: "NewSourceSheetController")
-        self.addSourceSheet?.libSelector = self
-        self.window?.beginSheet(self.addSourceSheet!.window!, completionHandler: addSourceModalComplete)
-    }
-    
-    
-    @IBAction func removeSourceButtonPressed(_ sender: Any) {
-        guard sourceArrayController.selectedObjects.count > 0 else {return}
-        self.removeSourceSheet = RemoveSourceSheetController(windowNibName: "RemoveSourceSheetController")
-        self.removeSourceSheet?.libraryManagerSourceSelector = self
-        self.window?.beginSheet(self.removeSourceSheet!.window!, completionHandler: removeSourceModalComplete)
-    }
-    
-    func removeLibrary() {
-        let databaseManager = DatabaseManager()
-        databaseManager.removeSource(library: self.currentLibrary!)
-    }
-    
-    
-    func removeSourceModalComplete(response: NSModalResponse) {
-        print("remove source modal complete called")
-        delegate?.reinitializeInterfaceForRemovedSource()
-    }
-    
-    func addSourceModalComplete(response: NSModalResponse) {
-        tableView.reloadData()
-    }
+    var managedContext = (NSApplication.shared().delegate as! AppDelegate).managedObjectContext
     
     
     
@@ -92,9 +61,8 @@ class LibraryManagerSourceSelector: NSWindowController, NSTableViewDelegate {
     
     override func windowDidLoad() {
         super.windowDidLoad()
-        let indexSet = IndexSet(integer: 1)
-        self.tableView.selectRowIndexes(indexSet, byExtendingSelection: false)
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+        initializeForLibrary(library: globalRootLibrary!)
     }
     
 }

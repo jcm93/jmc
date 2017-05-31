@@ -12,6 +12,7 @@
                 <outlet property="shadowView" destination="lkm-vp-hdl" id="D3z-Fq-9lS"/>
                 <outlet property="textField" destination="FKC-O3-q1c" id="XfZ-sc-jai"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+                <outlet property="viewContainingElements" destination="ijF-vW-UZp" id="Drd-DA-beR"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
@@ -23,28 +24,38 @@
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="lkm-vp-hdl">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
                     <subviews>
-                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sO9-rl-0ny">
-                            <rect key="frame" x="7" y="30" width="466" height="235"/>
-                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" id="J8S-ay-R4F"/>
-                        </imageView>
-                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FKC-O3-q1c">
-                            <rect key="frame" x="-2" y="7" width="484" height="23"/>
-                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="VGi-Ec-sLb">
-                                <font key="font" metaFont="system" size="12"/>
-                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                            </textFieldCell>
-                        </textField>
+                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="ijF-vW-UZp">
+                            <rect key="frame" x="7" y="9" width="466" height="254"/>
+                            <subviews>
+                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sO9-rl-0ny">
+                                    <rect key="frame" x="0.0" y="16" width="466" height="238"/>
+                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" id="J8S-ay-R4F"/>
+                                </imageView>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FKC-O3-q1c">
+                                    <rect key="frame" x="-2" y="0.0" width="470" height="16"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="VGi-Ec-sLb">
+                                        <font key="font" metaFont="cellTitle"/>
+                                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="FKC-O3-q1c" secondAttribute="trailing" id="6lC-tt-VuZ"/>
+                                <constraint firstAttribute="trailing" secondItem="sO9-rl-0ny" secondAttribute="trailing" id="U5a-R9-Rbi"/>
+                                <constraint firstItem="FKC-O3-q1c" firstAttribute="leading" secondItem="ijF-vW-UZp" secondAttribute="leading" id="VQd-Al-HIN"/>
+                                <constraint firstItem="sO9-rl-0ny" firstAttribute="leading" secondItem="ijF-vW-UZp" secondAttribute="leading" id="hDv-9B-AUS"/>
+                                <constraint firstAttribute="bottom" secondItem="FKC-O3-q1c" secondAttribute="bottom" id="jhW-bB-d2d"/>
+                                <constraint firstItem="sO9-rl-0ny" firstAttribute="top" secondItem="ijF-vW-UZp" secondAttribute="top" id="tJJ-Ms-duY"/>
+                                <constraint firstItem="FKC-O3-q1c" firstAttribute="top" secondItem="sO9-rl-0ny" secondAttribute="bottom" id="vDy-gU-oKs"/>
+                            </constraints>
+                        </customView>
                     </subviews>
                     <constraints>
-                        <constraint firstItem="sO9-rl-0ny" firstAttribute="leading" secondItem="lkm-vp-hdl" secondAttribute="leading" constant="7" id="41t-pK-dVy"/>
-                        <constraint firstAttribute="bottom" secondItem="FKC-O3-q1c" secondAttribute="bottom" constant="7" id="5C7-BT-zIj"/>
-                        <constraint firstItem="FKC-O3-q1c" firstAttribute="top" secondItem="sO9-rl-0ny" secondAttribute="bottom" id="D6l-vH-8B0"/>
-                        <constraint firstAttribute="trailing" secondItem="FKC-O3-q1c" secondAttribute="trailing" id="Wnn-pc-jAZ"/>
-                        <constraint firstItem="FKC-O3-q1c" firstAttribute="leading" secondItem="lkm-vp-hdl" secondAttribute="leading" id="fSM-5P-jQa"/>
-                        <constraint firstItem="sO9-rl-0ny" firstAttribute="top" secondItem="lkm-vp-hdl" secondAttribute="top" constant="7" id="tYp-3O-Sgh"/>
-                        <constraint firstAttribute="trailing" secondItem="sO9-rl-0ny" secondAttribute="trailing" constant="7" id="wVM-YS-FQW"/>
-                        <constraint firstAttribute="bottom" secondItem="sO9-rl-0ny" secondAttribute="bottom" constant="30" id="wuJ-ob-L9D"/>
+                        <constraint firstItem="ijF-vW-UZp" firstAttribute="leading" secondItem="lkm-vp-hdl" secondAttribute="leading" constant="7" id="B1p-U1-lvH"/>
+                        <constraint firstItem="ijF-vW-UZp" firstAttribute="top" secondItem="lkm-vp-hdl" secondAttribute="top" constant="9" id="PGV-fM-5Ia"/>
+                        <constraint firstAttribute="trailing" secondItem="ijF-vW-UZp" secondAttribute="trailing" constant="7" id="jny-wL-bkz"/>
+                        <constraint firstAttribute="bottom" secondItem="ijF-vW-UZp" secondAttribute="bottom" constant="9" id="lzf-kD-uh0"/>
                     </constraints>
                 </customView>
             </subviews>

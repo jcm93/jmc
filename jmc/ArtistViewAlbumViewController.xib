@@ -25,7 +25,7 @@
                         <rect key="frame" x="1" y="1" width="1049" height="749"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="500" viewBased="YES" id="c4B-FR-NTi">
+                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="500" rowSizeStyle="automatic" viewBased="YES" id="c4B-FR-NTi">
                                 <rect key="frame" x="0.0" y="0.0" width="1049" height="749"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
@@ -58,12 +58,12 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CQR-Hf-eVF">
-                                                        <rect key="frame" x="19" y="146" width="306" height="306"/>
+                                                        <rect key="frame" x="22" y="149" width="300" height="300"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="300" id="0nT-ti-Dvt"/>
                                                             <constraint firstAttribute="height" constant="300" id="ZWn-zt-fvb"/>
                                                         </constraints>
-                                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="AhA-gs-qhy"/>
+                                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyUpOrDown" id="AhA-gs-qhy"/>
                                                     </imageView>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zLk-X2-0gb">
                                                         <rect key="frame" x="20" y="124" width="135" height="17"/>
@@ -73,22 +73,19 @@
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
-                                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="dGv-hx-CAK">
-                                                        <rect key="frame" x="381" y="3" width="616" height="478"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="616" id="LZM-Gi-08o"/>
-                                                            <constraint firstAttribute="height" constant="478" id="hvc-sT-Us5"/>
-                                                        </constraints>
+                                                    <customView ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dGv-hx-CAK">
+                                                        <rect key="frame" x="352" y="-8" width="645" height="478"/>
                                                     </customView>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstAttribute="trailing" secondItem="dGv-hx-CAK" secondAttribute="trailing" constant="3" id="6X8-wm-UGY"/>
                                                     <constraint firstItem="zLk-X2-0gb" firstAttribute="top" secondItem="CQR-Hf-eVF" secondAttribute="bottom" constant="8" id="HIy-j0-zGG"/>
-                                                    <constraint firstAttribute="bottom" secondItem="dGv-hx-CAK" secondAttribute="bottom" constant="3" id="Nic-Xo-AYn"/>
+                                                    <constraint firstItem="dGv-hx-CAK" firstAttribute="leading" secondItem="CQR-Hf-eVF" secondAttribute="trailing" constant="30" id="MSQ-EQ-HtV"/>
+                                                    <constraint firstAttribute="trailing" secondItem="dGv-hx-CAK" secondAttribute="trailing" constant="3" id="WwU-ef-h3L"/>
                                                     <constraint firstItem="HpB-11-5Tk" firstAttribute="top" secondItem="19j-p4-ypp" secondAttribute="top" constant="19" id="X2f-sZ-aC5"/>
                                                     <constraint firstItem="CQR-Hf-eVF" firstAttribute="top" secondItem="HpB-11-5Tk" secondAttribute="bottom" constant="8" id="ZtA-4k-NlJ"/>
                                                     <constraint firstItem="CQR-Hf-eVF" firstAttribute="leading" secondItem="19j-p4-ypp" secondAttribute="leading" constant="22" id="aaz-VZ-9uV"/>
                                                     <constraint firstItem="zLk-X2-0gb" firstAttribute="leading" secondItem="19j-p4-ypp" secondAttribute="leading" constant="22" id="rHX-bx-YJe"/>
+                                                    <constraint firstItem="dGv-hx-CAK" firstAttribute="top" secondItem="19j-p4-ypp" secondAttribute="top" constant="30" id="tav-18-2UY"/>
                                                     <constraint firstItem="HpB-11-5Tk" firstAttribute="leading" secondItem="19j-p4-ypp" secondAttribute="leading" constant="22" id="xXu-0f-8zL"/>
                                                 </constraints>
                                                 <connections>
@@ -99,9 +96,6 @@
                                                 </connections>
                                             </tableCellView>
                                         </prototypeCellViews>
-                                        <connections>
-                                            <binding destination="kXu-Mp-LLx" name="value" keyPath="arrangedObjects" id="Slx-LW-TkZ"/>
-                                        </connections>
                                     </tableColumn>
                                 </tableColumns>
                                 <connections>

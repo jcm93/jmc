@@ -197,7 +197,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     func switchToPlaylist(_ item: SourceListItem) {
-        /*if item == currentSourceListItem {return}
+        if item == currentSourceListItem {return}
         currentTableViewController?.hasInitialized = false
         trackQueueViewController?.currentSourceListItem = item
         currentSourceListItem = item
@@ -243,10 +243,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             hideAdvancedFilter()
         }
         populateSearchBar()
-        currentTableViewController?.tableView.reloadData()*/
+        currentTableViewController?.tableView.reloadData()
+        /*print("doing thing")
         let testView = ArtistViewController(nibName: "ArtistViewController", bundle: nil)
-        librarySplitView.addSubview(testView!.view)
-        self.testView = testView
+        librarySplitView.addArrangedSubview(testView!.view)
+        self.testView = testView*/
     }
     
     func populateSearchBar() {
