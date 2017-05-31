@@ -9,6 +9,7 @@
 import Foundation
 
 extension Track {
+    
     @objc func compareArtist(_ other: Track) -> ComparisonResult {
         let self_artist_name = (self.sort_artist != nil) ? self.sort_artist : self.artist?.name
         let other_artist_name = (other.sort_artist != nil) ? other.sort_artist : other.artist?.name

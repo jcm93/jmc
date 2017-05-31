@@ -1194,7 +1194,7 @@ func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder, subContext: N
         cachedOrder.needs_update = true
         cachedOrder.track_views = NSMutableOrderedSet(array: newTracks.map({return ($0 as! Track).view!}))
     } else {
-        let mutableVersion = cachedOrder.track_views!
+        let mutableVersion = cachedOrder.track_views!.mutableCopy() as! NSMutableOrderedSet
         mutableVersion.removeObjects(in: actualTracks.map({return $0.view!}))
         for track in actualTracks {
             let index = insert(mutableVersion, track: track.view!, isGreater: comparator)

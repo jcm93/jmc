@@ -26,8 +26,6 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   }
 }
 
-
-
 class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowDelegate {
     
     //target views
@@ -135,11 +133,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         importWindowController?.showWindow(self)
     }
     
-    func searchFieldDidStartSearching(_ sender: NSSearchField) {
-        print("search started searching called")
-        viewCoordinator?.search_bar_content = searchField.stringValue
-    }
-    
 
     @IBAction func searchFieldAction(_ sender: AnyObject) {
         print("search field action called")
@@ -161,11 +154,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             currentTableViewController?.trackViewArrayController.filterPredicate = nil
             currentTableViewController?.searchString = nil
         }
-    }
-    
-    func searchFieldDidEndSearching(_ sender: NSSearchField) {
-        print("search ended searching called")
-        viewCoordinator?.search_bar_content = ""
     }
     
     func networkPlaylistCallback(_ id: Int, idList: [Int]) {

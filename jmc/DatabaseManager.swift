@@ -32,23 +32,6 @@ func instanceCheck(_ entity: String, name: String) -> NSManagedObject? {
     }
 }
 
-func getArt(_ name: String) -> AlbumArtworkCollection? {
-    let managedContext: NSManagedObjectContext = {
-        return (NSApplication.shared().delegate
-            as? AppDelegate)?.managedObjectContext }()!
-    let fetch_req = NSFetchRequest<NSFetchRequestResult>(entityName: "AlbumArtworkCollection")
-    let predicate = NSPredicate(format: "album.name == %@", name)
-    fetch_req.predicate = predicate
-    var results: [AlbumArtworkCollection]
-    do {
-        results = try managedContext.fetch(fetch_req) as! [AlbumArtworkCollection]
-        return results[0]
-    } catch {
-        print("err: \(error)")
-        return nil
-    }
-}
-
 class FileAddToDatabaseError: NSObject {
     var urlString: String
     var error: String

@@ -69,23 +69,6 @@ extension TrackView {
 
 }
 
-// MARK: Generated accessors for other_sort_orders
-extension TrackView {
-
-    @objc(addOther_sort_ordersObject:)
-    @NSManaged public func addToOther_sort_orders(_ value: SortOrder)
-
-    @objc(removeOther_sort_ordersObject:)
-    @NSManaged public func removeFromOther_sort_orders(_ value: SortOrder)
-
-    @objc(addOther_sort_orders:)
-    @NSManaged public func addToOther_sort_orders(_ values: NSSet)
-
-    @objc(removeOther_sort_orders:)
-    @NSManaged public func removeFromOther_sort_orders(_ values: NSSet)
-
-}
-
 // MARK: Generated accessors for playlists
 extension TrackView {
 
