@@ -2,7 +2,7 @@
 //  SourceListItem+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 5/6/17.
+//  Created by John Moody on 5/31/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 

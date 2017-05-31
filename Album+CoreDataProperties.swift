@@ -2,7 +2,7 @@
 //  Album+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 5/21/17.
+//  Created by John Moody on 5/31/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 
@@ -26,7 +26,6 @@ extension Album {
     @NSManaged public var album_artist: Artist?
     @NSManaged public var other_art: NSOrderedSet?
     @NSManaged public var primary_art: AlbumArtwork?
-    @NSManaged public var properties: Property?
     @NSManaged public var tracks: NSSet?
 
 }

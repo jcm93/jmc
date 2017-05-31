@@ -1,5 +1,5 @@
 //
-//  Library+CoreDataClass.swift
+//  SongCollection+CoreDataClass.swift
 //  jmc
 //
 //  Created by John Moody on 5/31/17.
@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 
-public class Library: NSManagedObject {
-    
+
+public class SongCollection: NSManagedObject {
+
 }

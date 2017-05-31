@@ -2,7 +2,7 @@
 //  Artist+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 5/11/17.
+//  Created by John Moody on 5/31/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 
@@ -21,7 +21,6 @@ extension Artist {
     @NSManaged public var name: String?
     @NSManaged public var albums: NSSet?
     @NSManaged public var composers: NSSet?
-    @NSManaged public var properties: Property?
     @NSManaged public var tracks: NSSet?
 
 }

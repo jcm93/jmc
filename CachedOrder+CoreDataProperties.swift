@@ -2,7 +2,7 @@
 //  CachedOrder+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 5/13/17.
+//  Created by John Moody on 5/31/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 
@@ -21,7 +21,7 @@ extension CachedOrder {
     @NSManaged public var order: String?
     @NSManaged public var filtered_track_views: NSOrderedSet?
     @NSManaged public var library: Library?
-    @NSManaged public var track_views: NSMutableOrderedSet?
+    @NSManaged public var track_views: NSOrderedSet?
 
 }
 

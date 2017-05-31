@@ -109,7 +109,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     var hasMusic: Bool = false
     var focusedColumn: NSTableColumn?
     var currentOrder: CachedOrder?
-    var newCurrentOrder: NewCachedOrder?
     var asc: Bool?
     var is_streaming = false
     var currentLibrary: Library?
@@ -135,8 +134,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         importWindowController?.mainWindowController = self
         importWindowController?.showWindow(self)
     }
-    //the view coordinator
-    var viewCoordinator: ViewCoordinator?
     
     func searchFieldDidStartSearching(_ sender: NSSearchField) {
         print("search started searching called")

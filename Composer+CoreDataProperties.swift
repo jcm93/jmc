@@ -2,7 +2,7 @@
 //  Composer+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 5/11/17.
+//  Created by John Moody on 5/31/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 
@@ -20,7 +20,6 @@ extension Composer {
     @NSManaged public var is_network: NSNumber?
     @NSManaged public var name: String?
     @NSManaged public var artists: NSSet?
-    @NSManaged public var properties: NSSet?
     @NSManaged public var tracks: NSSet?
 
 }
@@ -39,23 +38,6 @@ extension Composer {
 
     @objc(removeArtists:)
     @NSManaged public func removeFromArtists(_ values: NSSet)
-
-}
-
-// MARK: Generated accessors for properties
-extension Composer {
-
-    @objc(addPropertiesObject:)
-    @NSManaged public func addToProperties(_ value: Property)
-
-    @objc(removePropertiesObject:)
-    @NSManaged public func removeFromProperties(_ value: Property)
-
-    @objc(addProperties:)
-    @NSManaged public func addToProperties(_ values: NSSet)
-
-    @objc(removeProperties:)
-    @NSManaged public func removeFromProperties(_ values: NSSet)
 
 }
 
