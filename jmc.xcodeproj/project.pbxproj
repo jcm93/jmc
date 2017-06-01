@@ -14,7 +14,6 @@
 		0D0747671EDF6DCD00E252DF /* Album+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0747661EDF6DCD00E252DF /* Album+CoreDataClass.swift */; };
 		0D0747691EDF6DF500E252DF /* CachedOrder+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0747681EDF6DF500E252DF /* CachedOrder+CoreDataClass.swift */; };
 		0D07476B1EDF6E1000E252DF /* Library+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D07476A1EDF6E1000E252DF /* Library+CoreDataClass.swift */; };
-		0D07476D1EDF703C00E252DF /* TokenFieldController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D07476C1EDF703C00E252DF /* TokenFieldController.swift */; };
 		0D0C2AA71E88D8DA00CA82C3 /* MTImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0C2AA61E88D8DA00CA82C3 /* MTImageCell.swift */; };
 		0D0C2AA91E88D8FF00CA82C3 /* MTButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0C2AA81E88D8FF00CA82C3 /* MTButtonCell.swift */; };
 		0D0E5FAF1D3E909D009E0FA3 /* DragAndDropImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */; };
@@ -107,6 +106,7 @@
 		0DA7E95A1ECC141900719678 /* ImageCollectionViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA7E9581ECC141900719678 /* ImageCollectionViewItem.swift */; };
 		0DA7E95B1ECC141900719678 /* ImageCollectionViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DA7E9591ECC141900719678 /* ImageCollectionViewItem.xib */; };
 		0DA8D0401D1B1128009FEC28 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */; };
+		0DAA858A1EDFE90E004BF089 /* OrganizationTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAA85891EDFE90E004BF089 /* OrganizationTemplate.swift */; };
 		0DAB30911CFBA3340028928F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30901CFBA3340028928F /* AppDelegate.swift */; };
 		0DAB30961CFBA3340028928F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0DAB30951CFBA3340028928F /* Assets.xcassets */; };
 		0DAB30991CFBA3340028928F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DAB30971CFBA3340028928F /* MainMenu.xib */; };
@@ -207,7 +207,6 @@
 		0D0747661EDF6DCD00E252DF /* Album+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Album+CoreDataClass.swift"; path = "Core Data Shit/Album+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D0747681EDF6DF500E252DF /* CachedOrder+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CachedOrder+CoreDataClass.swift"; path = "Core Data Shit/CachedOrder+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D07476A1EDF6E1000E252DF /* Library+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Library+CoreDataClass.swift"; path = "Core Data Shit/Library+CoreDataClass.swift"; sourceTree = "<group>"; };
-		0D07476C1EDF703C00E252DF /* TokenFieldController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TokenFieldController.swift; path = "Other Windows/Library Manager/TokenFieldController.swift"; sourceTree = "<group>"; };
 		0D0C2AA61E88D8DA00CA82C3 /* MTImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MTImageCell.swift; path = "Main Interface Components/Main Table View/MTImageCell.swift"; sourceTree = "<group>"; };
 		0D0C2AA81E88D8FF00CA82C3 /* MTButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MTButtonCell.swift; path = "Main Interface Components/Main Table View/MTButtonCell.swift"; sourceTree = "<group>"; };
 		0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DragAndDropImageView.swift; path = "Main Interface Components/Subview Controllers/DragAndDropImageView.swift"; sourceTree = "<group>"; };
@@ -301,6 +300,7 @@
 		0DA7E9581ECC141900719678 /* ImageCollectionViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageCollectionViewItem.swift; path = "Other Windows/ImageCollectionViewItem.swift"; sourceTree = "<group>"; };
 		0DA7E9591ECC141900719678 /* ImageCollectionViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImageCollectionViewItem.xib; path = "Other Windows/ImageCollectionViewItem.xib"; sourceTree = "<group>"; };
 		0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressBarView.swift; path = "Main Interface Components/Miscellaneous/ProgressBarView.swift"; sourceTree = "<group>"; };
+		0DAA85891EDFE90E004BF089 /* OrganizationTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganizationTemplate.swift; sourceTree = "<group>"; };
 		0DAB308D1CFBA3340028928F /* jmc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = jmc.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0DAB30901CFBA3340028928F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = AppDelegate.swift; path = "Delegate:Main Window Controller/AppDelegate.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		0DAB30951CFBA3340028928F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -539,7 +539,6 @@
 				0DC397A91E5282920009792B /* LibraryManagerViewController.swift */,
 				0DC397AA1E5282920009792B /* LibraryManagerViewController.xib */,
 				0DF1887E1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift */,
-				0D07476C1EDF703C00E252DF /* TokenFieldController.swift */,
 				0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */,
 				0DF188821EDD072B00241785 /* OrganizationRuleViewcontroller.swift */,
 				0DF188831EDD072B00241785 /* OrganizationRuleViewcontroller.xib */,
@@ -694,6 +693,7 @@
 			isa = PBXGroup;
 			children = (
 				0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */,
+				0DAA85891EDFE90E004BF089 /* OrganizationTemplate.swift */,
 				0DE486931EA92B78009B226B /* AddFilesQueueLoop.swift */,
 				0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */,
 				0D116B841E5800FD00C759FD /* LocationManager.swift */,
@@ -1156,8 +1156,8 @@
 				0D51C8A51EAC01F8002F6182 /* ConsolidateLibrarySheetController.swift in Sources */,
 				0D51C8AA1EAC1866002F6182 /* TransformerURLStringToURL.swift in Sources */,
 				0D592A431EDF6C8B0054D553 /* SmartCriteria+CoreDataClass.swift in Sources */,
+				0DAA858A1EDFE90E004BF089 /* OrganizationTemplate.swift in Sources */,
 				0DB60F901E62341500105766 /* AddFilesWindowController.swift in Sources */,
-				0D07476D1EDF703C00E252DF /* TokenFieldController.swift in Sources */,
 				0DE486941EA92B78009B226B /* AddFilesQueueLoop.swift in Sources */,
 				0D51C8A11EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift in Sources */,
 				0D60F5291E8720A300CA5420 /* PlaylistOrderObject.swift in Sources */,

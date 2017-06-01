@@ -10,42 +10,8 @@ import Cocoa
 
 class OrganizationRuleViewcontroller: NSViewController, NSTokenFieldDelegate {
     
-    var names = Set(tokenList.map({return $0.name}))
-    
     @IBOutlet weak var tokenField: NSTokenField!
     @IBOutlet weak var pathControl: NSPathControl!
-    
-    override func controlTextDidChange(_ obj: Notification) {
-        print("called")
-        if tokenField.stringValue.contains("\\") {
-            tokenField.stringValue = tokenField.stringValue.replacingOccurrences(of: "\\", with: "")
-            tokenField.menu?.popUp(positioning: nil, at: tokenField.frame.origin.applying(CGAffineTransform(translationX: 0.0, y: -8.0)), in: self.view)
-        } else {
-            
-        }
-    }
-    
-    func tokenField(_ tokenField: NSTokenField, representedObjectForEditing editingString: String) -> Any {
-        return OrganizationFieldToken(name: editingString)
-    }
-    
-    func tokenField(_ tokenField: NSTokenField, displayStringForRepresentedObject representedObject: Any) -> String? {
-        return (representedObject as! OrganizationFieldToken).name
-    }
-    
-    func tokenField(_ tokenField: NSTokenField, editingStringForRepresentedObject representedObject: Any) -> String? {
-        return (representedObject as! OrganizationFieldToken).name
-    }
-    
-    func tokenField(_ tokenField: NSTokenField, styleForRepresentedObject representedObject: Any) -> NSTokenStyle {
-        let object = representedObject as! OrganizationFieldToken
-        if !names.contains(object.name) {
-            //return NSPlainTextTokenStyle
-            return .none
-        } else {
-            return .rounded
-        }
-    }
     
     @IBAction func browsePressed(_ sender: Any) {
         let panel = NSOpenPanel()
@@ -57,10 +23,46 @@ class OrganizationRuleViewcontroller: NSViewController, NSTokenFieldDelegate {
             pathControl.url = panel.url
         }
     }
+    
+    func tokenField(_ tokenField: NSTokenField, representedObjectForEditing editingString: String) -> Any {
+        print("called")
+        return OrganizationFieldToken(string: editingString)
+    }
+    
+    func tokenField(_ tokenField: NSTokenField, displayStringForRepresentedObject representedObject: Any) -> String? {
+        print("called")
+        return (representedObject as! OrganizationFieldToken).stringRepresentation()
+    }
+    
+    func tokenField(_ tokenField: NSTokenField, editingStringForRepresentedObject representedObject: Any) -> String? {
+        print("called")
+        return (representedObject as! OrganizationFieldToken).stringRepresentation()
+    }
+    
+    func tokenField(_ tokenField: NSTokenField, styleForRepresentedObject representedObject: Any) -> NSTokenStyle {
+        print("called")
+        let object = representedObject as! OrganizationFieldToken
+        if object.tokenType == .other {
+            return .none
+        } else {
+            return .rounded
+        }
+    }
+    
+    override func controlTextDidChange(_ obj: Notification) {
+        print("called")
+        if tokenField.stringValue.contains("\\") {
+            tokenField.stringValue = tokenField.stringValue.replacingOccurrences(of: "\\", with: "")
+            tokenField.menu?.popUp(positioning: nil, at: tokenField.frame.origin.applying(CGAffineTransform(translationX: 0.0, y: -8.0)), in: self.view)
+        } else {
+            
+        }
+    }
+    
     func addToken(sender: NSMenuItem) {
-        let currentPosition = tokenField.currentEditor()!.selectedRange.location
         var currentTokenArray = tokenField.objectValue as! [OrganizationFieldToken]
-        currentTokenArray.append(OrganizationFieldToken(name: sender.title))
+        let newToken = OrganizationFieldToken(string: sender.title)
+        currentTokenArray.append(newToken)
         tokenField.objectValue = currentTokenArray as NSArray
     }
 

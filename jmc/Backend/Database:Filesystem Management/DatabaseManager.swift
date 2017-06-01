@@ -250,40 +250,70 @@ class DatabaseManager: NSObject {
         print("current track location: \(track.location)")
         let organizationType = track.library?.organization_type as! Int
         guard organizationType != NO_ORGANIZATION_TYPE else {return}
-        let artistFolderName = track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING
-        let albumFolderName = track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING
-        let trackName = validateStringForFilename(formFilenameForTrack(track, url: nil))
-        let currentLocationURL = URL(string: track.location!)
-        let oldAlbumDirectoryURL = currentLocationURL?.deletingLastPathComponent()
-        let newArtistDirectoryURL = ((currentLocationURL as NSURL?)?.deletingLastPathComponent as NSURL?)?.deletingLastPathComponent?.deletingLastPathComponent().appendingPathComponent(artistFolderName)
-        let newAlbumDirectoryURL = newArtistDirectoryURL?.appendingPathComponent(albumFolderName)
-        let newLocationURL = ((currentLocationURL as NSURL?)?.deletingLastPathComponent as NSURL?)?.deletingLastPathComponent?.deletingLastPathComponent().appendingPathComponent(artistFolderName).appendingPathComponent(albumFolderName).appendingPathComponent(trackName)
+        let predicateTemplateBundles = track.library?.organization_predicate as! [[NSPredicate : OrganizationTemplate]]
+        let organzationTemplate = {() -> OrganizationTemplate in
+            //predicates ordered from high priority to low priority, so return on the first match
+            for predicateTemplateBundle in predicateTemplateBundles {
+                if predicateTemplateBundle.keys.first!.evaluate(with: track) == true {
+                    return predicateTemplateBundle.values.first!
+                }
+            }
+        }()
+        let currentLocation = URL(string: track.location!)!
+        let fileExtension = currentLocation.pathExtension
+        let newLocation = organzationTemplate.getURL(for: track, withExtension: fileExtension)!
+        let directoryURL = newLocation.deletingLastPathComponent()
         //check if directories already exist
         do {
-            try fileManager.createDirectory(at: newAlbumDirectoryURL!, withIntermediateDirectories: true, attributes: nil)
-            try fileManager.moveItem(at: currentLocationURL!, to: newLocationURL!)
-            track.location = newLocationURL?.absoluteString
+            try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true, attributes: nil)
+            try fileManager.moveItem(at: currentLocation, to: newLocation)
+            track.location = newLocation.absoluteString
         } catch {
             print("error moving file: \(error)")
         }
-        do {
-            let currentAlbumDirectoryContents = try fileManager.contentsOfDirectory(at: oldAlbumDirectoryURL!, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
-            if currentAlbumDirectoryContents.count == 1 {
-                let lastFileURL = currentAlbumDirectoryContents[0]
-                let ext = lastFileURL.pathExtension.lowercased()
-                if VALID_ARTWORK_TYPE_EXTENSIONS.contains(ext) {
-                    let fileName = lastFileURL.lastPathComponent
-                    try fileManager.moveItem(at: lastFileURL, to: (newLocationURL?.deletingLastPathComponent().appendingPathComponent(fileName))!)
-                }
-            }
-        } catch {
-            print("error checking directory: \(error)")
-        }
-        print("moved \(currentLocationURL) to \(track.location!)")
+        trimDirectoryFollowingMoveOperation(track: track, currentLocation: currentLocation)
+        print("moved \(currentLocation) to \(track.location!)")
         if self.undoFileLocations[track] == nil {
             self.undoFileLocations[track] = [String]()
         }
         self.undoFileLocations[track]!.append(track.location!)
+    }
+    
+    func trimDirectoryFollowingMoveOperation(track: Track, currentLocation: URL) {
+        let directory = currentLocation.deletingLastPathComponent()
+        do {
+            let key = [URLResourceKey.typeIdentifierKey]
+            let currentAlbumDirectoryContents = try fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: key, options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
+            let audioFiles = currentAlbumDirectoryContents.filter({(url: URL) -> Bool in
+                do {
+                    let values = try url.resourceValues(forKeys: Set(key))
+                    return UTTypeConformsTo(values.typeIdentifier! as CFString, kUTTypeAudio)
+                } catch {
+                    print(error)
+                }
+            })
+            if audioFiles.count <= 0 {
+                self.moveLastFiles(currentAlbumDirectoryContents, outOfDirectory: directory, following: track)
+            }
+        } catch {
+            print("error checking directory: \(error)")
+        }
+    }
+    
+    func moveLastFiles(_ files: [URL], outOfDirectory directory: URL, following track: Track) {
+        do {
+            //abandon ship
+            let lastFileURL = currentAlbumDirectoryContents[0]
+            let ext = lastFileURL.pathExtension.lowercased()
+            if VALID_ARTWORK_TYPE_EXTENSIONS.contains(ext) {
+                let fileName = lastFileURL.lastPathComponent
+                try fileManager.moveItem(at: lastFileURL, to: (newLocationURL?.deletingLastPathComponent().appendingPathComponent(fileName))!)
+            }
+            //close the portal
+            try fileManager.removeItem(at: directory)
+        } catch {
+            print(error)
+        }
     }
     
     func getMDItemFromURL(_ url: URL) -> MDItem? {

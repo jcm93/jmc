@@ -8,27 +8,10 @@
 
 import Cocoa
 
-class OrganizationFieldToken: NSObject {
-    var name: String
-    init(name: String) {
-        self.name = name
-    }
-}
-
-let tokenList: [OrganizationFieldToken] = [
-    OrganizationFieldToken(name: "Album Artist"),
-    OrganizationFieldToken(name: "Artist"),
-    OrganizationFieldToken(name: "Album"),
-    OrganizationFieldToken(name: "Track #"),
-    OrganizationFieldToken(name: "Track Name"),
-    OrganizationFieldToken(name: "Year")
-]
-
 class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFieldDelegate {
     
     @IBOutlet weak var pathControl: NSPathControl!
     @IBOutlet weak var splitView: NSSplitView!
-    var names = Set(tokenList.map({return $0.name}))
     
     @IBOutlet weak var tokenField: NSTokenField!
     
@@ -45,6 +28,37 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
         }
     }
     
+    @IBAction func addRule(_ sender: Any) {
+        let newViewController = OrganizationRuleViewcontroller(nibName: "OrganizationRuleViewcontroller", bundle: nil)
+        ruleControllers.append(newViewController!)
+        splitView.addArrangedSubview(newViewController!.view)
+    }
+    
+    func tokenField(_ tokenField: NSTokenField, representedObjectForEditing editingString: String) -> Any {
+        print("called")
+        return OrganizationFieldToken(string: editingString)
+    }
+    
+    func tokenField(_ tokenField: NSTokenField, displayStringForRepresentedObject representedObject: Any) -> String? {
+        print("called")
+        return (representedObject as! OrganizationFieldToken).stringRepresentation()
+    }
+    
+    func tokenField(_ tokenField: NSTokenField, editingStringForRepresentedObject representedObject: Any) -> String? {
+        print("called")
+        return (representedObject as! OrganizationFieldToken).stringRepresentation()
+    }
+    
+    func tokenField(_ tokenField: NSTokenField, styleForRepresentedObject representedObject: Any) -> NSTokenStyle {
+        print("called")
+        let object = representedObject as! OrganizationFieldToken
+        if object.tokenType == .other {
+            return .none
+        } else {
+            return .rounded
+        }
+    }
+    
     override func controlTextDidChange(_ obj: Notification) {
         print("called")
         if tokenField.stringValue.contains("\\") {
@@ -55,39 +69,11 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
         }
     }
     
-    func tokenField(_ tokenField: NSTokenField, representedObjectForEditing editingString: String) -> Any {
-        return OrganizationFieldToken(name: editingString)
-    }
-    
-    func tokenField(_ tokenField: NSTokenField, displayStringForRepresentedObject representedObject: Any) -> String? {
-        return (representedObject as! OrganizationFieldToken).name
-    }
-    
-    func tokenField(_ tokenField: NSTokenField, editingStringForRepresentedObject representedObject: Any) -> String? {
-        return (representedObject as! OrganizationFieldToken).name
-    }
-    
-    func tokenField(_ tokenField: NSTokenField, styleForRepresentedObject representedObject: Any) -> NSTokenStyle {
-        let object = representedObject as! OrganizationFieldToken
-        if !names.contains(object.name) {
-            //return NSPlainTextTokenStyle
-            return .none
-        } else {
-            return .rounded
-        }
-    }
-    
     func addToken(sender: NSMenuItem) {
-        let currentPosition = tokenField.currentEditor()!.selectedRange.location
         var currentTokenArray = tokenField.objectValue as! [OrganizationFieldToken]
-        currentTokenArray.append(OrganizationFieldToken(name: sender.title))
+        let newToken = OrganizationFieldToken(string: sender.title)
+        currentTokenArray.append(newToken)
         tokenField.objectValue = currentTokenArray as NSArray
-    }
-    
-    @IBAction func addRule(_ sender: Any) {
-        let newViewController = OrganizationRuleViewcontroller(nibName: "OrganizationRuleViewcontroller", bundle: nil)
-        ruleControllers.append(newViewController!)
-        splitView.addArrangedSubview(newViewController!.view)
     }
 
     override func windowDidLoad() {
