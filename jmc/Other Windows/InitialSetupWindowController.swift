@@ -32,10 +32,8 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 }
 
 
-public enum LibraryOrganizationType: Int {
-    case move = 1
-    case copy = 2
-    case none = 0
+enum LibraryOrganizationType: Int {
+    case none, move, copy
 }
 
 class InitialSetupWindowController: NSWindowController {
@@ -91,7 +89,6 @@ class InitialSetupWindowController: NSWindowController {
             directoryURL = myFileDialog.url!
             libraryPathControl.url = directoryURL
         }
-        
         // Make sure that a path was chosen
     }
     

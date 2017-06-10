@@ -10,7 +10,6 @@
             <connections>
                 <outlet property="addWatchFolderButton" destination="ysf-8d-R25" id="dnY-bh-2gN"/>
                 <outlet property="automaticallyAddFilesCheck" destination="8r8-tc-b9V" id="bil-YH-aic"/>
-                <outlet property="changeLocationButton" destination="6F5-4K-Ifq" id="XF5-VB-1Zk"/>
                 <outlet property="consolidateLibraryButton" destination="EYr-io-jRU" id="jHX-eY-bnr"/>
                 <outlet property="copyRadio" destination="Tc9-NX-a0t" id="NMY-FK-GRH"/>
                 <outlet property="dirScanStatusTextField" destination="cne-IQ-5GZ" id="Nn5-pd-VE9"/>
@@ -255,19 +254,6 @@ Gw
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6F5-4K-Ifq">
-                                        <rect key="frame" x="685" y="422" width="150" height="32"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="138" id="lbA-o0-6pL"/>
-                                        </constraints>
-                                        <buttonCell key="cell" type="push" title="Change location..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1ct-fA-cOg">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="changeSourceCentralMediaFolderButtonPressed:" target="-2" id="Y9q-PD-wS1"/>
-                                        </connections>
-                                    </button>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6vp-tQ-c95">
                                         <rect key="frame" x="15" y="404" width="211" height="17"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Behavior when adding new media:" id="TDK-gN-1nC">
@@ -283,7 +269,7 @@ Gw
                                         <rect key="frame" x="17" y="238" width="812" height="5"/>
                                     </box>
                                     <pathControl verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n1T-9X-h7D" customClass="JMPathControl" customModule="jmc" customModuleProvider="target">
-                                        <rect key="frame" x="152" y="429" width="536" height="20"/>
+                                        <rect key="frame" x="152" y="429" width="208" height="20"/>
                                         <pathCell key="cell" controlSize="small" selectable="YES" alignment="left" id="5GR-Xv-PI6">
                                             <font key="font" metaFont="smallSystem"/>
                                             <url key="url" string="file:///Users/johnmoody/Music/jmc/"/>
@@ -394,7 +380,7 @@ Gw
                                         </textFieldCell>
                                     </textField>
                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="piP-uS-Zxd">
-                                        <rect key="frame" x="719" y="366" width="116" height="32"/>
+                                        <rect key="frame" x="719" y="421" width="116" height="32"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="push" title="Advanced...." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="YJK-aa-mEE">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -411,7 +397,6 @@ Gw
                                     <constraint firstItem="8r8-tc-b9V" firstAttribute="top" secondItem="CeJ-Wl-DSi" secondAttribute="bottom" constant="16" id="2Vt-lA-O40"/>
                                     <constraint firstItem="0zW-S6-wv4" firstAttribute="top" secondItem="AV9-ZF-cTG" secondAttribute="bottom" constant="8" id="3tp-QF-VAL"/>
                                     <constraint firstItem="6vp-tQ-c95" firstAttribute="top" secondItem="n1T-9X-h7D" secondAttribute="bottom" constant="8" id="4dh-rX-AHl"/>
-                                    <constraint firstItem="6F5-4K-Ifq" firstAttribute="top" secondItem="ZCg-e7-Yu8" secondAttribute="top" constant="88" id="5ln-jh-faO"/>
                                     <constraint firstItem="6vp-tQ-c95" firstAttribute="leading" secondItem="ZCg-e7-Yu8" secondAttribute="leading" constant="17" id="6Wh-vN-hsd"/>
                                     <constraint firstItem="CeJ-Wl-DSi" firstAttribute="leading" secondItem="ZCg-e7-Yu8" secondAttribute="leading" constant="17" id="7Gq-oY-mDF"/>
                                     <constraint firstItem="o0e-Sb-QOp" firstAttribute="leading" secondItem="Tc9-NX-a0t" secondAttribute="trailing" constant="28" id="8yn-NI-jkL"/>
@@ -443,7 +428,6 @@ Gw
                                     <constraint firstItem="HWV-ag-XYf" firstAttribute="leading" secondItem="ZCg-e7-Yu8" secondAttribute="leading" constant="17" id="dz5-mb-LUa"/>
                                     <constraint firstItem="P7g-tb-aOA" firstAttribute="top" secondItem="esh-Z0-Oix" secondAttribute="bottom" constant="11" id="eZ9-jk-hoo"/>
                                     <constraint firstItem="YxN-YA-YBq" firstAttribute="top" secondItem="IwK-4P-gTP" secondAttribute="bottom" constant="3" id="eb4-zH-paK"/>
-                                    <constraint firstAttribute="trailing" secondItem="6F5-4K-Ifq" secondAttribute="trailing" constant="17" id="eet-lH-MDg"/>
                                     <constraint firstItem="Tc9-NX-a0t" firstAttribute="leading" secondItem="mkl-Ic-VxO" secondAttribute="trailing" constant="8" id="gfM-Ly-t8e"/>
                                     <constraint firstItem="z11-19-8Af" firstAttribute="top" secondItem="oNl-LD-A9F" secondAttribute="bottom" constant="17" id="h3P-N0-lnU"/>
                                     <constraint firstItem="P7g-tb-aOA" firstAttribute="leading" secondItem="ZCg-e7-Yu8" secondAttribute="leading" constant="17" id="ilL-QJ-V1t"/>
@@ -460,7 +444,6 @@ Gw
                                     <constraint firstItem="LH2-3i-bq3" firstAttribute="top" secondItem="Tc9-NX-a0t" secondAttribute="bottom" constant="14" id="ytx-ze-74K"/>
                                     <constraint firstItem="cUP-gH-z2b" firstAttribute="top" secondItem="ZCg-e7-Yu8" secondAttribute="top" constant="5" id="yw4-eL-wq4"/>
                                     <constraint firstItem="ps8-zQ-L2I" firstAttribute="top" secondItem="cUP-gH-z2b" secondAttribute="bottom" constant="11" id="zOE-UB-Qys"/>
-                                    <constraint firstItem="6F5-4K-Ifq" firstAttribute="leading" secondItem="n1T-9X-h7D" secondAttribute="trailing" constant="3" id="zSy-6Y-nAA"/>
                                 </constraints>
                             </view>
                         </tabViewItem>
@@ -485,7 +468,7 @@ Gw
                                         <rect key="frame" x="17" y="17" width="812" height="448"/>
                                         <clipView key="contentView" drawsBackground="NO" id="dQk-LC-xZW">
                                             <rect key="frame" x="1" y="0.0" width="810" height="447"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="9yz-tg-h6A" viewBased="YES" id="1rH-JT-oaU">
                                                     <rect key="frame" x="0.0" y="0.0" width="885" height="424"/>
@@ -766,7 +749,7 @@ Gw
                                         <rect key="frame" x="17" y="49" width="812" height="412"/>
                                         <clipView key="contentView" id="2gV-b4-O0o">
                                             <rect key="frame" x="1" y="0.0" width="810" height="411"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" headerView="aIU-i4-nDg" viewBased="YES" id="cjf-jD-81c">
                                                     <rect key="frame" x="0.0" y="0.0" width="810" height="388"/>

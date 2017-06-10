@@ -250,7 +250,7 @@ class DatabaseManager: NSObject {
         print("current track location: \(track.location)")
         let organizationType = track.library?.organization_type as! Int
         guard organizationType != NO_ORGANIZATION_TYPE else {return}
-        let predicateTemplateBundles = track.library?.organization_predicate as! [[NSPredicate : OrganizationTemplate]]
+        let predicateTemplateBundles = track.library?.organization_templates as! [[NSPredicate : OrganizationTemplate]]
         let organzationTemplate = {() -> OrganizationTemplate in
             //predicates ordered from high priority to low priority, so return on the first match
             for predicateTemplateBundle in predicateTemplateBundles {
@@ -258,6 +258,7 @@ class DatabaseManager: NSObject {
                     return predicateTemplateBundle.values.first!
                 }
             }
+            return predicateTemplateBundles.last!.first!.value
         }()
         let currentLocation = URL(string: track.location!)!
         let fileExtension = currentLocation.pathExtension
@@ -271,7 +272,7 @@ class DatabaseManager: NSObject {
         } catch {
             print("error moving file: \(error)")
         }
-        trimDirectoryFollowingMoveOperation(track: track, currentLocation: currentLocation)
+        trimDirectoryFollowingMoveOperation(track: track, oldLocation: currentLocation)
         print("moved \(currentLocation) to \(track.location!)")
         if self.undoFileLocations[track] == nil {
             self.undoFileLocations[track] = [String]()
@@ -279,40 +280,74 @@ class DatabaseManager: NSObject {
         self.undoFileLocations[track]!.append(track.location!)
     }
     
-    func trimDirectoryFollowingMoveOperation(track: Track, currentLocation: URL) {
-        let directory = currentLocation.deletingLastPathComponent()
-        do {
-            let key = [URLResourceKey.typeIdentifierKey]
-            let currentAlbumDirectoryContents = try fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: key, options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
-            let audioFiles = currentAlbumDirectoryContents.filter({(url: URL) -> Bool in
+    func trimDirectoryFollowingMoveOperation(track: Track, oldLocation: URL) {
+        let oldDirectory = oldLocation.deletingLastPathComponent()
+        let currentTrackLocations = track.album?.tracks?.flatMap({return ($0 as! Track).location})
+        let currentTrackDirectories = currentTrackLocations?.flatMap({return URL(string: $0)?.deletingLastPathComponent()}) ?? [URL]()
+        let directoriesSet = Set(currentTrackDirectories)
+        guard directoriesSet.contains(oldDirectory) == false else { return }
+        guard let albumFiles = track.album?.getMiscellaneousFiles() else { return }
+        if currentTrackDirectories.count == 1 {
+            let currentAlbumDirectory = currentTrackDirectories.first!
+            for albumFile in albumFiles {
                 do {
-                    let values = try url.resourceValues(forKeys: Set(key))
-                    return UTTypeConformsTo(values.typeIdentifier! as CFString, kUTTypeAudio)
+                    let fileURL = URL(string: albumFile)!
+                    let fileName = fileURL.lastPathComponent
+                    try fileManager.moveItem(at: fileURL, to: currentAlbumDirectory.appendingPathComponent(fileName))
                 } catch {
                     print(error)
                 }
-            })
-            if audioFiles.count <= 0 {
-                self.moveLastFiles(currentAlbumDirectoryContents, outOfDirectory: directory, following: track)
             }
-        } catch {
-            print("error checking directory: \(error)")
+        } else {
+            //construct directory for album files since album is spread across disparate locations
+            guard let albumDirectory = createNonTemplateDirectoryFor(album: track.album) else { return }
+            for albumFile in albumFiles {
+                do {
+                    let fileURL = URL(string: albumFile)!
+                    let fileName = fileURL.lastPathComponent
+                    try fileManager.moveItem(at: fileURL, to: albumDirectory.appendingPathComponent(fileName))
+                } catch {
+                    print(error)
+                }
+            }
         }
-    }
-    
-    func moveLastFiles(_ files: [URL], outOfDirectory directory: URL, following track: Track) {
         do {
-            //abandon ship
-            let lastFileURL = currentAlbumDirectoryContents[0]
-            let ext = lastFileURL.pathExtension.lowercased()
-            if VALID_ARTWORK_TYPE_EXTENSIONS.contains(ext) {
-                let fileName = lastFileURL.lastPathComponent
-                try fileManager.moveItem(at: lastFileURL, to: (newLocationURL?.deletingLastPathComponent().appendingPathComponent(fileName))!)
+            let oldContents = try fileManager.contentsOfDirectory(at: oldDirectory, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+            if oldContents.count < 1 {
+                try fileManager.removeItem(at: oldDirectory)
             }
-            //close the portal
-            try fileManager.removeItem(at: directory)
         } catch {
             print(error)
+        }
+        
+    }
+    
+    func createNonTemplateDirectoryFor(album albumOptional: Album?) -> URL? {
+        guard let album = albumOptional else { return nil }
+        let library = (album.tracks!.anyObject() as! Track).library
+        let baseURL = library!.getCentralMediaFolder()!
+        var albumDirectory = baseURL.appendingPathComponent("Album Files")
+        if album.is_compilation == true {
+            albumDirectory.appendPathComponent("Compilations")
+        } else {
+            if album.album_artist != nil {
+                albumDirectory.appendPathComponent(album.album_artist!.name ?? UNKNOWN_ARTIST_STRING)
+            } else {
+                let set = Set(album.tracks!.flatMap({return ($0 as! Track).artist?.name}))
+                if set.count > 1 {
+                    albumDirectory.appendPathComponent(UNKNOWN_ALBUM_ARTIST_STRING)
+                } else {
+                    albumDirectory.appendPathComponent(set.first ?? UNKNOWN_ARTIST_STRING)
+                }
+            }
+        }
+        albumDirectory.appendPathComponent(album.name ?? UNKNOWN_ALBUM_STRING)
+        do {
+            try fileManager.createDirectory(at: albumDirectory, withIntermediateDirectories: true, attributes: nil)
+            return albumDirectory
+        } catch {
+            print(error)
+            return nil
         }
     }
     
@@ -360,42 +395,6 @@ class DatabaseManager: NSObject {
             }
         }
         return (mediaURLs, errors)
-    }
-    
-    func createNewSource(url: URL) {
-        let library = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
-        library.volume_url_string = url.absoluteString
-        library.name = url.lastPathComponent
-        library.parent = globalRootLibrary
-        library.is_active = true
-        let librarySourceListItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
-        librarySourceListItem.library = library
-        librarySourceListItem.name = library.name
-        globalRootLibrarySourceListItem!.addToChildren(librarySourceListItem)
-    }
-    
-    func addNewSource(url: URL, organize: Bool, visualUpdateHandler: ProgressBarController?) {
-        let library = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
-        library.volume_url_string = url.absoluteString
-        library.name = url.lastPathComponent
-        library.parent = globalRootLibrary
-        library.is_active = true
-        library.renames_files = organize as NSNumber
-        library.organization_type = organize == true ? 2 as NSNumber : 0 as NSNumber
-        library.keeps_track_of_files = true
-        var urlArray = library.watch_dirs as? [URL] ?? [URL]()
-        urlArray.append(url)
-        library.watch_dirs = urlArray as NSArray
-        library.monitors_directories_for_new = true
-        let librarySourceListItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
-        librarySourceListItem.library = library
-        librarySourceListItem.name = library.name
-        globalRootLibrarySourceListItem!.addToChildren(librarySourceListItem)
-        visualUpdateHandler?.makeIndeterminate(actionName: "Getting all media in directory")
-        let mediaURLs = getMediaURLsInDirectoryURLs([url]).0
-        DispatchQueue.global(qos: .default).async {
-            self.addTracksFromURLs(mediaURLs, to: library, visualUpdateHandler: visualUpdateHandler, callback: nil)
-        }
     }
     
     func removeNetworkedLibrary(_ library: Library) {

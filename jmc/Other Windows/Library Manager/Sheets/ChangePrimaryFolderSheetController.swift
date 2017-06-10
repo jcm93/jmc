@@ -25,18 +25,6 @@ class ChangePrimaryFolderSheetController: NSWindowController {
         if modalResult == NSFileHandlingPanelOKButton {
             self.pathControl.url = panel.urls[0]
         }
-        validateURL()
-    }
-    
-    func validateURL() {
-        let volumeURL = getVolumeOfURL(url: self.pathControl.url!)
-        if volumeURL != URL(string: self.libraryManager!.library!.volume_url_string!) {
-            okButton.isEnabled = false
-            errorText.isHidden = false
-        } else {
-            okButton.isEnabled = true
-            errorText.isHidden = true
-        }
     }
     
     @IBAction func okPressed(_ sender: Any) {

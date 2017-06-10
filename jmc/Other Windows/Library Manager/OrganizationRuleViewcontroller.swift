@@ -13,6 +13,8 @@ class OrganizationRuleViewcontroller: NSViewController, NSTokenFieldDelegate {
     @IBOutlet weak var tokenField: NSTokenField!
     @IBOutlet weak var pathControl: NSPathControl!
     
+    var names = ["Album", "Album Artist", "Artist", "Track #", "Year", "Track Name"]
+    
     @IBAction func browsePressed(_ sender: Any) {
         let panel = NSOpenPanel()
         panel.canChooseDirectories = true

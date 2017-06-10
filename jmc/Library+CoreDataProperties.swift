@@ -2,7 +2,7 @@
 //  Library+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 5/31/17.
+//  Created by John Moody on 6/10/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 
@@ -16,7 +16,6 @@ extension Library {
         return NSFetchRequest<Library>(entityName: "Library")
     }
 
-    @NSManaged public var central_media_folder_url_string: String?
     @NSManaged public var finds_artwork: NSNumber?
     @NSManaged public var is_active: NSNumber?
     @NSManaged public var is_available: NSNumber?
@@ -33,12 +32,11 @@ extension Library {
     @NSManaged public var next_genre_id: NSNumber?
     @NSManaged public var next_playlist_id: NSNumber?
     @NSManaged public var next_track_id: NSNumber?
-    @NSManaged public var organization_predicate: NSObject?
+    @NSManaged public var organization_templates: NSObject?
     @NSManaged public var organization_type: NSNumber?
     @NSManaged public var peer: NSObject?
     @NSManaged public var renames_files: NSNumber?
     @NSManaged public var uuid: String?
-    @NSManaged public var volume_url_string: String?
     @NSManaged public var watch_dirs: NSObject?
     @NSManaged public var cached_orders: NSSet?
     @NSManaged public var children: NSSet?
@@ -46,6 +44,7 @@ extension Library {
     @NSManaged public var master_playlist: NSSet?
     @NSManaged public var parent: Library?
     @NSManaged public var tracks: NSSet?
+    @NSManaged public var organization_template: OrganizationTemplateBundle?
 
 }
 

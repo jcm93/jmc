@@ -2,7 +2,7 @@
 //  Album+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 5/31/17.
+//  Created by John Moody on 6/3/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 
@@ -27,6 +27,7 @@ extension Album {
     @NSManaged public var other_art: NSOrderedSet?
     @NSManaged public var primary_art: AlbumArtwork?
     @NSManaged public var tracks: NSSet?
+    @NSManaged public var other_files: NSSet?
 
 }
 
@@ -79,5 +80,22 @@ extension Album {
 
     @objc(removeTracks:)
     @NSManaged public func removeFromTracks(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for other_files
+extension Album {
+
+    @objc(addOther_filesObject:)
+    @NSManaged public func addToOther_files(_ value: AlbumFile)
+
+    @objc(removeOther_filesObject:)
+    @NSManaged public func removeFromOther_files(_ value: AlbumFile)
+
+    @objc(addOther_files:)
+    @NSManaged public func addToOther_files(_ values: NSSet)
+
+    @objc(removeOther_files:)
+    @NSManaged public func removeFromOther_files(_ values: NSSet)
 
 }

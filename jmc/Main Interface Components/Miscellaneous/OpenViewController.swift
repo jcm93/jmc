@@ -38,9 +38,6 @@ class OpenViewController: NSViewController {
             orgCheck.state = NSOffState
             moveRadio.isEnabled = false
             copyRadio.isEnabled = false
-            if currentLibrary?.central_media_folder_url_string == nil {
-                orgCheck.isEnabled = false
-            }
         }
     }
     

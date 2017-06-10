@@ -95,6 +95,18 @@ func getLibrary(withName name: String) -> [Library]? {
     }
 }
 
+func getAllMiscellaneousAlbumFiles(for album: Album) -> [String] {
+    var albumFiles = [String?]()
+    albumFiles.append(album.primary_art?.artwork_location)
+    if let otherArt = album.other_art {
+        albumFiles.append(contentsOf: otherArt.map({return ($0 as! AlbumArtwork).artwork_location}))
+    }
+    if let otherFiles = album.other_files {
+        albumFiles.append(contentsOf: otherFiles.map({return ($0 as! AlbumFile).location}))
+    }
+    return albumFiles.flatMap({return $0})
+}
+
 //mark sort descriptors
 var artistSortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "sort_artist", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "sort_album", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:))), NSSortDescriptor(key: "track_num", ascending:true), NSSortDescriptor(key: "name", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:)))]
 
@@ -246,6 +258,7 @@ let MOVE_ORGANIZATION_TYPE = 1
 let COPY_ORGANIZATION_TYPE = 2
 let UNKNOWN_ARTIST_STRING = "Unknown Artist"
 let UNKNOWN_ALBUM_STRING = "Unknown Album"
+let UNKNOWN_ALBUM_ARTIST_STRING = "Various Artists"
 let NO_FILENAME_STRING = "_"
 let MIN_SONG_BAR_WIDTH_FRACTION: CGFloat = 0.174
 let MIN_VOLUME_BAR_WIDTH_FRACTION: CGFloat = 0.03
@@ -360,37 +373,35 @@ func getTracksOutsideHomeDirectory(library: Library) -> [Track] {
     return result
 }
 
-func changeLibraryLocation(library: Library, newLocation: URL) {
-    let oldURL = URL(string: library.volume_url_string!)!
-    let oldPath = oldURL.absoluteString
-    let newPath = newLocation.absoluteString
-    var badLocationCount = 0
-    for track in (library.tracks! as! Set<Track>) {
-        guard track.location!.hasPrefix(oldPath) else {badLocationCount += 1; continue}
-        track.location = track.location!.replacingOccurrences(of: oldPath, with: newPath, options: .anchored, range: nil)
-    }
-    if var watchDirs = library.watch_dirs as? [URL] {
-        if watchDirs.contains(oldURL) {
-            watchDirs.remove(at: watchDirs.index(of: oldURL)!)
-            watchDirs.append(newLocation)
-            library.watch_dirs = watchDirs as NSArray
+func changeVolumeLocation(volume: Volume, newLocation: URL) {
+    let oldVolumeURL = URL(string: volume.location!)!
+    let oldVolumeURLAbsoluteString = oldVolumeURL.absoluteString
+    let newAbsoluteString = newLocation.absoluteString
+    for track in globalRootLibrary!.tracks! as! Set<Track> {
+        let url = URL(string: track.location!)!
+        let trackVolume = getVolumeOfURL(url: url)
+        if trackVolume == oldVolumeURL {
+            track.location = track.location!.replacingOccurrences(of: oldVolumeURLAbsoluteString, with: newAbsoluteString, options: .anchored, range: nil)
         }
     }
-    print("number of invalid locations: \(badLocationCount)")
-    library.volume_url_string = newLocation.absoluteString
+    if let watchDirs = globalRootLibrary?.watch_dirs as? [URL] {
+        var newWatchDirs = [URL]()
+        for url in watchDirs {
+            let watchDirVolume = getVolumeOfURL(url: url)
+            if watchDirVolume == oldVolumeURL {
+                let oldWatchDirAbsoluteString = url.absoluteString
+                let newURLAbsoluteString = oldWatchDirAbsoluteString.replacingOccurrences(of: oldVolumeURLAbsoluteString, with: newAbsoluteString, options: .anchored, range: nil)
+                newWatchDirs.append(URL(string: newURLAbsoluteString)!)
+            } else {
+                newWatchDirs.append(url)
+            }
+        }
+        globalRootLibrary?.watch_dirs = newWatchDirs as NSArray
+    }
 }
 
 func changeLibraryCentralMediaFolder(library: Library, newLocation: URL) {
-    var watchDirs = library.watch_dirs as? [URL] ?? [URL]()
-    if library.central_media_folder_url_string != nil {
-        let oldURL = URL(string: library.central_media_folder_url_string!)!
-        if watchDirs.contains(oldURL) {
-            watchDirs.remove(at: watchDirs.index(of: oldURL)!)
-        }
-    }
-    watchDirs.append(newLocation)
-    library.watch_dirs = watchDirs as NSArray
-    library.central_media_folder_url_string = newLocation.absoluteString
+    library.organization_template?.default_template?.base_url_string = newLocation.absoluteString
 }
 
 func getVolumeOfURL(url: URL) -> URL {
@@ -398,10 +409,27 @@ func getVolumeOfURL(url: URL) -> URL {
         let key = URLResourceKey.volumeURLKey
         let resourceValues = try url.resourceValues(forKeys: Set([key]))
         let volURL = resourceValues.volume
-        return volURL!
+        return volURL!.standardizedFileURL
     } catch {
         print(error)
         fatalError()
+    }
+}
+
+func checkIfVolumeExists(withURL url: URL) -> Volume? {
+    let fetch = NSFetchRequest<Volume>(entityName: "Volume")
+    let predicate = NSPredicate(format: "location == %@", url.absoluteString)
+    fetch.predicate = predicate
+    do {
+        let results = try managedContext.fetch(fetch)
+        if results.count > 0 {
+            return results[0]
+        } else {
+            return nil
+        }
+    } catch {
+        print(error)
+        return nil
     }
 }
 
@@ -888,6 +916,13 @@ func notEnablingUndo(stuff: (Void) -> Void) {
     stuff()
     managedContext.processPendingChanges()
     managedContext.undoManager?.enableUndoRegistration()
+}
+
+func withUndoBlock(name: String, stuff: (Void) -> Void) {
+    managedContext.undoManager?.beginUndoGrouping()
+    stuff()
+    managedContext.undoManager?.endUndoGrouping()
+    managedContext.undoManager?.setActionName(name)
 }
 
 func editTrackNum(_ tracks: [Track]?, num: Int) {

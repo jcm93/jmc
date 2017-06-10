@@ -7,8 +7,21 @@
 //
 
 import Foundation
+import CoreData
 
 extension Track {
+    
+    func setLocationCheckingVolume(to url: URL) {
+        let volume = getVolumeOfURL(url: url)
+        if let volumeObject = checkIfVolumeExists(withURL: volume) {
+            self.volume = volumeObject
+        } else {
+            let newVolume = NSEntityDescription.insertNewObject(forEntityName: "Volume", into: managedContext) as! Volume
+            newVolume.location = volume.absoluteString
+            self.volume = newVolume
+        }
+        self.location = url.absoluteString
+    }
     
     @objc func compareArtist(_ other: Track) -> ComparisonResult {
         let self_artist_name = (self.sort_artist != nil) ? self.sort_artist : self.artist?.name

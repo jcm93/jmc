@@ -10,6 +10,7 @@
         <attribute name="track_count" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="album_artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="albums" inverseEntity="Artist" syncable="YES"/>
         <relationship name="other_art" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="AlbumArtwork" inverseName="album_multiple" inverseEntity="AlbumArtwork" syncable="YES"/>
+        <relationship name="other_files" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AlbumFile" inverseName="album" inverseEntity="AlbumFile" syncable="YES"/>
         <relationship name="primary_art" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AlbumArtwork" inverseName="album" inverseEntity="AlbumArtwork" syncable="YES"/>
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="album" inverseEntity="Track" syncable="YES"/>
     </entity>
@@ -21,6 +22,11 @@
         <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="primary_art" inverseEntity="Album" syncable="YES"/>
         <relationship name="album_multiple" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="other_art" inverseEntity="Album" syncable="YES"/>
+    </entity>
+    <entity name="AlbumFile" representedClassName=".AlbumFile" syncable="YES">
+        <attribute name="file_description" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="other_files" inverseEntity="Album" syncable="YES"/>
     </entity>
     <entity name="Artist" representedClassName=".Artist" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
@@ -46,7 +52,6 @@
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="composer" inverseEntity="Track" syncable="YES"/>
     </entity>
     <entity name="Library" representedClassName=".Library" syncable="YES">
-        <attribute name="central_media_folder_url_string" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="finds_artwork" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_active" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_available" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
@@ -63,19 +68,31 @@
         <attribute name="next_genre_id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="next_playlist_id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="next_track_id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="organization_predicate" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="organization_templates" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="organization_type" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="peer" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="renames_files" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="volume_url_string" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="watch_dirs" optional="YES" attributeType="Transformable" syncable="YES"/>
         <relationship name="cached_orders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CachedOrder" inverseName="library" inverseEntity="CachedOrder" syncable="YES"/>
         <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Library" inverseName="parent" inverseEntity="Library" syncable="YES"/>
         <relationship name="local_items" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SourceListItem" inverseName="library" inverseEntity="SourceListItem" syncable="YES"/>
         <relationship name="master_playlist" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SongCollection" inverseName="if_master_library" inverseEntity="SongCollection" syncable="YES"/>
+        <relationship name="organization_template" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="OrganizationTemplateBundle" inverseName="library" inverseEntity="OrganizationTemplateBundle" syncable="YES"/>
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="children" inverseEntity="Library" syncable="YES"/>
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="library" inverseEntity="Track" syncable="YES"/>
+    </entity>
+    <entity name="OrganizationTemplate" representedClassName=".OrganizationTemplate" syncable="YES">
+        <attribute name="base_url_string" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="predicate" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="tokens" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <relationship name="bundle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="OrganizationTemplateBundle" inverseName="default_template" inverseEntity="OrganizationTemplateBundle" syncable="YES"/>
+        <relationship name="bundle_multiple" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="OrganizationTemplateBundle" inverseName="other_templates" inverseEntity="OrganizationTemplateBundle" syncable="YES"/>
+    </entity>
+    <entity name="OrganizationTemplateBundle" representedClassName=".OrganizationTemplateBundle" syncable="YES">
+        <relationship name="default_template" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="OrganizationTemplate" inverseName="bundle" inverseEntity="OrganizationTemplate" syncable="YES"/>
+        <relationship name="library" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="organization_template" inverseEntity="Library" syncable="YES"/>
+        <relationship name="other_templates" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OrganizationTemplate" inverseName="bundle_multiple" inverseEntity="OrganizationTemplate" syncable="YES"/>
     </entity>
     <entity name="SmartCriteria" representedClassName=".SmartCriteria" syncable="YES">
         <attribute name="fetch_limit" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -146,6 +163,7 @@
         <relationship name="composer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Composer" inverseName="tracks" inverseEntity="Composer" syncable="YES"/>
         <relationship name="library" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="tracks" inverseEntity="Library" syncable="YES"/>
         <relationship name="view" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackView" inverseName="track" inverseEntity="TrackView" syncable="YES"/>
+        <relationship name="volume" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Volume" inverseName="tracks" inverseEntity="Volume" syncable="YES"/>
     </entity>
     <entity name="TrackView" representedClassName=".TrackView" syncable="YES">
         <attribute name="album_artist_order" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
@@ -164,17 +182,25 @@
         <relationship name="playlists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SongCollection" inverseName="tracks" inverseEntity="SongCollection" syncable="YES"/>
         <relationship name="track" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Track" inverseName="view" inverseEntity="Track" syncable="YES"/>
     </entity>
+    <entity name="Volume" representedClassName=".Volume" syncable="YES">
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="volume" inverseEntity="Track" syncable="YES"/>
+    </entity>
     <elements>
-        <element name="Album" positionX="-1721" positionY="315" width="128" height="208"/>
+        <element name="Album" positionX="-1721" positionY="315" width="128" height="225"/>
         <element name="AlbumArtwork" positionX="-1757" positionY="81" width="128" height="150"/>
+        <element name="AlbumFile" positionX="-1269" positionY="81" width="128" height="90"/>
         <element name="Artist" positionX="-1386" positionY="144" width="128" height="133"/>
         <element name="CachedOrder" positionX="-1314" positionY="-171" width="128" height="135"/>
-        <element name="Composer" positionX="-1557" positionY="323" width="128" height="118"/>
-        <element name="Library" positionX="-801" positionY="-45" width="128" height="495"/>
+        <element name="Composer" positionX="-1557" positionY="323" width="128" height="120"/>
+        <element name="Library" positionX="-801" positionY="-45" width="128" height="480"/>
         <element name="SmartCriteria" positionX="-1557" positionY="180" width="128" height="120"/>
         <element name="SongCollection" positionX="-954" positionY="108" width="128" height="180"/>
         <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="210"/>
-        <element name="Track" positionX="-1143" positionY="-27" width="128" height="598"/>
+        <element name="Track" positionX="-1143" positionY="-27" width="128" height="615"/>
         <element name="TrackView" positionX="-1548" positionY="-216" width="128" height="268"/>
+        <element name="Volume" positionX="-1548" positionY="-63" width="128" height="75"/>
+        <element name="OrganizationTemplateBundle" positionX="-1539" positionY="-54" width="128" height="90"/>
+        <element name="OrganizationTemplate" positionX="-1530" positionY="-45" width="128" height="120"/>
     </elements>
 </model>

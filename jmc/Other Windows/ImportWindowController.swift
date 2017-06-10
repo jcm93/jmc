@@ -56,36 +56,10 @@ class ImportWindowController: NSWindowController {
             pathURL = pathURL.appendingPathComponent("iTunes Media", isDirectory: true)
         }
         let appDelegate = (NSApplication.shared().delegate as! AppDelegate)
-        let library = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
-        library.central_media_folder_url_string = pathURL.absoluteString
-        do {
-            let key = URLResourceKey.volumeURLKey
-            let resourceValues = try pathURL.resourceValues(forKeys: Set([key]))
-            let url = resourceValues.volume
-            library.volume_url_string = url!.absoluteString
-        } catch {
-            print(error)
-            fatalError()
-        }
-        library.name = pathURL.lastPathComponent
-        library.parent = globalRootLibrary
-        library.is_active = true
-        library.renames_files = 0 as NSNumber
-        library.organization_type = 0 as NSNumber
-        library.keeps_track_of_files = true
-        var urlArray = library.watch_dirs as? [URL] ?? [URL]()
-        urlArray.append(pathURL)
-        library.watch_dirs = urlArray as NSArray
-        library.monitors_directories_for_new = true
-        let librarySourceListItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
-        librarySourceListItem.library = library
-        librarySourceListItem.name = library.name
-        globalRootLibrarySourceListItem!.addToChildren(librarySourceListItem)
-
         appDelegate.iTunesParser = self.iTunesParser
         appDelegate.launchAddFilesDialog()
         DispatchQueue.global(qos: .default).async {
-            appDelegate.iTunesParser?.makeLibrary(parentLibrary: library, visualUpdateHandler: appDelegate.backgroundAddFilesHandler)
+            appDelegate.iTunesParser?.makeLibrary(parentLibrary: globalRootLibrary, visualUpdateHandler: appDelegate.backgroundAddFilesHandler)
         }
         self.window?.close()
     }

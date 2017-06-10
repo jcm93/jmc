@@ -178,11 +178,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             copyRadio.isEnabled = true
             renamesFilesCheck.isEnabled = true
             changeLocationButton.isEnabled = true
-            if library?.central_media_folder_url_string != nil {
-                sourceLocationField.url = URL(string: library!.central_media_folder_url_string!)
-            } else {
-                sourceLocationField.url = URL(string: library!.volume_url_string!)
-            }
+            sourceLocationField.url = library?.getCentralMediaFolder()
             orgBehaviorRadioAction(self)
         }
     }
@@ -327,14 +323,11 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         guard response != NSModalResponseCancel else {return}
         if self.missingTracks!.count > 0 {
             let trackNotFoundArray = self.missingTracks!.map({(track: Track) -> TrackNotFound in
-                if let location = track.location {
-                    if let url = URL(string: location) {
-                        return TrackNotFound(path: url.path, track: track)
-                    } else {
-                        return TrackNotFound(path: location, track: track)
-                    }
+                let location = track.location!
+                if let url = URL(string: location) {
+                    return TrackNotFound(path: url.path, track: track)
                 } else {
-                    return TrackNotFound(path: nil, track: track)
+                    return TrackNotFound(path: location, track: track)
                 }
             })
             self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
@@ -358,7 +351,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         fileDialog.runModal()
         if fileDialog.urls.count > 0 {
             let url = fileDialog.urls[0]
-            track.location = url.absoluteString
+            track.setLocationCheckingVolume(to: url)
             tracksNotFoundArrayController.removeObject(trackContainer)
             databaseManager.fixInfoForTrack(track: track)
             missingTracks!.remove(at: missingTracks!.index(of: track)!)

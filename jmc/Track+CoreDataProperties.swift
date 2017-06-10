@@ -2,7 +2,7 @@
 //  Track+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 5/31/17.
+//  Created by John Moody on 6/8/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 
@@ -53,5 +53,6 @@ extension Track {
     @NSManaged public var composer: Composer?
     @NSManaged public var library: Library?
     @NSManaged public var view: TrackView?
+    @NSManaged public var volume: Volume?
 
 }

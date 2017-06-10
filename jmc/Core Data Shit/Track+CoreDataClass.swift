@@ -20,7 +20,7 @@ public class Track: NSManagedObject {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         self.view?.album_artist_order
         dict["id"] = self.id
-        dict["location"] = self.location
+        dict["location"] = self.location!
         for field in fields {
             switch field {
             case "is_enabled":

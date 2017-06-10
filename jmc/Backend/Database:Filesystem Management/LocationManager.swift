@@ -12,15 +12,15 @@ import CoreData
 import Cocoa
 
 struct TrackFirstRenameEvent {
-    let track: Track?
-    let initialPath: String
+    let tracks: [Track]?
+    let initialPathAbsoluteURLString: String
     let id: UInt64
     let flags: FSEventStreamEventFlags
-    init(path: String, id: UInt64, flags: FSEventStreamEventFlags, track: Track?) {
-        self.initialPath = path
+    init(path: String, id: UInt64, flags: FSEventStreamEventFlags, tracks: [Track]?) {
+        self.initialPathAbsoluteURLString = URL(fileURLWithPath: path)!.absoluteString
         self.id = id
         self.flags = flags
-        self.track = track
+        self.tracks = tracks
     }
 }
 
@@ -28,7 +28,6 @@ class LocationManager: NSObject {
     
     var activeMonitoringURLs = Set<URL>()
     var activeMonitoringFileDescriptors = [String : Int32]()
-    var libraryURLDictionary = [URL : Library]()
     var fileManager = FileManager.default
     var withinDirRenameEvents = [String : TrackFirstRenameEvent?]()
     var databaseManager = DatabaseManager()
@@ -190,15 +189,11 @@ class LocationManager: NSObject {
             let oldURL = URL(fileURLWithPath: "\(path)/")
             let library = libraryURLDictionary[oldURL]
             let newURL = URL(fileURLWithPath: newPathString)
+            
             changeLibraryLocation(library: library!, newLocation: newURL)
             
-            //libraryURLDictionary
-            
-            libraryURLDictionary.removeValue(forKey: oldURL)
-            libraryURLDictionary[newURL] = library
             
             //activeMonitoringURLs
-            
             activeMonitoringURLs.remove(oldURL)
             activeMonitoringURLs.update(with: newURL)
             
@@ -228,23 +223,21 @@ class LocationManager: NSObject {
                 print("item created, modified")
                 let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
                 let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})
-                let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath!)]!
                 if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) && fileManager.fileExists(atPath: path) {
-                    if self.urlsToAddToDatabase[library] == nil {
-                        self.urlsToAddToDatabase[library] = [URL]()
+                    if self.urlsToAddToDatabase[globalRootLibrary!] == nil {
+                        self.urlsToAddToDatabase[globalRootLibrary!] = [URL]()
                     }
-                    self.urlsToAddToDatabase[library]!.append(URL(fileURLWithPath: path))
+                    self.urlsToAddToDatabase[globalRootLibrary!]!.append(URL(fileURLWithPath: path))
                 }
             } else {
                 print("item created, not modified")
                 let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
                 let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})!
-                let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
                 if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) && fileManager.fileExists(atPath: path) {
-                    if self.urlsToAddToDatabase[library] == nil {
-                        self.urlsToAddToDatabase[library] = [URL]()
+                    if self.urlsToAddToDatabase[globalRootLibrary!] == nil {
+                        self.urlsToAddToDatabase[globalRootLibrary!] = [URL]()
                     }
-                    self.urlsToAddToDatabase[library]!.append(URL(fileURLWithPath: path))
+                    self.urlsToAddToDatabase[globalRootLibrary!]!.append(URL(fileURLWithPath: path))
                 }
             }
         }
@@ -253,12 +246,11 @@ class LocationManager: NSObject {
                 print("item created after pending")
                 let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
                 let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})!
-                let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
                 if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
-                    if self.urlsToAddToDatabase[library] == nil {
-                        self.urlsToAddToDatabase[library] = [URL]()
+                    if self.urlsToAddToDatabase[globalRootLibrary!] == nil {
+                        self.urlsToAddToDatabase[globalRootLibrary!] = [URL]()
                     }
-                    self.urlsToAddToDatabase[library]!.append(URL(fileURLWithPath: path))
+                    self.urlsToAddToDatabase[globalRootLibrary!]!.append(URL(fileURLWithPath: path))
                 }
                 self.pendingCreatePaths.remove(at: self.pendingCreatePaths.index(of: path)!)
             }
@@ -270,57 +262,50 @@ class LocationManager: NSObject {
             if withinDirRenameEvents[rootDirectoryPath]??.id == id - 1 {
                 //this is definitely the second half of another rename event, which we may or may not care about
                 let firstEvent = withinDirRenameEvents[rootDirectoryPath]!
-                if firstEvent!.track != nil && firstEvent!.track!.library!.keeps_track_of_files == true {
-                    firstEvent!.track!.location = URL(fileURLWithPath: path).absoluteString
-                    do {
-                        try managedContext.save()
-                    } catch {
-                        print(error)
+                if firstEvent!.tracks != nil && globalRootLibrary!.keeps_track_of_files == true {
+                    let newURLPathAbsoluteString = URL(fileURLWithPath: path).absoluteString
+                    for track in firstEvent!.tracks! {
+                        track.location = track.location?.replacingOccurrences(of: firstEvent!.initialPathAbsoluteURLString, with: newURLPathAbsoluteString, options: .anchored, range: nil)
                     }
                 }
                 withinDirRenameEvents[rootDirectoryPath] = nil
             } else {
-                //either this location is valid and a new file was added, or...
+                //either this location is valid and a new file or directory was added...
                 var isDirectory = ObjCBool(booleanLiteral: false)
                 if fileManager.fileExists(atPath: path, isDirectory: &isDirectory) && path != rootDirectoryPath {
-                    let library = self.libraryURLDictionary[URL(fileURLWithPath: rootDirectoryPath)]!
-                    if library.monitors_directories_for_new as? Bool == true {
+                    if globalRootLibrary?.monitors_directories_for_new as? Bool == true {
                         if isDirectory.boolValue == true {
                             DispatchQueue.global(qos: .default).async {
                                 print("going and getting urls")
                                 let urls = self.databaseManager.getMediaURLsInDirectoryURLs([URL(fileURLWithPath: path)]).0
-                                if self.urlsToAddToDatabase[library] == nil {
-                                    self.urlsToAddToDatabase[library] = [URL]()
+                                if self.urlsToAddToDatabase[globalRootLibrary!] == nil {
+                                    self.urlsToAddToDatabase[globalRootLibrary!] = [URL]()
                                 }
-                                self.urlsToAddToDatabase[library]!.append(contentsOf: urls)
+                                self.urlsToAddToDatabase[globalRootLibrary!]!.append(contentsOf: urls)
                                 print("about to add urls to database")
                                 self.tryAddNewFilesToDatabase()
                             }
                         } else {
                             if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
-                                let errors = databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: library, visualUpdateHandler: nil, callback: nil) //ignores errors :(
+                                let errors = databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: globalRootLibrary!, visualUpdateHandler: nil, callback: nil) //ignores errors :(
                             }
                         }
                         //metadata should already exist.
                     }
                 } else {
                     //...or this is the first half of a rename event, which we may or may not care about
-                    let track = {() -> Track? in
+                    let tracks = {() -> [Track]? in
                         let fr = NSFetchRequest<Track>(entityName: "Track")
-                        fr.predicate = NSPredicate(format: "location contains[c] %@", URL(fileURLWithPath: path).absoluteString)
+                        fr.predicate = NSPredicate(format: "location beginswith[c] %@", URL(fileURLWithPath: path).absoluteString)
                         do {
-                            let track = try managedContext.fetch(fr)
-                            if track.count == 1 {
-                                return track[0]
-                            } else {
-                                return nil
-                            }
+                            let tracks = try managedContext.fetch(fr)
+                            return tracks
                         } catch {
                             print(error)
                         }
                         return nil
                     }()
-                    let newFirstHalfEvent = TrackFirstRenameEvent(path: path, id: id, flags: flags, track: track)
+                    let newFirstHalfEvent = TrackFirstRenameEvent(path: path, id: id, flags: flags, tracks: tracks)
                     withinDirRenameEvents[rootDirectoryPath] = newFirstHalfEvent
                 }
             }
@@ -346,17 +331,11 @@ class LocationManager: NSObject {
             lastEventID = FSEventStreamEventId(kFSEventStreamEventIdSinceNow)
         }
         var urls = [URL]()
-        for libraryInList in libraries {
-            if libraryInList.monitors_directories_for_new == true || libraryInList.keeps_track_of_files == true {
-                let url = URL(string: libraryInList.central_media_folder_url_string!)!
-                urls.append(url)
-                libraryURLDictionary[url] = libraryInList
-                if let watchURLs = libraryInList.watch_dirs as? [URL] {
-                    urls.append(contentsOf: watchURLs)
-                    for url in watchURLs {
-                        self.libraryURLDictionary[url] = libraryInList
-                    }
-                }
+        if globalRootLibrary!.monitors_directories_for_new == true || globalRootLibrary!.keeps_track_of_files == true {
+            let url = globalRootLibrary!.getCentralMediaFolder()!
+            urls.append(url)
+            if let watchURLs = globalRootLibrary!.watch_dirs as? [URL] {
+                urls.append(contentsOf: watchURLs)
             }
         }
         self.activeMonitoringURLs = Set(urls)
