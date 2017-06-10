@@ -250,19 +250,11 @@ class DatabaseManager: NSObject {
         print("current track location: \(track.location)")
         let organizationType = track.library?.organization_type as! Int
         guard organizationType != NO_ORGANIZATION_TYPE else {return}
-        let predicateTemplateBundles = track.library?.organization_templates as! [[NSPredicate : OrganizationTemplate]]
-        let organzationTemplate = {() -> OrganizationTemplate in
-            //predicates ordered from high priority to low priority, so return on the first match
-            for predicateTemplateBundle in predicateTemplateBundles {
-                if predicateTemplateBundle.keys.first!.evaluate(with: track) == true {
-                    return predicateTemplateBundle.values.first!
-                }
-            }
-            return predicateTemplateBundles.last!.first!.value
-        }()
+        let predicateTemplateBundles = track.library?.organization_template
+        let organizationTemplate = predicateTemplateBundles?.match(track)
         let currentLocation = URL(string: track.location!)!
         let fileExtension = currentLocation.pathExtension
-        let newLocation = organzationTemplate.getURL(for: track, withExtension: fileExtension)!
+        let newLocation = organizationTemplate.getURL(for: track, withExtension: fileExtension)!
         let directoryURL = newLocation.deletingLastPathComponent()
         //check if directories already exist
         do {
@@ -959,52 +951,28 @@ class DatabaseManager: NSObject {
     }
     
     func moveFileToAppropriateLocationForTrack(_ track: Track, currentURL: URL) -> URL? {
-        let fileName = {() -> String in
-            switch track.library?.renames_files as! Bool {
-            case true:
-                return validateStringForFilename(self.formFilenameForTrack(track, url: currentURL))
-            default:
-                return currentURL.lastPathComponent
-            }
-        }()
-        var albumDirectoryURL: URL?
-        var fileURL: URL?
-        let orgType = track.library?.organization_type! as! Int
-        if orgType == NO_ORGANIZATION_TYPE {
-            track.location = currentURL.deletingLastPathComponent().appendingPathComponent(fileName).absoluteString
-            fileURL = currentURL
-        } else {
-            let libraryPathURL = URL(string: track.library!.central_media_folder_url_string!)
-            var album, albumArtist: String
-            if track.album?.is_compilation != true {
-                albumArtist = validateStringForFilename(track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING)
-                album = validateStringForFilename(track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING)
-                albumDirectoryURL = libraryPathURL?.appendingPathComponent(albumArtist).appendingPathComponent(album)
-            } else {
-                album = validateStringForFilename(track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING)
-                albumDirectoryURL = libraryPathURL?.appendingPathComponent("Compilations").appendingPathComponent(album)
-            }
-            do {
-                try fileManager.createDirectory(at: albumDirectoryURL!, withIntermediateDirectories: true, attributes: nil)
-            } catch {
-                print("error creating album directory: \(error)")
-            }
-            do {
-                fileURL = albumDirectoryURL?.appendingPathComponent(fileName)
-                if currentURL != fileURL {
-                    if orgType == MOVE_ORGANIZATION_TYPE {
-                        try fileManager.moveItem(at: currentURL, to: fileURL!)
-                    } else {
-                        try fileManager.copyItem(at: currentURL, to: fileURL!)
-                    }
-                }
-                track.location = fileURL?.absoluteString
-            } catch {
-                print("error while moving/copying files: \(error)")
-                return nil
-            }
+        print("current track location: \(track.location)")
+        let organizationType = track.library?.organization_type as! Int
+        guard organizationType != NO_ORGANIZATION_TYPE else {return}
+        let predicateTemplateBundles = track.library?.organization_template
+        let organizationTemplate = predicateTemplateBundles?.match(track)
+        let currentLocation = URL(string: track.location!)!
+        let fileExtension = currentLocation.pathExtension
+        let newLocation = organzationTemplate.getURL(for: track, withExtension: fileExtension)!
+        let directoryURL = newLocation.deletingLastPathComponent()
+        //check if directories already exist
+        do {
+            try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true, attributes: nil)
+            try fileManager.moveItem(at: currentLocation, to: newLocation)
+            track.location = newLocation.absoluteString
+        } catch {
+            print("error moving file: \(error)")
         }
-        return fileURL
+        print("moved \(currentLocation) to \(track.location!)")
+        if self.undoFileLocations[track] == nil {
+            self.undoFileLocations[track] = [String]()
+        }
+        self.undoFileLocations[track]!.append(track.location!)
     }
     
     func moveFileForNetworkTrackToAppropriateLocationWithData(_ track: Track, data: Data) -> Bool {

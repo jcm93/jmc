@@ -2,7 +2,7 @@
 //  Volume+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 6/8/17.
+//  Created by John Moody on 6/10/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 
@@ -18,6 +18,8 @@ extension Volume {
 
     @NSManaged public var location: String?
     @NSManaged public var tracks: NSSet?
+    @NSManaged public var source_list_item: SourceListItem?
+    @NSManaged public var library: Library?
 
 }
 

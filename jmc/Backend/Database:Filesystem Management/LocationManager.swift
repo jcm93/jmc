@@ -17,7 +17,7 @@ struct TrackFirstRenameEvent {
     let id: UInt64
     let flags: FSEventStreamEventFlags
     init(path: String, id: UInt64, flags: FSEventStreamEventFlags, tracks: [Track]?) {
-        self.initialPathAbsoluteURLString = URL(fileURLWithPath: path)!.absoluteString
+        self.initialPathAbsoluteURLString = URL(fileURLWithPath: path).absoluteString
         self.id = id
         self.flags = flags
         self.tracks = tracks
@@ -186,11 +186,9 @@ class LocationManager: NSObject {
             
             //change the library's library_location, update the activeMonitoringURLs and libraryURLDictionary, close all open file descriptors, then re-initialize the stream
             
-            let oldURL = URL(fileURLWithPath: "\(path)/")
-            let library = libraryURLDictionary[oldURL]
+            let oldURL = URL(fileURLWithPath: path)
             let newURL = URL(fileURLWithPath: newPathString)
-            
-            changeLibraryLocation(library: library!, newLocation: newURL)
+            globalRootLibrary?.someRootChanged(newURL: newURL, oldURL: oldURL)
             
             
             //activeMonitoringURLs

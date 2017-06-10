@@ -45,6 +45,7 @@ extension Library {
     @NSManaged public var parent: Library?
     @NSManaged public var tracks: NSSet?
     @NSManaged public var organization_template: OrganizationTemplateBundle?
+    @NSManaged public var volumes: NSSet?
 
 }
 
@@ -148,5 +149,22 @@ extension Library {
 
     @objc(removeTracks:)
     @NSManaged public func removeFromTracks(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for volumes
+extension Library {
+
+    @objc(addVolumesObject:)
+    @NSManaged public func addToVolumes(_ value: Volume)
+
+    @objc(removeVolumesObject:)
+    @NSManaged public func removeFromVolumes(_ value: Volume)
+
+    @objc(addVolumes:)
+    @NSManaged public func addToVolumes(_ values: NSSet)
+
+    @objc(removeVolumes:)
+    @NSManaged public func removeFromVolumes(_ values: NSSet)
 
 }

@@ -93,33 +93,10 @@ class InitialSetupWindowController: NSWindowController {
     }
     
     func setupForNilLibrary() {
-        print("nil library")
-        //create glob root library
-        let newLibrary = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
-        newLibrary.name = NSFullUserName() + "'s library"
-        newLibrary.parent = nil
-        //create actual library
+        //create library
         let newActualLibrary = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
-        newActualLibrary.central_media_folder_url_string = libraryPathControl.url!.absoluteString
-        do {
-            let key = URLResourceKey.volumeURLKey
-            let resourceValues = try libraryPathControl.url!.resourceValues(forKeys: Set([key]))
-            let url = resourceValues.volume
-            newActualLibrary.volume_url_string = url!.absoluteString
-        } catch {
-            print(error)
-            fatalError()
-        }
-        newActualLibrary.name = libraryPathControl.url?.lastPathComponent
-        newActualLibrary.parent = newLibrary
-        newActualLibrary.is_active = true
-        newActualLibrary.renames_files = modifyMetadata as NSNumber
-        newActualLibrary.keeps_track_of_files = true
-        var urlArray = [URL]()
-        urlArray.append(libraryPathControl.url!)
-        newActualLibrary.watch_dirs = urlArray as NSArray
-        newActualLibrary.monitors_directories_for_new = false
-        newActualLibrary.organization_type = organizationType.rawValue as NSNumber
+        newActualLibrary.initialSetup(withCentralDirectory: libraryPathControl.url!, organizationType: organizationType, renamesFiles: modifyMetadata)
+        
         let newActualLibrarySLI = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         newActualLibrarySLI.library = newActualLibrary
         newActualLibrarySLI.name = newActualLibrary.name

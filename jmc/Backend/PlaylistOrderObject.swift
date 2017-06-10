@@ -27,17 +27,17 @@ class PlaylistOrderObject: Equatable, Hashable {
     
     func libraryStatusNeedsUpdate() {
         let viewController = self.sourceListItem.tableViewController
-        let libraries = Set((viewController?.trackViewArrayController.arrangedObjects as! [TrackView]).flatMap({return $0.track!.library}))
+        let volumes = Set((viewController?.trackViewArrayController.arrangedObjects as! [TrackView]).flatMap({return $0.track!.volume}))
         var count = 0
-        var missingLibraries = [Library]()
-        for library in libraries {
-            if (library.is_available as! Bool) != libraryIsAvailable(library: library) {
+        var missingVolumes = [Volume]()
+        for volume in volumes {
+            if !volumeIsAvailable(volume: volume) {
                 count += 1
-                missingLibraries.append(library)
+                missingVolumes.append(volume)
             }
         }
-        for library in missingLibraries {
-            let IDs = Set((library.tracks as! Set<Track>).map({return Int($0.id!)}))
+        for volume in missingVolumes {
+            let IDs = Set((volume.tracks as! Set<Track>).map({return Int($0.id!)}))
             self.current_play_order = self.current_play_order!.filter({return !IDs.contains($0)})
         }
         if count > 0 {

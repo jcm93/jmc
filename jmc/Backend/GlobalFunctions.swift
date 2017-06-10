@@ -130,6 +130,30 @@ let DEFAULTS_SHARING_STRING = "sharesLibrary"
 let DEFAULTS_IS_EQ_ENABLED_STRING = "isEQEnabled?"
 let DEFAULTS_SHOWS_ARTWORK_STRING = "showsArtwork"
 
+let DEFAULT_TEMPLATE_TOKEN_ARRAY: [OrganizationFieldToken] = [
+    OrganizationFieldToken(string: "/"),
+    OrganizationFieldToken(string: "Album Artist"),
+    OrganizationFieldToken(string: "/"),
+    OrganizationFieldToken(string: "Album"),
+    OrganizationFieldToken(string: "/"),
+    OrganizationFieldToken(string: "Track #"),
+    OrganizationFieldToken(string: " "),
+    OrganizationFieldToken(string: "Track Name")
+]
+
+let COMPILATION_TOKEN_ARRAY: [OrganizationFieldToken] = [
+    OrganizationFieldToken(string: "/Compilations/"),
+    OrganizationFieldToken(string: "Album"),
+    OrganizationFieldToken(string: "/"),
+    OrganizationFieldToken(string: "Track #"),
+    OrganizationFieldToken(string: " "),
+    OrganizationFieldToken(string: "Artist"),
+    OrganizationFieldToken(string: " - "),
+    OrganizationFieldToken(string: "Track Name")
+]
+
+let COMPILATION_PREDICATE: NSPredicate = NSPredicate(format: "album.compilation == true")
+
 //library-specific user defaults
 //destroy all of these, make them attributes of library in CD
 /*let DEFAULTS_WATCHES_DIRECTORIES_FOR_NEW_FILES = "watchesDirectories"
@@ -342,25 +366,15 @@ func validateStringForFilename(_ string: String) -> String {
     return newString
 }
 
-func libraryIsAvailable(library: Library) -> Bool {
-    var isAvailable: Bool = false
-    notEnablingUndo {
-        let fileManager = FileManager.default
-        let libraryPath = URL(string: library.volume_url_string!)!.path
-        var isDirectory = ObjCBool(booleanLiteral: false)
-        if fileManager.fileExists(atPath: libraryPath, isDirectory: &isDirectory) && isDirectory.boolValue {
-            library.is_available = true
-            isAvailable = true
-        } else {
-            library.is_available = false
-            isAvailable = false
-        }
-    }
-    return isAvailable
+func volumeIsAvailable(volume: Volume) -> Bool {
+    let fileManager = FileManager.default
+    let libraryPath = URL(string: volume.location!)!.path
+    var isDirectory = ObjCBool(booleanLiteral: false)
+    return fileManager.fileExists(atPath: libraryPath, isDirectory: &isDirectory) && isDirectory.boolValue
 }
 
 func getTracksOutsideHomeDirectory(library: Library) -> [Track] {
-    let centralFolderURL = URL(string: library.central_media_folder_url_string!)
+    let centralFolderURL = library.getCentralMediaFolder()
     let result = library.tracks!.flatMap({(member: Any) -> Track? in
         let track = member as! Track
         let currentURL = URL(string: track.location!)

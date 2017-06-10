@@ -129,18 +129,6 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         }
     }
     
-    func tabView(_ tabView: NSTabView, shouldSelect tabViewItem: NSTabViewItem?) -> Bool {
-        if libraryIsAvailable(library: self.library!) {
-            return true
-        } else {
-            if tabViewItem! == locationManagerTabItem || tabViewItem! == findNewMediaTabItem {
-                return false
-            } else {
-                return true
-            }
-        }
-    }
-    
     @IBAction func changeSourceCentralMediaFolderButtonPressed(_ sender: Any) {
         let parent = self.view.window?.windowController as! LibraryManagerSourceSelector
         parent.changeFolderSheet = ChangePrimaryFolderSheetController(windowNibName: "ChangePrimaryFolderSheetController")

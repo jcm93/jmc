@@ -258,7 +258,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             return false
         } else if source.children?.count > 0 && source.library != nil {
             return true
-        } else if source.library != nil && !libraryIsAvailable(library: source.library!) {
+        } else if source.volume != nil && !volumeIsAvailable(library: source.volume!) {
             return false
         } else if source.children?.count > 0 && source.is_folder != true {
             return false
