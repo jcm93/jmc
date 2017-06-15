@@ -9,8 +9,9 @@
         <customObject id="-2" userLabel="File's Owner" customClass="AdvancedOrganizationOptionsWindowController" customModule="jmc" customModuleProvider="target">
             <connections>
                 <outlet property="pathControl" destination="0X4-yH-pvo" id="beS-Tq-kNg"/>
-                <outlet property="splitView" destination="dg1-RT-mDz" id="yOu-dQ-zk2"/>
+                <outlet property="tableView" destination="nYg-ND-Uzh" id="oMY-b3-6E3"/>
                 <outlet property="tokenField" destination="HnL-Me-Oxf" id="gBR-S3-bOA"/>
+                <outlet property="viewControllerArrayController" destination="Pgb-EO-K9F" id="Kqs-jx-HMe"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -25,9 +26,6 @@
                 <rect key="frame" x="0.0" y="0.0" width="760" height="405"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <splitView arrangesAllSubviews="NO" dividerStyle="thin" translatesAutoresizingMaskIntoConstraints="NO" id="dg1-RT-mDz">
-                        <rect key="frame" x="20" y="86" width="720" height="172"/>
-                    </splitView>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GYP-jC-8lL">
                         <rect key="frame" x="16" y="13" width="106" height="32"/>
                         <buttonCell key="cell" type="push" title="Add Rule..." bezelStyle="rounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gg8-bU-r9K">
@@ -120,7 +118,74 @@ DQ
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="smallSystem"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="addFieldPressed:" target="-2" id="3qF-K1-Us1"/>
+                        </connections>
                     </button>
+                    <scrollView wantsLayer="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="189" horizontalPageScroll="10" verticalLineScroll="189" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TVk-N6-RYv">
+                        <rect key="frame" x="20" y="74" width="720" height="196"/>
+                        <clipView key="contentView" id="0st-YU-oO1">
+                            <rect key="frame" x="0.0" y="0.0" width="720" height="196"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="187" rowSizeStyle="automatic" viewBased="YES" id="nYg-ND-Uzh">
+                                    <rect key="frame" x="0.0" y="0.0" width="720" height="196"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <size key="intercellSpacing" width="3" height="2"/>
+                                    <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                    <tableColumns>
+                                        <tableColumn width="717" minWidth="40" maxWidth="1000" id="sf6-jb-n06">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                            </tableHeaderCell>
+                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="CcT-Yb-Q5v">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                            <prototypeCellViews>
+                                                <tableCellView identifier="OrganizationRuleCellView" id="oxX-Z4-qas" customClass="OrganizationRuleCellView" customModule="jmc" customModuleProvider="target">
+                                                    <rect key="frame" x="1" y="1" width="717" height="187"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <subviews>
+                                                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="Pro-yK-kKh">
+                                                            <rect key="frame" x="0.0" y="4" width="717" height="179"/>
+                                                        </customView>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="Pro-yK-kKh" firstAttribute="top" secondItem="oxX-Z4-qas" secondAttribute="top" constant="4" id="Mt7-lO-4Zd"/>
+                                                        <constraint firstAttribute="trailing" secondItem="Pro-yK-kKh" secondAttribute="trailing" id="PsE-Rt-9Um"/>
+                                                        <constraint firstItem="Pro-yK-kKh" firstAttribute="leading" secondItem="oxX-Z4-qas" secondAttribute="leading" id="a3u-VJ-hzz"/>
+                                                        <constraint firstAttribute="bottom" secondItem="Pro-yK-kKh" secondAttribute="bottom" constant="4" id="reh-xL-vCX"/>
+                                                    </constraints>
+                                                    <connections>
+                                                        <outlet property="organizationView" destination="Pro-yK-kKh" id="pR4-rC-eW6"/>
+                                                    </connections>
+                                                </tableCellView>
+                                            </prototypeCellViews>
+                                        </tableColumn>
+                                    </tableColumns>
+                                    <connections>
+                                        <outlet property="dataSource" destination="-2" id="Cdj-I6-fKf"/>
+                                        <outlet property="delegate" destination="-2" id="q4G-bV-E6v"/>
+                                    </connections>
+                                </tableView>
+                            </subviews>
+                            <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="VwR-qC-fxV">
+                            <rect key="frame" x="1" y="179" width="718" height="16"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="hck-XN-zfz">
+                            <rect key="frame" x="224" y="17" width="15" height="102"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                    </scrollView>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="GYP-jC-8lL" secondAttribute="bottom" constant="20" id="25E-6a-s8R"/>
@@ -128,24 +193,24 @@ DQ
                     <constraint firstItem="0X4-yH-pvo" firstAttribute="top" secondItem="gqi-YS-1bs" secondAttribute="bottom" constant="17" id="8FH-ob-bB5"/>
                     <constraint firstItem="UDm-7s-nfC" firstAttribute="top" secondItem="A22-Xw-Wrn" secondAttribute="bottom" constant="8" id="EYJ-FW-x1c"/>
                     <constraint firstItem="v4z-jF-Vcf" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="32" id="Gch-fn-6qk"/>
-                    <constraint firstItem="A22-Xw-Wrn" firstAttribute="top" secondItem="dg1-RT-mDz" secondAttribute="bottom" constant="20" id="HbM-a4-VKS"/>
                     <constraint firstItem="HnL-Me-Oxf" firstAttribute="leading" secondItem="0X4-yH-pvo" secondAttribute="trailing" constant="8" id="K8Y-5E-kS9"/>
+                    <constraint firstItem="TVk-N6-RYv" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="MiW-ip-YUw"/>
                     <constraint firstAttribute="trailing" secondItem="UDm-7s-nfC" secondAttribute="trailing" constant="20" id="NIA-L8-UBY"/>
                     <constraint firstItem="GYP-jC-8lL" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="22" id="OKG-vR-A9t"/>
-                    <constraint firstItem="dg1-RT-mDz" firstAttribute="top" secondItem="can-1v-0CX" secondAttribute="bottom" constant="20" id="PMC-XF-Q5d"/>
+                    <constraint firstAttribute="trailing" secondItem="TVk-N6-RYv" secondAttribute="trailing" constant="20" id="PuN-Zo-mR7"/>
                     <constraint firstAttribute="trailing" secondItem="A22-Xw-Wrn" secondAttribute="trailing" constant="20" id="SyS-IU-Co3"/>
                     <constraint firstItem="HnL-Me-Oxf" firstAttribute="top" secondItem="v4z-jF-Vcf" secondAttribute="bottom" constant="8" id="XcR-yz-hqO"/>
                     <constraint firstItem="HnL-Me-Oxf" firstAttribute="leading" secondItem="v4z-jF-Vcf" secondAttribute="leading" id="ZDo-Nk-qIc"/>
                     <constraint firstAttribute="trailing" secondItem="HnL-Me-Oxf" secondAttribute="trailing" constant="20" id="akc-Yv-YMJ"/>
                     <constraint firstAttribute="trailing" secondItem="PFg-gk-jKD" secondAttribute="trailing" constant="20" id="akk-QQ-kqt"/>
                     <constraint firstItem="can-1v-0CX" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="b50-2b-dSl"/>
-                    <constraint firstAttribute="trailing" secondItem="dg1-RT-mDz" secondAttribute="trailing" constant="20" id="fo7-Lb-cbg"/>
-                    <constraint firstItem="dg1-RT-mDz" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="g37-Ji-Ooe"/>
+                    <constraint firstItem="A22-Xw-Wrn" firstAttribute="top" secondItem="TVk-N6-RYv" secondAttribute="bottom" constant="8" id="hM6-Os-cV2"/>
                     <constraint firstItem="can-1v-0CX" firstAttribute="top" secondItem="elX-Gj-Y13" secondAttribute="bottom" constant="8" id="idT-Cv-1R4"/>
                     <constraint firstItem="PFg-gk-jKD" firstAttribute="top" secondItem="HnL-Me-Oxf" secondAttribute="bottom" constant="9" id="kxs-xB-He3"/>
                     <constraint firstItem="elX-Gj-Y13" firstAttribute="top" secondItem="0X4-yH-pvo" secondAttribute="bottom" constant="8" id="npt-bv-zeD"/>
                     <constraint firstItem="gqi-YS-1bs" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="qLX-uZ-ZGL"/>
                     <constraint firstItem="0X4-yH-pvo" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="wyy-FY-D7G"/>
+                    <constraint firstItem="TVk-N6-RYv" firstAttribute="top" secondItem="can-1v-0CX" secondAttribute="bottom" constant="8" id="yZk-bJ-W6e"/>
                     <constraint firstAttribute="bottom" secondItem="UDm-7s-nfC" secondAttribute="bottom" constant="20" id="zGt-nb-mJQ"/>
                     <constraint firstItem="elX-Gj-Y13" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="zP6-HT-eZH"/>
                 </constraints>
@@ -155,6 +220,11 @@ DQ
             </connections>
             <point key="canvasLocation" x="162" y="106.5"/>
         </window>
+        <arrayController objectClassName="jmc.OrganizationRuleViewcontroller" automaticallyPreparesContent="YES" id="Pgb-EO-K9F">
+            <connections>
+                <binding destination="-2" name="contentArray" keyPath="self.ruleControllers" id="UJ5-Bn-ocr"/>
+            </connections>
+        </arrayController>
         <menu id="CeI-0p-J45">
             <point key="canvasLocation" x="669" y="-12.5"/>
         </menu>

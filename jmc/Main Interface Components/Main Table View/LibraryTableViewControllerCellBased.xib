@@ -70,8 +70,11 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <imageCell key="dataCell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="2JN-sp-G6r" customClass="MTImageCell" customModule="jmc" customModuleProvider="target"/>
+                                        <imageCell key="dataCell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="2JN-sp-G6r" customClass="MTImageCell" customModule="jmc" customModuleProvider="target">
+                                            <accessibility description="Playing Indicator"/>
+                                        </imageCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Playing Indicator Column"/>
                                     </tableColumn>
                                     <tableColumn identifier="playlist_number" width="17.07421875" minWidth="10" maxWidth="3.4028234663852886e+38" hidden="YES" id="6iL-fo-xZs" userLabel="PlaylistNumber">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
@@ -96,8 +99,10 @@
                                         <buttonCell key="dataCell" type="check" title="Check" bezelStyle="regularSquare" imagePosition="left" controlSize="small" inset="2" id="xb8-NW-uac" customClass="MTButtonCell" customModule="jmc" customModuleProvider="target">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="smallSystem"/>
+                                            <accessibility description="Is Enabled Check"/>
                                         </buttonCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Enabled Column"/>
                                         <connections>
                                             <binding destination="6rv-dK-iy8" name="value" keyPath="arrangedObjects.track.status" id="YWe-5M-Pdk">
                                                 <dictionary key="options">
@@ -116,9 +121,11 @@
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <accessibility description="Track Name"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="name_order"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Track Name Column"/>
                                     </tableColumn>
                                     <tableColumn identifier="time" width="52" minWidth="10" maxWidth="3.4028234663852886e+38" id="eXL-My-fyv" userLabel="Time">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Time">
@@ -131,9 +138,11 @@
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <accessibility description="Track Time"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.time"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Time Column"/>
                                     </tableColumn>
                                     <tableColumn identifier="artist" width="221.515625" minWidth="40" maxWidth="1000" id="ois-tu-0mi">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Artist">
@@ -145,9 +154,11 @@
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <accessibility description="Artist Name"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="artist_order"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Artist Name Column"/>
                                     </tableColumn>
                                     <tableColumn identifier="album" width="208.56640625" minWidth="10" maxWidth="3.4028234663852886e+38" id="FDo-TA-EDz">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Album">
@@ -159,9 +170,11 @@
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <accessibility description="Album Name"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="album_order"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Album Name Column"/>
                                     </tableColumn>
                                     <tableColumn identifier="file_kind" editable="NO" width="90" minWidth="10" maxWidth="3.4028234663852886e+38" id="5dZ-BN-JWr" userLabel="Kind">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Kind">
@@ -173,9 +186,11 @@
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <accessibility description="Track File Kind"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="kind_order"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Kind Column"/>
                                     </tableColumn>
                                     <tableColumn identifier="bit_rate" editable="NO" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="LHQ-sH-EgW" userLabel="Bit Rate">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Bit Rate">
@@ -188,9 +203,11 @@
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <accessibility description="Track Bit Rate"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.bit_rate"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Bit Rate Column"/>
                                     </tableColumn>
                                     <tableColumn identifier="size" editable="NO" width="60" minWidth="10" maxWidth="3.4028234663852886e+38" id="fbs-bA-3rx">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Size">
@@ -203,9 +220,11 @@
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <accessibility description="Track File Size"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.size"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Size Column"/>
                                     </tableColumn>
                                     <tableColumn identifier="track_num" width="45" minWidth="10" maxWidth="3.4028234663852886e+38" id="NsF-KX-H3W">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Track #">
@@ -218,9 +237,11 @@
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <accessibility description="Track Number"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.track_num"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Track Number Column"/>
                                     </tableColumn>
                                     <tableColumn identifier="date_added" editable="NO" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="Ruz-xG-tmM">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Added">
@@ -233,9 +254,11 @@
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <accessibility description="Track Date Added"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="date_added_order"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Date Added Column"/>
                                     </tableColumn>
                                     <tableColumn identifier="genre" width="80" minWidth="10" maxWidth="3.4028234663852886e+38" id="Nl7-dl-GwI">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Genre">
@@ -247,9 +270,11 @@
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <accessibility description="Track Genre"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.genre"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Genre Column"/>
                                     </tableColumn>
                                     <tableColumn identifier="date_modified" editable="NO" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="AC9-ib-KCM">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Modified">
@@ -262,9 +287,11 @@
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <accessibility description="Track Date Modified"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.date_modified"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Date Modified Column"/>
                                     </tableColumn>
                                     <tableColumn identifier="date_released" editable="NO" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="0XQ-xd-Lm9">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Released">
@@ -277,9 +304,11 @@
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <accessibility description="Track Date Released"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.album.release_date"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Date Released Column"/>
                                     </tableColumn>
                                     <tableColumn identifier="comments" width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="xDe-V0-AuH">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Comments">
@@ -291,9 +320,11 @@
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <accessibility description="Track Comments"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.comments"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Comments Column"/>
                                     </tableColumn>
                                     <tableColumn identifier="composer" width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="79h-OO-O9Q">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Composer">
@@ -528,6 +559,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
                                 </tableColumns>
+                                <accessibility description="Main Table View"/>
                                 <connections>
                                     <binding destination="6rv-dK-iy8" name="content" keyPath="arrangedObjects" id="H3j-EW-nJB"/>
                                     <binding destination="6rv-dK-iy8" name="selectionIndexes" keyPath="selectionIndexes" previousBinding="H3j-EW-nJB" id="tqC-TW-sJD"/>
@@ -552,6 +584,7 @@
                             <outlet property="menu" destination="H0B-Bf-KKf" id="d2F-M1-nCw"/>
                         </connections>
                     </tableHeaderView>
+                    <accessibility description="Main Table Scroll View"/>
                 </scrollView>
             </subviews>
             <constraints>

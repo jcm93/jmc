@@ -68,7 +68,6 @@
         <attribute name="next_genre_id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="next_playlist_id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="next_track_id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="organization_templates" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="organization_type" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="peer" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="renames_files" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
@@ -197,14 +196,14 @@
         <element name="Artist" positionX="-1386" positionY="144" width="128" height="133"/>
         <element name="CachedOrder" positionX="-1314" positionY="-171" width="128" height="135"/>
         <element name="Composer" positionX="-1557" positionY="323" width="128" height="120"/>
-        <element name="Library" positionX="-801" positionY="-45" width="128" height="495"/>
+        <element name="Library" positionX="-801" positionY="-45" width="128" height="480"/>
+        <element name="OrganizationTemplate" positionX="-1530" positionY="-45" width="128" height="120"/>
+        <element name="OrganizationTemplateBundle" positionX="-1539" positionY="-54" width="128" height="90"/>
         <element name="SmartCriteria" positionX="-1557" positionY="180" width="128" height="120"/>
         <element name="SongCollection" positionX="-954" positionY="108" width="128" height="180"/>
         <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="225"/>
         <element name="Track" positionX="-1143" positionY="-27" width="128" height="615"/>
         <element name="TrackView" positionX="-1548" positionY="-216" width="128" height="268"/>
         <element name="Volume" positionX="-1548" positionY="-63" width="128" height="105"/>
-        <element name="OrganizationTemplateBundle" positionX="-1539" positionY="-54" width="128" height="90"/>
-        <element name="OrganizationTemplate" positionX="-1530" positionY="-45" width="128" height="120"/>
     </elements>
 </model>

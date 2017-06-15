@@ -2,7 +2,7 @@
 //  Library+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 6/10/17.
+//  Created by John Moody on 6/12/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 
@@ -32,7 +32,6 @@ extension Library {
     @NSManaged public var next_genre_id: NSNumber?
     @NSManaged public var next_playlist_id: NSNumber?
     @NSManaged public var next_track_id: NSNumber?
-    @NSManaged public var organization_templates: NSObject?
     @NSManaged public var organization_type: NSNumber?
     @NSManaged public var peer: NSObject?
     @NSManaged public var renames_files: NSNumber?
@@ -42,9 +41,9 @@ extension Library {
     @NSManaged public var children: NSSet?
     @NSManaged public var local_items: NSOrderedSet?
     @NSManaged public var master_playlist: NSSet?
+    @NSManaged public var organization_template: OrganizationTemplateBundle?
     @NSManaged public var parent: Library?
     @NSManaged public var tracks: NSSet?
-    @NSManaged public var organization_template: OrganizationTemplateBundle?
     @NSManaged public var volumes: NSSet?
 
 }

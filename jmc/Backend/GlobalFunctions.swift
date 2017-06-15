@@ -136,23 +136,23 @@ let DEFAULT_TEMPLATE_TOKEN_ARRAY: [OrganizationFieldToken] = [
     OrganizationFieldToken(string: "/"),
     OrganizationFieldToken(string: "Album"),
     OrganizationFieldToken(string: "/"),
-    OrganizationFieldToken(string: "Track #"),
+    OrganizationFieldToken(string: "Disc-Track #"),
     OrganizationFieldToken(string: " "),
-    OrganizationFieldToken(string: "Track Name")
+    OrganizationFieldToken(string: "Title")
 ]
 
 let COMPILATION_TOKEN_ARRAY: [OrganizationFieldToken] = [
     OrganizationFieldToken(string: "/Compilations/"),
     OrganizationFieldToken(string: "Album"),
     OrganizationFieldToken(string: "/"),
-    OrganizationFieldToken(string: "Track #"),
+    OrganizationFieldToken(string: "Disc-Track #"),
     OrganizationFieldToken(string: " "),
     OrganizationFieldToken(string: "Artist"),
     OrganizationFieldToken(string: " - "),
-    OrganizationFieldToken(string: "Track Name")
+    OrganizationFieldToken(string: "Title")
 ]
 
-let COMPILATION_PREDICATE: NSPredicate = NSPredicate(format: "album.compilation == true")
+let COMPILATION_PREDICATE: NSPredicate = NSPredicate(format: "track.album.is_compilation == true")
 
 //library-specific user defaults
 //destroy all of these, make them attributes of library in CD

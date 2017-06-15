@@ -361,10 +361,10 @@ class AudioModule: NSObject {
                     self.finalBuffer = false
                     self.currentFileBufferer!.fillNextBuffer()
                 }
-                print("scheduling initial buffer of length \(initialBuffer!.frameLength)")
-                print("nextBufferStartFrame is \(self.nextBufferStartFrame)")
-                print(curFile?.processingFormat)
-                print(audioEngine.outputNode)
+                //print("scheduling initial buffer of length \(initialBuffer!.frameLength)")
+                //print("nextBufferStartFrame is \(self.nextBufferStartFrame)")
+                //print(curFile?.processingFormat)
+                //print(audioEngine.outputNode)
                 resetValues()
                 if (audioEngine.isRunning == false) {
                     try audioEngine.start()
@@ -521,8 +521,8 @@ class AudioModule: NSObject {
     func fileBuffererCompletion() {
         //swap decode buffer
         let bufferThatCompleted = currentFileBufferer?.currentDecodeBuffer == currentFileBufferer?.bufferA ? currentFileBufferer?.bufferA : currentFileBufferer?.bufferB
-        print("buffer that just played is \(bufferThatCompleted)")
-        print("\(Date()): file bufferer completion called, finalBuffer is \(finalBuffer) and trackTransitionBufferGuardStop is \(trackTransitionBufferGuardStop)")
+        //print("buffer that just played is \(bufferThatCompleted)")
+        //print("\(Date()): file bufferer completion called, finalBuffer is \(finalBuffer) and trackTransitionBufferGuardStop is \(trackTransitionBufferGuardStop)")
         if self.isSeeking == true {
             print("is seeking, file bufferer completion finished")
             return
@@ -533,14 +533,14 @@ class AudioModule: NSObject {
         } else if self.finalBuffer == true {
             self.finalBuffer = false
         } else if self.trackTransitionBufferGuardStop != true {
-            print("filling next buffer")
+            //print("filling next buffer")
              self.currentFileBufferer!.fillNextBuffer()
         }
-        print("file bufferer completion finished")
+        //print("file bufferer completion finished")
     }
     
     func fileBuffererSeekDecodeCallback(isFinalBuffer: Bool) {
-        print("beginning of file seek buffer decode callback")
+        //print("beginning of file seek buffer decode callback")
         if self.upcomingTrackURL != nil {
             self.upcomingTrackURL = nil
             self.seekInterrupted = true
@@ -562,8 +562,8 @@ class AudioModule: NSObject {
         curPlayerNode.scheduleBuffer(newBuffer, at: nil, options: .interrupts, completionHandler: fileBuffererCompletion)
         curPlayerNode.play()
         self.currentHandlerType = .natural
-        print("cur player node last render time \(curPlayerNode.lastRenderTime)")
-        print("scheduled buffer \(newBuffer)")
+        //print("cur player node last render time \(curPlayerNode.lastRenderTime)")
+        //print("scheduled buffer \(newBuffer)")
         self.isSeeking = false
         if isFinalBuffer == true {
             self.finalBuffer = true
@@ -579,25 +579,25 @@ class AudioModule: NSObject {
         } else {
             self.finalBuffer = false
             self.finalBufferQueued = false
-            print("is not final buffer")
+            //print("is not final buffer")
             nextBufferStartFrame += Int64(newBuffer.frameLength)
             self.currentFileBufferer?.fillNextBuffer()
         }
         currentHandlerType = .natural
         self.didSeek = true
         mainWindowController?.seekCompleted()
-        print("end of file seek buffer decode callback")
+        //print("end of file seek buffer decode callback")
     }
     
     func fileBuffererDecodeCallback(isFinalBuffer: Bool) {
         //called when a buffer is decoded. always schedule the buffer after the end of the current one
-        print("beginning of file buffer decode callback")
+        //print("beginning of file buffer decode callback")
         let newBuffer = self.currentFileBufferer!.currentDecodeBuffer
         let currentBuffer = self.currentFileBufferer!.currentDecodeBuffer == self.currentFileBufferer!.bufferA ? self.currentFileBufferer!.bufferB : self.currentFileBufferer!.bufferA
         let frameToScheduleAt = nextBufferStartFrame
-        print("scheduling buffer \(newBuffer) at frame \(frameToScheduleAt). buffer is \(newBuffer.frameLength) in length")
+        //print("scheduling buffer \(newBuffer) at frame \(frameToScheduleAt). buffer is \(newBuffer.frameLength) in length")
         let time = AVAudioTime(sampleTime: frameToScheduleAt, atRate: currentBuffer.format.sampleRate)
-        print(time)
+        //print(time)
         curPlayerNode.scheduleBuffer(newBuffer, at: time, options: .init(rawValue: 0), completionHandler: fileBuffererCompletion)
         if isFinalBuffer == true {
             self.finalBufferQueued = true
@@ -610,7 +610,7 @@ class AudioModule: NSObject {
             self.finalBuffer = false
             nextBufferStartFrame += Int64(newBuffer.frameLength)
         }
-        print("end of file buffer decode callback")
+        //print("end of file buffer decode callback")
     }
     
     func setUpNextFile(asyncID: Int?) {

@@ -13,7 +13,7 @@ import CoreData
 public class OrganizationTemplateBundle: NSManagedObject {
     
     func match(_ track: Track) -> OrganizationTemplate {
-        let organizationTemplate = self.other_templates?.first(where: {(($0 as! OrganizationTemplate).predicate as! NSPredicate).evaluate(with: track)})
+        let organizationTemplate = self.other_templates?.first(where: {(($0 as! OrganizationTemplate).predicate as! NSPredicate).evaluate(with: track.view)})
         return organizationTemplate as? OrganizationTemplate ?? self.default_template!
     }
     

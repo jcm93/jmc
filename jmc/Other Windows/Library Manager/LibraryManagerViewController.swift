@@ -66,22 +66,9 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     @IBOutlet weak var consolidateLibraryButton: NSButton!
     @IBOutlet weak var watchFoldersLabel: NSTextField!
     @IBOutlet weak var fileMonitorDescriptionLabel: NSTextField!
-    @IBOutlet weak var volumePathControl: JMPathControl!
-    @IBOutlet weak var renamesFilesCheck: NSButton!
     
     @IBOutlet weak var automaticallyAddFilesCheck: NSButton!
     @IBOutlet weak var enableDirectoryMonitoringCheck: NSButton!
-    
-    @IBAction func removeSourceButtonPressed(_ sender: Any) {
-        
-    }
-    @IBAction func renamesFilesChecked(_ sender: Any) {
-        if renamesFilesCheck.state == NSOnState {
-            library?.renames_files = true
-        } else {
-            library?.renames_files = false
-        }
-    }
     
     @IBAction func enableMonitoringCheckAction(_ sender: Any) {
         if enableDirectoryMonitoringCheck.state == NSOnState {
@@ -145,7 +132,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         let response = openPanel.runModal()
         if response == NSFileHandlingPanelOKButton {
             let newURL = openPanel.urls[0]
-            changeLibraryLocation(library: self.library!, newLocation: newURL)
+            library?.changeCentralFolderLocation(newURL: newURL)
             locationManager.reinitializeEventStream()
             initializeForLibrary(library: self.library!)
         }
@@ -160,11 +147,9 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             library?.organization_type = NO_ORGANIZATION_TYPE as NSNumber
             moveRadio.isEnabled = false
             copyRadio.isEnabled = false
-            renamesFilesCheck.isEnabled = false
         } else {
             moveRadio.isEnabled = true
             copyRadio.isEnabled = true
-            renamesFilesCheck.isEnabled = true
             changeLocationButton.isEnabled = true
             sourceLocationField.url = library?.getCentralMediaFolder()
             orgBehaviorRadioAction(self)
@@ -218,74 +203,42 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         print("init for \(library.name)")
         self.library = library
         sourceNameField.stringValue = library.name!
-        let volumeURL = URL(string: library.volume_url_string ?? "/")!
-        volumePathControl.url = volumeURL
-        let libraryWasAvailable = library.is_available
-        let libraryIsNowAvailable = libraryIsAvailable(library: library)
-        if libraryIsNowAvailable {
-            //enable options
-            doesOrganizeCheck.isEnabled = true
+        if let centralMediaFolderURL = library.getCentralMediaFolder() {
+            sourceLocationField.url = centralMediaFolderURL
+        }
+        if library.organization_type != nil && library.organization_type != 0 {
+            copyRadio.isEnabled = true
+            moveRadio.isEnabled = true
             changeLocationButton.isEnabled = true
-            automaticallyAddFilesCheck.isEnabled = true
-            addWatchFolderButton.isEnabled = true
-            removeWatchFolderButton.isEnabled = true
-            enableDirectoryMonitoringCheck.isEnabled = true
-            renamesFilesCheck.isEnabled = true
-            if let centralMediaFolderURLString = library.central_media_folder_url_string, let centralMediaFolderURL = URL(string: centralMediaFolderURLString) {
-                sourceLocationField.stringValue = centralMediaFolderURL.path
-            } else {
-                sourceLocationField.url = URL(string: library.volume_url_string!)
-            }
-            if library.organization_type != nil && library.organization_type != 0 {
-                copyRadio.isEnabled = true
-                moveRadio.isEnabled = true
-                renamesFilesCheck.isEnabled = true
-                if library.renames_files != true {
-                    renamesFilesCheck.state = NSOffState
-                } else {
-                    renamesFilesCheck.state = NSOnState
-                }
-                changeLocationButton.isEnabled = true
-                doesOrganizeCheck.state = NSOnState
-                if library.organization_type?.intValue == MOVE_ORGANIZATION_TYPE {
-                    orgBehaviorRadioAction(moveRadio)
-                } else if library.organization_type?.intValue == COPY_ORGANIZATION_TYPE {
-                    orgBehaviorRadioAction(copyRadio)
-                }
-            } else {
-                renamesFilesCheck.isEnabled = false
-                doesOrganizeCheck.state = NSOffState
-                copyRadio.isEnabled = false
-                moveRadio.isEnabled = false
-                changeLocationButton.isEnabled = false
-            }
-            if library.monitors_directories_for_new == true {
-                automaticallyAddFilesCheck.state = NSOnState
-                if let watchDirs = library.watch_dirs as? [URL] {
-                    self.watchFolders = watchDirs
-                }
-            } else {
-                automaticallyAddFilesCheck.state = NSOffState
-                self.watchFolders = [URL]()
-            }
-            if library.keeps_track_of_files == true {
-                enableDirectoryMonitoringCheck.state = NSOnState
-                sourceMonitorStatusImageView.image = NSImage(named: "NSStatusAvailable")
-                sourceMonitorStatusTextField.stringValue = "Directory monitoring is active."
-            } else {
-                enableDirectoryMonitoringCheck.state = NSOffState
-                sourceMonitorStatusImageView.image = NSImage(named: "NSStatusUnavailable")
-                sourceMonitorStatusTextField.stringValue = "Directory monitoring inactive."
+            doesOrganizeCheck.state = NSOnState
+            if library.organization_type?.intValue == MOVE_ORGANIZATION_TYPE {
+                moveRadio.state = NSOnState
+            } else if library.organization_type?.intValue == COPY_ORGANIZATION_TYPE {
+                copyRadio.state = NSOnState
             }
         } else {
-            //disable options, except volume locator
-            doesOrganizeCheck.isEnabled = false
+            doesOrganizeCheck.state = NSOffState
+            copyRadio.isEnabled = false
+            moveRadio.isEnabled = false
             changeLocationButton.isEnabled = false
-            automaticallyAddFilesCheck.isEnabled = false
-            addWatchFolderButton.isEnabled = false
-            removeWatchFolderButton.isEnabled = false
-            renamesFilesCheck.isEnabled = false
-            enableDirectoryMonitoringCheck.isEnabled = false
+        }
+        if library.monitors_directories_for_new == true {
+            automaticallyAddFilesCheck.state = NSOnState
+            if let watchDirs = library.watch_dirs as? [URL] {
+                self.watchFolders = watchDirs
+            }
+        } else {
+            automaticallyAddFilesCheck.state = NSOffState
+            self.watchFolders = [URL]()
+        }
+        if library.keeps_track_of_files == true {
+            enableDirectoryMonitoringCheck.state = NSOnState
+            sourceMonitorStatusImageView.image = NSImage(named: "NSStatusAvailable")
+            sourceMonitorStatusTextField.stringValue = "Directory monitoring is active."
+        } else {
+            enableDirectoryMonitoringCheck.state = NSOffState
+            sourceMonitorStatusImageView.image = NSImage(named: "NSStatusUnavailable")
+            sourceMonitorStatusTextField.stringValue = "Directory monitoring inactive."
         }
     }
     
@@ -311,11 +264,14 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         guard response != NSModalResponseCancel else {return}
         if self.missingTracks!.count > 0 {
             let trackNotFoundArray = self.missingTracks!.map({(track: Track) -> TrackNotFound in
-                let location = track.location!
-                if let url = URL(string: location) {
-                    return TrackNotFound(path: url.path, track: track)
+                if let location = track.location {
+                    if let url = URL(string: location) {
+                        return TrackNotFound(path: url.path, track: track)
+                    } else {
+                        return TrackNotFound(path: location, track: track)
+                    }
                 } else {
-                    return TrackNotFound(path: location, track: track)
+                    return TrackNotFound(path: nil, track: track)
                 }
             })
             self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")

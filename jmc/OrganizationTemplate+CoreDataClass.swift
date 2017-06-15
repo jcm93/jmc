@@ -16,16 +16,16 @@ public class OrganizationTemplate: NSManagedObject {
         //every template should be technically valid, but for the sake of convenience, we probably want to mandate that templates have at least one token, and contain a trackname token, at the very least
         //very "at own risk"
         guard let template = self.tokens as? [OrganizationFieldToken] else { return false }
-        guard template.contains(where: {$0.tokenType != .other}) else { return false }
-        guard template.contains(where: {$0.tokenType == .trackname}) else { return false }
+        //guard template.contains(where: {$0.tokenType != .other}) else { return false }
+        //guard template.contains(where: {$0.tokenType == .trackname}) else { return false }
         return true
     }
     
     func getURL(for track: Track, withExtension pathExtension: String) -> URL? {
-        guard let template = self.tokens as? [OrganizationFieldToken], let baseURL = URL(string: self.base_url_string!) else { return nil }
+        guard let template = self.tokens as? [OrganizationFieldToken], var baseURL = URL(string: self.base_url_string!) else { return nil }
         let urlPathComponents = template.map({return transformToPathComponent(token: $0, track: track)}).joined().components(separatedBy: "/")
         for component in urlPathComponents {
-            return baseURL.appendingPathComponent(component)
+            baseURL.appendPathComponent(component)
         }
         return baseURL.appendingPathExtension(pathExtension)
     }
@@ -43,7 +43,25 @@ public class OrganizationTemplate: NSManagedObject {
         case .trackname:
             return track.name ?? ""
         case .tracknum:
-            return track.track_num?.stringValue ?? ""
+            var discNumberStringRepresentation: String
+            if track.disc_number != nil {
+                discNumberStringRepresentation = "\(String(describing: track.disc_number!))-"
+            } else {
+                discNumberStringRepresentation = ""
+            }
+            let trackNumberStringRepresentation: String
+            if track.track_num != nil {
+                let trackNumber = Int(track.track_num!)
+                if trackNumber < 10 {
+                    trackNumberStringRepresentation = "0\(trackNumber)"
+                } else {
+                    trackNumberStringRepresentation = String(trackNumber)
+                }
+            } else {
+                trackNumberStringRepresentation = ""
+                discNumberStringRepresentation = ""
+            }
+            return "\(discNumberStringRepresentation)\(trackNumberStringRepresentation)"
         case .year:
             return track.album?.release_date?.description ?? ""
         }

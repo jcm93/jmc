@@ -118,19 +118,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func openFiles() {
         let panel = NSOpenPanel()
-        let accessoryView = OpenViewController(nibName: "OpenViewController", bundle: nil)
         panel.allowedFileTypes = VALID_FILE_TYPES
         panel.allowsMultipleSelection = true
         panel.canChooseDirectories = true
         panel.canChooseFiles = true
-        panel.accessoryView = accessoryView?.view
-        panel.isAccessoryViewDisclosed = true
         let modalResponse = panel.runModal()
         if modalResponse == NSFileHandlingPanelOKButton {
-            let orgType = accessoryView?.orgType
             let urls = self.databaseManager?.getMediaURLsInDirectoryURLs(panel.urls).0
             self.launchAddFilesDialog()
-            self.addFilesQueueLoop?.addChunksToQueue(urls: [accessoryView!.currentLibrary! : urls!])
+            self.addFilesQueueLoop?.addChunksToQueue(urls: [globalRootLibrary! : urls!])
             self.addFilesQueueLoop?.start()
         }
         
@@ -256,8 +252,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func application(_ sender: NSApplication, openFiles filenames: [String]) {
-        let library = globalRootLibrary!.children!.allObjects[0] as! Library
-        databaseManager!.addTracksFromURLs(filenames.map({return URL(fileURLWithPath: $0)}), to: library, visualUpdateHandler: nil, callback: nil)
+        databaseManager!.addTracksFromURLs(filenames.map({return URL(fileURLWithPath: $0)}), to: globalRootLibrary!, visualUpdateHandler: nil, callback: nil)
     }
 
     // MARK: - Core Data stack

@@ -183,7 +183,7 @@ class FlacDecoder: NSObject, FileBufferer {
             }
             self.bufferCurrentlyDecoding = false
             let finalBuffer = self.currentTrackSampleIndex! >= self.totalFrames
-            print("current track sample index \(self.currentTrackSampleIndex), total frames \(self.totalFrames), finalBuffer \(finalBuffer)")
+            //print("current track sample index \(self.currentTrackSampleIndex), total frames \(self.totalFrames), finalBuffer \(finalBuffer)")
             //must be responsible for moderating frame length
             self.currentDecodeBuffer.frameLength = self.currentBufferSampleIndex!
             self.audioModule!.fileBuffererSeekDecodeCallback(isFinalBuffer: finalBuffer)
@@ -216,7 +216,7 @@ class FlacDecoder: NSObject, FileBufferer {
                 self.decoderBroke = false
                 self.bufferCurrentlyDecoding = false
                 let finalBuffer = self.currentTrackSampleIndex! >= self.totalFrames
-                print("current track sample index \(self.currentTrackSampleIndex), total frames \(self.totalFrames), finalBuffer \(finalBuffer)")
+                //print("current track sample index \(self.currentTrackSampleIndex), total frames \(self.totalFrames), finalBuffer \(finalBuffer)")
                 //must be responsible for moderating frame length
                 if finalBuffer {
                     self.currentDecodeBuffer.frameLength = self.currentBufferSampleIndex!

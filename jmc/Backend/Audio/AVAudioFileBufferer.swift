@@ -45,19 +45,19 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
                 //determine if final buffer
                 if self.audioModule.currentFileBufferer! as! AVAudioFileBufferer == self && self.isSeeking != true && self.needsSeek != true && self.isCurrentlyDecoding != true {
                     self.isCurrentlyDecoding = true
-                    print("is currently decoding set to true")
+                    //print("is currently decoding set to true")
                     try self.file.read(into: self.currentDecodeBuffer, frameCount: self.bufferFrameLength)
                     self.isCurrentlyDecoding = false
-                    print("done decoding")
+                    //print("done decoding")
                     if self.needsSeek == true {
-                        print("calling needs seek callback")
+                        //print("calling needs seek callback")
                         self.needsSeekCallback()
                         return
                     }
-                    print("actual reading of file from completion has completed, about to call decode callback")
+                    //print("actual reading of file from completion has completed, about to call decode callback")
                     self.lastFrameDecoded += self.bufferFrameLength
                     let lastBuffer = self.lastFrameDecoded >= UInt32(self.file.length)
-                    print("lastBuffer is \(lastBuffer)")
+                    //print("lastBuffer is \(lastBuffer)")
                     self.audioModule.fileBuffererDecodeCallback(isFinalBuffer: lastBuffer)
                 }
             } catch {

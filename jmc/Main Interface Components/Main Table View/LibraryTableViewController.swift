@@ -189,10 +189,10 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     }
 
     func getUpcomingIDsForPlayEvent(_ shuffleState: Int, id: Int, row: Int?) -> Int {
-        let libraries = Set((trackViewArrayController.arrangedObjects as! [TrackView]).flatMap({return $0.track?.library}))
+        let volumes = Set((trackViewArrayController.arrangedObjects as! [TrackView]).flatMap({return $0.track?.volume}))
         var count = 0
-        for library in libraries {
-            if (library.is_available as! Bool) != libraryIsAvailable(library: library) {
+        for volume in volumes {
+            if !volumeIsAvailable(volume: volume) {
                 count += 1
             }
         }
@@ -200,7 +200,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             print("library status has changed, reloading data")
             mainWindowController?.sourceListViewController?.reloadData()
         }
-        let idArray = (trackViewArrayController.arrangedObjects as! [TrackView]).filter({return $0.track?.library?.is_available == true}).map({return Int($0.track!.id!)})
+        let idArray = (trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
         if shuffleState == NSOnState {
             //secretly adjust the shuffled array such that it behaves mysteriously like a ring buffer. ssshhhh
             let currentShuffleArray = self.item!.playOrderObject!.shuffled_play_order!
@@ -425,21 +425,13 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     }
     
     func initializeForLibrary() {
-        if self.item?.library?.parent != nil {
-            trackViewArrayController.fetchPredicate = NSPredicate(format: "track.library == %@", self.item!.library!)
-        } else {
-            let activeLibraries = { () -> [Library] in
-                let fetch = NSFetchRequest<Library>(entityName: "Library")
-                fetch.predicate = NSPredicate(format: "is_active == %@", NSNumber(booleanLiteral: true))
-                do {
-                    return try managedContext.fetch(fetch)
-                } catch {
-                    return [Library]()
-                }
-                }().filter({(library: Library) in return libraryIsAvailable(library: library)})
-            trackViewArrayController.fetchPredicate = NSPredicate(format: "track.library in %@", activeLibraries)
-        }
+        //trackViewArrayController.fetchPredicate = NSPredicate(format: "track.is_network != true", self.item!.library!)
+        trackViewArrayController.fetchPredicate = nil
         trackViewArrayController.fetch(nil)
+    }
+    
+    func initializeForVolume() {
+        trackViewArrayController.fetchPredicate = NSPredicate(format: "track.volume == %@", self.item!.volume!)
     }
     
     override func viewDidLoad() {
@@ -465,7 +457,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                 initializeSmartPlaylist()
             }
             initializeForPlaylist()
-        } else {
+        } else if item?.library != nil {
             print("initializing for library")
             tableView.tableColumns[1].isHidden = true
             if let sortData = UserDefaults.standard.object(forKey: DEFAULTS_LIBRARY_SORT_DESCRIPTOR_STRING) {
@@ -474,6 +466,13 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                 }
             }
             initializeForLibrary()
+        } else if item?.volume != nil {
+            if let sortData = UserDefaults.standard.object(forKey: DEFAULTS_LIBRARY_SORT_DESCRIPTOR_STRING) {
+                if let sortDescriptors = NSKeyedUnarchiver.unarchiveObject(with: sortData as! Data) {
+                    tableView.sortDescriptors = sortDescriptors as! [NSSortDescriptor]
+                }
+            }
+            initializeForVolume()
         }
         super.viewDidLoad()
         // Do view setup here.

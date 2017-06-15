@@ -344,8 +344,7 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Library" id="Dg0-kB-e3J">
                         <items>
-                            <menuItem title="Manage Library..." id="bBy-Ti-uZG">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Manage Library..." keyEquivalent="L" id="bBy-Ti-uZG">
                                 <connections>
                                     <action selector="openLibraryManager:" target="Voe-Tx-rLC" id="OlN-XK-LQX"/>
                                 </connections>

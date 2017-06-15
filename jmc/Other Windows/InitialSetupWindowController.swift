@@ -95,7 +95,7 @@ class InitialSetupWindowController: NSWindowController {
     func setupForNilLibrary() {
         //create library
         let newActualLibrary = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
-        newActualLibrary.initialSetup(withCentralDirectory: libraryPathControl.url!, organizationType: organizationType, renamesFiles: modifyMetadata)
+        newActualLibrary.initialSetup(withCentralDirectory: libraryPathControl.url!, organizationType: organizationType.rawValue, renamesFiles: modifyMetadata)
         
         let newActualLibrarySLI = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         newActualLibrarySLI.library = newActualLibrary
@@ -110,6 +110,7 @@ class InitialSetupWindowController: NSWindowController {
         cd_library_header.name = "Library"
         cd_library_header.sort_order = 0
         cd_library_header.parent = source_list_root
+        newActualLibrarySLI.parent = cd_library_header
         let cd_shared_header = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         cd_shared_header.is_header = true
         cd_shared_header.name = "Shared Libraries"
@@ -120,14 +121,6 @@ class InitialSetupWindowController: NSWindowController {
         cd_playlists_header.name = "Playlists"
         cd_playlists_header.sort_order = 2
         cd_playlists_header.parent = source_list_root
-        
-        //create master playlist source list item
-        let cd_library_master_playlist_source_item = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
-        cd_library_master_playlist_source_item.parent = cd_library_header
-        cd_library_master_playlist_source_item.name = "Music"
-        cd_library_master_playlist_source_item.library = newLibrary
-        
-        newActualLibrarySLI.parent = cd_library_master_playlist_source_item
         
         //create cached orders
         let cachedArtistOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: managedContext) as! CachedOrder
@@ -215,14 +208,9 @@ class InitialSetupWindowController: NSWindowController {
             }
             if result != nil {
                 library = result!
-                let libraryPath = result!.central_media_folder_url_string
-                if libraryPath != nil {
-                    let libraryURL = URL(string: libraryPath!)
-                    if libraryURL != nil {
-                        directoryURL = libraryURL
-                        libraryPathControl.url = libraryURL
-                    }
-                }
+                let libraryPath = result!.getCentralMediaFolder()!
+                directoryURL = libraryPath
+                libraryPathControl.url = libraryPath
             } else {
                 libraryPathControl.url = jmcDirURL
             }

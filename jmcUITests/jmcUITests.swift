@@ -34,9 +34,24 @@ class jmcUITests: XCTestCase {
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         
         let jmcWindow = XCUIApplication().windows["jmc"]
-        jmcWindow.tables.tableRows.containing(.staticText, identifier:"1:11").children(matching: .textField).element(boundBy: 0).click()
+        let mainTableViewTable = jmcWindow.tables["Main Table View"]
+        mainTableViewTable.children(matching: .tableRow).element(boundBy: 5).textFields["Track Name"].click()
+        mainTableViewTable.children(matching: .tableRow).element(boundBy: 6).textFields["Track Name"].click()
         jmcWindow.click()
-        jmcWindow.outlines.children(matching: .outlineRow).element(boundBy: 0).cells.containing(.disclosureTriangle, identifier:"NSOutlineViewDisclosureButtonKey").element.typeKey(XCUIKeyboardKeyDownArrow, modifierFlags:[])
+        
+        let artistButton = jmcWindow.tables["Main Table View"].buttons["Artist"]
+        artistButton.click()
+        artistButton.click()
+        artistButton.click()
+        jmcWindow.click()
+        
+        let nsoutlineviewdisclosurebuttonkeyCell = jmcWindow.outlines["Source List Clip View"].cells.containing(.disclosureTriangle, identifier:"NSOutlineViewDisclosureButtonKey").element
+        nsoutlineviewdisclosurebuttonkeyCell.click()
+        nsoutlineviewdisclosurebuttonkeyCell.click()
+        nsoutlineviewdisclosurebuttonkeyCell.click()
+        nsoutlineviewdisclosurebuttonkeyCell.click()
+        jmcWindow.click()
+        
         
     }
     

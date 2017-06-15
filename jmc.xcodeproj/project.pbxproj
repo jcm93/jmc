@@ -64,8 +64,6 @@
 		0D592A471EDF6C8B0054D553 /* Track+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A321EDF6C8B0054D553 /* Track+CoreDataClass.swift */; };
 		0D592A491EDF6C8B0054D553 /* Artist+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A341EDF6C8B0054D553 /* Artist+CoreDataClass.swift */; };
 		0D592A4A1EDF6C8B0054D553 /* Artist+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A351EDF6C8B0054D553 /* Artist+CoreDataProperties.swift */; };
-		0D592A4B1EDF6C8B0054D553 /* SourceListItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A361EDF6C8B0054D553 /* SourceListItem+CoreDataClass.swift */; };
-		0D592A4C1EDF6C8B0054D553 /* SourceListItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A371EDF6C8B0054D553 /* SourceListItem+CoreDataProperties.swift */; };
 		0D592A4D1EDF6C8B0054D553 /* TrackView+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A381EDF6C8B0054D553 /* TrackView+CoreDataClass.swift */; };
 		0D592A4E1EDF6C8B0054D553 /* TrackView+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A391EDF6C8B0054D553 /* TrackView+CoreDataProperties.swift */; };
 		0D5A55E91DDBE16600E46F08 /* SourceListCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */; };
@@ -73,8 +71,6 @@
 		0D606EF91E7B4DB0007AE152 /* AVAudioFileBufferer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */; };
 		0D60F5261E86F77900CA5420 /* TimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D60F5251E86F77900CA5420 /* TimeFormatter.swift */; };
 		0D60F5291E8720A300CA5420 /* PlaylistOrderObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */; };
-		0D6802171EB7D73200D03923 /* OpenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6802151EB7D73200D03923 /* OpenViewController.swift */; };
-		0D6802181EB7D73200D03923 /* OpenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D6802161EB7D73200D03923 /* OpenViewController.xib */; };
 		0D69659D1EA02EC50050D505 /* ProgressBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D69659C1EA02EC50050D505 /* ProgressBarController.swift */; };
 		0D6E041B1ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6E04191ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift */; };
 		0D6E041C1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D6E041A1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib */; };
@@ -97,6 +93,8 @@
 		0D8B98691ED2ACF000283DD1 /* ArtistViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8B98671ED2ACF000283DD1 /* ArtistViewController.xib */; };
 		0D8D4A171D90868500FA1603 /* LocationManagerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8D4A151D90868500FA1603 /* LocationManagerController.swift */; };
 		0D8D4A181D90868500FA1603 /* LocationManagerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8D4A161D90868500FA1603 /* LocationManagerController.xib */; };
+		0D99D49F1EF1D5AD00264CFF /* SpecialScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D99D49E1EF1D5AD00264CFF /* SpecialScrollView.swift */; };
+		0D99D4A11EF216F200264CFF /* OrganizationRuleCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D99D4A01EF216F200264CFF /* OrganizationRuleCellView.swift */; };
 		0D9CE6711D334F97004FA8CB /* ImportWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */; };
 		0D9CE6721D334F97004FA8CB /* ImportWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D9CE6701D334F97004FA8CB /* ImportWindowController.xib */; };
 		0D9CE6751D34128B004FA8CB /* InitialSetupWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */; };
@@ -168,7 +166,7 @@
 		0DE486841EA579FD009B226B /* AddWatchFolderSheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DE486821EA579FD009B226B /* AddWatchFolderSheetController.xib */; };
 		0DE486861EA58C67009B226B /* JMPathControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE486851EA58C67009B226B /* JMPathControl.swift */; };
 		0DE486911EA83FBA009B226B /* AddFilesProgressSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE4868F1EA83FBA009B226B /* AddFilesProgressSheet.swift */; };
-		0DE486921EA83FBA009B226B /* AddFilesProgressSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DE486901EA83FBA009B226B /* AddFilesProgressSheet.xib */; };
+		0DE486921EA83FBA009B226B /* GenericProgressBarSheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DE486901EA83FBA009B226B /* GenericProgressBarSheetController.xib */; };
 		0DE486941EA92B78009B226B /* AddFilesQueueLoop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE486931EA92B78009B226B /* AddFilesQueueLoop.swift */; };
 		0DE74A531D7D9457005211E6 /* SharedLibraryRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE74A521D7D9457005211E6 /* SharedLibraryRequestHandler.swift */; };
 		0DE957C81EE9D5D0008CBECF /* Track+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE957C41EE9D5D0008CBECF /* Track+CoreDataProperties.swift */; };
@@ -181,6 +179,8 @@
 		0DE957D61EEC5465008CBECF /* OrganizationTemplate+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE957D21EEC5465008CBECF /* OrganizationTemplate+CoreDataProperties.swift */; };
 		0DE957D71EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE957D31EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataClass.swift */; };
 		0DE957D81EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE957D41EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataProperties.swift */; };
+		0DE957DB1EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE957D91EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift */; };
+		0DE957DC1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE957DA1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift */; };
 		0DF188801EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF1887E1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift */; };
 		0DF188811EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */; };
 		0DF188841EDD072B00241785 /* OrganizationRuleViewcontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF188821EDD072B00241785 /* OrganizationRuleViewcontroller.swift */; };
@@ -266,8 +266,6 @@
 		0D592A321EDF6C8B0054D553 /* Track+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Track+CoreDataClass.swift"; path = "Core Data Shit/Track+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D592A341EDF6C8B0054D553 /* Artist+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Artist+CoreDataClass.swift"; path = "Core Data Shit/Artist+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D592A351EDF6C8B0054D553 /* Artist+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Artist+CoreDataProperties.swift"; path = "Core Data Shit/Artist+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0D592A361EDF6C8B0054D553 /* SourceListItem+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SourceListItem+CoreDataClass.swift"; path = "Core Data Shit/SourceListItem+CoreDataClass.swift"; sourceTree = "<group>"; };
-		0D592A371EDF6C8B0054D553 /* SourceListItem+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SourceListItem+CoreDataProperties.swift"; path = "Core Data Shit/SourceListItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D592A381EDF6C8B0054D553 /* TrackView+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TrackView+CoreDataClass.swift"; path = "Core Data Shit/TrackView+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D592A391EDF6C8B0054D553 /* TrackView+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TrackView+CoreDataProperties.swift"; path = "Core Data Shit/TrackView+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SourceListCellView.swift; path = "Main Interface Components/Subview Controllers/SourceListCellView.swift"; sourceTree = "<group>"; };
@@ -275,8 +273,6 @@
 		0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AVAudioFileBufferer.swift; path = Backend/Audio/AVAudioFileBufferer.swift; sourceTree = "<group>"; };
 		0D60F5251E86F77900CA5420 /* TimeFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimeFormatter.swift; path = Backend/Formatters/TimeFormatter.swift; sourceTree = "<group>"; };
 		0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlaylistOrderObject.swift; path = Backend/PlaylistOrderObject.swift; sourceTree = "<group>"; };
-		0D6802151EB7D73200D03923 /* OpenViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OpenViewController.swift; path = "Main Interface Components/Miscellaneous/OpenViewController.swift"; sourceTree = "<group>"; };
-		0D6802161EB7D73200D03923 /* OpenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OpenViewController.xib; path = "Main Interface Components/Miscellaneous/OpenViewController.xib"; sourceTree = "<group>"; };
 		0D69659C1EA02EC50050D505 /* ProgressBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressBarController.swift; path = "Main Interface Components/Miscellaneous/ProgressBarController.swift"; sourceTree = "<group>"; };
 		0D6E04191ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewTrackListViewController.swift; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewTrackListViewController.swift"; sourceTree = "<group>"; };
 		0D6E041A1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistViewTrackListViewController.xib; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewTrackListViewController.xib"; sourceTree = "<group>"; };
@@ -300,6 +296,8 @@
 		0D8B98671ED2ACF000283DD1 /* ArtistViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistViewController.xib; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewController.xib"; sourceTree = "<group>"; };
 		0D8D4A151D90868500FA1603 /* LocationManagerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationManagerController.swift; path = "Other Windows/LocationManagerController.swift"; sourceTree = "<group>"; };
 		0D8D4A161D90868500FA1603 /* LocationManagerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LocationManagerController.xib; path = "Other Windows/LocationManagerController.xib"; sourceTree = "<group>"; };
+		0D99D49E1EF1D5AD00264CFF /* SpecialScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecialScrollView.swift; sourceTree = "<group>"; };
+		0D99D4A01EF216F200264CFF /* OrganizationRuleCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganizationRuleCellView.swift; sourceTree = "<group>"; };
 		0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImportWindowController.swift; path = "Other Windows/ImportWindowController.swift"; sourceTree = "<group>"; };
 		0D9CE6701D334F97004FA8CB /* ImportWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImportWindowController.xib; path = "Other Windows/ImportWindowController.xib"; sourceTree = "<group>"; };
 		0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InitialSetupWindowController.swift; path = "Other Windows/InitialSetupWindowController.swift"; sourceTree = "<group>"; };
@@ -391,7 +389,7 @@
 		0DE486821EA579FD009B226B /* AddWatchFolderSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddWatchFolderSheetController.xib; path = "Other Windows/Library Manager/Sheets/AddWatchFolderSheetController.xib"; sourceTree = "<group>"; };
 		0DE486851EA58C67009B226B /* JMPathControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JMPathControl.swift; path = "Other Windows/Library Manager/JMPathControl.swift"; sourceTree = "<group>"; };
 		0DE4868F1EA83FBA009B226B /* AddFilesProgressSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = AddFilesProgressSheet.swift; path = "Main Interface Components/Miscellaneous/AddFilesProgressSheet.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		0DE486901EA83FBA009B226B /* AddFilesProgressSheet.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddFilesProgressSheet.xib; path = "Main Interface Components/Miscellaneous/AddFilesProgressSheet.xib"; sourceTree = "<group>"; };
+		0DE486901EA83FBA009B226B /* GenericProgressBarSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GenericProgressBarSheetController.xib; path = "Main Interface Components/Miscellaneous/GenericProgressBarSheetController.xib"; sourceTree = "<group>"; };
 		0DE486931EA92B78009B226B /* AddFilesQueueLoop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddFilesQueueLoop.swift; path = "Backend/Database:Filesystem Management/AddFilesQueueLoop.swift"; sourceTree = "<group>"; };
 		0DE74A521D7D9457005211E6 /* SharedLibraryRequestHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharedLibraryRequestHandler.swift; path = "Backend/Network Functionality/SharedLibraryRequestHandler.swift"; sourceTree = "<group>"; };
 		0DE957C41EE9D5D0008CBECF /* Track+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Track+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -404,6 +402,8 @@
 		0DE957D21EEC5465008CBECF /* OrganizationTemplate+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OrganizationTemplate+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0DE957D31EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OrganizationTemplateBundle+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0DE957D41EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OrganizationTemplateBundle+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0DE957D91EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SourceListItem+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0DE957DA1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SourceListItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0DF1887E1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdvancedOrganizationOptionsWindowController.swift; path = "Other Windows/Library Manager/AdvancedOrganizationOptionsWindowController.swift"; sourceTree = "<group>"; };
 		0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AdvancedOrganizationOptionsWindowController.xib; path = "Other Windows/Library Manager/AdvancedOrganizationOptionsWindowController.xib"; sourceTree = "<group>"; };
 		0DF188821EDD072B00241785 /* OrganizationRuleViewcontroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrganizationRuleViewcontroller.swift; path = "Other Windows/Library Manager/OrganizationRuleViewcontroller.swift"; sourceTree = "<group>"; };
@@ -524,6 +524,8 @@
 		0D01AD981D707ED900F9211F /* Core Data Shit */ = {
 			isa = PBXGroup;
 			children = (
+				0DE957D91EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift */,
+				0DE957DA1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift */,
 				0DE957D11EEC5465008CBECF /* OrganizationTemplate+CoreDataClass.swift */,
 				0DE957D21EEC5465008CBECF /* OrganizationTemplate+CoreDataProperties.swift */,
 				0DE957D31EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataClass.swift */,
@@ -551,8 +553,6 @@
 				0D592A311EDF6C8B0054D553 /* AlbumArtwork+CoreDataProperties.swift */,
 				0D592A341EDF6C8B0054D553 /* Artist+CoreDataClass.swift */,
 				0D592A351EDF6C8B0054D553 /* Artist+CoreDataProperties.swift */,
-				0D592A361EDF6C8B0054D553 /* SourceListItem+CoreDataClass.swift */,
-				0D592A371EDF6C8B0054D553 /* SourceListItem+CoreDataProperties.swift */,
 				0D592A381EDF6C8B0054D553 /* TrackView+CoreDataClass.swift */,
 				0D592A391EDF6C8B0054D553 /* TrackView+CoreDataProperties.swift */,
 				0D592A211EDF6BCE0054D553 /* TrackExtension.swift */,
@@ -567,8 +567,10 @@
 				0DC397AA1E5282920009792B /* LibraryManagerViewController.xib */,
 				0DF1887E1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift */,
 				0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */,
+				0D99D4A01EF216F200264CFF /* OrganizationRuleCellView.swift */,
 				0DF188821EDD072B00241785 /* OrganizationRuleViewcontroller.swift */,
 				0DF188831EDD072B00241785 /* OrganizationRuleViewcontroller.xib */,
+				0D99D49E1EF1D5AD00264CFF /* SpecialScrollView.swift */,
 				0DE486851EA58C67009B226B /* JMPathControl.swift */,
 				0D8AFE5A1E6F4FEB004AC584 /* LibraryManagerSourceSelector.swift */,
 				0D8AFE5B1E6F4FEB004AC584 /* LibraryManagerSourceSelector.xib */,
@@ -752,10 +754,8 @@
 			children = (
 				0D388AAC1E1F2C8800D25A7D /* AddPlaylistButton.swift */,
 				0D69659C1EA02EC50050D505 /* ProgressBarController.swift */,
-				0D6802151EB7D73200D03923 /* OpenViewController.swift */,
-				0D6802161EB7D73200D03923 /* OpenViewController.xib */,
 				0DE4868F1EA83FBA009B226B /* AddFilesProgressSheet.swift */,
-				0DE486901EA83FBA009B226B /* AddFilesProgressSheet.xib */,
+				0DE486901EA83FBA009B226B /* GenericProgressBarSheetController.xib */,
 				0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */,
 			);
 			name = Miscellaneous;
@@ -1091,7 +1091,6 @@
 				0DF4BEF41CFD0D4E00AC5824 /* MainWindowController.xib in Resources */,
 				0DD0DAE81E53A8EE00807CAC /* flac in Resources */,
 				0DD0DAE61E53A8EE00807CAC /* flac.rb in Resources */,
-				0D6802181EB7D73200D03923 /* OpenViewController.xib in Resources */,
 				0DD0DAF11E53A8EE00807CAC /* flac++.pc in Resources */,
 				0DF188811EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib in Resources */,
 				0DD0DB081E53A8EE00807CAC /* index.html in Resources */,
@@ -1107,7 +1106,7 @@
 				0DD0DAEA1E53A8EE00807CAC /* INSTALL_RECEIPT.json in Resources */,
 				0D51C8A61EAC01F8002F6182 /* ConsolidateLibrarySheetController.xib in Resources */,
 				0D9CE6781D3442D3004FA8CB /* Preferences.plist in Resources */,
-				0DE486921EA83FBA009B226B /* AddFilesProgressSheet.xib in Resources */,
+				0DE486921EA83FBA009B226B /* GenericProgressBarSheetController.xib in Resources */,
 				0D800C0D1ED3B54100EA2889 /* ArtistViewAlbumViewController.xib in Resources */,
 				0DD0DB0B1E53A8EE00807CAC /* flac.1 in Resources */,
 				0D299B141DF10FFF0009CF7A /* SourceListViewController.xib in Resources */,
@@ -1192,7 +1191,6 @@
 				0D51C8A11EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift in Sources */,
 				0D60F5291E8720A300CA5420 /* PlaylistOrderObject.swift in Sources */,
 				0D51C8B21EB01731002F6182 /* JMTabView.swift in Sources */,
-				0D6802171EB7D73200D03923 /* OpenViewController.swift in Sources */,
 				0D01AD911D7079D900F9211F /* EqualizerWindowController.swift in Sources */,
 				0D76F6A81D24B9AC00C6E70F /* DatabaseManager.swift in Sources */,
 				0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */,
@@ -1204,6 +1202,8 @@
 				0D9CE6711D334F97004FA8CB /* ImportWindowController.swift in Sources */,
 				0DE486911EA83FBA009B226B /* AddFilesProgressSheet.swift in Sources */,
 				0D116B851E5800FD00C759FD /* LocationManager.swift in Sources */,
+				0DE957DC1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift in Sources */,
+				0D99D4A11EF216F200264CFF /* OrganizationRuleCellView.swift in Sources */,
 				0DE957D61EEC5465008CBECF /* OrganizationTemplate+CoreDataProperties.swift in Sources */,
 				0D3756C01EAADBD700016136 /* PreferencesWindowController.swift in Sources */,
 				0DAB30911CFBA3340028928F /* AppDelegate.swift in Sources */,
@@ -1228,7 +1228,6 @@
 				0D3878BA1DD12530004CC3C1 /* SampleRateFormatter.swift in Sources */,
 				0DF4BEF31CFD0D4E00AC5824 /* MainWindowController.swift in Sources */,
 				0DE957CA1EE9D5D0008CBECF /* Volume+CoreDataProperties.swift in Sources */,
-				0D592A4C1EDF6C8B0054D553 /* SourceListItem+CoreDataProperties.swift in Sources */,
 				0D606EF61E7B4C21007AE152 /* FileBufferer.swift in Sources */,
 				0DC7127C1E2F115A0054ECE6 /* ImportErrorWindowController.swift in Sources */,
 				0DB996D01ED2874F00594939 /* AlbumArtImageView.swift in Sources */,
@@ -1239,7 +1238,6 @@
 				0D592A441EDF6C8B0054D553 /* SmartCriteria+CoreDataProperties.swift in Sources */,
 				0D592A471EDF6C8B0054D553 /* Track+CoreDataClass.swift in Sources */,
 				0D800C081ED3B3C800EA2889 /* ArtistListViewController.swift in Sources */,
-				0D592A4B1EDF6C8B0054D553 /* SourceListItem+CoreDataClass.swift in Sources */,
 				0D800C0F1ED3B6BF00EA2889 /* ArtistViewTableCellView.swift in Sources */,
 				0DE486831EA579FD009B226B /* AddWatchFolderSheetController.swift in Sources */,
 				0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */,
@@ -1252,6 +1250,7 @@
 				0D592A3F1EDF6C8B0054D553 /* SongCollection+CoreDataClass.swift in Sources */,
 				0DD274EF1D3190360055C43B /* GlobalFunctions.swift in Sources */,
 				0D592A461EDF6C8B0054D553 /* AlbumArtwork+CoreDataProperties.swift in Sources */,
+				0D99D49F1EF1D5AD00264CFF /* SpecialScrollView.swift in Sources */,
 				0D299B1F1DF151220009CF7A /* LibraryTableViewController.swift in Sources */,
 				0D592A4E1EDF6C8B0054D553 /* TrackView+CoreDataProperties.swift in Sources */,
 				0D3878BC1DD125E9004CC3C1 /* StupidNumberFormatter.swift in Sources */,
@@ -1262,6 +1261,7 @@
 				0D8D4A171D90868500FA1603 /* LocationManagerController.swift in Sources */,
 				0DB996D21ED287C400594939 /* AlbumArtPDFView.swift in Sources */,
 				0D8AFE5C1E6F4FEB004AC584 /* LibraryManagerSourceSelector.swift in Sources */,
+				0DE957DB1EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift in Sources */,
 				0DFE2E5A1EC0DAB6007EEF04 /* TrackQueueTableView.swift in Sources */,
 				0DB996D41ED287D400594939 /* AlbumArtCollectionView.swift in Sources */,
 				0DB996C51ECE233000594939 /* AlbumArtWindowController.swift in Sources */,

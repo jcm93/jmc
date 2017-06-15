@@ -16,7 +16,7 @@ import Cocoa
 
 class iTunesLibraryParser: NSObject {
     let libDict: NSMutableDictionary
-    let XMLPlaylistArray: NSArray
+    var XMLPlaylistArray: NSArray
     let XMLMasterPlaylistDict: NSDictionary
     let XMLMasterPlaylistTrackArray: NSArray
     let XMLTrackDictionaryDictionary: NSDictionary

@@ -51,13 +51,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "jmc/Backend/Database:Filesystem Management/DatabaseManager.swift"
-            timestampString = "518463836.533059"
+            filePath = "jmc/Delegate:Main Window Controller/MainWindowController.swift"
+            timestampString = "518911601.120255"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "250"
-            endingLineNumber = "250"
-            landmarkName = "moveFileAfterEdit(_:)"
+            startingLineNumber = "811"
+            endingLineNumber = "811"
+            landmarkName = "trackListTriangleClicked(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "jmc/Delegate:Main Window Controller/MainWindowController.swift"
+            timestampString = "518911622.566308"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "328"
+            endingLineNumber = "328"
+            landmarkName = "tempBreak(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

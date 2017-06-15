@@ -10,13 +10,13 @@ import Cocoa
 
 private var my_special_context = 0
 
-class ImportWindowController: NSWindowController {
+class ImportWindowController: NSWindowController, NSTableViewDelegate {
     
     @IBOutlet weak var pathController: NSPathControl!
     @IBOutlet weak var OKButton: NSButton!
-    @IBOutlet weak var keepDirectoryRadioButton: NSButton!
-    @IBOutlet weak var moveFilesRadioButton: NSButton!
-    @IBOutlet weak var pathField: NSTextField!
+    var playlists = [NSDictionary]()
+    @IBOutlet var playlistArrayController: NSArrayController!
+    @IBOutlet weak var playlistTableView: NSTableView!
     var path: String?
     var iTunesParser: iTunesLibraryParser?
     var mainWindowController: MainWindowController?
@@ -31,37 +31,34 @@ class ImportWindowController: NSWindowController {
         openFile()
     }
     
-    @IBAction func radioButtonAction(_ sender: AnyObject) {
-        if keepDirectoryRadioButton.state == NSOnState {
-            moveFiles = false
-        }
-        else if moveFilesRadioButton.state == NSOnState {
-            moveFiles = true
-        }
-    }
-    
     override func windowDidLoad() {
         super.windowDidLoad()
-
+        playlistTableView.delegate = self
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     }
     
+    
     @IBAction func confirmClicked(_ sender: AnyObject) {
-        var pathURL = URL(fileURLWithPath: path!)
-        pathURL = pathURL.deletingLastPathComponent()
-        pathURL = pathURL.appendingPathComponent("iTunes Music", isDirectory: true)
-        let fileManager = FileManager.default
-        if fileManager.fileExists(atPath: pathURL.path, isDirectory: nil) == false {
-            pathURL = pathURL.deletingLastPathComponent()
-            pathURL = pathURL.appendingPathComponent("iTunes Media", isDirectory: true)
-        }
         let appDelegate = (NSApplication.shared().delegate as! AppDelegate)
+        let set = Set(self.playlistArrayController.selectedObjects.map({return ($0 as! NSDictionary)["name"] as! String}))
+        self.iTunesParser?.XMLPlaylistArray = self.iTunesParser!.XMLPlaylistArray.filter({set.contains(($0 as! NSDictionary)["Name"] as! String)}) as NSArray
         appDelegate.iTunesParser = self.iTunesParser
         appDelegate.launchAddFilesDialog()
         DispatchQueue.global(qos: .default).async {
             appDelegate.iTunesParser?.makeLibrary(parentLibrary: globalRootLibrary, visualUpdateHandler: appDelegate.backgroundAddFilesHandler)
         }
         self.window?.close()
+    }
+    
+    /*func tableView(_ tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: IndexSet) -> IndexSet {
+        let currentSelection = tableView.selectedRowIndexes
+        let combined = currentSelection.union(proposedSelectionIndexes)
+        let intersection = currentSelection.intersection(proposedSelectionIndexes)
+        return combined.subtracting(intersection)
+    }*/
+    
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        print("called")
     }
     
     func openFile() {
@@ -75,11 +72,16 @@ class ImportWindowController: NSWindowController {
         }
         do {
             iTunesParser = try iTunesLibraryParser(path: path!)
+            self.playlists = iTunesParser!.XMLPlaylistArray.map({ (thing: Any) -> NSDictionary in
+                guard let dict = thing as? NSDictionary else { return [:] as NSDictionary }
+                let playlistName = dict["Name"] as? String
+                let numberOfItems = (dict["Playlist Items"] as? NSArray)?.count ?? 0
+                return ["name" : playlistName, "items" : numberOfItems] as NSDictionary
+            })
+            self.playlistArrayController.content = self.playlists
         } catch {
             OKButton.isEnabled = false
         }
-        
-        // Make sure that a path was chosen
         
     }
     

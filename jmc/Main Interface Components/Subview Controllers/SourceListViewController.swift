@@ -258,7 +258,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             return false
         } else if source.children?.count > 0 && source.library != nil {
             return true
-        } else if source.volume != nil && !volumeIsAvailable(library: source.volume!) {
+        } else if source.volume != nil && !volumeIsAvailable(volume: source.volume!) {
             return false
         } else if source.children?.count > 0 && source.is_folder != true {
             return false
@@ -303,32 +303,26 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             view.textField?.isEditable = true
             return view
         } else if source.library != nil {
-            if source.children?.count > 0 {
-                let view = outlineView.make(withIdentifier: "MasterLibraryCell", owner: self) as! SourceListCellView
+            let view = outlineView.make(withIdentifier: "MasterLibraryCell", owner: self) as! SourceListCellView
+            view.node = source
+            view.textField?.stringValue = "All Sources"
+            view.textField?.isEditable = false
+            return view
+        } else if source.volume != nil {
+            if volumeIsAvailable(volume: source.volume!) {
+                let view = outlineView.make(withIdentifier: "MasterPlaylistCell", owner: self) as! SourceListCellView
+                view.subviews[2].bind("value", to: source.library!, withKeyPath: "is_active", options: [NSContinuouslyUpdatesValueBindingOption : true])
                 view.node = source
-                view.textField?.stringValue = "All Sources"
+                view.textField?.stringValue = source.library!.name ?? ""
                 view.textField?.isEditable = false
                 return view
             } else {
-                if libraryIsAvailable(library: source.library!) {
-                    let view = outlineView.make(withIdentifier: "MasterPlaylistCell", owner: self) as! SourceListCellView
-                    view.subviews[2].bind("value", to: source.library!, withKeyPath: "is_active", options: [NSContinuouslyUpdatesValueBindingOption : true])
-                    /*if source.item.library?.is_active == true {
-                        (view.subviews[2] as! NSButton).state = NSOnState
-                    } else {
-                        (view.subviews[2] as! NSButton).state = NSOffState
-                    }*/
-                    view.node = source
-                    view.textField?.stringValue = source.library!.name ?? ""
-                    view.textField?.isEditable = false
-                    return view
-                } else {
-                    let view = outlineView.make(withIdentifier: "MasterPlaylistCellDisabled", owner: self) as! SourceListCellView
-                    view.node = source
-                    view.textField?.stringValue = source.library!.name ?? ""
-                    return view
-                }
+                let view = outlineView.make(withIdentifier: "MasterPlaylistCellDisabled", owner: self) as! SourceListCellView
+                view.node = source
+                view.textField?.stringValue = source.library!.name ?? ""
+                return view
             }
+
         } else {
             let view = outlineView.make(withIdentifier: "PlaylistCell", owner: self) as! SourceListCellView
             view.node = source

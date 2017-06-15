@@ -25,9 +25,9 @@ class OrganizationFieldToken: NSObject, NSCoding {
             self.tokenType = .albumartist
         case "Album":
             self.tokenType = .album
-        case "Track #":
+        case "Disc-Track #":
             self.tokenType = .tracknum
-        case "Track Name":
+        case "Title":
             self.tokenType = .trackname
         case "Year":
             self.tokenType = .year
@@ -58,9 +58,9 @@ class OrganizationFieldToken: NSObject, NSCoding {
         case .other:
             return self.stringIfOther!
         case .trackname:
-            return "Track Name"
+            return "Title"
         case .tracknum:
-            return "Track #"
+            return "Disc-Track #"
         case .year:
             return "Year"
         }

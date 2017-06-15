@@ -244,6 +244,14 @@ class DatabaseManager: NSObject {
         return potentialArtworkPath
     }
     
+    func appendDuplicateTo(url: URL, dupe: Int) -> URL {
+        let pathExtension = url.pathExtension
+        var lastComponent = url.deletingPathExtension().lastPathComponent
+        lastComponent.append(" \(dupe)")
+        var newURL = url.deletingLastPathComponent().appendingPathComponent(lastComponent).appendingPathExtension(pathExtension)
+        return newURL
+    }
+    
     //OK -- discrete
     func moveFileAfterEdit(_ track: Track) {
         print("moving file after edit")
@@ -254,13 +262,23 @@ class DatabaseManager: NSObject {
         let organizationTemplate = predicateTemplateBundles?.match(track)
         let currentLocation = URL(string: track.location!)!
         let fileExtension = currentLocation.pathExtension
-        let newLocation = organizationTemplate.getURL(for: track, withExtension: fileExtension)!
+        var newLocation = organizationTemplate!.getURL(for: track, withExtension: fileExtension)!
         let directoryURL = newLocation.deletingLastPathComponent()
         //check if directories already exist
         do {
             try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true, attributes: nil)
-            try fileManager.moveItem(at: currentLocation, to: newLocation)
-            track.location = newLocation.absoluteString
+            var dupe = 1
+            var newLocationWithDupe = newLocation
+            while (fileManager.fileExists(atPath: newLocationWithDupe.path)) {
+                if currentLocation != newLocation {
+                    newLocationWithDupe = appendDuplicateTo(url: newLocation, dupe: dupe)
+                    dupe += 1
+                } else {
+                    break
+                }
+            }
+            try fileManager.moveItem(at: currentLocation, to: newLocationWithDupe)
+            track.location = newLocationWithDupe.absoluteString
         } catch {
             print("error moving file: \(error)")
         }
@@ -953,18 +971,28 @@ class DatabaseManager: NSObject {
     func moveFileToAppropriateLocationForTrack(_ track: Track, currentURL: URL) -> URL? {
         print("current track location: \(track.location)")
         let organizationType = track.library?.organization_type as! Int
-        guard organizationType != NO_ORGANIZATION_TYPE else {return}
+        guard organizationType != NO_ORGANIZATION_TYPE else {return nil}
         let predicateTemplateBundles = track.library?.organization_template
         let organizationTemplate = predicateTemplateBundles?.match(track)
         let currentLocation = URL(string: track.location!)!
         let fileExtension = currentLocation.pathExtension
-        let newLocation = organzationTemplate.getURL(for: track, withExtension: fileExtension)!
+        var newLocation = organizationTemplate!.getURL(for: track, withExtension: fileExtension)!
         let directoryURL = newLocation.deletingLastPathComponent()
         //check if directories already exist
         do {
             try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true, attributes: nil)
-            try fileManager.moveItem(at: currentLocation, to: newLocation)
-            track.location = newLocation.absoluteString
+            var dupe = 1
+            var newLocationWithDupe = newLocation
+            while (fileManager.fileExists(atPath: newLocationWithDupe.path)) {
+                if currentLocation != newLocation {
+                    newLocationWithDupe = appendDuplicateTo(url: newLocation, dupe: dupe)
+                    dupe += 1
+                } else {
+                    break
+                }
+            }
+            try fileManager.moveItem(at: currentLocation, to: newLocationWithDupe)
+            track.location = newLocationWithDupe.absoluteString
         } catch {
             print("error moving file: \(error)")
         }
@@ -973,6 +1001,7 @@ class DatabaseManager: NSObject {
             self.undoFileLocations[track] = [String]()
         }
         self.undoFileLocations[track]!.append(track.location!)
+        return newLocation
     }
     
     func moveFileForNetworkTrackToAppropriateLocationWithData(_ track: Track, data: Data) -> Bool {
@@ -986,7 +1015,7 @@ class DatabaseManager: NSObject {
         }()
         var albumDirectoryURL: URL?
         var fileURL: URL?
-        let libraryPathURL = URL(fileURLWithPath: track.library!.central_media_folder_url_string!)
+        let libraryPathURL = track.library!.getCentralMediaFolder()!
         var album, albumArtist: String
         if track.album?.is_compilation != true {
             albumArtist = validateStringForFilename(track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING)
@@ -1300,7 +1329,7 @@ class DatabaseManager: NSObject {
                 visualUpdateHandler!.initializeForDirectoryParsing()
             }
         }
-        let libraryURL = URL(string: library.central_media_folder_url_string!)!
+        let libraryURL = library.getCentralMediaFolder()!
         let mediaURLs = getMediaURLsInDirectoryURLs([libraryURL]).0
         //diff the sets
         if visualUpdateHandler != nil {
@@ -1349,7 +1378,7 @@ class DatabaseManager: NSObject {
         }()
         var albumDirectoryURL: URL?
         var fileURL: URL?
-        let libraryPathURL = URL(fileURLWithPath: globalRootLibrary!.central_media_folder_url_string!)
+        let libraryPathURL = globalRootLibrary!.getCentralMediaFolder()!
         let albumArtist = track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING
         let album = track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING
         albumDirectoryURL = libraryPathURL.appendingPathComponent("tmp").appendingPathComponent(albumArtist).appendingPathComponent(album)

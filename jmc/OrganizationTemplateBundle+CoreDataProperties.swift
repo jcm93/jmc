@@ -2,7 +2,7 @@
 //  OrganizationTemplateBundle+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 6/10/17.
+//  Created by John Moody on 6/12/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 
@@ -16,9 +16,9 @@ extension OrganizationTemplateBundle {
         return NSFetchRequest<OrganizationTemplateBundle>(entityName: "OrganizationTemplateBundle")
     }
 
-    @NSManaged public var other_templates: NSOrderedSet?
     @NSManaged public var default_template: OrganizationTemplate?
     @NSManaged public var library: Library?
+    @NSManaged public var other_templates: NSOrderedSet?
 
 }
 

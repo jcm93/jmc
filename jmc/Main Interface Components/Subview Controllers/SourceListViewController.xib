@@ -411,12 +411,14 @@
                                         </prototypeCellViews>
                                     </tableColumn>
                                 </tableColumns>
+                                <accessibility description="Source List"/>
                                 <connections>
                                     <outlet property="delegate" destination="-2" id="0jI-p7-ivH"/>
                                 </connections>
                             </outlineView>
                         </subviews>
                         <nil key="backgroundColor"/>
+                        <accessibility description="Source List Clip View"/>
                     </clipView>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="267" id="N1m-H1-Fj6"/>
@@ -429,6 +431,7 @@
                         <rect key="frame" x="-100" y="-100" width="16" height="0.0"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
+                    <accessibility description="Source List Scroll View"/>
                 </scrollView>
             </subviews>
             <constraints>
