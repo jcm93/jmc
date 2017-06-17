@@ -341,6 +341,11 @@ let VALID_FILE_TYPES = ["aac", "adts", "ac3", "aif", "aiff", "aifc", "caf", "mp3
 
  */
 
+func numberOfTracksInsideDirectory(with url: URL) -> Int {
+    let absString = url.absoluteString
+    return (globalRootLibrary!.tracks as! Set<Track>).filter({return ($0.location ?? "").localizedCaseInsensitiveContains(absString)}).count
+}
+
 var cachedOrders: [String : CachedOrder]? = {
     print("accessing cached orders")
     var result = [String : CachedOrder]()

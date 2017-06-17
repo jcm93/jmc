@@ -11,7 +11,6 @@
                 <outlet property="pathControl" destination="0X4-yH-pvo" id="beS-Tq-kNg"/>
                 <outlet property="tableView" destination="nYg-ND-Uzh" id="oMY-b3-6E3"/>
                 <outlet property="tokenField" destination="HnL-Me-Oxf" id="gBR-S3-bOA"/>
-                <outlet property="viewControllerArrayController" destination="Pgb-EO-K9F" id="Kqs-jx-HMe"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -19,26 +18,15 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="Advanced Organization Options" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="760" height="405"/>
+            <rect key="contentRect" x="196" y="240" width="953" height="416"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <view key="contentView" wantsLayer="YES" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="760" height="405"/>
+                <rect key="frame" x="0.0" y="0.0" width="953" height="416"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GYP-jC-8lL">
-                        <rect key="frame" x="16" y="13" width="106" height="32"/>
-                        <buttonCell key="cell" type="push" title="Add Rule..." bezelStyle="rounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gg8-bU-r9K">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="addRulePressed:" target="-2" id="oSB-62-s6Y"/>
-                        </connections>
-                    </button>
                     <tokenField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HnL-Me-Oxf">
-                        <rect key="frame" x="264" y="330" width="476" height="21"/>
-                        <tokenFieldCell key="cell" selectable="YES" editable="YES" borderStyle="bezel" alignment="left" drawsBackground="YES" allowsEditingTextAttributes="YES" id="R1W-Wa-gAA">
+                        <rect key="frame" x="264" y="341" width="669" height="21"/>
+                        <tokenFieldCell key="cell" selectable="YES" editable="YES" refusesFirstResponder="YES" borderStyle="bezel" alignment="left" placeholderString="/Path/Template/" drawsBackground="YES" allowsEditingTextAttributes="YES" id="R1W-Wa-gAA">
                             <font key="font" metaFont="cellTitle"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -48,46 +36,22 @@
                         </connections>
                     </tokenField>
                     <pathControl verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0X4-yH-pvo">
-                        <rect key="frame" x="20" y="329" width="236" height="22"/>
+                        <rect key="frame" x="20" y="340" width="236" height="22"/>
                         <pathCell key="cell" selectable="YES" editable="YES" alignment="left" id="m6d-Nm-4c1">
                             <font key="font" metaFont="system"/>
                             <url key="url" string="file://localhost/Applications/"/>
                         </pathCell>
                     </pathControl>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="can-1v-0CX">
-                        <rect key="frame" x="18" y="278" width="102" height="17"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Additional rules:" id="RRm-CC-r3Z">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gqi-YS-1bs">
-                        <rect key="frame" x="18" y="368" width="83" height="17"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Default path:" id="hg5-EE-1QX">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v4z-jF-Vcf">
-                        <rect key="frame" x="262" y="359" width="81" height="14"/>
-                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Path template:" id="QxK-35-HBe">
-                            <font key="font" metaFont="smallSystem"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A22-Xw-Wrn">
-                        <rect key="frame" x="254" y="49" width="488" height="17"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Select template fields by typing a backslash (&quot;\&quot;). Rules are arranged by priority." id="KP7-mH-4dK">
+                        <rect key="frame" x="18" y="379" width="110" height="17"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Default directory:" id="hg5-EE-1QX">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="elX-Gj-Y13">
-                        <rect key="frame" x="15" y="297" width="75" height="28"/>
+                        <rect key="frame" x="15" y="312" width="75" height="28"/>
                         <buttonCell key="cell" type="push" title="Browse..." bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="JZJ-IA-LCs">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="smallSystem"/>
@@ -97,7 +61,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UDm-7s-nfC">
-                        <rect key="frame" x="623" y="13" width="123" height="32"/>
+                        <rect key="frame" x="816" y="13" width="123" height="32"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="111" id="xoE-6b-qIs"/>
                         </constraints>
@@ -113,7 +77,7 @@ DQ
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PFg-gk-jKD">
-                        <rect key="frame" x="672" y="297" width="73" height="28"/>
+                        <rect key="frame" x="865" y="308" width="73" height="28"/>
                         <buttonCell key="cell" type="push" title="Add field" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="VaF-8B-zfM">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="smallSystem"/>
@@ -123,19 +87,19 @@ DQ
                         </connections>
                     </button>
                     <scrollView wantsLayer="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="189" horizontalPageScroll="10" verticalLineScroll="189" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TVk-N6-RYv">
-                        <rect key="frame" x="20" y="74" width="720" height="196"/>
+                        <rect key="frame" x="20" y="119" width="913" height="153"/>
                         <clipView key="contentView" id="0st-YU-oO1">
-                            <rect key="frame" x="0.0" y="0.0" width="720" height="196"/>
+                            <rect key="frame" x="0.0" y="0.0" width="913" height="153"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="187" rowSizeStyle="automatic" viewBased="YES" id="nYg-ND-Uzh">
-                                    <rect key="frame" x="0.0" y="0.0" width="720" height="196"/>
+                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="187" rowSizeStyle="automatic" viewBased="YES" id="nYg-ND-Uzh" customClass="StupidTableView" customModule="jmc" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="913" height="153"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
-                                        <tableColumn width="717" minWidth="40" maxWidth="1000" id="sf6-jb-n06">
+                                        <tableColumn width="910" minWidth="40" maxWidth="5000" id="sf6-jb-n06">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -149,11 +113,11 @@ DQ
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             <prototypeCellViews>
                                                 <tableCellView identifier="OrganizationRuleCellView" id="oxX-Z4-qas" customClass="OrganizationRuleCellView" customModule="jmc" customModuleProvider="target">
-                                                    <rect key="frame" x="1" y="1" width="717" height="187"/>
+                                                    <rect key="frame" x="1" y="1" width="910" height="187"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Pro-yK-kKh">
-                                                            <rect key="frame" x="0.0" y="4" width="717" height="179"/>
+                                                            <rect key="frame" x="0.0" y="4" width="910" height="179"/>
                                                         </customView>
                                                     </subviews>
                                                     <constraints>
@@ -178,39 +142,58 @@ DQ
                             <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </clipView>
                         <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="VwR-qC-fxV">
-                            <rect key="frame" x="1" y="179" width="718" height="16"/>
+                            <rect key="frame" x="1" y="165" width="718" height="16"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="hck-XN-zfz">
-                            <rect key="frame" x="224" y="17" width="15" height="102"/>
+                            <rect key="frame" x="897" y="0.0" width="16" height="153"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A22-Xw-Wrn">
+                        <rect key="frame" x="593" y="55" width="342" height="56"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="56" id="fgh-Lb-ffV"/>
+                            <constraint firstAttribute="width" constant="339" id="jkj-nn-H3K"/>
+                        </constraints>
+                        <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="right" id="KP7-mH-4dK">
+                            <font key="font" metaFont="smallSystem"/>
+                            <string key="title">Template fields may be selected by typing a backslash ("\"). Media will be organized according to the first rule that matches. Rules are applied from the bottom up.                                          Drag and drop to rearrange rules.</string>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GYP-jC-8lL">
+                        <rect key="frame" x="14" y="270" width="138" height="32"/>
+                        <buttonCell key="cell" type="push" title="Add exception..." bezelStyle="rounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gg8-bU-r9K">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="addRulePressed:" target="-2" id="oSB-62-s6Y"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="GYP-jC-8lL" secondAttribute="bottom" constant="20" id="25E-6a-s8R"/>
                     <constraint firstItem="gqi-YS-1bs" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="20" id="6qX-uE-cZP"/>
                     <constraint firstItem="0X4-yH-pvo" firstAttribute="top" secondItem="gqi-YS-1bs" secondAttribute="bottom" constant="17" id="8FH-ob-bB5"/>
                     <constraint firstItem="UDm-7s-nfC" firstAttribute="top" secondItem="A22-Xw-Wrn" secondAttribute="bottom" constant="8" id="EYJ-FW-x1c"/>
-                    <constraint firstItem="v4z-jF-Vcf" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="32" id="Gch-fn-6qk"/>
                     <constraint firstItem="HnL-Me-Oxf" firstAttribute="leading" secondItem="0X4-yH-pvo" secondAttribute="trailing" constant="8" id="K8Y-5E-kS9"/>
                     <constraint firstItem="TVk-N6-RYv" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="MiW-ip-YUw"/>
                     <constraint firstAttribute="trailing" secondItem="UDm-7s-nfC" secondAttribute="trailing" constant="20" id="NIA-L8-UBY"/>
-                    <constraint firstItem="GYP-jC-8lL" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="22" id="OKG-vR-A9t"/>
                     <constraint firstAttribute="trailing" secondItem="TVk-N6-RYv" secondAttribute="trailing" constant="20" id="PuN-Zo-mR7"/>
+                    <constraint firstItem="TVk-N6-RYv" firstAttribute="top" secondItem="GYP-jC-8lL" secondAttribute="bottom" constant="5" id="Qjx-bO-e6B"/>
                     <constraint firstAttribute="trailing" secondItem="A22-Xw-Wrn" secondAttribute="trailing" constant="20" id="SyS-IU-Co3"/>
-                    <constraint firstItem="HnL-Me-Oxf" firstAttribute="top" secondItem="v4z-jF-Vcf" secondAttribute="bottom" constant="8" id="XcR-yz-hqO"/>
-                    <constraint firstItem="HnL-Me-Oxf" firstAttribute="leading" secondItem="v4z-jF-Vcf" secondAttribute="leading" id="ZDo-Nk-qIc"/>
+                    <constraint firstItem="GYP-jC-8lL" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="X4N-oi-QYq"/>
                     <constraint firstAttribute="trailing" secondItem="HnL-Me-Oxf" secondAttribute="trailing" constant="20" id="akc-Yv-YMJ"/>
                     <constraint firstAttribute="trailing" secondItem="PFg-gk-jKD" secondAttribute="trailing" constant="20" id="akk-QQ-kqt"/>
-                    <constraint firstItem="can-1v-0CX" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="b50-2b-dSl"/>
-                    <constraint firstItem="A22-Xw-Wrn" firstAttribute="top" secondItem="TVk-N6-RYv" secondAttribute="bottom" constant="8" id="hM6-Os-cV2"/>
-                    <constraint firstItem="can-1v-0CX" firstAttribute="top" secondItem="elX-Gj-Y13" secondAttribute="bottom" constant="8" id="idT-Cv-1R4"/>
+                    <constraint firstItem="A22-Xw-Wrn" firstAttribute="top" secondItem="TVk-N6-RYv" secondAttribute="bottom" constant="14" id="hM6-Os-cV2"/>
                     <constraint firstItem="PFg-gk-jKD" firstAttribute="top" secondItem="HnL-Me-Oxf" secondAttribute="bottom" constant="9" id="kxs-xB-He3"/>
-                    <constraint firstItem="elX-Gj-Y13" firstAttribute="top" secondItem="0X4-yH-pvo" secondAttribute="bottom" constant="8" id="npt-bv-zeD"/>
+                    <constraint firstItem="elX-Gj-Y13" firstAttribute="top" secondItem="0X4-yH-pvo" secondAttribute="bottom" constant="4" id="npt-bv-zeD"/>
                     <constraint firstItem="gqi-YS-1bs" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="qLX-uZ-ZGL"/>
+                    <constraint firstItem="GYP-jC-8lL" firstAttribute="top" secondItem="elX-Gj-Y13" secondAttribute="bottom" constant="20" id="stK-fz-9sV"/>
                     <constraint firstItem="0X4-yH-pvo" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="wyy-FY-D7G"/>
-                    <constraint firstItem="TVk-N6-RYv" firstAttribute="top" secondItem="can-1v-0CX" secondAttribute="bottom" constant="8" id="yZk-bJ-W6e"/>
+                    <constraint firstItem="HnL-Me-Oxf" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="54" id="yWf-O2-lYz"/>
                     <constraint firstAttribute="bottom" secondItem="UDm-7s-nfC" secondAttribute="bottom" constant="20" id="zGt-nb-mJQ"/>
                     <constraint firstItem="elX-Gj-Y13" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="zP6-HT-eZH"/>
                 </constraints>
@@ -218,13 +201,8 @@ DQ
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="162" y="106.5"/>
+            <point key="canvasLocation" x="161.5" y="112"/>
         </window>
-        <arrayController objectClassName="jmc.OrganizationRuleViewcontroller" automaticallyPreparesContent="YES" id="Pgb-EO-K9F">
-            <connections>
-                <binding destination="-2" name="contentArray" keyPath="self.ruleControllers" id="UJ5-Bn-ocr"/>
-            </connections>
-        </arrayController>
         <menu id="CeI-0p-J45">
             <point key="canvasLocation" x="669" y="-12.5"/>
         </menu>

@@ -28,13 +28,13 @@
                             <rect key="frame" x="7" y="9" width="466" height="254"/>
                             <subviews>
                                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sO9-rl-0ny">
-                                    <rect key="frame" x="0.0" y="16" width="466" height="238"/>
+                                    <rect key="frame" x="0.0" y="14" width="466" height="240"/>
                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" id="J8S-ay-R4F"/>
                                 </imageView>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FKC-O3-q1c">
-                                    <rect key="frame" x="-2" y="0.0" width="470" height="16"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="VGi-Ec-sLb">
-                                        <font key="font" metaFont="cellTitle"/>
+                                    <rect key="frame" x="-2" y="0.0" width="470" height="14"/>
+                                    <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="VGi-Ec-sLb">
+                                        <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>

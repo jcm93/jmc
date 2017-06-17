@@ -41,6 +41,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     var delegate: AppDelegate?
     var watchFolders = [URL]()
     var advancedOrganizationOptionsWindowController: AdvancedOrganizationOptionsWindowController?
+    var missingFilesViewController: MissingFilesViewController?
 
     @IBOutlet weak var findNewMediaTabItem: NSTabViewItem!
     @IBOutlet weak var locationManagerTabItem: NSTabViewItem!
@@ -85,7 +86,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         
     }
     @IBAction func automaticallyAddCheckAction(_ sender: Any) {
-        library?.monitors_directories_for_new = automaticallyAddFilesCheck.state == NSOnState ? true as NSNumber : false as NSNumber
+        library!.monitors_directories_for_new = automaticallyAddFilesCheck.state == NSOnState ? true as NSNumber : false as NSNumber
         if automaticallyAddFilesCheck.state == NSOnState {
             self.watchFolderTableView.isEnabled = true
             self.addWatchFolderButton.isEnabled = true
@@ -226,10 +227,15 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             automaticallyAddFilesCheck.state = NSOnState
             if let watchDirs = library.watch_dirs as? [URL] {
                 self.watchFolders = watchDirs
+                self.watchFoldersArrayController.content = self.watchFolders
             }
+            addWatchFolderButton.isEnabled = true
+            removeWatchFolderButton.isEnabled = true
         } else {
             automaticallyAddFilesCheck.state = NSOffState
             self.watchFolders = [URL]()
+            addWatchFolderButton.isEnabled = false
+            removeWatchFolderButton.isEnabled = false
         }
         if library.keeps_track_of_files == true {
             enableDirectoryMonitoringCheck.state = NSOnState
@@ -243,7 +249,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     }
     
     //location manager
-    @IBOutlet weak var lostTracksTableView: NSTableView!
+    @IBOutlet weak var locationManagerView: NSView!
     @IBOutlet weak var trackLocationStatusText: NSTextField!
     @IBOutlet weak var verifyLocationsButton: NSButton!
     @IBOutlet weak var libraryLocationStatusImageView: NSImageView!
@@ -260,9 +266,19 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         }
     }
     
+    func displayMissingFilesViewController(for URLs: [URL]) {
+        self.missingFilesViewController = MissingFilesViewController(nibName: "MissingFilesViewController", bundle: nil, URLs: URLs)
+        self.locationManagerView.addSubview(self.missingFilesViewController!.view)
+        self.missingFilesViewController!.view.topAnchor.constraint(equalTo: self.locationManagerView.topAnchor).isActive = true
+        self.missingFilesViewController!.view.leftAnchor.constraint(equalTo: self.locationManagerView.leftAnchor).isActive = true
+        self.missingFilesViewController!.view.bottomAnchor.constraint(equalTo: self.locationManagerView.bottomAnchor).isActive = true
+        self.missingFilesViewController!.view.rightAnchor.constraint(equalTo: self.locationManagerView.rightAnchor).isActive = true
+    }
+    
     func verifyLocationsModalComplete(response: NSModalResponse) {
         guard response != NSModalResponseCancel else {return}
         if self.missingTracks!.count > 0 {
+            displayMissingFilesViewController(for: self.missingTracks!.map({return URL(string: $0.location ?? "file:///poop/")!}))
             let trackNotFoundArray = self.missingTracks!.map({(track: Track) -> TrackNotFound in
                 if let location = track.location {
                     if let url = URL(string: location) {
@@ -280,26 +296,6 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         } else {
             self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusAvailable")
             self.trackLocationStatusText.stringValue = "All tracks located."
-        }
-    }
-    
-    @IBAction func locateTrackButtonPressed(_ sender: Any) {
-        print("locate pressed")
-        let row = lostTracksTableView.row(for: (sender as! NSButton).superview as! NSTableCellView)
-        let trackContainer = (tracksNotFoundArrayController.arrangedObjects as! [TrackNotFound])[row]
-        let track = trackContainer.track
-        let fileDialog = NSOpenPanel()
-        fileDialog.allowsMultipleSelection =  false
-        fileDialog.canChooseDirectories = false
-        fileDialog.allowedFileTypes = VALID_FILE_TYPES
-        fileDialog.runModal()
-        if fileDialog.urls.count > 0 {
-            let url = fileDialog.urls[0]
-            track.setLocationCheckingVolume(to: url)
-            tracksNotFoundArrayController.removeObject(trackContainer)
-            databaseManager.fixInfoForTrack(track: track)
-            missingTracks!.remove(at: missingTracks!.index(of: track)!)
-            lostTracksTableView.reloadData()
         }
     }
     

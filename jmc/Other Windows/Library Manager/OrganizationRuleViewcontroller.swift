@@ -1,5 +1,5 @@
 //
-//  OrganizationRuleViewcontroller.swift
+//  OrganizationRuleViewController.swift
 //  jmc
 //
 //  Created by John Moody on 5/29/17.
@@ -10,15 +10,18 @@ import Cocoa
 
 private var my_context = 0
 
-class OrganizationRuleViewcontroller: NSViewController, NSTokenFieldDelegate {
+class OrganizationRuleViewController: NSViewController, NSTokenFieldDelegate {
     
-    @IBOutlet weak var specialScrollView: SpecialScrollView!
+    @IBOutlet weak var boxView: NSView!
+    @IBOutlet weak var specialScrollView: NSScrollView!
     @IBOutlet weak var tokenField: NSTokenField!
     @IBOutlet weak var pathControl: NSPathControl!
     @IBOutlet weak var box: NSBox!
     
     var names = ["Album", "Album Artist", "Artist", "Year", "Title", "Disc-Track #"]
     var template: OrganizationTemplate?
+    var constraintsAreActive = false
+    var lastPredicate: NSPredicate?
     
     @IBAction func browsePressed(_ sender: Any) {
         let panel = NSOpenPanel()
@@ -71,14 +74,24 @@ class OrganizationRuleViewcontroller: NSViewController, NSTokenFieldDelegate {
         tokenField.objectValue = currentTokenArray as NSArray
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "predicate" {
-            DispatchQueue.main.async {
-                let parentWC = self.view.window!.windowController as! AdvancedOrganizationOptionsWindowController
-                let indexOfSelf = (parentWC.viewControllerArrayController.arrangedObjects as! NSArray).index(of: self)
-                parentWC.tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: indexOfSelf))
+    @IBAction func predicateEditorAction(_ sender: Any) {
+        print("doingus")
+        DispatchQueue.main.async {
+            let parentWC = self.view.window?.windowController as? AdvancedOrganizationOptionsWindowController
+            let indexOfSelf = parentWC?.ruleControllers.index(of: self)
+            if parentWC != nil && indexOfSelf != nil {
+                parentWC!.tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: indexOfSelf!))
             }
         }
+    }
+    @IBAction func removeRulePressed(_ sender: Any) {
+        self.removeObservers()
+        let windowController = self.view.window?.windowController as! AdvancedOrganizationOptionsWindowController
+        windowController.removeRule(self)
+    }
+    
+    func removeObservers() {
+        //predicateEditor.removeObserver(self, forKeyPath: "predicate")
     }
 
     @IBOutlet weak var predicateEditor: NSPredicateEditor!
@@ -104,9 +117,12 @@ class OrganizationRuleViewcontroller: NSViewController, NSTokenFieldDelegate {
         for item in self.names {
             tokenField.menu?.addItem(withTitle: item, action: #selector(self.addToken), keyEquivalent: "")
         }
-        predicateEditor.addObserver(self, forKeyPath: "predicate", options: .new, context: &my_context)
         box.wantsLayer = true
-        box.cornerRadius = 4.0
+        box.layer?.cornerRadius = 20.0
+        boxView.wantsLayer = true
+        boxView.layer?.cornerRadius = 20.0
+        self.tokenField.isEditable = true
+        self.predicateEditor.isEditable = true
     }
     
 }

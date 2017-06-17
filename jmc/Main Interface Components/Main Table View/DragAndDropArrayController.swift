@@ -221,7 +221,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
             let urlParseResult = databaseManager.getMediaURLsInDirectoryURLs(urls)
             errors.append(contentsOf: urlParseResult.1)
             let mediaURLs = urlParseResult.0
-            let newErrors = databaseManager.addTracksFromURLs(mediaURLs, to: self.mainWindow!.currentLibrary!, visualUpdateHandler: nil, callback: nil)
+            let newErrors = databaseManager.addTracksFromURLs(mediaURLs, to: globalRootLibrary!, visualUpdateHandler: nil, callback: nil)
             errors.append(contentsOf: newErrors)
             for error in errors {
                 error.urlString = error.urlString.removingPercentEncoding!

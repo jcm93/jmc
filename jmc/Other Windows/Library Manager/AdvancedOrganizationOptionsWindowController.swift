@@ -10,15 +10,15 @@ import Cocoa
 
 class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFieldDelegate, NSTableViewDataSource, NSTableViewDelegate {
     
-    @IBOutlet var viewControllerArrayController: NSArrayController!
     @IBOutlet weak var pathControl: NSPathControl!
-    @IBOutlet weak var tableView: NSTableView!
+    @IBOutlet weak var tableView: StupidTableView!
     
     @IBOutlet weak var tokenField: NSTokenField!
     
-    var ruleControllers = [OrganizationRuleViewcontroller]()
+    var ruleControllers = [OrganizationRuleViewController]()
     var libraryTemplateBundle: OrganizationTemplateBundle?
     var draggedIndexes: IndexSet?
+    var removedRuleControllers = [OrganizationRuleViewController]()
     
     var names = ["Album", "Album Artist", "Artist", "Year", "Title", "Disc-Track #"]
     
@@ -35,14 +35,8 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let view = tableView.make(withIdentifier: "OrganizationRuleCellView", owner: nil) as! OrganizationRuleCellView
-        let newViewController = (self.viewControllerArrayController.arrangedObjects as! NSArray)[row] as! OrganizationRuleViewcontroller
-        view.organizationView?.addSubview(newViewController.view)
-        //newViewController.view.frame = view.bounds
-        newViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        newViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        newViewController.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        newViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        //newViewController.viewDidLoad()
+        let newViewController = ruleControllers[row]
+        view.initializeForController(newViewController)
         return view
     }
     
@@ -53,7 +47,7 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
     }
     
     func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
-        if dropOperation == .above {
+        if dropOperation == .above && row < tableView.numberOfRows {
             return .move
         } else {
             return []
@@ -62,28 +56,30 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
     
     func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
         var offset = 0
+        guard self.draggedIndexes!.count == 1 else {
+            print("fuck shit stack")
+            return false
+        }
         for thing in self.draggedIndexes! {
-            tableView.moveRow(at: thing, to: row)
-            let viewController = (viewControllerArrayController.arrangedObjects as! NSArray)[thing]
-            viewControllerArrayController.remove(atArrangedObjectIndex: thing)
+            swap(&ruleControllers[thing], &ruleControllers[row])
             if thing < row {
                 offset -= 1
             }
-            viewControllerArrayController.insert(viewController, atArrangedObjectIndex: row)
+            tableView.moveRow(at: thing, to: row)
         }
-        tableView.reloadData()
+        //tableView.reloadData()
         self.draggedIndexes = nil
+        print(ruleControllers.map({return $0.predicateEditor.predicate}))
         return true
     }
     
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        let viewForRow = (viewControllerArrayController.arrangedObjects as! NSArray)[row] as! OrganizationRuleViewcontroller
-        print(viewForRow.view.fittingSize)
+        let viewForRow = ruleControllers[row]
         return viewForRow.view.fittingSize.height <= tableView.rowHeight ? tableView.rowHeight : viewForRow.view.fittingSize.height
     }
     
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return (viewControllerArrayController.arrangedObjects as! NSArray).count
+        return ruleControllers.count
     }
     
     @IBAction func addFieldPressed(_ sender: Any) {
@@ -95,9 +91,14 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
     }
     
     func addRule(template: OrganizationTemplate?) {
-        let newViewController = OrganizationRuleViewcontroller(nibName: "OrganizationRuleViewcontroller", bundle: nil)
+        let newViewController = OrganizationRuleViewController(nibName: "OrganizationRuleViewController", bundle: nil)
         newViewController!.template = template
         ruleControllers.append(newViewController!)
+        if template == nil {
+            tableView.insertRows(at: IndexSet(integer: tableView.numberOfRows < 0 ? 0 : tableView.numberOfRows), withAnimation: .slideDown)
+            newViewController?.predicateEditor.addRow(nil)
+            newViewController?.pathControl.url = pathControl.url
+        }
     }
     
     func tokenField(_ tokenField: NSTokenField, representedObjectForEditing editingString: String) -> Any {
@@ -132,23 +133,39 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
     
     @IBAction func okPressed(_ sender: Any) {
         saveData()
+        for rule in ruleControllers {
+            rule.removeObservers()
+        }
+        self.window?.close()
+    }
+    
+    func removeRule(_ vc: OrganizationRuleViewController) {
+        let index = ruleControllers.index(of: vc)
+        tableView.removeRows(at: IndexSet(integer: index!), withAnimation: NSTableViewAnimationOptions.slideUp)
+        let removedRuleController = ruleControllers.remove(at: index!)
+        removedRuleControllers.append(removedRuleController)
+        tableView.reloadData()
+        //tableView.noteNumberOfRowsChanged()
+        //let indexSet = IndexSet(Array(0..<tableView.numberOfRows))
+        //tableView.noteHeightOfRows(withIndexesChanged: indexSet)
+        
+        
     }
     
     func saveData() {
         withUndoBlock(name: "Edit Organization Template") {
-            let newTemplateBundle = NSEntityDescription.insertNewObject(forEntityName: "OrganizationTemplateBundle", into: managedContext) as! OrganizationTemplateBundle
-            let defaultTemplate = NSEntityDescription.insertNewObject(forEntityName: "OrganizationTemplate", into: managedContext) as! OrganizationTemplate
-            defaultTemplate.tokens = self.tokenField.objectValue as! [OrganizationFieldToken] as NSArray
-            defaultTemplate.base_url_string = self.pathControl.url?.absoluteString
-            newTemplateBundle.default_template = defaultTemplate
+            let templateBundle = globalRootLibrary?.organization_template
+            templateBundle?.default_template?.tokens = self.tokenField.objectValue as! [OrganizationFieldToken] as NSArray
+            templateBundle?.default_template?.base_url_string = self.pathControl.url?.absoluteString
             for rule in ruleControllers {
-                let template = NSEntityDescription.insertNewObject(forEntityName: "OrganizationTemplate", into: managedContext) as! OrganizationTemplate
+                let template = rule.template ?? NSEntityDescription.insertNewObject(forEntityName: "OrganizationTemplate", into: managedContext) as! OrganizationTemplate
+                template.base_url_string = rule.pathControl.url!.absoluteString
                 template.predicate = rule.predicateEditor.predicate!
                 template.tokens = rule.tokenField.objectValue as? NSObject
-                template.base_url_string = rule.pathControl.url!.absoluteString
-                newTemplateBundle.addToOther_templates(template)
             }
-            globalRootLibrary?.organization_template = newTemplateBundle
+            let templateArray = ruleControllers.map({return $0.template!})
+            let orderedSet = NSOrderedSet(array: templateArray)
+            templateBundle?.other_templates = orderedSet
         }
     }
     func initializeData() {
@@ -157,7 +174,7 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
             pathControl.url = URL(string: organizationTemplateBundle.default_template!.base_url_string!)
             if let templates = organizationTemplateBundle.other_templates {
                 for template in templates {
-                    addRule(template: template as! OrganizationTemplate)
+                    addRule(template: template as? OrganizationTemplate)
                 }
             }
         }
@@ -182,7 +199,6 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
         }
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
         initializeData()
-        self.viewControllerArrayController.content = self.ruleControllers
         self.tableView.reloadData()
         tableView.register(forDraggedTypes: ["special.poop.rows"])
     }

@@ -7,9 +7,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="OrganizationRuleViewcontroller" customModule="jmc" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="OrganizationRuleViewController" customModule="jmc" customModuleProvider="target">
             <connections>
                 <outlet property="box" destination="Sby-LW-2Y5" id="4Ix-6E-Aiy"/>
+                <outlet property="boxView" destination="3Pp-hm-6dr" id="LoR-GB-HMV"/>
                 <outlet property="pathControl" destination="PvW-9g-iam" id="wqz-n3-GcS"/>
                 <outlet property="predicateEditor" destination="ZUO-CH-Q8i" id="J4f-8n-QHn"/>
                 <outlet property="specialScrollView" destination="0kP-XD-87n" id="g3g-7j-5GP"/>
@@ -37,7 +38,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0zQ-8k-PNs">
-                                <rect key="frame" x="18" y="114" width="105" height="17"/>
+                                <rect key="frame" x="18" y="110" width="105" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="then organize in:" id="auf-PG-UFd">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -51,14 +52,6 @@
                                     <url key="url" string="file://localhost/Applications/"/>
                                 </pathCell>
                             </pathControl>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CjJ-q9-jyW">
-                                <rect key="frame" x="263" y="111" width="81" height="14"/>
-                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Path template:" id="2nF-y2-cmf">
-                                    <font key="font" metaFont="smallSystem"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
                             <button verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="kPS-Vd-Eo4">
                                 <rect key="frame" x="15" y="48" width="75" height="28"/>
                                 <buttonCell key="cell" type="push" title="Browse..." bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="hkg-eP-JFW">
@@ -71,7 +64,7 @@
                             </button>
                             <tokenField verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iHR-lo-fGn">
                                 <rect key="frame" x="265" y="81" width="489" height="22"/>
-                                <tokenFieldCell key="cell" selectable="YES" editable="YES" borderStyle="bezel" alignment="left" drawsBackground="YES" allowsEditingTextAttributes="YES" id="e00-MI-cc8">
+                                <tokenFieldCell key="cell" selectable="YES" editable="YES" borderStyle="bezel" alignment="left" placeholderString="/Path/Template/" drawsBackground="YES" allowsEditingTextAttributes="YES" id="e00-MI-cc8">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -80,13 +73,13 @@
                                     <outlet property="menu" destination="FLE-9u-MWd" id="twY-Qq-PiT"/>
                                 </connections>
                             </tokenField>
-                            <scrollView verticalCompressionResistancePriority="1000" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0kP-XD-87n" customClass="SpecialScrollView" customModule="jmc" customModuleProvider="target">
+                            <scrollView verticalCompressionResistancePriority="1000" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0kP-XD-87n">
                                 <rect key="frame" x="44" y="146" width="710" height="24"/>
                                 <clipView key="contentView" id="H86-UH-V9Y">
                                     <rect key="frame" x="1" y="1" width="708" height="22"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <predicateEditor verticalHuggingPriority="750" nestingMode="compound" rowHeight="25" id="ZUO-CH-Q8i">
+                                        <predicateEditor verticalHuggingPriority="750" nestingMode="compound" rowHeight="25" id="ZUO-CH-Q8i" customClass="StupidPredicateEditor" customModule="jmc" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="708" height="800"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <rowTemplates>
@@ -1343,6 +1336,9 @@
                                                     </popUpMenus>
                                                 </predicateEditorRowTemplate>
                                             </rowTemplates>
+                                            <connections>
+                                                <action selector="predicateEditorAction:" target="-2" id="kZI-t5-jUb"/>
+                                            </connections>
                                         </predicateEditor>
                                     </subviews>
                                     <color key="backgroundColor" white="0.91000002619999998" alpha="1" colorSpace="calibratedWhite"/>
@@ -1362,6 +1358,9 @@
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="removeRulePressed:" target="-2" id="cFx-Uz-5x3"/>
+                                </connections>
                             </button>
                             <button verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="4Ur-8u-JVE">
                                 <rect key="frame" x="686" y="49" width="73" height="28"/>
@@ -1377,25 +1376,24 @@
                         <constraints>
                             <constraint firstItem="1jK-Nc-meU" firstAttribute="leading" secondItem="0zQ-8k-PNs" secondAttribute="leading" id="4z5-az-hZS"/>
                             <constraint firstAttribute="trailing" secondItem="0kP-XD-87n" secondAttribute="trailing" constant="20" symbolic="YES" id="5gB-cs-bvV"/>
-                            <constraint firstItem="iHR-lo-fGn" firstAttribute="top" secondItem="CjJ-q9-jyW" secondAttribute="bottom" constant="8" symbolic="YES" id="GR3-r6-ZwA"/>
+                            <constraint firstAttribute="trailing" secondItem="iHR-lo-fGn" secondAttribute="trailing" constant="20" id="D9m-Cf-t2f"/>
                             <constraint firstItem="iHR-lo-fGn" firstAttribute="leading" secondItem="PvW-9g-iam" secondAttribute="trailing" constant="9" id="INf-Jo-gVg"/>
                             <constraint firstItem="0zQ-8k-PNs" firstAttribute="leading" secondItem="PvW-9g-iam" secondAttribute="leading" id="KIc-3p-XKq"/>
-                            <constraint firstItem="CjJ-q9-jyW" firstAttribute="top" secondItem="0kP-XD-87n" secondAttribute="bottom" constant="21" id="Pl4-Ch-IcY"/>
+                            <constraint firstItem="PvW-9g-iam" firstAttribute="top" secondItem="0zQ-8k-PNs" secondAttribute="bottom" constant="8" id="LMJ-GL-wZx"/>
                             <constraint firstItem="4Ur-8u-JVE" firstAttribute="top" secondItem="iHR-lo-fGn" secondAttribute="bottom" constant="8" symbolic="YES" id="Sb1-Gi-Ccy"/>
                             <constraint firstItem="kPS-Vd-Eo4" firstAttribute="top" secondItem="PvW-9g-iam" secondAttribute="bottom" constant="8" symbolic="YES" id="URf-c1-Q3k"/>
                             <constraint firstItem="1jK-Nc-meU" firstAttribute="top" secondItem="3Pp-hm-6dr" secondAttribute="top" constant="20" symbolic="YES" id="Wuc-w4-FaQ"/>
-                            <constraint firstItem="PvW-9g-iam" firstAttribute="top" secondItem="0zQ-8k-PNs" secondAttribute="bottom" constant="12" id="YgK-CV-RPD"/>
-                            <constraint firstItem="CjJ-q9-jyW" firstAttribute="leading" secondItem="iHR-lo-fGn" secondAttribute="leading" id="aWj-5G-5oG"/>
                             <constraint firstItem="0kP-XD-87n" firstAttribute="leading" secondItem="1jK-Nc-meU" secondAttribute="trailing" constant="12" id="bKH-Db-t4A"/>
                             <constraint firstItem="1jK-Nc-meU" firstAttribute="top" secondItem="0kP-XD-87n" secondAttribute="top" id="cQD-LY-qU3"/>
                             <constraint firstItem="PvW-9g-iam" firstAttribute="leading" secondItem="kPS-Vd-Eo4" secondAttribute="leading" id="dx8-GG-zxH"/>
                             <constraint firstItem="wA8-0h-1PS" firstAttribute="top" secondItem="4Ur-8u-JVE" secondAttribute="bottom" constant="14" id="fRH-IO-Uph"/>
                             <constraint firstItem="0kP-XD-87n" firstAttribute="trailing" secondItem="iHR-lo-fGn" secondAttribute="trailing" id="hLE-fe-4wK"/>
-                            <constraint firstItem="0zQ-8k-PNs" firstAttribute="top" secondItem="0kP-XD-87n" secondAttribute="bottom" constant="15" id="jCi-w6-8cA"/>
+                            <constraint firstItem="0zQ-8k-PNs" firstAttribute="top" secondItem="0kP-XD-87n" secondAttribute="bottom" constant="19" id="jCi-w6-8cA"/>
                             <constraint firstAttribute="bottom" secondItem="wA8-0h-1PS" secondAttribute="bottom" constant="20" symbolic="YES" id="jcr-np-6WS"/>
                             <constraint firstItem="iHR-lo-fGn" firstAttribute="trailing" secondItem="4Ur-8u-JVE" secondAttribute="trailing" id="kLQ-bu-xnX"/>
                             <constraint firstItem="1jK-Nc-meU" firstAttribute="leading" secondItem="3Pp-hm-6dr" secondAttribute="leading" constant="20" symbolic="YES" id="kiB-bX-fnf"/>
                             <constraint firstItem="4Ur-8u-JVE" firstAttribute="trailing" secondItem="wA8-0h-1PS" secondAttribute="trailing" id="lU5-QW-6Xb"/>
+                            <constraint firstItem="iHR-lo-fGn" firstAttribute="top" secondItem="0kP-XD-87n" secondAttribute="bottom" constant="43" id="ocf-vO-JSM"/>
                         </constraints>
                     </view>
                 </box>

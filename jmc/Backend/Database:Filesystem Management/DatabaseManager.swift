@@ -805,6 +805,9 @@ class DatabaseManager: NSObject {
     func trackNumOfEdited(tracks: [Track], value: Int) {
         managedContext.undoManager?.beginUndoGrouping()
         editTrackNumOf(tracks, num: value)
+        for track in tracks {
+            moveFileAfterEdit(track)
+        }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Total Tracks")
     }
@@ -826,6 +829,9 @@ class DatabaseManager: NSObject {
     func totalDiscsEdited(tracks: [Track], value: Int) {
         managedContext.undoManager?.beginUndoGrouping()
         editDiscNumOf(tracks, num: value)
+        for track in tracks {
+            moveFileAfterEdit(track)
+        }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Total Discs")
     }
@@ -836,6 +842,9 @@ class DatabaseManager: NSObject {
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
+        for track in tracks {
+            moveFileAfterEdit(track)
+        }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Composer")
     }
@@ -843,6 +852,9 @@ class DatabaseManager: NSObject {
     func genreEdited(tracks: [Track], value: String) {
         managedContext.undoManager?.beginUndoGrouping()
         editGenre(tracks, genre: value)
+        for track in tracks {
+            moveFileAfterEdit(track)
+        }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Genre")
     }
@@ -872,6 +884,9 @@ class DatabaseManager: NSObject {
         //needs work
         managedContext.undoManager?.beginUndoGrouping()
         editMovementName(tracks, name: value)
+        for track in tracks {
+            moveFileAfterEdit(track)
+        }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Movement Name")
     }
@@ -880,6 +895,9 @@ class DatabaseManager: NSObject {
         //needs work
         managedContext.undoManager?.beginUndoGrouping()
         editMovementNum(tracks, num: value)
+        for track in tracks {
+            moveFileAfterEdit(track)
+        }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Movement Number")
     }
