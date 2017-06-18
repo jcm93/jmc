@@ -266,8 +266,8 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         }
     }
     
-    func displayMissingFilesViewController(for URLs: [URL]) {
-        self.missingFilesViewController = MissingFilesViewController(nibName: "MissingFilesViewController", bundle: nil, URLs: URLs)
+    func displayMissingFilesViewController(for tracks: [Track]) {
+        self.missingFilesViewController = MissingFilesViewController(nibName: "MissingFilesViewController", bundle: nil, tracks: tracks)
         self.locationManagerView.addSubview(self.missingFilesViewController!.view)
         self.missingFilesViewController!.view.topAnchor.constraint(equalTo: self.locationManagerView.topAnchor).isActive = true
         self.missingFilesViewController!.view.leftAnchor.constraint(equalTo: self.locationManagerView.leftAnchor).isActive = true
@@ -278,7 +278,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     func verifyLocationsModalComplete(response: NSModalResponse) {
         guard response != NSModalResponseCancel else {return}
         if self.missingTracks!.count > 0 {
-            displayMissingFilesViewController(for: self.missingTracks!.map({return URL(string: $0.location ?? "file:///poop/")!}))
+            displayMissingFilesViewController(for: self.missingTracks!)
             let trackNotFoundArray = self.missingTracks!.map({(track: Track) -> TrackNotFound in
                 if let location = track.location {
                     if let url = URL(string: location) {

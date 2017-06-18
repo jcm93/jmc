@@ -27,7 +27,7 @@ public class OrganizationTemplate: NSManagedObject {
         for component in urlPathComponents {
             baseURL.appendPathComponent(component)
         }
-        return baseURL.appendingPathExtension(pathExtension)
+        return baseURL.appendingPathExtension(pathExtension).standardizedFileURL
     }
     
     func transformToPathComponent(token: OrganizationFieldToken, track: Track) -> String {

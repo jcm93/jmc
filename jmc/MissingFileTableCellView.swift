@@ -10,12 +10,18 @@ import Cocoa
 
 class MissingFileTableCellView: NSTableCellView {
     
-    @IBOutlet var locateButton: NSButton!
+    var representedNode: MissingTrackPathNode!
 
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
 
         // Drawing code here.
     }
+    
+}
+
+class MissingFileCellViewWithLocateButton: MissingFileTableCellView {
+    
+    @IBOutlet var locateButton: NSButton!
     
 }

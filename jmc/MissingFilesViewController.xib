@@ -95,7 +95,7 @@
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
-                                            <tableCellView identifier="ItemNumberNotFoundView" id="Cwo-sQ-bMw" customClass="MissingFileTableCellView" customModule="jmc" customModuleProvider="target">
+                                            <tableCellView identifier="ItemNumberNotFoundView" id="Cwo-sQ-bMw" customClass="MissingFileCellViewWithLocateButton" customModule="jmc" customModuleProvider="target">
                                                 <rect key="frame" x="367" y="1" width="342" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
@@ -122,11 +122,11 @@
                                                     <constraint firstItem="2an-FS-KrL" firstAttribute="top" secondItem="Cwo-sQ-bMw" secondAttribute="top" constant="1" id="ont-35-FhJ"/>
                                                 </constraints>
                                                 <connections>
-                                                    <outlet property="locateButton" destination="2an-FS-KrL" id="Sp2-O5-bTl"/>
+                                                    <outlet property="locateButton" destination="2an-FS-KrL" id="Ro7-ld-BlN"/>
                                                     <outlet property="textField" destination="r8z-uk-53p" id="bbM-rb-B69"/>
                                                 </connections>
                                             </tableCellView>
-                                            <tableCellView identifier="ItemNumberView" id="14U-2F-QyO">
+                                            <tableCellView identifier="ItemNumberView" id="14U-2F-QyO" customClass="MissingFileTableCellView" customModule="jmc" customModuleProvider="target">
                                                 <rect key="frame" x="367" y="20" width="342" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
