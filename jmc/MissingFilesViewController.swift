@@ -69,11 +69,11 @@ class MissingTrackPathTree: NSObject {
             let newNode = MissingTrackPathNode(pathComponent: nextPathComponent, parent: currentNode)
             let nextURLString = URL(fileURLWithPath: newNode.completePathRepresentation()).absoluteString
             let setUnderNextNode = Set(currentNode.totalTracks.filter {$0.location?.hasPrefix(nextURLString) ?? false})
-            print("creating node with \(pathComponents), total track count \(setUnderNextNode.count)")
             newNode.totalTracks = setUnderNextNode
             if pathComponents.count > 0 {
                 createNode(with: &pathComponents, under: newNode, with: missingTrack)
             } else {
+                newNode.missingTracks.insert(missingTrack)
                 return
             }
         }
@@ -170,23 +170,26 @@ class MissingFilesViewController: NSViewController, NSOutlineViewDataSource, NSO
     func outlineView(_ outlineView: NSOutlineView, shouldExpandItem item: Any) -> Bool {
         return true
     }
+    
     @IBAction func locateButtonPressed(_ sender: Any) {
         let view = (sender as! NSButton).superview! as! MissingFileTableCellView
         let node = view.representedNode
         let fileModal = NSOpenPanel()
         fileModal.canChooseDirectories = true
-        fileModal.runModal()
-        let url = fileModal.url
-        let oldAbsoluteString = URL(fileURLWithPath: node!.completePathRepresentation()).absoluteString
-        let newAbsoluteString = url!.absoluteString
-        for track in node!.missingTracks {
-            track.location = track.location!.replacingOccurrences(of: oldAbsoluteString, with: newAbsoluteString, options: .anchored, range: nil)
-            if fileManager.fileExists(atPath: URL(string: track.location!)!.path) {
-                self.missingTracks.remove(track)
+        if fileModal.runModal() == NSFileHandlingPanelOKButton {
+            let url = fileModal.url
+            let oldAbsoluteString = URL(fileURLWithPath: node!.completePathRepresentation()).absoluteString
+            let newAbsoluteString = url!.absoluteString
+            for track in node!.missingTracks {
+                track.location = track.location!.replacingOccurrences(of: oldAbsoluteString, with: newAbsoluteString, options: .anchored, range: nil)
+                if fileManager.fileExists(atPath: URL(string: track.location!)!.path) {
+                    self.missingTracks.remove(track)
+                }
             }
+            self.pathTree = MissingTrackPathTree(with: Array(self.missingTracks))
+            outlineView.reloadData()
+            outlineView.expandItem(nil, expandChildren: true)
         }
-        self.pathTree = MissingTrackPathTree(with: Array(self.missingTracks))
-        outlineView.reloadData()
     }
     
     override func viewDidLoad() {

@@ -79,6 +79,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     var sortAlbumIfAllEqual: String?
     var sortAlbumArtistIfAllEqual: String?
     var sortComposerIfAllEqual: String?
+    var flacMDItem: FlacDecoder?
     
     
     //mark artwork view
@@ -489,18 +490,25 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     
     func populateFileInfo() {
         //todo correct tags if inconsistent
-        let mdItem = MDItemCreateWithURL(kCFAllocatorDefault, NSURL(string: self.currentTrack!.location!))
+        let url = NSURL(string: self.currentTrack!.location!)!
+        self.locationPathControl.url = url as URL
+        
+        let mdItem = MDItemCreateWithURL(kCFAllocatorDefault, url)
+        if url.pathExtension?.lowercased() == "flac" {
+            self.flacMDItem = FlacDecoder(file: url as URL, audioModule: nil)
+            flacMDItem?.initForMetadata()
+        }
         let kind = MDItemCopyAttribute(mdItem, kMDItemKind) as? String
         kindLabel.stringValue = kind!
-        let duration = MDItemCopyAttribute(mdItem, kMDItemDurationSeconds) as! Int
+        let duration = MDItemCopyAttribute(mdItem, kMDItemDurationSeconds) as? Int ?? (Int(flacMDItem!.totalFrames / flacMDItem!.sampleRate!))
         durationLabel.stringValue = getTimeAsString(Double(duration))!
         let size = MDItemCopyAttribute(mdItem, kMDItemFSSize) as! Int
         sizeLabel.stringValue = fileSizeFormatter.string(fromByteCount: Int64(size))
-        let bitRateCheck = MDItemCopyAttribute(mdItem, kMDItemAudioBitRate) as? Int
+        let bitRateCheck = MDItemCopyAttribute(mdItem, kMDItemAudioBitRate) as? Int ?? (((size as! Int) * 8) / 1000) / duration
         bitRateLabel.stringValue = bitRateFormatter.string(for: bitRateCheck)!
-        let sampleRateCheck = MDItemCopyAttribute(mdItem, kMDItemAudioSampleRate) as? Int
+        let sampleRateCheck = MDItemCopyAttribute(mdItem, kMDItemAudioSampleRate) as? Int ?? Int(flacMDItem!.sampleRate!)
         sampleRateLabel.stringValue = sampleRateFormatter.string(for: sampleRateCheck)!
-        let channels = MDItemCopyAttribute(mdItem, kMDItemAudioChannelCount) as! Int
+        let channels = MDItemCopyAttribute(mdItem, kMDItemAudioChannelCount) as? Int ?? Int(flacMDItem!.channels!)
         channelsLabel.stringValue = String(describing: channels)
         let encoder = MDItemCopyAttribute(mdItem, kMDItemAudioEncodingApplication) as? String
         encoderLabel.stringValue = encoder != nil ? encoder! : "No encoder information available."

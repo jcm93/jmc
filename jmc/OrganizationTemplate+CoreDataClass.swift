@@ -15,7 +15,7 @@ public class OrganizationTemplate: NSManagedObject {
     func validateTemplate() -> Bool {
         //every template should be technically valid, but for the sake of convenience, we probably want to mandate that templates have at least one token, and contain a trackname token, at the very least
         //very "at own risk"
-        guard let template = self.tokens as? [OrganizationFieldToken] else { return false }
+        guard let template = self.tokens as? [OrganizationFieldToken], template.count > 0 else { return false }
         //guard template.contains(where: {$0.tokenType != .other}) else { return false }
         //guard template.contains(where: {$0.tokenType == .trackname}) else { return false }
         return true
@@ -29,6 +29,8 @@ public class OrganizationTemplate: NSManagedObject {
         }
         return baseURL.appendingPathExtension(pathExtension).standardizedFileURL
     }
+    
+    
     
     func transformToPathComponent(token: OrganizationFieldToken, track: Track) -> String {
         switch token.tokenType {

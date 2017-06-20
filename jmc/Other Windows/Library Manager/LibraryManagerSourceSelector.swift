@@ -19,6 +19,7 @@ class LibraryManagerSourceSelector: NSWindowController, NSTableViewDelegate {
     var watchFolderSheet: AddWatchFolderSheetController?
     var changeFolderSheet: ChangePrimaryFolderSheetController?
     var consolidateSheet: ConsolidateLibrarySheetController?
+    var someOtherSheet: GenericProgressBarSheetController?
     
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet var sourceArrayController: NSArrayController!

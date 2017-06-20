@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -80,18 +80,26 @@
                                     <items>
                                         <menuItem title="Playlist" id="KjC-22-qhT">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="newPlaylist:" target="Voe-Tx-rLC" id="5pM-TJ-jdv"/>
+                                            </connections>
                                         </menuItem>
                                         <menuItem title="Playlist From Selection" id="tAA-MA-JD3">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="newPlaylistFromSelection:" target="Voe-Tx-rLC" id="fos-br-JsV"/>
+                                            </connections>
                                         </menuItem>
                                         <menuItem title="Smart Playlist..." id="wj2-JD-Uje">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="newSmartPlaylist:" target="Voe-Tx-rLC" id="zkM-6j-ts7"/>
+                                            </connections>
                                         </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Add to Library..." id="qMV-Bb-1Lb">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Add to Library..." keyEquivalent="o" id="qMV-Bb-1Lb">
                                 <connections>
                                     <action selector="addToLibrary:" target="Voe-Tx-rLC" id="CPH-2g-kqO"/>
                                 </connections>

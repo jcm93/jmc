@@ -8,24 +8,34 @@
 
 import Cocoa
 
+class DisparateTrack: NSObject {
+    var track: Track
+    dynamic var potentialNewURL: URL
+    init(track: Track, potentialURL: URL) {
+        self.track = track
+        self.potentialNewURL = potentialURL
+    }
+}
+
 class ConsolidateLibrarySheetController: NSWindowController, ProgressBarController {
     
+    @IBOutlet weak var targetView: NSView!
     var actionName: String = ""
     var thingName: String = ""
     var thingCount: Int = 0
-    @IBOutlet weak var tableView: NSTableView!
+    var tableViewController: LibraryConsolidatorTableViewController?
+    var things = [DisparateTrack]()
     @IBOutlet weak var progressBar: NSProgressIndicator!
     @IBOutlet weak var progressTextLabel: NSTextField!
-    
-    @IBOutlet var disparateTracksArrayController: NSArrayController!
+
     var libraryManager: LibraryManagerViewController?
     
     @IBAction func selectNonePressed(_ sender: Any) {
-        tableView.deselectAll(nil)
+        tableViewController?.tableView.deselectAll(nil)
     }
     
     @IBAction func selectAllPressed(_ sender: Any) {
-        tableView.selectAll(nil)
+        tableViewController?.tableView.selectAll(nil)
     }
     
     @IBAction func cancelPressed(_ sender: Any) {
@@ -37,8 +47,8 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
     }
 
     @IBAction func consolidatePressed(_ sender: Any) {
-        let selectedTracks = disparateTracksArrayController.selectedObjects as! [Track]
-        self.libraryManager?.databaseManager.batchMoveTracks(tracks: selectedTracks, visualUpdateHandler: self)
+        let selectedTracks = self.tableViewController?.trackViewArrayController.selectedObjects as! [DisparateTrack]
+        self.libraryManager?.databaseManager.batchMoveTracks(tracks: selectedTracks.map({return $0.track}), visualUpdateHandler: self)
         self.progressBar.isHidden = false
         self.progressTextLabel.isHidden = false
         self.progressBar.maxValue = Double(selectedTracks.count)
@@ -65,12 +75,17 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
     func finish() {
         self.window?.close()
     }
+    
     override func windowDidLoad() {
         super.windowDidLoad()
-        
-        self.disparateTracksArrayController.content = getTracksOutsideHomeDirectory(library: libraryManager!.library!)
-        
-
+        self.tableViewController = LibraryConsolidatorTableViewController(nibName: "LibraryConsolidatorTableViewController", bundle: nil)
+        self.targetView.addSubview(tableViewController!.view)
+        self.tableViewController!.view.topAnchor.constraint(equalTo: targetView.topAnchor).isActive = true
+        self.tableViewController!.view.rightAnchor.constraint(equalTo: targetView.rightAnchor).isActive = true
+        self.tableViewController!.view.bottomAnchor.constraint(equalTo: targetView.bottomAnchor).isActive = true
+        self.tableViewController!.view.leftAnchor.constraint(equalTo: targetView.leftAnchor).isActive = true
+        self.tableViewController?.trackViewArrayController.content = self.things
+        self.tableViewController?.tableView.reloadData()
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     }
     

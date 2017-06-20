@@ -99,6 +99,7 @@
 		0D9CE6751D34128B004FA8CB /* InitialSetupWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */; };
 		0D9CE6761D34128B004FA8CB /* InitialSetupWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D9CE6741D34128B004FA8CB /* InitialSetupWindowController.xib */; };
 		0D9CE6781D3442D3004FA8CB /* Preferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D9CE6771D3442D3004FA8CB /* Preferences.plist */; };
+		0DA02D321EF9D41A00DDE5A9 /* MediaMetadataHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA02D311EF9D41A00DDE5A9 /* MediaMetadataHandler.swift */; };
 		0DA7E95A1ECC141900719678 /* ImageCollectionViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA7E9581ECC141900719678 /* ImageCollectionViewItem.swift */; };
 		0DA7E95B1ECC141900719678 /* ImageCollectionViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DA7E9591ECC141900719678 /* ImageCollectionViewItem.xib */; };
 		0DA8D0401D1B1128009FEC28 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */; };
@@ -184,6 +185,9 @@
 		0DE957D81EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE957D41EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataProperties.swift */; };
 		0DE957DB1EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE957D91EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift */; };
 		0DE957DC1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE957DA1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift */; };
+		0DEE9D991EF79A500025AA11 /* LibraryConsolidatorTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DEE9D981EF79A500025AA11 /* LibraryConsolidatorTableViewController.xib */; };
+		0DEE9D9B1EF79A630025AA11 /* LibraryConsolidatorTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEE9D9A1EF79A630025AA11 /* LibraryConsolidatorTableViewController.swift */; };
+		0DEE9D9D1EF7AB280025AA11 /* StupidTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEE9D9C1EF7AB280025AA11 /* StupidTableCellView.swift */; };
 		0DF188801EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF1887E1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift */; };
 		0DF188811EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */; };
 		0DF188841EDD072B00241785 /* OrganizationRuleViewcontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF188821EDD072B00241785 /* OrganizationRuleViewcontroller.swift */; };
@@ -305,6 +309,7 @@
 		0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InitialSetupWindowController.swift; path = "Other Windows/InitialSetupWindowController.swift"; sourceTree = "<group>"; };
 		0D9CE6741D34128B004FA8CB /* InitialSetupWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = InitialSetupWindowController.xib; path = "Other Windows/InitialSetupWindowController.xib"; sourceTree = "<group>"; };
 		0D9CE6771D3442D3004FA8CB /* Preferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Preferences.plist; sourceTree = "<group>"; };
+		0DA02D311EF9D41A00DDE5A9 /* MediaMetadataHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMetadataHandler.swift; sourceTree = "<group>"; };
 		0DA7E9581ECC141900719678 /* ImageCollectionViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageCollectionViewItem.swift; path = "Other Windows/ImageCollectionViewItem.swift"; sourceTree = "<group>"; };
 		0DA7E9591ECC141900719678 /* ImageCollectionViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImageCollectionViewItem.xib; path = "Other Windows/ImageCollectionViewItem.xib"; sourceTree = "<group>"; };
 		0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressBarView.swift; path = "Main Interface Components/Miscellaneous/ProgressBarView.swift"; sourceTree = "<group>"; };
@@ -410,6 +415,9 @@
 		0DE957D41EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OrganizationTemplateBundle+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0DE957D91EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SourceListItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0DE957DA1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SourceListItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0DEE9D981EF79A500025AA11 /* LibraryConsolidatorTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LibraryConsolidatorTableViewController.xib; sourceTree = "<group>"; };
+		0DEE9D9A1EF79A630025AA11 /* LibraryConsolidatorTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryConsolidatorTableViewController.swift; sourceTree = "<group>"; };
+		0DEE9D9C1EF7AB280025AA11 /* StupidTableCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StupidTableCellView.swift; sourceTree = "<group>"; };
 		0DF1887E1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdvancedOrganizationOptionsWindowController.swift; path = "Other Windows/Library Manager/AdvancedOrganizationOptionsWindowController.swift"; sourceTree = "<group>"; };
 		0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AdvancedOrganizationOptionsWindowController.xib; path = "Other Windows/Library Manager/AdvancedOrganizationOptionsWindowController.xib"; sourceTree = "<group>"; };
 		0DF188821EDD072B00241785 /* OrganizationRuleViewcontroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrganizationRuleViewcontroller.swift; path = "Other Windows/Library Manager/OrganizationRuleViewcontroller.swift"; sourceTree = "<group>"; };
@@ -731,6 +739,7 @@
 			isa = PBXGroup;
 			children = (
 				0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */,
+				0DA02D311EF9D41A00DDE5A9 /* MediaMetadataHandler.swift */,
 				0DAA85891EDFE90E004BF089 /* OrganizationFieldToken.swift */,
 				0DE486931EA92B78009B226B /* AddFilesQueueLoop.swift */,
 				0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */,
@@ -962,6 +971,9 @@
 				0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */,
 				0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */,
 				0D8AFE571E6D136D004AC584 /* MediaScannerSheet.xib */,
+				0DEE9D9A1EF79A630025AA11 /* LibraryConsolidatorTableViewController.swift */,
+				0DEE9D9C1EF7AB280025AA11 /* StupidTableCellView.swift */,
+				0DEE9D981EF79A500025AA11 /* LibraryConsolidatorTableViewController.xib */,
 				0D51C8A31EAC01F8002F6182 /* ConsolidateLibrarySheetController.swift */,
 				0D51C8A41EAC01F8002F6182 /* ConsolidateLibrarySheetController.xib */,
 			);
@@ -1116,6 +1128,7 @@
 				0DD0DAEA1E53A8EE00807CAC /* INSTALL_RECEIPT.json in Resources */,
 				0D51C8A61EAC01F8002F6182 /* ConsolidateLibrarySheetController.xib in Resources */,
 				0D9CE6781D3442D3004FA8CB /* Preferences.plist in Resources */,
+				0DEE9D991EF79A500025AA11 /* LibraryConsolidatorTableViewController.xib in Resources */,
 				0DE486921EA83FBA009B226B /* GenericProgressBarSheetController.xib in Resources */,
 				0D800C0D1ED3B54100EA2889 /* ArtistViewAlbumViewController.xib in Resources */,
 				0DD0DB0B1E53A8EE00807CAC /* flac.1 in Resources */,
@@ -1188,6 +1201,7 @@
 				0D592A411EDF6C8B0054D553 /* Composer+CoreDataClass.swift in Sources */,
 				0D0C2AA71E88D8DA00CA82C3 /* MTImageCell.swift in Sources */,
 				0D2D06D01EE32FB600A8EC66 /* Album+CoreDataProperties.swift in Sources */,
+				0DA02D321EF9D41A00DDE5A9 /* MediaMetadataHandler.swift in Sources */,
 				0D447BB91EB2B73F00372A80 /* JMTextField.swift in Sources */,
 				0D592A421EDF6C8B0054D553 /* Composer+CoreDataProperties.swift in Sources */,
 				0DC397AB1E5282920009792B /* LibraryManagerViewController.swift in Sources */,
@@ -1207,6 +1221,7 @@
 				0D606EF91E7B4DB0007AE152 /* AVAudioFileBufferer.swift in Sources */,
 				0DA8D0401D1B1128009FEC28 /* ProgressBarView.swift in Sources */,
 				0D0747691EDF6DF500E252DF /* CachedOrder+CoreDataClass.swift in Sources */,
+				0DEE9D9D1EF7AB280025AA11 /* StupidTableCellView.swift in Sources */,
 				0DE957D01EEB5654008CBECF /* Library+CoreDataProperties.swift in Sources */,
 				0DA7E95A1ECC141900719678 /* ImageCollectionViewItem.swift in Sources */,
 				0D9CE6711D334F97004FA8CB /* ImportWindowController.swift in Sources */,
@@ -1218,6 +1233,7 @@
 				0D3756C01EAADBD700016136 /* PreferencesWindowController.swift in Sources */,
 				0DAB30911CFBA3340028928F /* AppDelegate.swift in Sources */,
 				0D299B1B1DF11F140009CF7A /* TrackQueueViewController.swift in Sources */,
+				0DEE9D9B1EF79A630025AA11 /* LibraryConsolidatorTableViewController.swift in Sources */,
 				0DE957D51EEC5465008CBECF /* OrganizationTemplate+CoreDataClass.swift in Sources */,
 				0D76F6AA1D270EB900C6E70F /* DragAndDropArrayController.swift in Sources */,
 				0D2D06CE1EE32FB600A8EC66 /* AlbumFile+CoreDataProperties.swift in Sources */,

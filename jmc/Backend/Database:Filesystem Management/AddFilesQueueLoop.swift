@@ -9,12 +9,9 @@
 import Cocoa
 
 class FileAddQueueChunk: NSObject {
-    
-    var library: Library
     var urls: [URL]
     
-    init(library: Library, urls: [URL]) {
-        self.library = library
+    init(urls: [URL]) {
         self.urls = urls
     }
 }
@@ -75,13 +72,10 @@ class AddFilesQueueLoop: NSObject, ProgressBarController {
     
     func getURLsToAdd() -> FileAddQueueChunk {
         let baseChunk = urlsToAddChunks.removeFirst()
-        //get all other urls for this library in the chunk queue, remove their chunks and harvest their urls
         var indexesToDelete = [Int]()
         for (index, otherChunk) in urlsToAddChunks.enumerated() {
-            if otherChunk.library == baseChunk.library {
-                baseChunk.urls.append(contentsOf: otherChunk.urls)
-                indexesToDelete.append(index)
-            }
+            baseChunk.urls.append(contentsOf: otherChunk.urls)
+            indexesToDelete.append(index)
         }
         for index in indexesToDelete.sorted().reversed() {
             urlsToAddChunks.remove(at: index)
@@ -103,11 +97,11 @@ class AddFilesQueueLoop: NSObject, ProgressBarController {
                 //do some chunk optimization
                 let chunk = self.getURLsToAdd()
                 //get errors that indicate we can retry on the current thread, do the rest of the work on the main thread
-                let errors = self.databaseManager.addTracksFromURLs(chunk.urls, to: chunk.library, visualUpdateHandler: self, callback: self.finishedAddingChunkCallback)
+                let errors = self.databaseManager.addTracksFromURLs(chunk.urls, to: globalRootLibrary!, visualUpdateHandler: self, callback: self.finishedAddingChunkCallback)
                 let retryableErrors = errors.filter({return $0.error == kFileAddErrorMetadataNotYetPopulated})
                 let retryableURLs = retryableErrors.map({return URL(string: $0.urlString)!})
                 if retryableURLs.count > 0 {
-                    let newChunk = FileAddQueueChunk(library: chunk.library, urls: retryableURLs)
+                    let newChunk = FileAddQueueChunk(urls: retryableURLs)
                     self.urlsToAddChunks.append(newChunk)
                 }
                 //has the potential to retry forever, if a file's size metadata is never available.
@@ -122,18 +116,16 @@ class AddFilesQueueLoop: NSObject, ProgressBarController {
     }
     
     
-    func addChunksToQueue(urls: [Library : [URL]]) {
-        for library in urls.keys {
-            let newChunk = FileAddQueueChunk(library: library, urls: urls[library]!.filter({return !self.addedURLs.contains($0)}))
-            self.urlsToAddChunks.append(newChunk)
-            self.thingCount += newChunk.urls.count
-            for url in newChunk.urls {
-                self.addedURLs.insert(url)
-            }
-            DispatchQueue.main.async {
-                self.delegate.backgroundAddFilesHandler?.prepareForNewTask(actionName: "Importing", thingName: "tracks", thingCount: self.thingCount)
-                self.delegate.backgroundAddFilesHandler?.increment(thingsDone: self.thingsDone)
-            }
+    func addChunksToQueue(urls: [URL]) {
+        let newChunk = FileAddQueueChunk(urls: urls.filter({return !self.addedURLs.contains($0)}))
+        self.urlsToAddChunks.append(newChunk)
+        self.thingCount += newChunk.urls.count
+        for url in newChunk.urls {
+            self.addedURLs.insert(url)
+        }
+        DispatchQueue.main.async {
+            self.delegate.backgroundAddFilesHandler?.prepareForNewTask(actionName: "Importing", thingName: "tracks", thingCount: self.thingCount)
+            self.delegate.backgroundAddFilesHandler?.increment(thingsDone: self.thingsDone)
         }
     }
     

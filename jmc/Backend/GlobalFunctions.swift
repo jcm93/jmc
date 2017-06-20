@@ -115,6 +115,7 @@ var artistDescendingSortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "ar
 
 //global user defaults
 let DEFAULTS_SAVED_COLUMNS_STRING = "savedColumns"
+let DEFAULTS_SAVED_COLUMNS_STRING_CONSOLIDATOR = "consolidatorSavedColumns"
 let DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING = "checkForArt"
 let DEFAULTS_DATE_SORT_GRANULARITY = 500.0
 let DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING = "checkEmbeddedArtwork"
@@ -378,16 +379,32 @@ func volumeIsAvailable(volume: Volume) -> Bool {
     return fileManager.fileExists(atPath: libraryPath, isDirectory: &isDirectory) && isDirectory.boolValue
 }
 
-func getTracksOutsideHomeDirectory(library: Library) -> [Track] {
-    let centralFolderURL = library.getCentralMediaFolder()
-    let result = library.tracks!.flatMap({(member: Any) -> Track? in
-        let track = member as! Track
-        let currentURL = URL(string: track.location!)
-        if !currentURL!.path.hasPrefix(centralFolderURL!.path) {
-            return track
-        } else {
-            return nil
+func getNonMatchingTracks(library: Library, visualUpdateHandler: ProgressBarController?) -> [DisparateTrack] {
+    let templateBundle = library.organization_template
+    DispatchQueue.main.async {
+        visualUpdateHandler?.prepareForNewTask(actionName: "Checking organization template for", thingName: "tracks", thingCount: library.tracks!.count)
+    }
+    var index = 0
+    let result = (library.tracks as! Set<Track>).flatMap({track -> DisparateTrack? in
+        if let location = track.location {
+            if let currentURL = URL(string: location) {
+                let potentialURL = templateBundle!.match(track).getURL(for: track, withExtension: currentURL.pathExtension)!
+                DispatchQueue.main.async {
+                    visualUpdateHandler?.increment(thingsDone: index)
+                    index += 1
+                }
+                if potentialURL != currentURL {
+                    return DisparateTrack(track: track, potentialURL: potentialURL)
+                } else {
+                    return nil
+                }
+            }
         }
+        DispatchQueue.main.async {
+            visualUpdateHandler?.increment(thingsDone: index)
+            index += 1
+        }
+        return nil
     })
     return result
 }
@@ -526,6 +543,41 @@ let DEFAULT_COLUMN_VISIBILITY_DICTIONARY: [String : Int] = [
     "sort_composer" : 1,
     "sort_name" : 1,
     "time" : 0,
+    "track_num" : 0,
+]
+
+let DEFAULT_COLUMN_VISIBILITY_DICTIONARY_CONSOLIDATOR: [String : Int] = [
+    "album" : 1,
+    "artist" : 0,
+    "bit_rate" : 1,
+    "comments" : 1,
+    "composer" : 1,
+    "date_added" : 1,
+    "date_last_played" : 1,
+    "date_last_skipped" : 1,
+    "date_modified" : 1,
+    "date_released" : 1,
+    "disc_number" : 1,
+    "equalizer_preset" : 1,
+    "file_kind" : 1,
+    "genre" : 1,
+    "is_enabled" : 1,
+    "is_playing" : 1,
+    "movement_name" : 1,
+    "movement_number" : 1,
+    "name" : 0,
+    "play_count" : 1,
+    "playlist_number" : 1,
+    "rating" : 1,
+    "sample_rate" : 1,
+    "size" : 1,
+    "skip_count" : 1,
+    "sort_album" : 1,
+    "sort_album_artist" : 1,
+    "sort_artist" : 1,
+    "sort_composer" : 1,
+    "sort_name" : 1,
+    "time" : 1,
     "track_num" : 0,
 ]
 

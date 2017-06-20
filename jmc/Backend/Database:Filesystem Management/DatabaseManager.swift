@@ -266,6 +266,11 @@ class DatabaseManager: NSObject {
         let directoryURL = newLocation.deletingLastPathComponent()
         //check if directories already exist
         do {
+            if let values = try? directoryURL.resourceValues(forKeys: [.isDirectoryKey]) {
+                if values.isDirectory == true {
+                    
+                }
+            }
             try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true, attributes: nil)
             var dupe = 1
             var newLocationWithDupe = newLocation
@@ -651,7 +656,7 @@ class DatabaseManager: NSObject {
             }
             
             //move file to the appropriate location, if we're organizing
-            if moveFileToAppropriateLocationForTrack(track, currentURL: url) != nil {
+            if moveFileToAppropriateLocationForTrack(track, currentURL: url) != nil || library.organization_type == 0 as NSNumber {
                 if hasArt == true {
                     addArtForTrack(track, fromData: art!, managedContext: subContext)
                 }

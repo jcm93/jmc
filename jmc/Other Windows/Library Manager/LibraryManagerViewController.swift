@@ -195,9 +195,18 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     
     @IBAction func consolidateLibraryPressed(_ sender: Any) {
         let parent = self.view.window?.windowController as! LibraryManagerSourceSelector
-        parent.consolidateSheet = ConsolidateLibrarySheetController(windowNibName: "ConsolidateLibrarySheetController")
-        parent.consolidateSheet?.libraryManager = self
-        parent.window?.beginSheet(parent.consolidateSheet!.window!, completionHandler: nil)
+        parent.someOtherSheet = GenericProgressBarSheetController(windowNibName: "GenericProgressBarSheetController")
+        parent.window?.beginSheet(parent.someOtherSheet!.window!, completionHandler: nil)
+        DispatchQueue.global(qos: .default).async {
+            let things = getNonMatchingTracks(library: globalRootLibrary!, visualUpdateHandler: parent.someOtherSheet)
+            DispatchQueue.main.async {
+                parent.someOtherSheet?.finish()
+                parent.consolidateSheet = ConsolidateLibrarySheetController(windowNibName: "ConsolidateLibrarySheetController")
+                parent.consolidateSheet?.things = things
+                parent.window?.beginSheet(parent.consolidateSheet!.window!, completionHandler: nil)
+                parent.consolidateSheet?.libraryManager = self
+            }
+        }
     }
     
     func initializeForLibrary(library: Library) {

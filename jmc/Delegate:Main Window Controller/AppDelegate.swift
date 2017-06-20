@@ -38,6 +38,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         mainWindowController!.jumpToCurrentSong()
     }
     
+    @IBAction func newPlaylist(_ sender: AnyObject) {
+        mainWindowController?.createPlaylistFromTracks([Track]())
+    }
+    
+    @IBAction func newPlaylistFromSelection(_ sender: AnyObject) {
+        mainWindowController?.createPlaylistFromTracks((mainWindowController?.currentTableViewController?.trackViewArrayController.selectedObjects as! [TrackView]).map({return $0.track!}))
+        
+    }
+    @IBAction func newSmartPlaylist(_ sender: Any) {
+        mainWindowController?.showAdvancedFilter()
+    }
+    
+    
     @IBAction func previousMenuItemAction(_ sender: AnyObject) {
         mainWindowController?.skipBackward()
     }
@@ -126,7 +139,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if modalResponse == NSFileHandlingPanelOKButton {
             let urls = self.databaseManager?.getMediaURLsInDirectoryURLs(panel.urls).0
             self.launchAddFilesDialog()
-            self.addFilesQueueLoop?.addChunksToQueue(urls: [globalRootLibrary! : urls!])
+            self.addFilesQueueLoop?.addChunksToQueue(urls: urls!)
             self.addFilesQueueLoop?.start()
         }
         

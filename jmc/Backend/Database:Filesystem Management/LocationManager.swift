@@ -14,11 +14,9 @@ import Cocoa
 struct TrackFirstRenameEvent {
     let tracks: [Track]?
     let initialPathAbsoluteURLString: String
-    let id: UInt64
     let flags: FSEventStreamEventFlags
-    init(path: String, id: UInt64, flags: FSEventStreamEventFlags, tracks: [Track]?) {
+    init(path: String, flags: FSEventStreamEventFlags, tracks: [Track]) {
         self.initialPathAbsoluteURLString = URL(fileURLWithPath: path).absoluteString
-        self.id = id
         self.flags = flags
         self.tracks = tracks
     }
@@ -29,11 +27,11 @@ class LocationManager: NSObject {
     var activeMonitoringURLs = Set<URL>()
     var activeMonitoringFileDescriptors = [String : Int32]()
     var fileManager = FileManager.default
-    var withinDirRenameEvents = [String : TrackFirstRenameEvent?]()
+    var firstHalfRenameEvents = [FSEventStreamEventId : TrackFirstRenameEvent]()
     var databaseManager = DatabaseManager()
     var pendingCreatePaths = [String]()
-    var urlsToAddToDatabase = [Library : [URL]]()
-    var unpopulatedMetadataURLs = [Library: [URL]]()
+    var urlsToAddToDatabase = [URL]()
+    var unpopulatedMetadataURLs = [URL]()
     var currentlyAddingFiles = false
     var delegate: AppDelegate
     
@@ -67,7 +65,7 @@ class LocationManager: NSObject {
         if !self.urlsToAddToDatabase.isEmpty {
             print("adding chunks to queue")
             delegate.addFilesQueueLoop?.addChunksToQueue(urls: self.urlsToAddToDatabase)
-            self.urlsToAddToDatabase = [Library : [URL]]()
+            self.urlsToAddToDatabase = [URL]()
             if delegate.addFilesQueueLoop?.isRunning == false {
                 print("starting queue loop")
                 delegate.addFilesQueueLoop!.start()
@@ -219,36 +217,21 @@ class LocationManager: NSObject {
         if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemCreated)) > 0 {
             if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemModified)) > 0 {
                 print("item created, modified")
-                let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
-                let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})
                 if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) && fileManager.fileExists(atPath: path) {
-                    if self.urlsToAddToDatabase[globalRootLibrary!] == nil {
-                        self.urlsToAddToDatabase[globalRootLibrary!] = [URL]()
-                    }
-                    self.urlsToAddToDatabase[globalRootLibrary!]!.append(URL(fileURLWithPath: path))
+                    self.urlsToAddToDatabase.append(URL(fileURLWithPath: path))
                 }
             } else {
                 print("item created, not modified")
-                let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
-                let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})!
                 if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) && fileManager.fileExists(atPath: path) {
-                    if self.urlsToAddToDatabase[globalRootLibrary!] == nil {
-                        self.urlsToAddToDatabase[globalRootLibrary!] = [URL]()
-                    }
-                    self.urlsToAddToDatabase[globalRootLibrary!]!.append(URL(fileURLWithPath: path))
+                    self.urlsToAddToDatabase.append(URL(fileURLWithPath: path))
                 }
             }
         }
         if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemModified)) > 0 {
             if self.pendingCreatePaths.contains(path) {
                 print("item created after pending")
-                let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
-                let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})!
                 if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
-                    if self.urlsToAddToDatabase[globalRootLibrary!] == nil {
-                        self.urlsToAddToDatabase[globalRootLibrary!] = [URL]()
-                    }
-                    self.urlsToAddToDatabase[globalRootLibrary!]!.append(URL(fileURLWithPath: path))
+                    self.urlsToAddToDatabase.append(URL(fileURLWithPath: path))
                 }
                 self.pendingCreatePaths.remove(at: self.pendingCreatePaths.index(of: path)!)
             }
@@ -257,16 +240,15 @@ class LocationManager: NSObject {
             print("item renamed")
             let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
             let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})!
-            if withinDirRenameEvents[rootDirectoryPath]??.id == id - 1 {
+            if let firstEvent = firstHalfRenameEvents[id - 1] {
                 //this is definitely the second half of another rename event, which we may or may not care about
-                let firstEvent = withinDirRenameEvents[rootDirectoryPath]!
-                if firstEvent!.tracks != nil && globalRootLibrary!.keeps_track_of_files == true {
+                if firstEvent.tracks != nil && globalRootLibrary!.keeps_track_of_files == true {
                     let newURLPathAbsoluteString = URL(fileURLWithPath: path).absoluteString
-                    for track in firstEvent!.tracks! {
-                        track.location = track.location?.replacingOccurrences(of: firstEvent!.initialPathAbsoluteURLString, with: newURLPathAbsoluteString, options: .anchored, range: nil)
+                    for track in firstEvent.tracks! {
+                        track.location = track.location?.replacingOccurrences(of: firstEvent.initialPathAbsoluteURLString, with: newURLPathAbsoluteString, options: .anchored, range: nil)
                     }
                 }
-                withinDirRenameEvents[rootDirectoryPath] = nil
+                firstHalfRenameEvents[id - 1] = nil
             } else {
                 //either this location is valid and a new file or directory was added...
                 var isDirectory = ObjCBool(booleanLiteral: false)
@@ -276,10 +258,7 @@ class LocationManager: NSObject {
                             DispatchQueue.global(qos: .default).async {
                                 print("going and getting urls")
                                 let urls = self.databaseManager.getMediaURLsInDirectoryURLs([URL(fileURLWithPath: path)]).0
-                                if self.urlsToAddToDatabase[globalRootLibrary!] == nil {
-                                    self.urlsToAddToDatabase[globalRootLibrary!] = [URL]()
-                                }
-                                self.urlsToAddToDatabase[globalRootLibrary!]!.append(contentsOf: urls)
+                                self.urlsToAddToDatabase.append(contentsOf: urls)
                                 print("about to add urls to database")
                                 self.tryAddNewFilesToDatabase()
                             }
@@ -292,7 +271,7 @@ class LocationManager: NSObject {
                     }
                 } else {
                     //...or this is the first half of a rename event, which we may or may not care about
-                    let tracks = {() -> [Track]? in
+                    if let tracks = {() -> [Track]? in
                         let fr = NSFetchRequest<Track>(entityName: "Track")
                         fr.predicate = NSPredicate(format: "location beginswith[c] %@", URL(fileURLWithPath: path).absoluteString)
                         do {
@@ -302,9 +281,10 @@ class LocationManager: NSObject {
                             print(error)
                         }
                         return nil
-                    }()
-                    let newFirstHalfEvent = TrackFirstRenameEvent(path: path, id: id, flags: flags, tracks: tracks)
-                    withinDirRenameEvents[rootDirectoryPath] = newFirstHalfEvent
+                        }() {
+                        let newFirstHalfEvent = TrackFirstRenameEvent(path: path, flags: flags, tracks: tracks)
+                        firstHalfRenameEvents[id] = newFirstHalfEvent
+                    }
                 }
             }
         }
