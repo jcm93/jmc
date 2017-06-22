@@ -47,7 +47,7 @@ public class Track: NSManagedObject {
                 }
             case "date_released":
                 if self.album?.release_date != nil {
-                    dict["date_released"] = dateFormatter.string(from: self.album!.release_date! as Date)
+                    dict["date_released"] = dateFormatter.string(from: self.album!.release_date!.date as Date)
                     dict["release_date_order"] = self.view?.release_date_order
                 }
             case "comments":

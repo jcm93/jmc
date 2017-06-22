@@ -63,6 +63,7 @@ class FlacDecoder: NSObject, FileBufferer {
         if createFLACStreamDecoder(file: self.file) == true {
             FLAC__stream_decoder_process_until_end_of_metadata(&self.decoder!)
         }
+        print("poopie")
     }
     
     

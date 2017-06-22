@@ -121,16 +121,13 @@ class DatabaseManager: NSObject {
             let currentArtURLs = track.album!.other_art!.map({return URL(string: ($0 as! AlbumArtwork).artwork_location!)!})
             guard !currentArtURLs.contains(url) else { return false }
         }
-        var artLocation = url
-        if track.library?.organization_type != nil && track.library?.organization_type != 0 {
-            let filename = url.lastPathComponent
-            artLocation = URL(string: track.location!)!.deletingLastPathComponent().appendingPathComponent(filename)
-            do {
-                try fileManager.copyItem(at: url, to: artLocation)
-            } catch {
-                print(error)
-                return false
-            }
+        let filename = url.lastPathComponent
+        var artLocation = getAlbumDirectory(for: track.album!).appendingPathComponent(filename)
+        do {
+            try fileManager.copyItem(at: url, to: artLocation)
+        } catch {
+            print(error)
+            return false
         }
         if track.album?.primary_art == nil {
             let newPrimaryArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
@@ -195,7 +192,7 @@ class DatabaseManager: NSObject {
         //no matches from current art set
         //make sure it's a real image
         guard let fileExtension = getFileType(image: data) else { return false }
-        let albumDirectory = URL(string: track.location!)!.deletingLastPathComponent()
+        let albumDirectory = getAlbumDirectory(for: album)
         let artworkURL = getArtworkFilenameForDirectory(url: albumDirectory, ext: fileExtension)
         do {
             try data.write(to: artworkURL)
@@ -256,36 +253,26 @@ class DatabaseManager: NSObject {
     func moveFileAfterEdit(_ track: Track) {
         print("moving file after edit")
         print("current track location: \(track.location)")
-        let organizationType = track.library?.organization_type as! Int
-        guard organizationType != NO_ORGANIZATION_TYPE else {return}
-        let predicateTemplateBundles = track.library?.organization_template
-        let organizationTemplate = predicateTemplateBundles?.match(track)
-        let currentLocation = URL(string: track.location!)!
-        let fileExtension = currentLocation.pathExtension
-        var newLocation = organizationTemplate!.getURL(for: track, withExtension: fileExtension)!
+        guard let currentLocation = URL(string: track.location!) else { print("current location doesn't exist."); return }
+        guard let newLocation = track.determineLocation() else { return }
         let directoryURL = newLocation.deletingLastPathComponent()
         //check if directories already exist
-        do {
-            if let values = try? directoryURL.resourceValues(forKeys: [.isDirectoryKey]) {
-                if values.isDirectory == true {
-                    
-                }
-            }
-            try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true, attributes: nil)
-            var dupe = 1
-            var newLocationWithDupe = newLocation
-            while (fileManager.fileExists(atPath: newLocationWithDupe.path)) {
-                if currentLocation != newLocation {
+        if currentLocation.path.lowercased() != newLocation.path.lowercased() {
+            do {
+                try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true, attributes: nil)
+                var dupe = 1
+                var newLocationWithDupe = newLocation
+                while (fileManager.fileExists(atPath: newLocationWithDupe.path)) {
                     newLocationWithDupe = appendDuplicateTo(url: newLocation, dupe: dupe)
                     dupe += 1
-                } else {
-                    break
                 }
+                try fileManager.moveItem(at: currentLocation, to: newLocationWithDupe)
+                track.location = newLocationWithDupe.absoluteString
+            } catch {
+                print("error moving file: \(error)")
             }
-            try fileManager.moveItem(at: currentLocation, to: newLocationWithDupe)
-            track.location = newLocationWithDupe.absoluteString
-        } catch {
-            print("error moving file: \(error)")
+        } else {
+            checkCasesForMove(withOldURL: currentLocation, newURL: newLocation)
         }
         trimDirectoryFollowingMoveOperation(track: track, oldLocation: currentLocation)
         print("moved \(currentLocation) to \(track.location!)")
@@ -295,12 +282,46 @@ class DatabaseManager: NSObject {
         self.undoFileLocations[track]!.append(track.location!)
     }
     
+    func checkCasesForMove(withOldURL oldURL: URL, newURL: URL) {
+        //oldURL.path.lowercased() == newURL.path.lowercased()
+        guard oldURL.path.lowercased() == newURL.path.lowercased() else { return }
+        let newPathComponents = newURL.pathComponents
+        
+        var oldComponentsTraversedSoFar = [String]()
+        var newComponentsTraversedSoFar = [String]()
+        for (index, pathComponent) in oldURL.pathComponents.enumerated() {
+            if pathComponent != newPathComponents[index] {
+                let urlA = URL(fileURLWithPath: "/" + (oldComponentsTraversedSoFar + [pathComponent]).joined(separator: "/"))
+                let urlB = URL(fileURLWithPath: "/" + (newComponentsTraversedSoFar + [newPathComponents[index]]).joined(separator: "/"))
+                do {
+                    try fileManager.moveItem(at: urlA, to: urlB)
+                } catch {
+                    NSLog("error renaming directories for case mismatch: \(error)")
+                }
+            }
+            newComponentsTraversedSoFar.append(newPathComponents[index])
+            oldComponentsTraversedSoFar.append(pathComponent)
+        }
+    }
+    
+    func getAlbumDirectory(for album: Album) -> URL {
+        let currentTrackLocations = album.tracks?.flatMap({return ($0 as! Track).location})
+        let currentTrackDirectories = currentTrackLocations?.flatMap({return URL(string: $0)?.deletingLastPathComponent()}) ?? [URL]()
+        let directoriesSet = Set(currentTrackDirectories)
+        if directoriesSet.count == 1 {
+            return directoriesSet.first!
+        } else {
+            return createNonTemplateDirectoryFor(album: album)!
+        }
+    }
+    
     func trimDirectoryFollowingMoveOperation(track: Track, oldLocation: URL) {
         let oldDirectory = oldLocation.deletingLastPathComponent()
         let currentTrackLocations = track.album?.tracks?.flatMap({return ($0 as! Track).location})
         let currentTrackDirectories = currentTrackLocations?.flatMap({return URL(string: $0)?.deletingLastPathComponent()}) ?? [URL]()
         let directoriesSet = Set(currentTrackDirectories)
         guard directoriesSet.contains(oldDirectory) == false else { return }
+        //no files left in old directory
         guard let albumFiles = track.album?.getMiscellaneousFiles() else { return }
         if currentTrackDirectories.count == 1 {
             let currentAlbumDirectory = currentTrackDirectories.first!
@@ -469,34 +490,34 @@ class DatabaseManager: NSObject {
             
             //format-sensitive metadata
             for item in flacReader!.metadataDictionary {
-                switch item.key {
-                case "ARTIST":
+                switch item.key.lowercased() {
+                case "artist":
                     metadataDictionary[kArtistKey]          = item.value
-                case "ALBUM":
+                case "album":
                     metadataDictionary[kAlbumKey]           = item.value
-                case "COMPOSER":
+                case "composer":
                     metadataDictionary[kComposerKey]        = item.value
-                case "DATE":
+                case "date":
                     metadataDictionary[kReleaseDateKey]     = item.value
-                case "DESCRIPTION":
+                case "description":
                     metadataDictionary[kCommentsKey]        = item.value
-                case "GENRE":
+                case "genre":
                     metadataDictionary[kGenreKey]           = item.value
-                case "RELEASE DATE":
+                case "release date":
                     metadataDictionary[kReleaseDateKey]     = item.value
-                case "TITLE":
+                case "title":
                     metadataDictionary[kNameKey]            = item.value
-                case "TRACKNUMBER":
+                case "tracknumber":
                     metadataDictionary[kTrackNumKey]        = item.value
-                case "COMPILATION":
+                case "compilation":
                     metadataDictionary[kIsCompilationKey]   = item.value
-                case "COMMENT":
+                case "comment":
                     metadataDictionary[kCommentsKey]        = item.value
-                case "TOTALTRACKS":
+                case "totaltracks":
                     metadataDictionary[kTotalTracksKey]     = item.value
-                case "DISCNUMBER":
+                case "discnumber":
                     metadataDictionary[kDiscNumberKey]      = item.value
-                case "ALBUMARTIST":
+                case "albumartist":
                     metadataDictionary[kAlbumArtistKey]     = item.value
                 default: break
                 }
@@ -505,7 +526,7 @@ class DatabaseManager: NSObject {
             metadataDictionary[kSampleRateKey]  = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioSampleRate" as CFString) as? Int as NSNumber?
             metadataDictionary[kBitRateKey]     = (MDItemCopyAttribute(mediaFileObject, "kMDItemAudioBitRate" as CFString!) as! Double) / 1000
             metadataDictionary[kTimeKey]        = (MDItemCopyAttribute(mediaFileObject, "kMDItemDurationSeconds" as CFString!) as! Double) * 1000
-            metadataDictionary[kTrackNumKey]    = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioTrackNumber" as CFString!) as? Int as NSNumber?
+            metadataDictionary[kTrackNumKey]    = (MDItemCopyAttribute(mediaFileObject, "kMDItemAudioTrackNumber" as CFString!) as? Int).map({ return String($0) })
             metadataDictionary[kGenreKey]       = MDItemCopyAttribute(mediaFileObject, "kMDItemMusicalGenre" as CFString!) as? String
             metadataDictionary[kNameKey]        = MDItemCopyAttribute(mediaFileObject, "kMDItemTitle" as CFString!) as? String
             metadataDictionary[kAlbumKey]       = MDItemCopyAttribute(mediaFileObject, "kMDItemAlbum" as CFString!) as? String
@@ -525,6 +546,7 @@ class DatabaseManager: NSObject {
         var addedArtists = [String: Artist]()
         var addedAlbums = [String: Album]()
         var addedComposers = [String: Composer]()
+        var addedVolumes = [URL : Volume]()
         var tracks = [Track]()
         var index = 0
         DispatchQueue.main.async {
@@ -549,6 +571,21 @@ class DatabaseManager: NSObject {
             track.id = globalRootLibrary?.next_track_id
             globalRootLibrary?.next_track_id = Int(globalRootLibrary!.next_track_id!) + 1 as NSNumber
             track.status = 0
+            let volumeURL = getVolumeOfURL(url: url)
+            if let existingVolume = addedVolumes[volumeURL]  {
+                track.volume = existingVolume
+            } else if let existingVolume = checkIfVolumeExists(withURL: volumeURL) {
+                track.volume = subContext.object(with: existingVolume.objectID) as! Volume
+            } else {
+                let newVolume = NSEntityDescription.insertNewObject(forEntityName: "Volume", into: subContext) as! Volume
+                newVolume.location = volumeURL.absoluteString
+                newVolume.name = (try? volumeURL.resourceValues(forKeys: [.volumeNameKey]))?.volumeName
+                track.volume = newVolume
+                let newSourceListItemForVolume = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: subContext) as! SourceListItem
+                newSourceListItemForVolume.volume = newVolume
+                (subContext.object(with: globalRootLibrarySourceListItem!.objectID) as! SourceListItem).addToChildren(newSourceListItemForVolume)
+                addedVolumes[volumeURL] = newVolume
+            }
             
             //associate track with library
             track.library = subContextLibrary as! Library
@@ -561,7 +598,7 @@ class DatabaseManager: NSObject {
             track.file_kind     = fileMetadataDictionary[kFileKindKey] as? String
             track.time          = fileMetadataDictionary[kTimeKey] as! Double as NSNumber
             track.size          = fileMetadataDictionary[kSizeKey] as! Int as NSNumber
-            track.track_num     = fileMetadataDictionary[kTrackNumKey] as? NSNumber
+            track.track_num     = (fileMetadataDictionary[kTrackNumKey] as? String).flatMap({return $0}).flatMap({return Int.init($0)}) as NSNumber?
             track.genre         = fileMetadataDictionary[kGenreKey] as? String
             if let name         = fileMetadataDictionary[kNameKey] as? String {
                 track.name = name
@@ -583,6 +620,10 @@ class DatabaseManager: NSObject {
                     track.album = newAlbum
                     addedAlbums[albumCheck] = newAlbum
                     addedAlbum = newAlbum
+                }
+                if let releaseDateString = fileMetadataDictionary[kReleaseDateKey] as? String {
+                    let date = JMDate(year: Int(releaseDateString)!)
+                    track.album?.release_date = date
                 }
             }
             if let artistCheck = fileMetadataDictionary[kArtistKey] as? String {
@@ -656,7 +697,7 @@ class DatabaseManager: NSObject {
             }
             
             //move file to the appropriate location, if we're organizing
-            if moveFileToAppropriateLocationForTrack(track, currentURL: url) != nil || library.organization_type == 0 as NSNumber {
+            if moveFileAfterEdit(track) != nil || library.organization_type == 0 as NSNumber {
                 if hasArt == true {
                     addArtForTrack(track, fromData: art!, managedContext: subContext)
                 }
@@ -957,6 +998,18 @@ class DatabaseManager: NSObject {
         managedContext.undoManager?.setActionName("Edit Sort Name")
     }
     
+    func releaseDateEdited(tracks: [Track], value: JMDate) {
+        withUndoBlock(name: "Edit Release Date") {
+            editReleaseDate(tracks, date: value)
+            for order in cachedOrders!.values {
+                reorderForTracks(tracks, cachedOrder: order, subContext: nil)
+            }
+            for track in tracks {
+                moveFileAfterEdit(track)
+            }
+        }
+    }
+    
     
     
     func batchMoveTracks(tracks: [Track], visualUpdateHandler: ProgressBarController?) {
@@ -966,7 +1019,7 @@ class DatabaseManager: NSObject {
         DispatchQueue.global(qos: .default).async {
             var index = 0
             for track in subContextTracks {
-                self.moveFileToAppropriateLocationForTrack(track, currentURL: URL(string: track.location!)!)
+                self.moveFileAfterEdit(track)
                 index += 1
                 DispatchQueue.main.async {
                     visualUpdateHandler?.increment(thingsDone: index)
@@ -991,73 +1044,21 @@ class DatabaseManager: NSObject {
         }
     }
     
-    func moveFileToAppropriateLocationForTrack(_ track: Track, currentURL: URL) -> URL? {
-        print("current track location: \(track.location)")
-        let organizationType = track.library?.organization_type as! Int
-        guard organizationType != NO_ORGANIZATION_TYPE else {return nil}
-        let predicateTemplateBundles = track.library?.organization_template
-        let organizationTemplate = predicateTemplateBundles?.match(track)
-        let currentLocation = URL(string: track.location!)!
-        let fileExtension = currentLocation.pathExtension
-        var newLocation = organizationTemplate!.getURL(for: track, withExtension: fileExtension)!
-        let directoryURL = newLocation.deletingLastPathComponent()
-        //check if directories already exist
-        do {
-            try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true, attributes: nil)
-            var dupe = 1
-            var newLocationWithDupe = newLocation
-            while (fileManager.fileExists(atPath: newLocationWithDupe.path)) {
-                if currentLocation != newLocation {
-                    newLocationWithDupe = appendDuplicateTo(url: newLocation, dupe: dupe)
-                    dupe += 1
-                } else {
-                    break
-                }
-            }
-            try fileManager.moveItem(at: currentLocation, to: newLocationWithDupe)
-            track.location = newLocationWithDupe.absoluteString
-        } catch {
-            print("error moving file: \(error)")
-        }
-        print("moved \(currentLocation) to \(track.location!)")
-        if self.undoFileLocations[track] == nil {
-            self.undoFileLocations[track] = [String]()
-        }
-        self.undoFileLocations[track]!.append(track.location!)
-        return newLocation
-    }
+    
+    //MARK: network stuff (needs rewrite-ish)
     
     func moveFileForNetworkTrackToAppropriateLocationWithData(_ track: Track, data: Data) -> Bool {
-        let fileName = {() -> String in
-            switch track.library?.renames_files as! Bool {
-            case true:
-                return self.formFilenameForTrack(track, url: nil)
-            default:
-                return URL(string: track.location!)!.lastPathComponent
-            }
-        }()
-        var albumDirectoryURL: URL?
-        var fileURL: URL?
-        let libraryPathURL = track.library!.getCentralMediaFolder()!
-        var album, albumArtist: String
-        if track.album?.is_compilation != true {
-            albumArtist = validateStringForFilename(track.album?.album_artist?.name != nil ? track.album!.album_artist!.name! : track.artist?.name != nil ? track.artist!.name! : UNKNOWN_ARTIST_STRING)
-            album = validateStringForFilename(track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING)
-            albumDirectoryURL = libraryPathURL.appendingPathComponent(albumArtist).appendingPathComponent(album)
-        } else {
-            album = validateStringForFilename(track.album?.name != nil ? track.album!.name! : UNKNOWN_ALBUM_STRING)
-            albumDirectoryURL = libraryPathURL.appendingPathComponent("Compilations").appendingPathComponent(album)
-        }
+        guard let location = track.determineLocation() else { print("could not determine location"); return false }
+        let containingDirectoryURL = location.deletingLastPathComponent()
         do {
-            try fileManager.createDirectory(at: albumDirectoryURL!, withIntermediateDirectories: true, attributes: nil)
+            try fileManager.createDirectory(at: containingDirectoryURL, withIntermediateDirectories: true, attributes: nil)
         } catch {
             print("error creating album directory: \(error)")
             return false
         }
         do {
-            fileURL = albumDirectoryURL!.appendingPathComponent(fileName)
-            try data.write(to: fileURL!, options: NSData.WritingOptions.atomic)
-            track.location = fileURL!.absoluteString
+            try data.write(to: location, options: NSData.WritingOptions.atomic)
+            track.location = location.absoluteString
         } catch {
             print("error while moving/copying files: \(error)")
             return false
@@ -1155,7 +1156,7 @@ class DatabaseManager: NSObject {
             case "date_modified":
                 newTrack.date_modified = dateFormatter.date(from: trackMetadata["date_modified"] as! String) as! NSDate
             case "date_released":
-                newTrack.album?.release_date = dateFormatter.date(from: trackMetadata["date_released"] as! String) as! NSDate
+                newTrack.album?.release_date?.date = dateFormatter.date(from: trackMetadata["date_released"] as! String) as! NSDate
                 newTrackView.release_date_order = trackMetadata["release_date_order"] as? Int as NSNumber?
             case "comments":
                 newTrack.comments = trackMetadata["comments"] as? String
@@ -1513,7 +1514,7 @@ class DatabaseManager: NSObject {
                 case "date_modified":
                     newTrack.date_modified = dateFormatter.date(from: track["date_modified"] as! String) as! NSDate
                 case "date_released":
-                    newTrack.album?.release_date = dateFormatter.date(from: track["date_released"] as! String) as! NSDate
+                    newTrack.album?.release_date?.date = dateFormatter.date(from: track["date_released"] as! String) as! NSDate
                     newTrackView.release_date_order = track["release_date_order"] as? Int as NSNumber?
                 case "comments":
                     newTrack.comments = track["comments"] as? String

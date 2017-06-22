@@ -65,7 +65,7 @@ public class OrganizationTemplate: NSManagedObject {
             }
             return "\(discNumberStringRepresentation)\(trackNumberStringRepresentation)"
         case .year:
-            return track.album?.release_date?.description ?? ""
+            return track.album?.release_date?.date.description ?? ""
         }
     }
 

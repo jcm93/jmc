@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -186,7 +186,7 @@
                                                 <predicateEditorRowTemplate rowType="simple" id="yvW-Eb-YIX" userLabel="Date Released Row Template">
                                                     <array key="leftExpressionObject">
                                                         <expression type="keyPath">
-                                                            <string key="keyPath">track.album.release_date</string>
+                                                            <string key="keyPath">track.album.release_date.date</string>
                                                         </expression>
                                                     </array>
                                                     <integer key="rightExpressionObject" value="900"/>
@@ -196,7 +196,7 @@
                                                             <items>
                                                                 <menuItem title="Date Released" state="on" id="Zm1-j4-HbY" userLabel="Date Modified">
                                                                     <expression key="representedObject" type="keyPath">
-                                                                        <string key="keyPath">track.album.release_date</string>
+                                                                        <string key="keyPath">track.album.release_date.date</string>
                                                                     </expression>
                                                                 </menuItem>
                                                             </items>

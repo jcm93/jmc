@@ -49,6 +49,7 @@ class MissingTrackPathNode: NSObject {
         let path = "/" + pathComponents.filter({$0 != "" && $0 != "/"}).joined(separator: "/")
         return path
     }
+    
 }
 
 class MissingTrackPathTree: NSObject {
@@ -149,8 +150,7 @@ class MissingFilesViewController: NSViewController, NSOutlineViewDataSource, NSO
             return view
         default:
             let numberBeneath = node.missingTracks.count
-            let url = URL(fileURLWithPath: node.completePathRepresentation())
-            if node.missingTracks.count >= node.totalTracks.count {
+            if numberBeneath >= node.totalTracks.count {
                 let view = outlineView.make(withIdentifier: "ItemNumberNotFoundView", owner: node) as! MissingFileCellViewWithLocateButton
                 let string  = "\(numberBeneath) missing, \(node.totalTracks.count) total"
                 view.textField?.stringValue = string

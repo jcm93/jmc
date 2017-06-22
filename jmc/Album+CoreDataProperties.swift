@@ -21,7 +21,7 @@ extension Album {
     @NSManaged public var is_compilation: NSNumber?
     @NSManaged public var is_network: NSNumber?
     @NSManaged public var name: String?
-    @NSManaged public var release_date: NSDate?
+    @NSManaged public var release_date: JMDate?
     @NSManaged public var track_count: NSNumber?
     @NSManaged public var album_artist: Artist?
     @NSManaged public var other_art: NSOrderedSet?

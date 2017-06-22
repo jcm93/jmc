@@ -53,13 +53,17 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     @IBOutlet weak var compilationButton: NSButton!
     @IBOutlet weak var commentsField: NSTextField!
     @IBOutlet weak var composerField: NSTextField!
-    @IBOutlet weak var releaseDatePicker: NSDatePicker!
     @IBOutlet weak var trackNumOfField: NSTextField!
     @IBOutlet weak var trackNumField: NSTextField!
     @IBOutlet weak var albumArtistField: NSTextField!
     @IBOutlet weak var nameField: NSTextField!
     @IBOutlet weak var albumField: NSTextField!
     @IBOutlet weak var artistField: NSTextField!
+    @IBOutlet weak var yearField: NSTextField!
+    @IBOutlet weak var monthCheck: NSButton!
+    @IBOutlet weak var dayCheck: NSButton!
+    @IBOutlet weak var monthField: NSPopUpButton!
+    @IBOutlet weak var dayField: NSPopUpButton!
     
     let fileSizeFormatter = ByteCountFormatter()
     let bitRateFormatter = BitRateFormatter()
@@ -80,6 +84,8 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     var sortAlbumArtistIfAllEqual: String?
     var sortComposerIfAllEqual: String?
     var flacMDItem: FlacDecoder?
+    var releaseDateComponents: DateComponents?
+    var componentSet = Set([Calendar.Component.day, Calendar.Component.weekday, Calendar.Component.year, Calendar.Component.month])
     
     
     //mark artwork view
@@ -179,19 +185,55 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
         mainWindowController?.refreshCurrentSortOrder()
     }
     
-    @IBAction func releaseDateChecked(_ sender: AnyObject) {
-        if releaseDateCheck.state == NSOnState {
-            releaseDatePicker.datePickerElements = .yearMonthDayDatePickerElementFlag
-            releaseDatePicker.isEnabled = true
+    @IBAction func monthChecked(_ sender: Any) {
+        if monthCheck.state == NSOnState {
+            let month = Int(self.monthField.selectedItem!.title)
+            self.releaseDateComponents?.month = month
+            let days = Calendar.current.range(of: .day, in: .month, for: self.releaseDateComponents!.date!)!
+            self.dayField.menu?.removeAllItems()
+            for day in days.lowerBound..<days.upperBound {
+                self.dayField.menu?.addItem(withTitle: String(day), action: nil, keyEquivalent: "")
+            }
         } else {
-            releaseDatePicker.datePickerElements = NSDatePickerElementFlags(rawValue: 0)
-            releaseDatePicker.isEnabled = false
+            dayCheck.state = NSOffState
         }
-        mainWindowController?.currentTableViewController?.trackViewArrayController.fetch(nil)
+        datePickerAction(self)
     }
     
+    
+    
     @IBAction func datePickerAction(_ sender: AnyObject) {
-        
+        if self.releaseDateCheck.state == NSOnState {
+            if self.releaseDateComponents == nil {
+                self.releaseDateComponents = DateComponents()
+                self.releaseDateComponents?.calendar = Calendar.current
+            }
+            if let year = Int(self.yearField.stringValue) {
+                self.releaseDateComponents?.year = year
+                if monthCheck.state == NSOnState {
+                    if let month = Int(monthField.selectedItem!.title) {
+                        self.releaseDateComponents?.month = month
+                        if dayCheck.state == NSOnState {
+                            let day = Int(dayField.selectedItem!.title)!
+                            self.releaseDateComponents?.day = day
+                        } else {
+                            self.releaseDateComponents?.day = nil
+                            self.releaseDateComponents?.weekday = nil
+                        }
+                    }
+                } else {
+                    self.releaseDateComponents?.month = nil
+                }
+            }
+        } else {
+            self.releaseDateComponents?.year = nil
+            self.monthCheck.state = NSOffState
+            self.dayCheck.state = NSOffState
+        }
+        if self.releaseDateComponents?.date != nil && self.releaseDateComponents?.year != nil {
+            let newJMDate = JMDate(year: self.releaseDateComponents!.year!, month: self.releaseDateComponents?.month, day: self.releaseDateComponents?.day)
+            databaseManager.releaseDateEdited(tracks: self.selectedTracks!, value: newJMDate)
+        }
     }
     
     func allEqual<T:Equatable>(_ thing: [T?]) -> Bool {
@@ -282,12 +324,29 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
         let release_dates = selectedTracks!.map({ return $0.album?.release_date })
         if allEqual(release_dates) == true {
             if release_dates[0] != nil {
-                releaseDatePicker.dateValue = release_dates[0]! as Date
+                let jmDate = release_dates[0]!
                 releaseDateCheck.state = NSOnState
+                self.releaseDateComponents = Calendar.current.dateComponents(self.componentSet, from: release_dates[0]!.date as Date)
+                self.releaseDateComponents?.calendar = Calendar.current
+                self.releaseDateComponents?.weekday = nil
+                self.yearField.stringValue = String(self.releaseDateComponents!.year!)
+                if jmDate.hasMonth == true {
+                    let month = self.releaseDateComponents!.month!
+                    self.monthCheck.state = NSOnState
+                    self.monthField.selectItem(at: month - 1)
+                    let days = Calendar.current.range(of: .day, in: .month, for: self.releaseDateComponents!.date!)!
+                    self.dayField.menu?.removeAllItems()
+                    for day in days.lowerBound..<days.upperBound {
+                        self.dayField.menu?.addItem(withTitle: String(day), action: nil, keyEquivalent: "")
+                    }
+                    if jmDate.hasDay {
+                        let day = releaseDateComponents!.day!
+                        self.dayCheck.state = NSOnState
+                        self.dayField.selectItem(at: day - 1)
+                    }
+                }
             } else {
                 releaseDateCheck.state = NSOffState
-                releaseDatePicker.datePickerElements = NSDatePickerElementFlags(rawValue: 0)
-                releaseDatePicker.isEnabled = false
             }
         }
         let track_nums = selectedTracks!.map({return $0.track_num})
@@ -417,6 +476,8 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
         if selectedTracks!.count > 1 {
             nextTrackButton.isHidden = true
             previousTrackButton.isHidden = true
+            segControl.setEnabled(false, forSegment: 2)
+            segControl.setWidth(0.00001, forSegment: 2)
             tabView.removeTabViewItem(fileInfoTab)
         } else {
             currentTrack = selectedTracks![0]
@@ -530,6 +591,13 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     @IBOutlet weak var sortingComposerField: NSTextField!
     @IBOutlet weak var sortingComposerSortAsField: NSTextField!
     
+    @IBAction func previousTrackPressed(_ sender: Any) {
+        
+    }
+    
+    @IBAction func nextTrackPressed(_ sender: Any) {
+        
+    }
 
     override func windowDidLoad() {
         super.windowDidLoad()
@@ -538,6 +606,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
         tabView.drawsBackground = false
         self.window?.titlebarAppearsTransparent = true
         self.window!.titleVisibility = .hidden
+        self.window?.isMovableByWindowBackground = true
     }
     
 }

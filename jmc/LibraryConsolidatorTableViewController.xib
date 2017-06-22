@@ -652,7 +652,7 @@
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                         <connections>
-                                                            <binding destination="1Wl-7M-nYw" name="value" keyPath="objectValue.track.album.release_date" id="Bdb-gT-Mfq"/>
+                                                            <binding destination="1Wl-7M-nYw" name="value" keyPath="objectValue.track.album.release_date.date" id="gZr-Mc-BmE"/>
                                                         </connections>
                                                     </textField>
                                                 </subviews>

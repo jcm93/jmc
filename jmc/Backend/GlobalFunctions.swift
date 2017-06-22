@@ -200,7 +200,7 @@ var kTrackNumKey = "trackNumber"
 //rels
 var kAlbumKey = "album"
 var kArtistKey = "artist"
-var kAlbumArtistKey = "albumArtist"
+var kAlbumArtistKey = "albumartist"
 var kComposerKey = "composer"
 var kReleaseDateKey = "dateReleased"
 var kIsCompilationKey = "isCompilation"
@@ -1099,6 +1099,14 @@ func editSortComposer(_ tracks: [Track]?, sortComposer: String) {
     if tracks != nil {
         for track in tracks! {
             track.sort_composer = sortComposer
+        }
+    }
+}
+
+func editReleaseDate(_ tracks: [Track]?, date: JMDate) {
+    if tracks != nil {
+        for album in Set(tracks!.flatMap({return $0.album})) {
+            album.release_date = date
         }
     }
 }

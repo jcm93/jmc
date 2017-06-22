@@ -96,6 +96,10 @@ class InitialSetupWindowController: NSWindowController {
         //create library
         let newActualLibrary = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
         newActualLibrary.initialSetup(withCentralDirectory: libraryPathControl.url!, organizationType: organizationType.rawValue, renamesFiles: modifyMetadata)
+        let defaultVolume = NSEntityDescription.insertNewObject(forEntityName: "Volume", into: managedContext) as! Volume
+        defaultVolume.location = getVolumeOfURL(url: libraryPathControl.url!).absoluteString
+        defaultVolume.name = (try? libraryPathControl.url!.resourceValues(forKeys: [.volumeNameKey]))?.volumeName
+        newActualLibrary.addToVolumes(defaultVolume)
         
         let newActualLibrarySLI = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         newActualLibrarySLI.library = newActualLibrary
@@ -103,6 +107,11 @@ class InitialSetupWindowController: NSWindowController {
         //create dummy source list item as root of source list
         let source_list_root = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         source_list_root.is_root = true
+        
+        //create SLI for default volume
+        let defaultVolumeSLI = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
+        defaultVolumeSLI.volume = defaultVolume
+        newActualLibrarySLI.addToChildren(defaultVolumeSLI)
         
         //create source list headers
         let cd_library_header = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem

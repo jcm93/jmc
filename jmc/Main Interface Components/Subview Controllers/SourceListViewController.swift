@@ -311,15 +311,14 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         } else if source.volume != nil {
             if volumeIsAvailable(volume: source.volume!) {
                 let view = outlineView.make(withIdentifier: "MasterPlaylistCell", owner: self) as! SourceListCellView
-                view.subviews[2].bind("value", to: source.library!, withKeyPath: "is_active", options: [NSContinuouslyUpdatesValueBindingOption : true])
                 view.node = source
-                view.textField?.stringValue = source.library!.name ?? ""
+                view.textField?.stringValue = source.volume!.name ?? ""
                 view.textField?.isEditable = false
                 return view
             } else {
                 let view = outlineView.make(withIdentifier: "MasterPlaylistCellDisabled", owner: self) as! SourceListCellView
                 view.node = source
-                view.textField?.stringValue = source.library!.name ?? ""
+                view.textField?.stringValue = source.volume!.name ?? ""
                 return view
             }
 

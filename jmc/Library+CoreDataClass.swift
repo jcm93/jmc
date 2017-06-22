@@ -49,9 +49,6 @@ public class Library: NSManagedObject {
         self.organization_template = newTemplateBundle
         self.name = NSFullUserName() + "'s library"
         self.parent = nil
-        let defaultVolume = NSEntityDescription.insertNewObject(forEntityName: "Volume", into: managedContext) as! Volume
-        defaultVolume.location = getVolumeOfURL(url: url).absoluteString
-        self.addToVolumes(defaultVolume)
         self.is_active = true
         self.renames_files = renamesFiles as NSNumber
         var urlArray = [URL]()

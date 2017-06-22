@@ -139,14 +139,13 @@ class iTunesLibraryParser: NSObject {
                     }
                 }
                 if let year                 = trackDict[iTunesImporterYearKey] as? Int {
-                    var dateComponents = DateComponents()
-                    dateComponents.year = year
-                    dateComponents .calendar = Calendar(identifier: .gregorian)
-                    cd_track.album?.release_date = dateComponents.date! as NSDate
+                    let date = JMDate(year: year)
+                    cd_track.album?.release_date = date
                 }
                 if let releaseDate              = trackDict[iTunesImporterReleaseDateKey] as? NSDate {
                     if cd_track.album?.release_date == nil {
-                        cd_track.album?.release_date = releaseDate
+                        let date = JMDate(date: releaseDate)
+                        cd_track.album?.release_date = date
                     }
                 }
                 cd_track.album?.is_compilation = trackDict[iTunesImporterCompilationKey] as? NSNumber

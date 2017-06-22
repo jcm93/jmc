@@ -100,6 +100,9 @@
 		0D9CE6761D34128B004FA8CB /* InitialSetupWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D9CE6741D34128B004FA8CB /* InitialSetupWindowController.xib */; };
 		0D9CE6781D3442D3004FA8CB /* Preferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D9CE6771D3442D3004FA8CB /* Preferences.plist */; };
 		0DA02D321EF9D41A00DDE5A9 /* MediaMetadataHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA02D311EF9D41A00DDE5A9 /* MediaMetadataHandler.swift */; };
+		0DA02D341EFA046A00DDE5A9 /* JMDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA02D331EFA046A00DDE5A9 /* JMDate.swift */; };
+		0DA02D361EFA099E00DDE5A9 /* JMDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA02D351EFA099E00DDE5A9 /* JMDateFormatter.swift */; };
+		0DA02D381EFB098900DDE5A9 /* StupidSearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA02D371EFB098900DDE5A9 /* StupidSearchField.swift */; };
 		0DA7E95A1ECC141900719678 /* ImageCollectionViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA7E9581ECC141900719678 /* ImageCollectionViewItem.swift */; };
 		0DA7E95B1ECC141900719678 /* ImageCollectionViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DA7E9591ECC141900719678 /* ImageCollectionViewItem.xib */; };
 		0DA8D0401D1B1128009FEC28 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */; };
@@ -310,6 +313,9 @@
 		0D9CE6741D34128B004FA8CB /* InitialSetupWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = InitialSetupWindowController.xib; path = "Other Windows/InitialSetupWindowController.xib"; sourceTree = "<group>"; };
 		0D9CE6771D3442D3004FA8CB /* Preferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Preferences.plist; sourceTree = "<group>"; };
 		0DA02D311EF9D41A00DDE5A9 /* MediaMetadataHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMetadataHandler.swift; sourceTree = "<group>"; };
+		0DA02D331EFA046A00DDE5A9 /* JMDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMDate.swift; sourceTree = "<group>"; };
+		0DA02D351EFA099E00DDE5A9 /* JMDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMDateFormatter.swift; sourceTree = "<group>"; };
+		0DA02D371EFB098900DDE5A9 /* StupidSearchField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StupidSearchField.swift; sourceTree = "<group>"; };
 		0DA7E9581ECC141900719678 /* ImageCollectionViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageCollectionViewItem.swift; path = "Other Windows/ImageCollectionViewItem.swift"; sourceTree = "<group>"; };
 		0DA7E9591ECC141900719678 /* ImageCollectionViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImageCollectionViewItem.xib; path = "Other Windows/ImageCollectionViewItem.xib"; sourceTree = "<group>"; };
 		0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressBarView.swift; path = "Main Interface Components/Miscellaneous/ProgressBarView.swift"; sourceTree = "<group>"; };
@@ -529,6 +535,7 @@
 			children = (
 				0DAB30901CFBA3340028928F /* AppDelegate.swift */,
 				0DF4BEF11CFD0D4E00AC5824 /* MainWindowController.swift */,
+				0DA02D371EFB098900DDE5A9 /* StupidSearchField.swift */,
 				0DF4BEF21CFD0D4E00AC5824 /* MainWindowController.xib */,
 				0DAB30971CFBA3340028928F /* MainMenu.xib */,
 			);
@@ -631,8 +638,10 @@
 				0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */,
 				0D60F5251E86F77900CA5420 /* TimeFormatter.swift */,
 				0D3878BB1DD125E9004CC3C1 /* StupidNumberFormatter.swift */,
+				0DA02D351EFA099E00DDE5A9 /* JMDateFormatter.swift */,
 				0D3878B91DD12530004CC3C1 /* SampleRateFormatter.swift */,
 				0D51C8A71EAC1646002F6182 /* URLStringFormatter.swift */,
+				0DA02D331EFA046A00DDE5A9 /* JMDate.swift */,
 			);
 			name = Formatters;
 			sourceTree = "<group>";
@@ -1194,6 +1203,7 @@
 				0D51C8A81EAC1646002F6182 /* URLStringFormatter.swift in Sources */,
 				0DE74A531D7D9457005211E6 /* SharedLibraryRequestHandler.swift in Sources */,
 				0D592A221EDF6BCE0054D553 /* TrackExtension.swift in Sources */,
+				0DA02D381EFB098900DDE5A9 /* StupidSearchField.swift in Sources */,
 				0D800C0C1ED3B54100EA2889 /* ArtistViewAlbumViewController.swift in Sources */,
 				0D299B131DF10FFF0009CF7A /* SourceListViewController.swift in Sources */,
 				0DE486861EA58C67009B226B /* JMPathControl.swift in Sources */,
@@ -1249,6 +1259,7 @@
 				0D592A401EDF6C8B0054D553 /* SongCollection+CoreDataProperties.swift in Sources */,
 				0D299B231DF158A60009CF7A /* AdvancedFilterViewController.swift in Sources */,
 				0DF4BEEE1CFBE4CB00AC5824 /* iTunesLibraryParser.swift in Sources */,
+				0DA02D341EFA046A00DDE5A9 /* JMDate.swift in Sources */,
 				0D8B98681ED2ACF000283DD1 /* ArtistViewController.swift in Sources */,
 				0D8AFE541E6CB3E7004AC584 /* LocationVerifierSheetController.swift in Sources */,
 				0D3878BA1DD12530004CC3C1 /* SampleRateFormatter.swift in Sources */,
@@ -1261,6 +1272,7 @@
 				0DE957C81EE9D5D0008CBECF /* Track+CoreDataProperties.swift in Sources */,
 				0DD7A3BC1EF4738F00FEDD71 /* StupidTableView.swift in Sources */,
 				0D0C2AA91E88D8FF00CA82C3 /* MTButtonCell.swift in Sources */,
+				0DA02D361EFA099E00DDE5A9 /* JMDateFormatter.swift in Sources */,
 				0D0E5FAF1D3E909D009E0FA3 /* DragAndDropImageView.swift in Sources */,
 				0D592A441EDF6C8B0054D553 /* SmartCriteria+CoreDataProperties.swift in Sources */,
 				0D592A471EDF6C8B0054D553 /* Track+CoreDataClass.swift in Sources */,

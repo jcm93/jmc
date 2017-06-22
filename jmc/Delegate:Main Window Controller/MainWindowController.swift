@@ -886,9 +886,14 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         delegate?.shuffleMenuItem.state = shuffleButton.state
         delegate?.repeatMenuItem.state = repeatButton.state
         self.window?.isMovableByWindowBackground = true
+        UserDefaults.standard.set(false, forKey: jmcDarkAppearanceOption)
         if UserDefaults.standard.bool(forKey: jmcDarkAppearanceOption) {
             self.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
             theBox.fillColor = NSColor(patternImage: NSImage(named: "Inverted Gradient")!)
+            let color = NSColor.tertiaryLabelColor
+            let attrs = [NSForegroundColorAttributeName : color]
+            let newAttributedString = NSAttributedString(string: "Search", attributes: attrs)
+            (searchField.cell as! NSSearchFieldCell).placeholderAttributedString = newAttributedString
         }
         barViewToggle.isHidden = true
         //self.window?.invalidateShadow()

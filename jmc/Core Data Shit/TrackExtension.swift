@@ -23,6 +23,17 @@ extension Track {
         self.location = url.absoluteString
     }
     
+    func determineLocation() -> URL? {
+        let organizationType = self.library?.organization_type as! Int
+        guard organizationType != NO_ORGANIZATION_TYPE else {return nil}
+        let predicateTemplateBundles = self.library?.organization_template
+        let organizationTemplate = predicateTemplateBundles?.match(self)
+        let currentLocation = URL(string: self.location!)!
+        let fileExtension = currentLocation.pathExtension
+        let newLocation = organizationTemplate!.getURL(for: self, withExtension: fileExtension)!
+        return newLocation
+    }
+    
     @objc func compareArtist(_ other: Track) -> ComparisonResult {
         let self_artist_name = (self.sort_artist != nil) ? self.sort_artist : self.artist?.name
         let other_artist_name = (other.sort_artist != nil) ? other.sort_artist : other.artist?.name
@@ -55,7 +66,8 @@ extension Track {
                     let other_track_num = other.track_num
                     let track_num_comparison: ComparisonResult
                     if self_track_num == nil || other_track_num == nil {
-                        track_num_comparison = (self_track_num == other_track_num) ? .orderedSame : (other_track_num != nil) ? .orderedAscending : .orderedDescending
+                        //QOL for editing when track # tag nonexistent
+                        track_num_comparison = (self_track_num == other_track_num) ? .orderedSame : (other_track_num != nil) ? .orderedDescending : .orderedAscending
                     } else {
                         track_num_comparison = self_track_num!.compare(other_track_num!)
                     }
@@ -112,7 +124,8 @@ extension Track {
                     let other_track_num = other.track_num
                     let track_num_comparison: ComparisonResult
                     if self_track_num == nil || other_track_num == nil {
-                        track_num_comparison = (self_track_num == other_track_num) ? .orderedSame : (other_track_num != nil) ? .orderedAscending : .orderedDescending
+                        //QOL for editing when track # tag nonexistent
+                        track_num_comparison = (self_track_num == other_track_num) ? .orderedSame : (other_track_num != nil) ? .orderedDescending : .orderedAscending
                     } else {
                         track_num_comparison = self_track_num!.compare(other_track_num!)
                     }
@@ -168,7 +181,8 @@ extension Track {
                     let other_track_num = other.track_num
                     let track_num_comparison: ComparisonResult
                     if self_track_num == nil || other_track_num == nil {
-                        track_num_comparison = (self_track_num == other_track_num) ? .orderedSame : (other_track_num != nil) ? .orderedAscending : .orderedDescending
+                        //QOL for editing when track # tag nonexistent
+                        track_num_comparison = (self_track_num == other_track_num) ? .orderedSame : (other_track_num != nil) ? .orderedDescending : .orderedAscending
                     } else {
                         track_num_comparison = self_track_num!.compare(other_track_num!)
                     }
@@ -256,8 +270,8 @@ extension Track {
     }
     
     @objc func compareDateReleased(_ other: Track) -> ComparisonResult {
-        let self_date_released = self.album?.release_date
-        let other_date_released = other.album?.release_date
+        let self_date_released = self.album?.release_date?.date
+        let other_date_released = other.album?.release_date?.date
         guard self_date_released != nil && other_date_released != nil else {
             return (self_date_released == other_date_released) ? .orderedSame : (other_date_released != nil) ? .orderedAscending : .orderedDescending
         }
