@@ -12,7 +12,7 @@ import Cocoa
 import CoreData
 // FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
 // Consider refactoring the code to use the non-optional operators.
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+/*fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
     return l < r
@@ -32,7 +32,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   default:
     return rhs < lhs
   }
-}
+}*/
 
 
 var managedContext = (NSApplication.shared().delegate as! AppDelegate).managedObjectContext
@@ -693,6 +693,51 @@ func getUTIFrom(url: URL) -> CFString? {
     return uniformTypeIdentifier
 }
 
+var jmcUnknownArtist = {() -> Artist in
+    let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Artist")
+    let predicate = NSPredicate(format: "id == 1")
+    request.predicate = predicate
+    do {
+        let result = try managedContext.fetch(request) as! [Artist]
+        return result[0]
+    } catch {
+        let unknownArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
+        unknownArtist.id = 1
+        unknownArtist.name = "Unknown Artist"
+        return unknownArtist
+    }
+}
+
+var jmcUnknownAlbum = {() -> Album in
+    let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Album")
+    let predicate = NSPredicate(format: "id == 1")
+    request.predicate = predicate
+    do {
+        let result = try managedContext.fetch(request) as! [Album]
+        return result[0]
+    } catch {
+        let unknownAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+        unknownAlbum.id = 1
+        unknownAlbum.name = "Unknown Album"
+        return unknownAlbum
+    }
+}
+
+var jmcUnknownComposer = {() -> Composer in
+    let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Composer")
+    let predicate = NSPredicate(format: "id == 1")
+    request.predicate = predicate
+    do {
+        let result = try managedContext.fetch(request) as! [Composer]
+        return result[0]
+    } catch {
+        let unknownComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: managedContext) as! Composer
+        unknownComposer.id = 1
+        unknownComposer.name = "Unknown Composer"
+        return unknownComposer
+    }
+}
+
 func checkIfArtistExists(_ name: String) -> Artist? {
     let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Artist")
     let predicate = NSPredicate(format: "name == %@", name)
@@ -710,9 +755,9 @@ func checkIfArtistExists(_ name: String) -> Artist? {
     }
 }
 
-func checkIfAlbumExists(_ name: String) -> Album? {
+func checkIfAlbumExists(withName name: String, withArtist artist: Artist) -> Album? {
     let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Album")
-    let predicate = NSPredicate(format: "name == %@", name)
+    let predicate = NSPredicate(format: "name == %@ and album_artist == %@", name, artist)
     request.predicate = predicate
     do {
         let result = try managedContext.fetch(request) as! [Album]
@@ -921,46 +966,68 @@ func editComposer(_ tracks: [Track]?, composerName: String) {
 
 func editAlbum(_ tracks: [Track]?, albumName: String) {
     print(albumName)
-    var album: Album?
-    let albumCheck = checkIfAlbumExists(albumName)
-    if albumCheck != nil {
-        album = albumCheck!
-        for track in tracks! {
-            print("old album name: \(track.sort_album)")
-            track.album = albumCheck!
-            let albumName = albumCheck!.name!
+    guard let tracks = tracks else { return }
+    var artistTrackDictionary = [Artist : [Track]]()
+    for track in tracks {
+        if artistTrackDictionary[track.artist!] == nil {
+            artistTrackDictionary[track.artist!] = [Track]()
+        }
+        artistTrackDictionary[track.artist!]?.append(track)
+    }
+    for (artist, tracks) in artistTrackDictionary {
+        if let albumCheck = checkIfAlbumExists(withName: albumName, withArtist: artist) {
+            for track in tracks {
+                track.album = albumCheck
+                let albumName = albumCheck.name!
+                let sortAlbumName = getSortName(albumName)
+                if sortAlbumName != albumName {
+                    track.sort_album = sortAlbumName
+                }
+            }
+        } else {
+            let new_album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+            new_album.name = albumName
+            new_album.id = globalRootLibrary?.next_album_id
+            new_album.album_artist = artist
+            globalRootLibrary!.next_album_id = Int(globalRootLibrary!.next_album_id!) + 1 as NSNumber
             let sortAlbumName = getSortName(albumName)
-            if sortAlbumName != albumName {
-                track.sort_album = sortAlbumName
-            }
-            print("new album name: \(track.sort_album)")
-        }
-    } else {
-        let new_album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
-        new_album.name = albumName
-        new_album.id = globalRootLibrary?.next_album_id
-        globalRootLibrary!.next_album_id = Int(globalRootLibrary!.next_album_id!) + 1 as NSNumber
-        let sortAlbumName = getSortName(albumName)
-        for track in tracks! {
-            track.album = new_album
-            if sortAlbumName != albumName {
-                track.sort_album = sortAlbumName
+            for track in tracks {
+                track.album = new_album
+                if sortAlbumName != albumName {
+                    track.sort_album = sortAlbumName
+                }
             }
         }
-        album = new_album
     }
 }
 
 func editAlbumArtist(_ tracks: [Track]?, albumArtistName: String) {
+    guard let tracks = tracks else { return }
     print(albumArtistName)
     let artistCheck = checkIfArtistExists(albumArtistName)
+    let albums = Set(tracks.map({return $0.album!}))
+    var nameAlbumDictionary = [String : [Album]]()
+    for album in albums {
+        if nameAlbumDictionary[album.name!] == nil {
+            nameAlbumDictionary[album.name!] = [Album]()
+        }
+        nameAlbumDictionary[album.name!]!.append(album)
+    }
+    var combinedAlbums = [Album]()
+    for (_, albums) in nameAlbumDictionary {
+        combinedAlbums.append(albums.reduce(albums.first!) {
+            return combineAlbums($0, $1)
+        })
+    }
     if artistCheck != nil {
-        for track in tracks! {
-            track.album?.album_artist = artistCheck!
+        for album in combinedAlbums {
+            album.album_artist = artistCheck!
             let artistName = artistCheck!.name!
             let sortArtistName = getSortName(artistName)
             if sortArtistName != artistName {
-                track.sort_album_artist = sortArtistName
+                for track in album.tracks as! Set<Track> {
+                    track.sort_album_artist = sortArtistName
+                }
             }
         }
     } else {
@@ -969,16 +1036,47 @@ func editAlbumArtist(_ tracks: [Track]?, albumArtistName: String) {
         new_artist.id = globalRootLibrary?.next_artist_id
         globalRootLibrary!.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
         let sortArtistName = getSortName(albumArtistName)
-        let unique_albums = Set(tracks!.map({return $0.album!}))
-        for album in unique_albums {
+        for album in combinedAlbums {
             album.album_artist = new_artist
         }
-        for track in tracks! {
+        for track in tracks {
             if sortArtistName != albumArtistName {
                 track.sort_album_artist = sortArtistName
             }
         }
     }
+}
+
+func combineAlbums(_ firstAlbum: Album, _ secondAlbum: Album) -> Album {
+    //combine primary artwork
+    if firstAlbum.primary_art != nil {
+        if secondAlbum.primary_art != nil {
+            firstAlbum.addToOther_art(secondAlbum.primary_art!)
+        }
+    } else {
+        if secondAlbum.primary_art != nil {
+            firstAlbum.primary_art = secondAlbum.primary_art
+        }
+    }
+    //combine secondary artwork
+    if let secondOtherArt = secondAlbum.other_art, secondOtherArt.count > 0 {
+        if firstAlbum.primary_art == nil {
+            firstAlbum.primary_art = secondAlbum.other_art?.firstObject as! AlbumArtwork
+        } else {
+            firstAlbum.addToOther_art(secondAlbum.other_art!)
+        }
+    }
+    //combine other files
+    if let secondOtherFiles = secondAlbum.other_files, secondOtherFiles.count > 0 {
+        firstAlbum.addToOther_files(secondAlbum.other_files!)
+    }
+    
+    //combine tracks
+    for track in secondAlbum.tracks as! Set<Track> {
+        track.album = firstAlbum
+    }
+    
+    return firstAlbum
 }
 
 func notEnablingUndo(stuff: (Void) -> Void) {
@@ -1269,7 +1367,7 @@ func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder, subContext: N
     default:
         comparator = Track.compareArtist
     }
-    if actualTracks.count > cachedOrder.track_views?.count {
+    if let cachedOrderTrackViews = cachedOrder.track_views, actualTracks.count > cachedOrderTrackViews.count {
         let allTracks = (cachedOrder.track_views!.array as! [TrackView]).map({return $0.track!}) + actualTracks as NSArray
         let newTracks: NSArray
         let key: String

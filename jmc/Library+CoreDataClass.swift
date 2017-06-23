@@ -37,7 +37,8 @@ public class Library: NSManagedObject {
         let oldString = self.organization_template!.default_template!.base_url_string!
         let newString = newURL.absoluteString
         self.organization_template?.default_template?.base_url_string = self.organization_template?.default_template?.base_url_string?.replacingOccurrences(of: oldString, with: newString, options: .anchored, range: nil)
-        for template in self.organization_template?.other_templates as! Set<OrganizationTemplate> {
+        for objCTemplate in self.organization_template!.other_templates! {
+            guard let template = objCTemplate as? OrganizationTemplate else { continue }
             template.base_url_string = template.base_url_string?.replacingOccurrences(of: oldString, with: newString, options: .anchored, range: nil)
         }
 

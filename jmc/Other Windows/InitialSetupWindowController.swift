@@ -159,12 +159,23 @@ class InitialSetupWindowController: NSWindowController {
         let cachedComposerOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: managedContext) as! CachedOrder
         cachedComposerOrder.order = "Composer"
         
+        //create blank entities
+        let unknownArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
+        unknownArtist.id = 1
+        unknownArtist.name = "Unknown Artist"
+        let unknownAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+        unknownAlbum.id = 1
+        unknownAlbum.name = "Unknown Album"
+        let unknownComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: managedContext) as! Composer
+        unknownComposer.id = 1
+        unknownComposer.name = "Unknown Composer"
+        
         //set IDs
-        library?.next_album_id = 1
+        library?.next_album_id = 2
         library?.next_track_id = 1
-        library?.next_artist_id = 1
+        library?.next_artist_id = 2
         library?.next_genre_id = 1
-        library?.next_composer_id = 1
+        library?.next_composer_id = 2
         library?.next_playlist_id = 1
         library?.next_album_artwork_id = 1
         library?.next_album_artwork_collection_id = 1

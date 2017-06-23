@@ -156,7 +156,7 @@
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <accessibility description="Artist Name"/>
                                         </textFieldCell>
-                                        <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="artist_order"/>
+                                        <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="album_artist_order"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <accessibility description="Artist Name Column"/>
                                     </tableColumn>

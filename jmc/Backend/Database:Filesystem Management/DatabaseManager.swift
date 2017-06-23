@@ -323,8 +323,8 @@ class DatabaseManager: NSObject {
         guard directoriesSet.contains(oldDirectory) == false else { return }
         //no files left in old directory
         guard let albumFiles = track.album?.getMiscellaneousFiles() else { return }
-        if currentTrackDirectories.count == 1 {
-            let currentAlbumDirectory = currentTrackDirectories.first!
+        if directoriesSet.count == 1 {
+            let currentAlbumDirectory = directoriesSet.first!
             for albumFile in albumFiles {
                 do {
                     let fileURL = URL(string: albumFile)!
@@ -543,9 +543,9 @@ class DatabaseManager: NSObject {
         subContext.parent = managedContext
         let subContextLibrary = subContext.object(with: library.objectID)
         var errors = [FileAddToDatabaseError]()
-        var addedArtists = [String: Artist]()
-        var addedAlbums = [String: Album]()
-        var addedComposers = [String: Composer]()
+        var addedArtists = [String : Artist]()
+        var addedAlbums = [String : [Artist : Album]]()
+        var addedComposers = [String : Composer]()
         var addedVolumes = [URL : Volume]()
         var tracks = [Track]()
         var index = 0
@@ -558,7 +558,7 @@ class DatabaseManager: NSObject {
                 errors.append(FileAddToDatabaseError(url: url.absoluteString, error: kFileAddErrorMetadataNotYetPopulated)); continue
             }
             var addedArtist: Artist?
-            var addedAlbum: Album?
+            var addedAlbum: String?
             var addedComposer: Composer?
             var addedAlbumArtist: Artist?
             
@@ -607,25 +607,6 @@ class DatabaseManager: NSObject {
             }
             
             //populate artist, album, composer
-            if let albumCheck = fileMetadataDictionary[kAlbumKey] as? String {
-                if let alreadyAddedAlbum = addedAlbums[albumCheck] {
-                    track.album = alreadyAddedAlbum
-                } else if let alreadyAddedAlbum = checkIfAlbumExists(albumCheck) {
-                    track.album = subContext.object(with: alreadyAddedAlbum.objectID) as! Album
-                } else {
-                    let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: subContext) as! Album
-                    newAlbum.name = albumCheck
-                    newAlbum.id = globalRootLibrary?.next_album_id
-                    globalRootLibrary?.next_album_id = Int(globalRootLibrary!.next_album_id!) + 1 as NSNumber
-                    track.album = newAlbum
-                    addedAlbums[albumCheck] = newAlbum
-                    addedAlbum = newAlbum
-                }
-                if let releaseDateString = fileMetadataDictionary[kReleaseDateKey] as? String {
-                    let date = JMDate(year: Int(releaseDateString)!)
-                    track.album?.release_date = date
-                }
-            }
             if let artistCheck = fileMetadataDictionary[kArtistKey] as? String {
                 if let alreadyAddedArtist = addedArtists[artistCheck] {
                     track.artist = alreadyAddedArtist
@@ -640,7 +621,37 @@ class DatabaseManager: NSObject {
                     addedArtists[artistCheck] = newArtist
                     addedArtist = newArtist
                 }
+            } else {
+                track.artist = subContext.object(with: jmcUnknownArtist().objectID) as! Artist
+                //assign to unknown artist
             }
+            if let albumCheck = fileMetadataDictionary[kAlbumKey] as? String {
+                if let alreadyAddedAlbum = addedAlbums[albumCheck]?[track.artist!] {
+                    track.album = alreadyAddedAlbum
+                } else if let alreadyAddedAlbum = checkIfAlbumExists(withName: albumCheck, withArtist: track.artist!) {
+                    track.album = subContext.object(with: alreadyAddedAlbum.objectID) as! Album
+                } else {
+                    let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: subContext) as! Album
+                    newAlbum.name = albumCheck
+                    newAlbum.id = globalRootLibrary?.next_album_id
+                    addedAlbum = albumCheck
+                    globalRootLibrary?.next_album_id = Int(globalRootLibrary!.next_album_id!) + 1 as NSNumber
+                    track.album = newAlbum
+                }
+                if let releaseDateString = fileMetadataDictionary[kReleaseDateKey] as? String {
+                    let date = JMDate(year: Int(releaseDateString)!)
+                    track.album?.release_date = date
+                }
+            } else {
+                track.album = subContext.object(with: jmcUnknownAlbum().objectID) as! Album
+                //assign to unknown album
+            }
+            track.album!.album_artist = track.artist!
+            if addedAlbums[track.album!.name!] == nil {
+                addedAlbums[track.album!.name!] = [Artist : Album]()
+            }
+            addedAlbums[track.album!.name!]![track.artist!] = track.album!
+            addedAlbums[track.album!.name!]![track.album!.album_artist!] = track.album!
             if let composerCheck = fileMetadataDictionary[kComposerKey] as? String {
                 if let alreadyAddedComposer = addedComposers[composerCheck] {
                     track.composer = alreadyAddedComposer
@@ -654,22 +665,6 @@ class DatabaseManager: NSObject {
                     track.composer = newComposer
                     addedComposers[composerCheck] = newComposer
                     addedComposer = newComposer
-                }
-            }
-            //handle album artist
-            if let albumArtistName = fileMetadataDictionary[kAlbumArtistKey] as? String {
-                if let alreadyAddedArtist = addedArtists[albumArtistName] {
-                    track.album?.album_artist = alreadyAddedArtist
-                } else if let alreadyAddedArtist = checkIfArtistExists(albumArtistName) {
-                    track.album?.album_artist = subContext.object(with: alreadyAddedArtist.objectID) as! Artist
-                } else {
-                    let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: subContext) as! Artist
-                    newArtist.name = albumArtistName
-                    newArtist.id = globalRootLibrary?.next_artist_id
-                    globalRootLibrary?.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
-                    track.album?.album_artist = newArtist
-                    addedArtists[albumArtistName] = newArtist
-                    addedAlbumArtist = newArtist
                 }
             }
             
@@ -705,6 +700,9 @@ class DatabaseManager: NSObject {
             } else {
                 print("error moving")
                 errors.append(FileAddToDatabaseError(url: url.absoluteString, error: "Couldn't move/copy file to album directory"))
+                if addedAlbum != nil {
+                    subContext.delete(track.album!)
+                }
                 subContext.delete(track)
                 subContext.delete(trackView)
                 if addedArtist != nil {
@@ -713,9 +711,7 @@ class DatabaseManager: NSObject {
                 if addedComposer != nil {
                     subContext.delete(addedComposer!)
                 }
-                if addedAlbum != nil {
-                    subContext.delete(addedAlbum!)
-                }
+
             }
             index += 1
             DispatchQueue.main.async {
@@ -1136,7 +1132,7 @@ class DatabaseManager: NSObject {
             case "album":
                 let albumName = trackMetadata["album"] as! String
                 let album: Album = {
-                    let albumCheck = checkIfAlbumExists(albumName)
+                    let albumCheck = checkIfAlbumExists(withName: albumName, withArtist: track.artist!)
                     if albumCheck == nil {
                         let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
                         addedAlbum = album
@@ -1492,7 +1488,7 @@ class DatabaseManager: NSObject {
                         if addedAlbums[albumName] != nil {
                             return addedAlbums[albumName] as! Album
                         } else {
-                            let albumCheck = checkIfAlbumExists(albumName)
+                            let albumCheck = checkIfAlbumExists(withName: albumName, withArtist: newTrack.artist!)
                             if albumCheck == nil {
                                 let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
                                 album.name = albumName

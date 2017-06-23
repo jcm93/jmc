@@ -99,7 +99,7 @@ class iTunesLibraryParser: NSObject {
                 if let albumName            = trackDict[iTunesImporterAlbumNameKey] as? String {
                     if let addedAlbum = self.addedAlbums[albumName] {
                         cd_track.album = addedAlbum
-                    } else if let albumFromParentContext = checkIfAlbumExists(albumName) {
+                    } else if let albumFromParentContext = checkIfAlbumExists(withName: albumName, withArtist: cd_track.artist!) {
                         cd_track.album = subContext.object(with: albumFromParentContext.objectID) as? Album
                     } else {
                         let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: subContext) as! Album
@@ -110,6 +110,7 @@ class iTunesLibraryParser: NSObject {
                         self.addedAlbums[albumName] = newAlbum
                     }
                 }
+                //fix
                 if let albumArtistName      = trackDict[iTunesImporterAlbumArtistKey] as? String {
                     if let addedArtist = self.addedArtists[albumArtistName] {
                         cd_track.album?.album_artist = addedArtist
