@@ -162,13 +162,13 @@ class InitialSetupWindowController: NSWindowController {
         //create blank entities
         let unknownArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
         unknownArtist.id = 1
-        unknownArtist.name = "Unknown Artist"
+        unknownArtist.name = ""
         let unknownAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
         unknownAlbum.id = 1
-        unknownAlbum.name = "Unknown Album"
+        unknownAlbum.name = ""
         let unknownComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: managedContext) as! Composer
         unknownComposer.id = 1
-        unknownComposer.name = "Unknown Composer"
+        unknownComposer.name = ""
         
         //set IDs
         library?.next_album_id = 2

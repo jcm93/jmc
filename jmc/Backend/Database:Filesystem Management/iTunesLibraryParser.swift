@@ -8,8 +8,6 @@
 
 //Parses iTunes libraries and puts the metadata in Core Data
 
-//note: source list items bound directly to library do NOT include headers. shared lib sources are then accessed by library.local_items
-
 import Foundation
 import CoreData
 import Cocoa
@@ -31,9 +29,10 @@ class iTunesLibraryParser: NSObject {
     }
     
     var addedArtists = [String : Artist]()
-    var addedAlbums = [String : Album]()
+    var addedAlbums = [Artist : [String : Album]]()
     var addedComposers = [String : Composer]()
     var addedTracks = [Int : Track]()
+    var albumsWithUnknownArtists = [Album]()
     
     func makeLibrary(parentLibrary: Library?, visualUpdateHandler: ProgressBarController?) {
         let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
@@ -82,36 +81,37 @@ class iTunesLibraryParser: NSObject {
                 cd_track.status             = trackDict[iTunesImporterDisabledKey] as? NSNumber
                 cd_track.sort_artist        = trackDict[iTunesImporterSortArtistKey] as? String
                 cd_track.sort_album_artist  = trackDict[iTunesImporterSortAlbumArtistKey] as? String
-                if let artistName           = trackDict[iTunesImporterArtistNameKey] as? String {
-                    if let addedArtist = self.addedArtists[artistName] {
-                        cd_track.artist = addedArtist
-                    } else if let artistFromParentContext = checkIfArtistExists(artistName) {
-                        cd_track.artist = subContext.object(with: artistFromParentContext.objectID) as? Artist
-                    } else {
-                        let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: subContext) as! Artist
-                        newArtist.name = artistName
-                        newArtist.id = rootLibrary!.next_artist_id
-                        rootLibrary!.next_artist_id = rootLibrary!.next_artist_id!.intValue + 1 as NSNumber
-                        cd_track.artist = newArtist
-                        self.addedArtists[artistName] = newArtist
-                    }
+                let artistName              = trackDict[iTunesImporterArtistNameKey] as? String ?? ""
+                if let addedArtist = self.addedArtists[artistName] {
+                    cd_track.artist = addedArtist
+                } else if let artistFromParentContext = checkIfArtistExists(artistName) {
+                    cd_track.artist = subContext.object(with: artistFromParentContext.objectID) as? Artist
+                } else {
+                    let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: subContext) as! Artist
+                    newArtist.name = artistName
+                    newArtist.id = rootLibrary!.next_artist_id
+                    rootLibrary!.next_artist_id = rootLibrary!.next_artist_id!.intValue + 1 as NSNumber
+                    cd_track.artist = newArtist
+                    self.addedArtists[artistName] = newArtist
                 }
-                if let albumName            = trackDict[iTunesImporterAlbumNameKey] as? String {
-                    if let addedAlbum = self.addedAlbums[albumName] {
-                        cd_track.album = addedAlbum
-                    } else if let albumFromParentContext = checkIfAlbumExists(withName: albumName, withArtist: cd_track.artist!) {
-                        cd_track.album = subContext.object(with: albumFromParentContext.objectID) as? Album
-                    } else {
-                        let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: subContext) as! Album
-                        newAlbum.name = albumName
-                        newAlbum.id = rootLibrary!.next_album_id
-                        rootLibrary!.next_album_id = rootLibrary!.next_album_id!.intValue + 1 as NSNumber
-                        cd_track.album = newAlbum
-                        self.addedAlbums[albumName] = newAlbum
+                let albumName               = trackDict[iTunesImporterAlbumNameKey] as? String ?? ""
+                if let addedAlbum = self.addedAlbums[cd_track.artist!]?[albumName] {
+                    cd_track.album = addedAlbum
+                } else if let albumFromParentContext = checkIfAlbumExists(withName: albumName, withArtist: cd_track.artist!) {
+                    cd_track.album = subContext.object(with: albumFromParentContext.objectID) as? Album
+                } else {
+                    let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: subContext) as! Album
+                    newAlbum.name = albumName
+                    newAlbum.id = rootLibrary!.next_album_id
+                    rootLibrary!.next_album_id = rootLibrary!.next_album_id!.intValue + 1 as NSNumber
+                    cd_track.album = newAlbum
+                    if self.addedAlbums[cd_track.artist!] == nil {
+                        self.addedAlbums[cd_track.artist!] = [String : Album]()
                     }
+                    self.addedAlbums[cd_track.artist!]![albumName] = newAlbum
                 }
                 //fix
-                if let albumArtistName      = trackDict[iTunesImporterAlbumArtistKey] as? String {
+                if let albumArtistName         = trackDict[iTunesImporterAlbumArtistKey] as? String {
                     if let addedArtist = self.addedArtists[albumArtistName] {
                         cd_track.album?.album_artist = addedArtist
                     } else if let artistFromParentContext = checkIfArtistExists(albumArtistName) {
@@ -124,6 +124,9 @@ class iTunesLibraryParser: NSObject {
                         cd_track.album?.album_artist = newArtist
                         self.addedArtists[albumArtistName] = newArtist
                     }
+                } else {
+                    //assign album artist later
+                    albumsWithUnknownArtists.append(cd_track.album!)
                 }
                 if let composerName         = trackDict[iTunesImporterComposerKey] as? String {
                     if let addedComposer = self.addedComposers[composerName] {
@@ -154,6 +157,19 @@ class iTunesLibraryParser: NSObject {
                     visualUpdateHandler?.increment(thingsDone: index)
                 }
                 index += 1
+            }
+        }
+        index = 0
+        DispatchQueue.main.async {
+            visualUpdateHandler?.prepareForNewTask(actionName: "Messing with", thingName: "albums", thingCount: self.albumsWithUnknownArtists.count)
+        }
+        for album in albumsWithUnknownArtists {
+            let countSet = NSCountedSet(array: (album.tracks as! Set<Track>).map({return $0.artist!}))
+            let mostFrequentArtist = countSet.max(by: {return countSet.count(for: $0) < countSet.count(for: $1)}) as! Artist
+            album.album_artist = mostFrequentArtist
+            index += 1
+            DispatchQueue.main.async {
+                visualUpdateHandler?.increment(thingsDone: index)
             }
         }
         

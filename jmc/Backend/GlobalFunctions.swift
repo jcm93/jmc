@@ -703,7 +703,7 @@ var jmcUnknownArtist = {() -> Artist in
     } catch {
         let unknownArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
         unknownArtist.id = 1
-        unknownArtist.name = "Unknown Artist"
+        unknownArtist.name = ""
         return unknownArtist
     }
 }
@@ -718,7 +718,7 @@ var jmcUnknownAlbum = {() -> Album in
     } catch {
         let unknownAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
         unknownAlbum.id = 1
-        unknownAlbum.name = "Unknown Album"
+        unknownAlbum.name = ""
         return unknownAlbum
     }
 }

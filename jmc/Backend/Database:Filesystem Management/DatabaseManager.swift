@@ -544,7 +544,7 @@ class DatabaseManager: NSObject {
         let subContextLibrary = subContext.object(with: library.objectID)
         var errors = [FileAddToDatabaseError]()
         var addedArtists = [String : Artist]()
-        var addedAlbums = [String : [Artist : Album]]()
+        var addedAlbums = [Artist : [String : Album]]()
         var addedComposers = [String : Composer]()
         var addedVolumes = [URL : Volume]()
         var tracks = [Track]()
@@ -607,51 +607,41 @@ class DatabaseManager: NSObject {
             }
             
             //populate artist, album, composer
-            if let artistCheck = fileMetadataDictionary[kArtistKey] as? String {
-                if let alreadyAddedArtist = addedArtists[artistCheck] {
-                    track.artist = alreadyAddedArtist
-                } else if let alreadyAddedArtist = checkIfArtistExists(artistCheck) {
-                    track.artist = subContext.object(with: alreadyAddedArtist.objectID) as! Artist
-                } else {
-                    let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: subContext) as! Artist
-                    newArtist.name = artistCheck
-                    newArtist.id = globalRootLibrary?.next_artist_id
-                    globalRootLibrary?.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
-                    track.artist = newArtist
-                    addedArtists[artistCheck] = newArtist
-                    addedArtist = newArtist
-                }
+            let artistCheck = fileMetadataDictionary[kArtistKey] as? String ?? ""
+            if let alreadyAddedArtist = addedArtists[artistCheck] {
+                track.artist = alreadyAddedArtist
+            } else if let alreadyAddedArtist = checkIfArtistExists(artistCheck) {
+                track.artist = subContext.object(with: alreadyAddedArtist.objectID) as! Artist
             } else {
-                track.artist = subContext.object(with: jmcUnknownArtist().objectID) as! Artist
-                //assign to unknown artist
+                let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: subContext) as! Artist
+                newArtist.name = artistCheck
+                newArtist.id = globalRootLibrary?.next_artist_id
+                globalRootLibrary?.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
+                track.artist = newArtist
+                addedArtists[artistCheck] = newArtist
+                addedArtist = newArtist
             }
-            if let albumCheck = fileMetadataDictionary[kAlbumKey] as? String {
-                if let alreadyAddedAlbum = addedAlbums[albumCheck]?[track.artist!] {
-                    track.album = alreadyAddedAlbum
-                } else if let alreadyAddedAlbum = checkIfAlbumExists(withName: albumCheck, withArtist: track.artist!) {
-                    track.album = subContext.object(with: alreadyAddedAlbum.objectID) as! Album
-                } else {
-                    let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: subContext) as! Album
-                    newAlbum.name = albumCheck
-                    newAlbum.id = globalRootLibrary?.next_album_id
-                    addedAlbum = albumCheck
-                    globalRootLibrary?.next_album_id = Int(globalRootLibrary!.next_album_id!) + 1 as NSNumber
-                    track.album = newAlbum
-                }
-                if let releaseDateString = fileMetadataDictionary[kReleaseDateKey] as? String {
-                    let date = JMDate(year: Int(releaseDateString)!)
-                    track.album?.release_date = date
-                }
+            let albumCheck = fileMetadataDictionary[kAlbumKey] as? String ?? ""
+            if let alreadyAddedAlbum = addedAlbums[track.artist!]?[albumCheck] {
+                track.album = alreadyAddedAlbum
+            } else if let alreadyAddedAlbum = checkIfAlbumExists(withName: albumCheck, withArtist: track.artist!) {
+                track.album = subContext.object(with: alreadyAddedAlbum.objectID) as! Album
             } else {
-                track.album = subContext.object(with: jmcUnknownAlbum().objectID) as! Album
-                //assign to unknown album
+                let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: subContext) as! Album
+                newAlbum.name = albumCheck
+                newAlbum.id = globalRootLibrary?.next_album_id
+                addedAlbum = albumCheck
+                if addedAlbums[track.artist!] == nil {
+                    addedAlbums[track.artist!] = [String : Album]()
+                }
+                newAlbum.album_artist = track.artist!
+                globalRootLibrary?.next_album_id = Int(globalRootLibrary!.next_album_id!) + 1 as NSNumber
+                track.album = newAlbum
             }
-            track.album!.album_artist = track.artist!
-            if addedAlbums[track.album!.name!] == nil {
-                addedAlbums[track.album!.name!] = [Artist : Album]()
+            if let releaseDateString = fileMetadataDictionary[kReleaseDateKey] as? String {
+                let date = JMDate(year: Int(releaseDateString)!)
+                track.album?.release_date = date
             }
-            addedAlbums[track.album!.name!]![track.artist!] = track.album!
-            addedAlbums[track.album!.name!]![track.album!.album_artist!] = track.album!
             if let composerCheck = fileMetadataDictionary[kComposerKey] as? String {
                 if let alreadyAddedComposer = addedComposers[composerCheck] {
                     track.composer = alreadyAddedComposer
