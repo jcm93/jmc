@@ -273,7 +273,6 @@ let fieldsToCachedOrdersDictionary: NSDictionary = [
 ]
 
 
-
 //other constants
 var LIBRARY_MOVES_DESCRIPTION = "Added media will be moved into a subdirectory of this directory"
 var LIBRARY_COPIES_DESCRIPTION = "Added media will be copied into a subdirectory of this directory"
@@ -290,6 +289,8 @@ let MIN_VOLUME_BAR_WIDTH_FRACTION: CGFloat = 0.03
 let MIN_SEARCH_BAR_WIDTH_FRACTION: CGFloat = 0.145
 let MAX_VOLUME_BAR_WIDTH_FRACTION: CGFloat = 0.101
 let MIN_DISTANCE_BETWEEN_VOLUME_AND_SONG_BAR_FRACTION: CGFloat = 0.025
+
+let CUE_SHEET_UTI_STRING = "com.goldenhawk.cdrwin-cuesheet"
 
 let SOURCE_FETCH_REQUEST = NSFetchRequest<NSFetchRequestResult>(entityName: "SourceListItem")
 let TRACK_FETCH_REQUEST = NSFetchRequest<NSFetchRequestResult>(entityName: "Track")
@@ -687,7 +688,7 @@ func getFileTypeFrom(url: URL) -> String? {
     return getImageExtension(uniformTypeIdentifier)
 }
 
-func getUTIFrom(url: URL) -> CFString? {
+/*func getUTIFrom(url: URL) -> CFString? {
     guard let imageSource = CGImageSourceCreateWithURL(url as NSURL, [:] as NSDictionary) else {
         return nil
     }
@@ -695,6 +696,10 @@ func getUTIFrom(url: URL) -> CFString? {
         return nil
     }
     return uniformTypeIdentifier
+}*/
+
+func getUTIFrom(url: URL) -> String? {
+    return (try? url.resourceValues(forKeys: [.typeIdentifierKey]))?.typeIdentifier
 }
 
 var jmcUnknownArtist = {() -> Artist in

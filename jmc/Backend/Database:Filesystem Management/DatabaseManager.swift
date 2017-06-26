@@ -108,6 +108,22 @@ class DatabaseManager: NSObject {
         }
     }
     
+    func addMiscellaneousFile(forTrack track: Track, from url: URL, managedContext: NSManagedObjectContext) -> Bool {
+        //returns true if file was successfully added
+        guard let album = track.album else { return false }
+        guard let uti = getUTIFrom(url: url) else { return false }
+        guard UTTypeConformsTo(uti as CFString, kUTTypeText) else { return false }
+        let fileObject = NSEntityDescription.insertNewObject(forEntityName: "AlbumFile", into: managedContext) as! AlbumFile
+        fileObject.album = album
+        fileObject.location = url.absoluteString
+        if UTTypeConformsTo(uti as CFString, CUE_SHEET_UTI_STRING as CFString) {
+            fileObject.file_description = "Cue Sheet"
+        } else if UTTypeConformsTo(uti as CFString, kUTTypeLog) {
+            fileObject.file_description = "Log File"
+        }
+        return true
+    }
+    
     func addArtForTrack(_ track: Track, from url: URL, managedContext: NSManagedObjectContext) -> Bool {
         //returns true if art was successfully added, so a receiver can display the image, if needed
         guard let album = track.album else { return false }

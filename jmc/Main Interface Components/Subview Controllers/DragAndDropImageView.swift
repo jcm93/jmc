@@ -49,14 +49,20 @@ class DragAndDropImageView: NSImageView {
         //do the album art stuff
         if let board = sender.draggingPasteboard().propertyList(forType: "NSFilenamesPboardType") as? NSArray {
             let urls = board.map({return URL(fileURLWithPath: $0 as! String)})
-            if viewController?.mainWindow?.currentTrack != nil {
+            if let currentTrack = viewController?.mainWindow?.currentTrack {
                 let databaseManager = DatabaseManager()
                 var results = [Bool]()
                 for url in urls {
-                    results.append(databaseManager.addArtForTrack(viewController!.mainWindow!.currentTrack!, from: url, managedContext: managedContext))
+                    if let urlUTI = getUTIFrom(url: url) {
+                        if UTTypeConformsTo(urlUTI as CFString, kUTTypeImage) || UTTypeConformsTo(urlUTI as CFString, kUTTypePDF) {
+                            results.append(databaseManager.addArtForTrack(currentTrack, from: url, managedContext: managedContext))
+                        } else {
+                            results.append(databaseManager.addMiscellaneousFile(forTrack: currentTrack, from: url, managedContext: managedContext))
+                        }
+                    }
                 }
                 if results.contains(true) {
-                    self.viewController?.initAlbumArt(viewController!.mainWindow!.currentTrack!)
+                    self.viewController?.initAlbumArt(currentTrack)
                 }
             }
             else {

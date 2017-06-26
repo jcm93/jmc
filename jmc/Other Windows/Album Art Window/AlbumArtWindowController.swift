@@ -16,6 +16,7 @@ class AlbumArtWindowController: NSWindowController, NSCollectionViewDataSource, 
     @IBOutlet weak var imageView: AlbumArtImageView!
     @IBOutlet weak var collectionView: AlbumArtCollectionView!
     @IBOutlet weak var pdfViewer: AlbumArtPDFView!
+    @IBOutlet weak var textView: NSTextView!
     
     var track: Track?
     var otherArtImages = [AlbumArtwork]()
@@ -106,11 +107,23 @@ class AlbumArtWindowController: NSWindowController, NSCollectionViewDataSource, 
     }
     
     func changePrimaryImage(imageURL: URL) {
-        if UTTypeConformsTo(getUTIFrom(url: imageURL)!, kUTTypePDF) {
+        if UTTypeConformsTo(getUTIFrom(url: imageURL)! as CFString, kUTTypeText) {
+            do {
+                self.textView.string = try String(contentsOf: imageURL)
+                self.imageView.isHidden = true
+                self.pdfViewer.isHidden = true
+                self.textView.isHidden = false
+                let rect = NSRect(origin: window!.frame.origin, size: self.textView.intrinsicContentSize)
+                self.window?.animator().setFrame(rect, display: true)
+            } catch {
+                return
+            }
+        } else if UTTypeConformsTo(getUTIFrom(url: imageURL)! as CFString, kUTTypePDF) {
             let pdfDocument = PDFDocument(url: imageURL)!
             pdfViewer.document = pdfDocument
             self.imageView.isHidden = true
             self.pdfViewer.isHidden = false
+            self.textView.isHidden = true
             let width = pdfViewer.documentView!.frame.width
             let height = pdfViewer.documentView!.frame.height / CGFloat(pdfDocument.pageCount)
             let newRect = NSRect(x: window!.frame.origin.x, y: window!.frame.origin.y, width: width, height: 800)
@@ -121,6 +134,7 @@ class AlbumArtWindowController: NSWindowController, NSCollectionViewDataSource, 
             self.imageView.imageScaling = .scaleProportionallyUpOrDown
             self.pdfViewer.isHidden = true
             self.imageView.isHidden = false
+            self.textView.isHidden = true
             let aspectRatio = image.size.height / image.size.width
             let heightAddendum = otherArtImages.count > 1 ? otherArtBox.frame.height : 0
             let newHeight = defaultImageWidthPixels * aspectRatio + heightAddendum

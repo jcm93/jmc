@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
-        <plugIn identifier="com.apple.pdfkit.ibplugin" version="12118"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
+        <plugIn identifier="com.apple.pdfkit.ibplugin" version="12121"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
@@ -16,6 +16,7 @@
                 <outlet property="imageView" destination="Kez-vk-IRQ" id="nVX-LV-mXR"/>
                 <outlet property="otherArtBox" destination="rAc-yv-VnU" id="3n7-zW-fRV"/>
                 <outlet property="pdfViewer" destination="rSd-A8-MXh" id="hZT-dY-K8H"/>
+                <outlet property="textView" destination="FzC-w4-leo" id="1dA-qs-Eui"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -35,6 +36,32 @@
                     <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qFx-fw-DwT">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="455"/>
                         <subviews>
+                            <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WFq-LX-mL0">
+                                <rect key="frame" x="0.0" y="455" width="480" height="0.0"/>
+                                <clipView key="contentView" id="jvr-9y-LAd">
+                                    <rect key="frame" x="1" y="1" width="478" height="1"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textView importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="FzC-w4-leo">
+                                            <rect key="frame" x="0.0" y="0.0" width="478" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <size key="minSize" width="478" height="1"/>
+                                            <size key="maxSize" width="478" height="10000000"/>
+                                            <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        </textView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </clipView>
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="ctc-9N-kG8">
+                                    <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="wOE-e4-sc8">
+                                    <rect key="frame" x="463" y="1" width="16" height="0.0"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                            </scrollView>
                             <pdfView autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rSd-A8-MXh" customClass="AlbumArtPDFView" customModule="jmc" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="455" width="480" height="0.0"/>
                             </pdfView>
@@ -71,7 +98,7 @@
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="AyC-DS-y1H">
-                                                <rect key="frame" x="466" y="107" width="16" height="0.0"/>
+                                                <rect key="frame" x="466" y="137" width="16" height="0.0"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>
@@ -91,9 +118,13 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="rAc-yv-VnU" secondAttribute="trailing" id="602-b4-nXz"/>
                             <constraint firstItem="rAc-yv-VnU" firstAttribute="leading" secondItem="qFx-fw-DwT" secondAttribute="leading" id="6Lp-gn-9q0"/>
+                            <constraint firstItem="WFq-LX-mL0" firstAttribute="leading" secondItem="qFx-fw-DwT" secondAttribute="leading" id="EGA-vu-GtG"/>
                             <constraint firstItem="rSd-A8-MXh" firstAttribute="leading" secondItem="qFx-fw-DwT" secondAttribute="leading" id="Puy-mH-YrB"/>
+                            <constraint firstItem="rSd-A8-MXh" firstAttribute="top" secondItem="WFq-LX-mL0" secondAttribute="bottom" id="Yv7-lc-ApA"/>
                             <constraint firstItem="rSd-A8-MXh" firstAttribute="top" secondItem="qFx-fw-DwT" secondAttribute="top" id="aKL-AX-lBZ"/>
                             <constraint firstItem="Kez-vk-IRQ" firstAttribute="top" secondItem="qFx-fw-DwT" secondAttribute="top" id="e7A-yR-EFT"/>
+                            <constraint firstAttribute="trailing" secondItem="WFq-LX-mL0" secondAttribute="trailing" id="ewH-Hh-QXg"/>
+                            <constraint firstItem="WFq-LX-mL0" firstAttribute="top" secondItem="qFx-fw-DwT" secondAttribute="top" id="i0B-ma-lfe"/>
                             <constraint firstItem="Kez-vk-IRQ" firstAttribute="leading" secondItem="qFx-fw-DwT" secondAttribute="leading" id="lur-wV-5gc"/>
                             <constraint firstAttribute="trailing" secondItem="Kez-vk-IRQ" secondAttribute="trailing" id="lzo-C3-cEp"/>
                         </constraints>
@@ -101,8 +132,10 @@
                             <integer value="1000"/>
                             <integer value="1000"/>
                             <integer value="1000"/>
+                            <integer value="1000"/>
                         </visibilityPriorities>
                         <customSpacing>
+                            <real value="3.4028234663852886e+38"/>
                             <real value="3.4028234663852886e+38"/>
                             <real value="3.4028234663852886e+38"/>
                             <real value="3.4028234663852886e+38"/>

@@ -132,11 +132,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "jmc/Backend/Database:Filesystem Management/DatabaseManager.swift"
-            timestampString = "519850108.58411"
+            timestampString = "520149541.558786"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "326"
-            endingLineNumber = "326"
+            startingLineNumber = "342"
+            endingLineNumber = "342"
             landmarkName = "trimDirectoryFollowingMoveOperation(track:oldLocation:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -148,11 +148,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "jmc/Backend/Database:Filesystem Management/DatabaseManager.swift"
-            timestampString = "519850161.775397"
+            timestampString = "520149541.558786"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "325"
-            endingLineNumber = "325"
+            startingLineNumber = "341"
+            endingLineNumber = "341"
             landmarkName = "trimDirectoryFollowingMoveOperation(track:oldLocation:)"
             landmarkType = "7">
          </BreakpointContent>
