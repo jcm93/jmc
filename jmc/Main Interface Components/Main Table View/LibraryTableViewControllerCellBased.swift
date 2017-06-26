@@ -15,8 +15,10 @@ class LibraryTableViewControllerCellBased: LibraryTableViewController {
     @IBOutlet weak var isEnabledColumn: NSTableColumn!
     @IBOutlet weak var nameColumn: NSTableColumn!
     @IBOutlet weak var timeColumn: NSTableColumn!
+    @IBOutlet weak var albumByArtistColumn: NSTableColumn!
     @IBOutlet weak var artistColumn: NSTableColumn!
     @IBOutlet weak var albumColumn: NSTableColumn!
+    @IBOutlet weak var albumArtistColumn: NSTableColumn!
     @IBOutlet weak var kindColumn: NSTableColumn!
     @IBOutlet weak var bitRateColumn: NSTableColumn!
     @IBOutlet weak var sizeColumn: NSTableColumn!

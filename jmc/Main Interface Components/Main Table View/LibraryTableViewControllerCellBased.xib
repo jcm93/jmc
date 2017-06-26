@@ -8,8 +8,10 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="LibraryTableViewControllerCellBased" customModule="jmc" customModuleProvider="target">
             <connections>
+                <outlet property="albumArtistColumn" destination="iR0-Qj-q6u" id="ptg-yj-5BR"/>
+                <outlet property="albumByArtistColumn" destination="ois-tu-0mi" id="9lr-FY-DOm"/>
                 <outlet property="albumColumn" destination="FDo-TA-EDz" id="LKi-Yn-Wg1"/>
-                <outlet property="artistColumn" destination="ois-tu-0mi" id="bLc-cG-wyu"/>
+                <outlet property="artistColumn" destination="yKq-1g-Y4O" id="RpD-Z9-nva"/>
                 <outlet property="bitRateColumn" destination="LHQ-sH-EgW" id="pL3-si-X0Y"/>
                 <outlet property="columnVisibilityMenu" destination="H0B-Bf-KKf" id="R0f-rd-LmK"/>
                 <outlet property="commentsColumn" destination="xDe-V0-AuH" id="E0k-9b-KIT"/>
@@ -145,12 +147,44 @@
                                         <accessibility description="Time Column"/>
                                     </tableColumn>
                                     <tableColumn identifier="artist" width="221.515625" minWidth="40" maxWidth="1000" id="ois-tu-0mi">
-                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Artist">
+                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Album by Artist">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="PlC-3Y-8lx" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <accessibility description="Artist Name"/>
+                                        </textFieldCell>
+                                        <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="album_artist_order"/>
+                                        <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Artist Name Column"/>
+                                    </tableColumn>
+                                    <tableColumn identifier="artist" width="221.515625" minWidth="40" maxWidth="1000" hidden="YES" id="yKq-1g-Y4O">
+                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Artist">
+                                            <font key="font" metaFont="smallSystem"/>
+                                            <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                        </tableHeaderCell>
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="fEH-rj-gw3" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <accessibility description="Artist Name"/>
+                                        </textFieldCell>
+                                        <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="artist_order"/>
+                                        <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        <accessibility description="Artist Name Column"/>
+                                    </tableColumn>
+                                    <tableColumn identifier="artist" width="221.515625" minWidth="40" maxWidth="1000" hidden="YES" id="iR0-Qj-q6u">
+                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Album Artist">
+                                            <font key="font" metaFont="smallSystem"/>
+                                            <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                        </tableHeaderCell>
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="Sjm-Fj-4oa" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -570,7 +604,7 @@
                         </subviews>
                     </clipView>
                     <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="ipS-jB-32M">
-                        <rect key="frame" x="0.0" y="496" width="3723" height="16"/>
+                        <rect key="frame" x="0.0" y="496" width="3922" height="16"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                     <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="n50-Tl-r5V">

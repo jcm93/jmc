@@ -40,6 +40,10 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
             return track.name
         case tableViewController!.timeColumn:
             return track.time
+        case tableViewController!.albumByArtistColumn:
+            return track.artist?.name
+        case tableViewController!.albumArtistColumn:
+            return track.album?.album_artist?.name
         case tableViewController!.artistColumn:
             return track.artist?.name
         case tableViewController!.albumColumn:

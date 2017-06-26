@@ -513,7 +513,9 @@ let defaultSortPrefixDictionary: NSMutableDictionary = [
 
 let DEFAULT_COLUMN_VISIBILITY_DICTIONARY: [String : Int] = [
     "album" : 0,
-    "artist" : 0,
+    "artist" : 1,
+    "album_artist" : 1,
+    "album_by_artist" : 0,
     "bit_rate" : 0,
     "comments" : 0,
     "composer" : 1,
@@ -548,7 +550,9 @@ let DEFAULT_COLUMN_VISIBILITY_DICTIONARY: [String : Int] = [
 
 let DEFAULT_COLUMN_VISIBILITY_DICTIONARY_CONSOLIDATOR: [String : Int] = [
     "album" : 1,
-    "artist" : 0,
+    "album_artist" : 1,
+    "album_by_artist" : 0,
+    "artist" : 1,
     "bit_rate" : 1,
     "comments" : 1,
     "composer" : 1,
