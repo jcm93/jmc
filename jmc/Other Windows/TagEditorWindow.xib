@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -11,8 +10,8 @@
             <connections>
                 <outlet property="albumArtistField" destination="JsS-of-p1k" id="8tD-w3-dvo"/>
                 <outlet property="albumField" destination="5HB-Hb-5nM" id="kvw-pd-xq8"/>
-                <outlet property="artCollectionView" destination="b7d-4l-76W" id="wte-h2-fbN"/>
                 <outlet property="artistField" destination="NGA-Ea-5yh" id="05b-uW-FMQ"/>
+                <outlet property="artworkTargetView" destination="37F-7c-7Qe" id="8bk-pi-qx9"/>
                 <outlet property="bitRateLabel" destination="ujH-hy-RAp" id="qlh-TX-3Lf"/>
                 <outlet property="cancelButton" destination="7MN-Cx-KgN" id="FVB-pN-ju8"/>
                 <outlet property="channelsLabel" destination="eWa-dY-esF" id="unt-uV-MOt"/>
@@ -29,7 +28,6 @@
                 <outlet property="encoderLabel" destination="T4T-02-2fK" id="oCn-U5-aHH"/>
                 <outlet property="fileInfoTab" destination="Z37-fo-cZm" id="Jri-QG-UJY"/>
                 <outlet property="genreField" destination="mB6-l4-Y0p" id="tnv-v0-JdK"/>
-                <outlet property="imageView" destination="r7M-zu-ChY" id="lRN-ht-lDq"/>
                 <outlet property="kindLabel" destination="3iU-oy-ScM" id="Ura-56-bhG"/>
                 <outlet property="locationPathControl" destination="LR0-WP-jIL" id="M6g-k4-d9C"/>
                 <outlet property="monthCheck" destination="xmO-vg-R8r" id="DzY-9N-jkf"/>
@@ -563,54 +561,15 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="363"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="r7M-zu-ChY">
-                                            <rect key="frame" x="77" y="90" width="260" height="260"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" secondItem="r7M-zu-ChY" secondAttribute="height" multiplier="1:1" id="yVD-F2-SNR"/>
-                                            </constraints>
-                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="qNh-c5-MfJ"/>
-                                        </imageView>
-                                        <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="vn8-rZ-1x7">
-                                            <rect key="frame" x="20" y="8" width="374" height="77"/>
-                                            <clipView key="contentView" drawsBackground="NO" id="Les-PR-Bai">
-                                                <rect key="frame" x="1" y="1" width="372" height="75"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                <subviews>
-                                                    <collectionView id="b7d-4l-76W">
-                                                        <rect key="frame" x="0.0" y="0.0" width="372" height="75"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                        <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" scrollDirection="horizontal" id="j4Q-tt-2kQ">
-                                                            <size key="itemSize" width="50" height="50"/>
-                                                            <edgeInsets key="sectionInset" left="10" right="10" top="10" bottom="10"/>
-                                                        </collectionViewFlowLayout>
-                                                        <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                    </collectionView>
-                                                </subviews>
-                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                            </clipView>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="77" id="QfA-NN-MPf"/>
-                                            </constraints>
-                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="fhE-aA-uXc">
-                                                <rect key="frame" x="1" y="60" width="372" height="16"/>
-                                                <autoresizingMask key="autoresizingMask"/>
-                                            </scroller>
-                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="BdB-Us-PWJ">
-                                                <rect key="frame" x="360" y="1" width="16" height="75"/>
-                                                <autoresizingMask key="autoresizingMask"/>
-                                            </scroller>
-                                        </scrollView>
+                                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="37F-7c-7Qe">
+                                            <rect key="frame" x="20" y="0.0" width="374" height="358"/>
+                                        </customView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="vn8-rZ-1x7" firstAttribute="leading" secondItem="EEb-sb-s8d" secondAttribute="leading" constant="20" id="WIs-DA-GHU"/>
-                                        <constraint firstItem="r7M-zu-ChY" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="EEb-sb-s8d" secondAttribute="leading" constant="20" id="chi-9n-cnT"/>
-                                        <constraint firstAttribute="bottom" secondItem="vn8-rZ-1x7" secondAttribute="bottom" constant="8" id="ckh-ey-dDD"/>
-                                        <constraint firstItem="r7M-zu-ChY" firstAttribute="centerX" secondItem="EEb-sb-s8d" secondAttribute="centerX" id="h62-FB-bGb"/>
-                                        <constraint firstItem="vn8-rZ-1x7" firstAttribute="top" secondItem="r7M-zu-ChY" secondAttribute="bottom" constant="8" id="kpL-7b-MLO"/>
-                                        <constraint firstAttribute="trailing" secondItem="vn8-rZ-1x7" secondAttribute="trailing" constant="20" id="l6y-NM-8WD"/>
-                                        <constraint firstItem="r7M-zu-ChY" firstAttribute="top" secondItem="EEb-sb-s8d" secondAttribute="top" constant="16" id="n3f-Zl-AUN"/>
-                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="r7M-zu-ChY" secondAttribute="trailing" constant="20" id="nR6-zI-Zei"/>
-                                        <constraint firstItem="vn8-rZ-1x7" firstAttribute="centerX" secondItem="EEb-sb-s8d" secondAttribute="centerX" id="vxd-4k-FJn"/>
+                                        <constraint firstAttribute="bottom" secondItem="37F-7c-7Qe" secondAttribute="bottom" id="Mmq-L9-kvU"/>
+                                        <constraint firstItem="37F-7c-7Qe" firstAttribute="leading" secondItem="EEb-sb-s8d" secondAttribute="leading" constant="20" id="bX2-y3-u0l"/>
+                                        <constraint firstAttribute="trailing" secondItem="37F-7c-7Qe" secondAttribute="trailing" constant="20" id="cDO-m9-puy"/>
+                                        <constraint firstItem="37F-7c-7Qe" firstAttribute="top" secondItem="EEb-sb-s8d" secondAttribute="top" constant="5" id="hNA-IF-5GY"/>
                                     </constraints>
                                 </view>
                             </tabViewItem>
@@ -901,7 +860,7 @@
                                                 <constraint firstAttribute="width" constant="80" id="yQe-AX-YTJ"/>
                                             </constraints>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Name" id="Ixn-Yi-1D4">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -909,7 +868,7 @@
                                         <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0gg-7Y-OPI">
                                             <rect key="frame" x="99" y="340" width="295" height="21"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Fgu-E0-u6W">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -920,7 +879,7 @@
                                                 <constraint firstAttribute="width" constant="80" id="c0e-0W-7lN"/>
                                             </constraints>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Sort as" id="srt-gZ-KYR">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -928,7 +887,7 @@
                                         <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ujh-jL-De5">
                                             <rect key="frame" x="99" y="313" width="295" height="21"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Lqk-PS-kr5">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -939,7 +898,7 @@
                                                 <constraint firstAttribute="width" constant="80" id="AO7-Yk-1HD"/>
                                             </constraints>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Album" id="K0R-rI-HV5">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -947,7 +906,7 @@
                                         <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="me1-Q5-grQ">
                                             <rect key="frame" x="99" y="277" width="295" height="21"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="tvH-p2-SGd">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -958,7 +917,7 @@
                                                 <constraint firstAttribute="width" constant="80" id="crD-UZ-5ob"/>
                                             </constraints>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Artist" id="61n-Cz-vsT">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -966,7 +925,7 @@
                                         <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4rl-72-pON">
                                             <rect key="frame" x="99" y="214" width="295" height="21"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Fh9-75-ELu">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -977,7 +936,7 @@
                                                 <constraint firstAttribute="width" constant="80" id="Mgr-NH-XkO"/>
                                             </constraints>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Album Artist" id="B3K-oG-OTb">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -985,7 +944,7 @@
                                         <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tMC-JQ-NXP">
                                             <rect key="frame" x="99" y="151" width="295" height="21"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="3em-En-1hP">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -996,7 +955,7 @@
                                                 <constraint firstAttribute="width" constant="80" id="1Ju-Bh-u5O"/>
                                             </constraints>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Sort as" id="bmz-IA-QBQ">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -1004,7 +963,7 @@
                                         <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Plc-6s-Kin">
                                             <rect key="frame" x="99" y="250" width="295" height="21"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="avr-Az-pdS">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -1015,7 +974,7 @@
                                                 <constraint firstAttribute="width" constant="80" id="nZH-9P-SRs"/>
                                             </constraints>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Sort as" id="gzV-Rw-dUC">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -1023,7 +982,7 @@
                                         <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NIB-dv-9Kq">
                                             <rect key="frame" x="99" y="187" width="295" height="21"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="edB-9i-xUy">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -1034,7 +993,7 @@
                                                 <constraint firstAttribute="width" constant="80" id="fdn-A2-DRW"/>
                                             </constraints>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Sort as" id="Hud-gp-aSf">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -1042,7 +1001,7 @@
                                         <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PYz-rx-gnm">
                                             <rect key="frame" x="99" y="124" width="295" height="21"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Wyr-ai-72X">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -1053,7 +1012,7 @@
                                                 <constraint firstAttribute="width" constant="80" id="T1U-M8-sWm"/>
                                             </constraints>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Composer" id="H8x-uu-1cZ">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -1061,7 +1020,7 @@
                                         <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mev-3i-qjO">
                                             <rect key="frame" x="99" y="88" width="295" height="21"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="dTH-nV-0o3">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -1069,7 +1028,7 @@
                                         <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cs7-KK-lLm">
                                             <rect key="frame" x="99" y="61" width="295" height="21"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Ile-sz-qJd">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -1080,7 +1039,7 @@
                                                 <constraint firstAttribute="width" constant="80" id="yN4-fc-BOO"/>
                                             </constraints>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Sort as" id="QHX-5r-cfT">
-                                                <font key="font" metaFont="system" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>

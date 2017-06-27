@@ -11,7 +11,7 @@
 import Cocoa
 import CoreServices
 
-class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource {
+class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate {
     
     lazy var managedContext: NSManagedObjectContext = {
         return (NSApplication.shared().delegate
@@ -86,11 +86,10 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     var flacMDItem: FlacDecoder?
     var releaseDateComponents: DateComponents?
     var componentSet = Set([Calendar.Component.day, Calendar.Component.weekday, Calendar.Component.year, Calendar.Component.month])
+    var albumFilesViewController: AlbumFilesViewController?
     
     
     //mark artwork view
-    @IBOutlet weak var artworkCollectionView: NSCollectionView!
-    @IBOutlet weak var imageView: NSImageView!
     var artImages: [NSImage]?
     
     //mark file info view
@@ -487,52 +486,30 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     }
     
     //mark artwork view
-    @IBOutlet weak var artCollectionView: NSCollectionView!
-    var imageViews = [NSImageView]()
-    
-    func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("number of items in section, returning \(imageViews.count)")
-        return artImages!.count
-    }
-    
-    func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        let imageIndex = indexPath.last!
-        let item = collectionView.makeItem(withIdentifier: "ImageCollectionViewItem", for: indexPath)
-        item.imageView!.image = artImages![imageIndex]
-        return item
-    }
-    
-    func collectionView(_ collectionView: NSCollectionView, shouldSelectItemsAt indexPaths: Set<IndexPath>) -> Set<IndexPath> {
-        print("should select items called")
-        return indexPaths
-    }
-    
-    func collectionView(_ collectionView: NSCollectionView, shouldChangeItemsAt indexPaths: Set<IndexPath>, to highlightState: NSCollectionViewItemHighlightState) -> Set<IndexPath> {
-        print("should change items called")
-        return indexPaths
-    }
+    @IBOutlet weak var artworkTargetView: NSView!
     
     func populateArtwork() {
-        let album = selectedTracks![0].album
-        guard album != nil else {return}
-        if album!.primary_art != nil {
-            let artURL = URL(string: album!.primary_art!.artwork_location!)
-            self.imageView.image = NSImage(contentsOf: artURL!)
+        guard let album = selectedTracks![0].album else { return }
+        //change some layout stuff
+        self.albumFilesViewController = AlbumFilesViewController(nibName: "AlbumFilesViewController", bundle: nil)
+        self.albumFilesViewController?.track = selectedTracks![0]
+        self.artworkTargetView.addSubview(self.albumFilesViewController!.view)
+        self.albumFilesViewController!.view.leadingAnchor.constraint(equalTo: self.artworkTargetView.leadingAnchor).isActive = true
+        self.albumFilesViewController!.view.trailingAnchor.constraint(equalTo: self.artworkTargetView.trailingAnchor).isActive = true
+        self.albumFilesViewController!.view.topAnchor.constraint(equalTo: self.artworkTargetView.topAnchor).isActive = true
+        self.albumFilesViewController!.view.bottomAnchor.constraint(equalTo: self.artworkTargetView.bottomAnchor).isActive = true
+        let heightConstraint = self.albumFilesViewController?.otherArtBox.constraints.filter({return $0.firstAttribute == .height})
+        NSLayoutConstraint.deactivate(heightConstraint!)
+        let newConstraint = NSLayoutConstraint(item: self.albumFilesViewController?.otherArtBox, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 90.0)
+        NSLayoutConstraint.activate([newConstraint])
+        let flowLayout = self.albumFilesViewController?.collectionView.collectionViewLayout as! NSCollectionViewFlowLayout
+        flowLayout.itemSize = NSSize(width: 50.0, height: 60.0)
+        self.albumFilesViewController?.initializesPrimaryImageConstraint = false
+        for constraint in self.albumFilesViewController!.imageView.constraints.filter({return $0.firstAttribute == .height && $0.secondAttribute == .width}) {
+            constraint.isActive = false
         }
-        if album?.other_art != nil {
-            let artURLs: [URL] = album!.other_art!.map({return URL(string: ($0 as! AlbumArtwork).artwork_location!)!})
-            self.artImages = artURLs.map({return NSImage(contentsOf: $0)!})
-            for image in artImages! {
-                let imageView = NSImageView()
-                imageView.image = image
-                imageViews.append(imageView)
-            }
-            artCollectionView.dataSource = self
-            artCollectionView.delegate = self
-            artCollectionView.register(ImageCollectionViewItem.self, forItemWithIdentifier: "ImageCollectionViewItem")
-            artCollectionView.reloadData()
-        }
-        print("registering for dragged types")
+        self.albumFilesViewController?.otherArtBox.borderType = .bezelBorder
+        
     }
     
     //mark file info
@@ -565,7 +542,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
         durationLabel.stringValue = getTimeAsString(Double(duration))!
         let size = MDItemCopyAttribute(mdItem, kMDItemFSSize) as! Int
         sizeLabel.stringValue = fileSizeFormatter.string(fromByteCount: Int64(size))
-        let bitRateCheck = MDItemCopyAttribute(mdItem, kMDItemAudioBitRate) as? Int ?? (((size as! Int) * 8) / 1000) / duration
+        let bitRateCheck = (MDItemCopyAttribute(mdItem, kMDItemAudioBitRate) as? Int ?? (((size as! Int) * 8) / 1000) / duration) / 1000
         bitRateLabel.stringValue = bitRateFormatter.string(for: bitRateCheck)!
         let sampleRateCheck = MDItemCopyAttribute(mdItem, kMDItemAudioSampleRate) as? Int ?? Int(flacMDItem!.sampleRate!)
         sampleRateLabel.stringValue = sampleRateFormatter.string(for: sampleRateCheck)!

@@ -199,6 +199,8 @@
 		0DF4BEF31CFD0D4E00AC5824 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF4BEF11CFD0D4E00AC5824 /* MainWindowController.swift */; };
 		0DF4BEF41CFD0D4E00AC5824 /* MainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DF4BEF21CFD0D4E00AC5824 /* MainWindowController.xib */; };
 		0DFE2E5A1EC0DAB6007EEF04 /* TrackQueueTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFE2E591EC0DAB6007EEF04 /* TrackQueueTableView.swift */; };
+		0DFE725C1F0190DC00EACE66 /* AlbumFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFE725A1F0190DC00EACE66 /* AlbumFilesViewController.swift */; };
+		0DFE725D1F0190DC00EACE66 /* AlbumFilesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DFE725B1F0190DC00EACE66 /* AlbumFilesViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -432,6 +434,8 @@
 		0DF4BEF11CFD0D4E00AC5824 /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MainWindowController.swift; path = "Delegate:Main Window Controller/MainWindowController.swift"; sourceTree = "<group>"; };
 		0DF4BEF21CFD0D4E00AC5824 /* MainWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainWindowController.xib; path = "Delegate:Main Window Controller/MainWindowController.xib"; sourceTree = "<group>"; };
 		0DFE2E591EC0DAB6007EEF04 /* TrackQueueTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TrackQueueTableView.swift; path = "Main Interface Components/Subview Controllers/TrackQueueTableView.swift"; sourceTree = "<group>"; };
+		0DFE725A1F0190DC00EACE66 /* AlbumFilesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumFilesViewController.swift; sourceTree = "<group>"; };
+		0DFE725B1F0190DC00EACE66 /* AlbumFilesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumFilesViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -670,6 +674,8 @@
 				0DB996D31ED287D400594939 /* AlbumArtCollectionView.swift */,
 				0DB996CF1ED2874F00594939 /* AlbumArtImageView.swift */,
 				0DB996C41ECE233000594939 /* AlbumArtWindowController.xib */,
+				0DFE725A1F0190DC00EACE66 /* AlbumFilesViewController.swift */,
+				0DFE725B1F0190DC00EACE66 /* AlbumFilesViewController.xib */,
 			);
 			name = "Album Art Window";
 			sourceTree = "<group>";
@@ -1137,6 +1143,7 @@
 				0DD0DAEA1E53A8EE00807CAC /* INSTALL_RECEIPT.json in Resources */,
 				0D51C8A61EAC01F8002F6182 /* ConsolidateLibrarySheetController.xib in Resources */,
 				0D9CE6781D3442D3004FA8CB /* Preferences.plist in Resources */,
+				0DFE725D1F0190DC00EACE66 /* AlbumFilesViewController.xib in Resources */,
 				0DEE9D991EF79A500025AA11 /* LibraryConsolidatorTableViewController.xib in Resources */,
 				0DE486921EA83FBA009B226B /* GenericProgressBarSheetController.xib in Resources */,
 				0D800C0D1ED3B54100EA2889 /* ArtistViewAlbumViewController.xib in Resources */,
@@ -1248,6 +1255,7 @@
 				0D76F6AA1D270EB900C6E70F /* DragAndDropArrayController.swift in Sources */,
 				0D2D06CE1EE32FB600A8EC66 /* AlbumFile+CoreDataProperties.swift in Sources */,
 				0DC2E8F51E0110D200671D83 /* MTTextFieldCell.swift in Sources */,
+				0DFE725C1F0190DC00EACE66 /* AlbumFilesViewController.swift in Sources */,
 				0D592A491EDF6C8B0054D553 /* Artist+CoreDataClass.swift in Sources */,
 				0DE957D71EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataClass.swift in Sources */,
 				0D299B171DF111490009CF7A /* AlbumArtViewController.swift in Sources */,

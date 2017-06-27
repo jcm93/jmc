@@ -120,6 +120,8 @@ class DatabaseManager: NSObject {
             fileObject.file_description = "Cue Sheet"
         } else if UTTypeConformsTo(uti as CFString, kUTTypeLog) {
             fileObject.file_description = "Log File"
+        } else {
+            fileObject.file_description = "Other File"
         }
         return true
     }
@@ -498,7 +500,7 @@ class DatabaseManager: NSObject {
             let flacReader = FlacDecoder(file: url, audioModule: nil)
             flacReader!.initForMetadata()
             
-            metadataDictionary[kSampleRateKey]  = flacReader?.metadataDictionary[kSampleRateKey]
+            metadataDictionary[kSampleRateKey]  = flacReader?.sampleRate
             let duration_seconds                = Double(flacReader!.totalFrames) / Double(flacReader!.sampleRate!)
             let bitRate                         = ((Double(metadataDictionary[kSizeKey] as! Int) * 8) / 1000) / duration_seconds
             metadataDictionary[kBitRateKey]     = bitRate
@@ -650,6 +652,7 @@ class DatabaseManager: NSObject {
                 if addedAlbums[track.artist!] == nil {
                     addedAlbums[track.artist!] = [String : Album]()
                 }
+                addedAlbums[track.artist!]![albumCheck] = newAlbum
                 newAlbum.album_artist = track.artist!
                 globalRootLibrary?.next_album_id = Int(globalRootLibrary!.next_album_id!) + 1 as NSNumber
                 track.album = newAlbum
