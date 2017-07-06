@@ -42,7 +42,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="482" height="127"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" id="Mzr-kG-a3z">
-                                                <size key="itemSize" width="90" height="110"/>
+                                                <size key="itemSize" width="90" height="100"/>
                                                 <edgeInsets key="sectionInset" left="10" right="0.0" top="0.0" bottom="0.0"/>
                                             </collectionViewFlowLayout>
                                             <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>

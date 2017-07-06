@@ -67,22 +67,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "jmc/Delegate:Main Window Controller/MainWindowController.swift"
-            timestampString = "518911622.566308"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "328"
-            endingLineNumber = "328"
-            landmarkName = "tempBreak(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "jmc/Other Windows/Library Manager/AdvancedOrganizationOptionsWindowController.swift"
             timestampString = "519255284.593351"
             startingColumnNumber = "9223372036854775807"
@@ -122,38 +106,6 @@
             startingLineNumber = "816"
             endingLineNumber = "816"
             landmarkName = "refreshCurrentSortOrder()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "jmc/Backend/Database:Filesystem Management/DatabaseManager.swift"
-            timestampString = "520221031.85899"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "344"
-            endingLineNumber = "344"
-            landmarkName = "trimDirectoryFollowingMoveOperation(track:oldLocation:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "jmc/Backend/Database:Filesystem Management/DatabaseManager.swift"
-            timestampString = "520221031.85899"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "343"
-            endingLineNumber = "343"
-            landmarkName = "trimDirectoryFollowingMoveOperation(track:oldLocation:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

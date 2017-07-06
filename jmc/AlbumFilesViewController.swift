@@ -39,16 +39,20 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
             view.imageView!.image = image
             view.imageURL = imageURL
             view.textField!.stringValue = artImage.art_name ?? "Art Image"
+            view.representedObject = artImage
             return view
         } else {
             let otherFile = otherArtImages[index!] as! AlbumFile
             let view = collectionView.makeItem(withIdentifier: "image", for: indexPath) as! ImageCollectionViewItem
             let fileURL = URL(string: otherFile.location!)
-            let size = NSSize(width: 90, height: 110)
-            let image = QLThumbnailImageCreate(kCFAllocatorDefault, fileURL! as CFURL, size, [:] as CFDictionary).takeUnretainedValue()
-            view.imageView!.image = NSImage(cgImage: image, size: NSSize(width: image.width, height: image.height))
+            let size = NSSize(width: 90, height: 100)
+            if let unmanagedImage = QLThumbnailImageCreate(kCFAllocatorDefault, fileURL! as CFURL, size, [:] as CFDictionary) {
+                let image = unmanagedImage.takeUnretainedValue()
+                view.imageView!.image = NSImage(cgImage: image, size: NSSize(width: image.width, height: image.height))
+            }
             view.imageURL = fileURL
             view.textField?.stringValue = otherFile.file_description ?? "Other File"
+            view.representedObject = otherFile
             return view
         }
     }

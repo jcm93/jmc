@@ -431,7 +431,9 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     }
     
     func initializeForVolume() {
-        trackViewArrayController.fetchPredicate = NSPredicate(format: "track.volume == %@", self.item!.volume!)
+        let predicate = NSPredicate(format: "track.volume == %@", self.item!.volume!)
+        trackViewArrayController.fetchPredicate = predicate
+        trackViewArrayController.fetch(nil)
     }
     
     override func viewDidLoad() {

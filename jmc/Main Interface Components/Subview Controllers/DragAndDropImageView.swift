@@ -51,17 +51,21 @@ class DragAndDropImageView: NSImageView {
             let urls = board.map({return URL(fileURLWithPath: $0 as! String)})
             if let currentTrack = viewController?.mainWindow?.currentTrack {
                 let databaseManager = DatabaseManager()
-                var results = [Bool]()
+                var results = [AnyObject]()
                 for url in urls {
                     if let urlUTI = getUTIFrom(url: url) {
                         if UTTypeConformsTo(urlUTI as CFString, kUTTypeImage) || UTTypeConformsTo(urlUTI as CFString, kUTTypePDF) {
-                            results.append(databaseManager.addArtForTrack(currentTrack, from: url, managedContext: managedContext))
+                            if let result = databaseManager.addArtForTrack(currentTrack, from: url, managedContext: managedContext, organizes: true) {
+                                results.append(result)
+                            }
                         } else {
-                            results.append(databaseManager.addMiscellaneousFile(forTrack: currentTrack, from: url, managedContext: managedContext))
+                            if let result = databaseManager.addMiscellaneousFile(forTrack: currentTrack, from: url, managedContext: managedContext, organizes: true) {
+                                results.append(result)
+                            }
                         }
                     }
                 }
-                if results.contains(true) {
+                if results.count > 0 {
                     self.viewController?.initAlbumArt(currentTrack)
                 }
             }

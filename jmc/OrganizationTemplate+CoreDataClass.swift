@@ -33,40 +33,43 @@ public class OrganizationTemplate: NSManagedObject {
     
     
     func transformToPathComponent(token: OrganizationFieldToken, track: Track) -> String {
-        switch token.tokenType {
-        case .album:
-            return track.album?.name ?? UNKNOWN_ALBUM_STRING
-        case .albumartist:
-            return track.album?.album_artist?.name ?? track.artist?.name ?? UNKNOWN_ARTIST_STRING
-        case .artist:
-            return track.artist?.name ?? UNKNOWN_ARTIST_STRING
-        case .other:
-            return token.stringIfOther!
-        case .trackname:
-            return track.name ?? ""
-        case .tracknum:
-            var discNumberStringRepresentation: String
-            if track.disc_number != nil {
-                discNumberStringRepresentation = "\(String(describing: track.disc_number!))-"
-            } else {
-                discNumberStringRepresentation = ""
-            }
-            let trackNumberStringRepresentation: String
-            if track.track_num != nil {
-                let trackNumber = Int(track.track_num!)
-                if trackNumber < 10 {
-                    trackNumberStringRepresentation = "0\(trackNumber)"
+        var string = {() -> String in
+            switch token.tokenType {
+            case .album:
+                return track.album?.name ?? UNKNOWN_ALBUM_STRING
+            case .albumartist:
+                return track.album?.album_artist?.name ?? track.artist?.name ?? UNKNOWN_ARTIST_STRING
+            case .artist:
+                return track.artist?.name ?? UNKNOWN_ARTIST_STRING
+            case .other:
+                return token.stringIfOther!
+            case .trackname:
+                return track.name ?? ""
+            case .tracknum:
+                var discNumberStringRepresentation: String
+                if track.disc_number != nil {
+                    discNumberStringRepresentation = "\(String(describing: track.disc_number!))-"
                 } else {
-                    trackNumberStringRepresentation = String(trackNumber)
+                    discNumberStringRepresentation = ""
                 }
-            } else {
-                trackNumberStringRepresentation = ""
-                discNumberStringRepresentation = ""
+                let trackNumberStringRepresentation: String
+                if track.track_num != nil {
+                    let trackNumber = Int(track.track_num!)
+                    if trackNumber < 10 {
+                        trackNumberStringRepresentation = "0\(trackNumber)"
+                    } else {
+                        trackNumberStringRepresentation = String(trackNumber)
+                    }
+                } else {
+                    trackNumberStringRepresentation = ""
+                    discNumberStringRepresentation = ""
+                }
+                return "\(discNumberStringRepresentation)\(trackNumberStringRepresentation)"
+            case .year:
+                return track.album?.release_date?.date.description ?? ""
             }
-            return "\(discNumberStringRepresentation)\(trackNumberStringRepresentation)"
-        case .year:
-            return track.album?.release_date?.date.description ?? ""
-        }
+        }()
+        return string.replacingOccurrences(of: "/", with: ":")
     }
 
 }

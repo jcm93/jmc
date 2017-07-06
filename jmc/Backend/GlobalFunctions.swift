@@ -367,6 +367,7 @@ var cachedOrders: [String : CachedOrder]? = {
 
 func validateStringForFilename(_ string: String) -> String {
     //needed?
+    //yes.
     let newString = String(string.characters.map({
         $0 == "/" ? ":" : $0
     }))

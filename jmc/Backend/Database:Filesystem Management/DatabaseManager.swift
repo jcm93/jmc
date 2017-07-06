@@ -66,11 +66,13 @@ class DatabaseManager: NSObject {
         //we know primary_art is nil
         let validImages = searchAlbumDirectoryForArt(track)
         guard validImages.count > 0 else { return false }
-        var results = [Bool]()
+        var results = [AlbumArtwork]()
         for image in validImages {
-            results.append(addArtForTrack(track, from: image, managedContext: managedContext))
+            if let result = addArtForTrack(track, from: image, managedContext: managedContext, organizes: true) {
+                results.append(result)
+            }
         }
-        if results.contains(true) {
+        if results.count > 0 {
             return true
         } else {
             if let art = getArtworkFromFile(track.location!) {
@@ -108,11 +110,11 @@ class DatabaseManager: NSObject {
         }
     }
     
-    func addMiscellaneousFile(forTrack track: Track, from url: URL, managedContext: NSManagedObjectContext) -> Bool {
+    func addMiscellaneousFile(forTrack track: Track, from url: URL, managedContext: NSManagedObjectContext, organizes: Bool) -> AlbumFile? {
         //returns true if file was successfully added
-        guard let album = track.album else { return false }
-        guard let uti = getUTIFrom(url: url) else { return false }
-        guard UTTypeConformsTo(uti as CFString, kUTTypeText) else { return false }
+        guard let album = track.album else { return nil }
+        guard let uti = getUTIFrom(url: url) else { return nil }
+        guard UTTypeConformsTo(uti as CFString, kUTTypeText) else { return nil }
         let fileObject = NSEntityDescription.insertNewObject(forEntityName: "AlbumFile", into: managedContext) as! AlbumFile
         fileObject.album = album
         fileObject.location = url.absoluteString
@@ -123,45 +125,77 @@ class DatabaseManager: NSObject {
         } else {
             fileObject.file_description = "Other File"
         }
-        return true
+        if organizes {
+            let filename = url.lastPathComponent
+            moveAlbumFileToAppropriateDirectory(albumFile: fileObject, filename: filename)
+        }
+        return fileObject
     }
     
-    func addArtForTrack(_ track: Track, from url: URL, managedContext: NSManagedObjectContext) -> Bool {
+    func moveAlbumFileToAppropriateDirectory(albumFile: AlbumFile, filename: String) {
+        let destination = getAlbumDirectory(for: albumFile.album!).appendingPathComponent(filename)
+        do {
+            let oldLocation = URL(string: albumFile.location!)!
+            if globalRootLibrary?.organization_type == NSNumber(value: 1) {
+                try fileManager.moveItem(at: oldLocation, to: destination)
+            } else if globalRootLibrary?.organization_type == NSNumber(value: 2) {
+                try fileManager.copyItem(at: oldLocation, to: destination)
+            }
+            albumFile.location = destination.absoluteString
+        } catch {
+            print(error)
+        }
+    }
+    
+    func moveAlbumFileToAppropriateDirectory(albumArt: AlbumArtwork, filename: String) {
+        let destination = getAlbumDirectory(for: albumArt.album!).appendingPathComponent(filename)
+        do {
+            let oldLocation = URL(string: albumArt.artwork_location!)!
+            if globalRootLibrary?.organization_type == NSNumber(value: 1) {
+                try fileManager.moveItem(at: oldLocation, to: destination)
+            } else if globalRootLibrary?.organization_type == NSNumber(value: 2) {
+                try fileManager.copyItem(at: oldLocation, to: destination)
+            }
+            albumArt.artwork_location = destination.absoluteString
+        } catch {
+            print(error)
+        }
+    }
+    
+    func addArtForTrack(_ track: Track, from url: URL, managedContext: NSManagedObjectContext, organizes: Bool) -> AlbumArtwork? {
         //returns true if art was successfully added, so a receiver can display the image, if needed
-        guard let album = track.album else { return false }
+        guard let album = track.album else { return nil }
         let image = NSImage(byReferencing: url)
-        guard image.isValid else { return false }
+        guard image.isValid else { return nil }
         if track.album?.primary_art?.artwork_location != nil {
             let currentPrimaryArtURL = URL(string: track.album!.primary_art!.artwork_location!)
-            guard url != currentPrimaryArtURL else { return false }
+            guard url != currentPrimaryArtURL else { return nil }
         }
         if track.album?.other_art != nil && track.album!.other_art!.count > 0 {
             let currentArtURLs = track.album!.other_art!.map({return URL(string: ($0 as! AlbumArtwork).artwork_location!)!})
-            guard !currentArtURLs.contains(url) else { return false }
+            guard !currentArtURLs.contains(url) else { return nil }
         }
         let filename = url.lastPathComponent
-        var artLocation = getAlbumDirectory(for: track.album!).appendingPathComponent(filename)
-        do {
-            try fileManager.copyItem(at: url, to: artLocation)
-        } catch {
-            print(error)
-            return false
-        }
+        var newArt: AlbumArtwork
         if track.album?.primary_art == nil {
             let newPrimaryArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
+            newArt = newPrimaryArt
             newPrimaryArt.album = album
-            newPrimaryArt.artwork_location = artLocation.absoluteString
+            newPrimaryArt.artwork_location = url.absoluteString
             newPrimaryArt.id = globalRootLibrary?.next_album_artwork_id
             globalRootLibrary?.next_album_artwork_id = globalRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
-            return true
         } else {
             let newOtherArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
+            newArt = newOtherArt
             newOtherArt.album_multiple = album
-            newOtherArt.artwork_location = artLocation.absoluteString
+            newOtherArt.artwork_location = url.absoluteString
             newOtherArt.id = globalRootLibrary?.next_album_artwork_id
             globalRootLibrary?.next_album_artwork_id = globalRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
-            return true
         }
+        if organizes {
+            moveAlbumFileToAppropriateDirectory(albumArt: newArt, filename: filename)
+        }
+        return newArt
     }
     
     func addArtForTrack(_ track: Track, fromData data: Data, managedContext: NSManagedObjectContext) -> Bool {
@@ -268,11 +302,12 @@ class DatabaseManager: NSObject {
     }
     
     //OK -- discrete
-    func moveFileAfterEdit(_ track: Track) {
+    func moveFileAfterEdit(_ track: Track, copies: Bool) -> Bool {
         print("moving file after edit")
         print("current track location: \(track.location)")
-        guard let currentLocation = URL(string: track.location!) else { print("current location doesn't exist."); return }
-        guard let newLocation = track.determineLocation() else { return }
+        guard track.library?.organization_type != NSNumber(integerLiteral: 0) else { return true }
+        guard let currentLocation = URL(string: track.location!) else { print("current location doesn't exist."); return false }
+        guard let newLocation = track.determineLocation() else { return false }
         let directoryURL = newLocation.deletingLastPathComponent()
         //check if directories already exist
         if currentLocation.path.lowercased() != newLocation.path.lowercased() {
@@ -284,10 +319,15 @@ class DatabaseManager: NSObject {
                     newLocationWithDupe = appendDuplicateTo(url: newLocation, dupe: dupe)
                     dupe += 1
                 }
-                try fileManager.moveItem(at: currentLocation, to: newLocationWithDupe)
+                if !copies {
+                    try fileManager.moveItem(at: currentLocation, to: newLocationWithDupe)
+                } else {
+                    try fileManager.copyItem(at: currentLocation, to: newLocationWithDupe)
+                }
                 track.location = newLocationWithDupe.absoluteString
             } catch {
                 print("error moving file: \(error)")
+                return false
             }
         } else {
             checkCasesForMove(withOldURL: currentLocation, newURL: newLocation)
@@ -298,6 +338,7 @@ class DatabaseManager: NSObject {
             self.undoFileLocations[track] = [String]()
         }
         self.undoFileLocations[track]!.append(track.location!)
+        return true
     }
     
     func checkCasesForMove(withOldURL oldURL: URL, newURL: URL) {
@@ -422,6 +463,25 @@ class DatabaseManager: NSObject {
         print("directory enumeration error: \(error)")
         print("this is bad! returning true anyway")
         return true
+    }
+    
+    func getNonAudioFiles(inDirectory directory: URL) -> [(URL, CFString)]? {
+        do {
+            var currentDirectoryAddableFiles = [(URL, CFString)]()
+            let enumerator = fileManager.enumerator(atPath: directory.path)
+            for fileObject in enumerator! {
+                guard let file = fileObject as? URL else { continue }
+                if let uti = (try? file.resourceValues(forKeys: [.typeIdentifierKey]))?.typeIdentifier as CFString? {
+                    if UTTypeConformsTo(uti, kUTTypeImage) || UTTypeConformsTo(uti, kUTTypePDF) || UTTypeConformsTo(uti, kUTTypeLog) || UTTypeConformsTo(uti, kUTTypeText) || file.pathExtension.lowercased() == "cue" {
+                        currentDirectoryAddableFiles.append((file, uti))
+                    }
+                }
+            }
+            return currentDirectoryAddableFiles
+        } catch {
+            print(error)
+            return nil
+        }
     }
     
     func getMediaURLsInDirectoryURLs(_ urls: [URL]) -> ([URL],[FileAddToDatabaseError]) {
@@ -565,7 +625,9 @@ class DatabaseManager: NSObject {
         var addedAlbums = [Artist : [String : Album]]()
         var addedComposers = [String : Composer]()
         var addedVolumes = [URL : Volume]()
+        var scannedDirectories = Set<URL>()
         var tracks = [Track]()
+        var addedAlbumFiles = [AnyObject]()
         var index = 0
         DispatchQueue.main.async {
             visualUpdateHandler?.prepareForNewTask(actionName: "Importing", thingName: "tracks", thingCount: mediaURLs.count)
@@ -701,12 +763,18 @@ class DatabaseManager: NSObject {
             }
             
             //move file to the appropriate location, if we're organizing
-            if moveFileAfterEdit(track) != nil || library.organization_type == 0 as NSNumber {
-                if hasArt == true {
-                    addArtForTrack(track, fromData: art!, managedContext: subContext)
-                }
-                tracks.append(track)
-            } else {
+            var result = true
+            switch library.organization_type! {
+            case NSNumber(integerLiteral: 1):
+                result = moveFileAfterEdit(track, copies: false)
+            case NSNumber(integerLiteral: 2):
+                result = moveFileAfterEdit(track, copies: true)
+            default: result = true
+            }
+            if hasArt {
+                addArtForTrack(track, fromData: art!, managedContext: subContext)
+            }
+            if result == false {
                 print("error moving")
                 errors.append(FileAddToDatabaseError(url: url.absoluteString, error: "Couldn't move/copy file to album directory"))
                 if addedAlbum != nil {
@@ -720,12 +788,47 @@ class DatabaseManager: NSObject {
                 if addedComposer != nil {
                     subContext.delete(addedComposer!)
                 }
-
             }
             index += 1
+            let directoryURL = url.deletingLastPathComponent()
+            if !scannedDirectories.contains(directoryURL) {
+                //scan directory for art, logs, cues
+                if let addableFiles = getNonAudioFiles(inDirectory: directoryURL) {
+                    for file in addableFiles {
+                        if UTTypeConformsTo(file.1 as CFString, kUTTypeImage) || UTTypeConformsTo(file.1 as CFString, kUTTypePDF) {
+                            if let art = addArtForTrack(track, from: file.0, managedContext: subContext, organizes: false) {
+                                addedAlbumFiles.append(art)
+                            }
+                        } else {
+                            if let otherFile = addMiscellaneousFile(forTrack: track, from: file.0, managedContext: subContext, organizes: false) {
+                                addedAlbumFiles.append(otherFile)
+                            }
+                        }
+                    }
+                }
+                scannedDirectories.insert(directoryURL)
+                
+            }
             DispatchQueue.main.async {
                 visualUpdateHandler?.increment(thingsDone: index)
             }
+        }
+        index = 0
+        DispatchQueue.main.async {
+            visualUpdateHandler?.prepareForNewTask(actionName: "Moving", thingName: "album files", thingCount: addedAlbumFiles.count)
+        }
+        for item in addedAlbumFiles {
+            if let albumFile = item as? AlbumFile {
+                let filename = URL(string: albumFile.location!)!.lastPathComponent
+                moveAlbumFileToAppropriateDirectory(albumFile: albumFile, filename: filename)
+            } else if let art = item as? AlbumArtwork {
+                let filename = URL(string: art.artwork_location!)!.lastPathComponent
+                moveAlbumFileToAppropriateDirectory(albumArt: art, filename: filename)
+            }
+            DispatchQueue.main.async {
+                visualUpdateHandler?.increment(thingsDone: index)
+            }
+            index += 1
         }
         
         do {
@@ -791,7 +894,7 @@ class DatabaseManager: NSObject {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         for track in tracks {
-            moveFileAfterEdit(track)
+            moveFileAfterEdit(track, copies: false)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Name")
@@ -805,7 +908,7 @@ class DatabaseManager: NSObject {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         for track in tracks {
-            moveFileAfterEdit(track)
+            moveFileAfterEdit(track, copies: false)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Artist")
@@ -819,7 +922,7 @@ class DatabaseManager: NSObject {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         for track in tracks {
-            moveFileAfterEdit(track)
+            moveFileAfterEdit(track, copies: false)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Album Artist")
@@ -833,7 +936,7 @@ class DatabaseManager: NSObject {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         for track in tracks {
-            moveFileAfterEdit(track)
+            moveFileAfterEdit(track, copies: false)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Album")
@@ -847,7 +950,7 @@ class DatabaseManager: NSObject {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         for track in tracks {
-            moveFileAfterEdit(track)
+            moveFileAfterEdit(track, copies: false)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Track Number")
@@ -857,7 +960,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager?.beginUndoGrouping()
         editTrackNumOf(tracks, num: value)
         for track in tracks {
-            moveFileAfterEdit(track)
+            moveFileAfterEdit(track, copies: false)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Total Tracks")
@@ -871,7 +974,7 @@ class DatabaseManager: NSObject {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         for track in tracks {
-            moveFileAfterEdit(track)
+            moveFileAfterEdit(track, copies: false)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Disc Number")
@@ -881,7 +984,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager?.beginUndoGrouping()
         editDiscNumOf(tracks, num: value)
         for track in tracks {
-            moveFileAfterEdit(track)
+            moveFileAfterEdit(track, copies: false)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Total Discs")
@@ -894,7 +997,7 @@ class DatabaseManager: NSObject {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         for track in tracks {
-            moveFileAfterEdit(track)
+            moveFileAfterEdit(track, copies: false)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Composer")
@@ -904,7 +1007,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager?.beginUndoGrouping()
         editGenre(tracks, genre: value)
         for track in tracks {
-            moveFileAfterEdit(track)
+            moveFileAfterEdit(track, copies: false)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Genre")
@@ -918,7 +1021,7 @@ class DatabaseManager: NSObject {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
         for track in tracks {
-            moveFileAfterEdit(track)
+            moveFileAfterEdit(track, copies: false)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Compilation")
@@ -936,7 +1039,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager?.beginUndoGrouping()
         editMovementName(tracks, name: value)
         for track in tracks {
-            moveFileAfterEdit(track)
+            moveFileAfterEdit(track, copies: false)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Movement Name")
@@ -947,7 +1050,7 @@ class DatabaseManager: NSObject {
         managedContext.undoManager?.beginUndoGrouping()
         editMovementNum(tracks, num: value)
         for track in tracks {
-            moveFileAfterEdit(track)
+            moveFileAfterEdit(track, copies: false)
         }
         managedContext.undoManager?.endUndoGrouping()
         managedContext.undoManager?.setActionName("Edit Movement Number")
@@ -1010,7 +1113,7 @@ class DatabaseManager: NSObject {
                 reorderForTracks(tracks, cachedOrder: order, subContext: nil)
             }
             for track in tracks {
-                moveFileAfterEdit(track)
+                moveFileAfterEdit(track, copies: false)
             }
         }
     }
@@ -1024,7 +1127,7 @@ class DatabaseManager: NSObject {
         DispatchQueue.global(qos: .default).async {
             var index = 0
             for track in subContextTracks {
-                self.moveFileAfterEdit(track)
+                self.moveFileAfterEdit(track, copies: false)
                 index += 1
                 DispatchQueue.main.async {
                     visualUpdateHandler?.increment(thingsDone: index)

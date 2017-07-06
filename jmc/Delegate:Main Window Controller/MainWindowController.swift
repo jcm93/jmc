@@ -192,11 +192,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             let playlistViewController = otherLocalTableViewControllers.object(forKey: objectID) as! LibraryTableViewController
             librarySplitView.addArrangedSubview(playlistViewController.view)
             currentTableViewController = playlistViewController
-            if currentTableViewController?.playlist != nil {
+            /*if currentTableViewController?.playlist != nil {
                 currentTableViewController?.initializeForPlaylist()
             } else {
                 currentTableViewController?.initializeForLibrary()
-            }
+            }*/
             updateInfo()
         }
         else if otherSharedTableViewControllers.object(forKey: objectID) != nil && item.is_network == true {
@@ -204,11 +204,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             librarySplitView.addArrangedSubview(playlistViewController.view)
             currentTableViewController = playlistViewController
             currentTableViewController?.initializeForPlaylist()
-            if currentTableViewController?.playlist != nil {
+            /*if currentTableViewController?.playlist != nil {
                 currentTableViewController?.initializeForPlaylist()
             } else {
                 currentTableViewController?.initializeForLibrary()
-            }
+            }*/
             updateInfo()
         }
         else {
@@ -795,8 +795,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         DispatchQueue.main.async {
             let trackArray = (self.currentTableViewController?.trackViewArrayController?.arrangedObjects as! [TrackView])
             let numItems = trackArray.count as NSNumber
-            let totalSize = trackArray.map({return (($0.track)!.size?.int64Value)}).reduce(0, {$0 + ($1 != nil ? $1! : 0)})
-            let totalTime = trackArray.map({return (($0.track)!.time?.doubleValue)}).reduce(0, {$0 + ($1 != nil ? $1! : 0)})
+            let totalSize = trackArray.lazy.map({return (($0.track)!.size?.int64Value)}).reduce(0, {$0 + ($1 != nil ? $1! : 0)})
+            let totalTime = trackArray.lazy.map({return (($0.track)!.time?.doubleValue)}).reduce(0, {$0 + ($1 != nil ? $1! : 0)})
             let numString = self.numberFormatter.string(from: numItems)
             let sizeString = self.sizeFormatter.string(fromByteCount: totalSize)
             let timeString = self.dateFormatter.string(from: totalTime/1000)

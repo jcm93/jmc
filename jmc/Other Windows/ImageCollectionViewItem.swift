@@ -11,13 +11,20 @@ import Cocoa
 class ImageCollectionViewItem: NSCollectionViewItem {
     
     
-    @IBOutlet weak var viewContainingElements: NSView!
     @IBOutlet weak var shadowView: NSView!
     var imageURL: URL?
     
+    @IBAction func textFieldWasEdited(_ sender: Any) {
+        if let object = self.representedObject as? AlbumFile {
+            object.file_description = self.textField?.stringValue
+        } else if let object = self.representedObject as? AlbumArtwork {
+            object.art_name = self.textField?.stringValue
+        }
+    }
     override var isSelected: Bool {
         didSet {
             view.layer?.backgroundColor = isSelected ? NSColor.selectedMenuItemColor.cgColor : NSColor.clear.cgColor
+            self.textField?.textColor = isSelected ? NSColor.white : NSColor.textColor
             view.layer?.cornerRadius = 8.0
         }
     }
@@ -31,9 +38,7 @@ class ImageCollectionViewItem: NSCollectionViewItem {
         shadowView.layer?.shadowColor = NSColor.black.cgColor
         imageView?.wantsLayer = true
         textField?.isEditable = true
-        viewContainingElements.wantsLayer = true
-        viewContainingElements.layer?.cornerRadius = 7.0
-        viewContainingElements.layer?.backgroundColor = NSColor.lightGray.cgColor
+        self.textField?.wantsLayer = false
     }
     
 }

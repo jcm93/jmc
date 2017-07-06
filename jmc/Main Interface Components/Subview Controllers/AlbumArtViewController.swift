@@ -28,7 +28,7 @@ class AlbumArtViewController: NSViewController {
         print("loading album art window")
         self.artWindow = AlbumArtWindowController(windowNibName: "AlbumArtWindowController")
         self.artWindow?.track = self.mainWindow?.currentTrack
-        self.artWindow?.showWindow(self)
+        self.mainWindow?.window?.addChildWindow(self.artWindow!.window!, ordered: .above)
     }
     
     func toggleHidden(_ artworkToggle: Int) {
