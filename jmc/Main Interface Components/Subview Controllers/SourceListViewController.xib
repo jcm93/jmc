@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -111,7 +111,7 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView translatesAutoresizingMaskIntoConstraints="NO" id="gjn-sy-I9U">
-                                                        <rect key="frame" x="3" y="-1" width="17" height="17"/>
+                                                        <rect key="frame" x="3" y="0.0" width="17" height="17"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="17" id="0oz-WW-ZFr"/>
                                                             <constraint firstAttribute="height" constant="17" id="bQI-qd-3YT"/>
@@ -145,7 +145,7 @@
                                                     <constraint firstItem="ie1-Lv-hfk" firstAttribute="leading" secondItem="gjn-sy-I9U" secondAttribute="trailing" constant="7" id="5go-F5-dJs"/>
                                                     <constraint firstItem="nIS-VM-3pC" firstAttribute="leading" secondItem="ie1-Lv-hfk" secondAttribute="trailing" constant="7" id="93b-sA-WCL"/>
                                                     <constraint firstItem="gjn-sy-I9U" firstAttribute="leading" secondItem="VzQ-q9-Y9W" secondAttribute="leading" constant="3" id="Mq8-7v-4bN"/>
-                                                    <constraint firstItem="gjn-sy-I9U" firstAttribute="top" secondItem="VzQ-q9-Y9W" secondAttribute="top" constant="1" id="PeO-3z-Kku"/>
+                                                    <constraint firstItem="gjn-sy-I9U" firstAttribute="top" secondItem="VzQ-q9-Y9W" secondAttribute="top" id="PeO-3z-Kku"/>
                                                     <constraint firstItem="nIS-VM-3pC" firstAttribute="top" secondItem="VzQ-q9-Y9W" secondAttribute="top" constant="3" id="pUJ-hf-VNG"/>
                                                     <constraint firstItem="ie1-Lv-hfk" firstAttribute="top" secondItem="VzQ-q9-Y9W" secondAttribute="top" constant="1" id="tKy-Zq-OS2"/>
                                                 </constraints>
@@ -245,6 +245,7 @@
                                                     <constraint firstItem="T1a-RQ-kYh" firstAttribute="leading" secondItem="stS-ty-3x5" secondAttribute="trailing" constant="7" id="IjH-fu-71H"/>
                                                     <constraint firstAttribute="trailing" secondItem="T1a-RQ-kYh" secondAttribute="trailing" constant="7" id="JRL-8f-JXE"/>
                                                     <constraint firstItem="stS-ty-3x5" firstAttribute="centerY" secondItem="LSn-2b-aog" secondAttribute="centerY" id="LqT-gf-WJA"/>
+                                                    <constraint firstAttribute="bottom" secondItem="stS-ty-3x5" secondAttribute="bottom" id="OMs-lW-Xhc"/>
                                                     <constraint firstItem="i7p-C7-Fd1" firstAttribute="leading" secondItem="LSn-2b-aog" secondAttribute="leading" constant="4" id="ViC-oh-ogo"/>
                                                     <constraint firstItem="stS-ty-3x5" firstAttribute="top" secondItem="T1a-RQ-kYh" secondAttribute="top" id="YNT-hC-O3Y"/>
                                                     <constraint firstItem="stS-ty-3x5" firstAttribute="leading" secondItem="i7p-C7-Fd1" secondAttribute="trailing" constant="6" id="dza-Kb-sVi"/>
@@ -458,11 +459,11 @@
         </menu>
     </objects>
     <resources>
-        <image name="Master Library" width="15.75" height="13.5"/>
+        <image name="Master Library" width="32" height="32"/>
         <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSFolder" width="32" height="32"/>
-        <image name="Playlist" width="20" height="20"/>
-        <image name="Shared Library" width="23" height="20"/>
-        <image name="Smart Playlist" width="22" height="21"/>
+        <image name="Playlist" width="24" height="24"/>
+        <image name="Shared Library" width="32" height="32"/>
+        <image name="Smart Playlist" width="24" height="24"/>
     </resources>
 </document>

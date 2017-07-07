@@ -148,7 +148,7 @@ class DatabaseManager: NSObject {
     }
     
     func moveAlbumFileToAppropriateDirectory(albumArt: AlbumArtwork, filename: String) {
-        let destination = getAlbumDirectory(for: albumArt.album!).appendingPathComponent(filename)
+        let destination = getAlbumDirectory(for: albumArt.album ?? albumArt.album_multiple!).appendingPathComponent(filename)
         do {
             let oldLocation = URL(string: albumArt.artwork_location!)!
             if globalRootLibrary?.organization_type == NSNumber(value: 1) {
@@ -788,6 +788,8 @@ class DatabaseManager: NSObject {
                 if addedComposer != nil {
                     subContext.delete(addedComposer!)
                 }
+            } else {
+                tracks.append(track)
             }
             index += 1
             let directoryURL = url.deletingLastPathComponent()

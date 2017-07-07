@@ -36,15 +36,15 @@ public class OrganizationTemplate: NSManagedObject {
         var string = {() -> String in
             switch token.tokenType {
             case .album:
-                return track.album?.name ?? UNKNOWN_ALBUM_STRING
+                return (track.album?.name ?? UNKNOWN_ALBUM_STRING).replacingOccurrences(of: "/", with: ":")
             case .albumartist:
-                return track.album?.album_artist?.name ?? track.artist?.name ?? UNKNOWN_ARTIST_STRING
+                return (track.album?.album_artist?.name ?? track.artist?.name ?? UNKNOWN_ARTIST_STRING).replacingOccurrences(of: "/", with: ":")
             case .artist:
-                return track.artist?.name ?? UNKNOWN_ARTIST_STRING
+                return (track.artist?.name ?? UNKNOWN_ARTIST_STRING).replacingOccurrences(of: "/", with: ":")
             case .other:
                 return token.stringIfOther!
             case .trackname:
-                return track.name ?? ""
+                return (track.name ?? "").replacingOccurrences(of: "/", with: ":")
             case .tracknum:
                 var discNumberStringRepresentation: String
                 if track.disc_number != nil {
@@ -64,12 +64,12 @@ public class OrganizationTemplate: NSManagedObject {
                     trackNumberStringRepresentation = ""
                     discNumberStringRepresentation = ""
                 }
-                return "\(discNumberStringRepresentation)\(trackNumberStringRepresentation)"
+                return ("\(discNumberStringRepresentation)\(trackNumberStringRepresentation)").replacingOccurrences(of: "/", with: ":")
             case .year:
-                return track.album?.release_date?.date.description ?? ""
+                return (track.album?.release_date?.date.description ?? "").replacingOccurrences(of: "/", with: ":")
             }
         }()
-        return string.replacingOccurrences(of: "/", with: ":")
+        return string
     }
 
 }

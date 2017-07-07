@@ -10,15 +10,20 @@ import Cocoa
 
 class AlbumArtCollectionView: NSCollectionView {
     
+    var viewController: AlbumFilesViewController?
     
     override var mouseDownCanMoveWindow: Bool {
         return true
     }
-
+    
+    override func keyDown(with event: NSEvent) {
+        if event.charactersIgnoringModifiers == String(Character(UnicodeScalar(NSDeleteCharacter)!)) {
+            viewController?.deleteSelection()
+        }
+    }
 
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
-
         // Drawing code here.
     }
     

@@ -100,8 +100,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func launchAddFilesDialog() {
         self.backgroundAddFilesHandler = GenericProgressBarSheetController(windowNibName: "GenericProgressBarSheetController")
-        self.backgroundAddFilesHandler?.showWindow(self)
-        self.backgroundAddFilesHandler?.window?.level = Int(CGWindowLevelForKey(CGWindowLevelKey.floatingWindow))
+        self.mainWindowController?.window?.addChildWindow(self.backgroundAddFilesHandler!.window!, ordered: .above)
+        //self.backgroundAddFilesHandler?.window?.level = Int(CGWindowLevelForKey(CGWindowLevelKey.floatingWindow))
     }
     
     func reinitializeInterfaceForRemovedSource() {

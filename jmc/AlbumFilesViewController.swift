@@ -57,14 +57,41 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
         }
     }
     
-    func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, index: Int, dropOperation: NSCollectionViewDropOperation) -> Bool {
+    func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionViewDropOperation) -> Bool {
         print("accepting drop")
-        return true
+        if let board = draggingInfo.draggingPasteboard().propertyList(forType: "NSFilenamesPboardType") as? NSArray {
+            let urls = board.map({return URL(fileURLWithPath: $0 as! String)})
+            if let currentTrack = self.track {
+                let databaseManager = DatabaseManager()
+                var results = [AnyObject]()
+                for url in urls {
+                    if let urlUTI = getUTIFrom(url: url) {
+                        if UTTypeConformsTo(urlUTI as CFString, kUTTypeImage) || UTTypeConformsTo(urlUTI as CFString, kUTTypePDF) {
+                            if let result = databaseManager.addArtForTrack(currentTrack, from: url, managedContext: managedContext, organizes: true) {
+                                results.append(result)
+                                otherArtImages.append(result)
+                            }
+                        } else {
+                            if let result = databaseManager.addMiscellaneousFile(forTrack: currentTrack, from: url, managedContext: managedContext, organizes: true) {
+                                results.append(result)
+                                otherArtImages.append(result)
+                            }
+                        }
+                    }
+                }
+                collectionView.reloadData()
+                return true
+            }
+            else {
+                return false
+            }
+        }
+        return false
     }
     
-    func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndex proposedDropIndex: UnsafeMutablePointer<Int>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionViewDropOperation>) -> NSDragOperation {
+    func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionViewDropOperation>) -> NSDragOperation {
         print("validating drop")
-        return .move
+        return .every
     }
     
     func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
@@ -152,6 +179,32 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
         }
     }
 
+    func deleteSelection() {
+        var selectedObjects = [AnyObject]()
+        var indices = [Int]()
+        for item in collectionView.selectionIndexPaths {
+            indices.append(item.last!)
+            let object = otherArtImages[item.last!]
+            selectedObjects.append(object)
+        }
+        collectionView.deleteItems(at: collectionView.selectionIndexPaths)
+        for index in indices.sorted().reversed() {
+            let item = otherArtImages.remove(at: index)
+            if let art = item as? AlbumArtwork {
+                if art.album != nil {
+                    art.album = nil
+                } else if art.album_multiple != nil {
+                    art.album_multiple = nil
+                }
+                managedContext.delete(art)
+            } else if let file = item as? AlbumFile {
+                file.album = nil
+                managedContext.delete(file)
+            }
+        }
+        collectionView.reloadData()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
@@ -159,7 +212,8 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
         self.collectionView.delegate = self
         self.collectionView.register(ImageCollectionViewItem.self, forItemWithIdentifier: "image")
         self.collectionView.wantsLayer = true
-        self.collectionView.register(forDraggedTypes: [NSURLPboardType])
+        self.collectionView.viewController = self
+        self.collectionView.register(forDraggedTypes: [NSURLPboardType, NSFilenamesPboardType, NSFilesPromisePboardType])
         self.collectionView.setDraggingSourceOperationMask(.every, forLocal: true)
         self.collectionView.setDraggingSourceOperationMask(.every, forLocal: false)
         //self.textView.translatesAutoresizingMaskIntoConstraints = false
