@@ -46,6 +46,7 @@ class DatabaseManager: NSObject {
     var organizesMedia: Bool = true
     let fileManager = FileManager.default
     var undoFileLocations = [Track : [String]]()
+    var currentTrack: Track?
     
     func getArtworkFromFile(_ urlString: String) -> Data? {
         print("checking for art in file")
@@ -62,33 +63,60 @@ class DatabaseManager: NSObject {
         return art
     }
     
-    func tryFindPrimaryArtForTrack(_ track: Track) -> Bool {
+    func tryFindPrimaryArtForTrack(_ track: Track, callback: ((Track, Bool) -> Void)?) {
         //we know primary_art is nil
+        //may be called form background thread
+        self.currentTrack = track
         let validImages = searchAlbumDirectoryForArt(track)
-        guard validImages.count > 0 else { return false }
-        var results = [AlbumArtwork]()
-        for image in validImages {
-            if let result = addArtForTrack(track, from: image, managedContext: managedContext, organizes: true) {
-                results.append(result)
+        if validImages.count > 0 {
+            DispatchQueue.main.async {
+                var results = [AlbumArtwork]()
+                for image in validImages {
+                    if let result = self.addArtForTrack(track, from: image, managedContext: managedContext, organizes: true) {
+                        results.append(result)
+                    }
+                }
+                if results.count > 0 {
+                    callback?(track, true)
+                } else {
+                    callback?(track, false)
+                }
             }
-        }
-        if results.count > 0 {
-            return true
         } else {
             if let art = getArtworkFromFile(track.location!) {
-                return addArtForTrack(track, fromData: art, managedContext: managedContext)
+                DispatchQueue.main.async {
+                    if self.addArtForTrack(track, fromData: art, managedContext: managedContext) == true {
+                        callback?(track, true)
+                    } else {
+                        callback?(track, false)
+                    }
+                }
             } else {
-                return false
+                callback?(track, false)
             }
         }
+    }
+    
+    func artFoundCallback(for track: Track) {
+        guard self.currentTrack == track else { return }
     }
     
     func searchAlbumDirectoryForArt(_ track: Track) -> [URL] {
         let locationURL = URL(string: track.location!)
         let albumDirectoryURL = locationURL!.deletingLastPathComponent()
         do {
-            let albumDirectoryContents = try fileManager.contentsOfDirectory(at: albumDirectoryURL, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
-            let validImages = albumDirectoryContents.filter({return NSImage(byReferencing: $0).isValid})
+            let albumDirectoryContents = try fileManager.contentsOfDirectory(at: albumDirectoryURL, includingPropertiesForKeys: [.typeIdentifierKey], options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
+            let validImages = albumDirectoryContents.filter({url in
+                if let typeIdentifier = (try? url.resourceValues(forKeys: [.typeIdentifierKey]))?.typeIdentifier {
+                    if UTTypeConformsTo(typeIdentifier as CFString, kUTTypeImage) || UTTypeConformsTo(typeIdentifier as CFString, kUTTypePDF) {
+                        return NSImage(byReferencing: url).isValid
+                    } else {
+                        return false
+                    }
+                } else {
+                    return false
+                }
+            })
             return validImages
         } catch {
             print("error looking in album directory for art: \(error)")

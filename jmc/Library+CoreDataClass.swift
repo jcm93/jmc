@@ -55,6 +55,7 @@ public class Library: NSManagedObject {
         var urlArray = [URL]()
         urlArray.append(url)
         self.watch_dirs = urlArray as NSArray
+        self.finds_artwork = true as NSNumber
         self.monitors_directories_for_new = false
         self.organization_type = organizationType as NSNumber
         self.keeps_track_of_files = organizationType != 0 ? true as NSNumber : false as NSNumber
