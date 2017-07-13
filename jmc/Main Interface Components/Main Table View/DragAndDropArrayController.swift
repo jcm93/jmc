@@ -172,7 +172,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     
     func tableViewSelectionDidChange(_ notification: Notification) {
         if UserDefaults.standard.bool(forKey: DEFAULTS_ARTWORK_SHOWS_SELECTED) {
-            if let track = (self.selection as? TrackView)?.track {
+            if let track = (self.selectedObjects as? [TrackView])?.first?.track {
                 mainWindow?.initAlbumArtwork(for: track)
             }
         }

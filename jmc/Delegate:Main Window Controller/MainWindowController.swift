@@ -614,7 +614,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         var aa_string = ""
         var name_string = ""
         let the_track = self.currentTrack!
-        albumArtViewController?.initAlbumArt(the_track)
+        if !UserDefaults.standard.bool(forKey: DEFAULTS_ARTWORK_SHOWS_SELECTED) {
+            albumArtViewController?.initAlbumArt(the_track)
+        }
         name_string = the_track.name!
         if the_track.artist != nil {
             aa_string += (the_track.artist! as Artist).name!
