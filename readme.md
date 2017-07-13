@@ -27,7 +27,7 @@ jmc offers the most powerful tools for library organization of any media player 
 jmc elegantly accounts for media spread across external volumes, showing available and unavailable volumes in the sidebar and filtering the music in your library accordingly.
 
 #### Location Manager
-jmc will track the locations of files added to it. If your files do manage to go missing, when transferring media between volumes or libraries, for example, you can use the location manager to easily relocate lost files and folders.
+jmc will track the locations of files added to it. If your files do missing, when transferring media between volumes or libraries, for example, you can use the location manager to easily relocate lost files and folders.
 
 ### Advanced Search
 ![screenshot](https://i.imgur.com/oYB83zF.png)

@@ -35,8 +35,6 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutlineViewDataSource, NSTextFieldDelegate {
     
-    //pre-Sierra NSOutlineView weakly retains items, hence the need for SourceListNodes
-    
     @IBOutlet weak var sourceList: SourceListThatYouCanPressSpacebarOn!
     
     var currentAudioSource: SourceListItem?
@@ -45,8 +43,6 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     var requestedSharedPlaylists = NSMutableDictionary()
     var mainWindowController: MainWindowController?
     var server: ConnectivityManager?
-    var stronglyRetainedSLIs: [SourceListItem]? //serves no purpose other than to maintain strong refs to sourcelistitems, which NSOV does not pre-10.12
-    
     var draggedNodes: [SourceListItem]?
     var libraryHeaderNode: SourceListItem?
     var playlistHeaderNode: SourceListItem?
@@ -177,7 +173,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         playlistItem.playlist = playlist
         playlistItem.name = "New Playlist"
         if tracks != nil {
-            playlist.tracks = NSOrderedSet(array: tracks!)
+            playlist.tracks = NSOrderedSet(array: tracks!.map({return $0.view!}))
         }
         if smart_criteria != nil {
             playlist.smart_criteria = smart_criteria

@@ -10,6 +10,7 @@ import Cocoa
 
 class PreferencesWindowController: NSWindowController {
 
+    @IBOutlet weak var slider: NSSlider!
     override func windowDidLoad() {
         super.windowDidLoad()
 

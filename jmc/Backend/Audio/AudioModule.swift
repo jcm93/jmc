@@ -23,11 +23,15 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 }
 
 
-enum completionHandlerType {
+enum completionHandlerType: Int {
     case seek
     case natural
     case destroy
 }
+ 
+ enum LastTrackCompletionType: Int {
+    case natural, skipped
+ }
  
 //typealias FLAC__StreamDecoderReadCallback = (Optional<UnsafePointer<FLAC__StreamDecoder>>, Optional<UnsafeMutablePointer<UInt8>>, Optional<UnsafeMutablePointer<Int>>, Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderReadStatus
  
@@ -110,6 +114,7 @@ class AudioModule: NSObject {
     }()
     var curFile: AVAudioFile?
     var audioEngine = AVAudioEngine()
+    var lastTrackCompletionType: LastTrackCompletionType = .natural
     
     dynamic var is_initialized = false
     dynamic var track_changed = false
@@ -687,6 +692,7 @@ class AudioModule: NSObject {
                     print("done handling completion")
                 }
             }
+            self.lastTrackCompletionType = .natural
         case .seek:
             print("seek completion handler")
             //do nothing
@@ -695,6 +701,7 @@ class AudioModule: NSObject {
             self.total_offset_frames = 0
             self.total_offset_seconds = 0
             self.track_frame_offset = 0
+            self.lastTrackCompletionType = .skipped
             //do nothing
         }
     }

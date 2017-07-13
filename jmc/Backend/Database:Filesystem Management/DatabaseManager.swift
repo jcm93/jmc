@@ -819,18 +819,20 @@ class DatabaseManager: NSObject {
         DispatchQueue.main.async {
             visualUpdateHandler?.prepareForNewTask(actionName: "Moving", thingName: "album files", thingCount: addedAlbumFiles.count)
         }
-        for item in addedAlbumFiles {
-            if let albumFile = item as? AlbumFile {
-                let filename = URL(string: albumFile.location!)!.lastPathComponent
-                moveAlbumFileToAppropriateDirectory(albumFile: albumFile, filename: filename)
-            } else if let art = item as? AlbumArtwork {
-                let filename = URL(string: art.artwork_location!)!.lastPathComponent
-                moveAlbumFileToAppropriateDirectory(albumArt: art, filename: filename)
+        if globalRootLibrary?.organization_type != NSNumber(integerLiteral: 0) {
+            for item in addedAlbumFiles {
+                if let albumFile = item as? AlbumFile {
+                    let filename = URL(string: albumFile.location!)!.lastPathComponent
+                    moveAlbumFileToAppropriateDirectory(albumFile: albumFile, filename: filename)
+                } else if let art = item as? AlbumArtwork {
+                    let filename = URL(string: art.artwork_location!)!.lastPathComponent
+                    moveAlbumFileToAppropriateDirectory(albumArt: art, filename: filename)
+                }
+                DispatchQueue.main.async {
+                    visualUpdateHandler?.increment(thingsDone: index)
+                }
+                index += 1
             }
-            DispatchQueue.main.async {
-                visualUpdateHandler?.increment(thingsDone: index)
-            }
-            index += 1
         }
         
         do {

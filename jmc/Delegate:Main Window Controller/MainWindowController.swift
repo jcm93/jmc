@@ -731,6 +731,23 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         progressBar.doubleValue = 100
     }
     
+    func incrementPlayCountForCurrentTrack() {
+        self.currentTrack?.play_count = (self.currentTrack?.play_count as? Int ?? 0) + 1 as NSNumber
+        self.currentTrack?.date_last_played = NSDate()
+    }
+    
+    func checkPlayFractionForSkip() {
+        if self.progressBar.doubleValue / 100.0 > UserDefaults.standard.double(forKey: DEFAULTS_TRACK_PLAY_REGISTER_POINT) {
+            incrementPlayCountForCurrentTrack()
+        }
+        incrementSkipCountForCurrentTrack()
+    }
+    
+    func incrementSkipCountForCurrentTrack() {
+        self.currentTrack?.skip_count = (self.currentTrack?.skip_count as? Int ?? 0) + 1 as NSNumber
+        self.currentTrack?.date_last_skipped = NSDate()
+    }
+    
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if context == &my_context {
             if keyPath! == "track_changed" {
@@ -742,6 +759,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
                 }
                 if currentTrack != nil {
                     currentTableViewController?.reloadNowPlayingForTrack(currentTrack!)
+                    if delegate?.audioModule.lastTrackCompletionType == .natural {
+                        incrementPlayCountForCurrentTrack()
+                    } else {
+                        checkPlayFractionForSkip()
+                    }
                 }
                 trackQueueViewController!.nextTrack()
                 currentTrack = trackQueueViewController?.trackQueue[trackQueueViewController!.currentTrackIndex!].track

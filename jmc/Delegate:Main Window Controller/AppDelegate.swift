@@ -27,7 +27,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var serviceBrowser: ConnectivityManager?
     var importErrorWindowController: ImportErrorWindowController?
     var libraryManagerSourceSelector: LibraryManagerSourceSelector?
-    var addToLibraryViewController: AddFilesWindowController?
     var backgroundAddFilesHandler: GenericProgressBarSheetController?
     var addFilesQueueLoop: AddFilesQueueLoop?
     

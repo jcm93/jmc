@@ -130,6 +130,31 @@ let DEFAULTS_LIBRARY_SORT_DESCRIPTOR_STRING = "defaultsLibrarySortDescriptor"
 let DEFAULTS_SHARING_STRING = "sharesLibrary"
 let DEFAULTS_IS_EQ_ENABLED_STRING = "isEQEnabled?"
 let DEFAULTS_SHOWS_ARTWORK_STRING = "showsArtwork"
+let DEFAULTS_NUM_PAST_TRACKS = "numPastTracks"
+let DEFAULTS_ARTWORK_SHOWS_SELECTED = "artShowsSelected"
+let DEFAULTS_TABLE_SKIP_SHOWS_NEW_TRACK = "tableSkipShowsNewTrack"
+let DEFAULTS_TABLE_SORT_BEHAVIOR = "tableSortBehavior"
+let DEFAULTS_TRACK_PLAY_REGISTER_POINT = "registerTrackPlayPoint"
+
+enum TableSortBehavior: Int {
+    case followsNothing, followsSelection, followsCurrentTrack
+}
+
+let DEFAULTS_INITIAL_DEFAULTS: [String : Any] = [
+    DEFAULTS_ARE_INITIALIZED_STRING : true,
+    DEFAULTS_SHUFFLE_STRING : true,
+    DEFAULTS_VOLUME_STRING : 1.0,
+    DEFAULTS_IS_EQ_ENABLED_STRING : 1,
+    DEFAULTS_SHOWS_ARTWORK_STRING : true,
+    DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING : true,
+    DEFAULTS_CHECK_ALBUM_DIRECTORY_FOR_ART_STRING : true,
+    DEFAULTS_SHARING_STRING : true,
+    DEFAULTS_NUM_PAST_TRACKS : 3,
+    DEFAULTS_ARTWORK_SHOWS_SELECTED : false,
+    DEFAULTS_TABLE_SKIP_SHOWS_NEW_TRACK : false,
+    DEFAULTS_TABLE_SORT_BEHAVIOR : 1.0,
+    DEFAULTS_TRACK_PLAY_REGISTER_POINT : 0.75
+]
 
 let DEFAULT_TEMPLATE_TOKEN_ARRAY: [OrganizationFieldToken] = [
     OrganizationFieldToken(string: "/"),
@@ -922,10 +947,11 @@ func getInstanceWithHighestIDForEntity(_ entityName: String) -> NSManagedObject?
 }
 
 func editArtist(_ tracks: [Track]?, artistName: String) {
+    guard let tracks = tracks else { return }
     print(artistName)
     let artistCheck = checkIfArtistExists(artistName)
     if artistCheck != nil {
-        for track in tracks! {
+        for track in tracks {
             track.artist = artistCheck!
             let artistName = artistCheck!.name!
             let sortArtistName = getSortName(artistName)
@@ -939,13 +965,15 @@ func editArtist(_ tracks: [Track]?, artistName: String) {
         new_artist.id = globalRootLibrary?.next_artist_id
         globalRootLibrary!.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
         let sortArtistName = getSortName(artistName)
-        for track in tracks! {
+        for track in tracks {
             track.artist = new_artist
             if sortArtistName != artistName {
                 track.sort_artist = sortArtistName
             }
         }
     }
+    let tracksWithoutAlbumArtists = tracks.filter({ return $0.album?.album_artist != nil })
+    editAlbumArtist(tracksWithoutAlbumArtists, albumArtistName: artistName)
 }
 
 func editComposer(_ tracks: [Track]?, composerName: String) {

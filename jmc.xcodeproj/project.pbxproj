@@ -91,8 +91,6 @@
 		0D8AFE5D1E6F4FEB004AC584 /* LibraryManagerSourceSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8AFE5B1E6F4FEB004AC584 /* LibraryManagerSourceSelector.xib */; };
 		0D8B98681ED2ACF000283DD1 /* ArtistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8B98661ED2ACF000283DD1 /* ArtistViewController.swift */; };
 		0D8B98691ED2ACF000283DD1 /* ArtistViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8B98671ED2ACF000283DD1 /* ArtistViewController.xib */; };
-		0D8D4A171D90868500FA1603 /* LocationManagerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8D4A151D90868500FA1603 /* LocationManagerController.swift */; };
-		0D8D4A181D90868500FA1603 /* LocationManagerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8D4A161D90868500FA1603 /* LocationManagerController.xib */; };
 		0D99D4A11EF216F200264CFF /* OrganizationRuleCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D99D4A01EF216F200264CFF /* OrganizationRuleCellView.swift */; };
 		0D9CE6711D334F97004FA8CB /* ImportWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */; };
 		0D9CE6721D334F97004FA8CB /* ImportWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D9CE6701D334F97004FA8CB /* ImportWindowController.xib */; };
@@ -112,8 +110,6 @@
 		0DAB30991CFBA3340028928F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DAB30971CFBA3340028928F /* MainMenu.xib */; };
 		0DAB30A41CFBA3340028928F /* jmcTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30A31CFBA3340028928F /* jmcTests.swift */; };
 		0DAB30AF1CFBA3340028928F /* jmcUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30AE1CFBA3340028928F /* jmcUITests.swift */; };
-		0DB60F901E62341500105766 /* AddFilesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB60F8E1E62341500105766 /* AddFilesWindowController.swift */; };
-		0DB60F911E62341500105766 /* AddFilesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DB60F8F1E62341500105766 /* AddFilesWindowController.xib */; };
 		0DB996C51ECE233000594939 /* AlbumArtWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB996C31ECE233000594939 /* AlbumArtWindowController.swift */; };
 		0DB996C61ECE233000594939 /* AlbumArtWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DB996C41ECE233000594939 /* AlbumArtWindowController.xib */; };
 		0DB996D01ED2874F00594939 /* AlbumArtImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB996CF1ED2874F00594939 /* AlbumArtImageView.swift */; };
@@ -306,8 +302,6 @@
 		0D8AFE5B1E6F4FEB004AC584 /* LibraryManagerSourceSelector.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LibraryManagerSourceSelector.xib; path = "Other Windows/Library Manager/LibraryManagerSourceSelector.xib"; sourceTree = "<group>"; };
 		0D8B98661ED2ACF000283DD1 /* ArtistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewController.swift; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewController.swift"; sourceTree = "<group>"; };
 		0D8B98671ED2ACF000283DD1 /* ArtistViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistViewController.xib; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewController.xib"; sourceTree = "<group>"; };
-		0D8D4A151D90868500FA1603 /* LocationManagerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationManagerController.swift; path = "Other Windows/LocationManagerController.swift"; sourceTree = "<group>"; };
-		0D8D4A161D90868500FA1603 /* LocationManagerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LocationManagerController.xib; path = "Other Windows/LocationManagerController.xib"; sourceTree = "<group>"; };
 		0D99D4A01EF216F200264CFF /* OrganizationRuleCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganizationRuleCellView.swift; sourceTree = "<group>"; };
 		0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImportWindowController.swift; path = "Other Windows/ImportWindowController.swift"; sourceTree = "<group>"; };
 		0D9CE6701D334F97004FA8CB /* ImportWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImportWindowController.xib; path = "Other Windows/ImportWindowController.xib"; sourceTree = "<group>"; };
@@ -333,8 +327,6 @@
 		0DAB30AA1CFBA3340028928F /* jmc.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = jmc.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0DAB30AE1CFBA3340028928F /* jmcUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jmcUITests.swift; sourceTree = "<group>"; };
 		0DAB30B01CFBA3340028928F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0DB60F8E1E62341500105766 /* AddFilesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddFilesWindowController.swift; path = "Other Windows/AddFilesWindowController.swift"; sourceTree = "<group>"; };
-		0DB60F8F1E62341500105766 /* AddFilesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddFilesWindowController.xib; path = "Other Windows/AddFilesWindowController.xib"; sourceTree = "<group>"; };
 		0DB996C31ECE233000594939 /* AlbumArtWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlbumArtWindowController.swift; path = "Other Windows/Album Art Window/AlbumArtWindowController.swift"; sourceTree = "<group>"; };
 		0DB996C41ECE233000594939 /* AlbumArtWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AlbumArtWindowController.xib; path = "Other Windows/Album Art Window/AlbumArtWindowController.xib"; sourceTree = "<group>"; };
 		0DB996CF1ED2874F00594939 /* AlbumArtImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlbumArtImageView.swift; path = "Other Windows/Album Art Window/AlbumArtImageView.swift"; sourceTree = "<group>"; };
@@ -498,8 +490,6 @@
 			children = (
 				0D3756BE1EAADBD700016136 /* PreferencesWindowController.swift */,
 				0D3756BF1EAADBD700016136 /* PreferencesWindowController.xib */,
-				0DB60F8E1E62341500105766 /* AddFilesWindowController.swift */,
-				0DB60F8F1E62341500105766 /* AddFilesWindowController.xib */,
 				0D01D40F1E5E507F002B352D /* Library Manager */,
 				0DC7127A1E2F115A0054ECE6 /* ImportErrorWindowController.swift */,
 				0DC7127B1E2F115A0054ECE6 /* ImportErrorWindowController.xib */,
@@ -514,8 +504,6 @@
 				0D51C8B11EB01731002F6182 /* JMTabView.swift */,
 				0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */,
 				0D9CE6701D334F97004FA8CB /* ImportWindowController.xib */,
-				0D8D4A151D90868500FA1603 /* LocationManagerController.swift */,
-				0D8D4A161D90868500FA1603 /* LocationManagerController.xib */,
 				0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */,
 				0D9CE6741D34128B004FA8CB /* InitialSetupWindowController.xib */,
 			);
@@ -1134,10 +1122,8 @@
 				0DD0DB091E53A8EE00807CAC /* license.html in Resources */,
 				0DAB30991CFBA3340028928F /* MainMenu.xib in Resources */,
 				0D8AFE591E6D136D004AC584 /* MediaScannerSheet.xib in Resources */,
-				0D8D4A181D90868500FA1603 /* LocationManagerController.xib in Resources */,
 				0DD0DAFA1E53A8EE00807CAC /* documentation_bugs.html in Resources */,
 				0DD0DB0A1E53A8EE00807CAC /* ogg_mapping.html in Resources */,
-				0DB60F911E62341500105766 /* AddFilesWindowController.xib in Resources */,
 				0D6E041C1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib in Resources */,
 				0DD0DB021E53A8EE00807CAC /* features.html in Resources */,
 				0DD0DAEA1E53A8EE00807CAC /* INSTALL_RECEIPT.json in Resources */,
@@ -1227,7 +1213,6 @@
 				0D592A431EDF6C8B0054D553 /* SmartCriteria+CoreDataClass.swift in Sources */,
 				0DAA858A1EDFE90E004BF089 /* OrganizationFieldToken.swift in Sources */,
 				0D2D06CD1EE32FB600A8EC66 /* AlbumFile+CoreDataClass.swift in Sources */,
-				0DB60F901E62341500105766 /* AddFilesWindowController.swift in Sources */,
 				0DE486941EA92B78009B226B /* AddFilesQueueLoop.swift in Sources */,
 				0D51C8A11EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift in Sources */,
 				0D60F5291E8720A300CA5420 /* PlaylistOrderObject.swift in Sources */,
@@ -1306,7 +1291,6 @@
 				0DD7A3BF1EF4940E00FEDD71 /* MissingFilesViewController.swift in Sources */,
 				0D23CA6D1E03242400CAF529 /* PeerBrowser.swift in Sources */,
 				0D40A9F21D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift in Sources */,
-				0D8D4A171D90868500FA1603 /* LocationManagerController.swift in Sources */,
 				0DB996D21ED287C400594939 /* AlbumArtPDFView.swift in Sources */,
 				0D8AFE5C1E6F4FEB004AC584 /* LibraryManagerSourceSelector.swift in Sources */,
 				0DE957DB1EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift in Sources */,

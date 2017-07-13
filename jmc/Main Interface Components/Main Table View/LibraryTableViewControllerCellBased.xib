@@ -78,7 +78,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <accessibility description="Playing Indicator Column"/>
                                     </tableColumn>
-                                    <tableColumn identifier="playlist_number" width="17.07421875" minWidth="10" maxWidth="3.4028234663852886e+38" hidden="YES" id="6iL-fo-xZs" userLabel="PlaylistNumber">
+                                    <tableColumn identifier="playlist_number" width="30" minWidth="10" maxWidth="3.4028234663852886e+38" hidden="YES" id="6iL-fo-xZs" userLabel="PlaylistNumber">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>

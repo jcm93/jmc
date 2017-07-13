@@ -78,20 +78,18 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="New" id="EYx-uY-boj">
                                     <items>
-                                        <menuItem title="Playlist" id="KjC-22-qhT">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Playlist" keyEquivalent="n" id="KjC-22-qhT">
                                             <connections>
                                                 <action selector="newPlaylist:" target="Voe-Tx-rLC" id="5pM-TJ-jdv"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Playlist From Selection" id="tAA-MA-JD3">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Playlist From Selection" keyEquivalent="N" id="tAA-MA-JD3">
                                             <connections>
                                                 <action selector="newPlaylistFromSelection:" target="Voe-Tx-rLC" id="fos-br-JsV"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Smart Playlist..." id="wj2-JD-Uje">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Smart Playlist..." keyEquivalent="n" id="wj2-JD-Uje">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="newSmartPlaylist:" target="Voe-Tx-rLC" id="zkM-6j-ts7"/>
                                             </connections>
@@ -331,8 +329,7 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="View" id="HyV-fh-RgO">
                         <items>
-                            <menuItem title="Advanced Filter" id="JJs-Z9-CEf">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Advanced Filter" keyEquivalent="S" id="JJs-Z9-CEf">
                                 <connections>
                                     <action selector="showAdvancedFilter:" target="Voe-Tx-rLC" id="HtO-ub-jp0"/>
                                 </connections>
@@ -342,9 +339,10 @@
                                     <action selector="jumpToCurrentSong:" target="Voe-Tx-rLC" id="jbc-N3-Rgx"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Album Art" id="hYx-vO-dOM">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Jump to Selection" keyEquivalent="l" id="bmP-UI-9z3">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                             </menuItem>
+                            <menuItem title="Album Art" keyEquivalent="t" id="hYx-vO-dOM"/>
                         </items>
                     </menu>
                 </menuItem>
@@ -421,11 +419,8 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="JXu-Wd-CrQ"/>
-                            <menuItem title="meTunes" id="d81-2M-TJO">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                            <menuItem title="Equalizer" id="yTZ-KO-ido">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Equalizer" keyEquivalent="e" id="yTZ-KO-ido">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="testyThing:" target="Voe-Tx-rLC" id="edV-gV-vdN"/>
                                 </connections>
