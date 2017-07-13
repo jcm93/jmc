@@ -64,7 +64,9 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     func reloadNowPlayingForTrack(_ track: Track) {
         if let row = (trackViewArrayController.arrangedObjects as! [TrackView]).index(of: track.view!) {
             let tableRowIndexSet = IndexSet(integer: row)
-            let tableColumnIndexSet = IndexSet(integer: 0)
+            let indexOfPlaysColumn = self.tableView.column(withIdentifier: "play_count")
+            let indexOfSkipsColumn = self.tableView.column(withIdentifier: "skip_count")
+            let tableColumnIndexSet = IndexSet([0, indexOfPlaysColumn, indexOfSkipsColumn])
             tableView.reloadData(forRowIndexes: tableRowIndexSet, columnIndexes: tableColumnIndexSet)
         }
     }

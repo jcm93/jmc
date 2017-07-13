@@ -758,12 +758,12 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
                     self.currentTrack?.is_playing = false
                 }
                 if currentTrack != nil {
-                    currentTableViewController?.reloadNowPlayingForTrack(currentTrack!)
                     if delegate?.audioModule.lastTrackCompletionType == .natural {
                         incrementPlayCountForCurrentTrack()
                     } else {
                         checkPlayFractionForSkip()
                     }
+                    currentTableViewController?.reloadNowPlayingForTrack(currentTrack!)
                 }
                 trackQueueViewController!.nextTrack()
                 currentTrack = trackQueueViewController?.trackQueue[trackQueueViewController!.currentTrackIndex!].track

@@ -524,6 +524,11 @@ class AudioModule: NSObject {
     }
     
     func fileBuffererCompletion() {
+        if currentHandlerType == .destroy {
+            lastTrackCompletionType = .skipped
+        } else {
+            lastTrackCompletionType = .natural
+        }
         //swap decode buffer
         let bufferThatCompleted = currentFileBufferer?.currentDecodeBuffer == currentFileBufferer?.bufferA ? currentFileBufferer?.bufferA : currentFileBufferer?.bufferB
         //print("buffer that just played is \(bufferThatCompleted)")
@@ -697,11 +702,11 @@ class AudioModule: NSObject {
             print("seek completion handler")
             //do nothing
         case .destroy:
+            self.lastTrackCompletionType = .skipped
             print("destruction")
             self.total_offset_frames = 0
             self.total_offset_seconds = 0
             self.track_frame_offset = 0
-            self.lastTrackCompletionType = .skipped
             //do nothing
         }
     }
