@@ -42,6 +42,8 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     
     @IBAction func numTrackQueueTracksEdited(_ sender: Any) {
         UserDefaults.standard.set(trackQueueNumTracksField.integerValue, forKey: DEFAULTS_NUM_PAST_TRACKS)
+        //very bad.
+        (NSApplication.shared().delegate as! AppDelegate).mainWindowController?.trackQueueViewController?.tableView.minimumNumberVisibleRows = trackQueueNumTracksField.integerValue + 2
     }
     
     @IBAction func sliderAction(_ sender: Any) {
@@ -49,6 +51,8 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     }
     
     //SHARING
+    @IBOutlet weak var sharingCheck: NSButton!
+    @IBOutlet weak var libraryNameField: NSTextField!
     
     @IBAction func sharingCheckAction(_ sender: Any) {
         guard let check = sender as? NSButton else { return }
@@ -98,7 +102,40 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     override func windowDidLoad() {
         super.windowDidLoad()
         toolbar.selectedItemIdentifier = "general"
-
+        self.trackQueueNumTracksField.integerValue = UserDefaults.standard.integer(forKey: DEFAULTS_NUM_PAST_TRACKS)
+        if UserDefaults.standard.bool(forKey: DEFAULTS_ARTWORK_SHOWS_SELECTED) {
+            artworkSelectedTrackRadio.state = NSOnState
+        } else {
+            artworkCurrentTrackRadio.state = NSOnState
+        }
+        let trackWasPlayedPoint = UserDefaults.standard.double(forKey: DEFAULTS_TRACK_PLAY_REGISTER_POINT)
+        if trackWasPlayedPoint != 0.0 {
+            slider.doubleValue = trackWasPlayedPoint
+        } else {
+            slider.doubleValue = 0.75
+            UserDefaults.standard.set(0.75, forKey: DEFAULTS_TRACK_PLAY_REGISTER_POINT)
+        }
+        if UserDefaults.standard.bool(forKey: DEFAULTS_SHARING_STRING) {
+            sharingCheck.state = NSOnState
+        } else {
+            sharingCheck.state = NSOffState
+        }
+        libraryNameField.stringValue = globalRootLibrary?.name ?? ""
+        
+        if UserDefaults.standard.bool(forKey: DEFAULTS_TABLE_SKIP_SHOWS_NEW_TRACK) {
+            skipBehaviorFocusNewTrackRadioButton.state = NSOnState
+        } else {
+            skipBehaviorKeepCurrentFocusRadioButton.state = NSOnState
+        }
+        let sortBehavior = TableSortBehavior(rawValue: UserDefaults.standard.integer(forKey: DEFAULTS_TABLE_SORT_BEHAVIOR))!
+        switch sortBehavior {
+        case .followsCurrentTrack:
+            sortBehaviorFocusCurrentTrackRadioButton.state = NSOnState
+        case .followsNothing:
+            sortBehaviorKeepCurrentFocusRadioButton.state = NSOnState
+        default:
+            sortBehaviorFocusSelectionRadioButton.state = NSOnState
+        }
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     }
     

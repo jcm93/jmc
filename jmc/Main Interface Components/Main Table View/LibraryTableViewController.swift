@@ -51,6 +51,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     var hasInitialized = false
     var hasCreatedPlayOrder = false
     var needsPlaylistRefresh = false
+    var currentTrackRow = 0
     
     var isVisibleDict = NSMutableDictionary()
     func populateIsVisibleDict() {
@@ -63,11 +64,18 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     func reloadNowPlayingForTrack(_ track: Track) {
         if let row = (trackViewArrayController.arrangedObjects as! [TrackView]).index(of: track.view!) {
+            self.currentTrackRow = row
             let tableRowIndexSet = IndexSet(integer: row)
             let indexOfPlaysColumn = self.tableView.column(withIdentifier: "play_count")
             let indexOfSkipsColumn = self.tableView.column(withIdentifier: "skip_count")
             let tableColumnIndexSet = IndexSet([0, indexOfPlaysColumn, indexOfSkipsColumn])
             tableView.reloadData(forRowIndexes: tableRowIndexSet, columnIndexes: tableColumnIndexSet)
+        }
+    }
+    
+    func scrollToNewTrack() {
+        if currentTrackRow != 0, currentTrackRow < tableView.numberOfRows {
+            tableView.scrollRowToVisible(currentTrackRow)
         }
     }
     

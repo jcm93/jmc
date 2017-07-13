@@ -170,6 +170,14 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         self.fetch(nil)
     }
     
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        if UserDefaults.standard.bool(forKey: DEFAULTS_ARTWORK_SHOWS_SELECTED) {
+            if let track = (self.selection as? TrackView)?.track {
+                mainWindow?.initAlbumArtwork(for: track)
+            }
+        }
+    }
+    
     func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
         print("sort descriptors did change called")
         let newDescriptor = tableView.sortDescriptors[0].key
@@ -185,6 +193,18 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
             UserDefaults.standard.set(archivedSortDescriptor, forKey: DEFAULTS_PLAYLIST_SORT_DESCRIPTOR_STRING)
         } else {
             UserDefaults.standard.set(archivedSortDescriptor, forKey: DEFAULTS_LIBRARY_SORT_DESCRIPTOR_STRING)
+        }
+        switch TableSortBehavior(rawValue: UserDefaults.standard.integer(forKey: DEFAULTS_TABLE_SORT_BEHAVIOR))! {
+        case .followsCurrentTrack:
+            if let currentTrackView = mainWindow?.currentTrack?.view {
+                let row = (self.arrangedObjects as! NSArray).index(of: currentTrackView)
+                if row > -1 {
+                    tableView.scrollRowToVisible(row)
+                }
+            }
+        case .followsSelection:
+            tableView.scrollRowToVisible(tableView.selectedRow)
+        default: break
         }
     }
     

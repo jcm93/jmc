@@ -10,6 +10,8 @@
             <connections>
                 <outlet property="artworkCurrentTrackRadio" destination="ewr-U9-FaG" id="cFC-1K-5fZ"/>
                 <outlet property="artworkSelectedTrackRadio" destination="U2K-uc-YcT" id="fah-TR-qw6"/>
+                <outlet property="libraryNameField" destination="3gg-L6-UHt" id="yFu-TV-hJ6"/>
+                <outlet property="sharingCheck" destination="PiV-V3-sZr" id="y2C-eU-k6v"/>
                 <outlet property="skipBehaviorFocusNewTrackRadioButton" destination="i5q-Fh-f6A" id="zOL-2d-VhU"/>
                 <outlet property="skipBehaviorKeepCurrentFocusRadioButton" destination="CEy-FO-16G" id="kUQ-Xo-rPV"/>
                 <outlet property="slider" destination="mz0-5E-HLo" id="F9V-mE-yOa"/>

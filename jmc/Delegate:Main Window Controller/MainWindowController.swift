@@ -348,10 +348,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     //player stuff
     @IBOutlet weak var artToggle: NSButton!
     
-    func initAlbumArtwork() {
-        if self.currentTrack != nil {
-            albumArtViewController?.initAlbumArt(self.currentTrack!)
-        }
+    func initAlbumArtwork(for track: Track) {
+        albumArtViewController?.initAlbumArt(track)
     }
     
     @IBAction func toggleArtwork(_ sender: AnyObject) {
@@ -751,7 +749,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if context == &my_context {
             if keyPath! == "track_changed" {
-                let before = Date()
                 print("controller detects track change")
                 self.progressBarView.blockSeekEvents()
                 notEnablingUndo {
@@ -778,11 +775,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
                     self.currentTrack?.is_playing = true
                 }
                 currentTableViewController?.reloadNowPlayingForTrack(currentTrack!)
-                let after = Date()
-                let since = after.timeIntervalSince(before)
-                print(since)
                 self.isDoneWithSkipOperation = true
                 self.isDoneWithSkipBackOperation = true
+                if UserDefaults.standard.bool(forKey: DEFAULTS_TABLE_SKIP_SHOWS_NEW_TRACK) {
+                    currentTableViewController?.scrollToNewTrack()
+                }
             }
             else if keyPath! == "done_playing" {
                 print("controller detects finished playing")

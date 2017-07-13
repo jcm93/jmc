@@ -52,11 +52,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "jmc/Delegate:Main Window Controller/MainWindowController.swift"
-            timestampString = "521661267.551147"
+            timestampString = "521666484.799498"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "833"
-            endingLineNumber = "833"
+            startingLineNumber = "830"
+            endingLineNumber = "830"
             landmarkName = "trackListTriangleClicked(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -100,11 +100,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "jmc/Delegate:Main Window Controller/MainWindowController.swift"
-            timestampString = "521661267.551147"
+            timestampString = "521666484.799498"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "838"
-            endingLineNumber = "838"
+            startingLineNumber = "835"
+            endingLineNumber = "835"
             landmarkName = "refreshCurrentSortOrder()"
             landmarkType = "7">
          </BreakpointContent>
