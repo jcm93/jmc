@@ -189,7 +189,7 @@ class InitialSetupWindowController: NSWindowController {
     
     @IBAction func OKPressed(_ sender: AnyObject) {
         notEnablingUndo {
-            UserDefaults.standard.register(defaults: DEFAULTS_INITIAL_DEFAULTS)
+            UserDefaults.standard.setValuesForKeys(DEFAULTS_INITIAL_DEFAULTS)
             if self.library == nil {
                 setupForNilLibrary()
             }

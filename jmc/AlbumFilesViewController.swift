@@ -245,8 +245,11 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
                 }
                 collectionView.reloadData()
             }
-            if otherArtImages.count < 1 {
-                otherArtBox.isHidden = true
+            if otherArtImages.count < 2 {
+                NSLayoutConstraint.deactivate([targetView.bottomAnchor.constraint(equalTo: otherArtBox.topAnchor)])
+                otherArtBox.removeFromSuperview()
+                targetView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+                
             }
             if imageURL != nil {
                 changePrimaryImage(imageURL: imageURL!)

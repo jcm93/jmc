@@ -28,7 +28,7 @@ class AlbumArtViewController: NSViewController {
     func loadAlbumArtWindow() {
         print("loading album art window")
         self.artWindow = AlbumArtWindowController(windowNibName: "AlbumArtWindowController")
-        self.artWindow?.track = self.mainWindow?.currentTrack
+        self.artWindow?.track = self.currentTrack
         self.mainWindow?.window?.addChildWindow(self.artWindow!.window!, ordered: .above)
     }
     

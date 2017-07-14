@@ -64,7 +64,7 @@
 	<key>NSAppTransportSecurity</key>
 	<dict/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2016 John Moody. All rights reserved.</string>
+	<string>Copyright © 2016 John Moody. All rights reserved. Application icon by Matt Reagan.</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>

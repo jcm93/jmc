@@ -50,6 +50,34 @@ class MissingTrackPathNode: NSObject {
         return path
     }
     
+    func removeTrackRecursive(_ track: Track) {
+        if let track = self.missingTracks.remove(track) {
+            for child in self.children {
+                child.removeTrackRecursive(track)
+            }
+        }
+    }
+    
+    func getEmptyNodesBeneath() -> [MissingTrackPathNode] {
+        var nodes = [MissingTrackPathNode]()
+        for child in self.children {
+            nodes.append(contentsOf: child.getEmptyNodesBeneath())
+        }
+        if self.missingTracks.count < 1 {
+            nodes.append(self)
+        }
+        return nodes
+    }
+    
+    func purge() {
+        for child in self.children {
+            child.purge()
+        }
+        if self.missingTracks.count < 1 {
+            self.parent!.children.remove(at: self.parent!.children.index(of: self)!)
+        }
+    }
+    
 }
 
 class MissingTrackPathTree: NSObject {
@@ -131,17 +159,22 @@ class MissingFilesViewController: NSViewController, NSOutlineViewDataSource, NSO
         }
     }
     
+    func outlineViewSelectionDidChange(_ notification: Notification) {
+        print("dingus")
+    }
+    
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         guard let node = item as? MissingTrackPathNode else { return  nil }
         switch tableColumn! {
         case folderColumn:
             let view = outlineView.make(withIdentifier: "PathComponentView", owner: node) as! NSTableCellView
             view.textField?.stringValue = node.pathComponent
-            let url = URL(fileURLWithPath: node.completePathRepresentation())
+            let url = URL(fileURLWithPath: node.completePathRepresentation()).standardizedFileURL
             do {
                 let keys = [URLResourceKey.effectiveIconKey, URLResourceKey.customIconKey]
                 let values = try url.resourceValues(forKeys: Set(keys))
                 view.imageView?.image = values.customIcon ?? values.effectiveIcon as? NSImage
+                view.textField?.textColor = NSColor.textColor
             } catch {
                 view.textField?.textColor = NSColor.disabledControlTextColor
                 view.imageView?.image = node.children.count > 0 ? NSImage(named: "NSFolder") : NSWorkspace.shared().icon(forFileType: UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, url.pathExtension as CFString, nil)!.takeRetainedValue() as String)
@@ -178,17 +211,24 @@ class MissingFilesViewController: NSViewController, NSOutlineViewDataSource, NSO
         fileModal.canChooseDirectories = true
         if fileModal.runModal() == NSFileHandlingPanelOKButton {
             let url = fileModal.url
-            let oldAbsoluteString = URL(fileURLWithPath: node!.completePathRepresentation()).absoluteString
+            let oldAbsoluteString = URL(fileURLWithPath: node!.completePathRepresentation()).standardizedFileURL.absoluteString
             let newAbsoluteString = url!.absoluteString
+            node!.pathComponent = url!.lastPathComponent
+            outlineView.reloadItem(node!, reloadChildren: false)
             for track in node!.missingTracks {
-                track.location = track.location!.replacingOccurrences(of: oldAbsoluteString, with: newAbsoluteString, options: .anchored, range: nil)
+                track.location = URL(string: track.location!.replacingOccurrences(of: oldAbsoluteString, with: newAbsoluteString, options: .anchored, range: nil))!.standardizedFileURL.absoluteString
                 if fileManager.fileExists(atPath: URL(string: track.location!)!.path) {
                     self.missingTracks.remove(track)
+                    node!.removeTrackRecursive(track)
                 }
             }
-            self.pathTree = MissingTrackPathTree(with: Array(self.missingTracks))
-            outlineView.reloadData()
-            outlineView.expandItem(nil, expandChildren: true)
+            var nodesToRemove = node!.getEmptyNodesBeneath()
+            while let highestThing = nodesToRemove.popLast(), let rowOfThing = highestThing.parent!.children.index(of: highestThing) {
+                outlineView.removeItems(at: IndexSet(integer: rowOfThing), inParent: highestThing.parent, withAnimation: .slideUp)
+            }
+            node!.purge()
+            //outlineView.reloadData()
+            //outlineView.expandItem(nil, expandChildren: true)
         }
     }
     
