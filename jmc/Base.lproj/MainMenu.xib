@@ -341,8 +341,15 @@
                             </menuItem>
                             <menuItem title="Jump to Selection" keyEquivalent="l" id="bmP-UI-9z3">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="jumpToSelection:" target="Voe-Tx-rLC" id="ABi-VT-gkf"/>
+                                </connections>
                             </menuItem>
-                            <menuItem title="Album Art" keyEquivalent="t" id="hYx-vO-dOM"/>
+                            <menuItem title="Album Art" keyEquivalent="t" id="hYx-vO-dOM">
+                                <connections>
+                                    <action selector="toggleAlbumArt:" target="Voe-Tx-rLC" id="ny8-8K-Gun"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>

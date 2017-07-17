@@ -387,6 +387,9 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             self.export(playlists: selectedPlaylists)
         }
     }
+    @IBAction func removePlaylist(_ sender: Any) {
+        deleteSelection()
+    }
     
     func export(playlists: [SongCollection]) {
         let playlistsFolder = globalRootLibrary!.getCentralMediaFolder()!.appendingPathComponent("Exported Playlists")

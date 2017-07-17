@@ -448,6 +448,9 @@
             <items>
                 <menuItem title="Remove Playlist" id="R4D-LH-Ydh">
                     <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="removePlaylist:" target="-2" id="Taf-WF-dpO"/>
+                    </connections>
                 </menuItem>
                 <menuItem title="Export..." id="xFF-0U-KLT">
                     <modifierMask key="keyEquivalentModifierMask"/>

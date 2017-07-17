@@ -36,6 +36,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBAction func jumpToCurrentSong(_ sender: AnyObject) {
         mainWindowController!.jumpToCurrentSong()
     }
+    @IBAction func jumpToSelection(_ sender: Any) {
+        mainWindowController.jumpToSelection()
+    }
+    @IBAction func toggleAlbumArt(_ sender: Any) {
+        mainWindowController?.toggleArtwork(self)
+    }
     
     @IBAction func newPlaylist(_ sender: AnyObject) {
         mainWindowController?.createPlaylistFromTracks([Track]())

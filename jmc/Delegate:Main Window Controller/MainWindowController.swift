@@ -247,6 +247,10 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         currentTableViewController?.jumpToCurrentSong(currentTrack)
     }
     
+    func jumpToSelection() {
+        currentTableViewController?.jumpToSelection()
+    }
+    
     @IBAction func volumeDidChange(_ sender: AnyObject) {
         print("volume did change called")
         let newVolume = (sender as! NSSlider).floatValue
