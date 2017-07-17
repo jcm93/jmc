@@ -355,14 +355,19 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     func initAlbumArtwork(for track: Track) {
         albumArtViewController?.initAlbumArt(track)
     }
+    @IBAction func airPlayPressed(_ sender: Any) {
+        
+    }
     
     @IBAction func toggleArtwork(_ sender: AnyObject) {
-        if artToggle.state == NSOnState {
-            UserDefaults.standard.set(true, forKey: DEFAULTS_SHOWS_ARTWORK_STRING)
-            self.artworkTargetView.isHidden = false
-        } else {
+        if self.artworkTargetView.isHidden == false {
+            artToggle.state = NSOffState
             UserDefaults.standard.set(false, forKey: DEFAULTS_SHOWS_ARTWORK_STRING)
             self.artworkTargetView.isHidden = true
+        } else {
+            artToggle.state = NSOnState
+            UserDefaults.standard.set(true, forKey: DEFAULTS_SHOWS_ARTWORK_STRING)
+            self.artworkTargetView.isHidden = false
         }
     }
 

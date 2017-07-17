@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -13,18 +13,14 @@
                 <outlet property="changeLocationButton" destination="lG3-Fq-qhm" id="t3s-jL-z3l"/>
                 <outlet property="consolidateLibraryButton" destination="EYr-io-jRU" id="jHX-eY-bnr"/>
                 <outlet property="copyRadio" destination="Tc9-NX-a0t" id="NMY-FK-GRH"/>
-                <outlet property="dirScanStatusTextField" destination="cne-IQ-5GZ" id="Nn5-pd-VE9"/>
-                <outlet property="directoryPicker" destination="h7C-Tq-WtP" id="z5P-NQ-9SO"/>
                 <outlet property="doesOrganizeCheck" destination="P7g-tb-aOA" id="zIk-xC-C43"/>
                 <outlet property="enableDirectoryMonitoringCheck" destination="z11-19-8Af" id="JlC-vW-qYj"/>
                 <outlet property="fileMonitorDescriptionLabel" destination="AV9-ZF-cTG" id="r2C-nT-uij"/>
-                <outlet property="findNewMediaTabItem" destination="jUU-OL-6Zu" id="Vc1-CP-sQs"/>
                 <outlet property="libraryLocationStatusImageView" destination="I1c-gk-V84" id="tdd-Wx-rBo"/>
                 <outlet property="locationManagerTabItem" destination="07U-Hu-8Mt" id="c5I-7h-6gl"/>
                 <outlet property="locationManagerView" destination="evG-r5-drw" id="NaP-YH-QGw"/>
                 <outlet property="mediaAddBehaviorLabel" destination="6vp-tQ-c95" id="mGd-pp-IOL"/>
                 <outlet property="moveRadio" destination="mkl-Ic-VxO" id="81B-p3-Pwj"/>
-                <outlet property="newMediaTableView" destination="cjf-jD-81c" id="gzd-4k-bmf"/>
                 <outlet property="newTracksArrayController" destination="4Ry-w4-cNJ" id="Sfb-4f-ipr"/>
                 <outlet property="removeWatchFolderButton" destination="YxN-YA-YBq" id="4bH-fr-8W2"/>
                 <outlet property="sourceLocationField" destination="n1T-9X-h7D" id="k7O-we-ha8"/>
@@ -473,177 +469,6 @@ Gw
                                     <constraint firstItem="QqA-iC-st3" firstAttribute="top" secondItem="iQH-EJ-wem" secondAttribute="top" constant="15" id="iUc-X2-XNx"/>
                                     <constraint firstItem="QqA-iC-st3" firstAttribute="leading" secondItem="iQH-EJ-wem" secondAttribute="leading" constant="17" id="rft-zL-9Um"/>
                                     <constraint firstItem="evG-r5-drw" firstAttribute="top" secondItem="I1c-gk-V84" secondAttribute="bottom" constant="8" id="sMp-uo-E0M"/>
-                                </constraints>
-                            </view>
-                        </tabViewItem>
-                        <tabViewItem label="Find New Media" identifier="" id="jUU-OL-6Zu">
-                            <view key="view" id="Iby-Ob-Ox0">
-                                <rect key="frame" x="10" y="33" width="846" height="538"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <subviews>
-                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iyZ-i1-ZRh">
-                                        <rect key="frame" x="689" y="10" width="146" height="32"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="134" id="xbi-kZ-qxa"/>
-                                        </constraints>
-                                        <buttonCell key="cell" type="push" title="Import Selected" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="XGB-Ri-Y9z">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="importSelectedPressed:" target="-2" id="qfv-F9-uWT"/>
-                                        </connections>
-                                    </button>
-                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lXX-sj-vAB">
-                                        <rect key="frame" x="11" y="465" width="229" height="32"/>
-                                        <buttonCell key="cell" type="push" title="Scan directory for new media..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9xv-oB-ATj">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="scanSourceButtonPressed:" target="-2" id="K01-c4-6PL"/>
-                                        </connections>
-                                    </button>
-                                    <scrollView autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C9o-81-nmE">
-                                        <rect key="frame" x="17" y="49" width="812" height="412"/>
-                                        <clipView key="contentView" id="2gV-b4-O0o">
-                                            <rect key="frame" x="1" y="0.0" width="810" height="411"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <subviews>
-                                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" headerView="aIU-i4-nDg" viewBased="YES" id="cjf-jD-81c">
-                                                    <rect key="frame" x="0.0" y="0.0" width="810" height="388"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <size key="intercellSpacing" width="3" height="2"/>
-                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
-                                                    <tableColumns>
-                                                        <tableColumn width="807" minWidth="40" maxWidth="5000" id="nEx-5x-8dN">
-                                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="URL">
-                                                                <font key="font" metaFont="smallSystem"/>
-                                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
-                                                            </tableHeaderCell>
-                                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="pfg-Ug-EQm">
-                                                                <font key="font" metaFont="system"/>
-                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                            </textFieldCell>
-                                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                            <prototypeCellViews>
-                                                                <tableCellView id="mRk-9H-PLS">
-                                                                    <rect key="frame" x="1" y="1" width="807" height="20"/>
-                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                    <subviews>
-                                                                        <pathControl verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VXc-uu-hFS">
-                                                                            <rect key="frame" x="7" y="0.0" width="793" height="20"/>
-                                                                            <pathCell key="cell" controlSize="small" selectable="YES" editable="YES" alignment="left" id="e2G-2X-1WP">
-                                                                                <font key="font" metaFont="smallSystem"/>
-                                                                                <url key="url" string="file:///Applications/"/>
-                                                                            </pathCell>
-                                                                        </pathControl>
-                                                                    </subviews>
-                                                                    <constraints>
-                                                                        <constraint firstAttribute="trailing" secondItem="VXc-uu-hFS" secondAttribute="trailing" constant="7" id="6xU-U3-wnH"/>
-                                                                        <constraint firstItem="VXc-uu-hFS" firstAttribute="leading" secondItem="mRk-9H-PLS" secondAttribute="leading" constant="7" id="Wl7-Ge-noB"/>
-                                                                        <constraint firstItem="VXc-uu-hFS" firstAttribute="top" secondItem="mRk-9H-PLS" secondAttribute="top" id="XlM-wb-Qmq"/>
-                                                                        <constraint firstAttribute="bottom" secondItem="VXc-uu-hFS" secondAttribute="bottom" id="mfP-kG-Edd"/>
-                                                                    </constraints>
-                                                                </tableCellView>
-                                                            </prototypeCellViews>
-                                                            <connections>
-                                                                <binding destination="4Ry-w4-cNJ" name="value" keyPath="arrangedObjects.url.path" id="6P5-bp-XHu"/>
-                                                            </connections>
-                                                        </tableColumn>
-                                                    </tableColumns>
-                                                    <connections>
-                                                        <binding destination="4Ry-w4-cNJ" name="content" keyPath="arrangedObjects" id="a1J-Sh-sdW"/>
-                                                    </connections>
-                                                </tableView>
-                                            </subviews>
-                                        </clipView>
-                                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="uJ6-tN-5qq">
-                                            <rect key="frame" x="1" y="7" width="0.0" height="16"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </scroller>
-                                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="iv5-ri-MYB">
-                                            <rect key="frame" x="224" y="17" width="15" height="102"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </scroller>
-                                        <tableHeaderView key="headerView" id="aIU-i4-nDg">
-                                            <rect key="frame" x="0.0" y="0.0" width="810" height="23"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </tableHeaderView>
-                                    </scrollView>
-                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ePb-Ja-zph">
-                                        <rect key="frame" x="543" y="10" width="146" height="32"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="134" id="jFj-Q4-Htc"/>
-                                        </constraints>
-                                        <buttonCell key="cell" type="push" title="Select All" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="6XW-UM-g5h">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="selectAllPressed:" target="-2" id="h2H-wv-QdN"/>
-                                        </connections>
-                                    </button>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cne-IQ-5GZ">
-                                        <rect key="frame" x="15" y="504" width="112" height="17"/>
-                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Directory to scan:" id="jQU-Q5-mFi">
-                                            <font key="font" metaFont="system"/>
-                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hK1-VF-LRe">
-                                        <rect key="frame" x="397" y="10" width="146" height="32"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="134" id="ouu-QB-6FW"/>
-                                        </constraints>
-                                        <buttonCell key="cell" type="push" title="Select None" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fNr-My-gxw">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="selectNonePressed:" target="-2" id="Nga-Wv-xz3"/>
-                                        </connections>
-                                    </button>
-                                    <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="h7C-Tq-WtP">
-                                        <rect key="frame" x="131" y="498" width="701" height="26"/>
-                                        <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Dgk-W2-Z1z" id="T5H-en-1I9">
-                                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="menu"/>
-                                            <menu key="menu" id="FCw-mH-mYz">
-                                                <items>
-                                                    <menuItem title="Item 1" state="on" id="Dgk-W2-Z1z"/>
-                                                    <menuItem title="Item 2" id="EMY-IQ-6iJ"/>
-                                                    <menuItem title="Item 3" id="nrr-z9-WNj"/>
-                                                </items>
-                                            </menu>
-                                            <connections>
-                                                <binding destination="JS5-8t-VeM" name="content" keyPath="arrangedObjects.path" id="GjY-JO-VFH"/>
-                                            </connections>
-                                        </popUpButtonCell>
-                                    </popUpButton>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="iyZ-i1-ZRh" firstAttribute="leading" secondItem="ePb-Ja-zph" secondAttribute="trailing" constant="12" id="2yi-JE-hqO"/>
-                                    <constraint firstAttribute="trailing" secondItem="iyZ-i1-ZRh" secondAttribute="trailing" constant="17" id="BQx-IW-Ln4"/>
-                                    <constraint firstItem="cne-IQ-5GZ" firstAttribute="top" secondItem="Iby-Ob-Ox0" secondAttribute="top" constant="17" id="C0v-Ff-VDb"/>
-                                    <constraint firstAttribute="bottom" secondItem="ePb-Ja-zph" secondAttribute="bottom" constant="17" id="Gqm-GM-XTo"/>
-                                    <constraint firstItem="hK1-VF-LRe" firstAttribute="top" secondItem="C9o-81-nmE" secondAttribute="bottom" constant="11" id="HwE-d5-CfS"/>
-                                    <constraint firstItem="lXX-sj-vAB" firstAttribute="leading" secondItem="Iby-Ob-Ox0" secondAttribute="leading" constant="17" id="Puc-8X-bRc"/>
-                                    <constraint firstAttribute="bottom" secondItem="iyZ-i1-ZRh" secondAttribute="bottom" constant="17" id="TBH-6K-7Fp"/>
-                                    <constraint firstAttribute="trailing" secondItem="h7C-Tq-WtP" secondAttribute="trailing" constant="17" id="Ufc-1r-uAi"/>
-                                    <constraint firstAttribute="bottom" secondItem="hK1-VF-LRe" secondAttribute="bottom" constant="17" id="WOa-US-Zo4"/>
-                                    <constraint firstItem="C9o-81-nmE" firstAttribute="top" secondItem="lXX-sj-vAB" secondAttribute="bottom" constant="11" id="XQr-7C-ckC"/>
-                                    <constraint firstItem="lXX-sj-vAB" firstAttribute="top" secondItem="cne-IQ-5GZ" secondAttribute="bottom" constant="11" id="YfW-3p-Xwl"/>
-                                    <constraint firstItem="C9o-81-nmE" firstAttribute="leading" secondItem="Iby-Ob-Ox0" secondAttribute="leading" constant="17" id="fiN-M2-UXZ"/>
-                                    <constraint firstAttribute="trailing" secondItem="C9o-81-nmE" secondAttribute="trailing" constant="17" id="gUx-fX-QEA"/>
-                                    <constraint firstItem="h7C-Tq-WtP" firstAttribute="top" secondItem="Iby-Ob-Ox0" secondAttribute="top" constant="16" id="hDc-Hp-xIG"/>
-                                    <constraint firstItem="ePb-Ja-zph" firstAttribute="leading" secondItem="hK1-VF-LRe" secondAttribute="trailing" constant="12" id="mb5-ek-TUQ"/>
-                                    <constraint firstItem="h7C-Tq-WtP" firstAttribute="leading" secondItem="cne-IQ-5GZ" secondAttribute="trailing" constant="8" id="qfm-aA-iSO"/>
-                                    <constraint firstItem="cne-IQ-5GZ" firstAttribute="leading" secondItem="Iby-Ob-Ox0" secondAttribute="leading" constant="17" id="v5U-Hm-iSV"/>
                                 </constraints>
                             </view>
                         </tabViewItem>

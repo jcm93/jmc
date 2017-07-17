@@ -37,7 +37,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         mainWindowController!.jumpToCurrentSong()
     }
     @IBAction func jumpToSelection(_ sender: Any) {
-        mainWindowController.jumpToSelection()
+        mainWindowController?.jumpToSelection()
     }
     @IBAction func toggleAlbumArt(_ sender: Any) {
         mainWindowController?.toggleArtwork(self)

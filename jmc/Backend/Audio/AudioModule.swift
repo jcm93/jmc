@@ -63,6 +63,7 @@ class AudioModule: NSObject {
     var fileManager = FileManager.default
     var upcomingTrackURL: URL?
     var endOfCurrentTrackFrame: AVAudioFramePosition?
+    var airplayDeviceHandler: AirPlayDeviceHandler
     
     let verbotenFileTypes = ["m4v", "m4p"]
     
@@ -156,6 +157,7 @@ class AudioModule: NSObject {
     }
     
     override init() {
+        self.airplayDeviceHandler = AirPlayDeviceHandler()
         super.init()
         addListenerBlock(audioObjectPropertyListenerBlock,
                          onAudioObjectID: AudioObjectID(bitPattern: kAudioObjectSystemObject),
