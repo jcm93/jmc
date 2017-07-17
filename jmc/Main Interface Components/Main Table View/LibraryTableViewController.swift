@@ -62,6 +62,19 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         }
     }
     
+    @IBAction func toggleEnabled(_ sender: Any) {
+        guard self.trackViewArrayController.selectedObjects.count > 0 else { return }
+        for trackView in trackViewArrayController.selectedObjects as! [TrackView] {
+            trackView.track!.status = !(trackView.track!.status?.boolValue ?? false) as NSNumber?
+        }
+    }
+    
+    @IBAction func showInFinderAction(_ sender: Any) {
+        guard let tracks = (self.trackViewArrayController.selectedObjects as? [TrackView])?.map({return $0.track!}), tracks.count > 0 else { return }
+        let urls = tracks.map({return URL(string: $0.location!)!})
+        NSWorkspace.shared().activateFileViewerSelecting(urls)
+    }
+    
     func reloadNowPlayingForTrack(_ track: Track) {
         if let row = (trackViewArrayController.arrangedObjects as! [TrackView]).index(of: track.view!) {
             self.currentTrackRow = row

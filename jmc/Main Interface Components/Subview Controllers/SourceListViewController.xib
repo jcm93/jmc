@@ -415,6 +415,7 @@
                                 <accessibility description="Source List"/>
                                 <connections>
                                     <outlet property="delegate" destination="-2" id="0jI-p7-ivH"/>
+                                    <outlet property="menu" destination="CJP-UP-07s" id="xwb-Ua-jnj"/>
                                 </connections>
                             </outlineView>
                         </subviews>
@@ -450,9 +451,9 @@
                 </menuItem>
                 <menuItem title="Export..." id="xFF-0U-KLT">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem title="Item 3" id="zej-BY-1TH">
-                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="exportPlaylist:" target="-2" id="7Yo-39-zYV"/>
+                    </connections>
                 </menuItem>
             </items>
             <point key="canvasLocation" x="89" y="-11"/>

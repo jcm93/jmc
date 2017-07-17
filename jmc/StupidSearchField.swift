@@ -10,7 +10,7 @@ import Cocoa
 
 class StupidSearchField: NSSearchField {
     
-    override var allowsVibrancy: Bool { return false }
+    //override var allowsVibrancy: Bool { return true }
 
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)

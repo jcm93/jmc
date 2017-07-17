@@ -379,6 +379,53 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         }
     }
     
+    @IBAction func exportPlaylist(_ sender: Any) {
+        let selectedPlaylists = sourceList.selectedRowIndexes.flatMap({return (sourceList.item(atRow: $0) as? SourceListItem)?.playlist})
+        let delegate = (NSApplication.shared().delegate as! AppDelegate)
+        delegate.launchAddFilesDialog()
+        DispatchQueue.global(qos: .default).async {
+            self.export(playlists: selectedPlaylists)
+        }
+    }
+    
+    func export(playlists: [SongCollection]) {
+        let playlistsFolder = globalRootLibrary!.getCentralMediaFolder()!.appendingPathComponent("Exported Playlists")
+        let visualUpdateHandler = (NSApplication.shared().delegate as! AppDelegate).backgroundAddFilesHandler
+        var index = 0
+        DispatchQueue.main.async {
+            visualUpdateHandler?.prepareForNewTask(actionName: "Copying", thingName: "files", thingCount: playlists.reduce(0, { return $0 + $1.tracks!.count }))
+        }
+        var playlistFolders = [URL]()
+        for playlist in playlists {
+            let playlistFolder = playlistsFolder.appendingPathComponent(playlist.name!)
+            do {
+                try FileManager.default.createDirectory(at: playlistFolder, withIntermediateDirectories: true, attributes: nil)
+                for trackView in playlist.tracks! {
+                    index += 1
+                    DispatchQueue.main.async {
+                        visualUpdateHandler?.increment(thingsDone: index)
+                    }
+                    guard let track = (trackView as? TrackView)?.track, let trackURL = URL(string: track.location!) else { continue }
+                    let trackFilename = trackURL.lastPathComponent
+                    do {
+                        try FileManager.default.copyItem(at: trackURL, to: playlistFolder.appendingPathComponent(trackFilename))
+                    } catch {
+                        print("error copying track \(track.name)")
+                    }
+                }
+            } catch {
+                print("error exporting playlist \(playlist.name)")
+            }
+            playlistFolders.append(playlistFolder)
+        }
+        DispatchQueue.main.async {
+            NSWorkspace.shared().activateFileViewerSelecting(playlistFolders)
+        }
+        DispatchQueue.main.async {
+            visualUpdateHandler?.finish()
+        }
+    }
+    
     func deleteSelection() {
         let playlistHeaderIndex = sourceList.row(forItem: playlistHeaderNode)
         var validIndicesToDelete = IndexSet()

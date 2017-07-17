@@ -51,22 +51,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "jmc/Delegate:Main Window Controller/MainWindowController.swift"
-            timestampString = "521670809.671823"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "832"
-            endingLineNumber = "832"
-            landmarkName = "trackListTriangleClicked(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "jmc/Other Windows/Library Manager/AdvancedOrganizationOptionsWindowController.swift"
             timestampString = "519255284.593351"
             startingColumnNumber = "9223372036854775807"
@@ -90,22 +74,6 @@
             startingLineNumber = "14"
             endingLineNumber = "14"
             landmarkName = "mouseDown(with:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "jmc/Delegate:Main Window Controller/MainWindowController.swift"
-            timestampString = "521670809.671823"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "837"
-            endingLineNumber = "837"
-            landmarkName = "refreshCurrentSortOrder()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

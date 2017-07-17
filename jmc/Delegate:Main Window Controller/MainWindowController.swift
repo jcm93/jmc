@@ -843,6 +843,15 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     
     //mark album art
     
+    func makeDark() {
+        self.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+        theBox.fillColor = NSColor(patternImage: NSImage(named: "Inverted Gradient")!)
+        let color = NSColor.white
+        let attrs = [NSForegroundColorAttributeName : color]
+        let newAttributedString = NSAttributedString(string: "Search", attributes: attrs)
+        (searchField.cell as! NSSearchFieldCell).placeholderAttributedString = newAttributedString
+    }
+    
     override func windowDidLoad() {
         self.sourceListViewController = SourceListViewController(nibName: "SourceListViewController", bundle: nil)
         sourceListTargetView.addSubview(sourceListViewController!.view)
@@ -909,12 +918,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         self.window?.isMovableByWindowBackground = true
         UserDefaults.standard.set(false, forKey: jmcDarkAppearanceOption)
         if UserDefaults.standard.bool(forKey: jmcDarkAppearanceOption) {
-            self.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
-            theBox.fillColor = NSColor(patternImage: NSImage(named: "Inverted Gradient")!)
-            let color = NSColor.tertiaryLabelColor
-            let attrs = [NSForegroundColorAttributeName : color]
-            let newAttributedString = NSAttributedString(string: "Search", attributes: attrs)
-            (searchField.cell as! NSSearchFieldCell).placeholderAttributedString = newAttributedString
+            makeDark()
         }
         barViewToggle.isHidden = true
         //self.window?.invalidateShadow()

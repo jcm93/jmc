@@ -313,7 +313,7 @@
                                     <constraint firstAttribute="width" priority="250" constant="700" id="v2Z-d7-4FZ"/>
                                 </constraints>
                             </box>
-                            <searchField wantsLayer="YES" verticalHuggingPriority="750" horizontalCompressionResistancePriority="500" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="S7Y-RM-UHH" customClass="StupidSearchField" customModule="jmc" customModuleProvider="target">
+                            <searchField wantsLayer="YES" verticalHuggingPriority="750" horizontalCompressionResistancePriority="500" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="S7Y-RM-UHH">
                                 <rect key="frame" x="1179" y="16" width="379" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="width" priority="100" constant="300" id="OlZ-nl-m1p"/>

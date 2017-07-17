@@ -120,6 +120,7 @@
 		0DC397AC1E5282920009792B /* LibraryManagerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DC397AA1E5282920009792B /* LibraryManagerViewController.xib */; };
 		0DC7127C1E2F115A0054ECE6 /* ImportErrorWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC7127A1E2F115A0054ECE6 /* ImportErrorWindowController.swift */; };
 		0DC7127D1E2F115A0054ECE6 /* ImportErrorWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DC7127B1E2F115A0054ECE6 /* ImportErrorWindowController.xib */; };
+		0DCF1D1C1F1D113600240202 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0DCF1D191F1D10DC00240202 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0DD0DAE61E53A8EE00807CAC /* flac.rb in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAA31E53A8EE00807CAC /* flac.rb */; };
 		0DD0DAE71E53A8EE00807CAC /* AUTHORS in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAA41E53A8EE00807CAC /* AUTHORS */; };
 		0DD0DAE81E53A8EE00807CAC /* flac in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAA61E53A8EE00807CAC /* flac */; };
@@ -215,6 +216,19 @@
 			remoteInfo = minimalTunes;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0DCF1D1B1F1D112000240202 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				0DCF1D1C1F1D113600240202 /* Sparkle.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0D015AC31E00A30900EBAB6E /* LibraryTableViewControllerCellBased.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LibraryTableViewControllerCellBased.xib; path = "Main Interface Components/Main Table View/LibraryTableViewControllerCellBased.xib"; sourceTree = "<group>"; };
@@ -337,6 +351,7 @@
 		0DC397AA1E5282920009792B /* LibraryManagerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LibraryManagerViewController.xib; path = "Other Windows/Library Manager/LibraryManagerViewController.xib"; sourceTree = "<group>"; };
 		0DC7127A1E2F115A0054ECE6 /* ImportErrorWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImportErrorWindowController.swift; path = "Other Windows/ImportErrorWindowController.swift"; sourceTree = "<group>"; };
 		0DC7127B1E2F115A0054ECE6 /* ImportErrorWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImportErrorWindowController.xib; path = "Other Windows/ImportErrorWindowController.xib"; sourceTree = "<group>"; };
+		0DCF1D191F1D10DC00240202 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = "../../Downloads/Sparkle-1.18.0/Sparkle.framework"; sourceTree = "<group>"; };
 		0DD0DAA31E53A8EE00807CAC /* flac.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = flac.rb; sourceTree = "<group>"; };
 		0DD0DAA41E53A8EE00807CAC /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
 		0DD0DAA61E53A8EE00807CAC /* flac */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = flac; sourceTree = "<group>"; };
@@ -684,6 +699,7 @@
 				0DAB30A21CFBA3340028928F /* jmcTests */,
 				0DAB30AD1CFBA3340028928F /* jmcUITests */,
 				0DAB308E1CFBA3340028928F /* Products */,
+				0DCF1D181F1D10DC00240202 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -780,6 +796,14 @@
 				0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */,
 			);
 			name = Miscellaneous;
+			sourceTree = "<group>";
+		};
+		0DCF1D181F1D10DC00240202 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0DCF1D191F1D10DC00240202 /* Sparkle.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		0DD0DAA11E53A8EE00807CAC /* FLAC */ = {
@@ -990,6 +1014,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0DAB30B31CFBA3340028928F /* Build configuration list for PBXNativeTarget "jmc" */;
 			buildPhases = (
+				0DCF1D1B1F1D112000240202 /* CopyFiles */,
 				0DAB30891CFBA3340028928F /* Sources */,
 				0DAB308B1CFBA3340028928F /* Resources */,
 				0D1930E91E53A72600752942 /* Frameworks */,
