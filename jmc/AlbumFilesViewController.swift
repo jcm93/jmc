@@ -119,10 +119,10 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
         return indexPaths
     }
     
-    func collectionView(_ collectionView: NSCollectionView, shouldChangeItemsAt indexPaths: Set<IndexPath>, to highlightState: NSCollectionViewItemHighlightState) -> Set<IndexPath> {
+    /*func collectionView(_ collectionView: NSCollectionView, shouldChangeItemsAt indexPaths: Set<IndexPath>, to highlightState: NSCollectionViewItemHighlightState) -> Set<IndexPath> {
         print("should change items called")
         return indexPaths
-    }
+    }*/
     
     func initializePrimaryImageConstraint() {
         if initializesPrimaryImageConstraint {

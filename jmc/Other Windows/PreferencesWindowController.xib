@@ -221,12 +221,6 @@
                                     </constraints>
                                 </view>
                             </tabViewItem>
-                            <tabViewItem label="Item 3" identifier="" id="oQK-z2-2RT">
-                                <view key="view" id="Aju-rr-jm8">
-                                    <rect key="frame" x="0.0" y="0.0" width="487" height="186"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                </view>
-                            </tabViewItem>
                             <tabViewItem label="Item 2" identifier="" id="taG-mr-0MG">
                                 <view key="view" id="wco-cp-Xi2">
                                     <rect key="frame" x="0.0" y="0.0" width="487" height="186"/>
@@ -355,7 +349,6 @@
                     <toolbarItem reference="rKI-8j-jui"/>
                     <toolbarItem reference="Gk6-uZ-N5O"/>
                     <toolbarItem reference="6Da-d9-gln"/>
-                    <toolbarItem reference="cDR-3z-Uco"/>
                     <toolbarItem reference="rk1-eS-Lm3"/>
                     <toolbarItem reference="rKI-8j-jui"/>
                 </defaultToolbarItems>
@@ -371,7 +364,7 @@
     </objects>
     <resources>
         <image name="NSAdvanced" width="32" height="32"/>
-        <image name="NSAudioOutputVolumeMedTemplate" width="128" height="128"/>
+        <image name="NSAudioOutputVolumeMedTemplate" width="21" height="16"/>
         <image name="NSPreferencesGeneral" width="32" height="32"/>
         <image name="Shared Library" width="32" height="32"/>
     </resources>

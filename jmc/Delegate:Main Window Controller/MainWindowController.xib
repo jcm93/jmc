@@ -462,25 +462,11 @@
                             <outlet property="menu" destination="WAr-lr-0sM" id="tZk-Ww-b2z"/>
                         </connections>
                     </segmentedControl>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3zk-MK-Txl">
-                        <rect key="frame" x="332" y="4" width="44" height="25"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="44" id="o3L-oL-E1Z"/>
-                        </constraints>
-                        <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="AirPlay" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Li0-sK-BT1">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="airPlayPressed:" target="-2" id="usU-lb-Air"/>
-                        </connections>
-                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="0eg-hu-JdK" secondAttribute="bottom" constant="6" id="1mf-qn-i1B"/>
                     <constraint firstItem="qNB-cP-szA" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="3Zf-1k-4fz"/>
                     <constraint firstItem="rfk-1e-A3X" firstAttribute="leading" secondItem="aLT-7j-MYS" secondAttribute="trailing" constant="8" id="8hA-tp-cFE"/>
-                    <constraint firstItem="3zk-MK-Txl" firstAttribute="leading" secondItem="mb6-nw-TjG" secondAttribute="trailing" constant="8" id="8uV-bl-nRX"/>
                     <constraint firstItem="wUv-cJ-CeL" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="3" id="9dD-af-Zpw"/>
                     <constraint firstItem="r3P-eO-TmU" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="60" id="FWU-KC-1lo"/>
                     <constraint firstItem="wUv-cJ-CeL" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="75" id="Gt8-ei-BxH"/>
@@ -501,7 +487,6 @@
                     <constraint firstAttribute="bottom" secondItem="mb6-nw-TjG" secondAttribute="bottom" constant="6" id="lba-F2-zcv"/>
                     <constraint firstItem="FOU-Bi-82q" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="mfK-fT-Eft"/>
                     <constraint firstAttribute="bottom" secondItem="aLT-7j-MYS" secondAttribute="bottom" constant="6" id="o6B-h3-TeK"/>
-                    <constraint firstAttribute="bottom" secondItem="3zk-MK-Txl" secondAttribute="bottom" constant="6" id="r5Z-q9-Dl3"/>
                     <constraint firstItem="aLT-7j-MYS" firstAttribute="leading" secondItem="eg4-23-xqc" secondAttribute="trailing" constant="8" id="tVc-S0-2bd"/>
                     <constraint firstAttribute="bottom" secondItem="r3P-eO-TmU" secondAttribute="bottom" constant="36" id="vhg-0d-8Gk"/>
                     <constraint firstAttribute="bottom" secondItem="gzN-xP-Utz" secondAttribute="bottom" constant="6" id="wBw-oE-Tlu"/>
@@ -536,7 +521,6 @@
         </menu>
     </objects>
     <resources>
-        <image name="AirPlay" width="18" height="16"/>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSFlowViewTemplate" width="18" height="10"/>
         <image name="NSPlayTemplate" width="25" height="23"/>

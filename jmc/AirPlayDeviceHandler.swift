@@ -8,7 +8,6 @@
 
 import Cocoa
 import CoreAudio
-import CoreFoundation
 
 class AirPlayDestination: NSObject {
     
@@ -33,23 +32,25 @@ class AirPlayDeviceHandler: NSObject {
     var outputs = [AirPlayDestination]()
     var device: UInt32 = 0
     
-    
     override init() {
         var addr = AudioObjectPropertyAddress(mSelector: kAudioHardwarePropertyDevices, mScope: kAudioObjectPropertyScopeWildcard, mElement: kAudioObjectPropertyElementWildcard)
-        var propsize: UInt32 = 0
-        AudioObjectGetPropertyDataSize(AudioObjectID(kAudioObjectSystemObject), &addr, 0, nil, &propsize)
-        var deviceIDs = [UInt32](repeating: 0, count: Int(propsize))
-        AudioObjectGetPropertyData(AudioObjectID(kAudioObjectSystemObject), &addr, 0, nil, &propsize, &deviceIDs)
+        var numOutputDevices: UInt32 = 0
+        AudioObjectGetPropertyDataSize(AudioObjectID(kAudioObjectSystemObject), &addr, 0, nil, &numOutputDevices)
+        var deviceIDs = [UInt32](repeating: 0, count: Int(numOutputDevices))
+        AudioObjectGetPropertyData(AudioObjectID(kAudioObjectSystemObject), &addr, 0, nil, &numOutputDevices, &deviceIDs)
         
-        var transportTypeAddr = AudioObjectPropertyAddress(mSelector: kAudioDevicePropertyTransportType, mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMaster)
+        var transportTypeAddr = AudioObjectPropertyAddress(mSelector: kAudioDevicePropertyTransportType, mScope: kAudioObjectPropertyScopeWildcard, mElement: kAudioObjectPropertyElementWildcard)
+        
         var transportType: UInt32 = 0
+        var transportTypeSize = UInt32(MemoryLayout<UInt32>.size)
         
         for device in deviceIDs {
-            AudioObjectGetPropertyData(device, &transportTypeAddr, 0, nil, &propsize, &transportType)
-            print(transportType)
-            if transportType == kAudioDeviceTransportTypeAirPlay {
+            var tt: UInt32 = 0
+            AudioObjectGetPropertyData(device, &transportTypeAddr, 0, nil, &transportTypeSize, &tt)
+            print("\(device), \(tt)")
+            if tt == kAudioDeviceTransportTypeAirPlay {
                 self.device = device
-                print("found device")
+                print("found airplay output device")
             }
         }
         super.init()
@@ -64,6 +65,7 @@ class AirPlayDeviceHandler: NSObject {
         var sourceIDs = [UInt32](repeating: 0, count: Int(propsize))
         AudioObjectGetPropertyData(self.device, &addr, 0, nil, &propsize, &sourceIDs)
         for source in sourceIDs {
+            //print(source)
             outputs.append(AirPlayDestination(id: source, airPlayDevice: self.device))
         }
     }

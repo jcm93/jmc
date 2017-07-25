@@ -37,8 +37,8 @@ enum completionHandlerType: Int {
  
 
 class AudioModule: NSObject {
+    
     /*
-  
     graph structure:
   
     player node
@@ -63,7 +63,7 @@ class AudioModule: NSObject {
     var fileManager = FileManager.default
     var upcomingTrackURL: URL?
     var endOfCurrentTrackFrame: AVAudioFramePosition?
-    var airplayDeviceHandler: AirPlayDeviceHandler
+    //var airplayDeviceHandler: AirPlayDeviceHandler
     
     let verbotenFileTypes = ["m4v", "m4p"]
     
@@ -157,7 +157,7 @@ class AudioModule: NSObject {
     }
     
     override init() {
-        self.airplayDeviceHandler = AirPlayDeviceHandler()
+        //self.airplayDeviceHandler = AirPlayDeviceHandler()
         super.init()
         addListenerBlock(audioObjectPropertyListenerBlock,
                          onAudioObjectID: AudioObjectID(bitPattern: kAudioObjectSystemObject),
@@ -188,7 +188,6 @@ class AudioModule: NSObject {
     }
     
     func getDefaultAudioOutputDevice () -> AudioObjectID {
-        
         var devicePropertyAddress = AudioObjectPropertyAddress(mSelector: kAudioHardwarePropertyDefaultOutputDevice, mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMaster)
         var deviceID: AudioObjectID = 0
         var dataSize = UInt32(truncatingBitPattern: MemoryLayout<AudioDeviceID>.size)

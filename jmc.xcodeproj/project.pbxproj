@@ -122,45 +122,6 @@
 		0DC7127D1E2F115A0054ECE6 /* ImportErrorWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DC7127B1E2F115A0054ECE6 /* ImportErrorWindowController.xib */; };
 		0DCF1D1C1F1D113600240202 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0DCF1D191F1D10DC00240202 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0DCF1D251F1D3C6300240202 /* AirPlayDeviceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DCF1D241F1D3C6300240202 /* AirPlayDeviceHandler.swift */; };
-		0DD0DAE61E53A8EE00807CAC /* flac.rb in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAA31E53A8EE00807CAC /* flac.rb */; };
-		0DD0DAE71E53A8EE00807CAC /* AUTHORS in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAA41E53A8EE00807CAC /* AUTHORS */; };
-		0DD0DAE81E53A8EE00807CAC /* flac in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAA61E53A8EE00807CAC /* flac */; };
-		0DD0DAE91E53A8EE00807CAC /* metaflac in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAA71E53A8EE00807CAC /* metaflac */; };
-		0DD0DAEA1E53A8EE00807CAC /* INSTALL_RECEIPT.json in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAB91E53A8EE00807CAC /* INSTALL_RECEIPT.json */; };
-		0DD0DAEB1E53A8EE00807CAC /* libFLAC++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DD0DABB1E53A8EE00807CAC /* libFLAC++.6.dylib */; };
-		0DD0DAEC1E53A8EE00807CAC /* libFLAC++.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DD0DABC1E53A8EE00807CAC /* libFLAC++.a */; };
-		0DD0DAED1E53A8EE00807CAC /* libFLAC++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DD0DABD1E53A8EE00807CAC /* libFLAC++.dylib */; };
-		0DD0DAEE1E53A8EE00807CAC /* libFLAC.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DD0DABE1E53A8EE00807CAC /* libFLAC.8.dylib */; };
-		0DD0DAEF1E53A8EE00807CAC /* libFLAC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DD0DABF1E53A8EE00807CAC /* libFLAC.a */; };
-		0DD0DAF01E53A8EE00807CAC /* libFLAC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DD0DAC01E53A8EE00807CAC /* libFLAC.dylib */; };
-		0DD0DAF11E53A8EE00807CAC /* flac++.pc in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAC21E53A8EE00807CAC /* flac++.pc */; };
-		0DD0DAF21E53A8EE00807CAC /* flac.pc in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAC31E53A8EE00807CAC /* flac.pc */; };
-		0DD0DAF31E53A8EE00807CAC /* README in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAC41E53A8EE00807CAC /* README */; };
-		0DD0DAF41E53A8EE00807CAC /* libFLAC++.m4 in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAC71E53A8EE00807CAC /* libFLAC++.m4 */; };
-		0DD0DAF51E53A8EE00807CAC /* libFLAC.m4 in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAC81E53A8EE00807CAC /* libFLAC.m4 */; };
-		0DD0DAF61E53A8EE00807CAC /* FLAC.tag in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DACB1E53A8EE00807CAC /* FLAC.tag */; };
-		0DD0DAF71E53A8EE00807CAC /* changelog.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DACD1E53A8EE00807CAC /* changelog.html */; };
-		0DD0DAF81E53A8EE00807CAC /* developers.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DACE1E53A8EE00807CAC /* developers.html */; };
-		0DD0DAF91E53A8EE00807CAC /* documentation.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DACF1E53A8EE00807CAC /* documentation.html */; };
-		0DD0DAFA1E53A8EE00807CAC /* documentation_bugs.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAD01E53A8EE00807CAC /* documentation_bugs.html */; };
-		0DD0DAFB1E53A8EE00807CAC /* documentation_example_code.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAD11E53A8EE00807CAC /* documentation_example_code.html */; };
-		0DD0DAFC1E53A8EE00807CAC /* documentation_format_overview.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAD21E53A8EE00807CAC /* documentation_format_overview.html */; };
-		0DD0DAFD1E53A8EE00807CAC /* documentation_tools.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAD31E53A8EE00807CAC /* documentation_tools.html */; };
-		0DD0DAFE1E53A8EE00807CAC /* documentation_tools_flac.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAD41E53A8EE00807CAC /* documentation_tools_flac.html */; };
-		0DD0DAFF1E53A8EE00807CAC /* documentation_tools_metaflac.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAD51E53A8EE00807CAC /* documentation_tools_metaflac.html */; };
-		0DD0DB001E53A8EE00807CAC /* faq.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAD61E53A8EE00807CAC /* faq.html */; };
-		0DD0DB011E53A8EE00807CAC /* favicon.ico in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAD71E53A8EE00807CAC /* favicon.ico */; };
-		0DD0DB021E53A8EE00807CAC /* features.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAD81E53A8EE00807CAC /* features.html */; };
-		0DD0DB031E53A8EE00807CAC /* flac.css in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAD91E53A8EE00807CAC /* flac.css */; };
-		0DD0DB041E53A8EE00807CAC /* format.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DADA1E53A8EE00807CAC /* format.html */; };
-		0DD0DB051E53A8EE00807CAC /* id.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DADB1E53A8EE00807CAC /* id.html */; };
-		0DD0DB061E53A8EE00807CAC /* logo.svg in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DADD1E53A8EE00807CAC /* logo.svg */; };
-		0DD0DB071E53A8EE00807CAC /* logo130.gif in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DADE1E53A8EE00807CAC /* logo130.gif */; };
-		0DD0DB081E53A8EE00807CAC /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DADF1E53A8EE00807CAC /* index.html */; };
-		0DD0DB091E53A8EE00807CAC /* license.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAE01E53A8EE00807CAC /* license.html */; };
-		0DD0DB0A1E53A8EE00807CAC /* ogg_mapping.html in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAE11E53A8EE00807CAC /* ogg_mapping.html */; };
-		0DD0DB0B1E53A8EE00807CAC /* flac.1 in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAE41E53A8EE00807CAC /* flac.1 */; };
-		0DD0DB0C1E53A8EE00807CAC /* metaflac.1 in Resources */ = {isa = PBXBuildFile; fileRef = 0DD0DAE51E53A8EE00807CAC /* metaflac.1 */; };
 		0DD0DB0E1E54425800807CAC /* FlacDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD0DB0D1E54425800807CAC /* FlacDecoder.swift */; };
 		0DD274EF1D3190360055C43B /* GlobalFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD274EE1D3190360055C43B /* GlobalFunctions.swift */; };
 		0DD7A3BC1EF4738F00FEDD71 /* StupidTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD7A3BB1EF4738F00FEDD71 /* StupidTableView.swift */; };
@@ -193,6 +154,8 @@
 		0DF188811EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */; };
 		0DF188841EDD072B00241785 /* OrganizationRuleViewcontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF188821EDD072B00241785 /* OrganizationRuleViewcontroller.swift */; };
 		0DF188851EDD072B00241785 /* OrganizationRuleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DF188831EDD072B00241785 /* OrganizationRuleViewController.xib */; };
+		0DF491F91F27EC4800D23AD1 /* libFLAC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DF491F81F27EC4800D23AD1 /* libFLAC.dylib */; };
+		0DF491FB1F27EECC00D23AD1 /* libogg.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DF491FA1F27EECC00D23AD1 /* libogg.dylib */; };
 		0DF4BEEE1CFBE4CB00AC5824 /* iTunesLibraryParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */; };
 		0DF4BEF31CFD0D4E00AC5824 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF4BEF11CFD0D4E00AC5824 /* MainWindowController.swift */; };
 		0DF4BEF41CFD0D4E00AC5824 /* MainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DF4BEF21CFD0D4E00AC5824 /* MainWindowController.xib */; };
@@ -354,59 +317,6 @@
 		0DC7127B1E2F115A0054ECE6 /* ImportErrorWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImportErrorWindowController.xib; path = "Other Windows/ImportErrorWindowController.xib"; sourceTree = "<group>"; };
 		0DCF1D191F1D10DC00240202 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = "../../Downloads/Sparkle-1.18.0/Sparkle.framework"; sourceTree = "<group>"; };
 		0DCF1D241F1D3C6300240202 /* AirPlayDeviceHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirPlayDeviceHandler.swift; sourceTree = "<group>"; };
-		0DD0DAA31E53A8EE00807CAC /* flac.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = flac.rb; sourceTree = "<group>"; };
-		0DD0DAA41E53A8EE00807CAC /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
-		0DD0DAA61E53A8EE00807CAC /* flac */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = flac; sourceTree = "<group>"; };
-		0DD0DAA71E53A8EE00807CAC /* metaflac */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = metaflac; sourceTree = "<group>"; };
-		0DD0DAAA1E53A8EE00807CAC /* all.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = all.h; sourceTree = "<group>"; };
-		0DD0DAAB1E53A8EE00807CAC /* assert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = assert.h; sourceTree = "<group>"; };
-		0DD0DAAC1E53A8EE00807CAC /* callback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = callback.h; sourceTree = "<group>"; };
-		0DD0DAAD1E53A8EE00807CAC /* export.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = export.h; sourceTree = "<group>"; };
-		0DD0DAAE1E53A8EE00807CAC /* format.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = format.h; sourceTree = "<group>"; };
-		0DD0DAAF1E53A8EE00807CAC /* metadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = metadata.h; sourceTree = "<group>"; };
-		0DD0DAB01E53A8EE00807CAC /* ordinals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ordinals.h; sourceTree = "<group>"; };
-		0DD0DAB11E53A8EE00807CAC /* stream_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stream_decoder.h; sourceTree = "<group>"; };
-		0DD0DAB21E53A8EE00807CAC /* stream_encoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stream_encoder.h; sourceTree = "<group>"; };
-		0DD0DAB41E53A8EE00807CAC /* all.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = all.h; sourceTree = "<group>"; };
-		0DD0DAB51E53A8EE00807CAC /* decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decoder.h; sourceTree = "<group>"; };
-		0DD0DAB61E53A8EE00807CAC /* encoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encoder.h; sourceTree = "<group>"; };
-		0DD0DAB71E53A8EE00807CAC /* export.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = export.h; sourceTree = "<group>"; };
-		0DD0DAB81E53A8EE00807CAC /* metadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = metadata.h; sourceTree = "<group>"; };
-		0DD0DAB91E53A8EE00807CAC /* INSTALL_RECEIPT.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = INSTALL_RECEIPT.json; sourceTree = "<group>"; };
-		0DD0DABB1E53A8EE00807CAC /* libFLAC++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libFLAC++.6.dylib"; sourceTree = "<group>"; };
-		0DD0DABC1E53A8EE00807CAC /* libFLAC++.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libFLAC++.a"; sourceTree = "<group>"; };
-		0DD0DABD1E53A8EE00807CAC /* libFLAC++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libFLAC++.dylib"; sourceTree = "<group>"; };
-		0DD0DABE1E53A8EE00807CAC /* libFLAC.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libFLAC.8.dylib; sourceTree = "<group>"; };
-		0DD0DABF1E53A8EE00807CAC /* libFLAC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFLAC.a; sourceTree = "<group>"; };
-		0DD0DAC01E53A8EE00807CAC /* libFLAC.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libFLAC.dylib; sourceTree = "<group>"; };
-		0DD0DAC21E53A8EE00807CAC /* flac++.pc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "flac++.pc"; sourceTree = "<group>"; };
-		0DD0DAC31E53A8EE00807CAC /* flac.pc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = flac.pc; sourceTree = "<group>"; };
-		0DD0DAC41E53A8EE00807CAC /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		0DD0DAC71E53A8EE00807CAC /* libFLAC++.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "libFLAC++.m4"; sourceTree = "<group>"; };
-		0DD0DAC81E53A8EE00807CAC /* libFLAC.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libFLAC.m4; sourceTree = "<group>"; };
-		0DD0DACB1E53A8EE00807CAC /* FLAC.tag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FLAC.tag; sourceTree = "<group>"; };
-		0DD0DACD1E53A8EE00807CAC /* changelog.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = changelog.html; sourceTree = "<group>"; };
-		0DD0DACE1E53A8EE00807CAC /* developers.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = developers.html; sourceTree = "<group>"; };
-		0DD0DACF1E53A8EE00807CAC /* documentation.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = documentation.html; sourceTree = "<group>"; };
-		0DD0DAD01E53A8EE00807CAC /* documentation_bugs.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = documentation_bugs.html; sourceTree = "<group>"; };
-		0DD0DAD11E53A8EE00807CAC /* documentation_example_code.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = documentation_example_code.html; sourceTree = "<group>"; };
-		0DD0DAD21E53A8EE00807CAC /* documentation_format_overview.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = documentation_format_overview.html; sourceTree = "<group>"; };
-		0DD0DAD31E53A8EE00807CAC /* documentation_tools.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = documentation_tools.html; sourceTree = "<group>"; };
-		0DD0DAD41E53A8EE00807CAC /* documentation_tools_flac.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = documentation_tools_flac.html; sourceTree = "<group>"; };
-		0DD0DAD51E53A8EE00807CAC /* documentation_tools_metaflac.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = documentation_tools_metaflac.html; sourceTree = "<group>"; };
-		0DD0DAD61E53A8EE00807CAC /* faq.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = faq.html; sourceTree = "<group>"; };
-		0DD0DAD71E53A8EE00807CAC /* favicon.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = favicon.ico; sourceTree = "<group>"; };
-		0DD0DAD81E53A8EE00807CAC /* features.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = features.html; sourceTree = "<group>"; };
-		0DD0DAD91E53A8EE00807CAC /* flac.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = flac.css; sourceTree = "<group>"; };
-		0DD0DADA1E53A8EE00807CAC /* format.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = format.html; sourceTree = "<group>"; };
-		0DD0DADB1E53A8EE00807CAC /* id.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = id.html; sourceTree = "<group>"; };
-		0DD0DADD1E53A8EE00807CAC /* logo.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = logo.svg; sourceTree = "<group>"; };
-		0DD0DADE1E53A8EE00807CAC /* logo130.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = logo130.gif; sourceTree = "<group>"; };
-		0DD0DADF1E53A8EE00807CAC /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
-		0DD0DAE01E53A8EE00807CAC /* license.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = license.html; sourceTree = "<group>"; };
-		0DD0DAE11E53A8EE00807CAC /* ogg_mapping.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ogg_mapping.html; sourceTree = "<group>"; };
-		0DD0DAE41E53A8EE00807CAC /* flac.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = flac.1; sourceTree = "<group>"; };
-		0DD0DAE51E53A8EE00807CAC /* metaflac.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = metaflac.1; sourceTree = "<group>"; };
 		0DD0DB0D1E54425800807CAC /* FlacDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlacDecoder.swift; path = Backend/Audio/FlacDecoder.swift; sourceTree = "<group>"; };
 		0DD274EE1D3190360055C43B /* GlobalFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GlobalFunctions.swift; path = Backend/GlobalFunctions.swift; sourceTree = "<group>"; };
 		0DD7A3BB1EF4738F00FEDD71 /* StupidTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StupidTableView.swift; sourceTree = "<group>"; };
@@ -439,6 +349,9 @@
 		0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AdvancedOrganizationOptionsWindowController.xib; path = "Other Windows/Library Manager/AdvancedOrganizationOptionsWindowController.xib"; sourceTree = "<group>"; };
 		0DF188821EDD072B00241785 /* OrganizationRuleViewcontroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrganizationRuleViewcontroller.swift; path = "Other Windows/Library Manager/OrganizationRuleViewcontroller.swift"; sourceTree = "<group>"; };
 		0DF188831EDD072B00241785 /* OrganizationRuleViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OrganizationRuleViewController.xib; path = "Other Windows/Library Manager/OrganizationRuleViewController.xib"; sourceTree = "<group>"; };
+		0DF491F61F27EC4800D23AD1 /* stream_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stream_decoder.h; path = FLAC/stream_decoder.h; sourceTree = "<group>"; };
+		0DF491F81F27EC4800D23AD1 /* libFLAC.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libFLAC.dylib; path = FLAC/libFLAC.dylib; sourceTree = "<group>"; };
+		0DF491FA1F27EECC00D23AD1 /* libogg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libogg.dylib; path = FLAC/libogg.dylib; sourceTree = "<group>"; };
 		0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = iTunesLibraryParser.swift; path = "Backend/Database:Filesystem Management/iTunesLibraryParser.swift"; sourceTree = "<group>"; };
 		0DF4BEF11CFD0D4E00AC5824 /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MainWindowController.swift; path = "Delegate:Main Window Controller/MainWindowController.swift"; sourceTree = "<group>"; };
 		0DF4BEF21CFD0D4E00AC5824 /* MainWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainWindowController.xib; path = "Delegate:Main Window Controller/MainWindowController.xib"; sourceTree = "<group>"; };
@@ -452,12 +365,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0DD0DAEE1E53A8EE00807CAC /* libFLAC.8.dylib in Frameworks */,
-				0DD0DAEB1E53A8EE00807CAC /* libFLAC++.6.dylib in Frameworks */,
-				0DD0DAEC1E53A8EE00807CAC /* libFLAC++.a in Frameworks */,
-				0DD0DAED1E53A8EE00807CAC /* libFLAC++.dylib in Frameworks */,
-				0DD0DAF01E53A8EE00807CAC /* libFLAC.dylib in Frameworks */,
-				0DD0DAEF1E53A8EE00807CAC /* libFLAC.a in Frameworks */,
+				0DF491FB1F27EECC00D23AD1 /* libogg.dylib in Frameworks */,
+				0DF491F91F27EC4800D23AD1 /* libFLAC.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -697,7 +606,7 @@
 		0DAB30841CFBA3340028928F = {
 			isa = PBXGroup;
 			children = (
-				0DD0DAA11E53A8EE00807CAC /* FLAC */,
+				0DF491EE1F27EC2600D23AD1 /* FLAC */,
 				0DAB308F1CFBA3340028928F /* jmc */,
 				0DAB30A21CFBA3340028928F /* jmcTests */,
 				0DAB30AD1CFBA3340028928F /* jmcUITests */,
@@ -809,187 +718,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		0DD0DAA11E53A8EE00807CAC /* FLAC */ = {
-			isa = PBXGroup;
-			children = (
-				0DD0DAA21E53A8EE00807CAC /* .brew */,
-				0DD0DAA41E53A8EE00807CAC /* AUTHORS */,
-				0DD0DAA51E53A8EE00807CAC /* bin */,
-				0DD0DAA81E53A8EE00807CAC /* include */,
-				0DD0DAB91E53A8EE00807CAC /* INSTALL_RECEIPT.json */,
-				0DD0DABA1E53A8EE00807CAC /* lib */,
-				0DD0DAC41E53A8EE00807CAC /* README */,
-				0DD0DAC51E53A8EE00807CAC /* share */,
-			);
-			name = FLAC;
-			path = 1.3.2;
-			sourceTree = "<group>";
-		};
-		0DD0DAA21E53A8EE00807CAC /* .brew */ = {
-			isa = PBXGroup;
-			children = (
-				0DD0DAA31E53A8EE00807CAC /* flac.rb */,
-			);
-			path = .brew;
-			sourceTree = "<group>";
-		};
-		0DD0DAA51E53A8EE00807CAC /* bin */ = {
-			isa = PBXGroup;
-			children = (
-				0DD0DAA61E53A8EE00807CAC /* flac */,
-				0DD0DAA71E53A8EE00807CAC /* metaflac */,
-			);
-			path = bin;
-			sourceTree = "<group>";
-		};
-		0DD0DAA81E53A8EE00807CAC /* include */ = {
-			isa = PBXGroup;
-			children = (
-				0DD0DAA91E53A8EE00807CAC /* FLAC */,
-				0DD0DAB31E53A8EE00807CAC /* FLAC++ */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
-		0DD0DAA91E53A8EE00807CAC /* FLAC */ = {
-			isa = PBXGroup;
-			children = (
-				0DD0DAAA1E53A8EE00807CAC /* all.h */,
-				0DD0DAAB1E53A8EE00807CAC /* assert.h */,
-				0DD0DAAC1E53A8EE00807CAC /* callback.h */,
-				0DD0DAAD1E53A8EE00807CAC /* export.h */,
-				0DD0DAAE1E53A8EE00807CAC /* format.h */,
-				0DD0DAAF1E53A8EE00807CAC /* metadata.h */,
-				0DD0DAB01E53A8EE00807CAC /* ordinals.h */,
-				0DD0DAB11E53A8EE00807CAC /* stream_decoder.h */,
-				0DD0DAB21E53A8EE00807CAC /* stream_encoder.h */,
-			);
-			path = FLAC;
-			sourceTree = "<group>";
-		};
-		0DD0DAB31E53A8EE00807CAC /* FLAC++ */ = {
-			isa = PBXGroup;
-			children = (
-				0DD0DAB41E53A8EE00807CAC /* all.h */,
-				0DD0DAB51E53A8EE00807CAC /* decoder.h */,
-				0DD0DAB61E53A8EE00807CAC /* encoder.h */,
-				0DD0DAB71E53A8EE00807CAC /* export.h */,
-				0DD0DAB81E53A8EE00807CAC /* metadata.h */,
-			);
-			path = "FLAC++";
-			sourceTree = "<group>";
-		};
-		0DD0DABA1E53A8EE00807CAC /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				0DD0DABB1E53A8EE00807CAC /* libFLAC++.6.dylib */,
-				0DD0DABC1E53A8EE00807CAC /* libFLAC++.a */,
-				0DD0DABD1E53A8EE00807CAC /* libFLAC++.dylib */,
-				0DD0DABE1E53A8EE00807CAC /* libFLAC.8.dylib */,
-				0DD0DABF1E53A8EE00807CAC /* libFLAC.a */,
-				0DD0DAC01E53A8EE00807CAC /* libFLAC.dylib */,
-				0DD0DAC11E53A8EE00807CAC /* pkgconfig */,
-			);
-			path = lib;
-			sourceTree = "<group>";
-		};
-		0DD0DAC11E53A8EE00807CAC /* pkgconfig */ = {
-			isa = PBXGroup;
-			children = (
-				0DD0DAC21E53A8EE00807CAC /* flac++.pc */,
-				0DD0DAC31E53A8EE00807CAC /* flac.pc */,
-			);
-			path = pkgconfig;
-			sourceTree = "<group>";
-		};
-		0DD0DAC51E53A8EE00807CAC /* share */ = {
-			isa = PBXGroup;
-			children = (
-				0DD0DAC61E53A8EE00807CAC /* aclocal */,
-				0DD0DAC91E53A8EE00807CAC /* doc */,
-				0DD0DAE21E53A8EE00807CAC /* man */,
-			);
-			path = share;
-			sourceTree = "<group>";
-		};
-		0DD0DAC61E53A8EE00807CAC /* aclocal */ = {
-			isa = PBXGroup;
-			children = (
-				0DD0DAC71E53A8EE00807CAC /* libFLAC++.m4 */,
-				0DD0DAC81E53A8EE00807CAC /* libFLAC.m4 */,
-			);
-			path = aclocal;
-			sourceTree = "<group>";
-		};
-		0DD0DAC91E53A8EE00807CAC /* doc */ = {
-			isa = PBXGroup;
-			children = (
-				0DD0DACA1E53A8EE00807CAC /* flac-1.3.2 */,
-			);
-			path = doc;
-			sourceTree = "<group>";
-		};
-		0DD0DACA1E53A8EE00807CAC /* flac-1.3.2 */ = {
-			isa = PBXGroup;
-			children = (
-				0DD0DACB1E53A8EE00807CAC /* FLAC.tag */,
-				0DD0DACC1E53A8EE00807CAC /* html */,
-			);
-			path = "flac-1.3.2";
-			sourceTree = "<group>";
-		};
-		0DD0DACC1E53A8EE00807CAC /* html */ = {
-			isa = PBXGroup;
-			children = (
-				0DD0DACD1E53A8EE00807CAC /* changelog.html */,
-				0DD0DACE1E53A8EE00807CAC /* developers.html */,
-				0DD0DACF1E53A8EE00807CAC /* documentation.html */,
-				0DD0DAD01E53A8EE00807CAC /* documentation_bugs.html */,
-				0DD0DAD11E53A8EE00807CAC /* documentation_example_code.html */,
-				0DD0DAD21E53A8EE00807CAC /* documentation_format_overview.html */,
-				0DD0DAD31E53A8EE00807CAC /* documentation_tools.html */,
-				0DD0DAD41E53A8EE00807CAC /* documentation_tools_flac.html */,
-				0DD0DAD51E53A8EE00807CAC /* documentation_tools_metaflac.html */,
-				0DD0DAD61E53A8EE00807CAC /* faq.html */,
-				0DD0DAD71E53A8EE00807CAC /* favicon.ico */,
-				0DD0DAD81E53A8EE00807CAC /* features.html */,
-				0DD0DAD91E53A8EE00807CAC /* flac.css */,
-				0DD0DADA1E53A8EE00807CAC /* format.html */,
-				0DD0DADB1E53A8EE00807CAC /* id.html */,
-				0DD0DADC1E53A8EE00807CAC /* images */,
-				0DD0DADF1E53A8EE00807CAC /* index.html */,
-				0DD0DAE01E53A8EE00807CAC /* license.html */,
-				0DD0DAE11E53A8EE00807CAC /* ogg_mapping.html */,
-			);
-			path = html;
-			sourceTree = "<group>";
-		};
-		0DD0DADC1E53A8EE00807CAC /* images */ = {
-			isa = PBXGroup;
-			children = (
-				0DD0DADD1E53A8EE00807CAC /* logo.svg */,
-				0DD0DADE1E53A8EE00807CAC /* logo130.gif */,
-			);
-			path = images;
-			sourceTree = "<group>";
-		};
-		0DD0DAE21E53A8EE00807CAC /* man */ = {
-			isa = PBXGroup;
-			children = (
-				0DD0DAE31E53A8EE00807CAC /* man1 */,
-			);
-			path = man;
-			sourceTree = "<group>";
-		};
-		0DD0DAE31E53A8EE00807CAC /* man1 */ = {
-			isa = PBXGroup;
-			children = (
-				0DD0DAE41E53A8EE00807CAC /* flac.1 */,
-				0DD0DAE51E53A8EE00807CAC /* metaflac.1 */,
-			);
-			path = man1;
-			sourceTree = "<group>";
-		};
 		0DE486801EA579D8009B226B /* Sheets */ = {
 			isa = PBXGroup;
 			children = (
@@ -1008,6 +736,16 @@
 				0D51C8A41EAC01F8002F6182 /* ConsolidateLibrarySheetController.xib */,
 			);
 			name = Sheets;
+			sourceTree = "<group>";
+		};
+		0DF491EE1F27EC2600D23AD1 /* FLAC */ = {
+			isa = PBXGroup;
+			children = (
+				0DF491F61F27EC4800D23AD1 /* stream_decoder.h */,
+				0DF491FA1F27EECC00D23AD1 /* libogg.dylib */,
+				0DF491F81F27EC4800D23AD1 /* libFLAC.dylib */,
+			);
+			name = FLAC;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1119,60 +857,31 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0DD0DAE71E53A8EE00807CAC /* AUTHORS in Resources */,
 				0DB996C61ECE233000594939 /* AlbumArtWindowController.xib in Resources */,
-				0DD0DAFC1E53A8EE00807CAC /* documentation_format_overview.html in Resources */,
 				0DD7A3C01EF4940E00FEDD71 /* MissingFilesViewController.xib in Resources */,
 				0D015AC41E00A30900EBAB6E /* LibraryTableViewControllerCellBased.xib in Resources */,
 				0DE486841EA579FD009B226B /* AddWatchFolderSheetController.xib in Resources */,
 				0D9CE6761D34128B004FA8CB /* InitialSetupWindowController.xib in Resources */,
 				0D299B241DF158A60009CF7A /* AdvancedFilterViewController.xib in Resources */,
-				0DD0DAF21E53A8EE00807CAC /* flac.pc in Resources */,
 				0DC7127D1E2F115A0054ECE6 /* ImportErrorWindowController.xib in Resources */,
-				0DD0DB041E53A8EE00807CAC /* format.html in Resources */,
-				0DD0DAF41E53A8EE00807CAC /* libFLAC++.m4 in Resources */,
-				0DD0DB011E53A8EE00807CAC /* favicon.ico in Resources */,
-				0DD0DAF71E53A8EE00807CAC /* changelog.html in Resources */,
 				0D299B1C1DF11F140009CF7A /* TrackQueueViewController.xib in Resources */,
-				0DD0DAE91E53A8EE00807CAC /* metaflac in Resources */,
 				0DAB30961CFBA3340028928F /* Assets.xcassets in Resources */,
-				0DD0DAF81E53A8EE00807CAC /* developers.html in Resources */,
-				0DD0DAF31E53A8EE00807CAC /* README in Resources */,
 				0D3756C11EAADBD700016136 /* PreferencesWindowController.xib in Resources */,
-				0DD0DB071E53A8EE00807CAC /* logo130.gif in Resources */,
 				0D800C091ED3B3C800EA2889 /* ArtistListViewController.xib in Resources */,
 				0DF4BEF41CFD0D4E00AC5824 /* MainWindowController.xib in Resources */,
-				0DD0DAE81E53A8EE00807CAC /* flac in Resources */,
-				0DD0DAE61E53A8EE00807CAC /* flac.rb in Resources */,
-				0DD0DAF11E53A8EE00807CAC /* flac++.pc in Resources */,
 				0DF188811EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib in Resources */,
-				0DD0DB081E53A8EE00807CAC /* index.html in Resources */,
-				0DD0DB091E53A8EE00807CAC /* license.html in Resources */,
 				0DAB30991CFBA3340028928F /* MainMenu.xib in Resources */,
 				0D8AFE591E6D136D004AC584 /* MediaScannerSheet.xib in Resources */,
-				0DD0DAFA1E53A8EE00807CAC /* documentation_bugs.html in Resources */,
-				0DD0DB0A1E53A8EE00807CAC /* ogg_mapping.html in Resources */,
 				0D6E041C1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib in Resources */,
-				0DD0DB021E53A8EE00807CAC /* features.html in Resources */,
-				0DD0DAEA1E53A8EE00807CAC /* INSTALL_RECEIPT.json in Resources */,
 				0D51C8A61EAC01F8002F6182 /* ConsolidateLibrarySheetController.xib in Resources */,
 				0D9CE6781D3442D3004FA8CB /* Preferences.plist in Resources */,
 				0DFE725D1F0190DC00EACE66 /* AlbumFilesViewController.xib in Resources */,
 				0DEE9D991EF79A500025AA11 /* LibraryConsolidatorTableViewController.xib in Resources */,
 				0DE486921EA83FBA009B226B /* GenericProgressBarSheetController.xib in Resources */,
 				0D800C0D1ED3B54100EA2889 /* ArtistViewAlbumViewController.xib in Resources */,
-				0DD0DB0B1E53A8EE00807CAC /* flac.1 in Resources */,
 				0D299B141DF10FFF0009CF7A /* SourceListViewController.xib in Resources */,
-				0DD0DAFE1E53A8EE00807CAC /* documentation_tools_flac.html in Resources */,
 				0D8B98691ED2ACF000283DD1 /* ArtistViewController.xib in Resources */,
-				0DD0DB001E53A8EE00807CAC /* faq.html in Resources */,
-				0DD0DAF61E53A8EE00807CAC /* FLAC.tag in Resources */,
 				0D51C8A21EABD74B002F6182 /* ChangePrimaryFolderSheetController.xib in Resources */,
-				0DD0DAFF1E53A8EE00807CAC /* documentation_tools_metaflac.html in Resources */,
-				0DD0DB0C1E53A8EE00807CAC /* metaflac.1 in Resources */,
-				0DD0DAFB1E53A8EE00807CAC /* documentation_example_code.html in Resources */,
-				0DD0DAF91E53A8EE00807CAC /* documentation.html in Resources */,
-				0DD0DB031E53A8EE00807CAC /* flac.css in Resources */,
 				0D9CE6721D334F97004FA8CB /* ImportWindowController.xib in Resources */,
 				0D299B201DF151220009CF7A /* LibraryTableViewController.xib in Resources */,
 				0D01AD921D7079D900F9211F /* EqualizerWindowController.xib in Resources */,
@@ -1182,11 +891,7 @@
 				0D299B181DF111490009CF7A /* AlbumArtViewController.xib in Resources */,
 				0DF188851EDD072B00241785 /* OrganizationRuleViewController.xib in Resources */,
 				0DA7E95B1ECC141900719678 /* ImageCollectionViewItem.xib in Resources */,
-				0DD0DB051E53A8EE00807CAC /* id.html in Resources */,
-				0DD0DAFD1E53A8EE00807CAC /* documentation_tools.html in Resources */,
 				0D8AFE5D1E6F4FEB004AC584 /* LibraryManagerSourceSelector.xib in Resources */,
-				0DD0DAF51E53A8EE00807CAC /* libFLAC.m4 in Resources */,
-				0DD0DB061E53A8EE00807CAC /* logo.svg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1461,16 +1166,22 @@
 		0DAB30B41CFBA3340028928F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = jmc/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../ @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/1.3.2/lib",
+					"$(PROJECT_DIR)/jmc/release/lib",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/FLAC",
 				);
+				MACH_O_TYPE = mh_execute;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jcm.jmc;
 				PRODUCT_NAME = jmc;
 				SWIFT_OBJC_BRIDGING_HEADER = "jmc/jmc-Bridging-Header.h";
@@ -1483,16 +1194,22 @@
 		0DAB30B51CFBA3340028928F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
 				INFOPLIST_FILE = jmc/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../ @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/1.3.2/lib",
+					"$(PROJECT_DIR)/jmc/release/lib",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/FLAC",
 				);
+				MACH_O_TYPE = mh_execute;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jcm.jmc;
 				PRODUCT_NAME = jmc;
 				SWIFT_OBJC_BRIDGING_HEADER = "jmc/jmc-Bridging-Header.h";

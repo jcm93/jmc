@@ -49,7 +49,6 @@ class FlacDecoder: NSObject, FileBufferer {
         if createFLACStreamDecoder(file: self.file) == true {
             FLAC__stream_decoder_process_until_end_of_metadata(&self.decoder!)//populates self.sampleRate, self.channels, self.bitsPerSample
             let format = AVAudioFormat.init(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: Double(self.sampleRate!), channels: self.channels!, interleaved: false)
-            print(format.formatDescription)
             self.bufferA = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(self.bufferFrameLength) * self.blockSize!)
             self.bufferA.frameLength = self.bufferA.frameCapacity
             self.bufferB = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(self.bufferFrameLength) * self.blockSize!)
