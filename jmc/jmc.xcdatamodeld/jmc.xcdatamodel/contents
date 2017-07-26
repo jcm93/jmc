@@ -57,6 +57,8 @@
         <attribute name="is_available" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="keeps_track_of_files" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="last_fm_session_key" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="last_fm_username" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="last_fs_event" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="monitors_directories_for_new" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -197,7 +199,7 @@
         <element name="Artist" positionX="-1386" positionY="144" width="128" height="133"/>
         <element name="CachedOrder" positionX="-1314" positionY="-171" width="128" height="135"/>
         <element name="Composer" positionX="-1557" positionY="323" width="128" height="120"/>
-        <element name="Library" positionX="-801" positionY="-45" width="128" height="480"/>
+        <element name="Library" positionX="-801" positionY="-45" width="128" height="510"/>
         <element name="OrganizationTemplate" positionX="-1530" positionY="-45" width="128" height="120"/>
         <element name="OrganizationTemplateBundle" positionX="-1539" positionY="-54" width="128" height="90"/>
         <element name="SmartCriteria" positionX="-1557" positionY="180" width="128" height="120"/>

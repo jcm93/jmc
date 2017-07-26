@@ -743,6 +743,10 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     func incrementPlayCountForCurrentTrack() {
         self.currentTrack?.play_count = (self.currentTrack?.play_count as? Int ?? 0) + 1 as NSNumber
         self.currentTrack?.date_last_played = NSDate()
+        let timeNow = Date()
+        let timeInterval = -secsPlayed
+        let timeTrackStarted = timeNow.addingTimeInterval(timeInterval)
+        delegate?.lastFMDelegate?.scrobble(track: self.currentTrack!, timestamp: timeTrackStarted)
     }
     
     func checkPlayFractionForSkip() {

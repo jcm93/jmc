@@ -17,8 +17,10 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     @IBOutlet weak var artworkSelectedTrackRadio: NSButton!
     @IBOutlet weak var artworkCurrentTrackRadio: NSButton!
     
+    var lastFMDelegate: LastFMDelegate!
+    
     func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [String] {
-        return ["general", "sharing", "advanced"]
+        return ["general", "sharing", "lastfm", "advanced"]
     }
     
     @IBAction func selectGeneral(_ sender: Any) {
@@ -27,8 +29,11 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     @IBAction func selectSharing(_ sender: Any) {
         tabView.selectTabViewItem(at: 1)
     }
-    @IBAction func selectAdvanced(_ sender: Any) {
+    @IBAction func selectLastFM(_ sender: Any) {
         tabView.selectTabViewItem(at: 2)
+    }
+    @IBAction func selectAdvanced(_ sender: Any) {
+        tabView.selectTabViewItem(at: 3)
     }
     
     @IBAction func artworkSelectRadioAction(_ sender: Any) {
@@ -50,7 +55,7 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
         UserDefaults.standard.set(slider.doubleValue, forKey: DEFAULTS_TRACK_PLAY_REGISTER_POINT)
     }
     
-    //SHARING
+    //Sharing
     @IBOutlet weak var sharingCheck: NSButton!
     @IBOutlet weak var libraryNameField: NSTextField!
     
@@ -69,7 +74,41 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
         globalRootLibrary?.name = field.stringValue
     }
     
-    //ADVANCED
+    //Last.fm
+    
+    @IBOutlet weak var confirmAuthButton: NSButton!
+    @IBOutlet weak var authStatusLabel: NSTextField!
+    @IBOutlet weak var authStatusImage: NSImageView!
+    
+    func getLastFMDelegate() {
+        if self.lastFMDelegate == nil {
+            let appDelegate = NSApplication.shared().delegate as! AppDelegate
+            self.lastFMDelegate = appDelegate.lastFMDelegate
+        }
+    }
+    
+    @IBAction func authenticateLastFMPressed(_ sender: Any) {
+        getLastFMDelegate()
+        if lastFMDelegate.token != "" {
+            lastFMDelegate.launchAuthentication()
+            confirmAuthButton.isHidden = false
+        }
+    }
+    
+    @IBAction func confirmAuthButtonPressed(_ sender: Any) {
+        getLastFMDelegate()
+        guard lastFMDelegate.sessionKey == "" else { return }
+        if lastFMDelegate.token != "" {
+            lastFMDelegate.getSessionKey(callback: lastFMSessionAuthenticated)
+        }
+    }
+    
+    func lastFMSessionAuthenticated(username: String) {
+        self.authStatusImage.image = NSImage(named: NSImageNameStatusAvailable)
+        self.authStatusLabel.stringValue = "Authenticated with Last.fm for user \(username)"
+    }
+    
+    //Advanced
     
     @IBOutlet weak var skipBehaviorKeepCurrentFocusRadioButton: NSButton!
     @IBOutlet weak var skipBehaviorFocusNewTrackRadioButton: NSButton!
@@ -137,6 +176,9 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
             sortBehaviorFocusSelectionRadioButton.state = NSOnState
         }
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+        if globalRootLibrary?.last_fm_session_key != nil {
+            lastFMSessionAuthenticated(username: globalRootLibrary!.last_fm_username!)
+        }
     }
     
 }

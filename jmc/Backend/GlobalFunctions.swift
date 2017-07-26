@@ -686,6 +686,16 @@ func createMD5HashOf(data: Data) -> String {
     return hashString
 }
 
+func createThirtyTwoCharacterMD5HashOf(data: Data) -> String {
+    var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
+    data.withUnsafeBytes { bytes in
+        CC_MD5(bytes, CC_LONG(data.count), &digest)
+    }
+    let hashData = Data(bytes: digest)
+    let string = hashData.map( { return String(format: "%02hhx", $0) } ).joined()
+    return string
+}
+
 func getFileType(image: Data) -> String? {
     guard let imageSource = CGImageSourceCreateWithData(image as NSData, [:] as NSDictionary) else { return nil }
     guard let uniformTypeIdentifier = CGImageSourceGetType(imageSource) else { return nil }

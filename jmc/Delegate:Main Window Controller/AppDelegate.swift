@@ -29,6 +29,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var libraryManagerSourceSelector: LibraryManagerSourceSelector?
     var backgroundAddFilesHandler: GenericProgressBarSheetController?
     var addFilesQueueLoop: AddFilesQueueLoop?
+    var lastFMDelegate: LastFMDelegate?
     
     @IBOutlet weak var shuffleMenuItem: NSMenuItem!
     @IBOutlet weak var repeatMenuItem: NSMenuItem!
@@ -89,6 +90,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.locationManager = LocationManager(delegate: self)
         self.addFilesQueueLoop = AddFilesQueueLoop(delegate: self)
         self.locationManager?.initializeEventStream()
+        self.lastFMDelegate = LastFMDelegate()
         mainWindowController = MainWindowController(windowNibName: "MainWindowController")
         mainWindowController?.delegate = self
         if UserDefaults.standard.bool(forKey: "hasMusic") == true {
