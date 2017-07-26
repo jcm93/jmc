@@ -70,18 +70,6 @@ var globalRootLibrarySourceListItem = {() -> SourceListItem? in
     }
 }()
 
-func getAllLibraries() -> [Library]? {
-    let request = NSFetchRequest<Library>(entityName: "Library")
-    request.predicate = NSPredicate(format: "parent != nil")
-    do {
-        let result = try managedContext.fetch(request)
-        return result
-    } catch {
-        print(error)
-        return nil
-    }
-}
-
 func getLibrary(withName name: String) -> [Library]? {
     let request = NSFetchRequest<Library>(entityName: "Library")
     let predicate = NSPredicate(format: "name == %@", name)

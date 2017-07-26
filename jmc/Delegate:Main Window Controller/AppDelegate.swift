@@ -88,7 +88,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func initializeLibraryAndShowMainWindow() {
         self.locationManager = LocationManager(delegate: self)
         self.addFilesQueueLoop = AddFilesQueueLoop(delegate: self)
-        self.locationManager?.initializeEventStream(libraries: getAllLibraries()!)
+        self.locationManager?.initializeEventStream()
         mainWindowController = MainWindowController(windowNibName: "MainWindowController")
         mainWindowController?.delegate = self
         if UserDefaults.standard.bool(forKey: "hasMusic") == true {

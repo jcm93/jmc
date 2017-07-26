@@ -58,7 +58,6 @@ class LocationManager: NSObject {
     
     init(delegate: AppDelegate) {
         self.delegate = delegate
-        //NSWorkspace.shared().frontmostApplication
     }
     
     func tryAddNewFilesToDatabase() {
@@ -294,7 +293,7 @@ class LocationManager: NSObject {
         if eventStreamRef != nil {
             closeEventStream(eventStream: self.eventStreamRef!)
         }
-        initializeEventStream(libraries: getAllLibraries()!)
+        initializeEventStream()
     }
     
     func updateLastEventID() {
@@ -303,7 +302,7 @@ class LocationManager: NSObject {
         }
     }
     
-    func initializeEventStream(libraries: [Library]) {
+    func initializeEventStream() {
         var lastEventID = globalRootLibrary!.last_fs_event as? FSEventStreamEventId
         if lastEventID == 0 {
             lastEventID = FSEventStreamEventId(kFSEventStreamEventIdSinceNow)

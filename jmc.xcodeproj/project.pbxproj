@@ -17,6 +17,8 @@
 		0D0E5FAF1D3E909D009E0FA3 /* DragAndDropImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */; };
 		0D116B851E5800FD00C759FD /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D116B841E5800FD00C759FD /* LocationManager.swift */; };
 		0D1BDFA51D0F44A70092FBA0 /* AudioModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1BDFA41D0F44A70092FBA0 /* AudioModule.swift */; };
+		0D2300D51F28E77F007D392A /* libogg.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0DF491FA1F27EECC00D23AD1 /* libogg.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		0D2300D61F28E781007D392A /* libFLAC.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0DF491F81F27EC4800D23AD1 /* libFLAC.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		0D23CA6D1E03242400CAF529 /* PeerBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D23CA6C1E03242400CAF529 /* PeerBrowser.swift */; };
 		0D2410A31D6735F200F95494 /* artAPIRequestDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */; };
 		0D299B131DF10FFF0009CF7A /* SourceListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D299B111DF10FFF0009CF7A /* SourceListViewController.swift */; };
@@ -216,6 +218,8 @@
 			dstSubfolderSpec = 10;
 			files = (
 				0DCF1D1C1F1D113600240202 /* Sparkle.framework in CopyFiles */,
+				0D2300D51F28E77F007D392A /* libogg.dylib in CopyFiles */,
+				0D2300D61F28E781007D392A /* libFLAC.dylib in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
