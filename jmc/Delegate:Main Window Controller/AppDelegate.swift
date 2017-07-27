@@ -90,7 +90,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.locationManager = LocationManager(delegate: self)
         self.addFilesQueueLoop = AddFilesQueueLoop(delegate: self)
         self.locationManager?.initializeEventStream()
-        self.lastFMDelegate = LastFMDelegate()
+        //self.lastFMDelegate = LastFMDelegate()
         mainWindowController = MainWindowController(windowNibName: "MainWindowController")
         mainWindowController?.delegate = self
         if UserDefaults.standard.bool(forKey: "hasMusic") == true {

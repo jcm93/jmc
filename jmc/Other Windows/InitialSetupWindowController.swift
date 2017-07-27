@@ -220,9 +220,12 @@ class InitialSetupWindowController: NSWindowController {
             }
             if result != nil {
                 library = result!
-                let libraryPath = result!.getCentralMediaFolder()!
-                directoryURL = libraryPath
-                libraryPathControl.url = libraryPath
+                if let libraryPath = result!.getCentralMediaFolder() {
+                    directoryURL = libraryPath
+                    libraryPathControl.url = libraryPath
+                } else {
+                    libraryPathControl.url = jmcDirURL
+                }
             } else {
                 libraryPathControl.url = jmcDirURL
             }
