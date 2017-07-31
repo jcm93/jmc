@@ -87,18 +87,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func initializeLibraryAndShowMainWindow() {
+        if !UserDefaults.standard.bool(forKey: DEFAULTS_ARE_INITIALIZED_STRING) {
+            self.setupWindowController = InitialSetupWindowController(windowNibName: "InitialSetupWindowController")
+            self.setupWindowController?.setupForNilLibrary()
+        }
         self.locationManager = LocationManager(delegate: self)
         self.addFilesQueueLoop = AddFilesQueueLoop(delegate: self)
         self.locationManager?.initializeEventStream()
-        //self.lastFMDelegate = LastFMDelegate()
+        self.lastFMDelegate = LastFMDelegate()
         mainWindowController = MainWindowController(windowNibName: "MainWindowController")
         mainWindowController?.delegate = self
-        if UserDefaults.standard.bool(forKey: "hasMusic") == true {
-            mainWindowController?.hasMusic = true
-        }
-        else {
-            mainWindowController?.hasMusic = false
-        }
         mainWindowController?.showWindow(self)
         self.serviceBrowser = ConnectivityManager(delegate: self, slvc: mainWindowController!.sourceListViewController!)
         let defaultsEQOnState = UserDefaults.standard.integer(forKey: DEFAULTS_IS_EQ_ENABLED_STRING)
@@ -130,6 +128,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         importWindowController = ImportWindowController(windowNibName: "ImportWindowController")
         importWindowController?.mainWindowController = mainWindowController
         importWindowController?.showWindow(self)
+    }
+    
+    func doneImportingiTunesLibrary() {
+        mainWindowController?.sourceListViewController?.reloadData()
     }
     
     @IBAction func addToLibrary(_ sender: AnyObject) {
@@ -188,11 +190,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         showEqualizer()
     }
     
-    func setInitialDefaults() {
-        UserDefaults.standard.set(NSOffState, forKey: "shuffle")
-        UserDefaults.standard.set(NSOnState, forKey: "queueVisible")
-    }
-    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         for fetchRequest in BATCH_PURGE_NETWORK_FETCH_REQUESTS {
             do {
@@ -210,13 +207,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let fuckTransform = TransformerIntegerToTimestamp()
         databaseManager = DatabaseManager()
         ValueTransformer.setValueTransformer(fuckTransform, forName: NSValueTransformerName("AssTransform"))
+        initializeLibraryAndShowMainWindow()
         if UserDefaults.standard.bool(forKey: DEFAULTS_ARE_INITIALIZED_STRING) != true {
             print("has not started before")
-            setInitialDefaults()
-            setupWindowController = InitialSetupWindowController(windowNibName: "InitialSetupWindowController")
-            setupWindowController?.showWindow(self)
-        } else {
-            initializeLibraryAndShowMainWindow()
+            mainWindowController?.window?.beginSheet(setupWindowController!.window!, completionHandler: nil)
         }
         //NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidChangeDebug), name: Notification.Name.NSManagedObjectContextObjectsDidChange, object: managedObjectContext)
         NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidUndo), name: Notification.Name.NSUndoManagerDidUndoChange, object: managedObjectContext.undoManager)

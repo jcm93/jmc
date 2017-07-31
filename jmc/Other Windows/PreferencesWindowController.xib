@@ -10,8 +10,11 @@
             <connections>
                 <outlet property="artworkCurrentTrackRadio" destination="ewr-U9-FaG" id="cFC-1K-5fZ"/>
                 <outlet property="artworkSelectedTrackRadio" destination="U2K-uc-YcT" id="fah-TR-qw6"/>
+                <outlet property="authFailedLabel" destination="TbK-NS-0Hb" id="xJU-2p-tgr"/>
+                <outlet property="authProgressIndicator" destination="d1H-fg-ai8" id="r5W-B5-oo8"/>
                 <outlet property="authStatusImage" destination="h8B-qE-9yG" id="g3B-WD-1gq"/>
                 <outlet property="authStatusLabel" destination="fkV-SM-DL3" id="yaj-uG-cgc"/>
+                <outlet property="browserTextLabel" destination="DGz-px-Umo" id="FgR-sK-aLo"/>
                 <outlet property="confirmAuthButton" destination="hxw-av-1Wl" id="dOz-HN-1du"/>
                 <outlet property="libraryNameField" destination="3gg-L6-UHt" id="yFu-TV-hJ6"/>
                 <outlet property="sharingCheck" destination="PiV-V3-sZr" id="y2C-eU-k6v"/>
@@ -21,6 +24,7 @@
                 <outlet property="sortBehaviorFocusCurrentTrackRadioButton" destination="RpB-w0-Hge" id="1SF-eU-Xsa"/>
                 <outlet property="sortBehaviorFocusSelectionRadioButton" destination="dze-bm-ZVT" id="PCs-le-025"/>
                 <outlet property="sortBehaviorKeepCurrentFocusRadioButton" destination="1zs-Ej-fvG" id="IBi-Cb-PjJ"/>
+                <outlet property="startAuthButton" destination="yfd-VV-HVn" id="KKd-8M-VPa"/>
                 <outlet property="tabView" destination="mGV-i7-06f" id="cCl-ap-Zee"/>
                 <outlet property="toolbar" destination="P8n-uR-R67" id="ZRW-0H-Hmj"/>
                 <outlet property="trackQueueNumTracksField" destination="dqY-gs-YB6" id="4vH-Cj-Gc0"/>
@@ -229,20 +233,23 @@
                                     <rect key="frame" x="0.0" y="0.0" width="487" height="186"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fkV-SM-DL3">
-                                            <rect key="frame" x="36" y="150" width="253" height="17"/>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fkV-SM-DL3">
+                                            <rect key="frame" x="36" y="150" width="453" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Not currently authenticated with Last.fm." id="Csq-UI-tTO">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="h8B-qE-9yG">
+                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h8B-qE-9yG">
                                             <rect key="frame" x="20" y="150" width="16" height="16"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusUnavailable" id="2zf-yM-Zje"/>
                                         </imageView>
-                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yfd-VV-HVn">
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yfd-VV-HVn">
                                             <rect key="frame" x="140" y="75" width="206" height="32"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Authenticate with Last.fm..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Rcj-dg-ddn">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -251,19 +258,18 @@
                                                 <action selector="authenticateLastFMPressed:" target="-2" id="jeM-iN-MQ6"/>
                                             </connections>
                                         </button>
-                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DGz-px-Umo">
+                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DGz-px-Umo">
                                             <rect key="frame" x="-2" y="62" width="491" height="14"/>
-                                            <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="center" title="This will launch your default browser and direct you to https://last.fm/api/auth/." id="aMT-o7-pTO">
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="center" title="This will launch your default browser, directing you to https://last.fm/api/auth/." id="aMT-o7-pTO">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <button hidden="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hxw-av-1Wl">
+                                        <button hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hxw-av-1Wl">
                                             <rect key="frame" x="77" y="26" width="333" height="32"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="321" id="9am-cW-TWf"/>
-                                            </constraints>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="I have authorized jmc to use my Last.fm account" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="IBn-Pf-dNc">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -272,22 +278,20 @@
                                                 <action selector="confirmAuthButtonPressed:" target="-2" id="v6E-Mh-WK4"/>
                                             </connections>
                                         </button>
+                                        <progressIndicator hidden="YES" wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" indeterminate="YES" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="d1H-fg-ai8">
+                                            <rect key="frame" x="228" y="77" width="32" height="32"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        </progressIndicator>
+                                        <textField hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TbK-NS-0Hb">
+                                            <rect key="frame" x="177" y="111" width="133" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Authentication failed." id="mH1-bS-XEt">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
                                     </subviews>
-                                    <constraints>
-                                        <constraint firstItem="DGz-px-Umo" firstAttribute="leading" secondItem="AHb-1f-qQe" secondAttribute="leading" id="7Jd-fd-MK2"/>
-                                        <constraint firstItem="hxw-av-1Wl" firstAttribute="centerX" secondItem="AHb-1f-qQe" secondAttribute="centerX" id="CvH-q9-PmK"/>
-                                        <constraint firstItem="yfd-VV-HVn" firstAttribute="leading" secondItem="AHb-1f-qQe" secondAttribute="leading" constant="146" id="LQU-Qd-hkY"/>
-                                        <constraint firstAttribute="trailing" secondItem="DGz-px-Umo" secondAttribute="trailing" id="Lbd-LH-7TW"/>
-                                        <constraint firstItem="h8B-qE-9yG" firstAttribute="leading" secondItem="AHb-1f-qQe" secondAttribute="leading" constant="20" id="M0j-CO-dMs"/>
-                                        <constraint firstItem="hxw-av-1Wl" firstAttribute="top" secondItem="DGz-px-Umo" secondAttribute="bottom" constant="8" id="RU4-9t-Df3"/>
-                                        <constraint firstItem="fkV-SM-DL3" firstAttribute="leading" secondItem="h8B-qE-9yG" secondAttribute="trailing" constant="2" id="Z4Z-vx-09m"/>
-                                        <constraint firstAttribute="trailing" secondItem="fkV-SM-DL3" secondAttribute="trailing" constant="200" id="aif-QE-zZe"/>
-                                        <constraint firstItem="yfd-VV-HVn" firstAttribute="top" secondItem="fkV-SM-DL3" secondAttribute="bottom" constant="47" id="gEZ-tN-OqO"/>
-                                        <constraint firstItem="h8B-qE-9yG" firstAttribute="top" secondItem="AHb-1f-qQe" secondAttribute="top" constant="20" id="h8K-EV-tvQ"/>
-                                        <constraint firstItem="fkV-SM-DL3" firstAttribute="top" secondItem="AHb-1f-qQe" secondAttribute="top" constant="19" id="hmh-fj-UgC"/>
-                                        <constraint firstAttribute="trailing" secondItem="yfd-VV-HVn" secondAttribute="trailing" constant="147" id="xRG-ft-q0K"/>
-                                        <constraint firstItem="DGz-px-Umo" firstAttribute="top" secondItem="yfd-VV-HVn" secondAttribute="bottom" constant="6" id="zYW-2c-4UH"/>
-                                    </constraints>
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="Item 2" identifier="" id="taG-mr-0MG">
@@ -423,6 +427,7 @@
                     <toolbarItem reference="rKI-8j-jui"/>
                     <toolbarItem reference="Gk6-uZ-N5O"/>
                     <toolbarItem reference="6Da-d9-gln"/>
+                    <toolbarItem reference="oCe-eh-SNR"/>
                     <toolbarItem reference="rk1-eS-Lm3"/>
                     <toolbarItem reference="rKI-8j-jui"/>
                 </defaultToolbarItems>

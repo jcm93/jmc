@@ -12,55 +12,35 @@
                 <outlet property="libraryPathControl" destination="ii7-ve-GXO" id="wpZ-TB-aKf"/>
                 <outlet property="moveRadioButton" destination="mio-6K-wiF" id="glA-If-047"/>
                 <outlet property="noOrganizeRadioButton" destination="e1x-W7-CEu" id="Cvd-n6-tGb"/>
-                <outlet property="organizationDescField" destination="s88-9E-tU5" id="0YG-kS-cbK"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <window title="Setup" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
+        <window title="Setup" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES"/>
-            <rect key="contentRect" x="604" y="594" width="480" height="185"/>
+            <rect key="contentRect" x="604" y="594" width="480" height="209"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <value key="maxSize" type="size" width="480" height="185"/>
             <view key="contentView" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="185"/>
+                <rect key="frame" x="0.0" y="0.0" width="480" height="209"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s88-9E-tU5">
-                        <rect key="frame" x="238" y="73" width="224" height="36"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="String describing organizational behavior re: this directory" id="kd2-mj-nm3">
-                            <font key="font" metaFont="smallSystem"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="li4-gb-EI0">
-                        <rect key="frame" x="238" y="147" width="132" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Media folder location" id="9Wa-PB-xSN">
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="li4-gb-EI0">
+                        <rect key="frame" x="18" y="75" width="201" height="17"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="197" id="1X6-gz-Imx"/>
+                        </constraints>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Central media folder location:" id="9Wa-PB-xSN">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tXO-iP-WLY">
-                        <rect key="frame" x="370" y="137" width="96" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Browse..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="obX-0Y-Fsc">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="browseClicked:" target="-2" id="7RX-Na-iVH"/>
-                        </connections>
-                    </button>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mio-6K-wiF">
-                        <rect key="frame" x="14" y="144" width="213" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="radio" title="Organize library by moving files" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="NLD-9v-UXe">
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="mio-6K-wiF">
+                        <rect key="frame" x="19" y="125" width="224" height="18"/>
+                        <buttonCell key="cell" type="radio" title="Move files to central media folder" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="NLD-9v-UXe">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -68,10 +48,9 @@
                             <action selector="moveRadioAction:" target="-2" id="i7z-fk-VWQ"/>
                         </connections>
                     </button>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3aj-dF-ngb">
-                        <rect key="frame" x="14" y="122" width="217" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="radio" title="Organize library by copying files" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="pTf-me-c0R">
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="3aj-dF-ngb">
+                        <rect key="frame" x="19" y="103" width="223" height="18"/>
+                        <buttonCell key="cell" type="radio" title="Copy files to central media folder" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="pTf-me-c0R">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -79,10 +58,9 @@
                             <action selector="moveRadioAction:" target="-2" id="TlD-oA-fSA"/>
                         </connections>
                     </button>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e1x-W7-CEu">
-                        <rect key="frame" x="14" y="100" width="160" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="radio" title="Do not organize library" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="sSB-I9-vLy">
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="e1x-W7-CEu">
+                        <rect key="frame" x="19" y="147" width="128" height="18"/>
+                        <buttonCell key="cell" type="radio" title="Do not move files" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="sSB-I9-vLy">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -90,18 +68,11 @@
                             <action selector="moveRadioAction:" target="-2" id="Qcc-UR-1kc"/>
                         </connections>
                     </button>
-                    <pathControl verticalHuggingPriority="750" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ii7-ve-GXO">
-                        <rect key="frame" x="240" y="117" width="207" height="22"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <pathCell key="cell" selectable="YES" editable="YES" alignment="left" id="RNo-7w-CGU">
-                            <font key="font" metaFont="system"/>
-                            <url key="url" string="file:///"/>
-                            <color key="backgroundColor" red="0.89803921568627454" green="0.92549019607843142" blue="0.97254901960784312" alpha="1" colorSpace="deviceRGB"/>
-                        </pathCell>
-                    </pathControl>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xVd-Dw-PwO">
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xVd-Dw-PwO">
                         <rect key="frame" x="348" y="13" width="118" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="106" id="WPO-Gq-1Qq"/>
+                        </constraints>
                         <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="sZJ-Dj-TXs">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -113,12 +84,68 @@ DQ
                             <action selector="OKPressed:" target="-2" id="4VG-aU-EwD"/>
                         </connections>
                     </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2dj-XV-POe">
+                        <rect key="frame" x="18" y="172" width="326" height="17"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Choose what jmc should do with newly added media:" id="1eL-45-8dt">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tXO-iP-WLY">
+                        <rect key="frame" x="14" y="13" width="98" height="32"/>
+                        <buttonCell key="cell" type="push" title="Choose..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="obX-0Y-Fsc">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="browseClicked:" target="-2" id="7RX-Na-iVH"/>
+                        </connections>
+                    </button>
+                    <pathControl verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ii7-ve-GXO">
+                        <rect key="frame" x="20" y="45" width="441" height="22"/>
+                        <pathCell key="cell" selectable="YES" editable="YES" alignment="left" id="RNo-7w-CGU">
+                            <font key="font" metaFont="system"/>
+                            <url key="url" string="file:///"/>
+                        </pathCell>
+                    </pathControl>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="LDD-jD-uRd">
+                        <rect key="frame" x="112" y="13" width="160" height="32"/>
+                        <buttonCell key="cell" type="push" title="Advanced options..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="J3M-br-qrE">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="launchAdvancedOptions:" target="-2" id="fDA-My-Geo"/>
+                        </connections>
+                    </button>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="e1x-W7-CEu" firstAttribute="top" secondItem="2dj-XV-POe" secondAttribute="bottom" constant="8" symbolic="YES" id="08d-PJ-ox1"/>
+                    <constraint firstItem="ii7-ve-GXO" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="0Xn-dV-Ehi"/>
+                    <constraint firstItem="2dj-XV-POe" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" symbolic="YES" id="2rT-nh-5qA"/>
+                    <constraint firstItem="ii7-ve-GXO" firstAttribute="top" secondItem="li4-gb-EI0" secondAttribute="bottom" constant="8" symbolic="YES" id="36l-JE-GVD"/>
+                    <constraint firstItem="tXO-iP-WLY" firstAttribute="baseline" secondItem="LDD-jD-uRd" secondAttribute="baseline" id="90u-8a-PsW"/>
+                    <constraint firstItem="tXO-iP-WLY" firstAttribute="top" secondItem="ii7-ve-GXO" secondAttribute="bottom" constant="4" id="Jla-K7-Qm1"/>
+                    <constraint firstItem="ii7-ve-GXO" firstAttribute="leading" secondItem="tXO-iP-WLY" secondAttribute="leading" id="JoN-dx-981"/>
+                    <constraint firstItem="LDD-jD-uRd" firstAttribute="baseline" secondItem="xVd-Dw-PwO" secondAttribute="baseline" id="KLu-7S-LgW"/>
+                    <constraint firstAttribute="trailing" secondItem="xVd-Dw-PwO" secondAttribute="trailing" constant="20" symbolic="YES" id="Oxt-jP-hxj"/>
+                    <constraint firstItem="e1x-W7-CEu" firstAttribute="leading" secondItem="mio-6K-wiF" secondAttribute="leading" id="PtV-fN-rsR"/>
+                    <constraint firstItem="2dj-XV-POe" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="20" symbolic="YES" id="YBm-yh-cF2"/>
+                    <constraint firstItem="LDD-jD-uRd" firstAttribute="leading" secondItem="tXO-iP-WLY" secondAttribute="trailing" constant="12" symbolic="YES" id="bGT-5x-PSd"/>
+                    <constraint firstItem="3aj-dF-ngb" firstAttribute="leading" secondItem="li4-gb-EI0" secondAttribute="leading" id="dWo-2X-LGH"/>
+                    <constraint firstAttribute="bottom" secondItem="tXO-iP-WLY" secondAttribute="bottom" constant="20" symbolic="YES" id="hnq-t5-dem"/>
+                    <constraint firstItem="mio-6K-wiF" firstAttribute="top" secondItem="e1x-W7-CEu" secondAttribute="bottom" constant="6" symbolic="YES" id="nmA-3x-Dh5"/>
+                    <constraint firstItem="li4-gb-EI0" firstAttribute="leading" secondItem="ii7-ve-GXO" secondAttribute="leading" id="oBD-8l-yRZ"/>
+                    <constraint firstItem="2dj-XV-POe" firstAttribute="leading" secondItem="e1x-W7-CEu" secondAttribute="leading" id="sAX-kZ-fgP"/>
+                    <constraint firstItem="3aj-dF-ngb" firstAttribute="top" secondItem="mio-6K-wiF" secondAttribute="bottom" constant="6" symbolic="YES" id="szo-Ij-OEZ"/>
+                    <constraint firstItem="mio-6K-wiF" firstAttribute="leading" secondItem="3aj-dF-ngb" secondAttribute="leading" id="vYw-u6-dVS"/>
+                </constraints>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="419" y="211.5"/>
+            <point key="canvasLocation" x="419" y="223.5"/>
         </window>
     </objects>
 </document>

@@ -41,6 +41,19 @@ public class Library: NSManagedObject {
             guard let template = objCTemplate as? OrganizationTemplate else { continue }
             template.base_url_string = template.base_url_string?.replacingOccurrences(of: oldString, with: newString, options: .anchored, range: nil)
         }
+        if var watchDirs = self.watch_dirs as? [URL] {
+            let oldCentralFolder = URL(string: oldString)!
+            var indexesToReplace = [Int]()
+            for (index, url) in watchDirs.enumerated() {
+                if url == oldCentralFolder {
+                    indexesToReplace.append(index)
+                }
+            }
+            for index in indexesToReplace {
+                watchDirs[index] = newURL
+            }
+            self.watch_dirs = watchDirs as NSArray
+        }
 
     }
     

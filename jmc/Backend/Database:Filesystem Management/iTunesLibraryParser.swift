@@ -253,6 +253,7 @@ class iTunesLibraryParser: NSObject {
                 let highestPlaylistID = (getInstanceWithHighestIDForEntity("SongCollection") as! SongCollection).id
                 (managedContext.object(with: library!.objectID) as! Library).next_playlist_id = highestPlaylistID
                 visualUpdateHandler?.finish()
+                (NSApp.delegate as! AppDelegate).doneImportingiTunesLibrary()
             }
         }
     }

@@ -178,9 +178,8 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         }
     }
     
-    func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
-        print("sort descriptors did change called")
-        let newDescriptor = tableView.sortDescriptors[0].key
+    func tableView(_ tableView: NSTableView, mouseDownInHeaderOf tableColumn: NSTableColumn) {
+        let newDescriptor = tableColumn.sortDescriptorPrototype?.key
         let cachedOrderName = keyToCachedOrderDictionary[newDescriptor!]
         if cachedOrderName != nil {
             let cachedOrder = cachedOrders![cachedOrderName!]
@@ -188,6 +187,10 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
                 fixIndicesImmutable(order: cachedOrder!)
             }
         }
+    }
+    
+    func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
+        print("sort descriptors did change called")
         let archivedSortDescriptor = NSKeyedArchiver.archivedData(withRootObject: tableView.sortDescriptors)
         if tableViewController?.playlist != nil {
             UserDefaults.standard.set(archivedSortDescriptor, forKey: DEFAULTS_PLAYLIST_SORT_DESCRIPTOR_STRING)

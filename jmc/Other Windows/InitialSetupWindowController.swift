@@ -42,26 +42,24 @@ class InitialSetupWindowController: NSWindowController {
     @IBOutlet weak var copyRadioButton: NSButton!
     @IBOutlet weak var noOrganizeRadioButton: NSButton!
     @IBOutlet weak var modifyMetadataCheckBox: NSButton!
-    @IBOutlet weak var organizationDescField: NSTextField!
     @IBOutlet weak var libraryPathControl: NSPathControl!
     
     var organizationType: LibraryOrganizationType = .move
     var modifyMetadata: Bool = false
     var directoryURL: URL?
     var library: Library?
+    var centralURL: URL?
+    var advancedOptionsController: AdvancedOrganizationOptionsWindowController?
     
     @IBAction func moveRadioAction(_ sender: AnyObject) {
         if moveRadioButton.state == NSOnState {
             organizationType = .move
-            organizationDescField.stringValue = LIBRARY_MOVES_DESCRIPTION
         }
         else if copyRadioButton.state == NSOnState {
             organizationType = .copy
-            organizationDescField.stringValue = LIBRARY_COPIES_DESCRIPTION
         }
         else if noOrganizeRadioButton.state == NSOnState {
             organizationType = .none
-            organizationDescField.stringValue = LIBRARY_DOES_NOTHING_DESCRIPTION
         }
     }
     
@@ -82,23 +80,57 @@ class InitialSetupWindowController: NSWindowController {
         let myFileDialog: NSOpenPanel = NSOpenPanel()
         myFileDialog.canChooseFiles = false
         myFileDialog.canChooseDirectories = true
-        myFileDialog.runModal()
+        let response = myFileDialog.runModal()
         
         // Get the path to the file chosen in the NSOpenPanel
-        if myFileDialog.url!.path != nil {
+        if myFileDialog.url!.path != nil && response == NSFileHandlingPanelOKButton {
             directoryURL = myFileDialog.url!
             libraryPathControl.url = directoryURL
+            globalRootLibrary?.changeCentralFolderLocation(newURL: directoryURL!)
         }
         // Make sure that a path was chosen
     }
     
     func setupForNilLibrary() {
         //create library
+        
+        do {
+            let userMusicDirURL = try FileManager.default.url(for: .musicDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let jmcDirURL = userMusicDirURL.appendingPathComponent("jmc", isDirectory: true)
+            try FileManager.default.createDirectory(atPath: jmcDirURL.path, withIntermediateDirectories: true, attributes: nil)
+            let libraryFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Library")
+            let predicate = NSPredicate(format: "is_network == false or is_network == nil")
+            libraryFetchRequest.predicate = predicate
+            var result: Library?
+            do {
+                let libraryResult = try managedContext.fetch(libraryFetchRequest) as? [Library]
+                if libraryResult?.count > 0 {
+                    print("has library")
+                    result = libraryResult![0]
+                }
+            } catch {
+                print(error)
+            }
+            if result != nil {
+                library = result!
+                if let libraryPath = result!.getCentralMediaFolder() {
+                    directoryURL = libraryPath
+                    centralURL = libraryPath
+                } else {
+                    centralURL = jmcDirURL
+                }
+            } else {
+                centralURL = jmcDirURL
+            }
+        } catch {
+            print(error)
+        }
+        
         let newActualLibrary = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
-        newActualLibrary.initialSetup(withCentralDirectory: libraryPathControl.url!, organizationType: organizationType.rawValue, renamesFiles: modifyMetadata)
+        newActualLibrary.initialSetup(withCentralDirectory: centralURL!, organizationType: organizationType.rawValue, renamesFiles: modifyMetadata)
         let defaultVolume = NSEntityDescription.insertNewObject(forEntityName: "Volume", into: managedContext) as! Volume
-        defaultVolume.location = getVolumeOfURL(url: libraryPathControl.url!).absoluteString
-        defaultVolume.name = (try? libraryPathControl.url!.resourceValues(forKeys: [.volumeNameKey]))?.volumeName
+        defaultVolume.location = getVolumeOfURL(url: centralURL!).absoluteString
+        defaultVolume.name = (try? centralURL!.resourceValues(forKeys: [.volumeNameKey]))?.volumeName
         newActualLibrary.addToVolumes(defaultVolume)
         
         let newActualLibrarySLI = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
@@ -180,58 +212,29 @@ class InitialSetupWindowController: NSWindowController {
         library?.next_album_artwork_id = 1
         library?.next_album_artwork_collection_id = 1
         
+        notEnablingUndo {
+            UserDefaults.standard.setValuesForKeys(DEFAULTS_INITIAL_DEFAULTS)
+        }
+    }
+    
+    @IBAction func OKPressed(_ sender: AnyObject) {
+        UserDefaults.standard.set(true, forKey: DEFAULTS_ARE_INITIALIZED_STRING)
         do {
             try managedContext.save()
         } catch {
             print(error)
         }
+        self.window?.close()
     }
-    
-    @IBAction func OKPressed(_ sender: AnyObject) {
-        notEnablingUndo {
-            UserDefaults.standard.setValuesForKeys(DEFAULTS_INITIAL_DEFAULTS)
-            if self.library == nil {
-                setupForNilLibrary()
-            }
-            (NSApplication.shared().delegate as! AppDelegate).initializeLibraryAndShowMainWindow()
-            self.window?.close()
-        }
+    @IBAction func launchAdvancedOptions(_ sender: Any) {
+        self.advancedOptionsController = AdvancedOrganizationOptionsWindowController(windowNibName: "AdvancedOrganizationOptionsWindowController")
+        self.window?.beginSheet(self.advancedOptionsController!.window!, completionHandler: nil)
     }
     
     override func windowDidLoad() {
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
         moveRadioAction(self)
-        do {
-            let userMusicDirURL = try FileManager.default.url(for: .musicDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-            let jmcDirURL = userMusicDirURL.appendingPathComponent("jmc", isDirectory: true)
-            try FileManager.default.createDirectory(atPath: jmcDirURL.path, withIntermediateDirectories: true, attributes: nil)
-            let libraryFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Library")
-            let predicate = NSPredicate(format: "is_network == false or is_network == nil")
-            libraryFetchRequest.predicate = predicate
-            var result: Library?
-            do {
-                let libraryResult = try managedContext.fetch(libraryFetchRequest) as? [Library]
-                if libraryResult?.count > 0 {
-                    print("has library")
-                    result = libraryResult![0]
-                }
-            } catch {
-                print(error)
-            }
-            if result != nil {
-                library = result!
-                if let libraryPath = result!.getCentralMediaFolder() {
-                    directoryURL = libraryPath
-                    libraryPathControl.url = libraryPath
-                } else {
-                    libraryPathControl.url = jmcDirURL
-                }
-            } else {
-                libraryPathControl.url = jmcDirURL
-            }
-        } catch {
-            print(error)
-        }
+        self.libraryPathControl.url = self.centralURL
         super.windowDidLoad()
     }
     

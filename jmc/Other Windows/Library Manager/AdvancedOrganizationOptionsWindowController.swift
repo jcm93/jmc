@@ -145,11 +145,6 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
         let removedRuleController = ruleControllers.remove(at: index!)
         removedRuleControllers.append(removedRuleController)
         tableView.reloadData()
-        //tableView.noteNumberOfRowsChanged()
-        //let indexSet = IndexSet(Array(0..<tableView.numberOfRows))
-        //tableView.noteHeightOfRows(withIndexesChanged: indexSet)
-        
-        
     }
     
     func saveData() {

@@ -79,6 +79,10 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     @IBOutlet weak var confirmAuthButton: NSButton!
     @IBOutlet weak var authStatusLabel: NSTextField!
     @IBOutlet weak var authStatusImage: NSImageView!
+    @IBOutlet weak var authFailedLabel: NSTextField!
+    @IBOutlet weak var authProgressIndicator: NSProgressIndicator!
+    @IBOutlet weak var startAuthButton: NSButton!
+    @IBOutlet weak var browserTextLabel: NSTextField!
     
     func getLastFMDelegate() {
         if self.lastFMDelegate == nil {
@@ -89,23 +93,49 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     
     @IBAction func authenticateLastFMPressed(_ sender: Any) {
         getLastFMDelegate()
-        if lastFMDelegate.token != "" {
-            lastFMDelegate.launchAuthentication()
-            confirmAuthButton.isHidden = false
-        }
+        lastFMDelegate.launchAuthentication()
+        confirmAuthButton.isHidden = false
     }
     
     @IBAction func confirmAuthButtonPressed(_ sender: Any) {
         getLastFMDelegate()
-        guard lastFMDelegate.sessionKey == "" else { return }
-        if lastFMDelegate.token != "" {
-            lastFMDelegate.getSessionKey(callback: lastFMSessionAuthenticated)
-        }
+        lastFMDelegate.getSessionKey(callback: lastFMSessionAuthenticated)
+        hideAllElements()
+    }
+    
+    func hideAllElements() {
+        confirmAuthButton.isHidden = true
+        authFailedLabel.isHidden = true
+        startAuthButton.isHidden = true
+        browserTextLabel.isHidden = true
+        authProgressIndicator.isHidden = false
+        authProgressIndicator.startAnimation(nil)
+    }
+    
+    func authFailed() {
+        authFailedLabel.isHidden = false
+        confirmAuthButton.isHidden = true
+        startAuthButton.isHidden = false
+        browserTextLabel.isHidden = false
+    }
+    
+    func authSucceeded(name: String) {
+        self.authStatusImage.image = NSImage(named: NSImageNameStatusAvailable)
+        self.authStatusLabel.stringValue = "Authenticated with Last.fm for user \(name)"
+        authFailedLabel.isHidden = true
+        startAuthButton.isHidden = false
+        browserTextLabel.isHidden = false
+        confirmAuthButton.isHidden = true
     }
     
     func lastFMSessionAuthenticated(username: String) {
-        self.authStatusImage.image = NSImage(named: NSImageNameStatusAvailable)
-        self.authStatusLabel.stringValue = "Authenticated with Last.fm for user \(username)"
+        authProgressIndicator.stopAnimation(nil)
+        authProgressIndicator.isHidden = true
+        if username != "" {
+            authSucceeded(name: username)
+        } else {
+            authFailed()
+        }
     }
     
     //Advanced

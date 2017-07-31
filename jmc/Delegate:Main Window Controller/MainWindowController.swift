@@ -104,7 +104,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     var current_source_index_temp: Int?
     var infoString: String?
     var auxArrayController: NSArrayController?
-    var hasMusic: Bool = false
     var focusedColumn: NSTableColumn?
     var currentOrder: CachedOrder?
     var asc: Bool?
@@ -886,7 +885,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         //self.libraryTableViewController = LibraryTableViewController(nibName: "LibraryTableViewController", bundle: nil)
         numberFormatter.numberStyle = NumberFormatter.Style.decimal
         dateFormatter.unitsStyle = DateComponentsFormatter.UnitsStyle.full
-        print(hasMusic)
         self.delegate!.audioModule.mainWindowController = self
         progressBar.isDisplayedWhenStopped = true
         progressBarView.progressBar = progressBar

@@ -748,8 +748,10 @@ class DatabaseManager: NSObject {
                 track.album = newAlbum
             }
             if let releaseDateString = fileMetadataDictionary[kReleaseDateKey] as? String {
-                let date = JMDate(year: Int(releaseDateString)!)
-                track.album?.release_date = date
+                if let year = Int(releaseDateString) {
+                    let date = JMDate(year: year)
+                    track.album?.release_date = date
+                }
             }
             if let composerCheck = fileMetadataDictionary[kComposerKey] as? String {
                 if let alreadyAddedComposer = addedComposers[composerCheck] {

@@ -72,14 +72,19 @@ class LastFMDelegate: NSObject {
     
     func handleSessionKeyResponse(data: Data?, response: URLResponse?, err: Error?) {
         print("got session key response")
+        var name = ""
+        defer {
+            DispatchQueue.main.async {
+                self.callback?(name)
+            }
+        }
         do {
             let responseData = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! NSDictionary
             guard let session = responseData["session"] as? NSDictionary else { print("couldn't get session"); return }
             guard let key = session["key"] as? String else { print("couldn't get session key"); return }
             globalRootLibrary?.last_fm_session_key = key
-            let name = session["name"] as? String
+            name = session["name"] as? String ?? ""
             globalRootLibrary?.last_fm_username = name
-            callback?(name!)
         } catch {
             print(error)
         }
