@@ -28,7 +28,9 @@ public class OrganizationTemplateBundle: NSManagedObject {
         compilationRule.base_url_string = centralFolder.absoluteString
         compilationRule.predicate = COMPILATION_PREDICATE
         compilationRule.tokens = COMPILATION_TOKEN_ARRAY as NSArray
-        self.addToOther_templates(compilationRule)
+        let otherTemplates = self.other_templates?.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
+        otherTemplates.add(compilationRule)
+        self.other_templates = otherTemplates as NSOrderedSet
     }
 
 }
