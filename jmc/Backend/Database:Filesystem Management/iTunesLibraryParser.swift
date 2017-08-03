@@ -196,14 +196,9 @@ class iTunesLibraryParser: NSObject {
             cd_playlist.name = playlistDictionary["Name"] as? String
             cd_playlist.id = playlistDictionary["Playlist ID"] as? NSNumber
             if let playlistItems = playlistDictionary["Playlist Items"] as? NSArray {
-                for stupidDict in playlistItems {
-                    let trackID = (stupidDict as AnyObject).object(forKey: "Track ID") as! Int
-                    if addedTracks[trackID]?.view != nil {
-                        cd_playlist.addToTracks(addedTracks[trackID]!.view!)
-                    }
-                }
+                let playlistTrackViews = playlistItems.flatMap({return self.addedTracks[($0 as AnyObject).object(forKey: "Track ID") as! Int]?.view})
+                cd_playlist.addToTracks(playlistTrackViews)
             }
-            
             
             //create source list item for playlist
             let cd_playlist_source_list_item = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: subContext) as! SourceListItem

@@ -56,7 +56,10 @@ extension SongCollection {
     @NSManaged public func removeFromTracks(_ value: TrackView)
 
     @objc(addTracks:)
-    @NSManaged public func addToTracks(_ values: NSOrderedSet)
+    func addToTracks(_ values: [Any]) {
+        let currentTracks = self.tracks?.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
+        currentTracks.addObjects(from: values)
+    }
 
     @objc(removeTracks:)
     @NSManaged public func removeFromTracks(_ values: NSOrderedSet)
