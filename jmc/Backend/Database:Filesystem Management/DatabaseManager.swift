@@ -629,9 +629,15 @@ class DatabaseManager: NSObject {
                 }
             }
         } else {
-            metadataDictionary[kSampleRateKey]  = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioSampleRate" as CFString) as? Int as NSNumber?
-            metadataDictionary[kBitRateKey]     = (MDItemCopyAttribute(mediaFileObject, "kMDItemAudioBitRate" as CFString!) as! Double) / 1000
-            metadataDictionary[kTimeKey]        = (MDItemCopyAttribute(mediaFileObject, "kMDItemDurationSeconds" as CFString!) as! Double) * 1000
+            //what if we have a valid audio file, but can't retrieve audio metadata?
+            //for now, abandon ship
+            guard let sampleRate = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioSampleRate" as CFString) as? Int as NSNumber?,
+                  let bitRate = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioBitRate" as CFString!) as? Double, // / 1000
+                  let duration = MDItemCopyAttribute(mediaFileObject, "kMDItemDurationSeconds" as CFString!) as? Double // * 1000
+                  else { return nil }
+            metadataDictionary[kSampleRateKey]  = sampleRate
+            metadataDictionary[kBitRateKey]     = bitRate / 1000
+            metadataDictionary[kTimeKey]        = duration * 1000
             metadataDictionary[kTrackNumKey]    = (MDItemCopyAttribute(mediaFileObject, "kMDItemAudioTrackNumber" as CFString!) as? Int).map({ return String($0) })
             metadataDictionary[kGenreKey]       = MDItemCopyAttribute(mediaFileObject, "kMDItemMusicalGenre" as CFString!) as? String
             metadataDictionary[kNameKey]        = MDItemCopyAttribute(mediaFileObject, "kMDItemTitle" as CFString!) as? String
