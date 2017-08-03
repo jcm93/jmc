@@ -53,13 +53,21 @@ extension Album {
     @NSManaged public func replaceOther_art(at indexes: NSIndexSet, with values: [AlbumArtwork])
 
     @objc(addOther_artObject:)
-    @NSManaged public func addToOther_art(_ value: AlbumArtwork)
+    func addToOther_art(_ value: AlbumArtwork) {
+        let currentOtherArt = self.other_art?.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
+        currentOtherArt.add(value)
+        self.other_art = currentOtherArt as NSOrderedSet
+    }
 
     @objc(removeOther_artObject:)
     @NSManaged public func removeFromOther_art(_ value: AlbumArtwork)
 
     @objc(addOther_art:)
-    @NSManaged public func addToOther_art(_ values: NSOrderedSet)
+    func addToOther_art(_ values: [Any]) {
+        let currentOtherArt = self.other_art?.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
+        currentOtherArt.addObjects(from: values)
+        self.other_art = currentOtherArt as NSOrderedSet
+    }
 
     @objc(removeOther_art:)
     @NSManaged public func removeFromOther_art(_ values: NSOrderedSet)
@@ -87,13 +95,21 @@ extension Album {
 extension Album {
 
     @objc(addOther_filesObject:)
-    @NSManaged public func addToOther_files(_ value: AlbumFile)
+    func addToOther_files(_ value: AlbumFile) {
+        let currentOtherFiles = self.other_files?.mutableCopy() as? NSMutableSet ?? NSMutableSet()
+        currentOtherFiles.add(value)
+        self.other_files = currentOtherFiles as NSSet
+    }
 
     @objc(removeOther_filesObject:)
     @NSManaged public func removeFromOther_files(_ value: AlbumFile)
 
     @objc(addOther_files:)
-    @NSManaged public func addToOther_files(_ values: NSSet)
+    func addToOther_files(_ values: NSSet) {
+        let currentOtherFiles = self.other_files?.mutableCopy() as? NSMutableSet ?? NSMutableSet()
+        currentOtherFiles.addObjects(from: values.allObjects)
+        self.other_files = currentOtherFiles as NSSet
+    }
 
     @objc(removeOther_files:)
     @NSManaged public func removeFromOther_files(_ values: NSSet)

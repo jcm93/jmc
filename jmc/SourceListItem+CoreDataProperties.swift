@@ -35,7 +35,11 @@ extension SourceListItem {
 extension SourceListItem {
 
     @objc(insertObject:inChildrenAtIndex:)
-    @NSManaged public func insertIntoChildren(_ value: SourceListItem, at idx: Int)
+    func insertIntoChildren(_ value: SourceListItem, at idx: Int) {
+        let currentChildren = self.children?.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
+        currentChildren.insert(value, at: idx)
+        self.children = currentChildren as NSOrderedSet
+    }
 
     @objc(removeObjectFromChildrenAtIndex:)
     @NSManaged public func removeFromChildren(at idx: Int)
@@ -63,9 +67,9 @@ extension SourceListItem {
     @NSManaged public func removeFromChildren(_ value: SourceListItem)
 
     @objc(addChildren:)
-    func addToChildren(_ values: NSOrderedSet) {
+    func addToChildren(_ values: [Any]) {
         let currentChildren = self.children?.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
-        currentChildren.addObjects(from: values.array)
+        currentChildren.addObjects(from: values)
         self.children = currentChildren as NSOrderedSet
     }
 
