@@ -15,6 +15,8 @@
         <customObject id="76H-Is-DYh" customClass="MainWindowController" customModule="jmc" customModuleProvider="target"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="jmc" customModuleProvider="target">
             <connections>
+                <outlet property="equalizerWindowMenuItem" destination="yTZ-KO-ido" id="ybf-3H-nKU"/>
+                <outlet property="jmcWindowMenuItem" destination="uQV-fL-2eI" id="kRj-pa-2Fj"/>
                 <outlet property="repeatMenuItem" destination="2KZ-Mz-PQy" id="OpJ-kz-a3W"/>
                 <outlet property="shuffleMenuItem" destination="b4e-W9-bct" id="9w2-aV-btF"/>
             </connections>
@@ -426,6 +428,11 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="JXu-Wd-CrQ"/>
+                            <menuItem title="jmc" keyEquivalent="o" id="uQV-fL-2eI">
+                                <connections>
+                                    <action selector="showMainWindow:" target="Voe-Tx-rLC" id="Y9p-w9-GYJ"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Equalizer" keyEquivalent="e" id="yTZ-KO-ido">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
@@ -455,6 +462,9 @@
                     </menu>
                 </menuItem>
             </items>
+            <connections>
+                <outlet property="delegate" destination="-2" id="OSw-un-b2e"/>
+            </connections>
         </menu>
     </objects>
 </document>

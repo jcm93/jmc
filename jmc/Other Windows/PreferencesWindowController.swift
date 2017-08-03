@@ -91,6 +91,19 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
         }
     }
     
+    @IBAction func scrobbleCheck(_ sender: Any) {
+        getLastFMDelegate()
+        guard let check = sender as? NSButton else { return }
+        switch check.state {
+        case NSOnState:
+            self.lastFMDelegate.scrobbles = true
+            UserDefaults.standard.set(true, forKey: DEFAULTS_SCROBBLES)
+        default:
+            self.lastFMDelegate.scrobbles = false
+            UserDefaults.standard.set(false, forKey: DEFAULTS_SCROBBLES)
+        }
+    }
+    
     @IBAction func authenticateLastFMPressed(_ sender: Any) {
         getLastFMDelegate()
         lastFMDelegate.launchAuthentication()

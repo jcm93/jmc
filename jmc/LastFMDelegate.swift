@@ -15,6 +15,7 @@ class LastFMDelegate: NSObject {
     var baseURL = URL(string: "https://ws.audioscrobbler.com/2.0/?")!
     var token: String = ""
     var sessionKey = globalRootLibrary!.last_fm_session_key ?? ""
+    var scrobbles = UserDefaults.standard.bool(forKey: DEFAULTS_SCROBBLES)
     
     var callback: ((String) -> Void)?
     
@@ -98,6 +99,7 @@ class LastFMDelegate: NSObject {
     }
     
     func scrobble(track: Track, timestamp: Date) {
+        guard self.scrobbles else { return }
         guard track.artist?.name != nil , track.name != nil else { print("can't scrobble nil track"); return }
         var request = URLRequest(url: baseURL)
         request.httpMethod = "POST"

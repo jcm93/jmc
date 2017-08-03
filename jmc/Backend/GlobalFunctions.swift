@@ -124,6 +124,7 @@ let DEFAULTS_TABLE_SKIP_SHOWS_NEW_TRACK = "tableSkipShowsNewTrack"
 let DEFAULTS_TABLE_SORT_BEHAVIOR = "tableSortBehavior"
 let DEFAULTS_TRACK_PLAY_REGISTER_POINT = "registerTrackPlayPoint"
 let DEFAULTS_TRACK_QUEUE_VISIBLE = "queueVisible"
+let DEFAULTS_SCROBBLES = "scrobbles"
 
 enum TableSortBehavior: Int {
     case followsNothing, followsSelection, followsCurrentTrack
@@ -142,7 +143,8 @@ let DEFAULTS_INITIAL_DEFAULTS: [String : Any] = [
     DEFAULTS_TABLE_SKIP_SHOWS_NEW_TRACK : false,
     DEFAULTS_TABLE_SORT_BEHAVIOR : 0,
     DEFAULTS_TRACK_PLAY_REGISTER_POINT : 0.75,
-    DEFAULTS_TRACK_QUEUE_VISIBLE : true
+    DEFAULTS_TRACK_QUEUE_VISIBLE : true,
+    DEFAULTS_SCROBBLES : true
 ]
 
 let DEFAULT_TEMPLATE_TOKEN_ARRAY: [OrganizationFieldToken] = [

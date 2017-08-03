@@ -148,6 +148,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             library?.organization_type = NO_ORGANIZATION_TYPE as NSNumber
             moveRadio.isEnabled = false
             copyRadio.isEnabled = false
+            changeLocationButton.isEnabled = false
         } else {
             moveRadio.isEnabled = true
             copyRadio.isEnabled = true

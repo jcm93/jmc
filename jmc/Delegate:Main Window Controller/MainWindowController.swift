@@ -746,6 +746,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         let timeInterval = -secsPlayed
         let timeTrackStarted = timeNow.addingTimeInterval(timeInterval)
         delegate?.lastFMDelegate?.scrobble(track: self.currentTrack!, timestamp: timeTrackStarted)
+        print("seconds played: \(secsPlayed)")
     }
     
     func checkPlayFractionForSkip() {

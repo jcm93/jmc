@@ -12,7 +12,7 @@ import Cocoa
 
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     
     var mainWindowController: MainWindowController?
     var databaseManager: DatabaseManager?
@@ -30,6 +30,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var backgroundAddFilesHandler: GenericProgressBarSheetController?
     var addFilesQueueLoop: AddFilesQueueLoop?
     var lastFMDelegate: LastFMDelegate?
+    @IBOutlet weak var jmcWindowMenuItem: NSMenuItem!
+    @IBOutlet weak var equalizerWindowMenuItem: NSMenuItem!
     
     @IBOutlet weak var shuffleMenuItem: NSMenuItem!
     @IBOutlet weak var repeatMenuItem: NSMenuItem!
@@ -119,6 +121,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
     }
     
+    @IBAction func showMainWindow(_ sender: Any) {
+        if self.mainWindowController?.window?.isVisible == nil || self.mainWindowController?.window?.isVisible == false {
+            self.mainWindowController?.showWindow(self)
+        } else {
+            self.mainWindowController?.window?.close()
+        }
+    }
+    
     @IBAction func openLibraryManager(_ sender: Any) {
         self.libraryManagerSourceSelector = LibraryManagerSourceSelector(windowNibName: "LibraryManagerSourceSelector")
         self.libraryManagerSourceSelector?.showWindow(self)
@@ -174,9 +184,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func showEqualizer() {
         print("show equalizer called")
-        self.equalizerWindowController = EqualizerWindowController(windowNibName: "EqualizerWindowController")
-        self.equalizerWindowController?.audioModule = self.audioModule
-        self.equalizerWindowController?.showWindow(self)
+        if self.equalizerWindowController == nil {
+            self.equalizerWindowController = EqualizerWindowController(windowNibName: "EqualizerWindowController")
+            self.equalizerWindowController?.audioModule = self.audioModule
+        }
+        if self.equalizerWindowController?.window?.isVisible == nil || self.equalizerWindowController?.window?.isVisible == false {
+            self.equalizerWindowController?.showWindow(self)
+        } else {
+            self.equalizerWindowController?.window?.close()
+        }
+    }
+    
+    override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        return true
+    }
+    
+    func menu(_ menu: NSMenu, update item: NSMenuItem, at index: Int, shouldCancel: Bool) -> Bool {
+        print("called")
+        return true
     }
     
     @IBAction func showAdvancedFilter(_ sender: AnyObject) {
