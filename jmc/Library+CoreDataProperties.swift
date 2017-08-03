@@ -157,7 +157,11 @@ extension Library {
 extension Library {
 
     @objc(addVolumesObject:)
-    @NSManaged public func addToVolumes(_ value: Volume)
+    func addToVolumes(_ value: Volume) {
+        let currentVolumes = self.volumes?.mutableCopy() as? NSMutableSet ?? NSMutableSet()
+        currentVolumes.add(value)
+        self.volumes = currentVolumes as NSSet
+    }
 
     @objc(removeVolumesObject:)
     @NSManaged public func removeFromVolumes(_ value: Volume)

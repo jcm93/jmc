@@ -53,13 +53,21 @@ extension SourceListItem {
     @NSManaged public func replaceChildren(at indexes: NSIndexSet, with values: [SourceListItem])
 
     @objc(addChildrenObject:)
-    @NSManaged public func addToChildren(_ value: SourceListItem)
+    func addToChildren(_ value: SourceListItem) {
+        let currentChildren = self.children?.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
+        currentChildren.add(value)
+        self.children = currentChildren as NSOrderedSet
+    }
 
     @objc(removeChildrenObject:)
     @NSManaged public func removeFromChildren(_ value: SourceListItem)
 
     @objc(addChildren:)
-    @NSManaged public func addToChildren(_ values: NSOrderedSet)
+    func addToChildren(_ values: NSOrderedSet) {
+        let currentChildren = self.children?.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
+        currentChildren.addObjects(from: values.array)
+        self.children = currentChildren as NSOrderedSet
+    }
 
     @objc(removeChildren:)
     @NSManaged public func removeFromChildren(_ values: NSOrderedSet)
