@@ -151,6 +151,9 @@ class AddFilesQueueLoop: NSObject, ProgressBarController {
             self.thingCount = 0
             self.thingsDone = 0
             self.delegate.backgroundAddFilesHandler?.finish()
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                self.delegate.backgroundAddFilesHandler?.finish()
+            }
         }
     }
 }

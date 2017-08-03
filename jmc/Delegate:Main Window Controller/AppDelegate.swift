@@ -106,6 +106,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
     
     func launchAddFilesDialog() {
+        print("launch add files called")
         self.backgroundAddFilesHandler = GenericProgressBarSheetController(windowNibName: "GenericProgressBarSheetController")
         self.mainWindowController?.window?.addChildWindow(self.backgroundAddFilesHandler!.window!, ordered: .above)
         //self.backgroundAddFilesHandler?.window?.level = Int(CGWindowLevelForKey(CGWindowLevelKey.floatingWindow))
@@ -157,7 +158,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let modalResponse = panel.runModal()
         if modalResponse == NSFileHandlingPanelOKButton {
             let urls = self.databaseManager?.getMediaURLsInDirectoryURLs(panel.urls).0
-            self.launchAddFilesDialog()
+            //self.launchAddFilesDialog()
             self.addFilesQueueLoop?.addChunksToQueue(urls: urls!)
             self.addFilesQueueLoop?.start()
         }

@@ -478,6 +478,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         }
         print("returning none")
         return NSDragOperation()
+        print("poop")
     }
     
     func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
