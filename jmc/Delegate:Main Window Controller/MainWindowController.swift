@@ -387,8 +387,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         
     }
     
-    func playSong(_ track: Track, row: Int?) {
-        guard fileManager.fileExists(atPath: URL(string: track.location!)!.path) else {sourceListViewController!.reloadData(); return}
+    func playSong(_ track: Track, row: Int?) -> Bool {
+        guard fileManager.fileExists(atPath: URL(string: track.location!)!.path) else { sourceListViewController!.reloadData(); return false }
         if track.is_network == true {
             self.is_streaming = true
             initializeInterfaceForNetworkTrack()
@@ -405,7 +405,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             networkSongWasPlayed = true
             trackQueueViewController?.createPlayOrderArray(track, row: row)
             trackQueueViewController?.changeCurrentTrack(self.currentTrack!)
-            return
+            return true
         } else {
             self.is_streaming = false
         }
@@ -417,6 +417,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         trackQueueViewController?.changeCurrentTrack(track)
         paused = false
         //currentTrack = track
+        return true
     }
     
     func shuffle_array(_ array: inout [Int]) {

@@ -1102,7 +1102,7 @@ func combineAlbums(_ firstAlbum: Album, _ secondAlbum: Album) -> Album {
         if firstAlbum.primary_art == nil {
             firstAlbum.primary_art = secondAlbum.other_art?.firstObject as! AlbumArtwork
         } else {
-            firstAlbum.addToOther_art(secondAlbum.other_art!)
+            firstAlbum.addToOther_art(secondAlbum.other_art!.array)
         }
     }
     //combine other files

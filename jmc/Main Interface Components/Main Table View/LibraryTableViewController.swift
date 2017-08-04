@@ -119,8 +119,9 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         mainWindowController!.playSong(item!, row: tableView!.selectedRow)
         */
         var items = (trackViewArrayController.selectedObjects as! [TrackView]).map({return $0.track!})
-        mainWindowController?.playSong(items.removeFirst(), row: nil)
-        mainWindowController?.trackQueueViewController?.addTracksToQueue(nil, tracks: items)
+        if mainWindowController!.playSong(items.removeFirst(), row: nil) {
+            mainWindowController?.trackQueueViewController?.addTracksToQueue(nil, tracks: items)
+        }
     }
     
     @IBAction func getInfoFromTableView(_ sender: AnyObject) {
@@ -135,10 +136,11 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     @IBAction func playFromTableView(_ sender: AnyObject) {
         let tracksToPlay = rightMouseDownTarget!.map({return $0.track!})
-        self.mainWindowController?.playSong(tracksToPlay[0], row: rightMouseDownRow)
-        if tracksToPlay.count > 1 {
-            let tracks = Array(tracksToPlay[1...tracksToPlay.count])
-            self.mainWindowController!.trackQueueViewController?.addTracksToQueue(nil, tracks: tracks)
+        if self.mainWindowController!.playSong(tracksToPlay[0], row: rightMouseDownRow) {
+            if tracksToPlay.count > 1 {
+                let tracks = Array(tracksToPlay[1...tracksToPlay.count])
+                self.mainWindowController!.trackQueueViewController?.addTracksToQueue(nil, tracks: tracks)
+            }
         }
     }
     
