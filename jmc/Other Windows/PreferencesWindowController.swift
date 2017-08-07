@@ -193,7 +193,12 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     //Library
     @IBOutlet weak var libraryManagerTargetView: NSView!
     var libraryManagerViewController: LibraryManagerViewController?
-    
+    var verifyLocationsSheet: LocationVerifierSheetController?
+    var mediaScannerSheet: MediaScannerSheet?
+    var watchFolderSheet: AddWatchFolderSheetController?
+    var changeFolderSheet: ChangePrimaryFolderSheetController?
+    var consolidateSheet: ConsolidateLibrarySheetController?
+    var someOtherSheet: GenericProgressBarSheetController?
     
     //Advanced
     

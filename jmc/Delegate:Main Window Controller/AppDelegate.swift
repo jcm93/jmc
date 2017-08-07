@@ -26,7 +26,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     let fileHandler = FileManager.default
     var serviceBrowser: ConnectivityManager?
     var importErrorWindowController: ImportErrorWindowController?
-    var libraryManagerSourceSelector: LibraryManagerSourceSelector?
     var backgroundAddFilesHandler: GenericProgressBarSheetController?
     var addFilesQueueLoop: AddFilesQueueLoop?
     var lastFMDelegate: LastFMDelegate?
@@ -131,9 +130,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
     
     @IBAction func openLibraryManager(_ sender: Any) {
-        self.libraryManagerSourceSelector = LibraryManagerSourceSelector(windowNibName: "LibraryManagerSourceSelector")
-        self.libraryManagerSourceSelector?.showWindow(self)
-        self.libraryManagerSourceSelector?.delegate = self
+        self.openPreferences(self)
+        self.preferencesWindowController?.toolbar.selectedItemIdentifier = "library"
+        self.preferencesWindowController?.selectLibrary(self)
     }
     @IBAction func openImportWindow(_ sender: AnyObject) {
         importWindowController = ImportWindowController(windowNibName: "ImportWindowController")

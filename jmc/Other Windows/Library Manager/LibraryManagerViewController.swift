@@ -118,7 +118,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     }
     
     @IBAction func changeSourceCentralMediaFolderButtonPressed(_ sender: Any) {
-        let parent = self.view.window?.windowController as! LibraryManagerSourceSelector
+        let parent = self.view.window?.windowController as! PreferencesWindowController
         parent.changeFolderSheet = ChangePrimaryFolderSheetController(windowNibName: "ChangePrimaryFolderSheetController")
         parent.changeFolderSheet?.libraryManager = self
         parent.window?.beginSheet(parent.changeFolderSheet!.window!, completionHandler: nil)
@@ -166,7 +166,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     }
     
     @IBAction func addWatchFolderPressed(_ sender: Any) {
-        let parent = self.view.window?.windowController as! LibraryManagerSourceSelector
+        let parent = self.view.window?.windowController as! PreferencesWindowController
         parent.watchFolderSheet = AddWatchFolderSheetController(windowNibName: "AddWatchFolderSheetController")
         parent.watchFolderSheet?.libraryManager = self
         parent.window?.beginSheet(parent.watchFolderSheet!.window!, completionHandler: nil)
@@ -195,7 +195,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     }
     
     @IBAction func consolidateLibraryPressed(_ sender: Any) {
-        let parent = self.view.window?.windowController as! LibraryManagerSourceSelector
+        let parent = self.view.window?.windowController as! PreferencesWindowController
         parent.someOtherSheet = GenericProgressBarSheetController(windowNibName: "GenericProgressBarSheetController")
         parent.window?.beginSheet(parent.someOtherSheet!.window!, completionHandler: nil)
         DispatchQueue.global(qos: .default).async {
@@ -265,7 +265,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     @IBOutlet weak var libraryLocationStatusImageView: NSImageView!
     
     @IBAction func verifyLocationsPressed(_ sender: Any) {
-        let parent = self.view.window?.windowController as! LibraryManagerSourceSelector
+        let parent = self.view.window?.windowController as! PreferencesWindowController
         parent.verifyLocationsSheet = LocationVerifierSheetController(windowNibName: "LocationVerifierSheetController")
         parent.window?.beginSheet(parent.verifyLocationsSheet!.window!, completionHandler: verifyLocationsModalComplete)
         DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async {
@@ -315,7 +315,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     @IBOutlet weak var directoryPicker: NSPopUpButton!
     
     @IBAction func scanSourceButtonPressed(_ sender: Any) {
-        let parent = self.view.window?.windowController as! LibraryManagerSourceSelector
+        let parent = self.view.window?.windowController as! PreferencesWindowController
         parent.mediaScannerSheet = MediaScannerSheet(windowNibName: "MediaScannerSheet")
         parent.window?.beginSheet(parent.mediaScannerSheet!.window!, completionHandler: scanMediaModalComplete)
         DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async {

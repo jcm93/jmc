@@ -90,8 +90,6 @@
 		0D8AFE551E6CB3E7004AC584 /* LocationVerifierSheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */; };
 		0D8AFE581E6D136D004AC584 /* MediaScannerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */; };
 		0D8AFE591E6D136D004AC584 /* MediaScannerSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8AFE571E6D136D004AC584 /* MediaScannerSheet.xib */; };
-		0D8AFE5C1E6F4FEB004AC584 /* LibraryManagerSourceSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8AFE5A1E6F4FEB004AC584 /* LibraryManagerSourceSelector.swift */; };
-		0D8AFE5D1E6F4FEB004AC584 /* LibraryManagerSourceSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8AFE5B1E6F4FEB004AC584 /* LibraryManagerSourceSelector.xib */; };
 		0D8B98681ED2ACF000283DD1 /* ArtistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8B98661ED2ACF000283DD1 /* ArtistViewController.swift */; };
 		0D8B98691ED2ACF000283DD1 /* ArtistViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8B98671ED2ACF000283DD1 /* ArtistViewController.xib */; };
 		0D99D4A11EF216F200264CFF /* OrganizationRuleCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D99D4A01EF216F200264CFF /* OrganizationRuleCellView.swift */; };
@@ -309,8 +307,6 @@
 		0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LocationVerifierSheetController.xib; path = "Other Windows/Library Manager/Sheets/LocationVerifierSheetController.xib"; sourceTree = "<group>"; };
 		0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaScannerSheet.swift; path = "Other Windows/Library Manager/Sheets/MediaScannerSheet.swift"; sourceTree = "<group>"; };
 		0D8AFE571E6D136D004AC584 /* MediaScannerSheet.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MediaScannerSheet.xib; path = "Other Windows/Library Manager/Sheets/MediaScannerSheet.xib"; sourceTree = "<group>"; };
-		0D8AFE5A1E6F4FEB004AC584 /* LibraryManagerSourceSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LibraryManagerSourceSelector.swift; path = "Other Windows/Library Manager/LibraryManagerSourceSelector.swift"; sourceTree = "<group>"; };
-		0D8AFE5B1E6F4FEB004AC584 /* LibraryManagerSourceSelector.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LibraryManagerSourceSelector.xib; path = "Other Windows/Library Manager/LibraryManagerSourceSelector.xib"; sourceTree = "<group>"; };
 		0D8B98661ED2ACF000283DD1 /* ArtistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewController.swift; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewController.swift"; sourceTree = "<group>"; };
 		0D8B98671ED2ACF000283DD1 /* ArtistViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistViewController.xib; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewController.xib"; sourceTree = "<group>"; };
 		0D99D4A01EF216F200264CFF /* OrganizationRuleCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganizationRuleCellView.swift; sourceTree = "<group>"; };
@@ -583,8 +579,6 @@
 				0DF188821EDD072B00241785 /* OrganizationRuleViewcontroller.swift */,
 				0DF188831EDD072B00241785 /* OrganizationRuleViewController.xib */,
 				0DE486851EA58C67009B226B /* JMPathControl.swift */,
-				0D8AFE5A1E6F4FEB004AC584 /* LibraryManagerSourceSelector.swift */,
-				0D8AFE5B1E6F4FEB004AC584 /* LibraryManagerSourceSelector.xib */,
 				0DE486801EA579D8009B226B /* Sheets */,
 			);
 			name = "Library Manager";
@@ -1030,7 +1024,6 @@
 				0DA4E19D1F27F8BE00EC80B2 /* Makefile.in in Resources */,
 				0DA7E95B1ECC141900719678 /* ImageCollectionViewItem.xib in Resources */,
 				0DA4E18B1F27F8BE00EC80B2 /* test_cuesheet in Resources */,
-				0D8AFE5D1E6F4FEB004AC584 /* LibraryManagerSourceSelector.xib in Resources */,
 				0DA4E1901F27F8BE00EC80B2 /* test_streams in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1167,7 +1160,6 @@
 				0D23CA6D1E03242400CAF529 /* PeerBrowser.swift in Sources */,
 				0D40A9F21D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift in Sources */,
 				0DB996D21ED287C400594939 /* AlbumArtPDFView.swift in Sources */,
-				0D8AFE5C1E6F4FEB004AC584 /* LibraryManagerSourceSelector.swift in Sources */,
 				0DE957DB1EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift in Sources */,
 				0DFE2E5A1EC0DAB6007EEF04 /* TrackQueueTableView.swift in Sources */,
 				0DB996D41ED287D400594939 /* AlbumArtCollectionView.swift in Sources */,
