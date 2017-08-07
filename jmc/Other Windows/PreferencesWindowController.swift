@@ -20,20 +20,59 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     var lastFMDelegate: LastFMDelegate!
     
     func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [String] {
-        return ["general", "sharing", "lastfm", "advanced"]
+        return ["general", "sharing", "lastfm", "advanced", "library"]
     }
     
     @IBAction func selectGeneral(_ sender: Any) {
         tabView.selectTabViewItem(at: 0)
+        resizeSmaller()
     }
     @IBAction func selectSharing(_ sender: Any) {
         tabView.selectTabViewItem(at: 1)
+        resizeSmaller()
     }
     @IBAction func selectLastFM(_ sender: Any) {
         tabView.selectTabViewItem(at: 2)
+        resizeSmaller()
     }
+    
     @IBAction func selectAdvanced(_ sender: Any) {
         tabView.selectTabViewItem(at: 3)
+        resizeSmaller()
+    }
+    @IBAction func selectLibrary(_ sender: Any) {
+        tabView.selectTabViewItem(at: 4)
+        resizeLarger()
+    }
+    
+    func resizeLarger() {
+        let currentHeight: CGFloat = self.window!.frame.height
+        let currentWidth: CGFloat = self.window!.frame.width
+        let newHeight: CGFloat = 568 + 110
+        let newWidth: CGFloat = 852
+        let xDifference = (newWidth - currentWidth) / 2
+        let yDifference = newHeight - currentHeight
+        let newX = self.window!.frame.origin.x - xDifference
+        let newY = self.window!.frame.origin.y - yDifference
+        let newOrigin = CGPoint(x: newX, y: newY)
+        let newSize = CGSize(width: newWidth, height: newHeight)
+        let newFrame = NSRect(origin: newOrigin, size: newSize)
+        self.window?.animator().setFrame(newFrame, display: true)
+    }
+    
+    func resizeSmaller() {
+        let currentHeight: CGFloat = self.window!.frame.height
+        let currentWidth: CGFloat = self.window!.frame.width
+        let newHeight: CGFloat = 206 + 80
+        let newWidth: CGFloat = 527
+        let xDifference = (newWidth - currentWidth) / 2
+        let yDifference = newHeight - currentHeight
+        let newX = self.window!.frame.origin.x - xDifference
+        let newY = self.window!.frame.origin.y - yDifference
+        let newOrigin = CGPoint(x: newX, y: newY)
+        let newSize = CGSize(width: newWidth, height: newHeight)
+        let newFrame = NSRect(origin: newOrigin, size: newSize)
+        self.window?.animator().setFrame(newFrame, display: true)
     }
     
     @IBAction func artworkSelectRadioAction(_ sender: Any) {
@@ -151,6 +190,11 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
         }
     }
     
+    //Library
+    @IBOutlet weak var libraryManagerTargetView: NSView!
+    var libraryManagerViewController: LibraryManagerViewController?
+    
+    
     //Advanced
     
     @IBOutlet weak var skipBehaviorKeepCurrentFocusRadioButton: NSButton!
@@ -222,6 +266,10 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
         if globalRootLibrary?.last_fm_session_key != nil {
             lastFMSessionAuthenticated(username: globalRootLibrary!.last_fm_username!)
         }
+        self.libraryManagerViewController = LibraryManagerViewController(nibName: "LibraryManagerViewController", bundle: nil)
+        self.libraryManagerTargetView.addSubview(self.libraryManagerViewController!.view)
+        self.libraryManagerViewController?.initializeForLibrary(library: globalRootLibrary!)
+        
     }
     
 }

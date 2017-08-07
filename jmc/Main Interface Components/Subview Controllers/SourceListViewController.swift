@@ -108,6 +108,11 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         print("set object value called")
     }
     
+    @IBAction func allSourcesAction(_ sender: Any) {
+        self.mainWindowController?.delegate?.openLibraryManager(self)
+        
+    }
+    
     override func controlTextDidEndEditing(_ obj: Notification) {
         let item = sourceList.item(atRow: sourceList.row(for: (obj.object as! NSTextField))) as? SourceListItem
         item?.name = (obj.object as! NSTextField).stringValue

@@ -139,6 +139,9 @@
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
+                                                        <connections>
+                                                            <action selector="allSourcesAction:" target="-2" id="SpS-8t-nNb"/>
+                                                        </connections>
                                                     </button>
                                                 </subviews>
                                                 <constraints>

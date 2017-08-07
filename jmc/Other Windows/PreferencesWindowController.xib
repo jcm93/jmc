@@ -16,6 +16,7 @@
                 <outlet property="authStatusLabel" destination="fkV-SM-DL3" id="yaj-uG-cgc"/>
                 <outlet property="browserTextLabel" destination="DGz-px-Umo" id="FgR-sK-aLo"/>
                 <outlet property="confirmAuthButton" destination="hxw-av-1Wl" id="dOz-HN-1du"/>
+                <outlet property="libraryManagerTargetView" destination="Xu0-7J-vG1" id="DEq-Wq-BNU"/>
                 <outlet property="libraryNameField" destination="3gg-L6-UHt" id="yFu-TV-hJ6"/>
                 <outlet property="sharingCheck" destination="PiV-V3-sZr" id="y2C-eU-k6v"/>
                 <outlet property="skipBehaviorFocusNewTrackRadioButton" destination="i5q-Fh-f6A" id="zOL-2d-VhU"/>
@@ -34,9 +35,9 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="527" height="206"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
+            <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="633" y="727" width="527" height="206"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <view key="contentView" wantsLayer="YES" id="se5-gp-TjO">
                 <rect key="frame" x="0.0" y="0.0" width="527" height="206"/>
@@ -44,9 +45,6 @@
                 <subviews>
                     <tabView type="noTabsNoBorder" translatesAutoresizingMaskIntoConstraints="NO" id="mGV-i7-06f">
                         <rect key="frame" x="20" y="20" width="487" height="186"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="487" id="ZUb-k9-UTz"/>
-                        </constraints>
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="Tab" identifier="1" id="BM5-t1-oNs">
@@ -395,6 +393,23 @@
                                     </constraints>
                                 </view>
                             </tabViewItem>
+                            <tabViewItem label="Item 4" identifier="" id="OyC-if-h6J">
+                                <view key="view" id="gEe-Yz-zzn">
+                                    <rect key="frame" x="0.0" y="0.0" width="487" height="186"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="Xu0-7J-vG1">
+                                            <rect key="frame" x="0.0" y="0.0" width="487" height="186"/>
+                                        </customView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="Xu0-7J-vG1" secondAttribute="trailing" id="VRf-e4-qGv"/>
+                                        <constraint firstAttribute="bottom" secondItem="Xu0-7J-vG1" secondAttribute="bottom" id="qvj-Zw-hBA"/>
+                                        <constraint firstItem="Xu0-7J-vG1" firstAttribute="leading" secondItem="gEe-Yz-zzn" secondAttribute="leading" id="swV-vG-SEs"/>
+                                        <constraint firstItem="Xu0-7J-vG1" firstAttribute="top" secondItem="gEe-Yz-zzn" secondAttribute="top" id="zPJ-8E-Si1"/>
+                                    </constraints>
+                                </view>
+                            </tabViewItem>
                         </tabViewItems>
                     </tabView>
                 </subviews>
@@ -433,10 +448,16 @@
                             <action selector="selectLastFM:" target="-2" id="6nq-Js-nAT"/>
                         </connections>
                     </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="C54D3E42-4FFA-4BBA-B74B-44668E43E979" explicitItemIdentifier="library" label="Library" paletteLabel="Library" tag="-1" image="Master Library" id="stl-RG-cbF">
+                        <connections>
+                            <action selector="selectLibrary:" target="-2" id="PNu-12-yg3"/>
+                        </connections>
+                    </toolbarItem>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
                     <toolbarItem reference="rKI-8j-jui"/>
                     <toolbarItem reference="Gk6-uZ-N5O"/>
+                    <toolbarItem reference="stl-RG-cbF"/>
                     <toolbarItem reference="6Da-d9-gln"/>
                     <toolbarItem reference="oCe-eh-SNR"/>
                     <toolbarItem reference="rk1-eS-Lm3"/>
@@ -454,6 +475,7 @@
     </objects>
     <resources>
         <image name="LastFM" width="256" height="256"/>
+        <image name="Master Library" width="32" height="32"/>
         <image name="NSAdvanced" width="32" height="32"/>
         <image name="NSAudioOutputVolumeMedTemplate" width="21" height="16"/>
         <image name="NSPreferencesGeneral" width="32" height="32"/>

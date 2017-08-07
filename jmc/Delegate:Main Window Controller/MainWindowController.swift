@@ -388,7 +388,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     func playSong(_ track: Track, row: Int?) -> Bool {
-        guard fileManager.fileExists(atPath: URL(string: track.location!)!.path) else { sourceListViewController!.reloadData(); return false }
+        guard fileManager.fileExists(atPath: URL(string: track.location!)!.path) else {
+            sourceListViewController!.reloadData()
+            handleTrackMissing(track: track)
+            return false
+        }
         if track.is_network == true {
             self.is_streaming = true
             initializeInterfaceForNetworkTrack()
