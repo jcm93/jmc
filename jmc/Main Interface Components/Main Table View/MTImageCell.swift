@@ -10,17 +10,6 @@ import Cocoa
 
 class MTImageCell: NSImageCell {
     
-    var actualAction: Selector?
-    
-    override var action: Selector? {
-        set {
-            self.actualAction = newValue
-        }
-        get {
-            return self.actualAction
-        }
-    }
-    
     override func imageRect(forBounds rect: NSRect) -> NSRect {
         let transform = CGAffineTransform(translationX: 6.0, y: 0.0)
         return rect.applying(transform)
