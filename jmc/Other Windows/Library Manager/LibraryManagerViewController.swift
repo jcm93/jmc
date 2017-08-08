@@ -32,6 +32,7 @@ class NewMediaURL: NSObject {
 
 class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTabViewDelegate {
     
+    @IBOutlet weak var tabView: NSTabView!
     var fileManager = FileManager.default
     var databaseManager = DatabaseManager()
     var locationManager = (NSApplication.shared().delegate as! AppDelegate).locationManager!

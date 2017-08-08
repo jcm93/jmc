@@ -2,7 +2,7 @@
 //  Track+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 6/8/17.
+//  Created by John Moody on 8/7/17.
 //  Copyright © 2017 John Moody. All rights reserved.
 //
 
@@ -48,6 +48,7 @@ extension Track {
     @NSManaged public var status: NSNumber?
     @NSManaged public var time: NSNumber?
     @NSManaged public var track_num: NSNumber?
+    @NSManaged public var is_available: NSNumber?
     @NSManaged public var album: Album?
     @NSManaged public var artist: Artist?
     @NSManaged public var composer: Composer?

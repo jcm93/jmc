@@ -141,6 +141,7 @@
         <attribute name="file_kind" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="genre" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
+        <attribute name="is_available" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_playing" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
@@ -205,7 +206,7 @@
         <element name="SmartCriteria" positionX="-1557" positionY="180" width="128" height="120"/>
         <element name="SongCollection" positionX="-954" positionY="108" width="128" height="180"/>
         <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="225"/>
-        <element name="Track" positionX="-1143" positionY="-27" width="128" height="615"/>
+        <element name="Track" positionX="-1143" positionY="-27" width="128" height="630"/>
         <element name="TrackView" positionX="-1548" positionY="-216" width="128" height="268"/>
         <element name="Volume" positionX="-1548" positionY="-63" width="128" height="120"/>
     </elements>

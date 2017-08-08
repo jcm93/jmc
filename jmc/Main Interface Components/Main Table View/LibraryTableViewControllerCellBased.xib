@@ -595,6 +595,7 @@
                                 </tableColumns>
                                 <accessibility description="Main Table View"/>
                                 <connections>
+                                    <action selector="tableViewAction:" target="-2" id="N6Z-mv-16a"/>
                                     <binding destination="6rv-dK-iy8" name="content" keyPath="arrangedObjects" id="H3j-EW-nJB"/>
                                     <binding destination="6rv-dK-iy8" name="selectionIndexes" keyPath="selectionIndexes" previousBinding="H3j-EW-nJB" id="tqC-TW-sJD"/>
                                     <binding destination="6rv-dK-iy8" name="sortDescriptors" keyPath="sortDescriptors" previousBinding="tqC-TW-sJD" id="eqZ-3L-RqL"/>

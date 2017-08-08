@@ -49,7 +49,7 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
         let currentHeight: CGFloat = self.window!.frame.height
         let currentWidth: CGFloat = self.window!.frame.width
         let newHeight: CGFloat = 568 + 110
-        let newWidth: CGFloat = 852
+        let newWidth: CGFloat = 892
         let xDifference = (newWidth - currentWidth) / 2
         let yDifference = newHeight - currentHeight
         let newX = self.window!.frame.origin.x - xDifference

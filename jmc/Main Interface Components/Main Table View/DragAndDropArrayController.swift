@@ -11,7 +11,7 @@ import Cocoa
 class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTableViewDelegate {
     
     var mainWindow: MainWindowController?
-    var tableViewController: LibraryTableViewControllerCellBased?
+    var tableViewController: LibraryTableViewControllerCellBased!
     var draggedRowIndexes: IndexSet?
     var countTest = 0
     var hasInitialized = false
@@ -19,7 +19,8 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
         //cast to NSArray to avoid typechecking every single object in array, as in when we cast to [TrackView]
         let track = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!
-        let status = track.library?.is_available as? Bool ?? true
+        let status = track.is_available as? Bool ?? track.library?.is_available as? Bool ?? true
+        var selector: Selector?
         let value = { () -> Any? in
         switch tableColumn! {
         case tableViewController!.isPlayingColumn:
@@ -30,6 +31,9 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
                     return NSImage(named: "NSAudioOutputVolumeMedTemplate")
                 }
             } else {
+                if track.is_available == false {
+                    return NSImage(named: "NSRevealFreestandingTemplate")
+                }
                 return nil
             }
         case tableViewController!.playlistNumberColumn:
@@ -103,6 +107,12 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         }
         }()
         return (value, status)
+    }
+
+    
+    func imageClicked(_ sender: Any) {
+        guard let track = ((self.arrangedObjects as? NSArray)?[tableViewController!.tableView.clickedRow] as? TrackView)?.track else { return }
+        print("clicked \(track.name)")
     }
     
     func tableView(_ tableView: NSTableView, setObjectValue object: Any?, for tableColumn: NSTableColumn?, row: Int) {

@@ -27,6 +27,7 @@
                 <outlet property="sourceMonitorStatusImageView" destination="oDw-f5-hTq" id="BJe-cr-Kef"/>
                 <outlet property="sourceMonitorStatusTextField" destination="0zW-S6-wv4" id="WgP-uZ-yEW"/>
                 <outlet property="sourceNameField" destination="Pvi-rp-51x" id="vyg-jW-r3g"/>
+                <outlet property="tabView" destination="TBq-1f-Yrc" id="P1P-q3-MaK"/>
                 <outlet property="trackLocationStatusText" destination="ep7-tg-vkg" id="tpy-AK-j4a"/>
                 <outlet property="tracksNotFoundArrayController" destination="Pf8-pz-DPL" id="AtD-2U-qZL"/>
                 <outlet property="verifyLocationsButton" destination="QqA-iC-st3" id="8IJ-Mk-2kd"/>
@@ -126,19 +127,19 @@ Gw
                                         </textFieldCell>
                                     </textField>
                                     <scrollView autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IwK-4P-gTP">
-                                        <rect key="frame" x="113" y="313" width="716" height="45"/>
+                                        <rect key="frame" x="113" y="313" width="713" height="45"/>
                                         <clipView key="contentView" id="lRO-vk-4lc">
-                                            <rect key="frame" x="1" y="1" width="714" height="43"/>
+                                            <rect key="frame" x="1" y="1" width="711" height="43"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" viewBased="YES" id="iZc-XK-2vC">
-                                                    <rect key="frame" x="0.0" y="0.0" width="714" height="43"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="711" height="43"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                     <tableColumns>
-                                                        <tableColumn width="711" minWidth="40" maxWidth="1000" id="2Qf-ju-tIz">
+                                                        <tableColumn width="708" minWidth="40" maxWidth="1000" id="2Qf-ju-tIz">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -152,11 +153,11 @@ Gw
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                             <prototypeCellViews>
                                                                 <tableCellView id="YuL-e7-UKJ">
-                                                                    <rect key="frame" x="1" y="1" width="711" height="20"/>
+                                                                    <rect key="frame" x="1" y="1" width="708" height="20"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <pathControl focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pXw-oA-9Lx" customClass="JMPathControl" customModule="jmc" customModuleProvider="target">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="711" height="20"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="708" height="20"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="height" constant="20" id="vOA-wH-2nR"/>
                                                                             </constraints>
@@ -194,7 +195,7 @@ Gw
                                             <constraint firstAttribute="height" constant="45" id="QSi-6I-FKz"/>
                                         </constraints>
                                         <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="5Cl-XX-Eg9">
-                                            <rect key="frame" x="1" y="28" width="714" height="16"/>
+                                            <rect key="frame" x="1" y="28" width="711" height="16"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="Otu-j3-qxn">
@@ -390,7 +391,7 @@ Gw
                                     <constraint firstItem="Pvi-rp-51x" firstAttribute="top" secondItem="ZCg-e7-Yu8" secondAttribute="top" constant="3" id="C0K-vl-pre"/>
                                     <constraint firstItem="n1T-9X-h7D" firstAttribute="leading" secondItem="3Yz-pm-nmY" secondAttribute="trailing" constant="8" id="CJQ-lx-pNX"/>
                                     <constraint firstItem="ysf-8d-R25" firstAttribute="top" secondItem="IwK-4P-gTP" secondAttribute="bottom" constant="3" id="F1J-se-Zav"/>
-                                    <constraint firstAttribute="trailing" secondItem="IwK-4P-gTP" secondAttribute="trailing" constant="17" id="Fzi-b3-7g9"/>
+                                    <constraint firstAttribute="trailing" secondItem="IwK-4P-gTP" secondAttribute="trailing" constant="20" id="Fzi-b3-7g9"/>
                                     <constraint firstItem="IwK-4P-gTP" firstAttribute="top" secondItem="8r8-tc-b9V" secondAttribute="bottom" constant="9" id="GCQ-0B-fxs"/>
                                     <constraint firstItem="EYr-io-jRU" firstAttribute="leading" secondItem="piP-uS-Zxd" secondAttribute="trailing" constant="15" id="Hmm-hG-KRW"/>
                                     <constraint firstItem="Pvi-rp-51x" firstAttribute="leading" secondItem="cUP-gH-z2b" secondAttribute="trailing" constant="8" id="KE6-Jh-Zms"/>

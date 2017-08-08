@@ -102,6 +102,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         self.serviceBrowser = ConnectivityManager(delegate: self, slvc: mainWindowController!.sourceListViewController!)
         let defaultsEQOnState = UserDefaults.standard.integer(forKey: DEFAULTS_IS_EQ_ENABLED_STRING)
         audioModule.toggleEqualizer(defaultsEQOnState)
+        NotificationCenter.default.addObserver(self, selector: #selector(mainWindowDidClose), name: Notification.Name.NSWindowWillClose, object: mainWindowController!.window)
+        jmcWindowMenuItem.state = NSOnState
     }
     
     func launchAddFilesDialog() {
@@ -124,9 +126,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @IBAction func showMainWindow(_ sender: Any) {
         if self.mainWindowController?.window?.isVisible == nil || self.mainWindowController?.window?.isVisible == false {
             self.mainWindowController?.showWindow(self)
-        } else {
-            self.mainWindowController?.window?.close()
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(mainWindowDidClose), name: Notification.Name.NSWindowWillClose, object: mainWindowController!.window)
+        jmcWindowMenuItem.state = NSOnState
     }
     
     @IBAction func openLibraryManager(_ sender: Any) {
@@ -134,6 +136,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         self.preferencesWindowController?.toolbar.selectedItemIdentifier = "library"
         self.preferencesWindowController?.selectLibrary(self)
     }
+    
     @IBAction func openImportWindow(_ sender: AnyObject) {
         importWindowController = ImportWindowController(windowNibName: "ImportWindowController")
         importWindowController?.mainWindowController = mainWindowController
@@ -190,18 +193,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         if self.equalizerWindowController?.window?.isVisible == nil || self.equalizerWindowController?.window?.isVisible == false {
             self.equalizerWindowController?.showWindow(self)
-        } else {
-            self.equalizerWindowController?.window?.close()
         }
-    }
-    
-    override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-        return true
-    }
-    
-    func menu(_ menu: NSMenu, update item: NSMenuItem, at index: Int, shouldCancel: Bool) -> Bool {
-        print("called")
-        return true
+        NotificationCenter.default.addObserver(self, selector: #selector(equalizerDidClose), name: Notification.Name.NSWindowWillClose, object: equalizerWindowController!.window)
+        equalizerWindowMenuItem.state = NSOnState
     }
     
     @IBAction func showAdvancedFilter(_ sender: AnyObject) {
@@ -213,6 +207,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     
     @IBAction func testyThing(_ sender: AnyObject) {
         showEqualizer()
+    }
+    
+    func mainWindowDidClose() {
+        print("main window did close called")
+        jmcWindowMenuItem.state = NSOffState
+    }
+    
+    func equalizerDidClose() {
+        print("equalizer did close called")
+        equalizerWindowMenuItem.state = NSOffState
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {

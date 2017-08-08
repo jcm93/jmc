@@ -384,12 +384,13 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     func handleTrackMissing(track: Track) {
-        
+        track.is_available = false
     }
     
     func playSong(_ track: Track, row: Int?) -> Bool {
         guard fileManager.fileExists(atPath: URL(string: track.location!)!.path) else {
             sourceListViewController!.reloadData()
+            currentTableViewController?.reloadDataForTrack(track, orRow: row)
             handleTrackMissing(track: track)
             return false
         }

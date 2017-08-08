@@ -10,6 +10,8 @@ import Cocoa
 
 class MTTextFieldCell: NSTextFieldCell {
     
+    var defaultColor: NSColor!
+    
     override func titleRect(forBounds rect: NSRect) -> NSRect {
         let newRect = NSRect(x: rect.origin.x, y: rect.origin.y + 1.0, width: rect.width - 4.0, height: rect.height)
         return newRect
@@ -22,11 +24,21 @@ class MTTextFieldCell: NSTextFieldCell {
     
     override init(textCell string: String) {
         super.init(textCell: string)
+        if self.identifier?.hasPrefix("sort") == true {
+            self.defaultColor = NSColor.disabledControlTextColor
+        } else {
+            self.defaultColor = NSColor.textColor
+        }
         self.font = NSFont.systemFont(ofSize: 12.0)
     }
     
     required init(coder: NSCoder) {
         super.init(coder: coder)
+        if self.identifier?.hasPrefix("sort") == true {
+            self.defaultColor = NSColor.disabledControlTextColor
+        } else {
+            self.defaultColor = NSColor.textColor
+        }
         self.font = NSFont.systemFont(ofSize: 12.0)
     }
     
@@ -34,8 +46,12 @@ class MTTextFieldCell: NSTextFieldCell {
         set(newValue) {
             if let actualValue = newValue as? (Any?, Bool) {
                 self.isEnabled = actualValue.1
-                if self.isEnabled == false {
+                if actualValue.1 == false {
                     self.isEditable = false
+                    self.textColor = NSColor.disabledControlTextColor
+                } else {
+                    self.isEditable = true
+                    self.textColor = self.defaultColor
                 }
                 super.objectValue = actualValue.0
             } else {

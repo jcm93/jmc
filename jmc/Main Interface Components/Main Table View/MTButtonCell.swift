@@ -11,7 +11,7 @@ import Cocoa
 class MTButtonCell: NSButtonCell {
     override var objectValue: Any? {
         set(newValue) {
-            if let actualValue = newValue as? (Any?, Bool) {
+            if let actualValue = newValue as? (Any?, Bool, Selector?) {
                 super.objectValue = actualValue.0 as? Int
                 self.isEnabled = actualValue.1
             }

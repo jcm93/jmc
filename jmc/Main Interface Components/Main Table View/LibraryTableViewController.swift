@@ -62,6 +62,18 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         }
     }
     
+    @IBAction func tableViewAction(_ sender: Any) {
+        guard tableView.clickedColumn == 0 else { return }
+        guard let track = ((self.trackViewArrayController.arrangedObjects as? NSArray)?[tableView.clickedRow] as? TrackView)?.track else { return }
+        if track.is_available == false {
+            print("clicked unavailable \(track.name)")
+            self.mainWindowController?.delegate?.openLibraryManager(self)
+            self.mainWindowController?.delegate?.preferencesWindowController?.libraryManagerViewController?.tabView.selectTabViewItem(at: 1)
+            self.mainWindowController?.delegate?.preferencesWindowController?.libraryManagerViewController?.verifyLocationsPressed(self)
+            
+        }
+    }
+    
     @IBAction func toggleEnabled(_ sender: Any) {
         guard self.trackViewArrayController.selectedObjects.count > 0 else { return }
         for trackView in trackViewArrayController.selectedObjects as! [TrackView] {
@@ -83,6 +95,15 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             let indexOfSkipsColumn = self.tableView.column(withIdentifier: "skip_count")
             let tableColumnIndexSet = IndexSet([0, indexOfPlaysColumn, indexOfSkipsColumn])
             tableView.reloadData(forRowIndexes: tableRowIndexSet, columnIndexes: tableColumnIndexSet)
+        }
+    }
+    
+    func reloadDataForTrack(_ track: Track, orRow row: Int?) {
+        if let row = row {
+            tableView.reloadData(forRowIndexes: IndexSet(integer: row), columnIndexes: IndexSet(0..<tableView.tableColumns.count))
+        } else {
+            let row = (trackViewArrayController.arrangedObjects as! [TrackView]).index(of: track.view!)!
+            tableView.reloadData(forRowIndexes: IndexSet(integer: row), columnIndexes: IndexSet(0..<tableView.tableColumns.count))
         }
     }
     
