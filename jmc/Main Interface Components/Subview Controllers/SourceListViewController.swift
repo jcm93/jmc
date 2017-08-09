@@ -138,7 +138,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
 
     func reloadData() {
-        print("reload data called")
+        print("source list reload data called")
         let selection = sourceList.selectedRowIndexes
         sourceList.reloadData()
         sourceList.selectRowIndexes(selection, byExtendingSelection: false)

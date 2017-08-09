@@ -23,6 +23,9 @@ class LastFMDelegate: NSObject {
     
     override init() {
         super.init()
+    }
+    
+    func setup() {
         if globalRootLibrary?.last_fm_session_key == nil {
             let methodParameter = URLQueryItem(name: "method", value: "auth.getToken")
             let apiKeyParameter = URLQueryItem(name: "api_key", value: apiKey)
@@ -32,7 +35,6 @@ class LastFMDelegate: NSObject {
             let task = URLSession.shared.dataTask(with: tokenRequestURLComponents!.url!, completionHandler: handleGetAuthTokenResponse)
             task.resume()
         }
-        
     }
     
     func handleGetAuthTokenResponse(data: Data?, response: URLResponse?, err: Error?) {

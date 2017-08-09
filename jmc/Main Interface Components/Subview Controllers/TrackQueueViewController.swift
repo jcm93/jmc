@@ -87,6 +87,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     var currentTrack: Track?
     var shuffle: Bool = false
     var activePlayOrders = [PlaylistOrderObject]()
+    var rightMouseDownTarget: IndexSet?
     
     func reloadData() {
         tableView?.reloadData()
@@ -185,6 +186,30 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         makePlaylistFromSelection()
     }
     
+    @IBAction func clearUpcoming(_ sender: Any) {
+        let indexSet = IndexSet(integersIn: ((self.currentTrackIndex! + 1)..<self.trackQueue.count - 1))
+        for index in indexSet.sorted().reversed() {
+            trackQueue.remove(at: index)
+        }
+        tableView.removeRows(at: indexSet, withAnimation: .slideUp)
+    }
+    
+    @IBAction func shuffleUpcoming(_ sender: Any) {
+        for i in (self.currentTrackIndex! + 1)..<self.trackQueue.count - 2 {
+            let j = Int(arc4random_uniform(UInt32(self.trackQueue.count - 1 - i))) + i
+            guard i != j else { continue }
+            swap(&trackQueue[i], &trackQueue[j])
+        }
+        tableView.reloadData()
+    }
+    
+    @IBAction func removeFromQueue(_ sender: Any) {
+        tableView.removeRows(at: self.rightMouseDownTarget!, withAnimation: .slideUp)
+        for row in tableView.selectedRowIndexes.sorted().reversed() {
+            self.trackQueue.remove(at: row)
+        }
+    }
+    
     func insertTrackInQueue(_ track: Track, index: Int, context: String, manually: Bool) {
         if index < trackQueue.count {
             let newTrackView = TrackQueueView()
@@ -201,6 +226,15 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         }
         else {
             addTrackToQueue(track, context: context, tense: 1, manually: manually)
+        }
+    }
+    
+    func determineRightMouseDownTarget(_ row: Int) {
+        let selectedRows = self.tableView.selectedRowIndexes
+        if selectedRows.contains(row) {
+            self.rightMouseDownTarget = selectedRows
+        } else {
+            self.rightMouseDownTarget = IndexSet(integer: row)
         }
     }
     

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -269,21 +269,33 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
             <items>
                 <menuItem title="Create Playlist from Selection" id="1ta-ZA-vfC">
                     <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="makePlaylistFromTrackQueueSelection:" target="-2" id="aTd-0E-kPp"/>
+                    </connections>
                 </menuItem>
                 <menuItem title="Remove from Queue" id="yJe-cq-6n0">
                     <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="removeFromQueue:" target="-2" id="fCt-Rs-umB"/>
+                    </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="ljj-Ui-lvw"/>
                 <menuItem title="Shuffle Upcoming" id="jwt-jW-MQB">
                     <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="shuffleUpcoming:" target="-2" id="zvE-bp-w9L"/>
+                    </connections>
                 </menuItem>
                 <menuItem title="Clear" id="1Ry-7D-3RY">
                     <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="clearUpcoming:" target="-2" id="VVd-mQ-b0E"/>
+                    </connections>
                 </menuItem>
             </items>
         </menu>
     </objects>
     <resources>
-        <image name="Playlist" width="20" height="20"/>
+        <image name="Playlist" width="24" height="24"/>
     </resources>
 </document>

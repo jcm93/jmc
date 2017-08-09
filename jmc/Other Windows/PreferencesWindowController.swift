@@ -127,6 +127,7 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
         if self.lastFMDelegate == nil {
             let appDelegate = NSApplication.shared().delegate as! AppDelegate
             self.lastFMDelegate = appDelegate.lastFMDelegate
+            self.lastFMDelegate.setup()
         }
     }
     
