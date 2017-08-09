@@ -496,12 +496,13 @@ class DatabaseManager: NSObject {
     func getNonAudioFiles(inDirectory directory: URL) -> [(URL, CFString)]? {
         do {
             var currentDirectoryAddableFiles = [(URL, CFString)]()
-            let enumerator = fileManager.enumerator(atPath: directory.path)
-            for fileObject in enumerator! {
-                guard let file = fileObject as? URL else { continue }
-                if let uti = (try? file.resourceValues(forKeys: [.typeIdentifierKey]))?.typeIdentifier as CFString? {
-                    if UTTypeConformsTo(uti, kUTTypeImage) || UTTypeConformsTo(uti, kUTTypePDF) || UTTypeConformsTo(uti, kUTTypeLog) || UTTypeConformsTo(uti, kUTTypeText) || file.pathExtension.lowercased() == "cue" {
-                        currentDirectoryAddableFiles.append((file, uti))
+            if let enumerator = fileManager.enumerator(atPath: directory.path) {
+                for fileObject in enumerator {
+                    guard let file = fileObject as? URL else { continue }
+                    if let uti = (try? file.resourceValues(forKeys: [.typeIdentifierKey]))?.typeIdentifier as CFString? {
+                        if UTTypeConformsTo(uti, kUTTypeImage) || UTTypeConformsTo(uti, kUTTypePDF) || UTTypeConformsTo(uti, kUTTypeLog) || UTTypeConformsTo(uti, kUTTypeText) || file.pathExtension.lowercased() == "cue" {
+                            currentDirectoryAddableFiles.append((file, uti))
+                        }
                     }
                 }
             }
@@ -697,6 +698,7 @@ class DatabaseManager: NSObject {
                 track.volume = newVolume
                 let newSourceListItemForVolume = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: subContext) as! SourceListItem
                 newSourceListItemForVolume.volume = newVolume
+                newSourceListItemForVolume.name = newVolume.name
                 (subContext.object(with: globalRootLibrarySourceListItem!.objectID) as! SourceListItem).addToChildren(newSourceListItemForVolume)
                 addedVolumes[volumeURL] = newVolume
             }

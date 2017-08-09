@@ -44,7 +44,7 @@ class InitialSetupWindowController: NSWindowController {
     @IBOutlet weak var modifyMetadataCheckBox: NSButton!
     @IBOutlet weak var libraryPathControl: NSPathControl!
     
-    var organizationType: LibraryOrganizationType = .move
+    var organizationType: LibraryOrganizationType = .none
     var modifyMetadata: Bool = false
     var directoryURL: URL?
     var library: Library?
@@ -119,6 +119,7 @@ class InitialSetupWindowController: NSWindowController {
                 } else {
                     centralURL = jmcDirURL
                 }
+                return
             } else {
                 centralURL = jmcDirURL
             }

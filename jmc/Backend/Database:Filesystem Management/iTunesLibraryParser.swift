@@ -35,6 +35,7 @@ class iTunesLibraryParser: NSObject {
     var albumsWithUnknownArtists = [Album]()
     
     func makeLibrary(parentLibrary: Library?, visualUpdateHandler: ProgressBarController?) {
+        //volume?
         let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         subContext.parent = managedContext
         let library = subContext.object(with: parentLibrary!.objectID) as? Library
