@@ -45,6 +45,7 @@
 		0D3E00871E3F1DC4007C1C83 /* jmc.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0D3E00851E3F1DC4007C1C83 /* jmc.xcdatamodeld */; };
 		0D40A9F21D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */; };
 		0D447BB91EB2B73F00372A80 /* JMTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D447BB81EB2B73F00372A80 /* JMTextField.swift */; };
+		0D48D0DF1F3D444B00ABAAC6 /* MediaKeyListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D48D0DE1F3D444B00ABAAC6 /* MediaKeyListener.swift */; };
 		0D51C8A11EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C89F1EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift */; };
 		0D51C8A21EABD74B002F6182 /* ChangePrimaryFolderSheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D51C8A01EABD74B002F6182 /* ChangePrimaryFolderSheetController.xib */; };
 		0D51C8A51EAC01F8002F6182 /* ConsolidateLibrarySheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C8A31EAC01F8002F6182 /* ConsolidateLibrarySheetController.swift */; };
@@ -261,6 +262,7 @@
 		0D3E00861E3F1DC4007C1C83 /* jmc.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = jmc.xcdatamodel; sourceTree = "<group>"; };
 		0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransformerIntegerToTimestamp.swift; path = Backend/Formatters/TransformerIntegerToTimestamp.swift; sourceTree = "<group>"; };
 		0D447BB81EB2B73F00372A80 /* JMTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JMTextField.swift; path = "Other Windows/JMTextField.swift"; sourceTree = "<group>"; };
+		0D48D0DE1F3D444B00ABAAC6 /* MediaKeyListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaKeyListener.swift; sourceTree = "<group>"; };
 		0D51C89F1EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangePrimaryFolderSheetController.swift; path = "Other Windows/Library Manager/Sheets/ChangePrimaryFolderSheetController.swift"; sourceTree = "<group>"; };
 		0D51C8A01EABD74B002F6182 /* ChangePrimaryFolderSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ChangePrimaryFolderSheetController.xib; path = "Other Windows/Library Manager/Sheets/ChangePrimaryFolderSheetController.xib"; sourceTree = "<group>"; };
 		0D51C8A31EAC01F8002F6182 /* ConsolidateLibrarySheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConsolidateLibrarySheetController.swift; path = "Other Windows/Library Manager/Sheets/ConsolidateLibrarySheetController.swift"; sourceTree = "<group>"; };
@@ -521,6 +523,7 @@
 				0DA02D371EFB098900DDE5A9 /* StupidSearchField.swift */,
 				0DF4BEF21CFD0D4E00AC5824 /* MainWindowController.xib */,
 				0DAB30971CFBA3340028928F /* MainMenu.xib */,
+				0D48D0DE1F3D444B00ABAAC6 /* MediaKeyListener.swift */,
 			);
 			name = "Delegate/Main Window Controller";
 			sourceTree = "<group>";
@@ -1085,6 +1088,7 @@
 				0D51C8B21EB01731002F6182 /* JMTabView.swift in Sources */,
 				0D01AD911D7079D900F9211F /* EqualizerWindowController.swift in Sources */,
 				0D76F6A81D24B9AC00C6E70F /* DatabaseManager.swift in Sources */,
+				0D48D0DF1F3D444B00ABAAC6 /* MediaKeyListener.swift in Sources */,
 				0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */,
 				0D2300D81F29108B007D392A /* LastFMDelegate.swift in Sources */,
 				0D606EF91E7B4DB0007AE152 /* AVAudioFileBufferer.swift in Sources */,

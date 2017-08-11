@@ -8,6 +8,7 @@
 
 import Cocoa
 import AVFoundation
+import AVKit
 
 // FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
 // Consider refactoring the code to use the non-optional operators.

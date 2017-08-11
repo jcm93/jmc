@@ -8,7 +8,6 @@
 //
 
 import Cocoa
-//import sReto
 
 
 @NSApplicationMain
@@ -29,6 +28,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     var backgroundAddFilesHandler: GenericProgressBarSheetController?
     var addFilesQueueLoop: AddFilesQueueLoop?
     var lastFMDelegate: LastFMDelegate?
+    var mediaKeyListener: MediaKeyListener?
+    
     @IBOutlet weak var jmcWindowMenuItem: NSMenuItem!
     @IBOutlet weak var equalizerWindowMenuItem: NSMenuItem!
     
@@ -243,6 +244,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         //NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidChangeDebug), name: Notification.Name.NSManagedObjectContextObjectsDidChange, object: managedObjectContext)
         NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidUndo), name: Notification.Name.NSUndoManagerDidUndoChange, object: managedObjectContext.undoManager)
+        self.mediaKeyListener = MediaKeyListener(self)
     }
     
     func managedObjectsDidUndo() {
