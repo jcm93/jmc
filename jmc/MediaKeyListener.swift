@@ -69,10 +69,10 @@ class MediaKeyListener: NSObject {
                 
             }
         default:
-            break
+            return Unmanaged.passRetained(event)
         }
         print(keyCode)
-        return Unmanaged.passRetained(event)
+        return nil
     }
     
     func sendPlayEvent() {
@@ -94,6 +94,8 @@ class MediaKeyListener: NSObject {
     }
     
     init(_ delegate: AppDelegate) {
+        
+        //todo: program currently just occupies top of media player key hierarchy; when it's open, itunes/vlc/etc. won't receive media key events. consider using SPMediaKeyTap instead
         self.delegate = delegate
         super.init()
         //DispatchQueue.global(qos: .default).async {
