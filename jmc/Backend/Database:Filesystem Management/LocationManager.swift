@@ -347,4 +347,5 @@ class LocationManager: NSObject {
         FSEventStreamInvalidate(eventStream)
         FSEventStreamRelease(eventStream)
     }
+    
 }
