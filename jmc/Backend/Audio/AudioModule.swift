@@ -160,12 +160,12 @@ class AudioModule: NSObject {
     override init() {
         //self.airplayDeviceHandler = AirPlayDeviceHandler()
         super.init()
-        addListenerBlock(audioObjectPropertyListenerBlock,
+        /*addListenerBlock(audioObjectPropertyListenerBlock,
                          onAudioObjectID: AudioObjectID(bitPattern: kAudioObjectSystemObject),
                          forPropertyAddress: AudioObjectPropertyAddress(
                             mSelector: kAudioHardwarePropertyDefaultOutputDevice,
                             mScope: kAudioObjectPropertyScopeGlobal,
-                            mElement: kAudioObjectPropertyElementMaster))
+                            mElement: kAudioObjectPropertyElementMaster))*/
         doInitialization()
     }
     
