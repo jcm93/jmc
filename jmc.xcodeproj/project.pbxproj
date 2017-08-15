@@ -958,6 +958,7 @@
 			knownRegions = (
 				en,
 				Base,
+				English,
 			);
 			mainGroup = 0DAB30841CFBA3340028928F;
 			productRefGroup = 0DAB308E1CFBA3340028928F /* Products */;
