@@ -256,6 +256,9 @@ class AudioModule: NSObject {
     func adjustGain(_ value: Float) {
         guard -12 <= value && value <= 12 else {return}
         equalizer.globalGain = value
+        var defaultsEQ = equalizer.bands.map({return $0.gain})
+        defaultsEQ.append(equalizer.globalGain)
+        UserDefaults.standard.set(defaultsEQ, forKey: DEFAULTS_CURRENT_EQ_STRING)
     }
     
     func playNetworkImmediately(_ track: Track) {
