@@ -88,6 +88,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     var shuffle: Bool = false
     var activePlayOrders = [PlaylistOrderObject]()
     var rightMouseDownTarget: IndexSet?
+    var upcomingTrack: Track?
     
     func reloadData() {
         tableView?.reloadData()
@@ -123,6 +124,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     
     func changeCurrentTrack(_ track: Track) {
         print("change current track called")
+        self.upcomingTrack = nil
         self.currentAudioSource = self.currentSourceListItem
         if (trackQueue.count == 0) {
             let newCurrentTrackView = TrackQueueView()
@@ -379,9 +381,10 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                         next_track = getTrackWithID(id!)
                     }
                 }
-                DispatchQueue.main.async {
+                self.upcomingTrack = next_track!
+                /*DispatchQueue.main.async {
                     self.addTrackToQueue(next_track!, context: self.currentAudioSource!.name!, tense: 2, manually: false)
-                }
+                }*/
                 return next_track
             }
         }

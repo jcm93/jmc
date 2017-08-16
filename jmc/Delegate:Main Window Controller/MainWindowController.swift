@@ -60,12 +60,12 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     @IBOutlet weak var barViewToggle: NSView!
     
     //subview controllers
-    var sourceListViewController: SourceListViewController?
-    var trackQueueViewController: TrackQueueViewController?
+    var sourceListViewController: SourceListViewController!
+    var trackQueueViewController: TrackQueueViewController!
     var otherLocalTableViewControllers = NSMutableDictionary()
     var otherSharedTableViewControllers = NSMutableDictionary()
-    var currentTableViewController: LibraryTableViewController?
-    var albumArtViewController: AlbumArtViewController?
+    var currentTableViewController: LibraryTableViewController!
+    var albumArtViewController: AlbumArtViewController!
     var advancedFilterViewController: AdvancedFilterViewController?
     
     //subordinate window controllers
@@ -672,34 +672,21 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         if self.delegate?.audioModule.isSeeking != true {
             let nodeTime = delegate?.audioModule.curPlayerNode.lastRenderTime
             let playerTime = delegate?.audioModule.curPlayerNode.playerTime(forNodeTime: nodeTime!)
-            print("unsafe update times")
-            print(nodeTime)
-            print(playerTime)
             var offset_thing: Double?
             if delegate?.audioModule.track_frame_offset == nil {
                 offset_thing = 0
             }
             else {
                 offset_thing  = delegate?.audioModule.track_frame_offset!
-                print(offset_thing)
             }
-            print(delegate?.audioModule.total_offset_seconds)
-            print(delegate?.audioModule.total_offset_frames)
             let seconds = ((Double((playerTime?.sampleTime)!) + offset_thing!) / (playerTime?.sampleRate)!) - Double(delegate!.audioModule.total_offset_seconds)
             let seconds_string = getTimeAsString(seconds)
-            //if timer?.isValid == true {
-                print("within valid clause")
-                currentTimeLabel.stringValue = seconds_string!
-                print(seconds_string)
-                progressBar.doubleValue = (seconds * 100) / duration!
-                if self.durationShowsTimeRemaining {
-                    durationLabel.stringValue = "-\(getTimeAsString(duration! - secsPlayed)!)"
-                }
-            //}
-            //else {
-                //currentTimeLabel.stringValue = ""
-                //progressBar.doubleValue = 0
-            //}
+            currentTimeLabel.stringValue = seconds_string!
+            print(seconds_string)
+            progressBar.doubleValue = (seconds * 100) / duration!
+            if self.durationShowsTimeRemaining {
+                durationLabel.stringValue = "-\(getTimeAsString(duration! - secsPlayed)!)"
+            }
             secsPlayed = seconds
             lastTimerDate = Date()
         }
@@ -772,6 +759,10 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         if context == &my_context {
             if keyPath! == "track_changed" {
                 print("controller detects track change")
+                if trackQueueViewController?.upcomingTrack != nil {
+                    trackQueueViewController.addTrackToQueue(trackQueueViewController.upcomingTrack!, context: trackQueueViewController.currentAudioSource!.name!, tense: 2, manually: false)
+                    trackQueueViewController.upcomingTrack = nil
+                }
                 self.progressBarView.blockSeekEvents()
                 notEnablingUndo {
                     self.currentTrack?.is_playing = false

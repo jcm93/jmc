@@ -397,6 +397,7 @@ class AudioModule: NSObject {
         } else {
             if self.isFirstPlayback == true {
                 print("this should only be called if no tracks have played yet")
+                self.isFirstPlayback = false
                 DispatchQueue.main.async {
                     if self.track_changed == false {
                         self.track_changed = true
@@ -643,6 +644,7 @@ class AudioModule: NSObject {
                     self.nextBufferStartFrame += Int64(initialBuffer!.frameLength)
                     print("scheduling initial buffer at frame \(gapless_duration)")
                     self.endOfCurrentTrackFrame = gapless_duration.sampleTime
+                    
                     if initialBuffer!.format != self.curPlayerNode.outputFormat(forBus: 0) {
                         print("setting different format")
                         self.nextFileIsDifferentFormat = true
@@ -651,11 +653,11 @@ class AudioModule: NSObject {
                     } else {
                         self.curPlayerNode.scheduleBuffer(initialBuffer!, at: gapless_duration, options: .init(rawValue: 0), completionHandler: self.fileBuffererCompletion)
                     }
+                    
                     let secondsPlayed = Double(self.curPlayerNode.playerTime(forNodeTime: self.curPlayerNode.lastRenderTime!)!.sampleTime) / self.curPlayerNode.lastRenderTime!.sampleRate
                     let delay = ((Double(gapless_duration.sampleTime) / gapless_duration.sampleRate) - secondsPlayed)
                     print("delay set to \(delay)")
                     self.upcomingTrackURL = url
-                    //do this differently
                     let thisChangeEventID = self.changeTrackEventCounter
                     self.changeTrackEventCounter += 1
                     self.currentValidChangeTrackEventID = thisChangeEventID
@@ -668,9 +670,6 @@ class AudioModule: NSObject {
     }
     
     func handleCompletion(optionalID: Int?) {
-        //called any time the playback node is stopped, whether for a seek, skip, or natural playback operation ending
-        //if this is the result of a scheduleFile or scheduleSegment operation, it is called after the last segment of the buffer is scheduled, not played. this is not the case for scheduleBuffer operations
-        //this can probably crash all over the place if the database can't be accessed for any reason
         print("handle completion called")
         switch currentHandlerType {
         case .natural:
