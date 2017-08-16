@@ -59,6 +59,7 @@ extension SongCollection {
     func addToTracks(_ values: [Any]) {
         let currentTracks = self.tracks?.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
         currentTracks.addObjects(from: values)
+        self.tracks = currentTracks as NSOrderedSet
     }
 
     @objc(removeTracks:)
