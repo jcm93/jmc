@@ -490,6 +490,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     
     func seek(_ frac: Double) {
         delegate?.audioModule.seek(frac)
+        //callback is seekCompleted()
     }
     
     func seekCompleted() {
@@ -686,7 +687,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             print(delegate?.audioModule.total_offset_frames)
             let seconds = ((Double((playerTime?.sampleTime)!) + offset_thing!) / (playerTime?.sampleRate)!) - Double(delegate!.audioModule.total_offset_seconds)
             let seconds_string = getTimeAsString(seconds)
-            if (timer?.isValid == true) {
+            //if timer?.isValid == true {
                 print("within valid clause")
                 currentTimeLabel.stringValue = seconds_string!
                 print(seconds_string)
@@ -694,11 +695,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
                 if self.durationShowsTimeRemaining {
                     durationLabel.stringValue = "-\(getTimeAsString(duration! - secsPlayed)!)"
                 }
-            }
-            else {
-                currentTimeLabel.stringValue = ""
-                progressBar.doubleValue = 0
-            }
+            //}
+            //else {
+                //currentTimeLabel.stringValue = ""
+                //progressBar.doubleValue = 0
+            //}
             secsPlayed = seconds
             lastTimerDate = Date()
         }

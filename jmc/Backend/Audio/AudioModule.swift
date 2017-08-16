@@ -774,6 +774,7 @@ class AudioModule: NSObject {
         track_frame_offset = Double(frame)
         currentHandlerType = .seek
         currentFileBufferer!.seek(to: frame)//can take place on multiple threads, do not set isSeeking to false yet
+        //ends up at self.fileBuffererSeekDecodeCallback
     }
     
     func seekCallback() {
