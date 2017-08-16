@@ -101,7 +101,7 @@ class LastFMDelegate: NSObject {
     }
     
     func scrobble(track: Track, timestamp: Date) {
-        guard self.scrobbles else { return }
+        guard self.scrobbles, self.sessionKey != "" else { return }
         guard track.artist?.name != nil , track.name != nil else { print("can't scrobble nil track"); return }
         var request = URLRequest(url: baseURL)
         request.httpMethod = "POST"
