@@ -395,7 +395,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         var indicesToRemove = [Int]()
         var amountToOffsetCurrentSourceIndex = 0
         for (index, id) in currentAudioSource!.playOrderObject!.current_play_order!.enumerated() {
-            if idSet.contains(id) && id != currentAudioSource!.playOrderObject?.current_play_order![currentSourceIndex!] {
+            if idSet.contains(id), currentAudioSource?.playOrderObject?.current_play_order?.count < currentSourceIndex, id != currentAudioSource!.playOrderObject?.current_play_order![currentSourceIndex!] {
                 indicesToRemove.append(index)
                 if index == currentSourceIndex { print("trying to remove from queue at currentSourceIndex") }
                 if index < currentSourceIndex! {

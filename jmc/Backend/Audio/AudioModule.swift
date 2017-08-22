@@ -143,7 +143,7 @@ class AudioModule: NSObject {
     var currentValidQueueEventID: Int = 0
     var differentFileScheduleTime: AVAudioTime?
     
-    var total_offset_frames: Int64 = 0
+    var total_offset_frames:   Int64 = 0
     var total_offset_seconds: Double = 0
     var nextBufferStartFrame: Int64 = 0
     var nextFileIsDifferentFormat = false
