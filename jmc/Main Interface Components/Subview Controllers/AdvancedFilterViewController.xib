@@ -65,6 +65,9 @@
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
+                                        <connections>
+                                            <action selector="doesLimitChanged:" target="-2" id="PPZ-Bp-IYI"/>
+                                        </connections>
                                     </button>
                                     <popUpButton verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hJp-25-SH6">
                                         <rect key="frame" x="504" y="2" width="76" height="26"/>
@@ -99,6 +102,9 @@
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
+                                        <connections>
+                                            <action selector="fetchLimitChanged:" target="-2" id="kIS-dS-AgJ"/>
+                                        </connections>
                                     </textField>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uwd-Rw-Gqo">
                                         <rect key="frame" x="583" y="8" width="81" height="17"/>
@@ -1403,6 +1409,9 @@
                                                 </popUpMenus>
                                             </predicateEditorRowTemplate>
                                         </rowTemplates>
+                                        <connections>
+                                            <action selector="predicateEditorAction:" target="-2" id="TOo-0K-bMC"/>
+                                        </connections>
                                     </predicateEditor>
                                 </subviews>
                                 <constraints>

@@ -203,7 +203,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         if let item = sender as? NSMenuItem {
             item.state = item.state == NSOnState ? NSOffState : NSOnState
         }
-        mainWindowController?.toggleFilterVisibility(self)
+        mainWindowController?.advancedFilterButtonPressed(self)
     }
     
     @IBAction func testyThing(_ sender: AnyObject) {

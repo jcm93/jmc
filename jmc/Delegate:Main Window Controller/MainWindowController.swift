@@ -327,7 +327,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         delegate?.shuffleMenuItem.state = shuffleButton.state
     }
     
+    @IBAction func skipBackward(_ sender: Any) {
+        self.skipBackward()
+    }
     @IBAction func tempBreak(_ sender: AnyObject) {
+        self.skip()
         print("dongels")
     }
     @IBAction func addPlaylistButton(_ sender: AnyObject) {
@@ -558,6 +562,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }
     }
     @IBAction func advancedFilterButtonPressed(_ sender: AnyObject) {
+        if sender is AppDelegate {
+            self.advancedSearchToggle.state = self.advancedSearchToggle.state == NSOnState ? NSOffState : NSOnState
+        }
         if advancedSearchToggle.state == NSOnState {
             showAdvancedFilter()
         } else {
@@ -565,45 +572,21 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }
     }
     
-    @IBAction func toggleFilterVisibility(_ sender: AnyObject) {
-        if advancedFilterViewController?.view != nil {
-            advancedSearchToggle.state = NSOffState
-            advancedFilterViewController!.view.removeFromSuperview()
-            currentTableViewController?.trackViewArrayController.filterPredicate = nil
-            //librarySplitView.removeArrangedSubview(advancedFilterViewController!.view)
-            advancedFilterViewController = nil
-            currentTableViewController?.advancedFilterVisible = false
-        } else {
-            advancedSearchToggle.state = NSOnState
-            self.advancedFilterViewController = AdvancedFilterViewController(nibName: "AdvancedFilterViewController", bundle: nil)
-            advancedFilterViewController!.mainWindowController = self
-            librarySplitView.insertArrangedSubview(advancedFilterViewController!.view, at: 0)
-            advancedFilterViewController?.predicateEditor!.bind("value", to: currentTableViewController!.trackViewArrayController, withKeyPath: "filterPredicate", options: nil)
-            currentTableViewController?.advancedFilterVisible = true
-            advancedFilterViewController?.initializePredicateEditor()
-        }
-    }
-    
     func showAdvancedFilter() {
         if advancedFilterViewController?.view == nil {
-            self.advancedFilterViewController = AdvancedFilterViewController(nibName: "AdvancedFilterViewController", bundle: nil)
+            self.advancedFilterViewController = AdvancedFilterViewController(tableViewController: self.currentTableViewController!)
+            //self.advancedFilterViewController = AdvancedFilterViewController(nibName: "AdvancedFilterViewController", bundle: nil)
             advancedFilterViewController!.mainWindowController = self
             librarySplitView.insertArrangedSubview(advancedFilterViewController!.view, at: 0)
-            advancedFilterViewController?.predicateEditor!.bind("value", to: currentTableViewController!.trackViewArrayController, withKeyPath: "filterPredicate", options: nil)
-            currentTableViewController?.advancedFilterVisible = true
             advancedFilterViewController?.initializePredicateEditor()
-            advancedSearchToggle.state = NSOnState
         }
     }
     
     func hideAdvancedFilter() {
         if advancedFilterViewController != nil {
             advancedFilterViewController!.view.removeFromSuperview()
-            currentTableViewController?.trackViewArrayController.filterPredicate = nil
-            //librarySplitView.removeArrangedSubview(advancedFilterViewController!.view)
-            advancedFilterViewController = nil
+            self.advancedFilterViewController = nil
             currentTableViewController?.advancedFilterVisible = false
-            advancedSearchToggle.state = NSOffState
         }
     }
     

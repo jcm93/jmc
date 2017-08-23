@@ -8,6 +8,8 @@
 
 import Cocoa
 
+private var my_context = 0
+
 class AdvancedFilterViewController: NSViewController {
     
     @IBOutlet weak var predicateEditor: NSPredicateEditor!
@@ -18,19 +20,90 @@ class AdvancedFilterViewController: NSViewController {
     @IBOutlet weak var itemLimitField: NSTextField!
     @IBOutlet weak var playlistSelectionCriteriaSelector: NSPopUpButton!
     
-    var mainWindowController: MainWindowController?
+    var mainWindowController: MainWindowController!
+    var tableViewController: LibraryTableViewController!
+    var editingSmartPlaylist = false
+    var isInitialized = false
+    
+    init(tableViewController: LibraryTableViewController) {
+        super.init(nibName: "AdvancedFilterViewController", bundle: nil)!
+        self.tableViewController = tableViewController
+        self.tableViewController.advancedFilterVisible = true
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    @IBAction func doesLimitChanged(_ sender: Any) {
+        guard let button = sender as? NSButton else { return }
+        if button.state == NSOnState {
+            self.tableViewController.playlist?.smart_criteria?.fetch_limit = self.itemLimitField.integerValue as NSNumber?
+            self.tableViewController.playlist?.smart_criteria?.fetch_limit_type = self.playlistLengthDeterminantSelector.titleOfSelectedItem!
+            self.tableViewController.playlist?.smart_criteria?.ordering_criterion = self.playlistSelectionCriteriaSelector.titleOfSelectedItem!
+        } else {
+            self.tableViewController.playlist?.smart_criteria?.fetch_limit = nil
+            self.tableViewController.playlist?.smart_criteria?.fetch_limit_type = nil
+            self.tableViewController.playlist?.smart_criteria?.ordering_criterion = nil
+        }
+        self.tableViewController.initializeSmartPlaylist()
+        self.tableViewController.initializeForPlaylist()
+        
+    }
+    
+    @IBAction func fetchLimitChanged(_ sender: Any) {
+        guard let textField = sender as? NSTextField else { return }
+        guard limitCheck.state == NSOnState else { return }
+        self.tableViewController.playlist?.smart_criteria?.fetch_limit = textField.integerValue as NSNumber?
+        self.tableViewController.initializeSmartPlaylist()
+        self.tableViewController.initializeForPlaylist()
+    }
     
     @IBAction func lengthDeterminantChanged(_ sender: AnyObject) {
-        
+        guard let popUpButton = sender as? NSPopUpButton else { return }
+        guard limitCheck.state == NSOnState else { return }
+        self.tableViewController.playlist?.smart_criteria?.fetch_limit_type = popUpButton.titleOfSelectedItem!
+        self.tableViewController.initializeSmartPlaylist()
+        self.tableViewController.initializeForPlaylist()
     }
 
     @IBAction func orderingCriterionChanged(_ sender: AnyObject) {
-        
+        guard let popUpButton = sender as? NSPopUpButton else { return }
+        guard limitCheck.state == NSOnState else { return }
+        self.tableViewController.playlist?.smart_criteria?.ordering_criterion = popUpButton.titleOfSelectedItem!
+        self.tableViewController.initializeSmartPlaylist()
+        self.tableViewController.initializeForPlaylist()
     }
     
     func initializePredicateEditor() {
+        if let smartCriteria = self.tableViewController.playlist?.smart_criteria {
+            self.predicateEditor.objectValue = smartCriteria.predicate
+            self.itemLimitField.stringValue = smartCriteria.fetch_limit?.stringValue ?? ""
+            self.limitCheck.state = smartCriteria.fetch_limit != nil ? NSOnState : NSOffState
+            if smartCriteria.fetch_limit_type != nil {
+                self.playlistLengthDeterminantSelector.selectItem(withTitle: smartCriteria.fetch_limit_type!)
+            }
+            if smartCriteria.ordering_criterion != nil {
+                self.playlistSelectionCriteriaSelector.selectItem(withTitle: smartCriteria.ordering_criterion!)
+            }
+        } else {
+            self.predicateEditor.objectValue = self.tableViewController.trackViewArrayController.filterPredicate
+        }
         if predicateEditor.predicate == nil {
             predicateEditor.addRow(nil)
+        }
+    }
+    
+    @IBAction func predicateEditorAction(_ sender: Any) {
+        print("predicate value changed")
+        if self.tableViewController.playlist?.smart_criteria != nil {
+            if self.editingSmartPlaylist == false {
+                self.tableViewController.trackViewArrayController.content = nil
+                self.editingSmartPlaylist = true
+            }
+            self.tableViewController.playlist!.smart_criteria!.predicate = self.predicateEditor.predicate!
+            self.tableViewController.initializeSmartPlaylist()
+            self.tableViewController.initializeForPlaylist()
         }
     }
     

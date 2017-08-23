@@ -604,8 +604,8 @@ let DEFAULT_COLUMN_VISIBILITY_DICTIONARY_CONSOLIDATOR: [String : Int] = [
 ]
 
 
-func shuffleArray(_ array: [AnyObject]) -> [AnyObject]? {
-    guard array.count > 0 else {return nil}
+func shuffleArray(_ array: [AnyObject]) -> [AnyObject] {
+    guard array.count > 0 else { return array }
     var newArray = array
     for i in 0..<array.count - 1 {
         let j = Int(arc4random_uniform(UInt32(array.count - i))) + i

@@ -134,11 +134,6 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         guard tableView!.selectedRow >= 0 else {
             return
         }
-        /*
-        single
-        let item = (trackViewArrayController?.arrangedObjects as! [TrackView])[tableView!.selectedRow].track
-        mainWindowController!.playSong(item!, row: tableView!.selectedRow)
-        */
         var items = (trackViewArrayController.selectedObjects as! [TrackView]).map({return $0.track!})
         if mainWindowController!.playSong(items.removeFirst(), row: nil) {
             mainWindowController?.trackQueueViewController?.addTracksToQueue(nil, tracks: items)
@@ -304,7 +299,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                 if smart_criteria?.ordering_criterion != nil {
                     switch smart_criteria!.ordering_criterion! {
                     case "random":
-                        results = shuffleArray(results as! [Track]) as! NSArray
+                        results = shuffleArray(results as! [Track]) as NSArray
                     case "name":
                         results = results!.sortedArray(using: #selector(Track.compareName)) as NSArray
                     case "artist":

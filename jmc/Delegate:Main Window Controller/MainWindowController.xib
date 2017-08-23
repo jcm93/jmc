@@ -121,6 +121,9 @@
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
+                                        <connections>
+                                            <action selector="skipBackward:" target="-2" id="OTK-xq-TPJ"/>
+                                        </connections>
                                     </button>
                                     <button translatesAutoresizingMaskIntoConstraints="NO" id="jia-N3-aQf">
                                         <rect key="frame" x="48" y="1" width="26" height="26"/>
@@ -346,7 +349,7 @@
                             <real value="3.4028234663852886e+38"/>
                         </customSpacing>
                     </stackView>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qNB-cP-szA">
+                    <button toolTip="Toggle shuffle" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qNB-cP-szA">
                         <rect key="frame" x="20" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="LmL-mZ-ewB"/>
@@ -361,7 +364,7 @@
                             <binding destination="-2" name="value" keyPath="self.shuffle" id="bQc-Re-Dbd"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eg4-23-xqc" userLabel="Repeat Button">
+                    <button toolTip="Toggle track repeat" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eg4-23-xqc" userLabel="Repeat Button">
                         <rect key="frame" x="72" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="PRo-qA-k4d"/>
@@ -394,7 +397,7 @@
                             </binding>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rfk-1e-A3X" userLabel="Sharing Button">
+                    <button toolTip="Toggle library sharing" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rfk-1e-A3X" userLabel="Sharing Button">
                         <rect key="frame" x="176" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="2rr-OL-nC8"/>
@@ -405,7 +408,7 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0eg-hu-JdK" userLabel="Sharing Button">
+                    <button toolTip="Toggle advanced search" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0eg-hu-JdK" userLabel="Sharing Button">
                         <rect key="frame" x="228" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="GHm-oO-umr"/>
@@ -430,7 +433,7 @@
                             <binding destination="-2" name="value" keyPath="self.infoString" id="pea-7J-Wc9"/>
                         </connections>
                     </textField>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aLT-7j-MYS" userLabel="Sharing Button">
+                    <button toolTip="Hide or show album art" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aLT-7j-MYS" userLabel="Sharing Button">
                         <rect key="frame" x="124" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="Iw5-0h-g0a"/>
@@ -445,7 +448,7 @@
                             <binding destination="-2" name="value" keyPath="self.showsArtwork" id="4Jq-aQ-Coe"/>
                         </connections>
                     </button>
-                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mb6-nw-TjG" customClass="AddPlaylistButton" customModule="jmc" customModuleProvider="target">
+                    <segmentedControl toolTip="Add a playlist (Hold down to add a folder or Smart Playlist)" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mb6-nw-TjG" customClass="AddPlaylistButton" customModule="jmc" customModuleProvider="target">
                         <rect key="frame" x="280" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="8fu-YF-rDI"/>

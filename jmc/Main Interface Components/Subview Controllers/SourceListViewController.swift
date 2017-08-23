@@ -177,6 +177,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         let playlistItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
         playlistItem.playlist = playlist
         playlistItem.name = "New Playlist"
+        playlist.name = "New Playlist"
         if tracks != nil {
             playlist.tracks = NSOrderedSet(array: tracks!.map({return $0.view!}))
         }
@@ -282,12 +283,18 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
                 view.node = source
                 view.textField?.stringValue = source.name!
                 view.textField?.delegate = self
+                if source.playlist?.name != source.name {
+                    source.playlist?.name = source.name
+                }
                 return view
             } else {
                 let view = outlineView.make(withIdentifier: "PlaylistCell", owner: self) as! SourceListCellView
                 view.node = source
                 view.textField?.stringValue = source.name!
                 view.textField?.delegate = self
+                if source.playlist?.name != source.name {
+                    source.playlist?.name = source.name
+                }
                 return view
             }
         } else if source.is_network == true {
@@ -328,6 +335,9 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             view.node = source
             view.textField?.stringValue = source.name!
             view.textField?.delegate = self
+            if source.playlist?.name != source.name {
+                source.playlist?.name = source.name
+            }
             return view
         }
     }
