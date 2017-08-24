@@ -535,11 +535,15 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             offset_thing  = delegate?.audioModule.track_frame_offset!
             print(offset_thing)
         }
-        let seconds = ((Double((playerTime?.sampleTime)!) + offset_thing!) / (playerTime?.sampleRate)!) - Double(delegate!.audioModule.total_offset_seconds)
-        if seconds > 3 {
-            delegate?.audioModule.skip_backward()
-            initializeInterfaceForNewTrack()
-            self.isDoneWithSkipBackOperation = true
+        if playerTime != nil {
+            let seconds = ((Double((playerTime?.sampleTime)!) + offset_thing!) / (playerTime?.sampleRate)!) - Double(delegate!.audioModule.total_offset_seconds)
+            if seconds > 3 {
+                delegate?.audioModule.skip_backward()
+                initializeInterfaceForNewTrack()
+                self.isDoneWithSkipBackOperation = true
+            } else {
+                trackQueueViewController?.skipToPreviousTrack()
+            }
         } else {
             trackQueueViewController?.skipToPreviousTrack()
         }
