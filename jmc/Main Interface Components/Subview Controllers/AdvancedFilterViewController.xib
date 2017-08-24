@@ -29,14 +29,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="942" height="861"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DBS-Qu-nqM">
-                                <rect key="frame" x="0.0" y="714" width="1063" height="855"/>
+                            <view translatesAutoresizingMaskIntoConstraints="NO" id="DBS-Qu-nqM">
+                                <rect key="frame" x="0.0" y="0.0" width="969" height="849"/>
                                 <subviews>
                                     <box verticalHuggingPriority="750" misplaced="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="nX7-9b-EWU">
-                                        <rect key="frame" x="481" y="-2" width="34" height="5"/>
+                                        <rect key="frame" x="481" y="-8" width="34" height="5"/>
                                     </box>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gzy-68-YXg">
-                                        <rect key="frame" x="303" y="112" width="149" height="17"/>
+                                        <rect key="frame" x="303" y="106" width="149" height="17"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="24" id="5Vj-Bh-OZ9"/>
                                         </constraints>
@@ -47,7 +47,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eoa-Ns-eJT">
-                                        <rect key="frame" x="765" y="6" width="168" height="19"/>
+                                        <rect key="frame" x="765" y="0.0" width="168" height="19"/>
                                         <buttonCell key="cell" type="roundRect" title="Create Smart Playlist" bezelStyle="roundedRect" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="coe-e4-FJ1">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="cellTitle"/>
@@ -57,7 +57,7 @@
                                         </connections>
                                     </button>
                                     <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iMc-98-GX4">
-                                        <rect key="frame" x="390" y="7" width="77" height="18"/>
+                                        <rect key="frame" x="390" y="1" width="77" height="18"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="73" id="c0E-dw-NvK"/>
                                         </constraints>
@@ -70,7 +70,7 @@
                                         </connections>
                                     </button>
                                     <popUpButton verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hJp-25-SH6">
-                                        <rect key="frame" x="504" y="2" width="76" height="26"/>
+                                        <rect key="frame" x="504" y="-4" width="76" height="26"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="71" id="pGZ-Yo-axY"/>
                                         </constraints>
@@ -92,7 +92,7 @@
                                         </connections>
                                     </popUpButton>
                                     <textField verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uih-3t-llx">
-                                        <rect key="frame" x="465" y="5" width="33" height="22"/>
+                                        <rect key="frame" x="465" y="-1" width="33" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="33" id="8av-JT-YzS"/>
                                         </constraints>
@@ -107,7 +107,7 @@
                                         </connections>
                                     </textField>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uwd-Rw-Gqo">
-                                        <rect key="frame" x="583" y="8" width="81" height="17"/>
+                                        <rect key="frame" x="583" y="2" width="81" height="17"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="77" id="FxW-82-bZ2"/>
                                         </constraints>
@@ -118,7 +118,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <popUpButton verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="08W-on-0KQ">
-                                        <rect key="frame" x="662" y="2" width="91" height="26"/>
+                                        <rect key="frame" x="662" y="-4" width="91" height="26"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="86" id="19n-th-yd2"/>
                                         </constraints>
@@ -154,7 +154,7 @@
                                         </connections>
                                     </popUpButton>
                                     <predicateEditor verticalHuggingPriority="750" misplaced="YES" nestingMode="compound" rowHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="uhI-gx-qru">
-                                        <rect key="frame" x="14" y="35" width="563" height="800"/>
+                                        <rect key="frame" x="14" y="29" width="563" height="800"/>
                                         <rowTemplates>
                                             <predicateEditorRowTemplate rowType="compound" id="esj-Gs-eOS" userLabel="AND/OR Row Template">
                                                 <popUpMenus>
@@ -1413,6 +1413,20 @@
                                             <action selector="predicateEditorAction:" target="-2" id="TOo-0K-bMC"/>
                                         </connections>
                                     </predicateEditor>
+                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="6Lp-rI-x2N">
+                                        <rect key="frame" x="7" y="4" width="17" height="17"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="17" id="Ovf-3M-cno"/>
+                                            <constraint firstAttribute="height" constant="17" id="ZPK-zE-kNG"/>
+                                        </constraints>
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRefreshTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="pob-xA-R0J">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="refreshSmartPlaylist:" target="-2" id="0Rx-xa-MZS"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="uhI-gx-qru" secondAttribute="bottom" constant="25" id="26W-3e-me3"/>
@@ -1424,8 +1438,10 @@
                                     <constraint firstItem="Uwd-Rw-Gqo" firstAttribute="top" secondItem="Eoa-Ns-eJT" secondAttribute="top" id="6Vr-HS-taJ"/>
                                     <constraint firstItem="nX7-9b-EWU" firstAttribute="top" secondItem="uhI-gx-qru" secondAttribute="bottom" id="6wC-5W-vkD"/>
                                     <constraint firstAttribute="trailing" secondItem="08W-on-0KQ" secondAttribute="trailing" constant="313" id="9OS-qj-aRb"/>
+                                    <constraint firstAttribute="bottom" secondItem="6Lp-rI-x2N" secondAttribute="bottom" constant="4" id="9hN-hl-nMe"/>
                                     <constraint firstItem="uih-3t-llx" firstAttribute="baseline" secondItem="hJp-25-SH6" secondAttribute="baseline" id="DBb-nH-l5R"/>
                                     <constraint firstItem="uih-3t-llx" firstAttribute="leading" secondItem="iMc-98-GX4" secondAttribute="trailing" id="OhT-B2-BLP"/>
+                                    <constraint firstItem="6Lp-rI-x2N" firstAttribute="leading" secondItem="DBS-Qu-nqM" secondAttribute="leading" constant="7" id="P4e-0v-I0m"/>
                                     <constraint firstItem="nX7-9b-EWU" firstAttribute="leading" secondItem="DBS-Qu-nqM" secondAttribute="leading" id="bq3-Op-ELt"/>
                                     <constraint firstAttribute="bottom" secondItem="Eoa-Ns-eJT" secondAttribute="bottom" constant="3" id="cLB-aY-R23"/>
                                     <constraint firstItem="uhI-gx-qru" firstAttribute="leading" secondItem="DBS-Qu-nqM" secondAttribute="leading" id="cLm-w0-9Id"/>
@@ -1468,4 +1484,7 @@
         </customView>
         <imageCell controlSize="small" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="LXl-Vj-UGz"/>
     </objects>
+    <resources>
+        <image name="NSRefreshTemplate" width="11" height="15"/>
+    </resources>
 </document>

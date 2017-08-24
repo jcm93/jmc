@@ -579,6 +579,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             advancedFilterViewController!.mainWindowController = self
             librarySplitView.insertArrangedSubview(advancedFilterViewController!.view, at: 0)
             advancedFilterViewController?.initializePredicateEditor()
+            self.advancedSearchToggle.state = NSOnState
         }
     }
     
@@ -588,6 +589,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             self.advancedFilterViewController = nil
             currentTableViewController?.advancedFilterVisible = false
         }
+        self.advancedSearchToggle.state = NSOffState
     }
     
     func initializeInterfaceForNetworkTrack() {

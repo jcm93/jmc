@@ -33,7 +33,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 }
 
 
-class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutlineViewDataSource, NSTextFieldDelegate {
+class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutlineViewDataSource, NSTextFieldDelegate, NSMenuDelegate {
     
     @IBOutlet weak var sourceList: SourceListThatYouCanPressSpacebarOn!
     
@@ -48,6 +48,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     var playlistHeaderNode: SourceListItem?
     var sharedHeaderNode: SourceListItem?
     
+    @IBOutlet var sourceListMenu: NSMenu!
+    var editSmartPlaylistMenuItem = NSMenuItem(title: "Edit Smart Playlist", action: #selector(editSmartPlaylistAction), keyEquivalent: "")
     
     lazy var rootSourceListItem: SourceListItem? = {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "SourceListItem")
@@ -92,6 +94,24 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             }
         } else {
             return (item as? SourceListItem)?.children?.count ?? 0
+        }
+    }
+    
+    @IBAction func editSmartPlaylistAction(_ sender: Any) {
+        self.sourceList.selectRowIndexes(IndexSet(integer: sourceList.clickedRow), byExtendingSelection: false)
+        self.mainWindowController?.showAdvancedFilter()
+    }
+    
+    func menuWillOpen(_ menu: NSMenu) {
+        guard let item = sourceList.item(atRow: sourceList.clickedRow) as? SourceListItem else { return }
+        if item.playlist?.smart_criteria != nil {
+            if !self.sourceListMenu.items.contains(self.editSmartPlaylistMenuItem) {
+                self.sourceListMenu.insertItem(self.editSmartPlaylistMenuItem, at: 1)
+            }
+        } else {
+            if self.sourceListMenu.items.contains(self.editSmartPlaylistMenuItem) {
+                self.sourceListMenu.removeItem(self.editSmartPlaylistMenuItem)
+            }
         }
     }
     
@@ -358,9 +378,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     func doneAddingNetworkPlaylistCallback(_ item: SourceListItem) {
-        guard currentSourceListItem == item else {return}
-        //let track_id_list = item.playlist?.track_id_list as? [Int]
-        //mainWindowController?.networkPlaylistCallback(Int(item.playlist!.id!), idList: track_id_list!)
+        guard currentSourceListItem == item else { return }
     }
     
     func outlineViewSelectionDidChange(_ notification: Notification) {
@@ -559,6 +577,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         sourceList.expandItem(libraryHeaderNode, expandChildren: true)
         sourceList.expandItem(playlistHeaderNode)
         sourceList.reloadData()
+        sourceListMenu.delegate = self
         sourceList.allowsEmptySelection = false
         // Do view setup here.
         super.viewDidLoad()

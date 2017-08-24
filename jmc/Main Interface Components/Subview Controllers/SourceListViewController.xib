@@ -9,6 +9,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="SourceListViewController" customModule="jmc" customModuleProvider="target">
             <connections>
                 <outlet property="sourceList" destination="Brh-x7-enW" id="ic4-i5-rz2"/>
+                <outlet property="sourceListMenu" destination="CJP-UP-07s" id="XeI-TT-rhC"/>
                 <outlet property="view" destination="kqx-LL-MdM" id="1is-D8-3v6"/>
             </connections>
         </customObject>

@@ -46,33 +46,33 @@ class AdvancedFilterViewController: NSViewController {
             self.tableViewController.playlist?.smart_criteria?.fetch_limit_type = nil
             self.tableViewController.playlist?.smart_criteria?.ordering_criterion = nil
         }
+        self.refreshSmartPlaylist(self)
+        
+    }
+    @IBAction func refreshSmartPlaylist(_ sender: Any) {
         self.tableViewController.initializeSmartPlaylist()
         self.tableViewController.initializeForPlaylist()
-        
     }
     
     @IBAction func fetchLimitChanged(_ sender: Any) {
         guard let textField = sender as? NSTextField else { return }
         guard limitCheck.state == NSOnState else { return }
         self.tableViewController.playlist?.smart_criteria?.fetch_limit = textField.integerValue as NSNumber?
-        self.tableViewController.initializeSmartPlaylist()
-        self.tableViewController.initializeForPlaylist()
+        self.refreshSmartPlaylist(self)
     }
     
     @IBAction func lengthDeterminantChanged(_ sender: AnyObject) {
         guard let popUpButton = sender as? NSPopUpButton else { return }
         guard limitCheck.state == NSOnState else { return }
         self.tableViewController.playlist?.smart_criteria?.fetch_limit_type = popUpButton.titleOfSelectedItem!
-        self.tableViewController.initializeSmartPlaylist()
-        self.tableViewController.initializeForPlaylist()
+        self.refreshSmartPlaylist(self)
     }
 
     @IBAction func orderingCriterionChanged(_ sender: AnyObject) {
         guard let popUpButton = sender as? NSPopUpButton else { return }
         guard limitCheck.state == NSOnState else { return }
         self.tableViewController.playlist?.smart_criteria?.ordering_criterion = popUpButton.titleOfSelectedItem!
-        self.tableViewController.initializeSmartPlaylist()
-        self.tableViewController.initializeForPlaylist()
+        self.refreshSmartPlaylist(self)
     }
     
     func initializePredicateEditor() {
@@ -102,8 +102,7 @@ class AdvancedFilterViewController: NSViewController {
                 self.editingSmartPlaylist = true
             }
             self.tableViewController.playlist!.smart_criteria!.predicate = self.predicateEditor.predicate!
-            self.tableViewController.initializeSmartPlaylist()
-            self.tableViewController.initializeForPlaylist()
+            self.refreshSmartPlaylist(self)
         }
     }
     
