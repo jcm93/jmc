@@ -403,7 +403,7 @@
                             <constraint firstAttribute="height" constant="22" id="2rr-OL-nC8"/>
                             <constraint firstAttribute="width" constant="44" id="Cdj-p4-8Uw"/>
                         </constraints>
-                        <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSTouchBarUserTemplate" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="n22-AL-O7V">
+                        <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="Sharing" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="n22-AL-O7V">
                             <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -532,11 +532,11 @@
         <image name="NSSkipBackTemplate" width="27" height="15"/>
         <image name="NSTouchBarGoDownTemplate" width="16" height="30"/>
         <image name="NSTouchBarGoUpTemplate" width="16" height="30"/>
-        <image name="NSTouchBarUserTemplate" width="17" height="30"/>
         <image name="Queue" width="200" height="231"/>
         <image name="Queue Alternate" width="200" height="231"/>
         <image name="Repeat" width="176" height="214"/>
         <image name="RepeatAlternate" width="176" height="214"/>
+        <image name="Sharing" width="17" height="22.5"/>
         <image name="Shuffle" width="202" height="219"/>
         <image name="ShuffleAlternate" width="202" height="219"/>
     </resources>
