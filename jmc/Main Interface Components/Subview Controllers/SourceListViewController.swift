@@ -51,7 +51,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     @IBOutlet var sourceListMenu: NSMenu!
     var editSmartPlaylistMenuItem = NSMenuItem(title: "Edit Smart Playlist", action: #selector(editSmartPlaylistAction), keyEquivalent: "")
     
-    lazy var rootSourceListItem: SourceListItem? = {
+    lazy var rootSourceListItem: SourceListItem! = {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "SourceListItem")
         do {
             let predicate = NSPredicate(format: "is_root == true")
@@ -140,15 +140,18 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         if item == nil {
-            let children = rootSourceListItem?.children
-            if (children?[index] as? SourceListItem)?.children?.count > 0 {
-                return rootSourceListItem?.children?[index]
+            let children = rootSourceListItem.children!
+            if (children[index] as? SourceListItem)?.children?.count > 0 {
+                return children[index]
             } else {
-                return rootSourceListItem?.children?[index + 1]
+                guard rootSourceListItem.children?.count > index + 1 else {
+                    return children[index]
+                }
+                return children[index + 1]
             }
         }
         let source = item as! SourceListItem
-        let child = source.children?[index]
+        let child = source.children![index]
         return child
     }
     

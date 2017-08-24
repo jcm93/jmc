@@ -515,6 +515,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             }
             initializeForLibrary()
         } else if item?.volume != nil {
+            tableView.tableColumns[1].isHidden = true
             if let sortData = UserDefaults.standard.object(forKey: DEFAULTS_LIBRARY_SORT_DESCRIPTOR_STRING) {
                 if let sortDescriptors = NSKeyedUnarchiver.unarchiveObject(with: sortData as! Data) {
                     tableView.sortDescriptors = sortDescriptors as! [NSSortDescriptor]
