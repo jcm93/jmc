@@ -709,6 +709,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         if durationShowsTimeRemaining == false {
             durationLabel.stringValue = getTimeAsString(self.duration!)!
         }
+        UserDefaults.standard.set(durationShowsTimeRemaining, forKey: DEFAULTS_DURATION_SHOWS_TIME_REMAINING)
     }
     
     func cleanUpBar() {
@@ -922,5 +923,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }
         barViewToggle.isHidden = true
         //self.window?.invalidateShadow()
+        self.durationShowsTimeRemaining = UserDefaults.standard.bool(forKey: DEFAULTS_DURATION_SHOWS_TIME_REMAINING)
     }
 }
