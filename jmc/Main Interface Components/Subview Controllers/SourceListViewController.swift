@@ -50,6 +50,10 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     
     @IBOutlet var sourceListMenu: NSMenu!
     var editSmartPlaylistMenuItem = NSMenuItem(title: "Edit Smart Playlist", action: #selector(editSmartPlaylistAction), keyEquivalent: "")
+    var removePlaylistMenuItem = NSMenuItem(title: "Remove Playlist", action: #selector(removePlaylist), keyEquivalent: "")
+    var exportPlaylistMenuItem = NSMenuItem(title: "Export Playlist", action: #selector(exportPlaylist), keyEquivalent: "")
+    
+    var playlistMenuItems: [NSMenuItem]!
     
     lazy var rootSourceListItem: SourceListItem! = {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "SourceListItem")
@@ -104,6 +108,12 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     
     func menuWillOpen(_ menu: NSMenu) {
         guard let item = sourceList.item(atRow: sourceList.clickedRow) as? SourceListItem else { return }
+        guard item.playlist != nil else { menu.removeAllItems(); return }
+        if menu.items.count == 0 {
+            for item in self.playlistMenuItems {
+                menu.addItem(item)
+            }
+        }
         if item.playlist?.smart_criteria != nil {
             if !self.sourceListMenu.items.contains(self.editSmartPlaylistMenuItem) {
                 self.sourceListMenu.insertItem(self.editSmartPlaylistMenuItem, at: 1)
@@ -574,6 +584,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         libraryHeaderNode = rootSourceListItem?.children?[0] as? SourceListItem
         sharedHeaderNode = rootSourceListItem?.children?[1] as? SourceListItem
         playlistHeaderNode = rootSourceListItem?.children?[2] as? SourceListItem
+        self.playlistMenuItems = [self.removePlaylistMenuItem, self.exportPlaylistMenuItem]
         sourceList.delegate = self
         sourceList.dataSource = self
         sourceList.autosaveExpandedItems = true

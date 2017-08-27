@@ -463,20 +463,6 @@
             <point key="canvasLocation" x="330.5" y="345.5"/>
         </customView>
         <menu id="CJP-UP-07s">
-            <items>
-                <menuItem title="Remove Playlist" id="R4D-LH-Ydh">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="removePlaylist:" target="-2" id="Taf-WF-dpO"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Export..." id="xFF-0U-KLT">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="exportPlaylist:" target="-2" id="7Yo-39-zYV"/>
-                    </connections>
-                </menuItem>
-            </items>
             <point key="canvasLocation" x="89" y="-11"/>
         </menu>
     </objects>
