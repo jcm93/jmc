@@ -244,6 +244,12 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         return true
     }
     
+    func object(at index: Int) -> TrackView? {
+        guard let array = self.arrangedObjects as? NSArray else { return nil }
+        guard index > -1, array.count > index else { return nil }
+        return array[index] as? TrackView
+    }
+    
     func tableView(_ tableView: NSTableView, draggingSession session: NSDraggingSession, willBeginAt screenPoint: NSPoint, forRowIndexes rowIndexes: IndexSet) {
         print("dragypoo called")
     }

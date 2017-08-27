@@ -53,6 +53,15 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     var needsPlaylistRefresh = false
     var currentTrackRow = 0
     
+    let getInfoMenuItem = NSMenuItem(title: "Get Info", action: #selector(getInfoFromTableView), keyEquivalent: "")
+    let addToQueueMenuItem = NSMenuItem(title: "Add to Queue", action: #selector(addToQueueFromTableView), keyEquivalent: "")
+    let playMenuItem = NSMenuItem(title: "Play", action: #selector(playFromTableView), keyEquivalent: "")
+    let separatorMenuItem = NSMenuItem.separator()
+    let toggleEnabledMenuItem = NSMenuItem(title: "Toggle Enabled/Disabled", action: #selector(toggleEnabled), keyEquivalent: "")
+    let showInFinderMenuItem = NSMenuItem(title: "Show in Finder", action: #selector(showInFinderAction), keyEquivalent: "")
+    
+    var normalMenuItemsArray: [NSMenuItem]!
+    
     var isVisibleDict = NSMutableDictionary()
     func populateIsVisibleDict() {
         if self.trackViewArrayController != nil {
@@ -420,9 +429,19 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     }
     
     func menuWillOpen(_ menu: NSMenu) {
-        for menuItem in menu.items {
-            if menuItem.representedObject != nil {
-                menuItem.state = (menuItem.representedObject as! NSTableColumn).isHidden ? NSOffState : NSOnState
+        switch menu {
+        case self.columnVisibilityMenu:
+            for menuItem in menu.items {
+                if menuItem.representedObject != nil {
+                    menuItem.state = (menuItem.representedObject as! NSTableColumn).isHidden ? NSOffState : NSOnState
+                }
+            }
+        default:
+            guard let _ = self.trackViewArrayController.object(at: tableView.clickedRow) else { menu.removeAllItems(); return }
+            if menu.items.count == 0 {
+                for item in self.normalMenuItemsArray {
+                    menu.addItem(item)
+                }
             }
         }
     }
@@ -484,9 +503,11 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     override func viewDidLoad() {
         print("view did load")
+        self.normalMenuItemsArray = [self.getInfoMenuItem, self.addToQueueMenuItem, self.playMenuItem, self.separatorMenuItem, self.toggleEnabledMenuItem, self.showInFinderMenuItem]
         trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .new, context: &my_context)
         trackViewArrayController.tableViewController = self as! LibraryTableViewControllerCellBased
         tableView.target = self
+        tableView.menu?.delegate = self
         tableView.doubleAction = #selector(tableViewDoubleClick)
         columnVisibilityMenu.delegate = self
         //self.initializeColumnVisibilityMenu(self.tableView)

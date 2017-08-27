@@ -146,6 +146,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     
     func doneImportingiTunesLibrary() {
         mainWindowController?.sourceListViewController?.reloadData()
+        self.iTunesParser = nil
     }
     
     @IBAction func addToLibrary(_ sender: AnyObject) {

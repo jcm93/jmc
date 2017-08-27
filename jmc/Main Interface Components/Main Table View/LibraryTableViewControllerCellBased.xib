@@ -638,40 +638,6 @@
         <menu id="H0B-Bf-KKf">
             <point key="canvasLocation" x="-70.5" y="-189.5"/>
         </menu>
-        <menu id="GHk-a7-b5o">
-            <items>
-                <menuItem title="Add to Queue" id="qFT-yZ-lP8">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="addToQueueFromTableView:" target="-2" id="4Jo-Gm-T5w"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Play" id="JSl-Hw-NLi">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="playFromTableView:" target="-2" id="mUW-FZ-QgI"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Get Info..." id="APy-P4-Xiq">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="getInfoFromTableView:" target="-2" id="YUD-u9-OCb"/>
-                    </connections>
-                </menuItem>
-                <menuItem isSeparatorItem="YES" id="u24-lV-AMW"/>
-                <menuItem title="Toggle Enabled/Disabled" id="n06-D6-ewQ">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="toggleEnabled:" target="-2" id="Tuj-vF-HWM"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Show in Finder" id="rHt-8y-MTS">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="showInFinderAction:" target="-2" id="Sub-TL-erD"/>
-                    </connections>
-                </menuItem>
-            </items>
-        </menu>
+        <menu id="GHk-a7-b5o"/>
     </objects>
 </document>

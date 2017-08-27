@@ -10,7 +10,6 @@ import Cocoa
 
 class ImageCollectionViewItem: NSCollectionViewItem {
     
-    
     @IBOutlet weak var shadowView: NSView!
     var imageURL: URL?
     

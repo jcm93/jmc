@@ -74,11 +74,11 @@ class MediaKeyListener: NSObject {
 
     let callback: @convention(c) (OpaquePointer, CGEventType, CGEvent, Optional<UnsafeMutableRawPointer>) -> Optional<Unmanaged<CGEvent>> = {
         (proxy: OpaquePointer, type: CGEventType, event: CGEvent, refcon: Optional<UnsafeMutableRawPointer>) -> Optional<Unmanaged<CGEvent>> in
-        guard type == CGEventType(rawValue: UInt32(NX_SYSDEFINED)) else { return Unmanaged.passRetained(event) }
-        guard let keyEvent = NSEvent(cgEvent: event) else { return Unmanaged.passRetained(event) }
-        guard keyEvent.subtype == NSEventSubtype.init(rawValue: 8) else { return Unmanaged.passRetained(event) }
+        guard type == CGEventType(rawValue: UInt32(NX_SYSDEFINED)) else { return Unmanaged.passUnretained(event) }
+        guard let keyEvent = NSEvent(cgEvent: event) else { return Unmanaged.passUnretained(event) }
+        guard keyEvent.subtype == NSEventSubtype.init(rawValue: 8) else { return Unmanaged.passUnretained(event) }
         let this = Unmanaged<MediaKeyListener>.fromOpaque(refcon!).takeUnretainedValue()
-        guard this.shouldInterceptMediaKeys else { return Unmanaged.passRetained(event) }
+        guard this.shouldInterceptMediaKeys else { return Unmanaged.passUnretained(event) }
         let keyCode = Int32((keyEvent.data1 & 0xFFFF0000) >> 16)
         let keyFlags = keyEvent.data1 & 0xFFFF
         let keyState = (keyFlags & 0xFF00) >> 8
@@ -121,7 +121,7 @@ class MediaKeyListener: NSObject {
                 this.backKeyPressed = false
             }
         default:
-            return Unmanaged.passRetained(event)
+            return Unmanaged.passUnretained(event)
         }
         print(keyCode)
         return nil
@@ -150,7 +150,7 @@ class MediaKeyListener: NSObject {
         super.init()
         let options = CGEventTapOptions.defaultTap
         let eventsOfInterest: UInt64 = UInt64(1 << NX_SYSDEFINED)
-        let machPort = CGEvent.tapCreate(tap: .cgSessionEventTap, place: .headInsertEventTap, options: options, eventsOfInterest: eventsOfInterest, callback: self.callback, userInfo: Unmanaged.passRetained(self).toOpaque())
+        let machPort = CGEvent.tapCreate(tap: .cgSessionEventTap, place: .headInsertEventTap, options: options, eventsOfInterest: eventsOfInterest, callback: self.callback, userInfo: Unmanaged.passUnretained(self).toOpaque())
         let eventPortSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, machPort!, 0)
         CFRunLoopAddSource(CFRunLoopGetCurrent(), eventPortSource, CFRunLoopMode.commonModes)
         print("created event tap")

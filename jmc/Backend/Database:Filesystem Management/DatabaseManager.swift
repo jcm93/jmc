@@ -179,11 +179,7 @@ class DatabaseManager: NSObject {
         let destination = getAlbumDirectory(for: albumArt.album ?? albumArt.album_multiple!).appendingPathComponent(filename)
         do {
             let oldLocation = URL(string: albumArt.artwork_location!)!
-            if globalRootLibrary?.organization_type == NSNumber(value: 1) {
-                try fileManager.moveItem(at: oldLocation, to: destination)
-            } else if globalRootLibrary?.organization_type == NSNumber(value: 2) {
-                try fileManager.copyItem(at: oldLocation, to: destination)
-            }
+            try fileManager.copyItem(at: oldLocation, to: destination)
             albumArt.artwork_location = destination.absoluteString
         } catch {
             print(error)
@@ -1463,18 +1459,25 @@ class DatabaseManager: NSObject {
                         }
                     }
                 }
-                if numTracksChecked >= count {
-                    if visualUpdateHandler != nil {
-                        DispatchQueue.main.async {
-                            visualUpdateHandler!.completionHandler()
-                        }
-                    }
+            }
+            if visualUpdateHandler != nil {
+                DispatchQueue.main.async {
+                    visualUpdateHandler!.completionHandler()
                 }
             }
-            print(missingTracks.count)
             return missingTracks
         } catch {
+            if visualUpdateHandler != nil {
+                DispatchQueue.main.async {
+                    visualUpdateHandler!.completionHandler()
+                }
+            }
             print(error)
+        }
+        if visualUpdateHandler != nil {
+            DispatchQueue.main.async {
+                visualUpdateHandler!.completionHandler()
+            }
         }
         return nil
     }
