@@ -43,6 +43,8 @@ class TrackQueueTableView: TableViewYouCanPressSpacebarOn {
         let clickedRow = self.row(at: localLocation)
         if clickedRow != -1 {
             trackQueueViewController?.determineRightMouseDownTarget(clickedRow)
+        } else {
+            trackQueueViewController?.rightMouseDownTarget = nil
         }
         super.rightMouseDown(with: theEvent)
     }

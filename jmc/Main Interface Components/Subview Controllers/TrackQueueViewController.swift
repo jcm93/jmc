@@ -66,7 +66,7 @@ class FromSourceDividerCell: NSTableCellView {}
 
 class FromSourceCell: NSTableCellView {}
 
-class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource {
+class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NSMenuDelegate {
     
     var trackQueue: [TrackQueueView] = [TrackQueueView]()
     var mainWindowController: MainWindowController?
@@ -89,6 +89,32 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     var activePlayOrders = [PlaylistOrderObject]()
     var rightMouseDownTarget: IndexSet?
     var upcomingTrack: Track?
+    
+    var createPlaylistMenuItem = NSMenuItem(title: "Create Playlist From Selection", action: #selector(makePlaylistFromSelection), keyEquivalent: "")
+    var removePlaylistMenuItem = NSMenuItem(title: "Remove From Queue", action: #selector(removeFromQueue), keyEquivalent: "")
+    var separatorMenuItem = NSMenuItem.separator()
+    var shuffleUpcomingMenuItem = NSMenuItem(title: "Shuffle Upcoming Tracks", action: #selector(shuffleUpcoming), keyEquivalent: "")
+    var clearQueueMenuItem = NSMenuItem(title: "Clear Upcoming", action: #selector(clearUpcoming), keyEquivalent: "")
+    
+    var normalMenuItems: [NSMenuItem]!
+    
+    func menuWillOpen(_ menu: NSMenu) {
+        menu.removeAllItems()
+        var menuItems = [NSMenuItem]()
+        if let items = self.rightMouseDownTarget?.map({ return self.trackQueue[$0] }).filter({ return $0.track != nil }), items.count > 0 {
+            menuItems.append(contentsOf: [self.createPlaylistMenuItem, self.removePlaylistMenuItem])
+        }
+        if currentTrackIndex != nil, self.trackQueue.count > currentTrackIndex! + 1 {
+            let futureTracks = self.trackQueue[currentTrackIndex!..<self.trackQueue.count - 1]
+            if menuItems.count > 0 {
+                menuItems.append(self.separatorMenuItem)
+            }
+            menuItems.append(contentsOf: [self.shuffleUpcomingMenuItem, self.clearQueueMenuItem])
+        }
+        for item in menuItems {
+            menu.addItem(item)
+        }
+    }
     
     func reloadData() {
         tableView?.reloadData()
@@ -733,6 +759,8 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         tableView.trackQueueViewController = self
         // Do view setup here.
         tableView.scroll(NSPoint(x: 0, y: tableView.frame.height))
+        self.tableView.menu?.delegate = self
+        self.normalMenuItems = [self.createPlaylistMenuItem, self.removePlaylistMenuItem, self.separatorMenuItem, self.shuffleUpcomingMenuItem, self.clearQueueMenuItem]
     }
 
     

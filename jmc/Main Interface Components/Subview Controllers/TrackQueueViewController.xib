@@ -265,35 +265,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
             </connections>
             <point key="canvasLocation" x="623" y="506.5"/>
         </customView>
-        <menu id="WI7-MJ-gex">
-            <items>
-                <menuItem title="Create Playlist from Selection" id="1ta-ZA-vfC">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="makePlaylistFromTrackQueueSelection:" target="-2" id="aTd-0E-kPp"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Remove from Queue" id="yJe-cq-6n0">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="removeFromQueue:" target="-2" id="fCt-Rs-umB"/>
-                    </connections>
-                </menuItem>
-                <menuItem isSeparatorItem="YES" id="ljj-Ui-lvw"/>
-                <menuItem title="Shuffle Upcoming" id="jwt-jW-MQB">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="shuffleUpcoming:" target="-2" id="zvE-bp-w9L"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Clear" id="1Ry-7D-3RY">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="clearUpcoming:" target="-2" id="VVd-mQ-b0E"/>
-                    </connections>
-                </menuItem>
-            </items>
-        </menu>
+        <menu id="WI7-MJ-gex"/>
     </objects>
     <resources>
         <image name="Playlist" width="24" height="24"/>
