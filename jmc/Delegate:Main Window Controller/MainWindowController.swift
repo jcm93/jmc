@@ -80,7 +80,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     var currentAudioSource: SourceListItem?
     var currentSourceListItem: SourceListItem?
     var networkSongWasPlayed = false
-    var delegate: AppDelegate?
+    var delegate: AppDelegate!
     var timer: Timer?
     var lastTimerDate: Date?
     var secsPlayed: TimeInterval = 0
@@ -659,25 +659,20 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     func updateValuesUnsafe() {
         print("unsafe called")
         if self.delegate?.audioModule.isSeeking != true {
-            let nodeTime = delegate?.audioModule.curPlayerNode.lastRenderTime
-            let playerTime = delegate?.audioModule.curPlayerNode.playerTime(forNodeTime: nodeTime!)
-            var offset_thing: Double?
-            if delegate?.audioModule.track_frame_offset == nil {
-                offset_thing = 0
+            if let nodeTime = delegate?.audioModule.curPlayerNode.lastRenderTime, let playerTime = delegate?.audioModule.curPlayerNode.playerTime(forNodeTime: nodeTime), let duration = self.duration, duration != 0 {
+                let offset: Double = delegate?.audioModule.track_frame_offset ?? 0
+                let seconds = (Double(playerTime.sampleTime) + offset) / (playerTime.sampleRate - delegate.audioModule.total_offset_seconds)
+                if let seconds_string = getTimeAsString(seconds) {
+                    currentTimeLabel.stringValue = seconds_string
+                    print(seconds_string)
+                }
+                progressBar.doubleValue = (seconds * 100) / duration
+                if self.durationShowsTimeRemaining {
+                    durationLabel.stringValue = "-\(getTimeAsString(duration - secsPlayed)!)"
+                }
+                secsPlayed = seconds
+                lastTimerDate = Date()
             }
-            else {
-                offset_thing  = delegate?.audioModule.track_frame_offset!
-            }
-            let seconds = ((Double((playerTime?.sampleTime)!) + offset_thing!) / (playerTime?.sampleRate)!) - Double(delegate!.audioModule.total_offset_seconds)
-            let seconds_string = getTimeAsString(seconds)
-            currentTimeLabel.stringValue = seconds_string!
-            print(seconds_string)
-            progressBar.doubleValue = (seconds * 100) / duration!
-            if self.durationShowsTimeRemaining {
-                durationLabel.stringValue = "-\(getTimeAsString(duration! - secsPlayed)!)"
-            }
-            secsPlayed = seconds
-            lastTimerDate = Date()
         }
     }
     

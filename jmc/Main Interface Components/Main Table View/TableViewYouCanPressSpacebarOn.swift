@@ -33,35 +33,14 @@ class TableViewYouCanPressSpacebarOn: NSTableView {
         //self.registerForDraggedTypes(types)
     }
     
-    /*override func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation {
-        if sender.draggingPasteboard().types!.contains(NSFilenamesPboardType) {
-            self.shouldDrawFocusRing = true
-            self.setKeyboardFocusRingNeedsDisplayInRect(self.bounds)
-        }
-        let operation = super.draggingEntered(sender)
-        self.drawRect(self.bounds)
-        return operation
-    }
-    
-    override func draggingExited(sender: NSDraggingInfo?) {
-        self.shouldDrawFocusRing = false
-        self.setKeyboardFocusRingNeedsDisplayInRect(self.bounds)
-        super.draggingExited(sender)
-    }
-    
-    override func concludeDragOperation(sender: NSDraggingInfo?) {
-        self.shouldDrawFocusRing = false
-        self.setKeyboardFocusRingNeedsDisplayInRect(self.bounds)
-        super.concludeDragOperation(sender)
-    }*/
-    
-    
     override func rightMouseDown(with theEvent: NSEvent) {
         let globalLocation = theEvent.locationInWindow
         let localLocation = self.convert(globalLocation, from: nil)
         let clickedRow = self.row(at: localLocation)
         if clickedRow != -1 {
             libraryTableViewController?.determineRightMouseDownTarget(clickedRow)
+        } else {
+            libraryTableViewController?.rightMouseDownTarget = nil
         }
         super.rightMouseDown(with: theEvent)
     }

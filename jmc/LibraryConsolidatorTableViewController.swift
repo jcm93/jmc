@@ -110,13 +110,9 @@ class LibraryConsolidatorTableViewController: NSViewController, NSMenuDelegate {
         //self.mainWindowController?.launchGetInfo(selectedTracks)
     }
     
-
-    
     func jumpToSelection() {
         tableView.scrollRowToVisible(tableView.selectedRow)
     }
-    
-
     
     func initializeColumnVisibilityMenu(_ tableView: NSTableView) {
         var savedColumns = UserDefaults.standard.dictionary(forKey: DEFAULTS_SAVED_COLUMNS_STRING_CONSOLIDATOR)

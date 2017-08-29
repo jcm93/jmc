@@ -104,7 +104,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         if let items = self.rightMouseDownTarget?.map({ return self.trackQueue[$0] }).filter({ return $0.track != nil }), items.count > 0 {
             menuItems.append(contentsOf: [self.createPlaylistMenuItem, self.removePlaylistMenuItem])
         }
-        if currentTrackIndex != nil, self.trackQueue.count > currentTrackIndex! + 1 {
+        if currentTrackIndex != nil, self.trackQueue.count > currentTrackIndex! + 2 {
             let futureTracks = self.trackQueue[currentTrackIndex!..<self.trackQueue.count - 1]
             if menuItems.count > 0 {
                 menuItems.append(self.separatorMenuItem)
