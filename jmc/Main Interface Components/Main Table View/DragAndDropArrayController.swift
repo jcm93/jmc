@@ -224,10 +224,13 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
         print("table view writerows called")
         let rows = NSMutableArray()
+        var filenames = [String]()
         for index in rowIndexes {
             let trackView = (self.arrangedObjects as! [TrackView])[index]
             rows.add(trackView.track!.objectID.uriRepresentation())
+            filenames.append(URL(string: trackView.track!.location!)!.path)
         }
+        pboard.setPropertyList(filenames, forType: NSFilenamesPboardType)
         draggedRowIndexes = rowIndexes
         let encodedIDs = NSKeyedArchiver.archivedData(withRootObject: rows)
         let context = mainWindow?.currentSourceListItem?.name

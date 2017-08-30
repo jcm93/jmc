@@ -661,7 +661,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         if self.delegate?.audioModule.isSeeking != true {
             if let nodeTime = delegate?.audioModule.curPlayerNode.lastRenderTime, let playerTime = delegate?.audioModule.curPlayerNode.playerTime(forNodeTime: nodeTime), let duration = self.duration, duration != 0 {
                 let offset: Double = delegate?.audioModule.track_frame_offset ?? 0
-                let seconds = (Double(playerTime.sampleTime) + offset) / (playerTime.sampleRate - delegate.audioModule.total_offset_seconds)
+                let seconds = (Double(playerTime.sampleTime) + offset) / (playerTime.sampleRate) - delegate.audioModule.total_offset_seconds
                 if let seconds_string = getTimeAsString(seconds) {
                     currentTimeLabel.stringValue = seconds_string
                     print(seconds_string)
