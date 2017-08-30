@@ -224,25 +224,32 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
         print("table view writerows called")
         let rows = NSMutableArray()
-        var filenames = [String]()
+        var fileURLs = [NSURL]()
         for index in rowIndexes {
-            let trackView = (self.arrangedObjects as! [TrackView])[index]
+            let trackView = (self.arrangedObjects as! NSArray)[index] as! TrackView
             rows.add(trackView.track!.objectID.uriRepresentation())
-            filenames.append(URL(string: trackView.track!.location!)!.path)
+            fileURLs.append(URL(string: trackView.track!.location!)! as NSURL)
         }
-        pboard.setPropertyList(filenames, forType: NSFilenamesPboardType)
+        print("writing urls")
+        //pboard.addTypes([NSURLPboardType], owner: nil)
+        pboard.writeObjects(fileURLs)
         draggedRowIndexes = rowIndexes
         let encodedIDs = NSKeyedArchiver.archivedData(withRootObject: rows)
         let context = mainWindow?.currentSourceListItem?.name
         print("context is \(context)")
         if context != nil {
-            pboard.setString(context!, forType: "context")
+            //pboard.setString(context!, forType: "context")
         }
         if mainWindow?.currentSourceListItem?.is_network == true {
             print("settin network pboard data")
             pboard.setData(encodedIDs, forType: "NetworkTrack")
         } else {
-            pboard.setData(encodedIDs, forType: "Track")
+            //pboard.setData(encodedIDs, forType: "Track")
+        }
+        print(pboard.types)
+        for item in pboard.pasteboardItems! {
+            print(item.types)
+            print(item.data(forType: "public.file-url"))
         }
         return true
     }
@@ -251,10 +258,6 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         guard let array = self.arrangedObjects as? NSArray else { return nil }
         guard index > -1, array.count > index else { return nil }
         return array[index] as? TrackView
-    }
-    
-    func tableView(_ tableView: NSTableView, draggingSession session: NSDraggingSession, willBeginAt screenPoint: NSPoint, forRowIndexes rowIndexes: IndexSet) {
-        print("dragypoo called")
     }
     
     func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
@@ -298,7 +301,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     }
     
     func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
-        if info.draggingPasteboard().types!.contains(NSFilenamesPboardType) {
+        /*if info.draggingPasteboard().types!.contains(NSFilenamesPboardType) {
             print("doingle")
             tableView.setDropRow(-1, dropOperation: NSTableViewDropOperation.on)
             return .copy
@@ -307,6 +310,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
             return .move
         } else {
             return NSDragOperation()
-        }
+        }*/
+        return []
     }
 }

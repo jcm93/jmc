@@ -93,7 +93,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             self.setupWindowController = InitialSetupWindowController(windowNibName: "InitialSetupWindowController")
             self.setupWindowController?.setupForNilLibrary()
         }
-        self.locationManager = LocationManager(delegate: self)
+        //self.locationManager = LocationManager(delegate: self)
         self.addFilesQueueLoop = AddFilesQueueLoop(delegate: self)
         self.locationManager?.initializeEventStream()
         self.lastFMDelegate = LastFMDelegate()
@@ -245,7 +245,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         //NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidChangeDebug), name: Notification.Name.NSManagedObjectContextObjectsDidChange, object: managedObjectContext)
         NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidUndo), name: Notification.Name.NSUndoManagerDidUndoChange, object: managedObjectContext.undoManager)
-        self.mediaKeyListener = MediaKeyListener(self)
+        //self.mediaKeyListener = MediaKeyListener(self)
     }
     
     func managedObjectsDidUndo() {
