@@ -1,5 +1,5 @@
 # jmc
-![screenshot](https://puu.sh/xoZkx/417acce23e.png)
+![screenshot](https://puu.sh/xoZTi/b6ae1550f8.png)
 
 jmc is a fast, elegant and powerful media manager for macOS. jmc aims to give you the power and functionality associated with hackable media managers like foobar2000 with the elegance and simplicity of a well-designed platform-native macOS application.
 
