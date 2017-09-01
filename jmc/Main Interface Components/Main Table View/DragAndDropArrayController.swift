@@ -223,6 +223,8 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     
     func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
         print("table view writerows called")
+        pboard.clearContents()
+        pboard.declareTypes([NSURLPboardType, NSFilenamesPboardType], owner: self)
         let rows = NSMutableArray()
         var fileURLs = [NSURL]()
         for index in rowIndexes {
@@ -238,18 +240,13 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         let context = mainWindow?.currentSourceListItem?.name
         print("context is \(context)")
         if context != nil {
-            //pboard.setString(context!, forType: "context")
+            pboard.setString(context!, forType: "context")
         }
         if mainWindow?.currentSourceListItem?.is_network == true {
             print("settin network pboard data")
             pboard.setData(encodedIDs, forType: "NetworkTrack")
         } else {
-            //pboard.setData(encodedIDs, forType: "Track")
-        }
-        print(pboard.types)
-        for item in pboard.pasteboardItems! {
-            print(item.types)
-            print(item.data(forType: "public.file-url"))
+            pboard.setData(encodedIDs, forType: "Track")
         }
         return true
     }
@@ -301,7 +298,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     }
     
     func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
-        /*if info.draggingPasteboard().types!.contains(NSFilenamesPboardType) {
+        if info.draggingPasteboard().types!.contains(NSFilenamesPboardType) {
             print("doingle")
             tableView.setDropRow(-1, dropOperation: NSTableViewDropOperation.on)
             return .copy
@@ -310,7 +307,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
             return .move
         } else {
             return NSDragOperation()
-        }*/
+        }
         return []
     }
 }

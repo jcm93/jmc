@@ -93,14 +93,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             self.setupWindowController = InitialSetupWindowController(windowNibName: "InitialSetupWindowController")
             self.setupWindowController?.setupForNilLibrary()
         }
-        //self.locationManager = LocationManager(delegate: self)
+        self.locationManager = LocationManager(delegate: self)
         self.addFilesQueueLoop = AddFilesQueueLoop(delegate: self)
         self.locationManager?.initializeEventStream()
         self.lastFMDelegate = LastFMDelegate()
         mainWindowController = MainWindowController(windowNibName: "MainWindowController")
         mainWindowController?.delegate = self
         mainWindowController?.showWindow(self)
-        self.serviceBrowser = ConnectivityManager(delegate: self, slvc: mainWindowController!.sourceListViewController!)
+        //self.serviceBrowser = ConnectivityManager(delegate: self, slvc: mainWindowController!.sourceListViewController!)
         let defaultsEQOnState = UserDefaults.standard.integer(forKey: DEFAULTS_IS_EQ_ENABLED_STRING)
         audioModule.toggleEqualizer(defaultsEQOnState)
         NotificationCenter.default.addObserver(self, selector: #selector(mainWindowDidClose), name: Notification.Name.NSWindowWillClose, object: mainWindowController!.window)
@@ -245,7 +245,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         //NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidChangeDebug), name: Notification.Name.NSManagedObjectContextObjectsDidChange, object: managedObjectContext)
         NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidUndo), name: Notification.Name.NSUndoManagerDidUndoChange, object: managedObjectContext.undoManager)
-        //self.mediaKeyListener = MediaKeyListener(self)
+        self.mediaKeyListener = MediaKeyListener(self)
     }
     
     func managedObjectsDidUndo() {

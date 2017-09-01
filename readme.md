@@ -1,5 +1,5 @@
 # jmc
-![screenshot](https://i.imgur.com/8NhiZpE.png)
+![screenshot](https://puu.sh/xoZkx/417acce23e.png)
 
 jmc is a fast, elegant and powerful media manager for macOS. jmc aims to give you the power and functionality associated with hackable media managers like foobar2000 with the elegance and simplicity of a well-designed platform-native macOS application.
 
@@ -22,6 +22,7 @@ jmc is written completely in Swift, is completely open-source, and runs on OS X 
 # Features
 
 ### Library Manager
+![screenshot](https://puu.sh/xoZHp/31dddfc751.png)
 jmc offers the most powerful tools for library organization of any media player for macOS. jmc keeps track of album artwork, PDFs, logs, cue sheets and more, and offers powerful tools for organizing your media.
 
 jmc elegantly accounts for media spread across external volumes, showing available and unavailable volumes in the sidebar and filtering the music in your library accordingly.
