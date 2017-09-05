@@ -17,6 +17,7 @@ class AlbumArtViewController: NSViewController {
     var mainWindow: MainWindowController?
     var databaseManager = DatabaseManager()
     var currentTrack: Track?
+    var currentURL: URL?
 
     
     override func viewDidLoad() {
@@ -47,8 +48,9 @@ class AlbumArtViewController: NSViewController {
         DispatchQueue.main.async {
             if !found {
                 self.albumArtView.image = nil
+                self.currentURL = nil
             } else {
-                guard track.album?.primary_art != nil else { self.albumArtView.image = nil; return }
+                guard track.album?.primary_art != nil else { self.albumArtView.image = nil; self.currentURL = nil; return }
                 self.initAlbumArt(track)
             }
         }
@@ -58,9 +60,11 @@ class AlbumArtViewController: NSViewController {
         self.currentTrack = track
         if track.album?.primary_art != nil {
             let imageURL = URL(string: track.album!.primary_art!.artwork_location!)!
+            guard self.currentURL != imageURL else { return }
             let image = NSImage(byReferencing: imageURL)
             if image.isValid {
                 self.albumArtView.image = image
+                self.currentURL = imageURL
             }
         } else {
             if track.library?.finds_artwork == true {
@@ -69,6 +73,7 @@ class AlbumArtViewController: NSViewController {
                 }
             } else {
                 self.albumArtView.image = nil
+                self.currentURL = nil
             }
         }
     }

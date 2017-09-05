@@ -614,7 +614,7 @@ class AudioModule: NSObject {
         //print("scheduling buffer \(newBuffer) at frame \(frameToScheduleAt). buffer is \(newBuffer.frameLength) in length")
         let time = AVAudioTime(sampleTime: frameToScheduleAt, atRate: currentBuffer.format.sampleRate)
         //print(time)
-        curPlayerNode.scheduleBuffer(newBuffer, at: time, options: .init(rawValue: 0), completionHandler: fileBuffererCompletion)
+        curPlayerNode.scheduleBuffer(newBuffer, at: nil, options: .init(rawValue: 0), completionHandler: fileBuffererCompletion)
         if isFinalBuffer == true {
             self.finalBufferQueued = true
             self.finalBuffer = false

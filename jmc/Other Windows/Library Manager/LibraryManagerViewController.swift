@@ -277,8 +277,9 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         }
     }
     
-    func displayMissingFilesViewController(for tracks: [Track]) {
-        self.missingFilesViewController = MissingFilesViewController(nibName: "MissingFilesViewController", bundle: nil, tracks: tracks)
+    func displayMissingFilesViewController(for tracks: inout [Track]) {
+        self.missingFilesViewController = MissingFilesViewController(nibName: "MissingFilesViewController", bundle: nil, tracks: &tracks)
+        self.missingFilesViewController?.libraryManager = self
         self.locationManagerView.addSubview(self.missingFilesViewController!.view)
         self.missingFilesViewController!.view.topAnchor.constraint(equalTo: self.locationManagerView.topAnchor).isActive = true
         self.missingFilesViewController!.view.leftAnchor.constraint(equalTo: self.locationManagerView.leftAnchor).isActive = true
@@ -289,7 +290,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     func verifyLocationsModalComplete(response: NSModalResponse) {
         guard response != NSModalResponseCancel else {return}
         if self.missingTracks!.count > 0 {
-            displayMissingFilesViewController(for: self.missingTracks!)
+            displayMissingFilesViewController(for: &self.missingTracks!)
             let trackNotFoundArray = self.missingTracks!.map({(track: Track) -> TrackNotFound in
                 if let location = track.location {
                     if let url = URL(string: location) {
@@ -304,6 +305,16 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
             self.trackLocationStatusText.stringValue = "\(self.missingTracks!.count) tracks not found."
             tracksNotFoundArrayController.content = trackNotFoundArray
+        } else {
+            self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusAvailable")
+            self.trackLocationStatusText.stringValue = "All tracks located."
+        }
+    }
+    
+    func updateMissingTracks(count: Int) {
+        if count > 0 {
+            self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
+            self.trackLocationStatusText.stringValue = "\(count) tracks not found."
         } else {
             self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusAvailable")
             self.trackLocationStatusText.stringValue = "All tracks located."

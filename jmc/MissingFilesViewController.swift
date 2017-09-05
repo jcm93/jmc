@@ -108,16 +108,23 @@ class MissingTrackPathTree: NSObject {
         }
     }
     
-    init(with missingTracks: [Track]) {
+    init(with missingTracks: inout [Track]) {
         self.rootNode = MissingTrackPathNode(pathComponent: "/")
         let allTrackSet = globalRootLibrary!.tracks as! Set<Track>
         self.rootNode.totalTracks = allTrackSet
         super.init()
-        for track in missingTracks {
+        var indexes = [Int]()
+        for (index, track) in missingTracks.enumerated() {
             if let location = track.location, let url = URL(string: location) {
                 var path = url.path.components(separatedBy: "/").filter({$0 != ""})
                 createNode(with: &path, with: track)
+            } else {
+                indexes.append(index)
+                //missingTracks.remove(at: index)
             }
+        }
+        for index in indexes.sorted().reversed() {
+            missingTracks.remove(at: index)
         }
     }
 }
@@ -130,9 +137,10 @@ class MissingFilesViewController: NSViewController, NSOutlineViewDataSource, NSO
     var pathTree: MissingTrackPathTree
     var fileManager = FileManager.default
     var missingTracks = Set<Track>()
+    var libraryManager: LibraryManagerViewController?
     
-    init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, tracks: [Track]) {
-        self.pathTree = MissingTrackPathTree(with: tracks)
+    init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, tracks: inout [Track]) {
+        self.pathTree = MissingTrackPathTree(with: &tracks)
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.missingTracks = Set(tracks)
     }
@@ -227,8 +235,7 @@ class MissingFilesViewController: NSViewController, NSOutlineViewDataSource, NSO
                 outlineView.removeItems(at: IndexSet(integer: rowOfThing), inParent: highestThing.parent, withAnimation: .slideUp)
             }
             node!.purge()
-            //outlineView.reloadData()
-            //outlineView.expandItem(nil, expandChildren: true)
+            libraryManager?.updateMissingTracks(count: missingTracks.count)
         }
     }
     

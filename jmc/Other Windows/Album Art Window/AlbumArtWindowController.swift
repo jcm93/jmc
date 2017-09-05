@@ -28,6 +28,7 @@ class AlbumArtWindowController: NSWindowController {
     }
     
     func fadeOutTitleBar() {
+        //self.window!.standardWindowButton(.closeButton)!.superview!.
         self.window!.standardWindowButton(.closeButton)!.superview!.animator().alphaValue = 0
     }
     
