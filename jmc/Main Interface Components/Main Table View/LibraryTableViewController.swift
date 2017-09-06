@@ -509,6 +509,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         tableView.target = self
         tableView.menu?.delegate = self
         tableView.doubleAction = #selector(tableViewDoubleClick)
+        //tableView.enclosingScrollView?.wantsLayer = true
         columnVisibilityMenu.delegate = self
         //self.initializeColumnVisibilityMenu(self.tableView)
         tableView.delegate = trackViewArrayController

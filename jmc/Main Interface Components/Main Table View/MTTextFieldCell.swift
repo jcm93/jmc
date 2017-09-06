@@ -12,17 +12,17 @@ class MTTextFieldCell: NSTextFieldCell {
     
     var defaultColor: NSColor!
     
-    override func titleRect(forBounds rect: NSRect) -> NSRect {
-        let newRect = NSRect(x: rect.origin.x, y: rect.origin.y + 1.0, width: rect.width - 4.0, height: rect.height)
+    override func drawingRect(forBounds rect: NSRect) -> NSRect {
+        let newRect = NSRect(x: rect.origin.x, y: rect.origin.y + 1.0, width: rect.width, height: rect.height - 1)
         return newRect
     }
     
-    override func drawInterior(withFrame cellFrame: NSRect, in controlView: NSView) {
+    /*override func drawInterior(withFrame cellFrame: NSRect, in controlView: NSView) {
         let titleRect = self.titleRect(forBounds: cellFrame)
         self.attributedStringValue.draw(in: titleRect)
-    }
+    }*/
     
-    override init(textCell string: String) {
+    /*override init(textCell string: String) {
         super.init(textCell: string)
         if self.identifier?.hasPrefix("sort") == true {
             self.defaultColor = NSColor.disabledControlTextColor
@@ -40,6 +40,14 @@ class MTTextFieldCell: NSTextFieldCell {
             self.defaultColor = NSColor.textColor
         }
         self.font = NSFont.systemFont(ofSize: 12.0)
+    }*/
+    
+    override init(textCell string: String) {
+        super.init(textCell: string)
+    }
+    
+    required init(coder: NSCoder) {
+        super.init(coder: coder)
     }
     
     override var objectValue: Any? {

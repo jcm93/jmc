@@ -609,10 +609,11 @@ class AudioModule: NSObject {
         //called when a buffer is decoded. always schedule the buffer after the end of the current one
         //print("beginning of file buffer decode callback")
         let newBuffer = self.currentFileBufferer!.currentDecodeBuffer
-        let currentBuffer = self.currentFileBufferer!.currentDecodeBuffer == self.currentFileBufferer!.bufferA ? self.currentFileBufferer!.bufferB : self.currentFileBufferer!.bufferA
-        let frameToScheduleAt = nextBufferStartFrame
+        //turns out all this math is unnecessary; scheduling 'at the end of all other buffers' is sufficient
+        //let currentBuffer = self.currentFileBufferer!.currentDecodeBuffer == self.currentFileBufferer!.bufferA ? self.currentFileBufferer!.bufferB : self.currentFileBufferer!.bufferA
+        //let frameToScheduleAt = nextBufferStartFrame
         //print("scheduling buffer \(newBuffer) at frame \(frameToScheduleAt). buffer is \(newBuffer.frameLength) in length")
-        let time = AVAudioTime(sampleTime: frameToScheduleAt, atRate: currentBuffer.format.sampleRate)
+        //let time = AVAudioTime(sampleTime: frameToScheduleAt, atRate: currentBuffer.format.sampleRate)
         //print(time)
         curPlayerNode.scheduleBuffer(newBuffer, at: nil, options: .init(rawValue: 0), completionHandler: fileBuffererCompletion)
         if isFinalBuffer == true {
