@@ -490,23 +490,18 @@ class DatabaseManager: NSObject {
     }
     
     func getNonAudioFiles(inDirectory directory: URL) -> [(URL, CFString)]? {
-        do {
-            var currentDirectoryAddableFiles = [(URL, CFString)]()
-            if let enumerator = fileManager.enumerator(atPath: directory.path) {
-                for fileObject in enumerator {
-                    guard let file = fileObject as? URL else { continue }
-                    if let uti = (try? file.resourceValues(forKeys: [.typeIdentifierKey]))?.typeIdentifier as CFString? {
-                        if UTTypeConformsTo(uti, kUTTypeImage) || UTTypeConformsTo(uti, kUTTypePDF) || UTTypeConformsTo(uti, kUTTypeLog) || UTTypeConformsTo(uti, kUTTypeText) || file.pathExtension.lowercased() == "cue" {
-                            currentDirectoryAddableFiles.append((file, uti))
-                        }
+        var currentDirectoryAddableFiles = [(URL, CFString)]()
+        if let enumerator = fileManager.enumerator(atPath: directory.path) {
+            for fileObject in enumerator {
+                guard let file = fileObject as? URL else { continue }
+                if let uti = (try? file.resourceValues(forKeys: [.typeIdentifierKey]))?.typeIdentifier as CFString? {
+                    if UTTypeConformsTo(uti, kUTTypeImage) || UTTypeConformsTo(uti, kUTTypePDF) || UTTypeConformsTo(uti, kUTTypeLog) || UTTypeConformsTo(uti, kUTTypeText) || file.pathExtension.lowercased() == "cue" {
+                        currentDirectoryAddableFiles.append((file, uti))
                     }
                 }
             }
-            return currentDirectoryAddableFiles
-        } catch {
-            print(error)
-            return nil
         }
+        return currentDirectoryAddableFiles
     }
     
     func getMediaURLsInDirectoryURLs(_ urls: [URL]) -> ([URL],[FileAddToDatabaseError]) {
@@ -926,7 +921,7 @@ class DatabaseManager: NSObject {
     
     func nameEdited(tracks: [Track], value: String) {
         managedContext.undoManager?.beginUndoGrouping()
-        managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        managedContext.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editName(tracks, name: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
@@ -940,7 +935,7 @@ class DatabaseManager: NSObject {
     
     func artistEdited(tracks: [Track], value: String) {
         managedContext.undoManager?.beginUndoGrouping()
-        managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        managedContext.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editArtist(tracks, artistName: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
@@ -954,7 +949,7 @@ class DatabaseManager: NSObject {
     
     func albumArtistEdited(tracks: [Track], value: String) {
         managedContext.undoManager?.beginUndoGrouping()
-        managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        managedContext.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editAlbumArtist(tracks, albumArtistName: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
@@ -967,7 +962,7 @@ class DatabaseManager: NSObject {
     }
     
     func albumEdited(tracks: [Track], value: String) {
-        managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        managedContext.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         managedContext.undoManager?.beginUndoGrouping()
         editAlbum(tracks, albumName: value)
         for order in cachedOrders!.values {
@@ -982,7 +977,7 @@ class DatabaseManager: NSObject {
     
     func trackNumEdited(tracks: [Track], value: Int) {
         managedContext.undoManager?.beginUndoGrouping()
-        managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        managedContext.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editTrackNum(tracks, num: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
@@ -1006,7 +1001,7 @@ class DatabaseManager: NSObject {
     
     func discNumEdited(tracks: [Track], value: Int) {
         managedContext.undoManager?.beginUndoGrouping()
-        managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        managedContext.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editDiscNum(tracks, num: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
@@ -1053,7 +1048,7 @@ class DatabaseManager: NSObject {
     
     func compilationChanged(tracks: [Track], value: Bool) {
         managedContext.undoManager?.beginUndoGrouping()
-        managedContext.undoManager!.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        managedContext.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editIsComp(tracks, isComp: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)

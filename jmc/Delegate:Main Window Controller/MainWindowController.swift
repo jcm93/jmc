@@ -308,7 +308,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     func windowWillReturnUndoManager(_ window: NSWindow) -> UndoManager? {
-        return managedContext.undoManager!
+        return managedContext.undoManager
     }
     
     @IBAction func repeatButtonPressed(_ sender: AnyObject) {

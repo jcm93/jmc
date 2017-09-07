@@ -21,55 +21,93 @@ public class OrganizationTemplate: NSManagedObject {
         return true
     }
     
-    func getURL(for track: Track, withExtension pathExtension: String) -> URL? {
-        guard let template = self.tokens as? [OrganizationFieldToken], var baseURL = URL(string: self.base_url_string!) else { return nil }
-        let urlPathComponents = template.map({return transformToPathComponent(token: $0, track: track)}).joined().components(separatedBy: "/")
+    func getURL(for albumFile: AnyObject, withExtension pathExtension: String) -> URL? {
+        guard var template = self.tokens as? [OrganizationFieldToken], var baseURL = URL(string: self.base_url_string!) else { return nil }
+        let urlPathComponents = {() -> [String] in
+            switch albumFile {
+            case is Track:
+                return template.map({return transformToPathComponent(token: $0, albumFile: albumFile)}).joined().components(separatedBy: "/")
+            case let albumFile as AlbumFile:
+                template.removeLast()
+                var components = template.map({return transformToPathComponent(token: $0, albumFile: albumFile)}).joined().components(separatedBy: "/")
+                components.append(albumFile.file_description!)
+                return components
+            default:
+                fatalError()
+            }
+        }()
         for component in urlPathComponents {
             baseURL.appendPathComponent(component)
         }
         return baseURL.appendingPathExtension(pathExtension).standardizedFileURL
     }
     
-    
-    
-    func transformToPathComponent(token: OrganizationFieldToken, track: Track) -> String {
+    func getValue(for key: OrganizationFieldToken, of file: AnyObject) -> String {
         var string = {() -> String in
-            switch token.tokenType {
-            case .album:
-                return (track.album?.name ?? UNKNOWN_ALBUM_STRING).replacingOccurrences(of: "/", with: ":")
-            case .albumartist:
-                return (track.album?.album_artist?.name ?? track.artist?.name ?? UNKNOWN_ARTIST_STRING).replacingOccurrences(of: "/", with: ":")
-            case .artist:
-                return (track.artist?.name ?? UNKNOWN_ARTIST_STRING).replacingOccurrences(of: "/", with: ":")
-            case .other:
-                return token.stringIfOther!
-            case .trackname:
-                return (track.name ?? "").replacingOccurrences(of: "/", with: ":")
-            case .tracknum:
-                var discNumberStringRepresentation: String
-                if track.disc_number != nil {
-                    discNumberStringRepresentation = "\(String(describing: track.disc_number!))-"
-                } else {
-                    discNumberStringRepresentation = ""
-                }
-                let trackNumberStringRepresentation: String
-                if track.track_num != nil {
-                    let trackNumber = Int(track.track_num!)
-                    if trackNumber < 10 {
-                        trackNumberStringRepresentation = "0\(trackNumber)"
+            switch file {
+            case let file as Track:
+                switch key.tokenType {
+                case .album:
+                    return (file.album?.name ?? UNKNOWN_ALBUM_STRING).replacingOccurrences(of: "/", with: ":")
+                case .albumartist:
+                    return (file.album?.album_artist?.name ?? file.artist?.name ?? UNKNOWN_ARTIST_STRING).replacingOccurrences(of: "/", with: ":")
+                case .artist:
+                    return (file.artist?.name ?? UNKNOWN_ARTIST_STRING).replacingOccurrences(of: "/", with: ":")
+                case .other:
+                    return key.stringIfOther!
+                case .trackname:
+                    return (file.name ?? "").replacingOccurrences(of: "/", with: ":")
+                case .tracknum:
+                    var discNumberStringRepresentation: String
+                    if file.disc_number != nil {
+                        discNumberStringRepresentation = "\(String(describing: file.disc_number!))-"
                     } else {
-                        trackNumberStringRepresentation = String(trackNumber)
+                        discNumberStringRepresentation = ""
                     }
-                } else {
-                    trackNumberStringRepresentation = ""
-                    discNumberStringRepresentation = ""
+                    let trackNumberStringRepresentation: String
+                    if file.track_num != nil {
+                        let trackNumber = Int(file.track_num!)
+                        if trackNumber < 10 {
+                            trackNumberStringRepresentation = "0\(trackNumber)"
+                        } else {
+                            trackNumberStringRepresentation = String(trackNumber)
+                        }
+                    } else {
+                        trackNumberStringRepresentation = ""
+                        discNumberStringRepresentation = ""
+                    }
+                    return ("\(discNumberStringRepresentation)\(trackNumberStringRepresentation)").replacingOccurrences(of: "/", with: ":")
+                case .year:
+                    return (file.album?.release_date?.date.description ?? "").replacingOccurrences(of: "/", with: ":")
                 }
-                return ("\(discNumberStringRepresentation)\(trackNumberStringRepresentation)").replacingOccurrences(of: "/", with: ":")
-            case .year:
-                return (track.album?.release_date?.date.description ?? "").replacingOccurrences(of: "/", with: ":")
+            case let file as AlbumFile:
+                switch key.tokenType {
+                case .album:
+                    return (file.album?.name ?? UNKNOWN_ALBUM_STRING).replacingOccurrences(of: "/", with: ":")
+                case .albumartist:
+                    return (file.album?.album_artist?.name ?? file.album?.album_artist?.name ?? UNKNOWN_ARTIST_STRING).replacingOccurrences(of: "/", with: ":")
+                case .artist:
+                    return (file.album?.album_artist?.name ?? UNKNOWN_ARTIST_STRING).replacingOccurrences(of: "/", with: ":")
+                case .other:
+                    return key.stringIfOther!
+                case .trackname:
+                    return (file.file_description ?? "").replacingOccurrences(of: "/", with: ":")
+                case .tracknum:
+                    return "shouldn't ever be returned"
+                case .year:
+                    return (file.album?.release_date?.date.description ?? "").replacingOccurrences(of: "/", with: ":")
+                }
+            default:
+                fatalError()
             }
         }()
         return string
+    }
+    
+    
+    
+    func transformToPathComponent(token: OrganizationFieldToken, albumFile: AnyObject) -> String {
+        return self.getValue(for: token, of: albumFile)
     }
 
 }

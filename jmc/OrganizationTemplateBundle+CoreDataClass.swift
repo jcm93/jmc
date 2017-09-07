@@ -12,9 +12,13 @@ import CoreData
 
 public class OrganizationTemplateBundle: NSManagedObject {
     
-    func match(_ track: Track) -> OrganizationTemplate {
-        let organizationTemplate = self.other_templates?.first(where: {(($0 as! OrganizationTemplate).predicate as! NSPredicate).evaluate(with: track.view)})
+    func match(_ file: AnyObject) -> OrganizationTemplate {
+        let organizationTemplate = self.other_templates?.first(where: {(($0 as! OrganizationTemplate).predicate as! NSPredicate).evaluate(with: file)})
         return organizationTemplate as? OrganizationTemplate ?? self.default_template!
+    }
+    
+    func match(entireAlbum album: Album) -> OrganizationTemplate {
+        
     }
     
     

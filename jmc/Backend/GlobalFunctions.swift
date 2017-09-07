@@ -398,13 +398,13 @@ func volumeIsAvailable(volume: Volume) -> Bool {
     return fileManager.fileExists(atPath: libraryPath, isDirectory: &isDirectory) && isDirectory.boolValue
 }
 
-func getNonMatchingTracks(library: Library, visualUpdateHandler: ProgressBarController?) -> [DisparateTrack] {
-    let templateBundle = library.organization_template
+func getNonMatchingTracks(visualUpdateHandler: ProgressBarController?) -> [AnyObject] {
+    let templateBundle = globalRootLibrary!.organization_template
     DispatchQueue.main.async {
-        visualUpdateHandler?.prepareForNewTask(actionName: "Checking organization template for", thingName: "tracks", thingCount: library.tracks!.count)
+        visualUpdateHandler?.prepareForNewTask(actionName: "Checking organization template for", thingName: "files", thingCount: globalRootLibrary!.tracks!.count)
     }
     var index = 0
-    let result = (library.tracks as! Set<Track>).flatMap({track -> DisparateTrack? in
+    let result = (globalRootLibrary!.tracks as! Set<Track>).flatMap({track -> DisparateTrack? in
         if let location = track.location {
             if let currentURL = URL(string: location) {
                 let potentialURL = templateBundle!.match(track).getURL(for: track, withExtension: currentURL.pathExtension)!

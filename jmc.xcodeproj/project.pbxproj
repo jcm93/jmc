@@ -87,6 +87,8 @@
 		0D800C0C1ED3B54100EA2889 /* ArtistViewAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D800C0A1ED3B54100EA2889 /* ArtistViewAlbumViewController.swift */; };
 		0D800C0D1ED3B54100EA2889 /* ArtistViewAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D800C0B1ED3B54100EA2889 /* ArtistViewAlbumViewController.xib */; };
 		0D800C0F1ED3B6BF00EA2889 /* ArtistViewTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D800C0E1ED3B6BF00EA2889 /* ArtistViewTableCellView.swift */; };
+		0D8A8B401F61CB54007529A0 /* AlbumFileLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8A8B3E1F61CB54007529A0 /* AlbumFileLocationViewController.swift */; };
+		0D8A8B411F61CB54007529A0 /* AlbumFileLocationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8A8B3F1F61CB54007529A0 /* AlbumFileLocationViewController.xib */; };
 		0D8AFE541E6CB3E7004AC584 /* LocationVerifierSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8AFE521E6CB3E7004AC584 /* LocationVerifierSheetController.swift */; };
 		0D8AFE551E6CB3E7004AC584 /* LocationVerifierSheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */; };
 		0D8AFE581E6D136D004AC584 /* MediaScannerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */; };
@@ -176,8 +178,6 @@
 		0DE957D81EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE957D41EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataProperties.swift */; };
 		0DE957DB1EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE957D91EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift */; };
 		0DE957DC1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE957DA1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift */; };
-		0DEE9D991EF79A500025AA11 /* LibraryConsolidatorTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DEE9D981EF79A500025AA11 /* LibraryConsolidatorTableViewController.xib */; };
-		0DEE9D9B1EF79A630025AA11 /* LibraryConsolidatorTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEE9D9A1EF79A630025AA11 /* LibraryConsolidatorTableViewController.swift */; };
 		0DEE9D9D1EF7AB280025AA11 /* StupidTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEE9D9C1EF7AB280025AA11 /* StupidTableCellView.swift */; };
 		0DF188801EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF1887E1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift */; };
 		0DF188811EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */; };
@@ -305,6 +305,8 @@
 		0D800C0B1ED3B54100EA2889 /* ArtistViewAlbumViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistViewAlbumViewController.xib; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewAlbumViewController.xib"; sourceTree = "<group>"; };
 		0D800C0E1ED3B6BF00EA2889 /* ArtistViewTableCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewTableCellView.swift; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewTableCellView.swift"; sourceTree = "<group>"; };
 		0D87867C1E3EFC000091785B /* jmc-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "jmc-Bridging-Header.h"; sourceTree = "<group>"; };
+		0D8A8B3E1F61CB54007529A0 /* AlbumFileLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumFileLocationViewController.swift; sourceTree = "<group>"; };
+		0D8A8B3F1F61CB54007529A0 /* AlbumFileLocationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumFileLocationViewController.xib; sourceTree = "<group>"; };
 		0D8AFE521E6CB3E7004AC584 /* LocationVerifierSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationVerifierSheetController.swift; path = "Other Windows/Library Manager/Sheets/LocationVerifierSheetController.swift"; sourceTree = "<group>"; };
 		0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LocationVerifierSheetController.xib; path = "Other Windows/Library Manager/Sheets/LocationVerifierSheetController.xib"; sourceTree = "<group>"; };
 		0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaScannerSheet.swift; path = "Other Windows/Library Manager/Sheets/MediaScannerSheet.swift"; sourceTree = "<group>"; };
@@ -400,8 +402,6 @@
 		0DE957D41EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OrganizationTemplateBundle+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0DE957D91EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SourceListItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0DE957DA1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SourceListItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0DEE9D981EF79A500025AA11 /* LibraryConsolidatorTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LibraryConsolidatorTableViewController.xib; sourceTree = "<group>"; };
-		0DEE9D9A1EF79A630025AA11 /* LibraryConsolidatorTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryConsolidatorTableViewController.swift; sourceTree = "<group>"; };
 		0DEE9D9C1EF7AB280025AA11 /* StupidTableCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StupidTableCellView.swift; sourceTree = "<group>"; };
 		0DF1887E1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdvancedOrganizationOptionsWindowController.swift; path = "Other Windows/Library Manager/AdvancedOrganizationOptionsWindowController.swift"; sourceTree = "<group>"; };
 		0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AdvancedOrganizationOptionsWindowController.xib; path = "Other Windows/Library Manager/AdvancedOrganizationOptionsWindowController.xib"; sourceTree = "<group>"; };
@@ -847,11 +847,11 @@
 				0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */,
 				0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */,
 				0D8AFE571E6D136D004AC584 /* MediaScannerSheet.xib */,
-				0DEE9D9A1EF79A630025AA11 /* LibraryConsolidatorTableViewController.swift */,
 				0DEE9D9C1EF7AB280025AA11 /* StupidTableCellView.swift */,
-				0DEE9D981EF79A500025AA11 /* LibraryConsolidatorTableViewController.xib */,
 				0D51C8A31EAC01F8002F6182 /* ConsolidateLibrarySheetController.swift */,
 				0D51C8A41EAC01F8002F6182 /* ConsolidateLibrarySheetController.xib */,
+				0D8A8B3E1F61CB54007529A0 /* AlbumFileLocationViewController.swift */,
+				0D8A8B3F1F61CB54007529A0 /* AlbumFileLocationViewController.xib */,
 			);
 			name = Sheets;
 			sourceTree = "<group>";
@@ -1007,7 +1007,6 @@
 				0DA4E19A1F27F8BE00EC80B2 /* Makefile.am in Resources */,
 				0DA4E1891F27F8BE00EC80B2 /* Makefile.in in Resources */,
 				0DFE725D1F0190DC00EACE66 /* AlbumFilesViewController.xib in Resources */,
-				0DEE9D991EF79A500025AA11 /* LibraryConsolidatorTableViewController.xib in Resources */,
 				0DA4E18A1F27F8BE00EC80B2 /* metaflac in Resources */,
 				0DE486921EA83FBA009B226B /* GenericProgressBarSheetController.xib in Resources */,
 				0D800C0D1ED3B54100EA2889 /* ArtistViewAlbumViewController.xib in Resources */,
@@ -1027,6 +1026,7 @@
 				0DF188851EDD072B00241785 /* OrganizationRuleViewController.xib in Resources */,
 				0DA4E19D1F27F8BE00EC80B2 /* Makefile.in in Resources */,
 				0DA7E95B1ECC141900719678 /* ImageCollectionViewItem.xib in Resources */,
+				0D8A8B411F61CB54007529A0 /* AlbumFileLocationViewController.xib in Resources */,
 				0DA4E18B1F27F8BE00EC80B2 /* test_cuesheet in Resources */,
 				0DA4E1901F27F8BE00EC80B2 /* test_streams in Resources */,
 			);
@@ -1062,6 +1062,7 @@
 				0DF188841EDD072B00241785 /* OrganizationRuleViewcontroller.swift in Sources */,
 				0D388AAD1E1F2C8800D25A7D /* AddPlaylistButton.swift in Sources */,
 				0D69659D1EA02EC50050D505 /* ProgressBarController.swift in Sources */,
+				0D8A8B401F61CB54007529A0 /* AlbumFileLocationViewController.swift in Sources */,
 				0D592A3B1EDF6C8B0054D553 /* CachedOrder+CoreDataProperties.swift in Sources */,
 				0D51C8A81EAC1646002F6182 /* URLStringFormatter.swift in Sources */,
 				0DE74A531D7D9457005211E6 /* SharedLibraryRequestHandler.swift in Sources */,
@@ -1107,7 +1108,6 @@
 				0D3756C01EAADBD700016136 /* PreferencesWindowController.swift in Sources */,
 				0DAB30911CFBA3340028928F /* AppDelegate.swift in Sources */,
 				0D299B1B1DF11F140009CF7A /* TrackQueueViewController.swift in Sources */,
-				0DEE9D9B1EF79A630025AA11 /* LibraryConsolidatorTableViewController.swift in Sources */,
 				0DE957D51EEC5465008CBECF /* OrganizationTemplate+CoreDataClass.swift in Sources */,
 				0D76F6AA1D270EB900C6E70F /* DragAndDropArrayController.swift in Sources */,
 				0D2D06CE1EE32FB600A8EC66 /* AlbumFile+CoreDataProperties.swift in Sources */,

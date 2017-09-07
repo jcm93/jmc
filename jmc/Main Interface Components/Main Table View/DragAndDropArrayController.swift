@@ -20,7 +20,6 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         //cast to NSArray to avoid typechecking every single object in array, as in when we cast to [TrackView]
         let track = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!
         let status = track.is_available as? Bool ?? track.library?.is_available as? Bool ?? true
-        var selector: Selector?
         let value = { () -> Any? in
         switch tableColumn! {
         case tableViewController!.isPlayingColumn:
@@ -121,7 +120,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         switch tableColumn! {
         case tableViewController!.nameColumn:
             let oldValue = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!.name!
-            guard (object as! String) != oldValue else { return }
+            guard (object as! String) != oldValue else { return }   
             mainWindow?.delegate?.databaseManager?.nameEdited(tracks: [((self.arrangedObjects as! NSArray)[row] as! TrackView).track!], value: object as! String)
         case tableViewController!.artistColumn:
             let oldValue = ((self.arrangedObjects as! NSArray)[row] as! TrackView).track!.artist?.name ?? ""
@@ -258,7 +257,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     }
     
     func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
-        if info.draggingPasteboard().types!.contains(NSFilenamesPboardType) {
+        if info.draggingPasteboard().types!.contains(NSFilenamesPboardType) && !info.draggingPasteboard().types!.contains("Track") {
             let files = info.draggingPasteboard().propertyList(forType: NSFilenamesPboardType) as! NSArray
             let urls = files.map({return URL(fileURLWithPath: $0 as! String)})
             let appDelegate = (NSApplication.shared().delegate as! AppDelegate)
@@ -277,7 +276,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         } else {
             //if we've reached this point, we must be in a playlist with a valid track id list, and the table must be sorted by playlist order
             managedContext.processPendingChanges()
-            managedContext.undoManager!.beginUndoGrouping()
+            managedContext.undoManager?.beginUndoGrouping()
             var rowAtWhichToInsert = row
             for index in draggedRowIndexes! {
                 if index < row {
@@ -291,14 +290,14 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
             tableViewController?.initializeForPlaylist()
             draggedRowIndexes = nil
             managedContext.processPendingChanges()
-            managedContext.undoManager!.setActionName("Edit Playlist Order")
-            managedContext.undoManager!.endUndoGrouping()
+            managedContext.undoManager?.setActionName("Edit Playlist Order")
+            managedContext.undoManager?.endUndoGrouping()
             return true
         }
     }
     
     func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
-        if info.draggingPasteboard().types!.contains(NSFilenamesPboardType) {
+        if info.draggingPasteboard().types!.contains(NSFilenamesPboardType) && !info.draggingPasteboard().types!.contains("Track") {
             print("doingle")
             tableView.setDropRow(-1, dropOperation: NSTableViewDropOperation.on)
             return .copy
@@ -308,6 +307,5 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         } else {
             return NSDragOperation()
         }
-        return []
     }
 }

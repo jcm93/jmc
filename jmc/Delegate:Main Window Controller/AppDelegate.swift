@@ -382,7 +382,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let coordinator = self.persistentStoreCoordinator
         var managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
-        managedObjectContext.undoManager = UndoManager()
+        //managedObjectContext.undoManager = UndoManager()
         return managedObjectContext
         
     }()
@@ -406,7 +406,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
     
     func undo(_ sender: Any) {
-        managedObjectContext.undoManager!.undo()
+        managedObjectContext.undoManager?.undo()
         mainWindowController?.currentTableViewController?.trackViewArrayController.fetch(nil)
     }
     
