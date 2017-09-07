@@ -147,35 +147,37 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
     
     func changePrimaryImage(imageURL: URL) {
         currentActiveView?.removeFromSuperview()
-        if UTTypeConformsTo(getUTIFrom(url: imageURL)! as CFString, kUTTypeText) {
-            do {
-                self.textView.string = try String(contentsOf: imageURL)
-                addSubviewAndInitializeConstraints(view: self.textViewScrollView)
-                self.currentActiveView = self.textViewScrollView
-                windowController?.resize(newSize: NSSize(width: 500, height: 500))
-            } catch {
-                print(error)
-                return
+        if let uti = getUTIFrom(url: imageURL) {
+            if UTTypeConformsTo(uti as CFString, kUTTypeText) {
+                do {
+                    self.textView.string = try String(contentsOf: imageURL)
+                    addSubviewAndInitializeConstraints(view: self.textViewScrollView)
+                    self.currentActiveView = self.textViewScrollView
+                    windowController?.resize(newSize: NSSize(width: 500, height: 500))
+                } catch {
+                    print(error)
+                    return
+                }
+            } else if UTTypeConformsTo(uti as CFString, kUTTypePDF) {
+                let pdfDocument = PDFDocument(url: imageURL)!
+                pdfViewer.document = pdfDocument
+                addSubviewAndInitializeConstraints(view: pdfViewer)
+                self.currentActiveView = pdfViewer
+                let width = pdfViewer.documentView!.frame.width
+                windowController?.resize(newSize: NSSize(width: width, height: 800.0))
+            } else if UTTypeConformsTo(uti as CFString, kUTTypeImage) {
+                let image = NSImage(byReferencing: imageURL)
+                self.imageView.image = image
+                self.imageView.imageScaling = .scaleProportionallyUpOrDown
+                addSubviewAndInitializeConstraints(view: self.imageView)
+                self.currentActiveView = self.imageView
+                let aspectRatio = image.size.height / image.size.width
+                let heightAddendum = otherArtImages.count > 1 ? otherArtBox.frame.height : 0
+                let newHeight = defaultImageWidthPixels * aspectRatio + heightAddendum
+                let newSize = NSSize(width: defaultImageWidthPixels, height: newHeight)
+                initializePrimaryImageConstraint()
+                windowController?.resize(newSize: newSize)
             }
-        } else if UTTypeConformsTo(getUTIFrom(url: imageURL)! as CFString, kUTTypePDF) {
-            let pdfDocument = PDFDocument(url: imageURL)!
-            pdfViewer.document = pdfDocument
-            addSubviewAndInitializeConstraints(view: pdfViewer)
-            self.currentActiveView = pdfViewer
-            let width = pdfViewer.documentView!.frame.width
-            windowController?.resize(newSize: NSSize(width: width, height: 800.0))
-        } else {
-            let image = NSImage(byReferencing: imageURL)
-            self.imageView.image = image
-            self.imageView.imageScaling = .scaleProportionallyUpOrDown
-            addSubviewAndInitializeConstraints(view: self.imageView)
-            self.currentActiveView = self.imageView
-            let aspectRatio = image.size.height / image.size.width
-            let heightAddendum = otherArtImages.count > 1 ? otherArtBox.frame.height : 0
-            let newHeight = defaultImageWidthPixels * aspectRatio + heightAddendum
-            let newSize = NSSize(width: defaultImageWidthPixels, height: newHeight)
-            initializePrimaryImageConstraint()
-            windowController?.resize(newSize: newSize)
         }
     }
 

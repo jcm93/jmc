@@ -17,39 +17,6 @@ class MTTextFieldCell: NSTextFieldCell {
         return newRect
     }
     
-    /*override func drawInterior(withFrame cellFrame: NSRect, in controlView: NSView) {
-        let titleRect = self.titleRect(forBounds: cellFrame)
-        self.attributedStringValue.draw(in: titleRect)
-    }*/
-    
-    /*override init(textCell string: String) {
-        super.init(textCell: string)
-        if self.identifier?.hasPrefix("sort") == true {
-            self.defaultColor = NSColor.disabledControlTextColor
-        } else {
-            self.defaultColor = NSColor.textColor
-        }
-        self.font = NSFont.systemFont(ofSize: 12.0)
-    }
-    
-    required init(coder: NSCoder) {
-        super.init(coder: coder)
-        if self.identifier?.hasPrefix("sort") == true {
-            self.defaultColor = NSColor.disabledControlTextColor
-        } else {
-            self.defaultColor = NSColor.textColor
-        }
-        self.font = NSFont.systemFont(ofSize: 12.0)
-    }*/
-    
-    override init(textCell string: String) {
-        super.init(textCell: string)
-    }
-    
-    required init(coder: NSCoder) {
-        super.init(coder: coder)
-    }
-    
     override var objectValue: Any? {
         set(newValue) {
             if let actualValue = newValue as? (Any?, Bool) {
