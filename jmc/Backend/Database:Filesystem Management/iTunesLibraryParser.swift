@@ -172,6 +172,11 @@ class iTunesLibraryParser: NSObject {
             DispatchQueue.main.async {
                 visualUpdateHandler?.increment(thingsDone: index)
             }
+            let sortName = getSortName(mostFrequentArtist.name!)
+            for track in album.tracks! {
+                let track = track as! Track
+                track.sort_album_artist = sortName
+            }
         }
         
         //create playlists

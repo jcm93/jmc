@@ -30,6 +30,7 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
     func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
         return otherArtImages.count
     }
+    
     func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
         let index = indexPath.last
         if let artImage = otherArtImages[index!] as? AlbumArtwork {
@@ -118,11 +119,6 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
         }
         return indexPaths
     }
-    
-    /*func collectionView(_ collectionView: NSCollectionView, shouldChangeItemsAt indexPaths: Set<IndexPath>, to highlightState: NSCollectionViewItemHighlightState) -> Set<IndexPath> {
-        print("should change items called")
-        return indexPaths
-    }*/
     
     func initializePrimaryImageConstraint() {
         if initializesPrimaryImageConstraint {
