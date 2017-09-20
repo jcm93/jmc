@@ -208,10 +208,11 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
         // Do view setup here.
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
-        self.collectionView.register(ImageCollectionViewItem.self, forItemWithIdentifier: "image")
+        self.collectionView.register(ImageCollectionViewItem.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier.init("image"))
+        //self.collectionView.register(ImageCollectionViewItem.self, forItemWithIdentifier: "image")
         self.collectionView.wantsLayer = true
         self.collectionView.viewController = self
-        self.collectionView.registerForDraggedTypes([NSURLPboardType, NSFilenamesPboardType, NSPasteboard.PasteboardType.filePromise])
+        self.collectionView.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeURL as String), NSPasteboard.PasteboardType.filePromise])
         self.collectionView.setDraggingSourceOperationMask(.every, forLocal: true)
         self.collectionView.setDraggingSourceOperationMask(.every, forLocal: false)
         //self.textView.translatesAutoresizingMaskIntoConstraints = false

@@ -24,7 +24,7 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
     var thingName: String = ""
     var thingCount: Int = 0
     var tableViewController: AlbumFileLocationViewController!
-    var things = [DisparateTrack]()
+    var things = [NSObject : URL]()
     @IBOutlet weak var progressBar: NSProgressIndicator!
     @IBOutlet weak var progressTextLabel: NSTextField!
 
@@ -39,13 +39,13 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
     }
 
     @IBAction func consolidatePressed(_ sender: Any) {
-        let selectedTracks = self.tableViewController?.trackViewArrayController.selectedObjects as! [DisparateTrack]
+        /*let selectedTracks = self.tableViewController?.trackViewArrayController.selectedObjects as! [DisparateTrack]
         self.libraryManager?.databaseManager.batchMoveTracks(tracks: selectedTracks.map({return $0.track}), visualUpdateHandler: self)
         self.progressBar.isHidden = false
         self.progressTextLabel.isHidden = false
         self.progressBar.maxValue = Double(selectedTracks.count)
         self.progressTextLabel.stringValue = "Consolidating tracks..."
-        self.thingCount = selectedTracks.count
+        self.thingCount = selectedTracks.count*/
         
     }
     
@@ -70,7 +70,7 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
     
     override func windowDidLoad() {
         super.windowDidLoad()
-        self.tableViewController = AlbumFileLocationViewController(nibName: "AlbumFileLocationViewController", bundle: nil)
+        self.tableViewController = AlbumFileLocationViewController(nibName: NSNib.Name(rawValue: "AlbumFileLocationViewController"), bundle: nil)
         self.targetView.addSubview(tableViewController!.view)
         self.tableViewController!.view.topAnchor.constraint(equalTo: targetView.topAnchor).isActive = true
         self.tableViewController!.view.rightAnchor.constraint(equalTo: targetView.rightAnchor).isActive = true

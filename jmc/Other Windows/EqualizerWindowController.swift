@@ -38,7 +38,7 @@ class EqualizerWindowController: NSWindowController {
     }
     @IBAction func eqSliderDidChange(_ sender: AnyObject) {
         let slider = sender as! NSSlider
-        let band = Int(slider.identifier!)!
+        let band = Int(slider.identifier!.rawValue)!
         let value = slider.floatValue
         self.audioModule!.adjustEqualizer(band, value: value)
     }

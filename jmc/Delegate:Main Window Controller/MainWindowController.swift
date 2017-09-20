@@ -89,9 +89,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     var duration: Double?
     @objc dynamic var paused: Bool = true
     var is_initialized = false
-    var shuffle: Bool = UserDefaults.standard.bool(forKey: DEFAULTS_SHUFFLE_STRING)
-    var will_repeat: Bool = UserDefaults.standard.bool(forKey: DEFAULTS_REPEAT_STRING)
-    var showsArtwork: Bool = UserDefaults.standard.bool(forKey: DEFAULTS_SHOWS_ARTWORK_STRING)
+    @objc dynamic var shuffle: Bool = UserDefaults.standard.bool(forKey: DEFAULTS_SHUFFLE_STRING)
+    @objc var will_repeat: Bool = UserDefaults.standard.bool(forKey: DEFAULTS_REPEAT_STRING)
+    @objc var showsArtwork: Bool = UserDefaults.standard.bool(forKey: DEFAULTS_SHOWS_ARTWORK_STRING)
     var currentTrack: Track?
     var currentTrackView: TrackView?
     var currentNetworkTrack: Track?
@@ -102,7 +102,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     //var current_source_index: Int?
     var currentPlaylistOrderObject: PlaylistOrderObject?
     var current_source_index_temp: Int?
-    var infoString: String?
+    @objc var infoString: String?
     var auxArrayController: NSArrayController?
     var focusedColumn: NSTableColumn?
     var currentOrder: CachedOrder?
@@ -434,7 +434,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         for i in 0..<array.count - 1 {
             let j = Int(arc4random_uniform(UInt32(array.count - i))) + i
             guard i != j else {continue}
-            swap(&array[i], &array[j])
+            array.swapAt(i, j)
         }
     }
     

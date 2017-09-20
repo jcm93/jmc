@@ -322,7 +322,7 @@ func shuffleArray(_ array: [AnyObject]) -> [AnyObject] {
     for i in 0..<array.count - 1 {
         let j = Int(arc4random_uniform(UInt32(array.count - i))) + i
         guard i != j else {continue}
-        swap(&newArray[i], &newArray[j])
+        newArray.swapAt(i, j)
     }
     return newArray
 }
@@ -386,7 +386,7 @@ func shuffle_array(_ array: inout [Int]) {
     for i in 0..<array.count - 1 {
         let j = Int(arc4random_uniform(UInt32(array.count - i))) + i
         guard i != j else {continue}
-        swap(&array[i], &array[j])
+        array.swapAt(i, j)
     }
 }
 

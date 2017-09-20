@@ -13,7 +13,7 @@ class AlbumFilePathNode: NSObject {
     var pathComponent: String
     var children = [AlbumFilePathNode]()
     var parent: AlbumFilePathNode?
-    var totalFiles = Set<AnyHashable>()
+    var totalFiles = Set<NSObject>()
     
     
     init(pathComponent: String, parent: AlbumFilePathNode? = nil) {
@@ -48,7 +48,7 @@ class AlbumFilePathNode: NSObject {
         return path
     }
     
-    func removeFileRecursive(_ file: AnyHashable) {
+    func removeFileRecursive(_ file: NSObject) {
         if let file = self.totalFiles.remove(file) {
             for child in self.children {
                 child.removeFileRecursive(file)
@@ -82,7 +82,7 @@ class AlbumFilePathTree: NSObject {
     
     var rootNode: AlbumFilePathNode
     
-    func createNode(with pathComponents: inout [String], under parentOrRoot: AlbumFilePathNode? = nil, with file: AnyHashable) {
+    func createNode(with pathComponents: inout [String], under parentOrRoot: AlbumFilePathNode? = nil, with file: NSObject) {
         guard pathComponents.count > 0 else { return }
         
         let currentNode = parentOrRoot ?? rootNode
@@ -95,7 +95,7 @@ class AlbumFilePathTree: NSObject {
         } else {
             let newNode = AlbumFilePathNode(pathComponent: nextPathComponent, parent: currentNode)
             let nextURLString = URL(fileURLWithPath: newNode.completePathRepresentation()).absoluteString
-            let setUnderNextNode = Set(currentNode.totalFiles.filter {(($0 as AnyObject).value(forKey: "location") as? String)?.hasPrefix(nextURLString) ?? false})
+            let setUnderNextNode = Set(currentNode.totalFiles.filter({return ($0.value(forKey: "location") as? String)?.hasPrefix(nextURLString) ?? false}))
             newNode.totalFiles = setUnderNextNode
             if pathComponents.count > 0 {
                 createNode(with: &pathComponents, under: newNode, with: file)
@@ -106,27 +106,23 @@ class AlbumFilePathTree: NSObject {
         }
     }
     
-    init(files: inout [AnyHashable]) {
+    init(files: inout [NSObject : URL]) {
         self.rootNode = AlbumFilePathNode(pathComponent: "/")
-        self.rootNode.totalFiles = Set(files)
+        self.rootNode.totalFiles = Set(files.keys)
         super.init()
-        var indexes = [Int]()
-        for (index, file) in files.enumerated() {
-            if let location = (file as AnyObject).value(forKey: "location") as? String, let url = URL(string: location) {
-                var path = url.path.components(separatedBy: "/").filter({$0 != ""})
-                createNode(with: &path, with: file)
-            } else {
-                indexes.append(index)
-            }
-        }
-        for index in indexes.sorted().reversed() {
-            files.remove(at: index)
+        var filesToRemove = [NSObject]()
+        for file in files {
+            let url = file.value
+            var path = url.path.components(separatedBy: "/").filter({$0 != ""})
+            let object = file.key
+            createNode(with: &path, with: object)
         }
     }
 }
 
 class AlbumFileLocationViewController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDelegate {
     
+    var tree: AlbumFilePathTree!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -148,6 +144,9 @@ class AlbumFileLocationViewController: NSViewController, NSOutlineViewDataSource
         return view
     }
     
-    
+    func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
+        guard let node = item as? AlbumFilePathNode else { return self.tree.rootNode.children.count }
+        return node.children.count
+    }
     
 }

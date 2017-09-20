@@ -172,7 +172,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     }
     
     @IBAction func compilationChanged(_ sender: Any) {
-        databaseManager.compilationChanged(tracks: self.selectedTracks!, value: self.compilationButton.state != 0)
+        databaseManager.compilationChanged(tracks: self.selectedTracks!, value: self.compilationButton.state.rawValue != 0)
         mainWindowController?.refreshCurrentSortOrder()
     }
     

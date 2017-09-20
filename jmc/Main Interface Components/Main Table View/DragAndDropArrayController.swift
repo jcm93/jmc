@@ -223,7 +223,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
         print("table view writerows called")
         pboard.clearContents()
-        pboard.declareTypes([NSURLPboardType, NSFilenamesPboardType], owner: self)
+        pboard.declareTypes([NSPasteboard.PasteboardType(kUTTypeURL as String)], owner: self)
         let rows = NSMutableArray()
         var fileURLs = [NSURL]()
         for index in rowIndexes {
@@ -257,8 +257,8 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     }
     
     func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
-        if info.draggingPasteboard().types!.contains(NSFilenamesPboardType) && !info.draggingPasteboard().types!.contains(NSPasteboard.PasteboardType(rawValue: "Track")) {
-            let files = info.draggingPasteboard().propertyList(forType: NSFilenamesPboardType) as! NSArray
+        if info.draggingPasteboard().types!.contains(NSPasteboard.PasteboardType(kUTTypeURL as String)) && !info.draggingPasteboard().types!.contains(NSPasteboard.PasteboardType(rawValue: "Track")) {
+            let files = info.draggingPasteboard().propertyList(forType: NSPasteboard.PasteboardType(kUTTypeURL as String)) as! NSArray
             let urls = files.map({return URL(fileURLWithPath: $0 as! String)})
             let appDelegate = (NSApplication.shared.delegate as! AppDelegate)
             var errors = [FileAddToDatabaseError]()
@@ -297,7 +297,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     }
     
     func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
-        if info.draggingPasteboard().types!.contains(NSFilenamesPboardType) && !info.draggingPasteboard().types!.contains(NSPasteboard.PasteboardType(rawValue: "Track")) {
+        if info.draggingPasteboard().types!.contains(NSPasteboard.PasteboardType(kUTTypeURL as String)) && !info.draggingPasteboard().types!.contains(NSPasteboard.PasteboardType(rawValue: "Track")) {
             print("doingle")
             tableView.setDropRow(-1, dropOperation: NSTableView.DropOperation.on)
             return .copy

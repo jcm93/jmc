@@ -122,7 +122,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     
     func toggleHidden(_ state: Int) {
         switch state {
-        case NSControl.StateValue.on:
+        case NSControl.StateValue.on.rawValue:
             tableView?.isHidden = false
         default:
             tableView?.isHidden = true
@@ -471,7 +471,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 if self.currentTrack != nil {
                     if let indexOfPlayedTrack = shuffled_array?.index(of: Int(self.currentTrack!.id!)) {
                         if indexOfPlayedTrack != 0 {
-                            swap(&shuffled_array![shuffled_array!.index(of: Int(self.currentTrack!.id!))!], &shuffled_array![0])
+                            shuffled_array!.swapAt(shuffled_array!.index(of: Int(self.currentTrack!.id!))!, 0)
                         }
                     }
                 }
@@ -635,7 +635,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         //uses cell.subviews[x] because IB can't connect outlets from elements to nstablecellview subclasses using .xibs, apparently
         var object = trackQueue[row]
-        if tableColumn?.identifier == "Is Playing" {
+        if tableColumn?.identifier.rawValue == "Is Playing" {
             switch object.viewType! {
             case .currentTrack:
                 return tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "nowPlaying"), owner: nil) as! NowPlayingCell

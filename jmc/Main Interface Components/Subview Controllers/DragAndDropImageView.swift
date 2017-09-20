@@ -14,7 +14,7 @@ class DragAndDropImageView: NSImageView {
     var mouseDownHappened = false
     
     override func awakeFromNib() {
-        self.registerForDraggedTypes([NSPasteboard.PasteboardType.png, NSPasteboard.PasteboardType.tiff, NSFilenamesPboardType])
+        self.registerForDraggedTypes([NSPasteboard.PasteboardType.png, NSPasteboard.PasteboardType.tiff, NSPasteboard.PasteboardType(kUTTypeURL as String)])
         self.animates = true
     }
 

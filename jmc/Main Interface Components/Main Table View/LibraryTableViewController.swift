@@ -44,7 +44,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     var rightMouseDownTarget: [TrackView]?
     var rightMouseDownRow: Int?
     var item: SourceListItem?
-    var managedContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext
+    @objc var managedContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext
     var searchString: String?
     var playlist: SongCollection?
     var advancedFilterVisible: Bool = false
@@ -100,8 +100,8 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         if let row = (trackViewArrayController.arrangedObjects as! [TrackView]).index(of: track.view!) {
             self.currentTrackRow = row
             let tableRowIndexSet = IndexSet(integer: row)
-            let indexOfPlaysColumn = self.tableView.column(withIdentifier: "play_count")
-            let indexOfSkipsColumn = self.tableView.column(withIdentifier: "skip_count")
+            let indexOfPlaysColumn = self.tableView.column(withIdentifier: NSUserInterfaceItemIdentifier.init("play_count"))
+            let indexOfSkipsColumn = self.tableView.column(withIdentifier: NSUserInterfaceItemIdentifier.init("skip_count"))
             let tableColumnIndexSet = IndexSet([0, indexOfPlaysColumn, indexOfSkipsColumn])
             tableView.reloadData(forRowIndexes: tableRowIndexSet, columnIndexes: tableColumnIndexSet)
         }
@@ -407,7 +407,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                 menuItem = NSMenuItem(title: column.headerCell.title, action: #selector(toggleColumn), keyEquivalent: "")
             }
             if (savedColumns != nil) {
-                let isHidden = savedColumns![column.identifier] as! Bool
+                let isHidden = savedColumns![column.identifier.rawValue] as! Bool
                 column.isHidden = isHidden
             }
             menuItem.target = self
@@ -516,7 +516,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         tableView.dataSource = trackViewArrayController
         tableView.libraryTableViewController = self
         tableView.reloadData()
-        tableView.registerForDraggedTypes([NSFilenamesPboardType])
+        tableView.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeURL as String)])
         trackViewArrayController.mainWindow = self.mainWindowController
         if playlist != nil {
             print("initializing for playlist")

@@ -13,7 +13,7 @@ import AVFoundation
 
 func instanceCheck(_ entity: String, name: String) -> NSManagedObject? {
     let managedContext: NSManagedObjectContext = {
-        return (NSApplication.shared().delegate
+        return (NSApplication.shared.delegate
             as? AppDelegate)?.managedObjectContext }()!
     let fetch_req = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
     let predicate = NSPredicate(format: "name == %@", name)
@@ -55,7 +55,7 @@ class DatabaseManager: NSObject {
         var art: Data?
         let commonMeta = mediaObject.commonMetadata
         for metadataItem in commonMeta {
-            if metadataItem.commonKey == "artwork" {
+            if metadataItem.commonKey?.rawValue == "artwork" {
                 print("found art in file")
                 art = metadataItem.value as? Data
             }
@@ -394,7 +394,7 @@ class DatabaseManager: NSObject {
         if directoriesSet.count == 1 {
             return directoriesSet.first!
         } else {
-            return createNonTemplateDirectoryFor(album: album)!
+            return createNonTemplateDirectoryFor(album: album, dry: true)!
         }
     }
     
@@ -410,7 +410,7 @@ class DatabaseManager: NSObject {
             let currentAlbumDirectory = directoriesSet.first!
             for albumFile in albumFiles {
                 do {
-                    let fileURL = URL(string: albumFile)!
+                    let fileURL = URL(string: albumFile.value(forKey: "location") as! String)!
                     let fileName = fileURL.lastPathComponent
                     try fileManager.moveItem(at: fileURL, to: currentAlbumDirectory.appendingPathComponent(fileName))
                 } catch {
@@ -419,10 +419,10 @@ class DatabaseManager: NSObject {
             }
         } else {
             //construct directory for album files since album is spread across disparate locations
-            guard let albumDirectory = createNonTemplateDirectoryFor(album: track.album) else { return }
+            guard let albumDirectory = createNonTemplateDirectoryFor(album: track.album, dry: false) else { return }
             for albumFile in albumFiles {
                 do {
-                    let fileURL = URL(string: albumFile)!
+                    let fileURL = URL(string: albumFile.value(forKey: "location") as! String)!
                     let fileName = fileURL.lastPathComponent
                     try fileManager.moveItem(at: fileURL, to: albumDirectory.appendingPathComponent(fileName))
                 } catch {
@@ -752,7 +752,7 @@ class DatabaseManager: NSObject {
             autoreleasepool {
                 if UserDefaults.standard.bool(forKey: DEFAULTS_CHECK_EMBEDDED_ARTWORK_STRING) {
                     var otherMetadataForAlbumArt = AVAsset(url: url).commonMetadata
-                    otherMetadataForAlbumArt = otherMetadataForAlbumArt.filter({return $0.commonKey == "artwork"})
+                    otherMetadataForAlbumArt = otherMetadataForAlbumArt.filter({return $0.commonKey?.rawValue == "artwork"})
                     if otherMetadataForAlbumArt.count > 0 {
                         art = otherMetadataForAlbumArt[0].value as? Data
                         if art != nil {
