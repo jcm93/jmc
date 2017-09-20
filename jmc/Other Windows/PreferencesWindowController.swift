@@ -19,8 +19,8 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     
     var lastFMDelegate: LastFMDelegate!
     
-    func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [String] {
-        return ["general", "sharing", "lastfm", "advanced", "library"]
+    func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return [NSToolbarItem.Identifier(rawValue: "general"), NSToolbarItem.Identifier(rawValue: "sharing"), NSToolbarItem.Identifier(rawValue: "lastfm"), NSToolbarItem.Identifier(rawValue: "advanced"), NSToolbarItem.Identifier(rawValue: "library")]
     }
     
     @IBAction func selectGeneral(_ sender: Any) {
@@ -87,7 +87,7 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     @IBAction func numTrackQueueTracksEdited(_ sender: Any) {
         UserDefaults.standard.set(trackQueueNumTracksField.integerValue, forKey: DEFAULTS_NUM_PAST_TRACKS)
         //very bad.
-        (NSApplication.shared().delegate as! AppDelegate).mainWindowController?.trackQueueViewController?.tableView.minimumNumberVisibleRows = trackQueueNumTracksField.integerValue + 2
+        (NSApplication.shared.delegate as! AppDelegate).mainWindowController?.trackQueueViewController?.tableView.minimumNumberVisibleRows = trackQueueNumTracksField.integerValue + 2
     }
     
     @IBAction func sliderAction(_ sender: Any) {
@@ -125,7 +125,7 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     
     func getLastFMDelegate() {
         if self.lastFMDelegate == nil {
-            let appDelegate = NSApplication.shared().delegate as! AppDelegate
+            let appDelegate = NSApplication.shared.delegate as! AppDelegate
             self.lastFMDelegate = appDelegate.lastFMDelegate
             self.lastFMDelegate.setup()
         }
@@ -173,7 +173,7 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     }
     
     func authSucceeded(name: String) {
-        self.authStatusImage.image = NSImage(named: NSImageNameStatusAvailable)
+        self.authStatusImage.image = NSImage(named: NSImage.Name.statusAvailable)
         self.authStatusLabel.stringValue = "Authenticated with Last.fm for user \(name)"
         authFailedLabel.isHidden = true
         startAuthButton.isHidden = false
@@ -233,7 +233,7 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     
     override func windowDidLoad() {
         super.windowDidLoad()
-        toolbar.selectedItemIdentifier = "general"
+        toolbar.selectedItemIdentifier = NSToolbarItem.Identifier(rawValue: "general")
         self.trackQueueNumTracksField.integerValue = UserDefaults.standard.integer(forKey: DEFAULTS_NUM_PAST_TRACKS)
         if UserDefaults.standard.bool(forKey: DEFAULTS_ARTWORK_SHOWS_SELECTED) {
             artworkSelectedTrackRadio.state = NSOnState
@@ -272,7 +272,7 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
         if globalRootLibrary?.last_fm_session_key != nil {
             lastFMSessionAuthenticated(username: globalRootLibrary!.last_fm_username!)
         }
-        self.libraryManagerViewController = LibraryManagerViewController(nibName: "LibraryManagerViewController", bundle: nil)
+        self.libraryManagerViewController = LibraryManagerViewController(nibName: NSNib.Name(rawValue: "LibraryManagerViewController"), bundle: nil)
         self.libraryManagerTargetView.addSubview(self.libraryManagerViewController!.view)
         self.libraryManagerViewController?.initializeForLibrary(library: globalRootLibrary!)
         

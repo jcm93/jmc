@@ -21,7 +21,8 @@ public class OrganizationTemplate: NSManagedObject {
         return true
     }
     
-    func getURL(for albumFile: AnyObject, withExtension pathExtension: String) -> URL? {
+    func getURL(for albumFile: AnyObject, withExtension pathExtension: String?) -> URL? {
+        let pathExtension = pathExtension ?? URL(string: albumFile.value(forKey: "location") as! String)!.pathExtension
         guard var template = self.tokens as? [OrganizationFieldToken], var baseURL = URL(string: self.base_url_string!) else { return nil }
         let urlPathComponents = {() -> [String] in
             switch albumFile {

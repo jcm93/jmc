@@ -34,7 +34,7 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
     func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
         let index = indexPath.last
         if let artImage = otherArtImages[index!] as? AlbumArtwork {
-            let view = collectionView.makeItem(withIdentifier: "image", for: indexPath) as! ImageCollectionViewItem
+            let view = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "image"), for: indexPath) as! ImageCollectionViewItem
             let imageURL = URL(string: artImage.artwork_location!)
             let image = NSImage(byReferencing: imageURL!)
             view.imageView!.image = image
@@ -44,7 +44,7 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
             return view
         } else {
             let otherFile = otherArtImages[index!] as! AlbumFile
-            let view = collectionView.makeItem(withIdentifier: "image", for: indexPath) as! ImageCollectionViewItem
+            let view = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "image"), for: indexPath) as! ImageCollectionViewItem
             let fileURL = URL(string: otherFile.location!)
             let size = NSSize(width: 90, height: 100)
             if let unmanagedImage = QLThumbnailImageCreate(kCFAllocatorDefault, fileURL! as CFURL, size, [:] as CFDictionary) {
@@ -58,9 +58,9 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
         }
     }
     
-    func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionViewDropOperation) -> Bool {
+    func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionView.DropOperation) -> Bool {
         print("accepting drop")
-        if let board = draggingInfo.draggingPasteboard().propertyList(forType: "NSFilenamesPboardType") as? NSArray {
+        if let board = draggingInfo.draggingPasteboard().propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType")) as? NSArray {
             let urls = board.map({return URL(fileURLWithPath: $0 as! String)})
             if let currentTrack = self.track {
                 let databaseManager = DatabaseManager()
@@ -90,7 +90,7 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
         return false
     }
     
-    func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionViewDropOperation>) -> NSDragOperation {
+    func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
         print("validating drop")
         return .every
     }
@@ -211,7 +211,7 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
         self.collectionView.register(ImageCollectionViewItem.self, forItemWithIdentifier: "image")
         self.collectionView.wantsLayer = true
         self.collectionView.viewController = self
-        self.collectionView.register(forDraggedTypes: [NSURLPboardType, NSFilenamesPboardType, NSFilesPromisePboardType])
+        self.collectionView.registerForDraggedTypes([NSURLPboardType, NSFilenamesPboardType, NSPasteboard.PasteboardType.filePromise])
         self.collectionView.setDraggingSourceOperationMask(.every, forLocal: true)
         self.collectionView.setDraggingSourceOperationMask(.every, forLocal: false)
         //self.textView.translatesAutoresizingMaskIntoConstraints = false

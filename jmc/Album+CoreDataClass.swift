@@ -11,14 +11,14 @@ import CoreData
 
 
 public class Album: NSManagedObject {
-    func getMiscellaneousFiles() -> [String] {
-        var albumFiles = [String?]()
-        albumFiles.append(self.primary_art?.artwork_location)
-        if let otherArt = self.other_art {
-            albumFiles.append(contentsOf: otherArt.map({return ($0 as! AlbumArtwork).artwork_location}))
+    func getMiscellaneousFiles() -> [NSObject] {
+        var albumFiles = [NSObject]()
+        albumFiles.append(self.primary_art)
+        if let otherArt = self.other_art?.array {
+            albumFiles.append(contentsOf: otherArt as [NSObject?])
         }
-        if let otherFiles = self.other_files {
-            albumFiles.append(contentsOf: otherFiles.map({return ($0 as! AlbumFile).location}))
+        if let otherFiles = self.other_files?.allObjects {
+            albumFiles.append(contentsOf: otherFiles as [NSObject?])
         }
         return albumFiles.flatMap({return $0})
     }

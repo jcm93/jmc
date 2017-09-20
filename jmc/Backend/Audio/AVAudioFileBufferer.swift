@@ -27,8 +27,8 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
     var format: AVAudioFormat
     
     init(file: AVAudioFile, audioModule: AudioModule) {
-        self.bufferA = AVAudioPCMBuffer(pcmFormat: file.processingFormat, frameCapacity: bufferFrameLength)
-        self.bufferB = AVAudioPCMBuffer(pcmFormat: file.processingFormat, frameCapacity: bufferFrameLength)
+        self.bufferA = AVAudioPCMBuffer(pcmFormat: file.processingFormat, frameCapacity: bufferFrameLength)!
+        self.bufferB = AVAudioPCMBuffer(pcmFormat: file.processingFormat, frameCapacity: bufferFrameLength)!
         self.currentDecodeBuffer = bufferA
         self.audioModule = audioModule
         self.format = file.processingFormat

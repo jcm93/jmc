@@ -28,13 +28,13 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
         panel.canChooseFiles = false
         panel.allowsMultipleSelection = false
         let result = panel.runModal()
-        if result == NSModalResponseOK {
+        if result == NSApplication.ModalResponse.OK {
             pathControl.url = panel.url
         }
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let view = tableView.make(withIdentifier: "OrganizationRuleCellView", owner: nil) as! OrganizationRuleCellView
+        let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "OrganizationRuleCellView"), owner: nil) as! OrganizationRuleCellView
         let newViewController = ruleControllers[row]
         view.initializeForController(newViewController)
         return view
@@ -42,11 +42,11 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
     
     func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
         self.draggedIndexes = rowIndexes
-        pboard.addTypes(["special.poop.rows"], owner: nil)
+        pboard.addTypes([NSPasteboard.PasteboardType(rawValue: "special.poop.rows")], owner: nil)
         return true
     }
     
-    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
+    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
         if dropOperation == .above && row < tableView.numberOfRows {
             return .move
         } else {
@@ -54,7 +54,7 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
         }
     }
     
-    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
+    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
         var offset = 0
         guard self.draggedIndexes!.count == 1 else {
             print("fuck shit stack")
@@ -91,17 +91,17 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
     }
     
     func addRule(template: OrganizationTemplate?) {
-        let newViewController = OrganizationRuleViewController(nibName: "OrganizationRuleViewController", bundle: nil)
-        newViewController!.template = template
-        ruleControllers.append(newViewController!)
+        let newViewController = OrganizationRuleViewController(nibName: NSNib.Name(rawValue: "OrganizationRuleViewController"), bundle: nil)
+        newViewController.template = template
+        ruleControllers.append(newViewController)
         if template == nil {
-            tableView.insertRows(at: IndexSet(integer: tableView.numberOfRows < 0 ? 0 : tableView.numberOfRows), withAnimation: .slideDown)
-            newViewController?.predicateEditor.addRow(nil)
-            newViewController?.pathControl.url = pathControl.url
+            tableView.insertRows(at: IndexSet(integer: tableView.numberOfRows < 0 ? 0 : tableView.numberOfRows), withAnimation: NSTableView.AnimationOptions.slideDown)
+            newViewController.predicateEditor.addRow(nil)
+            newViewController.pathControl.url = pathControl.url
         }
     }
     
-    func tokenField(_ tokenField: NSTokenField, representedObjectForEditing editingString: String) -> Any {
+    func tokenField(_ tokenField: NSTokenField, representedObjectForEditing editingString: String) -> (Any)? {
         return OrganizationFieldToken(string: editingString)
     }
     
@@ -113,7 +113,7 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
         return (representedObject as! OrganizationFieldToken).stringRepresentation()
     }
     
-    func tokenField(_ tokenField: NSTokenField, styleForRepresentedObject representedObject: Any) -> NSTokenStyle {
+    func tokenField(_ tokenField: NSTokenField, styleForRepresentedObject representedObject: Any) -> NSTokenField.TokenStyle {
         let object = representedObject as! OrganizationFieldToken
         if object.tokenType == .other {
             return .none
@@ -141,7 +141,7 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
     
     func removeRule(_ vc: OrganizationRuleViewController) {
         let index = ruleControllers.index(of: vc)
-        tableView.removeRows(at: IndexSet(integer: index!), withAnimation: NSTableViewAnimationOptions.slideUp)
+        tableView.removeRows(at: IndexSet(integer: index!), withAnimation: NSTableView.AnimationOptions.slideUp)
         let removedRuleController = ruleControllers.remove(at: index!)
         removedRuleControllers.append(removedRuleController)
         tableView.reloadData()
@@ -179,7 +179,7 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
         return IndexSet()
     }
     
-    func addToken(sender: NSMenuItem) {
+    @objc func addToken(sender: NSMenuItem) {
         var currentTokenArray = tokenField.objectValue as! [OrganizationFieldToken]
         let newToken = OrganizationFieldToken(string: sender.title)
         currentTokenArray.append(newToken)
@@ -195,7 +195,7 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
         initializeData()
         self.tableView.reloadData()
-        tableView.register(forDraggedTypes: ["special.poop.rows"])
+        tableView.registerForDraggedTypes([NSPasteboard.PasteboardType(rawValue: "special.poop.rows")])
     }
     
 }

@@ -73,7 +73,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }()
     
     lazy var managedContext: NSManagedObjectContext = {
-        return (NSApplication.shared().delegate
+        return (NSApplication.shared.delegate
             as? AppDelegate)?.managedObjectContext }()!
     
     func getCurrentSelection() -> SourceListItem {
@@ -305,14 +305,14 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         let source = item as! SourceListItem
         if (source.is_header == true) {
-            let view = outlineView.make(withIdentifier: "HeaderCell", owner: self) as! SourceListCellView
+            let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "HeaderCell"), owner: self) as! SourceListCellView
             view.node = source
             view.textField?.stringValue = source.name!
             view.textField?.isEditable = false
             return view
         } else if source.playlist != nil {
             if source.playlist?.smart_criteria != nil {
-                let view = outlineView.make(withIdentifier: "SmartPlaylistCell", owner: self) as! SourceListCellView
+                let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "SmartPlaylistCell"), owner: self) as! SourceListCellView
                 view.node = source
                 view.textField?.stringValue = source.name!
                 view.textField?.delegate = self
@@ -321,7 +321,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
                 }
                 return view
             } else {
-                let view = outlineView.make(withIdentifier: "PlaylistCell", owner: self) as! SourceListCellView
+                let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "PlaylistCell"), owner: self) as! SourceListCellView
                 view.node = source
                 view.textField?.stringValue = source.name!
                 view.textField?.delegate = self
@@ -331,40 +331,40 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
                 return view
             }
         } else if source.is_network == true {
-            let view = outlineView.make(withIdentifier: "NetworkLibraryCell", owner: self) as! SourceListCellView
+            let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "NetworkLibraryCell"), owner: self) as! SourceListCellView
             view.node = source
             view.textField?.stringValue = source.name!
             view.textField?.isEditable = false
             return view
         } else if source.is_folder == true {
-            let view = outlineView.make(withIdentifier: "PlaylistFolderCell", owner: self) as! SourceListCellView
+            let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "PlaylistFolderCell"), owner: self) as! SourceListCellView
             view.node = source
             view.textField?.stringValue = source.name!
             view.textField?.delegate = self
             view.textField?.isEditable = true
             return view
         } else if source.library != nil {
-            let view = outlineView.make(withIdentifier: "MasterLibraryCell", owner: self) as! SourceListCellView
+            let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "MasterLibraryCell"), owner: self) as! SourceListCellView
             view.node = source
             view.textField?.stringValue = "All Sources"
             view.textField?.isEditable = false
             return view
         } else if source.volume != nil {
             if volumeIsAvailable(volume: source.volume!) {
-                let view = outlineView.make(withIdentifier: "MasterPlaylistCell", owner: self) as! SourceListCellView
+                let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "MasterPlaylistCell"), owner: self) as! SourceListCellView
                 view.node = source
                 view.textField?.stringValue = source.volume!.name ?? ""
                 view.textField?.isEditable = false
                 return view
             } else {
-                let view = outlineView.make(withIdentifier: "MasterPlaylistCellDisabled", owner: self) as! SourceListCellView
+                let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "MasterPlaylistCellDisabled"), owner: self) as! SourceListCellView
                 view.node = source
                 view.textField?.stringValue = source.volume!.name ?? ""
                 return view
             }
 
         } else {
-            let view = outlineView.make(withIdentifier: "PlaylistCell", owner: self) as! SourceListCellView
+            let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "PlaylistCell"), owner: self) as! SourceListCellView
             view.node = source
             view.textField?.stringValue = source.name!
             view.textField?.delegate = self
@@ -415,7 +415,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         print(items)
         draggedNodes = items as? [SourceListItem]
         //for intra-NSOV drags, we do not attach pasteboard data
-        pasteboard.setData(nil, forType: "SourceListItem")
+        pasteboard.setData(nil, forType: NSPasteboard.PasteboardType(rawValue: "SourceListItem"))
         return true
     }
     
@@ -427,7 +427,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     
     @IBAction func exportPlaylist(_ sender: Any) {
         let selectedPlaylists = sourceList.selectedRowIndexes.flatMap({return (sourceList.item(atRow: $0) as? SourceListItem)?.playlist})
-        let delegate = (NSApplication.shared().delegate as! AppDelegate)
+        let delegate = (NSApplication.shared.delegate as! AppDelegate)
         delegate.launchAddFilesDialog()
         DispatchQueue.global(qos: .default).async {
             self.export(playlists: selectedPlaylists)
@@ -439,7 +439,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     
     func export(playlists: [SongCollection]) {
         let playlistsFolder = globalRootLibrary!.getCentralMediaFolder()!.appendingPathComponent("Exported Playlists")
-        let visualUpdateHandler = (NSApplication.shared().delegate as! AppDelegate).backgroundAddFilesHandler
+        let visualUpdateHandler = (NSApplication.shared.delegate as! AppDelegate).backgroundAddFilesHandler
         var index = 0
         DispatchQueue.main.async {
             visualUpdateHandler?.prepareForNewTask(actionName: "Copying", thingName: "files", thingCount: playlists.reduce(0, { return $0 + $1.tracks!.count }))
@@ -468,7 +468,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             playlistFolders.append(playlistFolder)
         }
         DispatchQueue.main.async {
-            NSWorkspace.shared().activateFileViewerSelecting(playlistFolders)
+            NSWorkspace.shared.activateFileViewerSelecting(playlistFolders)
         }
         DispatchQueue.main.async {
             visualUpdateHandler?.finish()
@@ -488,12 +488,12 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             managedContext.delete(item as! NSManagedObject)
         }
         let viewIndices = IndexSet(validIndicesToDelete.map({return $0 - playlistHeaderIndex - 1}))
-        sourceList.removeItems(at: viewIndices, inParent: playlistHeaderNode, withAnimation: .effectFade)
+        sourceList.removeItems(at: viewIndices, inParent: playlistHeaderNode, withAnimation: NSTableView.AnimationOptions.effectFade)
     }
     
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
         print("validate drop called on source list")
-        print(info.draggingPasteboard().data(forType: "Track"))
+        print(info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "Track")))
         let source = item as? SourceListItem
         if draggedNodes != nil {
             print(index)
@@ -507,12 +507,12 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
                 print("returning none")
                 return NSDragOperation()
             }
-        } else if info.draggingPasteboard().data(forType: "Track") != nil {
+        } else if info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "Track")) != nil {
             print("non nil track data")
             if source != nil && source!.parent!.name == "Playlists" {
                 return .generic
             }
-        } else if info.draggingPasteboard().data(forType: "NetworkTrack") != nil {
+        } else if info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "NetworkTrack")) != nil {
             print("non nil networktrack data")
             if source != nil {
                 let itemParentName = source!.parent?.name
@@ -537,11 +537,11 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             draggedNodes = nil
             self.reloadData()
             return true
-        } else if info.draggingPasteboard().data(forType: "Track") != nil {
+        } else if info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "Track")) != nil {
             print("doing stuff")
             let playlistItem = item as! SourceListItem
             let playlist = playlistItem.playlist
-            let data = info.draggingPasteboard().data(forType: "Track")
+            let data = info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "Track"))
             let unCodedThing = NSKeyedUnarchiver.unarchiveObject(with: data!) as! NSMutableArray
             let tracks = { () -> [Track] in
                 var result = [Track]()
@@ -552,11 +552,11 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
                 return result
             }()
             playlist?.addToTracks(tracks.map({return $0.view!}))
-        } else if info.draggingPasteboard().data(forType: "NetworkTrack") != nil {
+        } else if info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "NetworkTrack")) != nil {
             print("processing network track transfers")
             let playlistItem = item as! SourceListItem
             let playlist = playlistItem.playlist
-            let data = info.draggingPasteboard().data(forType: "NetworkTrack")
+            let data = info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "NetworkTrack"))
             let unCodedThing = NSKeyedUnarchiver.unarchiveObject(with: data!) as! NSMutableArray
             let tracks = { () -> [Track] in
                 var result = [Track]()

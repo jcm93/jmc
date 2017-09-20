@@ -37,17 +37,17 @@ class LocationManager: NSObject {
     
     var eventStreamRef: FSEventStreamRef?
     
-    let callback: @convention(c) (OpaquePointer, Optional<UnsafeMutableRawPointer>, Int, UnsafeMutableRawPointer, Optional<UnsafePointer<UInt32>>, Optional<UnsafePointer<UInt64>>) -> () = {
-        (streamRef: ConstFSEventStreamRef, clientCallBackInfo: UnsafeMutableRawPointer?, numEvents: Int, eventPaths: UnsafeMutableRawPointer, eventFlags: UnsafePointer<FSEventStreamEventFlags>?, eventIds: UnsafePointer<FSEventStreamEventId>?) -> () in
+    let callback: @convention(c) (OpaquePointer, Optional<UnsafeMutableRawPointer>, Int, UnsafeMutableRawPointer, UnsafePointer<UInt32>, UnsafePointer<UInt64>) -> () = {
+        (streamRef: ConstFSEventStreamRef, clientCallBackInfo: UnsafeMutableRawPointer?, numEvents: Int, eventPaths: UnsafeMutableRawPointer, eventFlags: UnsafePointer<FSEventStreamEventFlags>, eventIds: UnsafePointer<FSEventStreamEventId>) -> () in
         let currentLocationManagerInstance: LocationManager = Unmanaged<LocationManager>.fromOpaque(clientCallBackInfo!).takeUnretainedValue()
         let pathsArray = Unmanaged<NSArray>.fromOpaque(eventPaths).takeUnretainedValue()
         print("number of events: \(numEvents)")
         print("")
         for i in 0..<numEvents {
-            currentLocationManagerInstance.handleEvent(path: pathsArray[i] as! String, flags: eventFlags![i], id: eventIds![i])
-            print("flag: \(eventFlags![i])")
+            currentLocationManagerInstance.handleEvent(path: pathsArray[i] as! String, flags: eventFlags[i], id: eventIds[i])
+            print("flag: \(eventFlags[i])")
             print("path: \(pathsArray[i])")
-            print("eventID: \(eventIds![i])")
+            print("eventID: \(eventIds[i])")
             print("")
             currentLocationManagerInstance.updateLastEventID()
         }

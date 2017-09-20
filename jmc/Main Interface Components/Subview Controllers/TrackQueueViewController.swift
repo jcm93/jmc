@@ -139,7 +139,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         else {
             print("writing rows")
             let coded = NSKeyedArchiver.archivedData(withRootObject: rowIndexes)
-            pboard.setData(coded, forType: "public.TrackQueueView")
+            pboard.setData(coded, forType: NSPasteboard.PasteboardType(rawValue: "public.TrackQueueView"))
             return true
         }
     }
@@ -219,7 +219,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         for index in indexSet.sorted().reversed() {
             trackQueue.remove(at: index)
         }
-        tableView.removeRows(at: indexSet, withAnimation: .slideUp)
+        tableView.removeRows(at: indexSet, withAnimation: NSTableView.AnimationOptions.slideUp)
     }
     
     @IBAction func shuffleUpcoming(_ sender: Any) {
@@ -232,7 +232,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     }
     
     @IBAction func removeFromQueue(_ sender: Any) {
-        tableView.removeRows(at: self.rightMouseDownTarget!, withAnimation: .slideUp)
+        tableView.removeRows(at: self.rightMouseDownTarget!, withAnimation: NSTableView.AnimationOptions.slideUp)
         for row in tableView.selectedRowIndexes.sorted().reversed() {
             self.trackQueue.remove(at: row)
         }
@@ -460,7 +460,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     }
     
     func shufflePressed(_ state: Int) {
-        if (state == NSOnState) {
+        if (state == NSOnState.rawValue) {
             self.shuffle = true
             UserDefaults.standard.set(true, forKey: DEFAULTS_SHUFFLE_STRING)
             for poo in activePlayOrders {
@@ -509,7 +509,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         tableView.reloadData()
     }
     
-    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
+    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
         if row <= currentTrackIndex {
             return NSDragOperation()
         }
@@ -518,7 +518,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         }
     }
     
-    func makePlaylistFromSelection() {
+    @objc func makePlaylistFromSelection() {
         let tracks = self.tableView.selectedRowIndexes.map({return self.trackQueue[$0].track!})
         mainWindowController?.createPlaylistFromTracks(tracks)
     }
@@ -536,10 +536,10 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         tableView.reloadData()
     }
     
-    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
+    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
         print("accept drop")
-        if (info.draggingPasteboard().types!.contains("Track")) {
-            let thing = info.draggingPasteboard().data(forType: "Track")
+        if (info.draggingPasteboard().types!.contains(NSPasteboard.PasteboardType(rawValue: "Track"))) {
+            let thing = info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "Track"))
             self.temporaryPooForDragging = nil
             self.temporaryPooIndexForDragging = nil
             let unCodedThing = NSKeyedUnarchiver.unarchiveObject(with: thing!) as! NSMutableArray
@@ -553,8 +553,8 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             }()
             addTracksToQueue(row, tracks: tracks)
         }
-        if (info.draggingPasteboard().types!.contains("public.TrackQueueView")) {
-            let codedViews = info.draggingPasteboard().data(forType: "public.TrackQueueView")
+        if (info.draggingPasteboard().types!.contains(NSPasteboard.PasteboardType(rawValue: "public.TrackQueueView"))) {
+            let codedViews = info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "public.TrackQueueView"))
             let rows = NSKeyedUnarchiver.unarchiveObject(with: codedViews!) as! IndexSet
             var item_offset = 0
             var index_offset = 0
@@ -638,7 +638,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         if tableColumn?.identifier == "Is Playing" {
             switch object.viewType! {
             case .currentTrack:
-                return tableView.make(withIdentifier: "nowPlaying", owner: nil) as! NowPlayingCell
+                return tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "nowPlaying"), owner: nil) as! NowPlayingCell
             default:
                 return nil
             }
@@ -646,7 +646,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         else {
             switch object.viewType! {
             case .pastTrack:
-                let result = tableView.make(withIdentifier: "pastTrack", owner: nil) as! PastTrackCell
+                let result = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "pastTrack"), owner: nil) as! PastTrackCell
                 (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
                 var artist_aa_string = ""
                 if object.track!.artist != nil {
@@ -668,7 +668,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 }
                 return result
             case .currentTrack:
-                let result = tableView.make(withIdentifier: "currentTrack", owner: nil) as! TrackNameTableCell
+                let result = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "currentTrack"), owner: nil) as! TrackNameTableCell
                 (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
                 var artist_aa_string = ""
                 if object.track!.artist != nil {
@@ -689,17 +689,17 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                     (result.subviews[0] as! NSImageView).image = nil
                 }
                 if mainWindowController?.paused != true {
-                    (result.subviews[3] as! NSImageView).image = NSImage(named: "NSTouchBarAudioOutputVolumeMedTemplate")
+                    (result.subviews[3] as! NSImageView).image = NSImage(named: NSImage.Name(rawValue: "NSTouchBarAudioOutputVolumeMedTemplate"))
                 } else {
-                    (result.subviews[3] as! NSImageView).image = NSImage(named: "NSTouchBarAudioOutputVolumeOffTemplate")
+                    (result.subviews[3] as! NSImageView).image = NSImage(named: NSImage.Name(rawValue: "NSTouchBarAudioOutputVolumeOffTemplate"))
                 }
                 return result
             case .source:
-                let result = tableView.make(withIdentifier: "source", owner: nil) as! FromSourceCell
+                let result = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "source"), owner: nil) as! FromSourceCell
                 (result.subviews[1] as! NSTextField).stringValue = object.source!
                 return result
             case .futureTrack:
-                let result = tableView.make(withIdentifier: "futureTrack", owner: nil) as! TrackNameTableCell
+                let result = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "futureTrack"), owner: nil) as! TrackNameTableCell
                 (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
                 var artist_aa_string = ""
                 if object.track!.artist != nil {
@@ -721,7 +721,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 }
                 return result
             case .transient:
-                let result = tableView.make(withIdentifier: "futureTrack", owner: nil) as! TrackNameTableCell
+                let result = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "futureTrack"), owner: nil) as! TrackNameTableCell
                 (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
                 var artist_aa_string = ""
                 if object.track!.artist != nil {
@@ -755,7 +755,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         super.viewDidLoad()
         tableView!.dataSource = self
         tableView!.delegate = self
-        tableView!.register(forDraggedTypes: ["Track", "public.TrackQueueView"])
+        tableView!.registerForDraggedTypes([NSPasteboard.PasteboardType(rawValue: "Track"), NSPasteboard.PasteboardType(rawValue: "public.TrackQueueView")])
         tableView.trackQueueViewController = self
         // Do view setup here.
         tableView.scroll(NSPoint(x: 0, y: tableView.frame.height))

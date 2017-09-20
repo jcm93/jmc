@@ -19,7 +19,7 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, artist: Artist) {
         self.artist = artist
         self.albums = Array(Set(self.artist.tracks!.flatMap({return ($0 as! Track).album})))
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        super.init(nibName: nibNameOrNil.map { NSNib.Name(rawValue: $0) }, bundle: nibBundleOrNil)
     }
     
     required init?(coder: NSCoder) {
@@ -27,7 +27,7 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let view = tableView.make(withIdentifier: "ArtistViewTableCellView", owner: self) as! ArtistViewTableCellView
+        let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ArtistViewTableCellView"), owner: self) as! ArtistViewTableCellView
         view.populateTracksTable((albumArrayController.arrangedObjects as! NSArray)[row] as! Album)
         //self.views[row] = view
         return view

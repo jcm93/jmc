@@ -13,7 +13,7 @@ class SourceListThatYouCanPressSpacebarOn: NSOutlineView {
     var mainWindowController: MainWindowController?
     
     override func awakeFromNib() {
-        self.register(forDraggedTypes: ["SourceListItem", "Track", "NetworkTrack"])
+        self.registerForDraggedTypes([NSPasteboard.PasteboardType(rawValue: "SourceListItem"), NSPasteboard.PasteboardType(rawValue: "Track"), NSPasteboard.PasteboardType(rawValue: "NetworkTrack")])
     }
 
     override func draw(_ dirtyRect: NSRect) {

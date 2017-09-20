@@ -83,7 +83,7 @@ class InitialSetupWindowController: NSWindowController {
         let response = myFileDialog.runModal()
         
         // Get the path to the file chosen in the NSOpenPanel
-        if myFileDialog.url!.path != nil && response == NSFileHandlingPanelOKButton {
+        if myFileDialog.url!.path != nil && response.rawValue == NSFileHandlingPanelOKButton {
             directoryURL = myFileDialog.url!
             libraryPathControl.url = directoryURL
             globalRootLibrary?.changeCentralFolderLocation(newURL: directoryURL!)
@@ -228,7 +228,7 @@ class InitialSetupWindowController: NSWindowController {
         self.window?.close()
     }
     @IBAction func launchAdvancedOptions(_ sender: Any) {
-        self.advancedOptionsController = AdvancedOrganizationOptionsWindowController(windowNibName: "AdvancedOrganizationOptionsWindowController")
+        self.advancedOptionsController = AdvancedOrganizationOptionsWindowController(windowNibName: NSNib.Name(rawValue: "AdvancedOrganizationOptionsWindowController"))
         self.window?.beginSheet(self.advancedOptionsController!.window!, completionHandler: nil)
     }
     

@@ -60,8 +60,8 @@ class MediaKeyListener: NSObject {
     "com.netease.163music",
     "org.quodlibet.quodlibet"]
     
-    func activeApplicationDidChange(_ notification: Notification) {
-        guard let application = notification.userInfo?[NSWorkspaceApplicationKey] as? NSRunningApplication else { return }
+    @objc func activeApplicationDidChange(_ notification: Notification) {
+        guard let application = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication else { return }
         if let bundleIdentifier = application.bundleIdentifier, let index = bundleList.index(of: bundleIdentifier) {
             bundleList.remove(at: index)
             bundleList.insert(bundleIdentifier, at: 0)
@@ -69,14 +69,14 @@ class MediaKeyListener: NSObject {
     }
     
     func startListeningToAppSwitching() {
-        NSWorkspace.shared().notificationCenter.addObserver(self, selector: #selector(activeApplicationDidChange), name: Notification.Name.NSWorkspaceDidActivateApplication, object: nil)
+        NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(activeApplicationDidChange), name: NSWorkspace.didActivateApplicationNotification, object: nil)
     }
 
     let callback: @convention(c) (OpaquePointer, CGEventType, CGEvent, Optional<UnsafeMutableRawPointer>) -> Optional<Unmanaged<CGEvent>> = {
         (proxy: OpaquePointer, type: CGEventType, event: CGEvent, refcon: Optional<UnsafeMutableRawPointer>) -> Optional<Unmanaged<CGEvent>> in
         guard type == CGEventType(rawValue: UInt32(NX_SYSDEFINED)) else { return Unmanaged.passUnretained(event) }
         guard let keyEvent = NSEvent(cgEvent: event) else { return Unmanaged.passUnretained(event) }
-        guard keyEvent.subtype == NSEventSubtype.init(rawValue: 8) else { return Unmanaged.passUnretained(event) }
+        guard keyEvent.subtype == NSEvent.EventSubtype.init(rawValue: 8) else { return Unmanaged.passUnretained(event) }
         let this = Unmanaged<MediaKeyListener>.fromOpaque(refcon!).takeUnretainedValue()
         guard this.shouldInterceptMediaKeys else { return Unmanaged.passUnretained(event) }
         let keyCode = Int32((keyEvent.data1 & 0xFFFF0000) >> 16)

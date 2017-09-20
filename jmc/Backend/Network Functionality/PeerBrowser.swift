@@ -115,7 +115,7 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
     func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
         print("started getting resource \(resourceName) from peer \(peerID) with progress \(progress)")
     }
-    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL, withError error: Error?) {
+    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL??, withError error: Error?) {
         print("finished getting resource \(resourceName) from peer \(peerID) at url \(localURL) with error \(error)")
     }
     
@@ -128,7 +128,7 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
         let peer = item.library!.peer as! MCPeerID
         let visibleColumns = UserDefaults.standard.object(forKey: DEFAULTS_SAVED_COLUMNS_STRING) as! NSDictionary
         let visibleColumnsArray = visibleColumns.allKeys(for: false) as! [String]
-        let id = item.playlist!.id! as Int
+        let id = item.playlist!.id! as! Int
         askPeerForPlaylist(peer, id: id, visibleColumns: visibleColumnsArray)
     }
     

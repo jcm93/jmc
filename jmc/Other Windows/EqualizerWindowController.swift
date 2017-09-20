@@ -27,7 +27,7 @@ class EqualizerWindowController: NSWindowController {
     
     @IBAction func equalizerToggled(_ sender: AnyObject) {
         let state = eqToggle.state
-        self.audioModule!.toggleEqualizer(state)
+        self.audioModule!.toggleEqualizer(state.rawValue)
         UserDefaults.standard.set(eqToggle.state, forKey: DEFAULTS_IS_EQ_ENABLED_STRING)
     }
     
@@ -58,7 +58,7 @@ class EqualizerWindowController: NSWindowController {
             gainSlider.floatValue = defaultEQ![10]
         }
         let eqEnabledState = UserDefaults.standard.integer(forKey: DEFAULTS_IS_EQ_ENABLED_STRING)
-        eqToggle.state = eqEnabledState
+        eqToggle.state = NSControl.StateValue(rawValue: eqEnabledState)
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     }
     

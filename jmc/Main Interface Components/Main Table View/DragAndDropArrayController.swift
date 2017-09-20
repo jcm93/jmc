@@ -25,13 +25,13 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         case tableViewController!.isPlayingColumn:
             if track.is_playing == true {
                 if mainWindow?.paused == true {
-                    return NSImage(named: "NSAudioOutputVolumeOffTemplate")
+                    return NSImage(named: NSImage.Name(rawValue: "NSAudioOutputVolumeOffTemplate"))
                 } else {
-                    return NSImage(named: "NSAudioOutputVolumeMedTemplate")
+                    return NSImage(named: NSImage.Name(rawValue: "NSAudioOutputVolumeMedTemplate"))
                 }
             } else {
                 if track.is_available == false {
-                    return NSImage(named: "NSRevealFreestandingTemplate")
+                    return NSImage(named: NSImage.Name(rawValue: "NSRevealFreestandingTemplate"))
                 }
                 return nil
             }
@@ -239,13 +239,13 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         let context = mainWindow?.currentSourceListItem?.name
         print("context is \(context)")
         if context != nil {
-            pboard.setString(context!, forType: "context")
+            pboard.setString(context!, forType: NSPasteboard.PasteboardType(rawValue: "context"))
         }
         if mainWindow?.currentSourceListItem?.is_network == true {
             print("settin network pboard data")
-            pboard.setData(encodedIDs, forType: "NetworkTrack")
+            pboard.setData(encodedIDs, forType: NSPasteboard.PasteboardType(rawValue: "NetworkTrack"))
         } else {
-            pboard.setData(encodedIDs, forType: "Track")
+            pboard.setData(encodedIDs, forType: NSPasteboard.PasteboardType(rawValue: "Track"))
         }
         return true
     }
@@ -256,11 +256,11 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         return array[index] as? TrackView
     }
     
-    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
-        if info.draggingPasteboard().types!.contains(NSFilenamesPboardType) && !info.draggingPasteboard().types!.contains("Track") {
+    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
+        if info.draggingPasteboard().types!.contains(NSFilenamesPboardType) && !info.draggingPasteboard().types!.contains(NSPasteboard.PasteboardType(rawValue: "Track")) {
             let files = info.draggingPasteboard().propertyList(forType: NSFilenamesPboardType) as! NSArray
             let urls = files.map({return URL(fileURLWithPath: $0 as! String)})
-            let appDelegate = (NSApplication.shared().delegate as! AppDelegate)
+            let appDelegate = (NSApplication.shared.delegate as! AppDelegate)
             var errors = [FileAddToDatabaseError]()
             let databaseManager = DatabaseManager()
             let urlParseResult = databaseManager.getMediaURLsInDirectoryURLs(urls)
@@ -296,10 +296,10 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         }
     }
     
-    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
-        if info.draggingPasteboard().types!.contains(NSFilenamesPboardType) && !info.draggingPasteboard().types!.contains("Track") {
+    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
+        if info.draggingPasteboard().types!.contains(NSFilenamesPboardType) && !info.draggingPasteboard().types!.contains(NSPasteboard.PasteboardType(rawValue: "Track")) {
             print("doingle")
-            tableView.setDropRow(-1, dropOperation: NSTableViewDropOperation.on)
+            tableView.setDropRow(-1, dropOperation: NSTableView.DropOperation.on)
             return .copy
         }
         if draggedRowIndexes != nil && dropOperation == .above && tableView.sortDescriptors.first == tableView.tableColumns[1].sortDescriptorPrototype! && tableViewController?.playlist?.smart_criteria == nil {

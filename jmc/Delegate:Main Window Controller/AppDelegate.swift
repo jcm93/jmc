@@ -90,26 +90,26 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     
     func initializeLibraryAndShowMainWindow() {
         if !UserDefaults.standard.bool(forKey: DEFAULTS_ARE_INITIALIZED_STRING) {
-            self.setupWindowController = InitialSetupWindowController(windowNibName: "InitialSetupWindowController")
+            self.setupWindowController = InitialSetupWindowController(windowNibName: NSNib.Name(rawValue: "InitialSetupWindowController"))
             self.setupWindowController?.setupForNilLibrary()
         }
         self.locationManager = LocationManager(delegate: self)
         self.addFilesQueueLoop = AddFilesQueueLoop(delegate: self)
         self.locationManager?.initializeEventStream()
         self.lastFMDelegate = LastFMDelegate()
-        mainWindowController = MainWindowController(windowNibName: "MainWindowController")
+        mainWindowController = MainWindowController(windowNibName: NSNib.Name(rawValue: "MainWindowController"))
         mainWindowController?.delegate = self
         mainWindowController?.showWindow(self)
         //self.serviceBrowser = ConnectivityManager(delegate: self, slvc: mainWindowController!.sourceListViewController!)
         let defaultsEQOnState = UserDefaults.standard.integer(forKey: DEFAULTS_IS_EQ_ENABLED_STRING)
         audioModule.toggleEqualizer(defaultsEQOnState)
-        NotificationCenter.default.addObserver(self, selector: #selector(mainWindowDidClose), name: Notification.Name.NSWindowWillClose, object: mainWindowController!.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(mainWindowDidClose), name: NSWindow.willCloseNotification, object: mainWindowController!.window)
         jmcWindowMenuItem.state = NSOnState
     }
     
     func launchAddFilesDialog() {
         print("launch add files called")
-        self.backgroundAddFilesHandler = GenericProgressBarSheetController(windowNibName: "GenericProgressBarSheetController")
+        self.backgroundAddFilesHandler = GenericProgressBarSheetController(windowNibName: NSNib.Name(rawValue: "GenericProgressBarSheetController"))
         self.mainWindowController?.window?.addChildWindow(self.backgroundAddFilesHandler!.window!, ordered: .above)
         //self.backgroundAddFilesHandler?.window?.level = Int(CGWindowLevelForKey(CGWindowLevelKey.floatingWindow))
     }
@@ -128,18 +128,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         if self.mainWindowController?.window?.isVisible == nil || self.mainWindowController?.window?.isVisible == false {
             self.mainWindowController?.showWindow(self)
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(mainWindowDidClose), name: Notification.Name.NSWindowWillClose, object: mainWindowController!.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(mainWindowDidClose), name: NSWindow.willCloseNotification, object: mainWindowController!.window)
         jmcWindowMenuItem.state = NSOnState
     }
     
     @IBAction func openLibraryManager(_ sender: Any) {
         self.openPreferences(self)
-        self.preferencesWindowController?.toolbar.selectedItemIdentifier = "library"
+        self.preferencesWindowController?.toolbar.selectedItemIdentifier = NSToolbarItem.Identifier(rawValue: "library")
         self.preferencesWindowController?.selectLibrary(self)
     }
     
     @IBAction func openImportWindow(_ sender: AnyObject) {
-        importWindowController = ImportWindowController(windowNibName: "ImportWindowController")
+        importWindowController = ImportWindowController(windowNibName: NSNib.Name(rawValue: "ImportWindowController"))
         importWindowController?.mainWindowController = mainWindowController
         importWindowController?.showWindow(self)
     }
@@ -160,7 +160,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         panel.canChooseDirectories = true
         panel.canChooseFiles = true
         let modalResponse = panel.runModal()
-        if modalResponse == NSFileHandlingPanelOKButton {
+        if modalResponse.rawValue == NSFileHandlingPanelOKButton {
             let urls = self.databaseManager?.getMediaURLsInDirectoryURLs(panel.urls).0
             //self.launchAddFilesDialog()
             self.addFilesQueueLoop?.addChunksToQueue(urls: urls!)
@@ -171,7 +171,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     
     func showImportErrors(_ errors: [FileAddToDatabaseError]) {
         if errors.count > 0 {
-            self.importErrorWindowController = ImportErrorWindowController(windowNibName: "ImportErrorWindowController")
+            self.importErrorWindowController = ImportErrorWindowController(windowNibName: NSNib.Name(rawValue: "ImportErrorWindowController"))
             self.importErrorWindowController?.errors = errors
             self.importErrorWindowController?.showWindow(self)
         }
@@ -183,20 +183,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     @IBAction func openPreferences(_ sender: AnyObject) {
-        preferencesWindowController = PreferencesWindowController(windowNibName: "PreferencesWindowController")
+        preferencesWindowController = PreferencesWindowController(windowNibName: NSNib.Name(rawValue: "PreferencesWindowController"))
         preferencesWindowController?.showWindow(self)
     }
     
     func showEqualizer() {
         print("show equalizer called")
         if self.equalizerWindowController == nil {
-            self.equalizerWindowController = EqualizerWindowController(windowNibName: "EqualizerWindowController")
+            self.equalizerWindowController = EqualizerWindowController(windowNibName: NSNib.Name(rawValue: "EqualizerWindowController"))
             self.equalizerWindowController?.audioModule = self.audioModule
         }
         if self.equalizerWindowController?.window?.isVisible == nil || self.equalizerWindowController?.window?.isVisible == false {
             self.equalizerWindowController?.showWindow(self)
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(equalizerDidClose), name: Notification.Name.NSWindowWillClose, object: equalizerWindowController!.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(equalizerDidClose), name: NSWindow.willCloseNotification, object: equalizerWindowController!.window)
         equalizerWindowMenuItem.state = NSOnState
     }
     
@@ -211,12 +211,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         showEqualizer()
     }
     
-    func mainWindowDidClose() {
+    @objc func mainWindowDidClose() {
         print("main window did close called")
         jmcWindowMenuItem.state = NSOffState
     }
     
-    func equalizerDidClose() {
+    @objc func equalizerDidClose() {
         print("equalizer did close called")
         equalizerWindowMenuItem.state = NSOffState
     }
@@ -248,7 +248,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         self.mediaKeyListener = MediaKeyListener(self)
     }
     
-    func managedObjectsDidUndo() {
+    @objc func managedObjectsDidUndo() {
         print("managed objects did undo")
         self.mainWindowController?.trackQueueViewController?.refreshForChangedData()
         self.mainWindowController?.currentTableViewController?.trackViewArrayController.rearrangeObjects()
@@ -293,7 +293,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
     
     func showMainWindow() {
-        mainWindowController = MainWindowController(windowNibName: "MainWindowController")
+        mainWindowController = MainWindowController(windowNibName: NSNib.Name(rawValue: "MainWindowController"))
         mainWindowController!.showWindow(self)
     }
     
@@ -370,7 +370,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 dict[NSUnderlyingErrorKey] = failError
             }
             let error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
-            NSApplication.shared().presentError(error)
+            NSApplication.shared.presentError(error)
             abort()
         } else {
             return coordinator!
@@ -400,7 +400,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 try managedObjectContext.save()
             } catch {
                 let nserror = error as NSError
-                NSApplication.shared().presentError(nserror)
+                NSApplication.shared.presentError(nserror)
             }
         }
     }
@@ -415,7 +415,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         return managedObjectContext.undoManager
     }
 
-    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplicationTerminateReply {
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         // Save changes in the application's managed object context before the application terminates.
         for fetchRequest in BATCH_PURGE_NETWORK_FETCH_REQUESTS {
             do {
@@ -457,7 +457,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             alert.addButton(withTitle: cancelButton)
             
             let answer = alert.runModal()
-            if answer == NSAlertFirstButtonReturn {
+            if answer == NSApplication.ModalResponse.alertFirstButtonReturn {
                 return .terminateCancel
             }
         }

@@ -22,7 +22,7 @@ class ChangePrimaryFolderSheetController: NSWindowController {
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
         let modalResult = panel.runModal()
-        if modalResult == NSFileHandlingPanelOKButton {
+        if modalResult.rawValue == NSFileHandlingPanelOKButton {
             self.pathControl.url = panel.urls[0]
         }
     }

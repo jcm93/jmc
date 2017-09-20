@@ -82,7 +82,7 @@ class SharedLibraryRequestHandler {
             serializedTracks.append(track.dictRepresentation(fields))
         }
         playlistDictionary["playlist"] = serializedTracks
-        playlistDictionary["orders"] = getCachedOrders(fields, id_array: id_array as! [Int])
+        playlistDictionary["orders"] = getCachedOrders(fields, id_array: id_array )
         return playlistDictionary
     }
     

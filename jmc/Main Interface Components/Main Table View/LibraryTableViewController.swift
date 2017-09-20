@@ -44,7 +44,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     var rightMouseDownTarget: [TrackView]?
     var rightMouseDownRow: Int?
     var item: SourceListItem?
-    var managedContext = (NSApplication.shared().delegate as! AppDelegate).managedObjectContext
+    var managedContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext
     var searchString: String?
     var playlist: SongCollection?
     var advancedFilterVisible: Bool = false
@@ -93,7 +93,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     @IBAction func showInFinderAction(_ sender: Any) {
         guard let tracks = (self.trackViewArrayController.selectedObjects as? [TrackView])?.map({return $0.track!}), tracks.count > 0 else { return }
         let urls = tracks.map({return URL(string: $0.location!)!})
-        NSWorkspace.shared().activateFileViewerSelecting(urls)
+        NSWorkspace.shared.activateFileViewerSelecting(urls)
     }
     
     func reloadNowPlayingForTrack(_ track: Track) {
@@ -129,9 +129,9 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             return (trackViewArrayController?.arrangedObjects as! [TrackView])[tableView!.selectedRow].track!
         } else {
             var item: Track?
-            if shuffleState == NSOffState {
+            if shuffleState == NSOffState.rawValue {
                 item = (trackViewArrayController?.arrangedObjects as! [TrackView])[0].track!
-            } else if shuffleState == NSOnState {
+            } else if shuffleState == NSOnState.rawValue {
                 let random_index = Int(arc4random_uniform(UInt32(((trackViewArrayController?.arrangedObjects as! [TrackView]).count))))
                 item = (trackViewArrayController?.arrangedObjects as! [TrackView])[random_index].track!
             }
@@ -182,7 +182,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         mainWindowController?.interpretSpacebarEvent()
     }
     
-    func tableViewDoubleClick(_ sender: AnyObject) {
+    @objc func tableViewDoubleClick(_ sender: AnyObject) {
         guard tableView!.selectedRow >= 0 && tableView!.clickedRow >= 0 else {
             return
         }
@@ -251,7 +251,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             mainWindowController?.sourceListViewController?.reloadData()
         }
         let idArray = (trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
-        if shuffleState == NSOnState {
+        if shuffleState == NSOnState.rawValue {
             //secretly adjust the shuffled array such that it behaves mysteriously like a ring buffer. ssshhhh
             let currentShuffleArray = self.item!.playOrderObject!.shuffled_play_order!
             let indexToSwap = currentShuffleArray.index(of: id)!
@@ -278,7 +278,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     func fixPlayOrderForChangedFilterPredicate(_ shuffleState: Int) {
         print("fixing play order for changed filter predicate")
-        if shuffleState == NSOnState {
+        if shuffleState == NSOnState.rawValue {
             let idSet = Set((trackViewArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int}))
             let newPlayOrder = self.item!.playOrderObject!.shuffled_play_order!.filter({idSet.contains($0)})
             self.item!.playOrderObject!.current_play_order = newPlayOrder
@@ -397,11 +397,11 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         
         let menu = tableView.headerView?.menu
         for column in tableView.tableColumns {
-            if column.identifier == "name" || column.identifier == "is_playing" || column.identifier == "playlist_number" {
+            if column.identifier.rawValue == "name" || column.identifier.rawValue == "is_playing" || column.identifier.rawValue == "playlist_number" {
                 continue
             }
             let menuItem: NSMenuItem
-            if column.identifier == "is_enabled" {
+            if column.identifier.rawValue == "is_enabled" {
                 menuItem = NSMenuItem(title: "Enabled", action: #selector(toggleColumn), keyEquivalent: "")
             } else {
                 menuItem = NSMenuItem(title: column.headerCell.title, action: #selector(toggleColumn), keyEquivalent: "")
@@ -417,7 +417,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         }
     }
     
-    func toggleColumn(_ menuItem: NSMenuItem) {
+    @objc func toggleColumn(_ menuItem: NSMenuItem) {
         let column = menuItem.representedObject as! NSTableColumn
         column.isHidden = !column.isHidden
         menuItem.state = column.isHidden ? NSOffState : NSOnState
@@ -516,11 +516,11 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         tableView.dataSource = trackViewArrayController
         tableView.libraryTableViewController = self
         tableView.reloadData()
-        tableView.register(forDraggedTypes: [NSFilenamesPboardType])
+        tableView.registerForDraggedTypes([NSFilenamesPboardType])
         trackViewArrayController.mainWindow = self.mainWindowController
         if playlist != nil {
             print("initializing for playlist")
-            tableView.register(forDraggedTypes: ["Track"]) //to enable d&d reordering
+            tableView.registerForDraggedTypes([NSPasteboard.PasteboardType(rawValue: "Track")]) //to enable d&d reordering
             tableView.tableColumns[1].isHidden = false
             tableView.sortDescriptors = [tableView.tableColumns[1].sortDescriptorPrototype!]
             if playlist?.smart_criteria != nil {

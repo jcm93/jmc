@@ -54,7 +54,7 @@ class LastFMDelegate: NSObject {
         let apiKeyParameter = URLQueryItem(name: "api_key", value: apiKey)
         let tokenParameter = URLQueryItem(name: "token", value: self.token)
         authenticationURLComponents.queryItems = [apiKeyParameter, tokenParameter]
-        NSWorkspace.shared().open(authenticationURLComponents.url!)
+        NSWorkspace.shared.open(authenticationURLComponents.url!)
     }
     
     func getSessionKey(callback: ((String) -> Void)?) {

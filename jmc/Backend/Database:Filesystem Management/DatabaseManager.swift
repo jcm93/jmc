@@ -398,6 +398,23 @@ class DatabaseManager: NSObject {
         }
     }
     
+    func getProspectiveAlbumFileURLs(forAlbum album: Album, prospectiveTrackURLs trackURLs: [URL]) -> [AlbumFile : URL] {
+        var result = [AlbumFile : URL]()
+        let albumFiles = album.getMiscellaneousFiles()
+        guard albumFiles.count > 0 else {
+            return result
+        }
+        let directories = Set(trackURLs.map({return $0.deletingLastPathComponent()}))
+        let albumFileDirectory = directories.count == 1 ? directories.first! : createNonTemplateDirectoryFor(album: album, dry: true)
+        for albumFile in albumFiles {
+            let fileURL = URL(string: albumFile.location)!
+            let fileName = fileURL.lastPathComponent
+            result[albumFile] = albumFileDirectory!.appendingPathComponent(fileName)
+        }
+        
+        
+    }
+    
     func trimDirectoryFollowingMoveOperation(track: Track, oldLocation: URL) {
         let oldDirectory = oldLocation.deletingLastPathComponent()
         let currentTrackLocations = track.album?.tracks?.flatMap({return ($0 as! Track).location})
@@ -441,7 +458,7 @@ class DatabaseManager: NSObject {
         
     }
     
-    func createNonTemplateDirectoryFor(album albumOptional: Album?) -> URL? {
+    func createNonTemplateDirectoryFor(album albumOptional: Album?, dry: Bool) -> URL? {
         guard let album = albumOptional else { return nil }
         let library = (album.tracks!.anyObject() as! Track).library
         let baseURL = library!.getCentralMediaFolder()!
@@ -462,7 +479,9 @@ class DatabaseManager: NSObject {
         }
         albumDirectory.appendPathComponent(album.name ?? UNKNOWN_ALBUM_STRING)
         do {
-            try fileManager.createDirectory(at: albumDirectory, withIntermediateDirectories: true, attributes: nil)
+            if !dry {
+                try fileManager.createDirectory(at: albumDirectory, withIntermediateDirectories: true, attributes: nil)
+            }
             return albumDirectory
         } catch {
             print(error)

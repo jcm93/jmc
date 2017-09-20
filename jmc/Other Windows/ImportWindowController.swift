@@ -22,7 +22,7 @@ class ImportWindowController: NSWindowController, NSTableViewDelegate {
     var mainWindowController: MainWindowController?
     
     let managedContext: NSManagedObjectContext = {
-        return (NSApplication.shared().delegate
+        return (NSApplication.shared.delegate
             as? AppDelegate)?.managedObjectContext }()!
     
     var moveFiles: Bool = true
@@ -39,7 +39,7 @@ class ImportWindowController: NSWindowController, NSTableViewDelegate {
     
     
     @IBAction func confirmClicked(_ sender: AnyObject) {
-        let appDelegate = (NSApplication.shared().delegate as! AppDelegate)
+        let appDelegate = (NSApplication.shared.delegate as! AppDelegate)
         let set = Set(self.playlistArrayController.selectedObjects.map({return ($0 as! NSDictionary)["name"] as! String}))
         self.iTunesParser?.XMLPlaylistArray = self.iTunesParser!.XMLPlaylistArray.filter({set.contains(($0 as! NSDictionary)["Name"] as! String)}) as NSArray
         appDelegate.iTunesParser = self.iTunesParser

@@ -14,7 +14,7 @@ import CoreServices
 class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate {
     
     lazy var managedContext: NSManagedObjectContext = {
-        return (NSApplication.shared().delegate
+        return (NSApplication.shared.delegate
             as? AppDelegate)?.managedObjectContext }()!
     
     lazy var artistList: [Artist] = {
@@ -97,7 +97,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     
     //mark the rest
     var selectedTracks: [Track]?
-    dynamic var currentTrack: Track?
+    @objc dynamic var currentTrack: Track?
     
     func windowWillReturnUndoManager(_ window: NSWindow) -> UndoManager? {
         return managedContext.undoManager
@@ -491,7 +491,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     func populateArtwork() {
         guard let album = selectedTracks![0].album else { return }
         //change some layout stuff
-        self.albumFilesViewController = AlbumFilesViewController(nibName: "AlbumFilesViewController", bundle: nil)
+        self.albumFilesViewController = AlbumFilesViewController(nibName: NSNib.Name(rawValue: "AlbumFilesViewController"), bundle: nil)
         self.albumFilesViewController?.track = selectedTracks![0]
         self.artworkTargetView.addSubview(self.albumFilesViewController!.view)
         self.albumFilesViewController!.view.leadingAnchor.constraint(equalTo: self.artworkTargetView.leadingAnchor).isActive = true
@@ -542,7 +542,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
         durationLabel.stringValue = getTimeAsString(Double(duration))!
         let size = MDItemCopyAttribute(mdItem, kMDItemFSSize) as! Int
         sizeLabel.stringValue = fileSizeFormatter.string(fromByteCount: Int64(size))
-        let bitRateCheck = (MDItemCopyAttribute(mdItem, kMDItemAudioBitRate) as? Int ?? (((size as! Int) * 8) / 1000) / duration) / 1000
+        let bitRateCheck = (MDItemCopyAttribute(mdItem, kMDItemAudioBitRate) as? Int ?? (((size ) * 8) / 1000) / duration) / 1000
         bitRateLabel.stringValue = bitRateFormatter.string(for: bitRateCheck)!
         let sampleRateCheck = MDItemCopyAttribute(mdItem, kMDItemAudioSampleRate) as? Int ?? Int(flacMDItem!.sampleRate!)
         sampleRateLabel.stringValue = sampleRateFormatter.string(for: sampleRateCheck)!
@@ -553,7 +553,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
         let dateModified = MDItemCopyAttribute(mdItem, kMDItemContentModificationDate) as? NSDate
         dateModifiedLabel.stringValue = dateModified != nil ? dateModified!.description : ""
         let dateAdded = MDItemCopyAttribute(mdItem, kMDItemDateAdded) as? NSDate
-        dateAddedLabel.stringValue = dateAdded != nil ? dateAdded!.description as! String : ""
+        dateAddedLabel.stringValue = dateAdded != nil ? dateAdded!.description : ""
     }
     //mark playback
     //mark sorting

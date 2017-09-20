@@ -13,14 +13,30 @@ import CoreData
 public class OrganizationTemplateBundle: NSManagedObject {
     
     func match(_ file: AnyObject) -> OrganizationTemplate {
-        let organizationTemplate = self.other_templates?.first(where: {(($0 as! OrganizationTemplate).predicate as! NSPredicate).evaluate(with: file)})
-        return organizationTemplate as? OrganizationTemplate ?? self.default_template!
+        switch file {
+        case let file as Track:
+            let organizationTemplate = self.other_templates?.first(where: {(($0 as! OrganizationTemplate).predicate as! NSPredicate).evaluate(with: file)})
+            return organizationTemplate as? OrganizationTemplate ?? self.default_template!
+        case let file as AlbumFile:
+            //uh
+            
+            let organizationTemplate = self.other_templates?.first(where: {(($0 as! OrganizationTemplate).predicate as! NSPredicate).evaluate(with: file.album?.tracks?.anyObject() as? Track)})
+            return organizationTemplate as? OrganizationTemplate ?? self.default_template!
+        default:
+            return self.default_template!
+        }
     }
     
-    func match(entireAlbum album: Album) -> OrganizationTemplate {
+    func match(wholeAlbum album: Album) -> [NSObject : URL] {
+        var directoryURLs = Set<URL>()
+        let trackURLs = (album.tracks as! Set<Track>).map({track -> URL in
+            let template = self.match(track)
+            let url = template.getURL(for: track, withExtension: nil)!
+            directoryURLs.insert(url.deletingLastPathComponent())
+            return url
+        })
         
     }
-    
     
     func initializeWithDefaults(centralFolder: URL) {
         let defaultTemplate = NSEntityDescription.insertNewObject(forEntityName: "OrganizationTemplate", into: managedContext) as! OrganizationTemplate

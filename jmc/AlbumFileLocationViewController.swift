@@ -135,14 +135,14 @@ class AlbumFileLocationViewController: NSViewController, NSOutlineViewDataSource
     
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         guard let node = item as? AlbumFilePathNode else { return nil }
-        let view = outlineView.make(withIdentifier: "pathnode", owner: node) as! NSTableCellView
+        let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "pathnode"), owner: node) as! NSTableCellView
         let url = URL(fileURLWithPath: node.completePathRepresentation())
         let keys = [URLResourceKey.effectiveIconKey, URLResourceKey.customIconKey]
         if let values = try? url.resourceValues(forKeys: Set(keys)) {
             view.imageView?.image = values.customIcon ?? values.effectiveIcon as? NSImage
         } else {
             if node.children.count > 0 {
-                view.imageView?.image = NSImage(named: NSImageNameFolder)
+                view.imageView?.image = NSImage(named: NSImage.Name.folder)
             }
         }
         return view

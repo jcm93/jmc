@@ -27,7 +27,7 @@ class AlbumArtWindowController: NSWindowController {
         fadeOutTitleBar()
     }
     
-    func fadeOutTitleBar() {
+    @objc func fadeOutTitleBar() {
         //self.window!.standardWindowButton(.closeButton)!.superview!.
         self.window!.standardWindowButton(.closeButton)!.superview!.animator().alphaValue = 0
     }
@@ -40,14 +40,14 @@ class AlbumArtWindowController: NSWindowController {
     override func windowDidLoad() {
         super.windowDidLoad()
 
-        let trackingArea = NSTrackingArea(rect: self.window!.frame, options: [.activeAlways, .inVisibleRect, .mouseEnteredAndExited, .mouseMoved], owner: self, userInfo: nil)
+        let trackingArea = NSTrackingArea(rect: self.window!.frame, options: [NSTrackingArea.Options.activeAlways, NSTrackingArea.Options.inVisibleRect, NSTrackingArea.Options.mouseEnteredAndExited, NSTrackingArea.Options.mouseMoved], owner: self, userInfo: nil)
         self.window?.contentView?.addTrackingArea(trackingArea)
 
         //self.window?.contentView?.translatesAutoresizingMaskIntoConstraints = false
         self.window?.isMovableByWindowBackground = true
         
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
-        self.albumFilesViewController = AlbumFilesViewController(nibName: "AlbumFilesViewController", bundle: nil)
+        self.albumFilesViewController = AlbumFilesViewController(nibName: NSNib.Name(rawValue: "AlbumFilesViewController"), bundle: nil)
         self.albumFilesViewController?.track = self.track
         self.albumFilesViewController?.windowController = self
         self.contentView.addSubview(self.albumFilesViewController!.view)

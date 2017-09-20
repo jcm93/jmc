@@ -49,12 +49,12 @@ class FlacDecoder: NSObject, FileBufferer {
         if createFLACStreamDecoder(file: self.file) == true {
             FLAC__stream_decoder_process_until_end_of_metadata(&self.decoder!)//populates self.sampleRate, self.channels, self.bitsPerSample
             let format = AVAudioFormat.init(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: Double(self.sampleRate!), channels: self.channels!, interleaved: false)
-            self.bufferA = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(self.bufferFrameLength) * self.blockSize!)
+            self.bufferA = AVAudioPCMBuffer(pcmFormat: format!, frameCapacity: AVAudioFrameCount(self.bufferFrameLength) * self.blockSize!)!
             self.bufferA.frameLength = self.bufferA.frameCapacity
-            self.bufferB = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(self.bufferFrameLength) * self.blockSize!)
+            self.bufferB = AVAudioPCMBuffer(pcmFormat: format!, frameCapacity: AVAudioFrameCount(self.bufferFrameLength) * self.blockSize!)!
             self.bufferB.frameLength = self.bufferB.frameCapacity
             self.currentDecodeBuffer = self.bufferA
-            self.format = format
+            self.format = format!
         }
     }
     
@@ -99,7 +99,7 @@ class FlacDecoder: NSObject, FileBufferer {
     let flacMetadataCallback: @convention(c) (Optional<UnsafePointer<FLAC__StreamDecoder>>, Optional<UnsafePointer<FLAC__StreamMetadata>>, Optional<UnsafeMutableRawPointer>) -> () = {
         (decoder: Optional<UnsafePointer<FLAC__StreamDecoder>>, metadata: Optional<UnsafePointer<FLAC__StreamMetadata>>, client_data: Optional<UnsafeMutableRawPointer>) in
         let flacDecoder = Unmanaged<FlacDecoder>.fromOpaque(client_data!).takeUnretainedValue()
-        let meta = metadata!.pointee as! FLAC__StreamMetadata
+        let meta = metadata!.pointee 
         switch meta.type {
         case FLAC__METADATA_TYPE_STREAMINFO:
             flacDecoder.channels = meta.data.stream_info.channels

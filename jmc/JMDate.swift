@@ -10,7 +10,7 @@ import Cocoa
 
 public class JMDate: NSObject, NSCoding, NSCopying {
     
-    dynamic var date: NSDate
+    @objc dynamic var date: NSDate
     var hasDay: Bool
     var hasMonth: Bool
     

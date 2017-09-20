@@ -14,7 +14,7 @@ class DragAndDropImageView: NSImageView {
     var mouseDownHappened = false
     
     override func awakeFromNib() {
-        self.register(forDraggedTypes: [NSPasteboardTypePNG, NSPasteboardTypeTIFF, NSFilenamesPboardType])
+        self.registerForDraggedTypes([NSPasteboard.PasteboardType.png, NSPasteboard.PasteboardType.tiff, NSFilenamesPboardType])
         self.animates = true
     }
 
@@ -47,7 +47,7 @@ class DragAndDropImageView: NSImageView {
     
     override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
         //do the album art stuff
-        if let board = sender.draggingPasteboard().propertyList(forType: "NSFilenamesPboardType") as? NSArray {
+        if let board = sender.draggingPasteboard().propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType")) as? NSArray {
             let urls = board.map({return URL(fileURLWithPath: $0 as! String)})
             if let currentTrack = viewController?.mainWindow?.currentTrack {
                 let databaseManager = DatabaseManager()

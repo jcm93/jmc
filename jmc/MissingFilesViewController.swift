@@ -141,7 +141,7 @@ class MissingFilesViewController: NSViewController, NSOutlineViewDataSource, NSO
     
     init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, tracks: inout [Track]) {
         self.pathTree = MissingTrackPathTree(with: &tracks)
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        super.init(nibName: nibNameOrNil.map { NSNib.Name(rawValue: $0) }, bundle: nibBundleOrNil)
         self.missingTracks = Set(tracks)
     }
     
@@ -175,7 +175,7 @@ class MissingFilesViewController: NSViewController, NSOutlineViewDataSource, NSO
         guard let node = item as? MissingTrackPathNode else { return  nil }
         switch tableColumn! {
         case folderColumn:
-            let view = outlineView.make(withIdentifier: "PathComponentView", owner: node) as! NSTableCellView
+            let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "PathComponentView"), owner: node) as! NSTableCellView
             view.textField?.stringValue = node.pathComponent
             let url = URL(fileURLWithPath: node.completePathRepresentation()).standardizedFileURL
             do {
@@ -185,21 +185,21 @@ class MissingFilesViewController: NSViewController, NSOutlineViewDataSource, NSO
                 view.textField?.textColor = NSColor.textColor
             } catch {
                 view.textField?.textColor = NSColor.disabledControlTextColor
-                view.imageView?.image = node.children.count > 0 ? NSImage(named: "NSFolder") : NSWorkspace.shared().icon(forFileType: UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, url.pathExtension as CFString, nil)!.takeRetainedValue() as String)
+                view.imageView?.image = node.children.count > 0 ? NSImage(named: NSImage.Name(rawValue: "NSFolder")) : NSWorkspace.shared.icon(forFileType: UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, url.pathExtension as CFString, nil)!.takeRetainedValue() as String)
                 //print(error)
             }
             return view
         default:
             let numberBeneath = node.missingTracks.count
             if numberBeneath >= node.totalTracks.count {
-                let view = outlineView.make(withIdentifier: "ItemNumberNotFoundView", owner: node) as! MissingFileCellViewWithLocateButton
+                let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ItemNumberNotFoundView"), owner: node) as! MissingFileCellViewWithLocateButton
                 let string  = "\(numberBeneath) missing, \(node.totalTracks.count) total"
                 view.textField?.stringValue = string
                 view.representedNode = node
                 view.locateButton.action = #selector(locateButtonPressed)
                 return view
             } else {
-                let view = outlineView.make(withIdentifier: "ItemNumberView", owner: node) as! MissingFileTableCellView
+                let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ItemNumberView"), owner: node) as! MissingFileTableCellView
                 let string  = "\(numberBeneath) missing, \(node.totalTracks.count) total"
                 view.textField?.stringValue = string
                 view.representedNode = node
@@ -217,7 +217,7 @@ class MissingFilesViewController: NSViewController, NSOutlineViewDataSource, NSO
         let node = view.representedNode
         let fileModal = NSOpenPanel()
         fileModal.canChooseDirectories = true
-        if fileModal.runModal() == NSFileHandlingPanelOKButton {
+        if fileModal.runModal().rawValue == NSFileHandlingPanelOKButton {
             let url = fileModal.url
             let oldAbsoluteString = URL(fileURLWithPath: node!.completePathRepresentation()).standardizedFileURL.absoluteString
             let newAbsoluteString = url!.absoluteString
@@ -232,7 +232,7 @@ class MissingFilesViewController: NSViewController, NSOutlineViewDataSource, NSO
             }
             var nodesToRemove = node!.getEmptyNodesBeneath()
             while let highestThing = nodesToRemove.popLast(), let rowOfThing = highestThing.parent!.children.index(of: highestThing) {
-                outlineView.removeItems(at: IndexSet(integer: rowOfThing), inParent: highestThing.parent, withAnimation: .slideUp)
+                outlineView.removeItems(at: IndexSet(integer: rowOfThing), inParent: highestThing.parent, withAnimation: NSTableView.AnimationOptions.slideUp)
             }
             node!.purge()
             libraryManager?.updateMissingTracks(count: missingTracks.count)

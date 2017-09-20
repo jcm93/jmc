@@ -55,8 +55,8 @@ class AudioModule: NSObject {
     */
     
     //todo consistent naming
-    dynamic var trackQueue = [Track]()
-    dynamic var currentTrackLocation: String?
+    @objc dynamic var trackQueue = [Track]()
+    @objc dynamic var currentTrackLocation: String?
     var networkFlag = false
     var fileBuffererDictionary = [URL : FileBufferer]()
     var currentFileBufferer: FileBufferer?
@@ -118,10 +118,10 @@ class AudioModule: NSObject {
     var audioEngine = AVAudioEngine()
     var lastTrackCompletionType: LastTrackCompletionType = .natural
     
-    dynamic var is_initialized = false
-    dynamic var track_changed = false
-    dynamic var needs_tracks = false
-    dynamic var done_playing = true
+    @objc dynamic var is_initialized = false
+    @objc dynamic var track_changed = false
+    @objc dynamic var needs_tracks = false
+    @objc dynamic var done_playing = true
     
     var currentHandlerType: completionHandlerType = .natural
     
@@ -191,7 +191,7 @@ class AudioModule: NSObject {
     func getDefaultAudioOutputDevice () -> AudioObjectID {
         var devicePropertyAddress = AudioObjectPropertyAddress(mSelector: kAudioHardwarePropertyDefaultOutputDevice, mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMaster)
         var deviceID: AudioObjectID = 0
-        var dataSize = UInt32(truncatingBitPattern: MemoryLayout<AudioDeviceID>.size)
+        var dataSize = UInt32(truncatingIfNeeded: MemoryLayout<AudioDeviceID>.size)
         let systemObjectID = AudioObjectID(bitPattern: kAudioObjectSystemObject)
         if (kAudioHardwareNoError != AudioObjectGetPropertyData(systemObjectID, &devicePropertyAddress, 0, nil, &dataSize, &deviceID)) { return 0 }
         return deviceID
@@ -243,7 +243,7 @@ class AudioModule: NSObject {
     }
     
     func toggleEqualizer(_ state: Int) {
-        if state == NSOnState {
+        if state == NSOnState.rawValue {
             print("using eq")
             equalizer.bypass = false
             

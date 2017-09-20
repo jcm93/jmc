@@ -14,7 +14,7 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate {
     @IBOutlet weak var tableView: NSTableView!
     
     var artistViewController: ArtistViewController?
-    var managedContext = (NSApplication.shared().delegate as! AppDelegate).managedObjectContext
+    var managedContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext
     
     func tableViewSelectionDidChange(_ notification: Notification) {
         let selectedArtists = artistArrayController.selectedObjects as! [Artist]
@@ -23,7 +23,7 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate {
     
     init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, artistViewController: ArtistViewController) {
         self.artistViewController = artistViewController
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        super.init(nibName: nibNameOrNil.map { NSNib.Name(rawValue: $0) }, bundle: nibBundleOrNil)
     }
     
     required init?(coder: NSCoder) {

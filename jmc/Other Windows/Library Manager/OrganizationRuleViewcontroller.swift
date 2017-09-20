@@ -29,7 +29,7 @@ class OrganizationRuleViewController: NSViewController, NSTokenFieldDelegate {
         panel.canChooseFiles = false
         panel.allowsMultipleSelection = false
         let result = panel.runModal()
-        if result == NSModalResponseOK {
+        if result == NSApplication.ModalResponse.OK {
             pathControl.url = panel.url
         }
     }
@@ -37,7 +37,7 @@ class OrganizationRuleViewController: NSViewController, NSTokenFieldDelegate {
         tokenField.menu?.popUp(positioning: nil, at: tokenField.frame.origin.applying(CGAffineTransform(translationX: 0.0, y: -8.0)), in: self.view)
     }
     
-    func tokenField(_ tokenField: NSTokenField, representedObjectForEditing editingString: String) -> Any {
+    func tokenField(_ tokenField: NSTokenField, representedObjectForEditing editingString: String) -> (Any)? {
         return OrganizationFieldToken(string: editingString)
     }
     
@@ -49,7 +49,7 @@ class OrganizationRuleViewController: NSViewController, NSTokenFieldDelegate {
         return (representedObject as! OrganizationFieldToken).stringRepresentation()
     }
     
-    func tokenField(_ tokenField: NSTokenField, styleForRepresentedObject representedObject: Any) -> NSTokenStyle {
+    func tokenField(_ tokenField: NSTokenField, styleForRepresentedObject representedObject: Any) -> NSTokenField.TokenStyle {
         let object = representedObject as! OrganizationFieldToken
         if object.tokenType == .other {
             return .none
@@ -67,7 +67,7 @@ class OrganizationRuleViewController: NSViewController, NSTokenFieldDelegate {
         }
     }
     
-    func addToken(sender: NSMenuItem) {
+    @objc func addToken(sender: NSMenuItem) {
         var currentTokenArray = tokenField.objectValue as! [OrganizationFieldToken]
         let newToken = OrganizationFieldToken(string: sender.title)
         currentTokenArray.append(newToken)

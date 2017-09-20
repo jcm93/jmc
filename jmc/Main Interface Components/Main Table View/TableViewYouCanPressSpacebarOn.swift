@@ -22,8 +22,8 @@ class TableViewYouCanPressSpacebarOn: NSTableView {
 
     override func draw(_ dirtyRect: NSRect) {
         if self.shouldDrawFocusRing {
-            NSSetFocusRingStyle(NSFocusRingPlacement.only)
-            NSRectFill(self.bounds)
+            NSFocusRingPlacement.only.set()
+            self.bounds.fill()
         }
         super.draw(dirtyRect)
         // Drawing code here.

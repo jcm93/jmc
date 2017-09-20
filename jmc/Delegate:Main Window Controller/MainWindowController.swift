@@ -87,7 +87,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     var cur_view_title = "Music"
     var cur_source_title = "Music"
     var duration: Double?
-    dynamic var paused: Bool = true
+    @objc dynamic var paused: Bool = true
     var is_initialized = false
     var shuffle: Bool = UserDefaults.standard.bool(forKey: DEFAULTS_SHUFFLE_STRING)
     var will_repeat: Bool = UserDefaults.standard.bool(forKey: DEFAULTS_REPEAT_STRING)
@@ -127,7 +127,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     var librarySortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "artist_sort_order", ascending: true)]
     
     @IBAction func importButtonPressed(_ sender: AnyObject) {
-        importWindowController = ImportWindowController(windowNibName: "ImportWindowController")
+        importWindowController = ImportWindowController(windowNibName: NSNib.Name(rawValue: "ImportWindowController"))
         importWindowController?.mainWindowController = self
         importWindowController?.showWindow(self)
     }
@@ -165,11 +165,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     func createPlaylistViewController(_ item: SourceListItem) -> LibraryTableViewController {
-        let newPlaylistViewController = LibraryTableViewControllerCellBased(nibName: "LibraryTableViewControllerCellBased", bundle: nil)
-        newPlaylistViewController?.mainWindowController = self
-        newPlaylistViewController?.playlist = item.playlist
-        newPlaylistViewController?.item = item
-        return newPlaylistViewController!
+        let newPlaylistViewController = LibraryTableViewControllerCellBased(nibName: NSNib.Name(rawValue: "LibraryTableViewControllerCellBased"), bundle: nil)
+        newPlaylistViewController.mainWindowController = self
+        newPlaylistViewController.playlist = item.playlist
+        newPlaylistViewController.item = item
+        return newPlaylistViewController
     }
     
     func addObserversAndInitializeNewTableView(_ table: LibraryTableViewController, item: SourceListItem) {
@@ -257,7 +257,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     //track queue, source logic
     @IBAction func toggleExpandQueue(_ sender: AnyObject) {
-        trackQueueViewController!.toggleHidden(queueButton.state)
+        trackQueueViewController!.toggleHidden(queueButton.state.rawValue)
         switch queueButton.state {
         case NSOnState:
             trackQueueTargetView.isHidden = false
@@ -269,7 +269,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     func launchGetInfo(_ tracks: [Track]) {
-        self.tagWindowController = TagEditorWindow(windowNibName: "TagEditorWindow")
+        self.tagWindowController = TagEditorWindow(windowNibName: NSNib.Name(rawValue: "TagEditorWindow"))
         self.tagWindowController?.mainWindowController = self
         self.tagWindowController?.selectedTracks = tracks
         self.window?.addChildWindow(self.tagWindowController!.window!, ordered: .above)
@@ -283,7 +283,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     func createPlayOrderForTrackID(_ id: Int, row: Int?) -> Int {
-        return currentTableViewController!.getUpcomingIDsForPlayEvent(self.shuffleButton.state, id: id, row: row)
+        return currentTableViewController!.getUpcomingIDsForPlayEvent(self.shuffleButton.state.rawValue, id: id, row: row)
     }
     
     func getNextTrack() -> Track? {
@@ -323,7 +323,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     @IBAction func shuffleButtonPressed(_ sender: AnyObject) {
-        trackQueueViewController?.shufflePressed(shuffleButton.state)
+        trackQueueViewController?.shufflePressed(shuffleButton.state.rawValue)
         delegate?.shuffleMenuItem.state = shuffleButton.state
     }
     
@@ -440,7 +440,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     
     func playAnything() {
         if trackQueueViewController?.trackQueue.count == 0 {
-            let trackToPlay = currentTableViewController!.getTrackWithNoContext(shuffleButton.state)
+            let trackToPlay = currentTableViewController!.getTrackWithNoContext(shuffleButton.state.rawValue)
             if trackToPlay != nil {
                 playSong(trackToPlay!, row: nil)
             }
@@ -455,7 +455,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         alert.addButton(withTitle: "Cancel")
         alert.messageText = kDeleteEventText
         let response = alert.runModal()
-        if response == NSAlertFirstButtonReturn {
+        if response == NSApplication.ModalResponse.alertFirstButtonReturn {
             print("deleting tracks")
             self.delegate?.databaseManager?.removeTracks(selectedObjects.map({return $0.track!}))
         }
@@ -479,7 +479,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         updateValuesUnsafe()
         delegate?.audioModule.pause()
         timer!.invalidate()
-        playButton.image = NSImage(named: "NSPlayTemplate")
+        playButton.image = NSImage(named: NSImage.Name(rawValue: "NSPlayTemplate"))
     }
     
     func unpause() {
@@ -489,7 +489,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         delegate?.audioModule.play()
         timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateValuesSafe), userInfo: nil, repeats: true)
         RunLoop.current.add(timer!, forMode: RunLoopMode.commonModes)
-        playButton.image = NSImage(named: "NSPauseTemplate")
+        playButton.image = NSImage(named: NSImage.Name(rawValue: "NSPauseTemplate"))
     }
     
     func seek(_ frac: Double) {
@@ -653,7 +653,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         //timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValuesUnsafe), userInfo: nil, repeats: true)
         timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateValuesSafe), userInfo: nil, repeats: true)
         RunLoop.current.add(timer!, forMode: RunLoopMode.commonModes)
-        playButton.image = NSImage(named: "NSPauseTemplate")
+        playButton.image = NSImage(named: NSImage.Name(rawValue: "NSPauseTemplate"))
     }
     
     func updateValuesUnsafe() {
@@ -676,7 +676,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }
     }
     
-    func updateValuesSafe() {
+    @objc func updateValuesSafe() {
         let lastUpdateTime = lastTimerDate
         let currentTime = Date()
         let updateQuantity = currentTime.timeIntervalSince(lastUpdateTime!)
@@ -789,7 +789,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             }
             else if keyPath! == "filterPredicate" {
                 print("filter predicate changed")
-                currentTableViewController?.fixPlayOrderForChangedFilterPredicate(shuffleButton.state)
+                currentTableViewController?.fixPlayOrderForChangedFilterPredicate(shuffleButton.state.rawValue)
                 /*if (trackQueueViewController!.currentSourceListItem == trackQueueViewController!.currentAudioSource) && trackQueueViewController?.currentAudioSource!.playOrderObject != nil {
                     currentTableViewController!.fixPlayOrderForChangedFilterPredicate(trackQueueViewController!.currentAudioSource!.playOrderObject!, shuffleState: shuffleButton.state)
                 }*/
@@ -841,27 +841,27 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     //mark album art
     
     func makeDark() {
-        self.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
-        theBox.fillColor = NSColor(patternImage: NSImage(named: "Inverted Gradient")!)
+        self.window?.appearance = NSAppearance(named: NSAppearance.Name.vibrantDark)
+        theBox.fillColor = NSColor(patternImage: NSImage(named: NSImage.Name(rawValue: "Inverted Gradient"))!)
         let color = NSColor.white
-        let attrs = [NSForegroundColorAttributeName : color]
+        let attrs = [NSAttributedStringKey.foregroundColor : color]
         let newAttributedString = NSAttributedString(string: "Search", attributes: attrs)
         (searchField.cell as! NSSearchFieldCell).placeholderAttributedString = newAttributedString
     }
     
     override func windowDidLoad() {
-        self.sourceListViewController = SourceListViewController(nibName: "SourceListViewController", bundle: nil)
+        self.sourceListViewController = SourceListViewController(nibName: NSNib.Name(rawValue: "SourceListViewController"), bundle: nil)
         sourceListTargetView.addSubview(sourceListViewController!.view)
         self.sourceListViewController!.view.frame = sourceListTargetView.bounds
         let sourceListLayoutConstraints = [NSLayoutConstraint(item: sourceListViewController!.view, attribute: .left, relatedBy: .equal, toItem: sourceListTargetView, attribute: .left, multiplier: 1, constant: 0), NSLayoutConstraint(item: sourceListViewController!.view, attribute: .right, relatedBy: .equal, toItem: sourceListTargetView, attribute: .right, multiplier: 1, constant: 0), NSLayoutConstraint(item: sourceListViewController!.view, attribute: .top, relatedBy: .equal, toItem: sourceListTargetView, attribute: .top, multiplier: 1, constant: 0), NSLayoutConstraint(item: sourceListViewController!.view, attribute: .bottom, relatedBy: .equal, toItem: sourceListTargetView, attribute: .bottom, multiplier: 1, constant: 0)]
         NSLayoutConstraint.activate(sourceListLayoutConstraints)
         self.sourceListViewController?.mainWindowController = self
-        self.albumArtViewController = AlbumArtViewController(nibName: "AlbumArtViewController", bundle: nil)
+        self.albumArtViewController = AlbumArtViewController(nibName: NSNib.Name(rawValue: "AlbumArtViewController"), bundle: nil)
         artworkTargetView.addSubview(albumArtViewController!.view)
         let artworkLayoutConstraints = [NSLayoutConstraint(item: albumArtViewController!.view, attribute: .left, relatedBy: .equal, toItem: artworkTargetView, attribute: .left, multiplier: 1, constant: 0), NSLayoutConstraint(item: albumArtViewController!.view, attribute: .right, relatedBy: .equal, toItem: artworkTargetView, attribute: .right, multiplier: 1, constant: 0), NSLayoutConstraint(item: albumArtViewController!.view, attribute: .top, relatedBy: .equal, toItem: artworkTargetView, attribute: .top, multiplier: 1, constant: 0), NSLayoutConstraint(item: albumArtViewController!.view, attribute: .bottom, relatedBy: .equal, toItem: artworkTargetView, attribute: .bottom, multiplier: 1, constant: 0)]
         NSLayoutConstraint.activate(artworkLayoutConstraints)
         self.albumArtViewController!.view.frame = artworkTargetView.bounds
-        self.trackQueueViewController = TrackQueueViewController(nibName: "TrackQueueViewController", bundle: nil)
+        self.trackQueueViewController = TrackQueueViewController(nibName: NSNib.Name(rawValue: "TrackQueueViewController"), bundle: nil)
         trackQueueTargetView.addSubview(trackQueueViewController!.view)
         self.trackQueueViewController!.view.frame = trackQueueTargetView.bounds
         let trackQueueLayoutConstraints = [NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .left, relatedBy: .equal, toItem: trackQueueTargetView, attribute: .left, multiplier: 1, constant: 0), NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .right, relatedBy: .equal, toItem: trackQueueTargetView, attribute: .right, multiplier: 1, constant: 0), NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .top, relatedBy: .equal, toItem: trackQueueTargetView, attribute: .top, multiplier: 1, constant: 0), NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .bottom, relatedBy: .equal, toItem: trackQueueTargetView, attribute: .bottom, multiplier: 1, constant: 0)]
@@ -880,7 +880,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         theBox.borderType = .bezelBorder
         theBox.borderWidth = 1.1
         theBox.cornerRadius = 3
-        theBox.fillColor = NSColor(patternImage: NSImage(named: "Gradient")!)
+        theBox.fillColor = NSColor(patternImage: NSImage(named: NSImage.Name(rawValue: "Gradient"))!)
         searchField.delegate = self
         //searchField.drawsBackground = false
         self.delegate?.audioModule.addObserver(self, forKeyPath: "track_changed", options: .new, context: &my_context)
@@ -890,10 +890,10 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         self.albumArtViewController?.mainWindow = self
         trackQueueViewController?.mainWindowController = self
         volumeSlider.isContinuous = true
-        self.window!.titleVisibility = NSWindowTitleVisibility.hidden
+        self.window!.titleVisibility = NSWindow.TitleVisibility.hidden
         self.window!.titlebarAppearsTransparent = true
         UserDefaults.standard.set(true, forKey: "checkEmbeddedArtwork")
-        let userScreenSize = NSScreen.main()?.frame.width
+        let userScreenSize = NSScreen.main?.frame.width
         /*let songBarMinimumWidthConstraint = NSLayoutConstraint(item: theBox, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: userScreenSize! * MIN_SONG_BAR_WIDTH_FRACTION)
         let volumeBarMinimumWidthConstraint = NSLayoutConstraint(item: volumeSlider, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: userScreenSize! * MIN_VOLUME_BAR_WIDTH_FRACTION)
         let searchBarMinimumWidthConstraint = NSLayoutConstraint(item: searchField, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: userScreenSize! * MIN_SEARCH_BAR_WIDTH_FRACTION)

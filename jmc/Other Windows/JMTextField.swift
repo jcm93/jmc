@@ -13,12 +13,12 @@ class JMTagNumberTextField: NSTextField {
     override func textDidChange(_ notification: Notification) {
         let textWidth = self.attributedStringValue.size().width
         if textWidth <= 17.0 {
-            let currentWidthConstraint = self.constraints.filter({return $0.firstAttribute == NSLayoutAttribute.width})
+            let currentWidthConstraint = self.constraints.filter({return $0.firstAttribute == NSLayoutConstraint.Attribute.width})
             NSLayoutConstraint.deactivate(currentWidthConstraint)
             let constraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0.0, constant: 26.0)
             NSLayoutConstraint.activate([constraint])
         } else {
-            let currentWidthConstraint = self.constraints.filter({return $0.firstAttribute == NSLayoutAttribute.width})
+            let currentWidthConstraint = self.constraints.filter({return $0.firstAttribute == NSLayoutConstraint.Attribute.width})
             NSLayoutConstraint.deactivate(currentWidthConstraint)
             let constraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0.0, constant: textWidth + 10.0)
             NSLayoutConstraint.activate([constraint])

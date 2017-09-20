@@ -89,6 +89,8 @@
 		0D800C0F1ED3B6BF00EA2889 /* ArtistViewTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D800C0E1ED3B6BF00EA2889 /* ArtistViewTableCellView.swift */; };
 		0D8A8B401F61CB54007529A0 /* AlbumFileLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8A8B3E1F61CB54007529A0 /* AlbumFileLocationViewController.swift */; };
 		0D8A8B411F61CB54007529A0 /* AlbumFileLocationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8A8B3F1F61CB54007529A0 /* AlbumFileLocationViewController.xib */; };
+		0D8A8B431F61E524007529A0 /* DefaultsAndConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8A8B421F61E524007529A0 /* DefaultsAndConstants.swift */; };
+		0D8A8B451F61E5B4007529A0 /* EditingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8A8B441F61E5B4007529A0 /* EditingFunctions.swift */; };
 		0D8AFE541E6CB3E7004AC584 /* LocationVerifierSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8AFE521E6CB3E7004AC584 /* LocationVerifierSheetController.swift */; };
 		0D8AFE551E6CB3E7004AC584 /* LocationVerifierSheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */; };
 		0D8AFE581E6D136D004AC584 /* MediaScannerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */; };
@@ -307,6 +309,8 @@
 		0D87867C1E3EFC000091785B /* jmc-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "jmc-Bridging-Header.h"; sourceTree = "<group>"; };
 		0D8A8B3E1F61CB54007529A0 /* AlbumFileLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumFileLocationViewController.swift; sourceTree = "<group>"; };
 		0D8A8B3F1F61CB54007529A0 /* AlbumFileLocationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumFileLocationViewController.xib; sourceTree = "<group>"; };
+		0D8A8B421F61E524007529A0 /* DefaultsAndConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultsAndConstants.swift; sourceTree = "<group>"; };
+		0D8A8B441F61E5B4007529A0 /* EditingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditingFunctions.swift; sourceTree = "<group>"; };
 		0D8AFE521E6CB3E7004AC584 /* LocationVerifierSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationVerifierSheetController.swift; path = "Other Windows/Library Manager/Sheets/LocationVerifierSheetController.swift"; sourceTree = "<group>"; };
 		0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LocationVerifierSheetController.xib; path = "Other Windows/Library Manager/Sheets/LocationVerifierSheetController.xib"; sourceTree = "<group>"; };
 		0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaScannerSheet.swift; path = "Other Windows/Library Manager/Sheets/MediaScannerSheet.swift"; sourceTree = "<group>"; };
@@ -458,6 +462,8 @@
 			isa = PBXGroup;
 			children = (
 				0DD274EE1D3190360055C43B /* GlobalFunctions.swift */,
+				0D8A8B441F61E5B4007529A0 /* EditingFunctions.swift */,
+				0D8A8B421F61E524007529A0 /* DefaultsAndConstants.swift */,
 				0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */,
 				0D60F5271E86F78300CA5420 /* Formatters */,
 				0D606EF71E7B4C2A007AE152 /* Audio */,
@@ -936,17 +942,17 @@
 				TargetAttributes = {
 					0DAB308C1CFBA3340028928F = {
 						CreatedOnToolsVersion = 7.3.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
 					0DAB309E1CFBA3340028928F = {
 						CreatedOnToolsVersion = 7.3.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 0900;
 						TestTargetID = 0DAB308C1CFBA3340028928F;
 					};
 					0DAB30A91CFBA3340028928F = {
 						CreatedOnToolsVersion = 7.3.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 0900;
 						TestTargetID = 0DAB308C1CFBA3340028928F;
 					};
 				};
@@ -1119,6 +1125,7 @@
 				0D60F5261E86F77900CA5420 /* TimeFormatter.swift in Sources */,
 				0D592A4A1EDF6C8B0054D553 /* Artist+CoreDataProperties.swift in Sources */,
 				0DE957CF1EEB5654008CBECF /* Library+CoreDataClass.swift in Sources */,
+				0D8A8B451F61E5B4007529A0 /* EditingFunctions.swift in Sources */,
 				0D2D06CF1EE32FB600A8EC66 /* Album+CoreDataClass.swift in Sources */,
 				0D3878B81DD11926004CC3C1 /* BitRateFormatter.swift in Sources */,
 				0D592A401EDF6C8B0054D553 /* SongCollection+CoreDataProperties.swift in Sources */,
@@ -1135,6 +1142,7 @@
 				0DB996D01ED2874F00594939 /* AlbumArtImageView.swift in Sources */,
 				0D3E00871E3F1DC4007C1C83 /* jmc.xcdatamodeld in Sources */,
 				0DE957C81EE9D5D0008CBECF /* Track+CoreDataProperties.swift in Sources */,
+				0D8A8B431F61E524007529A0 /* DefaultsAndConstants.swift in Sources */,
 				0DD7A3BC1EF4738F00FEDD71 /* StupidTableView.swift in Sources */,
 				0D0C2AA91E88D8FF00CA82C3 /* MTButtonCell.swift in Sources */,
 				0DA02D361EFA099E00DDE5A9 /* JMDateFormatter.swift in Sources */,
@@ -1327,7 +1335,8 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "jmc/jmc-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				"USER_HEADER_SEARCH_PATHS[arch=*]" = "${PROJECT_DIR}";
 			};
 			name = Debug;
@@ -1359,7 +1368,8 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "jmc/jmc-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				"USER_HEADER_SEARCH_PATHS[arch=*]" = "${PROJECT_DIR}";
 			};
 			name = Release;
@@ -1373,7 +1383,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunesTests;
 				PRODUCT_NAME = jmc;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/jmc.app/Contents/MacOS/jmc";
 			};
 			name = Debug;
@@ -1387,7 +1398,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunesTests;
 				PRODUCT_NAME = jmc;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/jmc.app/Contents/MacOS/jmc";
 			};
 			name = Release;
@@ -1401,7 +1413,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunesUITests;
 				PRODUCT_NAME = jmc;
 				PROVISIONING_PROFILE = "";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = jmc;
 			};
 			name = Debug;
@@ -1415,7 +1428,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = jcm.minimalTunesUITests;
 				PRODUCT_NAME = jmc;
 				PROVISIONING_PROFILE = "";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = jmc;
 			};
 			name = Release;
