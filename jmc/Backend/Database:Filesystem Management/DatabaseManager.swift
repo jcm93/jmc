@@ -178,9 +178,9 @@ class DatabaseManager: NSObject {
     func moveAlbumFileToAppropriateDirectory(albumArt: AlbumArtwork, filename: String) {
         let destination = getAlbumDirectory(for: albumArt.album ?? albumArt.album_multiple!).appendingPathComponent(filename)
         do {
-            let oldLocation = URL(string: albumArt.artwork_location!)!
+            let oldLocation = URL(string: albumArt.location!)!
             try fileManager.copyItem(at: oldLocation, to: destination)
-            albumArt.artwork_location = destination.absoluteString
+            albumArt.location = destination.absoluteString
         } catch {
             print(error)
         }
@@ -191,12 +191,12 @@ class DatabaseManager: NSObject {
         guard let album = track.album else { return nil }
         let image = NSImage(byReferencing: url)
         guard image.isValid else { return nil }
-        if track.album?.primary_art?.artwork_location != nil {
-            let currentPrimaryArtURL = URL(string: track.album!.primary_art!.artwork_location!)
+        if track.album?.primary_art?.location != nil {
+            let currentPrimaryArtURL = URL(string: track.album!.primary_art!.location!)
             guard url != currentPrimaryArtURL else { return nil }
         }
         if track.album?.other_art != nil && track.album!.other_art!.count > 0 {
-            let currentArtURLs = track.album!.other_art!.map({return URL(string: ($0 as! AlbumArtwork).artwork_location!)!})
+            let currentArtURLs = track.album!.other_art!.map({return URL(string: ($0 as! AlbumArtwork).location!)!})
             guard !currentArtURLs.contains(url) else { return nil }
         }
         let filename = url.lastPathComponent
@@ -205,14 +205,14 @@ class DatabaseManager: NSObject {
             let newPrimaryArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
             newArt = newPrimaryArt
             newPrimaryArt.album = album
-            newPrimaryArt.artwork_location = url.absoluteString
+            newPrimaryArt.location = url.absoluteString
             newPrimaryArt.id = globalRootLibrary?.next_album_artwork_id
             globalRootLibrary?.next_album_artwork_id = globalRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
         } else {
             let newOtherArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
             newArt = newOtherArt
             newOtherArt.album_multiple = album
-            newOtherArt.artwork_location = url.absoluteString
+            newOtherArt.location = url.absoluteString
             newOtherArt.id = globalRootLibrary?.next_album_artwork_id
             globalRootLibrary?.next_album_artwork_id = globalRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
         }
@@ -232,7 +232,7 @@ class DatabaseManager: NSObject {
                 existingHash = existingPrimaryArt.image_hash!
             } else {
                 do {
-                    let url = URL(string: existingPrimaryArt.artwork_location!)!
+                    let url = URL(string: existingPrimaryArt.location!)!
                     let data = try Data(contentsOf: url, options: [])
                     let hash = createMD5HashOf(data: data)
                     existingPrimaryArt.image_hash = hash
@@ -251,7 +251,7 @@ class DatabaseManager: NSObject {
                     existingHash = existingOtherArt.image_hash!
                 } else {
                     do {
-                        let url = URL(string: existingOtherArt.artwork_location!)!
+                        let url = URL(string: existingOtherArt.location!)!
                         let data = try Data(contentsOf: url, options: [])
                         let hash = createMD5HashOf(data: data)
                         existingOtherArt.image_hash = hash
@@ -278,14 +278,14 @@ class DatabaseManager: NSObject {
         if track.album?.primary_art == nil {
             let newPrimaryArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
             newPrimaryArt.album = album
-            newPrimaryArt.artwork_location = artworkURL.absoluteString
+            newPrimaryArt.location = artworkURL.absoluteString
             newPrimaryArt.id = globalRootLibrary?.next_album_artwork_id
             globalRootLibrary?.next_album_artwork_id = globalRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
             return true
         } else {
             let newOtherArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
             newOtherArt.album_multiple = album
-            newOtherArt.artwork_location = artworkURL.absoluteString
+            newOtherArt.location = artworkURL.absoluteString
             newOtherArt.id = globalRootLibrary?.next_album_artwork_id
             globalRootLibrary?.next_album_artwork_id = globalRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
             return true
@@ -825,7 +825,7 @@ class DatabaseManager: NSObject {
                     let filename = URL(string: albumFile.location!)!.lastPathComponent
                     moveAlbumFileToAppropriateDirectory(albumFile: albumFile, filename: filename)
                 } else if let art = item as? AlbumArtwork {
-                    let filename = URL(string: art.artwork_location!)!.lastPathComponent
+                    let filename = URL(string: art.location!)!.lastPathComponent
                     moveAlbumFileToAppropriateDirectory(albumArt: art, filename: filename)
                 }
                 DispatchQueue.main.async {

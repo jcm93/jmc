@@ -36,6 +36,8 @@
 		0D2D06CE1EE32FB600A8EC66 /* AlbumFile+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D06CA1EE32FB600A8EC66 /* AlbumFile+CoreDataProperties.swift */; };
 		0D2D06CF1EE32FB600A8EC66 /* Album+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D06CB1EE32FB600A8EC66 /* Album+CoreDataClass.swift */; };
 		0D2D06D01EE32FB600A8EC66 /* Album+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D06CC1EE32FB600A8EC66 /* Album+CoreDataProperties.swift */; };
+		0D34A4771F7306D400CAA6C4 /* AlbumArtwork+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D34A4751F7306D300CAA6C4 /* AlbumArtwork+CoreDataClass.swift */; };
+		0D34A4781F7306D400CAA6C4 /* AlbumArtwork+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D34A4761F7306D300CAA6C4 /* AlbumArtwork+CoreDataProperties.swift */; };
 		0D3756C01EAADBD700016136 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3756BE1EAADBD700016136 /* PreferencesWindowController.swift */; };
 		0D3756C11EAADBD700016136 /* PreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D3756BF1EAADBD700016136 /* PreferencesWindowController.xib */; };
 		0D3878B81DD11926004CC3C1 /* BitRateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */; };
@@ -63,8 +65,6 @@
 		0D592A421EDF6C8B0054D553 /* Composer+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A2D1EDF6C8B0054D553 /* Composer+CoreDataProperties.swift */; };
 		0D592A431EDF6C8B0054D553 /* SmartCriteria+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A2E1EDF6C8B0054D553 /* SmartCriteria+CoreDataClass.swift */; };
 		0D592A441EDF6C8B0054D553 /* SmartCriteria+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A2F1EDF6C8B0054D553 /* SmartCriteria+CoreDataProperties.swift */; };
-		0D592A451EDF6C8B0054D553 /* AlbumArtwork+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A301EDF6C8B0054D553 /* AlbumArtwork+CoreDataClass.swift */; };
-		0D592A461EDF6C8B0054D553 /* AlbumArtwork+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A311EDF6C8B0054D553 /* AlbumArtwork+CoreDataProperties.swift */; };
 		0D592A471EDF6C8B0054D553 /* Track+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A321EDF6C8B0054D553 /* Track+CoreDataClass.swift */; };
 		0D592A491EDF6C8B0054D553 /* Artist+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A341EDF6C8B0054D553 /* Artist+CoreDataClass.swift */; };
 		0D592A4A1EDF6C8B0054D553 /* Artist+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A351EDF6C8B0054D553 /* Artist+CoreDataProperties.swift */; };
@@ -255,6 +255,8 @@
 		0D2D06CA1EE32FB600A8EC66 /* AlbumFile+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AlbumFile+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D2D06CB1EE32FB600A8EC66 /* Album+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Album+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D2D06CC1EE32FB600A8EC66 /* Album+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Album+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0D34A4751F7306D300CAA6C4 /* AlbumArtwork+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumArtwork+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0D34A4761F7306D300CAA6C4 /* AlbumArtwork+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumArtwork+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D3756BE1EAADBD700016136 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferencesWindowController.swift; path = "Other Windows/PreferencesWindowController.swift"; sourceTree = "<group>"; };
 		0D3756BF1EAADBD700016136 /* PreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PreferencesWindowController.xib; path = "Other Windows/PreferencesWindowController.xib"; sourceTree = "<group>"; };
 		0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BitRateFormatter.swift; path = Backend/Formatters/BitRateFormatter.swift; sourceTree = "<group>"; };
@@ -282,8 +284,6 @@
 		0D592A2D1EDF6C8B0054D553 /* Composer+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Composer+CoreDataProperties.swift"; path = "Core Data Shit/Composer+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D592A2E1EDF6C8B0054D553 /* SmartCriteria+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SmartCriteria+CoreDataClass.swift"; path = "Core Data Shit/SmartCriteria+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D592A2F1EDF6C8B0054D553 /* SmartCriteria+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SmartCriteria+CoreDataProperties.swift"; path = "Core Data Shit/SmartCriteria+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0D592A301EDF6C8B0054D553 /* AlbumArtwork+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "AlbumArtwork+CoreDataClass.swift"; path = "Core Data Shit/AlbumArtwork+CoreDataClass.swift"; sourceTree = "<group>"; };
-		0D592A311EDF6C8B0054D553 /* AlbumArtwork+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "AlbumArtwork+CoreDataProperties.swift"; path = "Core Data Shit/AlbumArtwork+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D592A321EDF6C8B0054D553 /* Track+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Track+CoreDataClass.swift"; path = "Core Data Shit/Track+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D592A341EDF6C8B0054D553 /* Artist+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Artist+CoreDataClass.swift"; path = "Core Data Shit/Artist+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D592A351EDF6C8B0054D553 /* Artist+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Artist+CoreDataProperties.swift"; path = "Core Data Shit/Artist+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -537,6 +537,8 @@
 		0D01AD981D707ED900F9211F /* Core Data Shit */ = {
 			isa = PBXGroup;
 			children = (
+				0D34A4751F7306D300CAA6C4 /* AlbumArtwork+CoreDataClass.swift */,
+				0D34A4761F7306D300CAA6C4 /* AlbumArtwork+CoreDataProperties.swift */,
 				0DE957D91EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift */,
 				0DE957DA1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift */,
 				0DE957D11EEC5465008CBECF /* OrganizationTemplate+CoreDataClass.swift */,
@@ -562,8 +564,6 @@
 				0D592A2D1EDF6C8B0054D553 /* Composer+CoreDataProperties.swift */,
 				0D592A2E1EDF6C8B0054D553 /* SmartCriteria+CoreDataClass.swift */,
 				0D592A2F1EDF6C8B0054D553 /* SmartCriteria+CoreDataProperties.swift */,
-				0D592A301EDF6C8B0054D553 /* AlbumArtwork+CoreDataClass.swift */,
-				0D592A311EDF6C8B0054D553 /* AlbumArtwork+CoreDataProperties.swift */,
 				0D592A341EDF6C8B0054D553 /* Artist+CoreDataClass.swift */,
 				0D592A351EDF6C8B0054D553 /* Artist+CoreDataProperties.swift */,
 				0D592A381EDF6C8B0054D553 /* TrackView+CoreDataClass.swift */,
@@ -1063,7 +1063,6 @@
 				0D015AC61E00A31C00EBAB6E /* LibraryTableViewControllerCellBased.swift in Sources */,
 				0DD0DB0E1E54425800807CAC /* FlacDecoder.swift in Sources */,
 				0DF188801EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift in Sources */,
-				0D592A451EDF6C8B0054D553 /* AlbumArtwork+CoreDataClass.swift in Sources */,
 				0D58F7491D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift in Sources */,
 				0DF188841EDD072B00241785 /* OrganizationRuleViewcontroller.swift in Sources */,
 				0D388AAD1E1F2C8800D25A7D /* AddPlaylistButton.swift in Sources */,
@@ -1129,6 +1128,7 @@
 				0D2D06CF1EE32FB600A8EC66 /* Album+CoreDataClass.swift in Sources */,
 				0D3878B81DD11926004CC3C1 /* BitRateFormatter.swift in Sources */,
 				0D592A401EDF6C8B0054D553 /* SongCollection+CoreDataProperties.swift in Sources */,
+				0D34A4781F7306D400CAA6C4 /* AlbumArtwork+CoreDataProperties.swift in Sources */,
 				0D299B231DF158A60009CF7A /* AdvancedFilterViewController.swift in Sources */,
 				0DF4BEEE1CFBE4CB00AC5824 /* iTunesLibraryParser.swift in Sources */,
 				0DA02D341EFA046A00DDE5A9 /* JMDate.swift in Sources */,
@@ -1163,7 +1163,6 @@
 				0D592A3F1EDF6C8B0054D553 /* SongCollection+CoreDataClass.swift in Sources */,
 				0DD274EF1D3190360055C43B /* GlobalFunctions.swift in Sources */,
 				0DD7A3C21EF4B60D00FEDD71 /* MissingFileTableCellView.swift in Sources */,
-				0D592A461EDF6C8B0054D553 /* AlbumArtwork+CoreDataProperties.swift in Sources */,
 				0D299B1F1DF151220009CF7A /* LibraryTableViewController.swift in Sources */,
 				0D592A4E1EDF6C8B0054D553 /* TrackView+CoreDataProperties.swift in Sources */,
 				0D3878BC1DD125E9004CC3C1 /* StupidNumberFormatter.swift in Sources */,
@@ -1173,6 +1172,7 @@
 				0D23CA6D1E03242400CAF529 /* PeerBrowser.swift in Sources */,
 				0D40A9F21D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift in Sources */,
 				0DB996D21ED287C400594939 /* AlbumArtPDFView.swift in Sources */,
+				0D34A4771F7306D400CAA6C4 /* AlbumArtwork+CoreDataClass.swift in Sources */,
 				0DE957DB1EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift in Sources */,
 				0DFE2E5A1EC0DAB6007EEF04 /* TrackQueueTableView.swift in Sources */,
 				0DB996D41ED287D400594939 /* AlbumArtCollectionView.swift in Sources */,

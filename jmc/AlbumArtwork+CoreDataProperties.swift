@@ -2,8 +2,9 @@
 //  AlbumArtwork+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 5/31/17.
+//  Created by John Moody on 9/20/17.
 //  Copyright © 2017 John Moody. All rights reserved.
+//
 //
 
 import Foundation
@@ -17,7 +18,7 @@ extension AlbumArtwork {
     }
 
     @NSManaged public var art_name: String?
-    @NSManaged public var artwork_location: String?
+    @NSManaged public var location: String?
     @NSManaged public var id: NSNumber?
     @NSManaged public var image_hash: String?
     @NSManaged public var is_network: NSNumber?

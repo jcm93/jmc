@@ -88,9 +88,9 @@ func getLibrary(withName name: String) -> [Library]? {
 
 func getAllMiscellaneousAlbumFiles(for album: Album) -> [String] {
     var albumFiles = [String?]()
-    albumFiles.append(album.primary_art?.artwork_location)
+    albumFiles.append(album.primary_art?.location)
     if let otherArt = album.other_art {
-        albumFiles.append(contentsOf: otherArt.map({return ($0 as! AlbumArtwork).artwork_location}))
+        albumFiles.append(contentsOf: otherArt.map({return ($0 as! AlbumArtwork).location}))
     }
     if let otherFiles = album.other_files {
         albumFiles.append(contentsOf: otherFiles.map({return ($0 as! AlbumFile).location}))
@@ -178,8 +178,9 @@ func volumeIsAvailable(volume: Volume) -> Bool {
 
 func determineTemplateLocations(visualUpdateHandler: ProgressBarController?) -> [NSObject : URL] {
     let templateBundle = globalRootLibrary.organization_template!
+    let count = globalRootLibrary.tracks!.count
     DispatchQueue.main.async {
-        visualUpdateHandler?.prepareForNewTask(actionName: "Checking organization template for", thingName: "files", thingCount: globalRootLibrary!.tracks!.count)
+        visualUpdateHandler?.prepareForNewTask(actionName: "Checking organization template for", thingName: "files", thingCount: count)
     }
     var index = 0
     var newFileLocations = [NSObject : URL]()

@@ -71,6 +71,7 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
     override func windowDidLoad() {
         super.windowDidLoad()
         self.tableViewController = AlbumFileLocationViewController(nibName: NSNib.Name(rawValue: "AlbumFileLocationViewController"), bundle: nil)
+        self.tableViewController.tree = AlbumFilePathTree(files: &self.things)
         self.targetView.addSubview(tableViewController!.view)
         self.tableViewController!.view.topAnchor.constraint(equalTo: targetView.topAnchor).isActive = true
         self.tableViewController!.view.rightAnchor.constraint(equalTo: targetView.rightAnchor).isActive = true

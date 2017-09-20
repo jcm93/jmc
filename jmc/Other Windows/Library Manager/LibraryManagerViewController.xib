@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -96,7 +96,7 @@ Gw
                                 <rect key="frame" x="10" y="33" width="846" height="538"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HWV-ag-XYf">
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HWV-ag-XYf">
                                         <rect key="frame" x="15" y="341" width="92" height="17"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Watch folders:" id="jOc-Fn-Tml">
                                             <font key="font" metaFont="system"/>
@@ -104,7 +104,7 @@ Gw
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pvi-rp-51x">
+                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Pvi-rp-51x">
                                         <rect key="frame" x="108" y="513" width="212" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="212" id="2hN-aM-yx7"/>
@@ -118,7 +118,7 @@ Gw
                                             <action selector="sourceNameWasEdited:" target="-2" id="SJC-Td-LUn"/>
                                         </connections>
                                     </textField>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cUP-gH-z2b">
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cUP-gH-z2b">
                                         <rect key="frame" x="15" y="516" width="87" height="17"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Library name:" id="pTX-6B-NZy">
                                             <font key="font" metaFont="system"/>
@@ -207,7 +207,7 @@ Gw
                                         <rect key="frame" x="17" y="156" width="16" height="16"/>
                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusAvailable" id="d3g-Tj-xKf"/>
                                     </imageView>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0zW-S6-wv4">
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0zW-S6-wv4">
                                         <rect key="frame" x="34" y="157" width="198" height="17"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Directory monitoring is enabled." id="aey-TF-mDB">
                                             <font key="font" metaFont="system"/>
@@ -245,7 +245,7 @@ Gw
                                             <action selector="orgBehaviorChecked:" target="-2" id="frV-cW-6Ak"/>
                                         </connections>
                                     </button>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Yz-pm-nmY">
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3Yz-pm-nmY">
                                         <rect key="frame" x="15" y="463" width="131" height="17"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Central media folder:" id="HWo-kG-dyo">
                                             <font key="font" metaFont="system"/>
@@ -253,7 +253,7 @@ Gw
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6vp-tQ-c95">
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6vp-tQ-c95">
                                         <rect key="frame" x="15" y="435" width="211" height="17"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Behavior when adding new media:" id="TDK-gN-1nC">
                                             <font key="font" metaFont="system"/>
@@ -302,7 +302,7 @@ Gw
                                             <action selector="removeWatchFolderPressed:" target="-2" id="v8U-Tc-ZJo"/>
                                         </connections>
                                     </button>
-                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AV9-ZF-cTG">
+                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="AV9-ZF-cTG">
                                         <rect key="frame" x="15" y="182" width="372" height="56"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="56" id="KkQ-T7-zhU"/>
@@ -365,7 +365,7 @@ Gw
                                             <action selector="changeSourceLocationButtonPressed:" target="-2" id="gAD-v5-YL3"/>
                                         </connections>
                                     </button>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LH2-3i-bq3">
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="LH2-3i-bq3">
                                         <rect key="frame" x="338" y="409" width="421" height="14"/>
                                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Consolidating your library will move all added media to the central media folder." id="dCt-nq-SuX">
                                             <font key="font" metaFont="smallSystem"/>
@@ -433,7 +433,7 @@ Gw
                                 <rect key="frame" x="10" y="33" width="846" height="538"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ep7-tg-vkg">
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ep7-tg-vkg">
                                         <rect key="frame" x="35" y="477" width="165" height="17"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Directory not yet scanned." id="OH3-zn-skJ">
                                             <font key="font" metaFont="system"/>

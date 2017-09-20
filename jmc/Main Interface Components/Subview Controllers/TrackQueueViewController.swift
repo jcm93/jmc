@@ -658,7 +658,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
                 if object.track!.album?.primary_art != nil {
                     let art = object.track?.album?.primary_art
-                    let path = art?.artwork_location!
+                    let path = art?.location!
                     let url = URL(string: path!)
                     let image = NSImage(contentsOf: url!)
                     (result.subviews[0] as! NSImageView).image = image
@@ -680,7 +680,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
                 if object.track!.album?.primary_art != nil {
                     let art = object.track?.album?.primary_art
-                    let path = art?.artwork_location!
+                    let path = art?.location!
                     let url = URL(string: path!)
                     let image = NSImage(contentsOf: url!)
                     (result.subviews[0] as! NSImageView).image = image
@@ -711,7 +711,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
                 if object.track!.album?.primary_art != nil {
                     let art = object.track?.album?.primary_art
-                    let path = art?.artwork_location!
+                    let path = art?.location!
                     let url = URL(string: path!)
                     let image = NSImage(contentsOf: url!)
                     (result.subviews[0] as! NSImageView).image = image
@@ -733,7 +733,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
                 if object.track!.album?.primary_art != nil {
                     let art = object.track?.album?.primary_art
-                    let path = art?.artwork_location!
+                    let path = art?.location!
                     let url = URL(string: path!)
                     let image = NSImage(contentsOf: url!)
                     (result.subviews[0] as! NSImageView).image = image

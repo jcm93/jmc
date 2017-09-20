@@ -35,7 +35,7 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
         let index = indexPath.last
         if let artImage = otherArtImages[index!] as? AlbumArtwork {
             let view = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "image"), for: indexPath) as! ImageCollectionViewItem
-            let imageURL = URL(string: artImage.artwork_location!)
+            let imageURL = URL(string: artImage.location!)
             let image = NSImage(byReferencing: imageURL!)
             view.imageView!.image = image
             view.imageURL = imageURL
@@ -223,7 +223,7 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
             var imageURL: URL? = nil
             //window.title = album.name!
             if let primaryArt = album.primary_art {
-                imageURL = URL(string: primaryArt.artwork_location!)!
+                imageURL = URL(string: primaryArt.location!)!
                 self.otherArtImages.append(primaryArt)
             }
             if let otherArt = album.other_art, otherArt.count > 0 {

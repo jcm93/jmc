@@ -29,7 +29,7 @@ class ArtistViewTableCellView: NSTableCellView {
         NSLayoutConstraint.activate([constraint])
         self.albumNameLabel.stringValue = self.album!.name!
         if self.album?.primary_art != nil {
-            self.artistImageView.image = NSImage(byReferencing: URL(string: self.album!.primary_art!.artwork_location!)!)
+            self.artistImageView.image = NSImage(byReferencing: URL(string: self.album!.primary_art!.location!)!)
         }
         self.artistImageView.wantsLayer = true
         self.artistImageView.layer?.cornerRadius = 10

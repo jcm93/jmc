@@ -59,7 +59,7 @@ class AlbumArtViewController: NSViewController {
     func initAlbumArt(_ track: Track) {
         self.currentTrack = track
         if track.album?.primary_art != nil {
-            let imageURL = URL(string: track.album!.primary_art!.artwork_location!)!
+            let imageURL = URL(string: track.album!.primary_art!.location!)!
             guard self.currentURL != imageURL else { return }
             let image = NSImage(byReferencing: imageURL)
             if image.isValid {

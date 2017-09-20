@@ -13,7 +13,9 @@ import CoreData
 public class Album: NSManagedObject {
     func getMiscellaneousFiles() -> [NSObject] {
         var albumFiles = [NSObject]()
-        albumFiles.append(self.primary_art!)
+        if self.primary_art != nil {
+            albumFiles.append(self.primary_art!)
+        }
         if let otherArt = self.other_art?.array {
             albumFiles.append(contentsOf: otherArt as! [NSObject])
         }

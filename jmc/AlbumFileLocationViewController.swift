@@ -124,6 +124,9 @@ class AlbumFileLocationViewController: NSViewController, NSOutlineViewDataSource
     
     var tree: AlbumFilePathTree!
     
+    @IBOutlet weak var outlineView: NSOutlineView!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
@@ -132,6 +135,7 @@ class AlbumFileLocationViewController: NSViewController, NSOutlineViewDataSource
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         guard let node = item as? AlbumFilePathNode else { return nil }
         let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "pathnode"), owner: node) as! NSTableCellView
+        view.objectValue = node
         let url = URL(fileURLWithPath: node.completePathRepresentation())
         let keys = [URLResourceKey.effectiveIconKey, URLResourceKey.customIconKey]
         if let values = try? url.resourceValues(forKeys: Set(keys)) {
@@ -141,12 +145,23 @@ class AlbumFileLocationViewController: NSViewController, NSOutlineViewDataSource
                 view.imageView?.image = NSImage(named: NSImage.Name.folder)
             }
         }
+        view.textField?.stringValue = node.pathComponent
         return view
     }
     
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
-        guard let node = item as? AlbumFilePathNode else { return self.tree.rootNode.children.count }
+        guard let node = item as? AlbumFilePathNode else { print(self.tree.rootNode.children.count); return self.tree.rootNode.children.count }
+        print(node.children.count)
         return node.children.count
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
+        guard let node = item as? AlbumFilePathNode else { return self.tree.rootNode }
+        return node.children[index]
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
+        return true
     }
     
 }

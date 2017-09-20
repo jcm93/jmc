@@ -40,7 +40,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     var missingTracks: [Track]?
     var newMediaURLs: [URL]?
     var delegate: AppDelegate?
-    var watchFolders = [URL]()
+    @objc var watchFolders = [URL]()
     var advancedOrganizationOptionsWindowController: AdvancedOrganizationOptionsWindowController?
     var missingFilesViewController: MissingFilesViewController?
 
