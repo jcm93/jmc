@@ -52,13 +52,13 @@ class InitialSetupWindowController: NSWindowController {
     var advancedOptionsController: AdvancedOrganizationOptionsWindowController?
     
     @IBAction func moveRadioAction(_ sender: AnyObject) {
-        if moveRadioButton.state == NSOnState {
+        if moveRadioButton.state == NSControl.StateValue.on {
             organizationType = .move
         }
-        else if copyRadioButton.state == NSOnState {
+        else if copyRadioButton.state == NSControl.StateValue.on {
             organizationType = .copy
         }
-        else if noOrganizeRadioButton.state == NSOnState {
+        else if noOrganizeRadioButton.state == NSControl.StateValue.on {
             organizationType = .none
         }
     }
@@ -67,7 +67,7 @@ class InitialSetupWindowController: NSWindowController {
         openFile()
     }
     @IBAction func modifyCheckBoxToggled(_ sender: AnyObject) {
-        if modifyMetadataCheckBox.state == NSOnState {
+        if modifyMetadataCheckBox.state == NSControl.StateValue.on {
             modifyMetadata = true
         }
         else {

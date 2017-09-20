@@ -259,7 +259,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     @IBAction func toggleExpandQueue(_ sender: AnyObject) {
         trackQueueViewController!.toggleHidden(queueButton.state.rawValue)
         switch queueButton.state {
-        case NSOnState:
+        case NSControl.StateValue.on:
             trackQueueTargetView.isHidden = false
             UserDefaults.standard.set(false, forKey: "queueHidden")
         default:
@@ -288,7 +288,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     
     func getNextTrack() -> Track? {
         let track: Track?
-        if repeatButton.state == NSOnState {
+        if repeatButton.state == NSControl.StateValue.on {
             return currentTrack
         } else {
             track = trackQueueViewController?.getNextTrack()//this function might change the interface around
@@ -312,7 +312,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     @IBAction func repeatButtonPressed(_ sender: AnyObject) {
-        if repeatButton.state == NSOnState {
+        if repeatButton.state == NSControl.StateValue.on {
             self.will_repeat = true
             UserDefaults.standard.set(true, forKey: DEFAULTS_REPEAT_STRING)
         } else {
@@ -364,11 +364,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     
     @IBAction func toggleArtwork(_ sender: AnyObject) {
         if self.artworkTargetView.isHidden == false {
-            artToggle.state = NSOffState
+            artToggle.state = NSControl.StateValue.off
             UserDefaults.standard.set(false, forKey: DEFAULTS_SHOWS_ARTWORK_STRING)
             self.artworkTargetView.isHidden = true
         } else {
-            artToggle.state = NSOnState
+            artToggle.state = NSControl.StateValue.on
             UserDefaults.standard.set(true, forKey: DEFAULTS_SHOWS_ARTWORK_STRING)
             self.artworkTargetView.isHidden = false
         }
@@ -567,9 +567,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     @IBAction func advancedFilterButtonPressed(_ sender: AnyObject) {
         if sender is AppDelegate {
-            self.advancedSearchToggle.state = self.advancedSearchToggle.state == NSOnState ? NSOffState : NSOnState
+            self.advancedSearchToggle.state = self.advancedSearchToggle.state == NSControl.StateValue.on ? NSControl.StateValue.off : NSControl.StateValue.on
         }
-        if advancedSearchToggle.state == NSOnState {
+        if advancedSearchToggle.state == NSControl.StateValue.on {
             showAdvancedFilter()
         } else {
             hideAdvancedFilter()
@@ -583,7 +583,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             advancedFilterViewController!.mainWindowController = self
             librarySplitView.insertArrangedSubview(advancedFilterViewController!.view, at: 0)
             advancedFilterViewController?.initializePredicateEditor()
-            self.advancedSearchToggle.state = NSOnState
+            self.advancedSearchToggle.state = NSControl.StateValue.on
         }
     }
     
@@ -593,7 +593,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             self.advancedFilterViewController = nil
             currentTableViewController?.advancedFilterVisible = false
         }
-        self.advancedSearchToggle.state = NSOffState
+        self.advancedSearchToggle.state = NSControl.StateValue.off
     }
     
     func initializeInterfaceForNetworkTrack() {

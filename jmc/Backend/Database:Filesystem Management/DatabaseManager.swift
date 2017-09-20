@@ -398,23 +398,6 @@ class DatabaseManager: NSObject {
         }
     }
     
-    func getProspectiveAlbumFileURLs(forAlbum album: Album, prospectiveTrackURLs trackURLs: [URL]) -> [AlbumFile : URL] {
-        var result = [AlbumFile : URL]()
-        let albumFiles = album.getMiscellaneousFiles()
-        guard albumFiles.count > 0 else {
-            return result
-        }
-        let directories = Set(trackURLs.map({return $0.deletingLastPathComponent()}))
-        let albumFileDirectory = directories.count == 1 ? directories.first! : createNonTemplateDirectoryFor(album: album, dry: true)
-        for albumFile in albumFiles {
-            let fileURL = URL(string: albumFile.location)!
-            let fileName = fileURL.lastPathComponent
-            result[albumFile] = albumFileDirectory!.appendingPathComponent(fileName)
-        }
-        
-        
-    }
-    
     func trimDirectoryFollowingMoveOperation(track: Track, oldLocation: URL) {
         let oldDirectory = oldLocation.deletingLastPathComponent()
         let currentTrackLocations = track.album?.tracks?.flatMap({return ($0 as! Track).location})
@@ -456,37 +439,6 @@ class DatabaseManager: NSObject {
             print(error)
         }
         
-    }
-    
-    func createNonTemplateDirectoryFor(album albumOptional: Album?, dry: Bool) -> URL? {
-        guard let album = albumOptional else { return nil }
-        let library = (album.tracks!.anyObject() as! Track).library
-        let baseURL = library!.getCentralMediaFolder()!
-        var albumDirectory = baseURL.appendingPathComponent("Album Files")
-        if album.is_compilation == true {
-            albumDirectory.appendPathComponent("Compilations")
-        } else {
-            if album.album_artist != nil {
-                albumDirectory.appendPathComponent(album.album_artist!.name ?? UNKNOWN_ARTIST_STRING)
-            } else {
-                let set = Set(album.tracks!.flatMap({return ($0 as! Track).artist?.name}))
-                if set.count > 1 {
-                    albumDirectory.appendPathComponent(UNKNOWN_ALBUM_ARTIST_STRING)
-                } else {
-                    albumDirectory.appendPathComponent(set.first ?? UNKNOWN_ARTIST_STRING)
-                }
-            }
-        }
-        albumDirectory.appendPathComponent(album.name ?? UNKNOWN_ALBUM_STRING)
-        do {
-            if !dry {
-                try fileManager.createDirectory(at: albumDirectory, withIntermediateDirectories: true, attributes: nil)
-            }
-            return albumDirectory
-        } catch {
-            print(error)
-            return nil
-        }
     }
     
     func getMDItemFromURL(_ url: URL) -> MDItem? {

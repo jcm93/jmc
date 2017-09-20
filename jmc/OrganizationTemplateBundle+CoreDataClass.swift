@@ -28,14 +28,29 @@ public class OrganizationTemplateBundle: NSManagedObject {
     }
     
     func match(wholeAlbum album: Album) -> [NSObject : URL] {
-        var directoryURLs = Set<URL>()
-        let trackURLs = (album.tracks as! Set<Track>).map({track -> URL in
+        var urlDictionary = [NSObject : URL]()
+        for track in album.tracks! {
+            let track = track as! Track
             let template = self.match(track)
             let url = template.getURL(for: track, withExtension: nil)!
-            directoryURLs.insert(url.deletingLastPathComponent())
-            return url
-        })
-        
+            urlDictionary[track] = url
+        }
+        addProspectiveAlbumFileURLs(forAlbum: album, toDestinationDictionary: &urlDictionary)
+        return urlDictionary
+    }
+    
+    func addProspectiveAlbumFileURLs(forAlbum album: Album, toDestinationDictionary urlDict: inout [NSObject : URL]) {
+        let albumFiles = album.getMiscellaneousFiles()
+        guard albumFiles.count > 0 else {
+            return
+        }
+        let directories = Set(urlDict.values.map({return $0.deletingLastPathComponent()}))
+        let albumFileDirectory = directories.count == 1 ? directories.first! : createNonTemplateDirectoryFor(album: album, dry: true)
+        for albumFile in albumFiles {
+            let fileURL = URL(string: albumFile.value(forKey: "location") as! String)!
+            let fileName = fileURL.lastPathComponent
+            urlDict[albumFile] = albumFileDirectory!.appendingPathComponent(fileName)
+        }
     }
     
     func initializeWithDefaults(centralFolder: URL) {

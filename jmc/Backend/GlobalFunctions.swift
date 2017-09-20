@@ -35,7 +35,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 }*/
 
 
-var managedContext = (NSApplication.shared().delegate as! AppDelegate).managedObjectContext
+var managedContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext
 
 func saveContext() {
     do {
@@ -45,7 +45,10 @@ func saveContext() {
     }
 }
 
-var globalRootLibrary = {() -> Library? in
+
+
+
+var globalRootLibrary: Library! = {() -> Library! in
     let fetchReq = NSFetchRequest<NSFetchRequestResult>(entityName: "Library")
     let predicate = NSPredicate(format: "parent == nil")
     fetchReq.predicate = predicate
@@ -174,39 +177,20 @@ func volumeIsAvailable(volume: Volume) -> Bool {
 }
 
 func determineTemplateLocations(visualUpdateHandler: ProgressBarController?) -> [NSObject : URL] {
-    let templateBundle = globalRootLibrary!.organization_template
+    let templateBundle = globalRootLibrary.organization_template!
     DispatchQueue.main.async {
         visualUpdateHandler?.prepareForNewTask(actionName: "Checking organization template for", thingName: "files", thingCount: globalRootLibrary!.tracks!.count)
     }
     var index = 0
-    var stuff = [NSObject : URL]()
-    let allAlbums = Set(globalRootLibrary!.tracks!.flatMap({return ($0 as? Track)?.album}))
+    var newFileLocations = [NSObject : URL]()
+    let allAlbums = Set(globalRootLibrary.tracks!.flatMap({return ($0 as? Track)?.album}))
     for album in allAlbums {
-        stuff
+        newFileLocations.merge(templateBundle.match(wholeAlbum: album), uniquingKeysWith: {(first, second) -> URL in
+            print("url conflict; this is bad");
+            return first
+        })
     }
-    
-    let result = (globalRootLibrary!.tracks as! Set<Track>).flatMap({track -> DisparateTrack? in
-        if let location = track.location {
-            if let currentURL = URL(string: location) {
-                let potentialURL = templateBundle!.match(track).getURL(for: track, withExtension: currentURL.pathExtension)!
-                DispatchQueue.main.async {
-                    visualUpdateHandler?.increment(thingsDone: index)
-                    index += 1
-                }
-                if potentialURL != currentURL {
-                    return DisparateTrack(track: track, potentialURL: potentialURL)
-                } else {
-                    return nil
-                }
-            }
-        }
-        DispatchQueue.main.async {
-            visualUpdateHandler?.increment(thingsDone: index)
-            index += 1
-        }
-        return nil
-    })
-    return result
+    return newFileLocations
 }
 
 func changeVolumeLocation(volume: Volume, newLocation: URL) {
@@ -263,6 +247,36 @@ func checkIfVolumeExists(withURL url: URL) -> Volume? {
         } else {
             return nil
         }
+    } catch {
+        print(error)
+        return nil
+    }
+}
+
+func createNonTemplateDirectoryFor(album albumOptional: Album?, dry: Bool) -> URL? {
+    guard let album = albumOptional else { return nil }
+    let baseURL = globalRootLibrary.getCentralMediaFolder()!
+    var albumDirectory = baseURL.appendingPathComponent("Album Files")
+    if album.is_compilation == true {
+        albumDirectory.appendPathComponent("Compilations")
+    } else {
+        if album.album_artist != nil {
+            albumDirectory.appendPathComponent(album.album_artist!.name ?? UNKNOWN_ARTIST_STRING)
+        } else {
+            let set = Set(album.tracks!.flatMap({return ($0 as! Track).artist?.name}))
+            if set.count > 1 {
+                albumDirectory.appendPathComponent(UNKNOWN_ALBUM_ARTIST_STRING)
+            } else {
+                albumDirectory.appendPathComponent(set.first ?? UNKNOWN_ARTIST_STRING)
+            }
+        }
+    }
+    albumDirectory.appendPathComponent(album.name ?? UNKNOWN_ALBUM_STRING)
+    do {
+        if !dry {
+            try FileManager.default.createDirectory(at: albumDirectory, withIntermediateDirectories: true, attributes: nil)
+        }
+        return albumDirectory
     } catch {
         print(error)
         return nil

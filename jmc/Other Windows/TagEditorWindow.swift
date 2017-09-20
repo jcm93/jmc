@@ -185,7 +185,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     }
     
     @IBAction func monthChecked(_ sender: Any) {
-        if monthCheck.state == NSOnState {
+        if monthCheck.state == NSControl.StateValue.on {
             let month = Int(self.monthField.selectedItem!.title)
             self.releaseDateComponents?.month = month
             let days = Calendar.current.range(of: .day, in: .month, for: self.releaseDateComponents!.date!)!
@@ -194,7 +194,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
                 self.dayField.menu?.addItem(withTitle: String(day), action: nil, keyEquivalent: "")
             }
         } else {
-            dayCheck.state = NSOffState
+            dayCheck.state = NSControl.StateValue.off
         }
         datePickerAction(self)
     }
@@ -202,17 +202,17 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     
     
     @IBAction func datePickerAction(_ sender: AnyObject) {
-        if self.releaseDateCheck.state == NSOnState {
+        if self.releaseDateCheck.state == NSControl.StateValue.on {
             if self.releaseDateComponents == nil {
                 self.releaseDateComponents = DateComponents()
                 self.releaseDateComponents?.calendar = Calendar.current
             }
             if let year = Int(self.yearField.stringValue) {
                 self.releaseDateComponents?.year = year
-                if monthCheck.state == NSOnState {
+                if monthCheck.state == NSControl.StateValue.on {
                     if let month = Int(monthField.selectedItem!.title) {
                         self.releaseDateComponents?.month = month
-                        if dayCheck.state == NSOnState {
+                        if dayCheck.state == NSControl.StateValue.on {
                             let day = Int(dayField.selectedItem!.title)!
                             self.releaseDateComponents?.day = day
                         } else {
@@ -226,8 +226,8 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
             }
         } else {
             self.releaseDateComponents?.year = nil
-            self.monthCheck.state = NSOffState
-            self.dayCheck.state = NSOffState
+            self.monthCheck.state = NSControl.StateValue.off
+            self.dayCheck.state = NSControl.StateValue.off
         }
         if self.releaseDateComponents?.date != nil && self.releaseDateComponents?.year != nil {
             let newJMDate = JMDate(year: self.releaseDateComponents!.year!, month: self.releaseDateComponents?.month, day: self.releaseDateComponents?.day)
@@ -324,14 +324,14 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
         if allEqual(release_dates) == true {
             if release_dates[0] != nil {
                 let jmDate = release_dates[0]!
-                releaseDateCheck.state = NSOnState
+                releaseDateCheck.state = NSControl.StateValue.on
                 self.releaseDateComponents = Calendar.current.dateComponents(self.componentSet, from: release_dates[0]!.date as Date)
                 self.releaseDateComponents?.calendar = Calendar.current
                 self.releaseDateComponents?.weekday = nil
                 self.yearField.stringValue = String(self.releaseDateComponents!.year!)
                 if jmDate.hasMonth == true {
                     let month = self.releaseDateComponents!.month!
-                    self.monthCheck.state = NSOnState
+                    self.monthCheck.state = NSControl.StateValue.on
                     self.monthField.selectItem(at: month - 1)
                     let days = Calendar.current.range(of: .day, in: .month, for: self.releaseDateComponents!.date!)!
                     self.dayField.menu?.removeAllItems()
@@ -340,12 +340,12 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
                     }
                     if jmDate.hasDay {
                         let day = releaseDateComponents!.day!
-                        self.dayCheck.state = NSOnState
+                        self.dayCheck.state = NSControl.StateValue.on
                         self.dayField.selectItem(at: day - 1)
                     }
                 }
             } else {
-                releaseDateCheck.state = NSOffState
+                releaseDateCheck.state = NSControl.StateValue.off
             }
         }
         let track_nums = selectedTracks!.map({return $0.track_num})
@@ -385,7 +385,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
         let is_compilations = selectedTracks!.map({return $0.album?.is_compilation})
         if allEqual(is_compilations) {
             if is_compilations[0] != nil {
-                compilationButton.state = is_compilations[0]! == NSNumber(value: true as Bool) ? NSOnState : NSOffState
+                compilationButton.state = is_compilations[0]! == NSNumber(value: true as Bool) ? NSControl.StateValue.on : NSControl.StateValue.off
             }
         }
         let ratings = selectedTracks!.map({return $0.rating})

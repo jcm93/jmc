@@ -37,7 +37,7 @@ class AdvancedFilterViewController: NSViewController {
     
     @IBAction func doesLimitChanged(_ sender: Any) {
         guard let button = sender as? NSButton else { return }
-        if button.state == NSOnState {
+        if button.state == NSControl.StateValue.on {
             self.tableViewController.playlist?.smart_criteria?.fetch_limit = self.itemLimitField.integerValue as NSNumber?
             self.tableViewController.playlist?.smart_criteria?.fetch_limit_type = self.playlistLengthDeterminantSelector.titleOfSelectedItem!
             self.tableViewController.playlist?.smart_criteria?.ordering_criterion = self.playlistSelectionCriteriaSelector.titleOfSelectedItem!
@@ -56,21 +56,21 @@ class AdvancedFilterViewController: NSViewController {
     
     @IBAction func fetchLimitChanged(_ sender: Any) {
         guard let textField = sender as? NSTextField else { return }
-        guard limitCheck.state == NSOnState else { return }
+        guard limitCheck.state == NSControl.StateValue.on else { return }
         self.tableViewController.playlist?.smart_criteria?.fetch_limit = textField.integerValue as NSNumber?
         self.refreshSmartPlaylist(self)
     }
     
     @IBAction func lengthDeterminantChanged(_ sender: AnyObject) {
         guard let popUpButton = sender as? NSPopUpButton else { return }
-        guard limitCheck.state == NSOnState else { return }
+        guard limitCheck.state == NSControl.StateValue.on else { return }
         self.tableViewController.playlist?.smart_criteria?.fetch_limit_type = popUpButton.titleOfSelectedItem!
         self.refreshSmartPlaylist(self)
     }
 
     @IBAction func orderingCriterionChanged(_ sender: AnyObject) {
         guard let popUpButton = sender as? NSPopUpButton else { return }
-        guard limitCheck.state == NSOnState else { return }
+        guard limitCheck.state == NSControl.StateValue.on else { return }
         self.tableViewController.playlist?.smart_criteria?.ordering_criterion = popUpButton.titleOfSelectedItem!
         self.refreshSmartPlaylist(self)
     }
@@ -79,7 +79,7 @@ class AdvancedFilterViewController: NSViewController {
         if let smartCriteria = self.tableViewController.playlist?.smart_criteria {
             self.predicateEditor.objectValue = smartCriteria.predicate
             self.itemLimitField.stringValue = smartCriteria.fetch_limit?.stringValue ?? ""
-            self.limitCheck.state = smartCriteria.fetch_limit != nil ? NSOnState : NSOffState
+            self.limitCheck.state = smartCriteria.fetch_limit != nil ? NSControl.StateValue.on : NSControl.StateValue.off
             if smartCriteria.fetch_limit_type != nil {
                 self.playlistLengthDeterminantSelector.selectItem(withTitle: smartCriteria.fetch_limit_type!)
             }
@@ -108,7 +108,7 @@ class AdvancedFilterViewController: NSViewController {
     
     @IBAction func createSmartPlaylistButtonPressed(_ sender: AnyObject) {
         let newSmartCriteria = NSEntityDescription.insertNewObject(forEntityName: "SmartCriteria", into: managedContext) as! SmartCriteria
-        if limitCheck.state == NSOnState {
+        if limitCheck.state == NSControl.StateValue.on {
             newSmartCriteria.fetch_limit = itemLimitField.integerValue as NSNumber?
             newSmartCriteria.fetch_limit_type = playlistLengthDeterminantSelector.titleOfSelectedItem
             newSmartCriteria.ordering_criterion = playlistSelectionCriteriaSelector.titleOfSelectedItem

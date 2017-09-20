@@ -77,13 +77,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
     }
     @IBAction func shuffleMenuItemAction(_ sender: AnyObject) {
-        shuffleMenuItem.state = shuffleMenuItem.state == NSOnState ? NSOffState : NSOnState
+        shuffleMenuItem.state = shuffleMenuItem.state == NSControl.StateValue.on ? NSControl.StateValue.off : NSControl.StateValue.on
         mainWindowController?.shuffleButton.state = shuffleMenuItem.state
         mainWindowController?.shuffleButtonPressed(self)
     }
     
     @IBAction func repeatMenuItemAction(_ sender: AnyObject) {
-        repeatMenuItem.state = repeatMenuItem.state == NSOnState ? NSOffState : NSOnState
+        repeatMenuItem.state = repeatMenuItem.state == NSControl.StateValue.on ? NSControl.StateValue.off : NSControl.StateValue.on
         mainWindowController?.repeatButton.state = repeatMenuItem.state
         mainWindowController?.repeatButtonPressed(self)
     }
@@ -104,7 +104,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let defaultsEQOnState = UserDefaults.standard.integer(forKey: DEFAULTS_IS_EQ_ENABLED_STRING)
         audioModule.toggleEqualizer(defaultsEQOnState)
         NotificationCenter.default.addObserver(self, selector: #selector(mainWindowDidClose), name: NSWindow.willCloseNotification, object: mainWindowController!.window)
-        jmcWindowMenuItem.state = NSOnState
+        jmcWindowMenuItem.state = NSControl.StateValue.on
     }
     
     func launchAddFilesDialog() {
@@ -129,7 +129,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             self.mainWindowController?.showWindow(self)
         }
         NotificationCenter.default.addObserver(self, selector: #selector(mainWindowDidClose), name: NSWindow.willCloseNotification, object: mainWindowController!.window)
-        jmcWindowMenuItem.state = NSOnState
+        jmcWindowMenuItem.state = NSControl.StateValue.on
     }
     
     @IBAction func openLibraryManager(_ sender: Any) {
@@ -197,12 +197,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             self.equalizerWindowController?.showWindow(self)
         }
         NotificationCenter.default.addObserver(self, selector: #selector(equalizerDidClose), name: NSWindow.willCloseNotification, object: equalizerWindowController!.window)
-        equalizerWindowMenuItem.state = NSOnState
+        equalizerWindowMenuItem.state = NSControl.StateValue.on
     }
     
     @IBAction func showAdvancedFilter(_ sender: AnyObject) {
         if let item = sender as? NSMenuItem {
-            item.state = item.state == NSOnState ? NSOffState : NSOnState
+            item.state = item.state == NSControl.StateValue.on ? NSControl.StateValue.off : NSControl.StateValue.on
         }
         mainWindowController?.advancedFilterButtonPressed(self)
     }
@@ -213,12 +213,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     
     @objc func mainWindowDidClose() {
         print("main window did close called")
-        jmcWindowMenuItem.state = NSOffState
+        jmcWindowMenuItem.state = NSControl.StateValue.off
     }
     
     @objc func equalizerDidClose() {
         print("equalizer did close called")
-        equalizerWindowMenuItem.state = NSOffState
+        equalizerWindowMenuItem.state = NSControl.StateValue.off
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {

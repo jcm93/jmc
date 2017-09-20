@@ -122,7 +122,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     
     func toggleHidden(_ state: Int) {
         switch state {
-        case NSOnState:
+        case NSControl.StateValue.on:
             tableView?.isHidden = false
         default:
             tableView?.isHidden = true
@@ -460,7 +460,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     }
     
     func shufflePressed(_ state: Int) {
-        if (state == NSOnState.rawValue) {
+        if (state == NSControl.StateValue.on.rawValue) {
             self.shuffle = true
             UserDefaults.standard.set(true, forKey: DEFAULTS_SHUFFLE_STRING)
             for poo in activePlayOrders {

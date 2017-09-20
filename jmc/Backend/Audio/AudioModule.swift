@@ -243,7 +243,7 @@ class AudioModule: NSObject {
     }
     
     func toggleEqualizer(_ state: Int) {
-        if state == NSOnState.rawValue {
+        if state == NSControl.StateValue.on.rawValue {
             print("using eq")
             equalizer.bypass = false
             

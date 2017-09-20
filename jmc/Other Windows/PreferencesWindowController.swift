@@ -77,7 +77,7 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     
     @IBAction func artworkSelectRadioAction(_ sender: Any) {
         switch artworkSelectedTrackRadio.state {
-        case NSOnState:
+        case NSControl.StateValue.on:
             UserDefaults.standard.set(true, forKey: DEFAULTS_ARTWORK_SHOWS_SELECTED)
         default:
             UserDefaults.standard.set(false, forKey: DEFAULTS_ARTWORK_SHOWS_SELECTED)
@@ -101,7 +101,7 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     @IBAction func sharingCheckAction(_ sender: Any) {
         guard let check = sender as? NSButton else { return }
         switch check.state {
-        case NSOnState:
+        case NSControl.StateValue.on:
             UserDefaults.standard.set(true, forKey: DEFAULTS_SHARING_STRING)
         default:
             UserDefaults.standard.set(false, forKey: DEFAULTS_SHARING_STRING)
@@ -135,7 +135,7 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
         getLastFMDelegate()
         guard let check = sender as? NSButton else { return }
         switch check.state {
-        case NSOnState:
+        case NSControl.StateValue.on:
             self.lastFMDelegate.scrobbles = true
             UserDefaults.standard.set(true, forKey: DEFAULTS_SCROBBLES)
         default:
@@ -212,7 +212,7 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     
     @IBAction func tableSkipBehaviorRadioAction(_ sender: Any) {
         switch skipBehaviorKeepCurrentFocusRadioButton.state {
-        case NSOnState:
+        case NSControl.StateValue.on:
             UserDefaults.standard.set(false, forKey: DEFAULTS_TABLE_SKIP_SHOWS_NEW_TRACK)
         default:
             UserDefaults.standard.set(true, forKey: DEFAULTS_TABLE_SKIP_SHOWS_NEW_TRACK)
@@ -220,9 +220,9 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     }
     
     @IBAction func tableSortBehaviorRadioAction(_ sender: Any) {
-        if sortBehaviorFocusSelectionRadioButton.state == NSOnState {
+        if sortBehaviorFocusSelectionRadioButton.state == NSControl.StateValue.on {
             UserDefaults.standard.set(TableSortBehavior.followsSelection.rawValue, forKey: DEFAULTS_TABLE_SORT_BEHAVIOR)
-        } else if sortBehaviorFocusCurrentTrackRadioButton.state == NSOnState {
+        } else if sortBehaviorFocusCurrentTrackRadioButton.state == NSControl.StateValue.on {
             UserDefaults.standard.set(TableSortBehavior.followsCurrentTrack.rawValue, forKey: DEFAULTS_TABLE_SORT_BEHAVIOR)
         } else {
             UserDefaults.standard.set(TableSortBehavior.followsNothing.rawValue, forKey: DEFAULTS_TABLE_SORT_BEHAVIOR)
@@ -236,9 +236,9 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
         toolbar.selectedItemIdentifier = NSToolbarItem.Identifier(rawValue: "general")
         self.trackQueueNumTracksField.integerValue = UserDefaults.standard.integer(forKey: DEFAULTS_NUM_PAST_TRACKS)
         if UserDefaults.standard.bool(forKey: DEFAULTS_ARTWORK_SHOWS_SELECTED) {
-            artworkSelectedTrackRadio.state = NSOnState
+            artworkSelectedTrackRadio.state = NSControl.StateValue.on
         } else {
-            artworkCurrentTrackRadio.state = NSOnState
+            artworkCurrentTrackRadio.state = NSControl.StateValue.on
         }
         let trackWasPlayedPoint = UserDefaults.standard.double(forKey: DEFAULTS_TRACK_PLAY_REGISTER_POINT)
         if trackWasPlayedPoint != 0.0 {
@@ -248,25 +248,25 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
             UserDefaults.standard.set(0.75, forKey: DEFAULTS_TRACK_PLAY_REGISTER_POINT)
         }
         if UserDefaults.standard.bool(forKey: DEFAULTS_SHARING_STRING) {
-            sharingCheck.state = NSOnState
+            sharingCheck.state = NSControl.StateValue.on
         } else {
-            sharingCheck.state = NSOffState
+            sharingCheck.state = NSControl.StateValue.off
         }
         libraryNameField.stringValue = globalRootLibrary?.name ?? ""
         
         if UserDefaults.standard.bool(forKey: DEFAULTS_TABLE_SKIP_SHOWS_NEW_TRACK) {
-            skipBehaviorFocusNewTrackRadioButton.state = NSOnState
+            skipBehaviorFocusNewTrackRadioButton.state = NSControl.StateValue.on
         } else {
-            skipBehaviorKeepCurrentFocusRadioButton.state = NSOnState
+            skipBehaviorKeepCurrentFocusRadioButton.state = NSControl.StateValue.on
         }
         let sortBehavior = TableSortBehavior(rawValue: UserDefaults.standard.integer(forKey: DEFAULTS_TABLE_SORT_BEHAVIOR))!
         switch sortBehavior {
         case .followsCurrentTrack:
-            sortBehaviorFocusCurrentTrackRadioButton.state = NSOnState
+            sortBehaviorFocusCurrentTrackRadioButton.state = NSControl.StateValue.on
         case .followsNothing:
-            sortBehaviorKeepCurrentFocusRadioButton.state = NSOnState
+            sortBehaviorKeepCurrentFocusRadioButton.state = NSControl.StateValue.on
         default:
-            sortBehaviorFocusSelectionRadioButton.state = NSOnState
+            sortBehaviorFocusSelectionRadioButton.state = NSControl.StateValue.on
         }
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
         if globalRootLibrary?.last_fm_session_key != nil {

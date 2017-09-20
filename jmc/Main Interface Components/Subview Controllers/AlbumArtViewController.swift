@@ -34,7 +34,7 @@ class AlbumArtViewController: NSViewController {
     }
     
     func toggleHidden(_ artworkToggle: Int) {
-        if artworkToggle == NSOnState.rawValue {
+        if artworkToggle == NSControl.StateValue.on.rawValue {
             albumArtBox.isHidden = false
         }
         else {

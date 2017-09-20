@@ -35,7 +35,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     @IBOutlet weak var tabView: NSTabView!
     var fileManager = FileManager.default
     var databaseManager = DatabaseManager()
-    var locationManager = (NSApplication.shared().delegate as! AppDelegate).locationManager!
+    var locationManager = (NSApplication.shared.delegate as! AppDelegate).locationManager!
     var library: Library?
     var missingTracks: [Track]?
     var newMediaURLs: [URL]?
@@ -73,13 +73,13 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     @IBOutlet weak var enableDirectoryMonitoringCheck: NSButton!
     
     @IBAction func enableMonitoringCheckAction(_ sender: Any) {
-        if enableDirectoryMonitoringCheck.state == NSOnState {
+        if enableDirectoryMonitoringCheck.state == NSControl.StateValue.on {
             library?.keeps_track_of_files = true as NSNumber
-            sourceMonitorStatusImageView.image = NSImage(named: "NSStatusAvailable")
+            sourceMonitorStatusImageView.image = NSImage(named: NSImage.Name.statusAvailable)
             sourceMonitorStatusTextField.stringValue = "Directory monitoring is enabled."
         } else {
             library?.keeps_track_of_files = false as NSNumber
-            sourceMonitorStatusImageView.image = NSImage(named: "NSStatusUnavailable")
+            sourceMonitorStatusImageView.image = NSImage(named: NSImage.Name.statusUnavailable)
             sourceMonitorStatusTextField.stringValue = "Directory monitoring inactive."
         }
         initializeForLibrary(library: library!)
@@ -87,8 +87,8 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         
     }
     @IBAction func automaticallyAddCheckAction(_ sender: Any) {
-        library!.monitors_directories_for_new = automaticallyAddFilesCheck.state == NSOnState ? true as NSNumber : false as NSNumber
-        if automaticallyAddFilesCheck.state == NSOnState {
+        library!.monitors_directories_for_new = automaticallyAddFilesCheck.state == NSControl.StateValue.on ? true as NSNumber : false as NSNumber
+        if automaticallyAddFilesCheck.state == NSControl.StateValue.on {
             self.watchFolderTableView.isEnabled = true
             self.addWatchFolderButton.isEnabled = true
             self.removeWatchFolderButton.isEnabled = true
@@ -120,7 +120,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     
     @IBAction func changeSourceCentralMediaFolderButtonPressed(_ sender: Any) {
         let parent = self.view.window?.windowController as! PreferencesWindowController
-        parent.changeFolderSheet = ChangePrimaryFolderSheetController(windowNibName: "ChangePrimaryFolderSheetController")
+        parent.changeFolderSheet = ChangePrimaryFolderSheetController(windowNibName: NSNib.Name(rawValue: "ChangePrimaryFolderSheetController"))
         parent.changeFolderSheet?.libraryManager = self
         parent.window?.beginSheet(parent.changeFolderSheet!.window!, completionHandler: nil)
         
@@ -132,7 +132,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         openPanel.canChooseDirectories = true
         openPanel.canChooseFiles = false
         let response = openPanel.runModal()
-        if response == NSFileHandlingPanelOKButton {
+        if response.rawValue == NSFileHandlingPanelOKButton {
             let newURL = openPanel.urls[0]
             library?.changeCentralFolderLocation(newURL: newURL)
             locationManager.reinitializeEventStream()
@@ -140,12 +140,12 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         }
     }
     @IBAction func advancedOrganizationPressed(_ sender: Any) {
-        self.advancedOrganizationOptionsWindowController = AdvancedOrganizationOptionsWindowController(windowNibName: "AdvancedOrganizationOptionsWindowController")
+        self.advancedOrganizationOptionsWindowController = AdvancedOrganizationOptionsWindowController(windowNibName: NSNib.Name(rawValue: "AdvancedOrganizationOptionsWindowController"))
         self.view.window?.addChildWindow(self.advancedOrganizationOptionsWindowController!.window!, ordered: .above)
     }
     
     @IBAction func orgBehaviorChecked(_ sender: Any) {
-        if doesOrganizeCheck.state == NSOffState {
+        if doesOrganizeCheck.state == NSControl.StateValue.off {
             library?.organization_type = NO_ORGANIZATION_TYPE as NSNumber
             moveRadio.isEnabled = false
             copyRadio.isEnabled = false
@@ -159,7 +159,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         }
     }
     @IBAction func orgBehaviorRadioAction(_ sender: Any) {
-        if moveRadio.state == NSOnState {
+        if moveRadio.state == NSControl.StateValue.on {
             library?.organization_type = MOVE_ORGANIZATION_TYPE as NSNumber
         } else {
             library?.organization_type = COPY_ORGANIZATION_TYPE as NSNumber
@@ -168,7 +168,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     
     @IBAction func addWatchFolderPressed(_ sender: Any) {
         let parent = self.view.window?.windowController as! PreferencesWindowController
-        parent.watchFolderSheet = AddWatchFolderSheetController(windowNibName: "AddWatchFolderSheetController")
+        parent.watchFolderSheet = AddWatchFolderSheetController(windowNibName: NSNib.Name(rawValue: "AddWatchFolderSheetController"))
         parent.watchFolderSheet?.libraryManager = self
         parent.window?.beginSheet(parent.watchFolderSheet!.window!, completionHandler: nil)
     }
@@ -197,13 +197,13 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     
     @IBAction func consolidateLibraryPressed(_ sender: Any) {
         let parent = self.view.window?.windowController as! PreferencesWindowController
-        parent.someOtherSheet = GenericProgressBarSheetController(windowNibName: "GenericProgressBarSheetController")
+        parent.someOtherSheet = GenericProgressBarSheetController(windowNibName: NSNib.Name(rawValue: "GenericProgressBarSheetController"))
         parent.window?.beginSheet(parent.someOtherSheet!.window!, completionHandler: nil)
         DispatchQueue.global(qos: .default).async {
-            let things = getNonMatchingTracks(library: globalRootLibrary!, visualUpdateHandler: parent.someOtherSheet)
+            let things = determineTemplateLocations(visualUpdateHandler: parent.someOtherSheet)
             DispatchQueue.main.async {
                 parent.someOtherSheet?.finish()
-                parent.consolidateSheet = ConsolidateLibrarySheetController(windowNibName: "ConsolidateLibrarySheetController")
+                parent.consolidateSheet = ConsolidateLibrarySheetController(windowNibName: NSNib.Name(rawValue: "ConsolidateLibrarySheetController"))
                 parent.consolidateSheet?.things = things
                 parent.window?.beginSheet(parent.consolidateSheet!.window!, completionHandler: nil)
                 parent.consolidateSheet?.libraryManager = self
@@ -222,20 +222,20 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             copyRadio.isEnabled = true
             moveRadio.isEnabled = true
             changeLocationButton.isEnabled = true
-            doesOrganizeCheck.state = NSOnState
+            doesOrganizeCheck.state = NSControl.StateValue.on
             if library.organization_type?.intValue == MOVE_ORGANIZATION_TYPE {
-                moveRadio.state = NSOnState
+                moveRadio.state = NSControl.StateValue.on
             } else if library.organization_type?.intValue == COPY_ORGANIZATION_TYPE {
-                copyRadio.state = NSOnState
+                copyRadio.state = NSControl.StateValue.on
             }
         } else {
-            doesOrganizeCheck.state = NSOffState
+            doesOrganizeCheck.state = NSControl.StateValue.off
             copyRadio.isEnabled = false
             moveRadio.isEnabled = false
             changeLocationButton.isEnabled = false
         }
         if library.monitors_directories_for_new == true {
-            automaticallyAddFilesCheck.state = NSOnState
+            automaticallyAddFilesCheck.state = NSControl.StateValue.on
             if let watchDirs = library.watch_dirs as? [URL] {
                 self.watchFolders = watchDirs
                 self.watchFoldersArrayController.content = self.watchFolders
@@ -243,18 +243,18 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             addWatchFolderButton.isEnabled = true
             removeWatchFolderButton.isEnabled = true
         } else {
-            automaticallyAddFilesCheck.state = NSOffState
+            automaticallyAddFilesCheck.state = NSControl.StateValue.off
             self.watchFolders = [URL]()
             addWatchFolderButton.isEnabled = false
             removeWatchFolderButton.isEnabled = false
         }
         if library.keeps_track_of_files == true {
-            enableDirectoryMonitoringCheck.state = NSOnState
-            sourceMonitorStatusImageView.image = NSImage(named: "NSStatusAvailable")
+            enableDirectoryMonitoringCheck.state = NSControl.StateValue.on
+            sourceMonitorStatusImageView.image = NSImage(named: NSImage.Name.statusAvailable)
             sourceMonitorStatusTextField.stringValue = "Directory monitoring is active."
         } else {
-            enableDirectoryMonitoringCheck.state = NSOffState
-            sourceMonitorStatusImageView.image = NSImage(named: "NSStatusUnavailable")
+            enableDirectoryMonitoringCheck.state = NSControl.StateValue.off
+            sourceMonitorStatusImageView.image = NSImage(named: NSImage.Name.statusUnavailable)
             sourceMonitorStatusTextField.stringValue = "Directory monitoring inactive."
         }
     }
@@ -267,12 +267,12 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     
     @IBAction func verifyLocationsPressed(_ sender: Any) {
         let parent = self.view.window?.windowController as! PreferencesWindowController
-        parent.verifyLocationsSheet = LocationVerifierSheetController(windowNibName: "LocationVerifierSheetController")
+        parent.verifyLocationsSheet = LocationVerifierSheetController(windowNibName: NSNib.Name(rawValue: "LocationVerifierSheetController"))
         parent.window?.beginSheet(parent.verifyLocationsSheet!.window!, completionHandler: verifyLocationsModalComplete)
         DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async {
             self.missingTracks = self.databaseManager.verifyTrackLocations(visualUpdateHandler: parent.verifyLocationsSheet, library: self.library!)
             DispatchQueue.main.async {
-                self.verifyLocationsModalComplete(response: 1)
+                self.verifyLocationsModalComplete(response: NSApplication.ModalResponse(rawValue: 1))
             }
         }
     }
@@ -287,8 +287,8 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         self.missingFilesViewController!.view.rightAnchor.constraint(equalTo: self.locationManagerView.rightAnchor).isActive = true
     }
     
-    func verifyLocationsModalComplete(response: NSModalResponse) {
-        guard response != NSModalResponseCancel else {return}
+    func verifyLocationsModalComplete(response: NSApplication.ModalResponse) {
+        guard response != NSApplication.ModalResponse.cancel else {return}
         if self.missingTracks!.count > 0 {
             displayMissingFilesViewController(for: &self.missingTracks!)
             let trackNotFoundArray = self.missingTracks!.map({(track: Track) -> TrackNotFound in
@@ -302,21 +302,21 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
                     return TrackNotFound(path: nil, track: track)
                 }
             })
-            self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
+            self.libraryLocationStatusImageView.image = NSImage(named: NSImage.Name(rawValue: "NSStatusPartiallyAvailable"))
             self.trackLocationStatusText.stringValue = "\(self.missingTracks!.count) tracks not found."
             tracksNotFoundArrayController.content = trackNotFoundArray
         } else {
-            self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusAvailable")
+            self.libraryLocationStatusImageView.image = NSImage(named: NSImage.Name(rawValue: "NSStatusAvailable"))
             self.trackLocationStatusText.stringValue = "All tracks located."
         }
     }
     
     func updateMissingTracks(count: Int) {
         if count > 0 {
-            self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
+            self.libraryLocationStatusImageView.image = NSImage(named: NSImage.Name(rawValue: "NSStatusPartiallyAvailable"))
             self.trackLocationStatusText.stringValue = "\(count) tracks not found."
         } else {
-            self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusAvailable")
+            self.libraryLocationStatusImageView.image = NSImage(named: NSImage.Name(rawValue: "NSStatusAvailable"))
             self.trackLocationStatusText.stringValue = "All tracks located."
         }
     }
@@ -328,17 +328,17 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     
     @IBAction func scanSourceButtonPressed(_ sender: Any) {
         let parent = self.view.window?.windowController as! PreferencesWindowController
-        parent.mediaScannerSheet = MediaScannerSheet(windowNibName: "MediaScannerSheet")
+        parent.mediaScannerSheet = MediaScannerSheet(windowNibName: NSNib.Name(rawValue: "MediaScannerSheet"))
         parent.window?.beginSheet(parent.mediaScannerSheet!.window!, completionHandler: scanMediaModalComplete)
         DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async {
             self.newMediaURLs = self.databaseManager.scanForNewMedia(visualUpdateHandler: parent.mediaScannerSheet, library: self.library!)
             DispatchQueue.main.async {
-                self.scanMediaModalComplete(response: 1)
+                self.scanMediaModalComplete(response: NSApplication.ModalResponse(rawValue: 1))
             }
         }
     }
     
-    func scanMediaModalComplete(response: NSModalResponse) {
+    func scanMediaModalComplete(response: NSApplication.ModalResponse) {
         if self.newMediaURLs!.count > 0{
             newTracksArrayController.content = self.newMediaURLs!.map({return NewMediaURL(url: $0)})
             

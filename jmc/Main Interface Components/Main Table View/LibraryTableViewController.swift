@@ -129,9 +129,9 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             return (trackViewArrayController?.arrangedObjects as! [TrackView])[tableView!.selectedRow].track!
         } else {
             var item: Track?
-            if shuffleState == NSOffState.rawValue {
+            if shuffleState == NSControl.StateValue.off.rawValue {
                 item = (trackViewArrayController?.arrangedObjects as! [TrackView])[0].track!
-            } else if shuffleState == NSOnState.rawValue {
+            } else if shuffleState == NSControl.StateValue.on.rawValue {
                 let random_index = Int(arc4random_uniform(UInt32(((trackViewArrayController?.arrangedObjects as! [TrackView]).count))))
                 item = (trackViewArrayController?.arrangedObjects as! [TrackView])[random_index].track!
             }
@@ -251,7 +251,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             mainWindowController?.sourceListViewController?.reloadData()
         }
         let idArray = (trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
-        if shuffleState == NSOnState.rawValue {
+        if shuffleState == NSControl.StateValue.on.rawValue {
             //secretly adjust the shuffled array such that it behaves mysteriously like a ring buffer. ssshhhh
             let currentShuffleArray = self.item!.playOrderObject!.shuffled_play_order!
             let indexToSwap = currentShuffleArray.index(of: id)!
@@ -278,7 +278,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     func fixPlayOrderForChangedFilterPredicate(_ shuffleState: Int) {
         print("fixing play order for changed filter predicate")
-        if shuffleState == NSOnState.rawValue {
+        if shuffleState == NSControl.StateValue.on.rawValue {
             let idSet = Set((trackViewArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int}))
             let newPlayOrder = self.item!.playOrderObject!.shuffled_play_order!.filter({idSet.contains($0)})
             self.item!.playOrderObject!.current_play_order = newPlayOrder
@@ -412,7 +412,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             }
             menuItem.target = self
             menuItem.representedObject = column
-            menuItem.state = column.isHidden ? NSOffState : NSOnState
+            menuItem.state = column.isHidden ? NSControl.StateValue.off : NSControl.StateValue.on
             menu?.addItem(menuItem)
         }
     }
@@ -420,7 +420,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     @objc func toggleColumn(_ menuItem: NSMenuItem) {
         let column = menuItem.representedObject as! NSTableColumn
         column.isHidden = !column.isHidden
-        menuItem.state = column.isHidden ? NSOffState : NSOnState
+        menuItem.state = column.isHidden ? NSControl.StateValue.off : NSControl.StateValue.on
         let columnVisibilityDictionary = NSMutableDictionary()
         for column in tableView.tableColumns {
             columnVisibilityDictionary[column.identifier] = column.isHidden
@@ -433,7 +433,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         case self.columnVisibilityMenu:
             for menuItem in menu.items {
                 if menuItem.representedObject != nil {
-                    menuItem.state = (menuItem.representedObject as! NSTableColumn).isHidden ? NSOffState : NSOnState
+                    menuItem.state = (menuItem.representedObject as! NSTableColumn).isHidden ? NSControl.StateValue.off : NSControl.StateValue.on
                 }
             }
         default:
