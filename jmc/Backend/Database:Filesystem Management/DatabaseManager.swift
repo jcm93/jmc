@@ -63,7 +63,7 @@ class DatabaseManager: NSObject {
         return art
     }
     
-    func tryFindPrimaryArtForTrack(_ track: Track, callback: ((Track, Bool) -> Void)?) {
+    func tryFindPrimaryArtForTrack(_ track: Track, callback: ((Track, Bool) -> Void)?) { //does not handle errors good
         //we know primary_art is nil
         //may be called form background thread
         self.currentTrack = track
@@ -101,7 +101,7 @@ class DatabaseManager: NSObject {
         guard self.currentTrack == track else { return }
     }
     
-    func searchAlbumDirectoryForArt(_ track: Track) -> [URL] {
+    func searchAlbumDirectoryForArt(_ track: Track) -> [URL] { //handles errors ok
         let locationURL = URL(string: track.location!)
         let albumDirectoryURL = locationURL!.deletingLastPathComponent()
         do {
@@ -124,18 +124,26 @@ class DatabaseManager: NSObject {
         }
     }
     
-    func undoOperationThatMovedFiles(for tracks: [Track]) {
+    func undoOperationThatMovedFiles(for tracks: [Track]) {//handles errors
         print("undoing a move operation")
+        var errors = [Error]()
         for track in tracks {
-            let currentFileLocation = self.undoFileLocations[track]?.removeLast()
-            if currentFileLocation != nil {
+            if let currentFileLocation = self.undoFileLocations[track]?.removeLast() {
                 do {
-                    try fileManager.moveItem(at: URL(string: currentFileLocation!)!, to: URL(string: track.location!)!)
+                    try fileManager.moveItem(at: URL(string: currentFileLocation)!, to: URL(string: track.location!)!)
                 } catch {
                     print("error undoing move \(error)")
+                    errors.append(error)
+                    track.location = currentFileLocation
                 }
+            } else {
+                //todo figure out how to initialize non-NSError, inform delegate
+                //let error = NSError(domain: <#T##String#>, code: <#T##Int#>, userInfo: <#T##[String : Any]?#>)
+                //errors.append(error)
+                //
             }
         }
+        informAppDelegateOfErrors(errors: errors)
     }
     
     func addMiscellaneousFile(forTrack track: Track, from url: URL, managedContext: NSManagedObjectContext, organizes: Bool) -> AlbumFile? {
@@ -160,7 +168,7 @@ class DatabaseManager: NSObject {
         return fileObject
     }
     
-    func moveAlbumFileToAppropriateDirectory(albumFile: AlbumFile, filename: String) {
+    func moveAlbumFileToAppropriateDirectory(albumFile: AlbumFile, filename: String) { //does not handle errors
         let destination = getAlbumDirectory(for: albumFile.album!).appendingPathComponent(filename)
         do {
             let oldLocation = URL(string: albumFile.location!)!
@@ -175,7 +183,7 @@ class DatabaseManager: NSObject {
         }
     }
     
-    func moveAlbumFileToAppropriateDirectory(albumArt: AlbumArtwork, filename: String) {
+    func moveAlbumFileToAppropriateDirectory(albumArt: AlbumArtwork, filename: String) { //does not handle errors
         let destination = getAlbumDirectory(for: albumArt.album ?? albumArt.album_multiple!).appendingPathComponent(filename)
         do {
             let oldLocation = URL(string: albumArt.location!)!
@@ -222,7 +230,7 @@ class DatabaseManager: NSObject {
         return newArt
     }
     
-    func addArtForTrack(_ track: Track, fromData data: Data, managedContext: NSManagedObjectContext) -> Bool {
+    func addArtForTrack(_ track: Track, fromData data: Data, managedContext: NSManagedObjectContext) -> Bool { //does not handle errors good
         //returns true if art was successfully added, so a receiver can display the image, if needed
         guard let album = track.album else { return false }
         let hashString = createMD5HashOf(data: data)
@@ -326,7 +334,7 @@ class DatabaseManager: NSObject {
     }
     
     //OK -- discrete
-    func moveFileAfterEdit(_ track: Track, copies: Bool) -> Bool {
+    func moveFileAfterEdit(_ track: Track, copies: Bool) -> Bool { //does not handle errors good
         print("moving file after edit")
         print("current track location: \(track.location)")
         guard track.library?.organization_type != NSNumber(integerLiteral: 0) else { return true }
@@ -365,7 +373,7 @@ class DatabaseManager: NSObject {
         return true
     }
     
-    func checkCasesForMove(withOldURL oldURL: URL, newURL: URL) {
+    func checkCasesForMove(withOldURL oldURL: URL, newURL: URL) { //does not handle errors good
         //oldURL.path.lowercased() == newURL.path.lowercased()
         guard oldURL.path.lowercased() == newURL.path.lowercased() else { return }
         let newPathComponents = newURL.pathComponents
@@ -398,7 +406,7 @@ class DatabaseManager: NSObject {
         }
     }
     
-    func trimDirectoryFollowingMoveOperation(track: Track, oldLocation: URL) {
+    func trimDirectoryFollowingMoveOperation(track: Track, oldLocation: URL) { //does not handle errors good
         let oldDirectory = oldLocation.deletingLastPathComponent()
         let currentTrackLocations = track.album?.tracks?.flatMap({return ($0 as! Track).location})
         let currentTrackDirectories = currentTrackLocations?.flatMap({return URL(string: $0)?.deletingLastPathComponent()}) ?? [URL]()
@@ -613,7 +621,7 @@ class DatabaseManager: NSObject {
         return metadataDictionary
     }
     
-    func addTracksFromURLs(_ mediaURLs: [URL], to library: Library, visualUpdateHandler: ProgressBarController?, callback: (() -> Void)?) -> [FileAddToDatabaseError] {
+    func addTracksFromURLs(_ mediaURLs: [URL], to library: Library, visualUpdateHandler: ProgressBarController?, callback: (() -> Void)?) -> [FileAddToDatabaseError] { //does not handle errors good
         let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         subContext.parent = managedContext
         let subContextLibrary = subContext.object(with: library.objectID)

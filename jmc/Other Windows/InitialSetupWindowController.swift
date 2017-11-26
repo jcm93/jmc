@@ -91,7 +91,7 @@ class InitialSetupWindowController: NSWindowController {
         // Make sure that a path was chosen
     }
     
-    func setupForNilLibrary() {
+    func setupForNilLibrary() { //does not handle errors good
         //create library
         
         do {

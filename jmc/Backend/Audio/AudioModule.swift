@@ -349,7 +349,7 @@ enum completionHandlerType: Int {
         }
     }
     
-    func initializePlayback() {
+    func initializePlayback() { // does not handle errors
         if currentTrackLocation == nil {
             return
         }
@@ -509,7 +509,7 @@ enum completionHandlerType: Int {
         }
     }
     
-    func createFileBufferer(url: URL) -> FileBufferer? {
+    func createFileBufferer(url: URL) -> FileBufferer? { // does not handle errors
         print("begin create file bufferer")
         if url.pathExtension.lowercased() == "flac" {
             let fileBufferer = FlacDecoder(file: url, audioModule: self)

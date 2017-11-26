@@ -37,7 +37,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 var managedContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext
 
-func saveContext() {
+func saveContext() { //does not handle errors
     do {
         try managedContext.save()
     } catch {
@@ -45,7 +45,10 @@ func saveContext() {
     }
 }
 
-
+func informAppDelegateOfErrors(errors: [Error]) {
+    guard let delegate = NSApplication.shared.delegate as? AppDelegate else { return }
+    delegate.alertForErrors(errors)
+}
 
 
 var globalRootLibrary: Library! = {() -> Library! in
@@ -263,7 +266,7 @@ func checkIfVolumeExists(withURL url: URL) -> Volume? {
     }
 }
 
-func createNonTemplateDirectoryFor(album albumOptional: Album?, dry: Bool) -> URL? {
+func createNonTemplateDirectoryFor(album albumOptional: Album?, dry: Bool) -> URL? { // does not handle errors
     guard let album = albumOptional else { return nil }
     let baseURL = globalRootLibrary.getCentralMediaFolder()!
     var albumDirectory = baseURL.appendingPathComponent("Album Files")

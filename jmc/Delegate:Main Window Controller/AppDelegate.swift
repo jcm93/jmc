@@ -37,6 +37,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @IBOutlet weak var repeatMenuItem: NSMenuItem!
     
     
+    func alertForErrors(_ errors: [Error]) {
+        //todo check docs for how to show mult. errors
+        for error in errors {
+            let alertModal = NSAlert(error: error)
+        }
+    }
+    
+    
     func initializeLibraryAndShowMainWindow() {
         if !UserDefaults.standard.bool(forKey: DEFAULTS_ARE_INITIALIZED_STRING) {
             self.setupWindowController = InitialSetupWindowController(windowNibName: NSNib.Name(rawValue: "InitialSetupWindowController"))

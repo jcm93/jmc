@@ -36,7 +36,7 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
         self.totalFrames = UInt32(file.length)
     }
     
-    func fillNextBuffer() {
+    func fillNextBuffer() { //does not handle errors
         //swap decode buffer
         self.currentBufferSampleIndex = 0
         self.currentDecodeBuffer = self.currentDecodeBuffer == self.bufferA ? self.bufferB : self.bufferA
@@ -72,7 +72,7 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
         self.needsSeek = false
     }
     
-    func seek(to frame: Int64) {
+    func seek(to frame: Int64) { //does not handle errors
         self.isSeeking = true
         print("seeking")
         do {
@@ -102,7 +102,7 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
         }
     }
     
-    func prepareFirstBuffer() -> AVAudioPCMBuffer? {
+    func prepareFirstBuffer() -> AVAudioPCMBuffer? { //does not handle errors
         self.currentBufferSampleIndex = 0
         do {
             self.isCurrentlyDecoding = true

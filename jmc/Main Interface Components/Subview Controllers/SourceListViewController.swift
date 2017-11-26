@@ -437,7 +437,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         deleteSelection()
     }
     
-    func export(playlists: [SongCollection]) {
+    func export(playlists: [SongCollection]) { //does not handle errors good
         let playlistsFolder = globalRootLibrary!.getCentralMediaFolder()!.appendingPathComponent("Exported Playlists")
         let visualUpdateHandler = (NSApplication.shared.delegate as! AppDelegate).backgroundAddFilesHandler
         var index = 0
