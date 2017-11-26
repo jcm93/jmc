@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13770" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13770"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -21,6 +21,7 @@
                 <outlet property="shuffleMenuItem" destination="b4e-W9-bct" id="9w2-aV-btF"/>
             </connections>
         </customObject>
+        <customObject id="a4U-cM-VOZ" userLabel="Menu Delegate" customClass="MainMenuDelegate" customModule="jmc" customModuleProvider="target"/>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
             <items>
@@ -428,7 +429,8 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="JXu-Wd-CrQ"/>
-                            <menuItem title="jmc" keyEquivalent="o" id="uQV-fL-2eI">
+                            <menuItem title="jmc" id="uQV-fL-2eI">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="showMainWindow:" target="Voe-Tx-rLC" id="Y9p-w9-GYJ"/>
                                 </connections>
@@ -463,7 +465,7 @@
                 </menuItem>
             </items>
             <connections>
-                <outlet property="delegate" destination="-2" id="OSw-un-b2e"/>
+                <outlet property="delegate" destination="a4U-cM-VOZ" id="smF-FH-nzD"/>
             </connections>
         </menu>
     </objects>

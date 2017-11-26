@@ -445,7 +445,9 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     
     func modifyPlayOrderForSortDescriptorChange() {
         if shuffle == false {
-            self.currentSourceListItem!.playOrderObject!.current_play_order = (self.currentSourceListItem?.tableViewController?.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
+            if let tracks = self.currentSourceListItem?.tableViewController?.trackViewArrayController.arrangedObjects as? NSArray, tracks.count > 0 {
+                self.currentSourceListItem!.playOrderObject!.current_play_order = (self.currentSourceListItem?.tableViewController?.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
+            }
             if currentSourceListItem == currentAudioSource {
                 self.currentSourceIndex = self.currentSourceListItem?.playOrderObject?.current_play_order?.index(of: Int(self.currentTrack!.id!))
             }

@@ -36,57 +36,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @IBOutlet weak var shuffleMenuItem: NSMenuItem!
     @IBOutlet weak var repeatMenuItem: NSMenuItem!
     
-    @IBAction func jumpToCurrentSong(_ sender: AnyObject) {
-        mainWindowController!.jumpToCurrentSong()
-    }
-    @IBAction func jumpToSelection(_ sender: Any) {
-        mainWindowController?.jumpToSelection()
-    }
-    @IBAction func toggleAlbumArt(_ sender: Any) {
-        mainWindowController?.toggleArtwork(self)
-    }
-    
-    @IBAction func newPlaylist(_ sender: AnyObject) {
-        mainWindowController?.createPlaylistFromTracks([Track]())
-    }
-    
-    @IBAction func newPlaylistFromSelection(_ sender: AnyObject) {
-        mainWindowController?.createPlaylistFromTracks((mainWindowController?.currentTableViewController?.trackViewArrayController.selectedObjects as! [TrackView]).map({return $0.track!}))
-        
-    }
-    @IBAction func newSmartPlaylist(_ sender: Any) {
-        mainWindowController?.showAdvancedFilter()
-    }
-    
-    
-    @IBAction func previousMenuItemAction(_ sender: AnyObject) {
-        mainWindowController?.skipBackward()
-    }
-    @IBAction func nextMenuItemAction(_ sender: AnyObject) {
-        mainWindowController?.skip()
-    }
-    @IBAction func pauseMenuItemAction(_ sender: AnyObject) {
-        if mainWindowController!.paused != true {
-            mainWindowController?.pause()
-        }
-    }
-    
-    @IBAction func playMenuItemAction(_ sender: AnyObject) {
-        if mainWindowController!.paused != false {
-            mainWindowController?.playPressed(self)
-        }
-    }
-    @IBAction func shuffleMenuItemAction(_ sender: AnyObject) {
-        shuffleMenuItem.state = shuffleMenuItem.state == NSControl.StateValue.on ? NSControl.StateValue.off : NSControl.StateValue.on
-        mainWindowController?.shuffleButton.state = shuffleMenuItem.state
-        mainWindowController?.shuffleButtonPressed(self)
-    }
-    
-    @IBAction func repeatMenuItemAction(_ sender: AnyObject) {
-        repeatMenuItem.state = repeatMenuItem.state == NSControl.StateValue.on ? NSControl.StateValue.off : NSControl.StateValue.on
-        mainWindowController?.repeatButton.state = repeatMenuItem.state
-        mainWindowController?.repeatButtonPressed(self)
-    }
     
     func initializeLibraryAndShowMainWindow() {
         if !UserDefaults.standard.bool(forKey: DEFAULTS_ARE_INITIALIZED_STRING) {
@@ -122,26 +71,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         initializeLibraryAndShowMainWindow()
         //source was removed
         
-    }
-    
-    @IBAction func showMainWindow(_ sender: Any) {
-        if self.mainWindowController?.window?.isVisible == nil || self.mainWindowController?.window?.isVisible == false {
-            self.mainWindowController?.showWindow(self)
-        }
-        NotificationCenter.default.addObserver(self, selector: #selector(mainWindowDidClose), name: NSWindow.willCloseNotification, object: mainWindowController!.window)
-        jmcWindowMenuItem.state = NSControl.StateValue.on
-    }
-    
-    @IBAction func openLibraryManager(_ sender: Any) {
-        self.openPreferences(self)
-        self.preferencesWindowController?.toolbar.selectedItemIdentifier = NSToolbarItem.Identifier(rawValue: "library")
-        self.preferencesWindowController?.selectLibrary(self)
-    }
-    
-    @IBAction func openImportWindow(_ sender: AnyObject) {
-        importWindowController = ImportWindowController(windowNibName: NSNib.Name(rawValue: "ImportWindowController"))
-        importWindowController?.mainWindowController = mainWindowController
-        importWindowController?.showWindow(self)
     }
     
     func doneImportingiTunesLibrary() {

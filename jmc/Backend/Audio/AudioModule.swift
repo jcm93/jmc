@@ -37,7 +37,7 @@ enum completionHandlerType: Int {
 //typealias FLAC__StreamDecoderReadCallback = (Optional<UnsafePointer<FLAC__StreamDecoder>>, Optional<UnsafeMutablePointer<UInt8>>, Optional<UnsafeMutablePointer<Int>>, Optional<UnsafeMutableRawPointer>) -> FLAC__StreamDecoderReadStatus
  
 
-class AudioModule: NSObject {
+ class AudioModule: NSObject {
     
     /*
     graph structure:
@@ -117,6 +117,7 @@ class AudioModule: NSObject {
     var curFile: AVAudioFile?
     var audioEngine = AVAudioEngine()
     var lastTrackCompletionType: LastTrackCompletionType = .natural
+    var routeDetector: NSObject?
     
     @objc dynamic var is_initialized = false
     @objc dynamic var track_changed = false
@@ -176,6 +177,11 @@ class AudioModule: NSObject {
         audioEngine.connect(curPlayerNode, to: sampleRateMixer, format: nil)
         audioEngine.connect(sampleRateMixer, to: equalizer, format: nil)
         audioEngine.connect(equalizer, to: audioEngine.mainMixerNode, format: nil)
+        if #available(OSX 10.13, *) {
+            self.routeDetector = AVRouteDetector()
+        } else {
+            // Fallback on earlier versions
+        }
     }
     
     func resetEngineCompletely() {

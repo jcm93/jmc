@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13770" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13770"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,6 +12,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="MainWindowController" customModule="jmc" customModuleProvider="target">
             <connections>
                 <outlet property="advancedSearchToggle" destination="0eg-hu-JdK" id="a8b-oC-Ej5"/>
+                <outlet property="airplayButton" destination="yRB-VI-EGH" id="ndV-3X-SmA"/>
                 <outlet property="artToggle" destination="aLT-7j-MYS" id="GYM-BS-7lJ"/>
                 <outlet property="artistAlbumLabel" destination="WNx-p0-gWl" id="MpA-ce-7KD"/>
                 <outlet property="artworkTargetView" destination="M4o-nI-Oef" id="yz5-8p-vw5"/>
@@ -40,7 +41,7 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="jmc" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="F0z-JX-Cv5">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" unifiedTitleAndToolbar="YES" fullSizeContentView="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="0.0" y="341" width="1683" height="1050"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
@@ -259,10 +260,10 @@
                                                         <constraint firstAttribute="bottom" secondItem="ErT-xb-uP3" secondAttribute="bottom" id="zry-e8-Q8k"/>
                                                     </constraints>
                                                 </customView>
-                                                <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d8i-aO-ImS">
+                                                <customView hidden="YES" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d8i-aO-ImS">
                                                     <rect key="frame" x="0.0" y="0.0" width="15" height="53"/>
                                                     <subviews>
-                                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="viN-xV-kI3">
+                                                        <button verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="viN-xV-kI3">
                                                             <rect key="frame" x="0.0" y="27" width="17" height="27"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="27" id="J11-bd-85G"/>
@@ -449,7 +450,7 @@
                         </connections>
                     </button>
                     <segmentedControl toolTip="Add a playlist (Hold down to add a folder or Smart Playlist)" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mb6-nw-TjG" customClass="AddPlaylistButton" customModule="jmc" customModuleProvider="target">
-                        <rect key="frame" x="280" y="4" width="44" height="25"/>
+                        <rect key="frame" x="280" y="5" width="44" height="23"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="8fu-YF-rDI"/>
                             <constraint firstAttribute="width" constant="44" id="ubO-id-wOc"/>
@@ -465,6 +466,19 @@
                             <outlet property="menu" destination="WAr-lr-0sM" id="tZk-Ww-b2z"/>
                         </connections>
                     </segmentedControl>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yRB-VI-EGH">
+                        <rect key="frame" x="332" y="4" width="44" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="44" id="c0m-Jk-e4f"/>
+                        </constraints>
+                        <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="AirPlay" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Dfw-IB-4vD">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="airPlayButtonPressed:" target="-2" id="Tkm-fS-ocA"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="0eg-hu-JdK" secondAttribute="bottom" constant="6" id="1mf-qn-i1B"/>
@@ -476,8 +490,10 @@
                     <constraint firstAttribute="trailing" secondItem="wxs-uU-bSr" secondAttribute="trailing" id="Hgn-uz-KPD"/>
                     <constraint firstItem="wxs-uU-bSr" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="JFe-fa-ed3"/>
                     <constraint firstAttribute="bottom" secondItem="rfk-1e-A3X" secondAttribute="bottom" constant="6" id="Lh9-xM-6AE"/>
+                    <constraint firstAttribute="bottom" secondItem="yRB-VI-EGH" secondAttribute="bottom" constant="6" id="SHK-6D-H1M"/>
                     <constraint firstItem="r3P-eO-TmU" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="U90-gJ-aXX"/>
                     <constraint firstAttribute="bottom" secondItem="eg4-23-xqc" secondAttribute="bottom" constant="6" id="VzN-90-baa"/>
+                    <constraint firstItem="yRB-VI-EGH" firstAttribute="leading" secondItem="mb6-nw-TjG" secondAttribute="trailing" constant="8" id="YME-0A-fb1"/>
                     <constraint firstAttribute="bottom" secondItem="qNB-cP-szA" secondAttribute="bottom" constant="6" id="Z28-wH-waA"/>
                     <constraint firstAttribute="trailing" secondItem="wUv-cJ-CeL" secondAttribute="trailing" constant="50" id="ago-jV-Jha"/>
                     <constraint firstItem="mb6-nw-TjG" firstAttribute="leading" secondItem="0eg-hu-JdK" secondAttribute="trailing" constant="8" id="bue-9o-k1t"/>
@@ -524,6 +540,7 @@
         </menu>
     </objects>
     <resources>
+        <image name="AirPlay" width="18" height="16"/>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSFlowViewTemplate" width="18" height="10"/>
         <image name="NSPlayTemplate" width="25" height="23"/>

@@ -8,9 +8,8 @@
 
 import Cocoa
 import CoreData
- 
+import AVKit
 
-private var my_context = 0
 
 import MultipeerConnectivity
 // FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
@@ -29,6 +28,7 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowDelegate {
     
     //target views
+    var my_context = 0
     //@IBOutlet weak var libraryTableTargetView: NSView!
     @IBOutlet weak var trackQueueTargetView: NSView!
     @IBOutlet weak var librarySplitView: NSSplitView!
@@ -37,6 +37,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     @IBOutlet weak var sourceListTargetView: NSView!
     
     //interface elements
+    @IBOutlet weak var airplayButton: NSButton!
     @IBOutlet weak var advancedSearchToggle: NSButton!
     @IBOutlet weak var playButton: NSButton!
     @IBOutlet weak var repeatButton: NSButton!
@@ -173,9 +174,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     func addObserversAndInitializeNewTableView(_ table: LibraryTableViewController, item: SourceListItem) {
-        table.trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .new, context: &my_context)
-        table.trackViewArrayController.addObserver(self, forKeyPath: "filterPredicate", options: .new, context: &my_context)
-        table.trackViewArrayController.addObserver(self, forKeyPath: "sortDescriptors", options: .new, context: &my_context)
         table.item = item
         table.mainWindowController = self
     }
@@ -191,11 +189,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             let playlistViewController = otherLocalTableViewControllers.object(forKey: objectID) as! LibraryTableViewController
             librarySplitView.addArrangedSubview(playlistViewController.view)
             currentTableViewController = playlistViewController
-            /*if currentTableViewController?.playlist != nil {
-                currentTableViewController?.initializeForPlaylist()
-            } else {
-                currentTableViewController?.initializeForLibrary()
-            }*/
             updateInfo()
         }
         else if otherSharedTableViewControllers.object(forKey: objectID) != nil && item.is_network == true {
@@ -203,11 +196,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             librarySplitView.addArrangedSubview(playlistViewController.view)
             currentTableViewController = playlistViewController
             currentTableViewController?.initializeForPlaylist()
-            /*if currentTableViewController?.playlist != nil {
-                currentTableViewController?.initializeForPlaylist()
-            } else {
-                currentTableViewController?.initializeForLibrary()
-            }*/
             updateInfo()
         }
         else {
@@ -919,5 +907,20 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         barViewToggle.isHidden = true
         //self.window?.invalidateShadow()
         self.durationShowsTimeRemaining = UserDefaults.standard.bool(forKey: DEFAULTS_DURATION_SHOWS_TIME_REMAINING)
+        if #available(OSX 10.13, *) {
+            self.airplayButton.isHidden = false
+        } else {
+            self.airplayButton.isHidden = true
+            // Fallback on earlier versions
+        }
+    }
+    @IBAction func airPlayButtonPressed(_ sender: Any) {
+        let popover = NSPopover()
+        if #available(OSX 10.13, *) {
+            (self.delegate.audioModule.routeDetector as! AVRouteDetector).multipleRoutesDetected
+        } else {
+            // Fallback on earlier versions
+        }
+        
     }
 }

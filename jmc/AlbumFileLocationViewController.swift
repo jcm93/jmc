@@ -95,7 +95,21 @@ class AlbumFilePathTree: NSObject {
         } else {
             let newNode = AlbumFilePathNode(pathComponent: nextPathComponent, parent: currentNode)
             let nextURLString = URL(fileURLWithPath: newNode.completePathRepresentation()).absoluteString
-            let setUnderNextNode = Set(currentNode.totalFiles.filter({return ($0.value(forKey: "location") as? String)?.hasPrefix(nextURLString) ?? false}))
+            let setUnderNextNode = Set(currentNode.totalFiles.filter({file in
+                let location = {() -> String? in
+                    switch file {
+                    case let track as Track:
+                        return track.location
+                    case let albumFile as AlbumFile:
+                        return albumFile.location
+                    case let albumArtwork as AlbumArtwork:
+                        return albumArtwork.location
+                    default:
+                        return "poop"
+                    }
+                }()
+                return location?.hasPrefix(nextURLString) ?? false
+            }))
             newNode.totalFiles = setUnderNextNode
             if pathComponents.count > 0 {
                 createNode(with: &pathComponents, under: newNode, with: file)
@@ -110,7 +124,6 @@ class AlbumFilePathTree: NSObject {
         self.rootNode = AlbumFilePathNode(pathComponent: "/")
         self.rootNode.totalFiles = Set(files.keys)
         super.init()
-        var filesToRemove = [NSObject]()
         for file in files {
             let url = file.value
             var path = url.path.components(separatedBy: "/").filter({$0 != ""})
@@ -150,8 +163,7 @@ class AlbumFileLocationViewController: NSViewController, NSOutlineViewDataSource
     }
     
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
-        guard let node = item as? AlbumFilePathNode else { print(self.tree.rootNode.children.count); return self.tree.rootNode.children.count }
-        print(node.children.count)
+        guard let node = item as? AlbumFilePathNode else { return self.tree.rootNode.children.count }
         return node.children.count
     }
     
@@ -161,7 +173,8 @@ class AlbumFileLocationViewController: NSViewController, NSOutlineViewDataSource
     }
     
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
-        return true
+        guard let node = item as? AlbumFilePathNode else { return false }
+        return node.children.count > 0
     }
     
 }

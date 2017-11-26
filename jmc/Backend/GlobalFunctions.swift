@@ -161,8 +161,6 @@ var cachedOrders: [String : CachedOrder]? = {
 }()
 
 func validateStringForFilename(_ string: String) -> String {
-    //needed?
-    //yes.
     let newString = String(string.characters.map({
         $0 == "/" ? ":" : $0
     }))
@@ -192,6 +190,17 @@ func determineTemplateLocations(visualUpdateHandler: ProgressBarController?) -> 
         })
     }
     return newFileLocations
+}
+
+func getCurrentLocations(visualUpdateHandler: ProgressBarController?) -> [NSObject : URL] {
+    var result = [NSObject : URL]()
+    for track in globalRootLibrary.tracks! {
+        let track = track as! Track
+        if let location = track.location, let url = URL(string: location) {
+            result[track] = url
+        }
+    }
+    return result
 }
 
 func changeVolumeLocation(volume: Volume, newLocation: URL) {

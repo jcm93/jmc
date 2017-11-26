@@ -505,6 +505,9 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         print("view did load")
         self.normalMenuItemsArray = [self.getInfoMenuItem, self.addToQueueMenuItem, self.playMenuItem, self.separatorMenuItem, self.toggleEnabledMenuItem, self.showInFinderMenuItem]
         trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .new, context: &my_context)
+        self.trackViewArrayController?.addObserver(self.mainWindowController!, forKeyPath: "arrangedObjects", options: .new, context: &self.mainWindowController!.my_context)
+        self.trackViewArrayController.addObserver(self.mainWindowController!, forKeyPath: "filterPredicate", options: .new, context: &self.mainWindowController!.my_context)
+        self.trackViewArrayController.addObserver(self.mainWindowController!, forKeyPath: "sortDescriptors", options: .new, context: &self.mainWindowController!.my_context)
         trackViewArrayController.tableViewController = self as! LibraryTableViewControllerCellBased
         tableView.target = self
         tableView.menu?.delegate = self

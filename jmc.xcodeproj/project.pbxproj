@@ -12,6 +12,7 @@
 		0D01AD911D7079D900F9211F /* EqualizerWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D01AD8F1D7079D900F9211F /* EqualizerWindowController.swift */; };
 		0D01AD921D7079D900F9211F /* EqualizerWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D01AD901D7079D900F9211F /* EqualizerWindowController.xib */; };
 		0D0747691EDF6DF500E252DF /* CachedOrder+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0747681EDF6DF500E252DF /* CachedOrder+CoreDataClass.swift */; };
+		0D0C28181FCB4FFB008A178C /* MainMenuDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0C28171FCB4FFB008A178C /* MainMenuDelegate.swift */; };
 		0D0C2AA71E88D8DA00CA82C3 /* MTImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0C2AA61E88D8DA00CA82C3 /* MTImageCell.swift */; };
 		0D0C2AA91E88D8FF00CA82C3 /* MTButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0C2AA81E88D8FF00CA82C3 /* MTButtonCell.swift */; };
 		0D0E5FAF1D3E909D009E0FA3 /* DragAndDropImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */; };
@@ -233,6 +234,7 @@
 		0D01AD8F1D7079D900F9211F /* EqualizerWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EqualizerWindowController.swift; path = "Other Windows/EqualizerWindowController.swift"; sourceTree = "<group>"; };
 		0D01AD901D7079D900F9211F /* EqualizerWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EqualizerWindowController.xib; path = "Other Windows/EqualizerWindowController.xib"; sourceTree = "<group>"; };
 		0D0747681EDF6DF500E252DF /* CachedOrder+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CachedOrder+CoreDataClass.swift"; path = "Core Data Shit/CachedOrder+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0D0C28171FCB4FFB008A178C /* MainMenuDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuDelegate.swift; sourceTree = "<group>"; };
 		0D0C2AA61E88D8DA00CA82C3 /* MTImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MTImageCell.swift; path = "Main Interface Components/Main Table View/MTImageCell.swift"; sourceTree = "<group>"; };
 		0D0C2AA81E88D8FF00CA82C3 /* MTButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MTButtonCell.swift; path = "Main Interface Components/Main Table View/MTButtonCell.swift"; sourceTree = "<group>"; };
 		0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DragAndDropImageView.swift; path = "Main Interface Components/Subview Controllers/DragAndDropImageView.swift"; sourceTree = "<group>"; };
@@ -529,6 +531,7 @@
 				0DA02D371EFB098900DDE5A9 /* StupidSearchField.swift */,
 				0DF4BEF21CFD0D4E00AC5824 /* MainWindowController.xib */,
 				0DAB30971CFBA3340028928F /* MainMenu.xib */,
+				0D0C28171FCB4FFB008A178C /* MainMenuDelegate.swift */,
 				0D48D0DE1F3D444B00ABAAC6 /* MediaKeyListener.swift */,
 			);
 			name = "Delegate/Main Window Controller";
@@ -1106,6 +1109,7 @@
 				0DA7E95A1ECC141900719678 /* ImageCollectionViewItem.swift in Sources */,
 				0D9CE6711D334F97004FA8CB /* ImportWindowController.swift in Sources */,
 				0DE486911EA83FBA009B226B /* AddFilesProgressSheet.swift in Sources */,
+				0D0C28181FCB4FFB008A178C /* MainMenuDelegate.swift in Sources */,
 				0D116B851E5800FD00C759FD /* LocationManager.swift in Sources */,
 				0DE957DC1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift in Sources */,
 				0D99D4A11EF216F200264CFF /* OrganizationRuleCellView.swift in Sources */,
