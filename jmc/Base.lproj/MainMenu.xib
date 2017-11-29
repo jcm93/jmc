@@ -15,13 +15,16 @@
         <customObject id="76H-Is-DYh" customClass="MainWindowController" customModule="jmc" customModuleProvider="target"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="jmc" customModuleProvider="target">
             <connections>
-                <outlet property="equalizerWindowMenuItem" destination="yTZ-KO-ido" id="ybf-3H-nKU"/>
-                <outlet property="jmcWindowMenuItem" destination="uQV-fL-2eI" id="kRj-pa-2Fj"/>
+                <outlet property="menuDelegate" destination="a4U-cM-VOZ" id="y40-ZZ-old"/>
                 <outlet property="repeatMenuItem" destination="2KZ-Mz-PQy" id="OpJ-kz-a3W"/>
-                <outlet property="shuffleMenuItem" destination="b4e-W9-bct" id="9w2-aV-btF"/>
             </connections>
         </customObject>
-        <customObject id="a4U-cM-VOZ" userLabel="Menu Delegate" customClass="MainMenuDelegate" customModule="jmc" customModuleProvider="target"/>
+        <customObject id="a4U-cM-VOZ" userLabel="Menu Delegate" customClass="MainMenuDelegate" customModule="jmc" customModuleProvider="target">
+            <connections>
+                <outlet property="repeatMenuItem" destination="2KZ-Mz-PQy" id="r3i-Sp-MFX"/>
+                <outlet property="shuffleMenuItem" destination="b4e-W9-bct" id="ZeS-zi-te4"/>
+            </connections>
+        </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
             <items>
@@ -83,18 +86,18 @@
                                     <items>
                                         <menuItem title="Playlist" keyEquivalent="n" id="KjC-22-qhT">
                                             <connections>
-                                                <action selector="newPlaylist:" target="Voe-Tx-rLC" id="5pM-TJ-jdv"/>
+                                                <action selector="newPlaylist:" target="a4U-cM-VOZ" id="LtE-FN-O7a"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Playlist From Selection" keyEquivalent="N" id="tAA-MA-JD3">
                                             <connections>
-                                                <action selector="newPlaylistFromSelection:" target="Voe-Tx-rLC" id="fos-br-JsV"/>
+                                                <action selector="newPlaylistFromSelection:" target="a4U-cM-VOZ" id="IZI-Rc-cI1"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Smart Playlist..." keyEquivalent="n" id="wj2-JD-Uje">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
-                                                <action selector="newSmartPlaylist:" target="Voe-Tx-rLC" id="zkM-6j-ts7"/>
+                                                <action selector="newSmartPlaylist:" target="a4U-cM-VOZ" id="qxw-V4-nlx"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -102,14 +105,14 @@
                             </menuItem>
                             <menuItem title="Add to Library..." keyEquivalent="o" id="qMV-Bb-1Lb">
                                 <connections>
-                                    <action selector="addToLibrary:" target="Voe-Tx-rLC" id="CPH-2g-kqO"/>
+                                    <action selector="openFiles:" target="a4U-cM-VOZ" id="dx2-TL-k0x"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
                             <menuItem title="Import iTunes Library..." id="T9K-M0-CcC">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="openImportWindow:" target="Voe-Tx-rLC" id="Z3F-f1-zAZ"/>
+                                    <action selector="openImportWindow:" target="a4U-cM-VOZ" id="Io0-rq-VOl"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -339,18 +342,18 @@
                             </menuItem>
                             <menuItem title="Jump to Current Song" keyEquivalent="l" id="5Oc-Sz-LBf" userLabel="Jump to Current Song">
                                 <connections>
-                                    <action selector="jumpToCurrentSong:" target="Voe-Tx-rLC" id="jbc-N3-Rgx"/>
+                                    <action selector="jumpToCurrentSong:" target="a4U-cM-VOZ" id="H9z-tM-DfH"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Jump to Selection" keyEquivalent="l" id="bmP-UI-9z3">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
-                                    <action selector="jumpToSelection:" target="Voe-Tx-rLC" id="ABi-VT-gkf"/>
+                                    <action selector="jumpToSelection:" target="a4U-cM-VOZ" id="A7k-KA-cgN"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Album Art" keyEquivalent="t" id="hYx-vO-dOM">
                                 <connections>
-                                    <action selector="toggleAlbumArt:" target="Voe-Tx-rLC" id="ny8-8K-Gun"/>
+                                    <action selector="toggleAlbumArt:" target="a4U-cM-VOZ" id="K8M-BL-A1G"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -362,7 +365,7 @@
                         <items>
                             <menuItem title="Manage Library..." keyEquivalent="L" id="bBy-Ti-uZG">
                                 <connections>
-                                    <action selector="openLibraryManager:" target="Voe-Tx-rLC" id="OlN-XK-LQX"/>
+                                    <action selector="openLibraryManager:" target="a4U-cM-VOZ" id="MQI-j8-jX8"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -375,39 +378,39 @@
                             <menuItem title="Pause" id="CUH-bU-TD7">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="pauseMenuItemAction:" target="Voe-Tx-rLC" id="Vfg-te-K5f"/>
+                                    <action selector="pauseMenuItemAction:" target="a4U-cM-VOZ" id="kyx-fy-HrO"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Play" id="FED-Mj-mou">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="playMenuItemAction:" target="Voe-Tx-rLC" id="Q41-X1-9X3"/>
+                                    <action selector="playMenuItemAction:" target="a4U-cM-VOZ" id="cWI-jW-Bdl"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="oUl-bH-bXi"/>
                             <menuItem title="Next" id="ifz-C1-1yU">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="nextMenuItemAction:" target="Voe-Tx-rLC" id="EQi-dp-60B"/>
+                                    <action selector="nextMenuItemAction:" target="a4U-cM-VOZ" id="Pqd-uz-ReQ"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Previous" id="Ezj-5Q-6Kd">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="previousMenuItemAction:" target="Voe-Tx-rLC" id="kmv-Ac-g30"/>
+                                    <action selector="previousMenuItemAction:" target="a4U-cM-VOZ" id="zIi-y5-PMV"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="Neq-FW-kKB"/>
                             <menuItem title="Shuffle" id="b4e-W9-bct">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="shuffleMenuItemAction:" target="Voe-Tx-rLC" id="9u7-S6-CUS"/>
+                                    <action selector="shuffleMenuItemAction:" target="a4U-cM-VOZ" id="SDa-uv-zev"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Repeat" id="2KZ-Mz-PQy">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="repeatMenuItemAction:" target="Voe-Tx-rLC" id="04r-MM-Jiy"/>
+                                    <action selector="repeatMenuItemAction:" target="a4U-cM-VOZ" id="Jj0-D3-zJm"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -429,18 +432,6 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="JXu-Wd-CrQ"/>
-                            <menuItem title="jmc" id="uQV-fL-2eI">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="showMainWindow:" target="Voe-Tx-rLC" id="Y9p-w9-GYJ"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Equalizer" keyEquivalent="e" id="yTZ-KO-ido">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="testyThing:" target="Voe-Tx-rLC" id="edV-gV-vdN"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="l6d-n2-K0h"/>
                             <menuItem title="Bring All to Front" id="LE2-aR-0XJ">
                                 <modifierMask key="keyEquivalentModifierMask"/>

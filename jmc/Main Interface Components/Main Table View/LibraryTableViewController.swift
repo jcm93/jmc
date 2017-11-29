@@ -76,7 +76,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         guard let track = ((self.trackViewArrayController.arrangedObjects as? NSArray)?[tableView.clickedRow] as? TrackView)?.track else { return }
         if track.is_available == false {
             print("clicked unavailable \(track.name)")
-            self.mainWindowController?.delegate?.openLibraryManager(self)
+            //self.mainWindowController?.delegate?.openLibraryManager(self)
             self.mainWindowController?.delegate?.preferencesWindowController?.libraryManagerViewController?.tabView.selectTabViewItem(at: 1)
             self.mainWindowController?.delegate?.preferencesWindowController?.libraryManagerViewController?.verifyLocationsPressed(self)
             

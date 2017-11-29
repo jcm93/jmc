@@ -29,12 +29,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     var addFilesQueueLoop: AddFilesQueueLoop?
     var lastFMDelegate: LastFMDelegate?
     var mediaKeyListener: MediaKeyListener?
-    
-    @IBOutlet weak var jmcWindowMenuItem: NSMenuItem!
-    @IBOutlet weak var equalizerWindowMenuItem: NSMenuItem!
-    
-    @IBOutlet weak var shuffleMenuItem: NSMenuItem!
-    @IBOutlet weak var repeatMenuItem: NSMenuItem!
+    @IBOutlet var menuDelegate: MainMenuDelegate!
     
     
     func alertForErrors(_ errors: [Error]) {
@@ -60,8 +55,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         //self.serviceBrowser = ConnectivityManager(delegate: self, slvc: mainWindowController!.sourceListViewController!)
         let defaultsEQOnState = UserDefaults.standard.integer(forKey: DEFAULTS_IS_EQ_ENABLED_STRING)
         audioModule.toggleEqualizer(defaultsEQOnState)
-        NotificationCenter.default.addObserver(self, selector: #selector(mainWindowDidClose), name: NSWindow.willCloseNotification, object: mainWindowController!.window)
-        jmcWindowMenuItem.state = NSControl.StateValue.on
     }
     
     func launchAddFilesDialog() {
@@ -123,39 +116,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         preferencesWindowController = PreferencesWindowController(windowNibName: NSNib.Name(rawValue: "PreferencesWindowController"))
         preferencesWindowController?.showWindow(self)
     }
-    
-    func showEqualizer() {
-        print("show equalizer called")
-        if self.equalizerWindowController == nil {
-            self.equalizerWindowController = EqualizerWindowController(windowNibName: NSNib.Name(rawValue: "EqualizerWindowController"))
-            self.equalizerWindowController?.audioModule = self.audioModule
-        }
-        if self.equalizerWindowController?.window?.isVisible == nil || self.equalizerWindowController?.window?.isVisible == false {
-            self.equalizerWindowController?.showWindow(self)
-        }
-        NotificationCenter.default.addObserver(self, selector: #selector(equalizerDidClose), name: NSWindow.willCloseNotification, object: equalizerWindowController!.window)
-        equalizerWindowMenuItem.state = NSControl.StateValue.on
-    }
-    
+
     @IBAction func showAdvancedFilter(_ sender: AnyObject) {
         if let item = sender as? NSMenuItem {
             item.state = item.state == NSControl.StateValue.on ? NSControl.StateValue.off : NSControl.StateValue.on
         }
         mainWindowController?.advancedFilterButtonPressed(self)
-    }
-    
-    @IBAction func testyThing(_ sender: AnyObject) {
-        showEqualizer()
-    }
-    
-    @objc func mainWindowDidClose() {
-        print("main window did close called")
-        jmcWindowMenuItem.state = NSControl.StateValue.off
-    }
-    
-    @objc func equalizerDidClose() {
-        print("equalizer did close called")
-        equalizerWindowMenuItem.state = NSControl.StateValue.off
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -183,6 +149,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         //NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidChangeDebug), name: Notification.Name.NSManagedObjectContextObjectsDidChange, object: managedObjectContext)
         NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidUndo), name: Notification.Name.NSUndoManagerDidUndoChange, object: managedObjectContext.undoManager)
         self.mediaKeyListener = MediaKeyListener(self)
+        self.menuDelegate.delegate = self
     }
     
     @objc func managedObjectsDidUndo() {

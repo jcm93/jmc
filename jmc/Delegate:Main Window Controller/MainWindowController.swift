@@ -256,6 +256,18 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }
     }
     
+    @IBAction func toggleEqualizer(_ sender: Any) {
+        print("show equalizer called")
+        if self.delegate.equalizerWindowController == nil {
+            self.delegate.equalizerWindowController = EqualizerWindowController(windowNibName: NSNib.Name(rawValue: "EqualizerWindowController"))
+            self.delegate.equalizerWindowController?.audioModule = self.delegate.audioModule
+        }
+        if self.delegate.equalizerWindowController?.window?.isVisible == nil || self.delegate.equalizerWindowController?.window?.isVisible == false {
+            self.delegate.equalizerWindowController?.showWindow(self)
+        }
+        self.delegate.equalizerWindowController?.window?.makeKeyAndOrderFront(nil)
+    }
+    
     func launchGetInfo(_ tracks: [Track]) {
         self.tagWindowController = TagEditorWindow(windowNibName: NSNib.Name(rawValue: "TagEditorWindow"))
         self.tagWindowController?.mainWindowController = self
@@ -307,12 +319,12 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             self.will_repeat = true
             UserDefaults.standard.set(false, forKey: DEFAULTS_REPEAT_STRING)
         }
-        delegate?.repeatMenuItem.state = repeatButton.state
+        delegate?.menuDelegate.repeatMenuItem.state = repeatButton.state
     }
     
     @IBAction func shuffleButtonPressed(_ sender: AnyObject) {
         trackQueueViewController?.shufflePressed(shuffleButton.state.rawValue)
-        delegate?.shuffleMenuItem.state = shuffleButton.state
+        delegate?.menuDelegate.shuffleMenuItem.state = shuffleButton.state
     }
     
     @IBAction func skipBackward(_ sender: Any) {
@@ -897,8 +909,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         clickRecognizer.numberOfClicksRequired = 1
         clickRecognizer.action = #selector(durationLabelOnClick)
         durationLabel.addGestureRecognizer(clickRecognizer)
-        delegate?.shuffleMenuItem.state = shuffleButton.state
-        delegate?.repeatMenuItem.state = repeatButton.state
+        delegate?.menuDelegate.shuffleMenuItem.state = shuffleButton.state
+        delegate?.menuDelegate.repeatMenuItem.state = repeatButton.state
         self.window?.isMovableByWindowBackground = true
         UserDefaults.standard.set(false, forKey: jmcDarkAppearanceOption)
         if UserDefaults.standard.bool(forKey: jmcDarkAppearanceOption) {

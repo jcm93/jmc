@@ -12,6 +12,13 @@ class MainMenuDelegate: NSObject, NSMenuDelegate {
     
     var mainWindowController: MainWindowController!
     var delegate: AppDelegate!
+    @IBOutlet weak var shuffleMenuItem: NSMenuItem!
+    @IBOutlet weak var repeatMenuItem: NSMenuItem!
+    
+
+    @IBAction func openFiles(_ sender: Any) {
+        self.delegate.openFiles()
+    }
     
     @IBAction func jumpToCurrentSong(_ sender: AnyObject) {
         self.mainWindowController.jumpToCurrentSong()
@@ -79,17 +86,5 @@ class MainMenuDelegate: NSObject, NSMenuDelegate {
         self.delegate.importWindowController = ImportWindowController(windowNibName: NSNib.Name(rawValue: "ImportWindowController"))
         self.delegate.importWindowController!.mainWindowController = mainWindowController
         self.delegate.importWindowController!.showWindow(self)
-    }
-    
-    override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-        <#code#>
-    }
-    
-    func menuDidClose(_ menu: NSMenu) {
-        <#code#>
-    }
-    
-    func menuWillOpen(_ menu: NSMenu) {
-        <#code#>
     }
 }
