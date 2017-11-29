@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13770" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13770"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -60,7 +60,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView canDrawConcurrently="YES" verticalHuggingPriority="750" placeholderIntrinsicWidth="833" placeholderIntrinsicHeight="583" allowsExpansionToolTips="YES" columnAutoresizingStyle="none" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveName="poop" rowHeight="20" headerView="x7Z-Ii-Jp5" id="bX0-m9-9Ad" userLabel="Library Table View" customClass="TableViewYouCanPressSpacebarOn" customModule="jmc" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="3922" height="489"/>
+                                <rect key="frame" x="0.0" y="0.0" width="3956" height="489"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -113,14 +113,14 @@
                                             </binding>
                                         </connections>
                                     </tableColumn>
-                                    <tableColumn identifier="name" width="40" minWidth="40" maxWidth="1000" id="qUc-Bo-Owx">
+                                    <tableColumn identifier="name" width="220" minWidth="40" maxWidth="1000" id="qUc-Bo-Owx">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Name">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" refusesFirstResponder="YES" title="Text Cell" id="6tX-3v-3dG" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <accessibility description="Track Name"/>
@@ -129,7 +129,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <accessibility description="Track Name Column"/>
                                     </tableColumn>
-                                    <tableColumn identifier="time" width="47" minWidth="10" maxWidth="3.4028234663852886e+38" id="eXL-My-fyv" userLabel="Time">
+                                    <tableColumn identifier="time" width="52" minWidth="10" maxWidth="3.4028234663852886e+38" id="eXL-My-fyv" userLabel="Time">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Time">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -137,7 +137,7 @@
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" alignment="right" title="Text Cell" id="c2u-8I-wVk" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" groupingSize="0" minimumIntegerDigits="0" maximumIntegerDigits="42" id="Wah-f4-Cjf" customClass="TimeFormatter" customModule="jmc" customModuleProvider="target"/>
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <accessibility description="Track Time"/>
@@ -146,14 +146,14 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <accessibility description="Time Column"/>
                                     </tableColumn>
-                                    <tableColumn identifier="album_by_artist" width="89" minWidth="40" maxWidth="1000" id="ois-tu-0mi">
+                                    <tableColumn identifier="album_by_artist" width="220" minWidth="40" maxWidth="1000" id="ois-tu-0mi">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Album by Artist">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="PlC-3Y-8lx" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <accessibility description="Artist Name"/>
@@ -162,14 +162,14 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <accessibility description="Album by Artist Column"/>
                                     </tableColumn>
-                                    <tableColumn identifier="artist" width="40" minWidth="40" maxWidth="1000" hidden="YES" id="yKq-1g-Y4O">
+                                    <tableColumn identifier="artist" width="220" minWidth="40" maxWidth="1000" hidden="YES" id="yKq-1g-Y4O">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Artist">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="fEH-rj-gw3" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <accessibility description="Artist Name"/>
@@ -178,14 +178,14 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <accessibility description="Artist Name Column"/>
                                     </tableColumn>
-                                    <tableColumn identifier="album_artist" width="74" minWidth="40" maxWidth="1000" hidden="YES" id="iR0-Qj-q6u">
+                                    <tableColumn identifier="album_artist" width="220" minWidth="40" maxWidth="1000" hidden="YES" id="iR0-Qj-q6u">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Album Artist">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="Sjm-Fj-4oa" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <accessibility description="Artist Name"/>
@@ -194,14 +194,14 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <accessibility description="Album Artist Column"/>
                                     </tableColumn>
-                                    <tableColumn identifier="album" width="42" minWidth="10" maxWidth="3.4028234663852886e+38" id="FDo-TA-EDz">
+                                    <tableColumn identifier="album" width="220" minWidth="10" maxWidth="3.4028234663852886e+38" id="FDo-TA-EDz">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Album">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="9Pd-9q-BoV" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <accessibility description="Album Name"/>
@@ -210,14 +210,14 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <accessibility description="Album Name Column"/>
                                     </tableColumn>
-                                    <tableColumn identifier="file_kind" editable="NO" width="32" minWidth="10" maxWidth="3.4028234663852886e+38" id="5dZ-BN-JWr" userLabel="Kind">
+                                    <tableColumn identifier="file_kind" editable="NO" width="52" minWidth="10" maxWidth="3.4028234663852886e+38" id="5dZ-BN-JWr" userLabel="Kind">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Kind">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="wTi-ot-6rL" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <accessibility description="Track File Kind"/>
@@ -226,7 +226,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <accessibility description="Kind Column"/>
                                     </tableColumn>
-                                    <tableColumn identifier="bit_rate" editable="NO" width="63" minWidth="10" maxWidth="3.4028234663852886e+38" id="LHQ-sH-EgW" userLabel="Bit Rate">
+                                    <tableColumn identifier="bit_rate" editable="NO" width="75" minWidth="10" maxWidth="3.4028234663852886e+38" id="LHQ-sH-EgW" userLabel="Bit Rate">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Bit Rate">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -234,7 +234,7 @@
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" id="mXz-Q9-Tss" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="Bbi-j2-hdc" customClass="BitRateFormatter" customModule="jmc" customModuleProvider="target"/>
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <accessibility description="Track Bit Rate"/>
@@ -243,7 +243,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <accessibility description="Bit Rate Column"/>
                                     </tableColumn>
-                                    <tableColumn identifier="size" editable="NO" width="44" minWidth="10" maxWidth="3.4028234663852886e+38" id="fbs-bA-3rx">
+                                    <tableColumn identifier="size" editable="NO" width="75" minWidth="10" maxWidth="3.4028234663852886e+38" id="fbs-bA-3rx">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Size">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -251,7 +251,7 @@
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" title="Text Cell" id="5ik-8J-6nt" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <byteCountFormatter key="formatter" id="hK1-LV-tV2"/>
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <accessibility description="Track File Size"/>
@@ -268,7 +268,7 @@
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" id="X4R-8m-Yfb" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="qGZ-Bl-5Tq" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <accessibility description="Track Number"/>
@@ -277,7 +277,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <accessibility description="Track Number Column"/>
                                     </tableColumn>
-                                    <tableColumn identifier="date_added" editable="NO" width="70" minWidth="10" maxWidth="3.4028234663852886e+38" id="Ruz-xG-tmM">
+                                    <tableColumn identifier="date_added" editable="NO" width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="Ruz-xG-tmM">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Added">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -285,7 +285,7 @@
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="dcq-tQ-T9h" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" id="xt6-G0-jSn"/>
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <accessibility description="Track Date Added"/>
@@ -294,14 +294,14 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <accessibility description="Date Added Column"/>
                                     </tableColumn>
-                                    <tableColumn identifier="genre" width="40" minWidth="10" maxWidth="3.4028234663852886e+38" id="Nl7-dl-GwI">
+                                    <tableColumn identifier="genre" width="70" minWidth="10" maxWidth="3.4028234663852886e+38" id="Nl7-dl-GwI">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Genre">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="ZfF-Zb-eGm" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <accessibility description="Track Genre"/>
@@ -310,7 +310,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <accessibility description="Genre Column"/>
                                     </tableColumn>
-                                    <tableColumn identifier="date_modified" editable="NO" width="82" minWidth="10" maxWidth="3.4028234663852886e+38" id="AC9-ib-KCM">
+                                    <tableColumn identifier="date_modified" editable="NO" width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="AC9-ib-KCM">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Modified">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -318,7 +318,7 @@
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="nhH-xB-aIO" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" id="h3L-u7-Cxm"/>
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <accessibility description="Track Date Modified"/>
@@ -327,7 +327,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <accessibility description="Date Modified Column"/>
                                     </tableColumn>
-                                    <tableColumn identifier="date_released" editable="NO" width="84" minWidth="10" maxWidth="3.4028234663852886e+38" id="0XQ-xd-Lm9">
+                                    <tableColumn identifier="date_released" editable="NO" width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="0XQ-xd-Lm9">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Released">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -335,7 +335,7 @@
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="dYe-xo-ZcP" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" id="yZP-oZ-PwJ" customClass="JMDateFormatter" customModule="jmc" customModuleProvider="target"/>
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <accessibility description="Track Date Released"/>
@@ -344,14 +344,14 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <accessibility description="Date Released Column"/>
                                     </tableColumn>
-                                    <tableColumn identifier="comments" width="65" minWidth="10" maxWidth="3.4028234663852886e+38" id="xDe-V0-AuH">
+                                    <tableColumn identifier="comments" width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="xDe-V0-AuH">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Comments">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="abB-lO-tuS" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <accessibility description="Track Comments"/>
@@ -360,14 +360,14 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <accessibility description="Comments Column"/>
                                     </tableColumn>
-                                    <tableColumn identifier="composer" width="62" minWidth="10" maxWidth="3.4028234663852886e+38" id="79h-OO-O9Q">
+                                    <tableColumn identifier="composer" width="220" minWidth="10" maxWidth="3.4028234663852886e+38" id="79h-OO-O9Q">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Composer">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="6bQ-qG-ujk" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
@@ -382,7 +382,7 @@
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" id="8VR-c1-KJQ" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="AIb-5G-jTw" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
@@ -396,14 +396,14 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="eF3-c0-cMT" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.equalizer_preset"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="date_last_played" editable="NO" width="69" minWidth="10" maxWidth="3.4028234663852886e+38" id="das-ju-aG7">
+                                    <tableColumn identifier="date_last_played" editable="NO" width="125" minWidth="10" maxWidth="3.4028234663852886e+38" id="das-ju-aG7">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Last Played">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -411,14 +411,14 @@
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="xae-pC-hvr" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" id="NDn-L6-Ngx"/>
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.date_last_played"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="date_last_skipped" editable="NO" width="77" minWidth="10" maxWidth="3.4028234663852886e+38" id="6aD-ae-eFf">
+                                    <tableColumn identifier="date_last_skipped" editable="NO" width="125" minWidth="10" maxWidth="3.4028234663852886e+38" id="6aD-ae-eFf">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Last Skipped">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -426,21 +426,21 @@
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="xLA-zd-b4j" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" id="TEx-JI-bvx"/>
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.date_last_skipped"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="movement_name" width="97" minWidth="10" maxWidth="3.4028234663852886e+38" id="dqs-Iw-GO8">
+                                    <tableColumn identifier="movement_name" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="dqs-Iw-GO8">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Movement Name">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="yQ6-uV-0wl" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
@@ -455,7 +455,7 @@
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" id="OSa-Oo-svg" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="Nud-KY-pef" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
@@ -470,7 +470,7 @@
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" id="UZa-8d-XJX" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="1xr-bN-jPn" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
@@ -485,7 +485,7 @@
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="qG3-K0-uCz" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="Fpf-zm-uOd" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
@@ -500,7 +500,7 @@
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" id="AC3-BK-Gx3" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="FXj-G5-uam" customClass="SampleRateFormatter" customModule="jmc" customModuleProvider="target"/>
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
@@ -515,77 +515,77 @@
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" id="VQc-zH-7I1" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
                                             <customFormatter key="formatter" id="EYz-ja-2fc" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="track.skip_count"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="sort_album" width="67" minWidth="10" maxWidth="3.4028234663852886e+38" id="bSp-01-bTE">
+                                    <tableColumn identifier="sort_album" width="220" minWidth="10" maxWidth="3.4028234663852886e+38" id="bSp-01-bTE">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sort Album">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="yEc-xF-LkN" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="localizedStandardCompare:" sortKey="track.sort_album"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="sort_album_artist" width="99" minWidth="10" maxWidth="3.4028234663852886e+38" id="s6e-Qu-gNO">
+                                    <tableColumn identifier="sort_album_artist" width="220" minWidth="10" maxWidth="3.4028234663852886e+38" id="s6e-Qu-gNO">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sort Album Artist">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="cS1-7y-Lyu" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="localizedStandardCompare:" sortKey="track.sort_album_artist"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="sort_artist" width="63" minWidth="10" maxWidth="3.4028234663852886e+38" id="Hwd-Kw-cOe">
+                                    <tableColumn identifier="sort_artist" width="220" minWidth="10" maxWidth="3.4028234663852886e+38" id="Hwd-Kw-cOe">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sort Artist">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="iKg-PX-qMW" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="localizedStandardCompare:" sortKey="track.sort_artist"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="sort_composer" width="88" minWidth="10" maxWidth="3.4028234663852886e+38" id="WWR-OI-OTi">
+                                    <tableColumn identifier="sort_composer" width="220" minWidth="10" maxWidth="3.4028234663852886e+38" id="WWR-OI-OTi">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sort Composer">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="yiZ-Vh-4nC" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="localizedStandardCompare:" sortKey="track.sort_composer"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="sort_name" width="64" minWidth="10" maxWidth="3.4028234663852886e+38" id="CyQ-Xo-pr8">
+                                    <tableColumn identifier="sort_name" width="220" minWidth="10" maxWidth="3.4028234663852886e+38" id="CyQ-Xo-pr8">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Sort Name">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="vEP-DR-YFo" customClass="MTTextFieldCell" customModule="jmc" customModuleProvider="target">
-                                            <font key="font" metaFont="system" size="12"/>
+                                            <font key="font" metaFont="cellTitle"/>
                                             <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
@@ -604,7 +604,7 @@
                             </tableView>
                         </subviews>
                     </clipView>
-                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="ipS-jB-32M">
+                    <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="ipS-jB-32M">
                         <rect key="frame" x="0.0" y="496" width="3922" height="16"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
@@ -613,7 +613,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                     <tableHeaderView key="headerView" id="x7Z-Ii-Jp5">
-                        <rect key="frame" x="0.0" y="0.0" width="3922" height="23"/>
+                        <rect key="frame" x="0.0" y="0.0" width="3956" height="23"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <connections>
                             <outlet property="menu" destination="H0B-Bf-KKf" id="d2F-M1-nCw"/>

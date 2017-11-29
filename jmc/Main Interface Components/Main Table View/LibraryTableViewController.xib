@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13770" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13770"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="LibraryTableViewController" customModule="minimalTunes" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="LibraryTableViewController" customModule="jmc" customModuleProvider="target">
             <connections>
                 <outlet property="columnVisibilityMenu" destination="H0B-Bf-KKf" id="R0f-rd-LmK"/>
                 <outlet property="libraryTableScrollView" destination="LLt-nN-be2" id="IF1-3p-NAc"/>
@@ -19,14 +20,14 @@
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Hz6-mo-xeY">
             <rect key="frame" x="0.0" y="0.0" width="3922" height="512"/>
             <subviews>
-                <scrollView wantsLayer="YES" canDrawConcurrently="YES" focusRingType="none" placeholderIntrinsicWidth="436" placeholderIntrinsicHeight="512" borderType="none" autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" horizontalScrollElasticity="none" verticalScrollElasticity="allowed" scrollerKnobStyle="dark" translatesAutoresizingMaskIntoConstraints="NO" id="LLt-nN-be2" userLabel="Library Table Scroll View" customClass="SpecialScrollView" customModule="minimalTunes" customModuleProvider="target">
+                <scrollView wantsLayer="YES" canDrawConcurrently="YES" focusRingType="none" placeholderIntrinsicWidth="436" placeholderIntrinsicHeight="512" borderType="none" autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" horizontalScrollElasticity="none" verticalScrollElasticity="allowed" scrollerKnobStyle="dark" translatesAutoresizingMaskIntoConstraints="NO" id="LLt-nN-be2" userLabel="Library Table Scroll View" customClass="SpecialScrollView" customModule="jmc" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="3922" height="512"/>
                     <clipView key="contentView" autoresizesSubviews="NO" canDrawConcurrently="YES" placeholderIntrinsicWidth="708" placeholderIntrinsicHeight="606" drawsBackground="NO" copiesOnScroll="NO" id="WYy-aH-0Ud">
                         <rect key="frame" x="0.0" y="0.0" width="3922" height="512"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView canDrawConcurrently="YES" verticalHuggingPriority="750" placeholderIntrinsicWidth="833" placeholderIntrinsicHeight="583" allowsExpansionToolTips="YES" columnAutoresizingStyle="none" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveName="poop" rowHeight="20" headerView="x7Z-Ii-Jp5" viewBased="YES" id="bX0-m9-9Ad" userLabel="Library Table View" customClass="TableViewYouCanPressSpacebarOn" customModule="minimalTunes" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="3755" height="0.0"/>
+                            <tableView canDrawConcurrently="YES" verticalHuggingPriority="750" placeholderIntrinsicWidth="833" placeholderIntrinsicHeight="583" allowsExpansionToolTips="YES" columnAutoresizingStyle="none" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveName="poop" rowHeight="20" headerView="x7Z-Ii-Jp5" viewBased="YES" id="bX0-m9-9Ad" userLabel="Library Table View" customClass="TableViewYouCanPressSpacebarOn" customModule="jmc" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="3922" height="489"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -49,7 +50,7 @@
                                                 <rect key="frame" x="1" y="1" width="17" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JfS-9C-uav">
+                                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JfS-9C-uav">
                                                         <rect key="frame" x="0.0" y="-2" width="20" height="20"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="20" id="Ssc-7V-zJq"/>
@@ -90,6 +91,7 @@
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xl6-LG-iK7">
                                                         <rect key="frame" x="-3" y="0.0" width="104" height="17"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="mHs-fh-Esg">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -372,7 +374,7 @@
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HQJ-7e-Ehn">
                                                         <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="Gya-KQ-ex2">
-                                                            <customFormatter key="formatter" id="fJ7-Sq-Apu" customClass="BitRateFormatter" customModule="minimalTunes" customModuleProvider="target"/>
+                                                            <customFormatter key="formatter" id="fJ7-Sq-Apu" customClass="BitRateFormatter" customModule="jmc" customModuleProvider="target"/>
                                                             <font key="font" metaFont="cellTitle"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -462,7 +464,7 @@
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OVK-fv-ma0">
                                                         <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="GOB-3e-vMu">
-                                                            <customFormatter key="formatter" id="pyD-fA-hJ1" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
+                                                            <customFormatter key="formatter" id="pyD-fA-hJ1" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                                             <font key="font" metaFont="cellTitle"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -774,7 +776,7 @@
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RKp-9Z-XmR">
                                                         <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="sAk-Qe-gny">
-                                                            <customFormatter key="formatter" id="bEf-Iy-HH4" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
+                                                            <customFormatter key="formatter" id="bEf-Iy-HH4" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                                             <font key="font" metaFont="cellTitle"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -997,7 +999,7 @@
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="82o-S4-k93">
                                                         <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="pEm-dt-hxn">
-                                                            <customFormatter key="formatter" id="bgL-Si-5Iw" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
+                                                            <customFormatter key="formatter" id="bgL-Si-5Iw" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                                             <font key="font" metaFont="cellTitle"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1042,7 +1044,7 @@
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3El-Nh-Nno">
                                                         <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="Dqi-3a-w5G">
-                                                            <customFormatter key="formatter" id="3N6-sC-AG4" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
+                                                            <customFormatter key="formatter" id="3N6-sC-AG4" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                                             <font key="font" metaFont="cellTitle"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1087,7 +1089,7 @@
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d59-DL-uQG">
                                                         <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="JkR-ZN-oH7">
-                                                            <customFormatter key="formatter" id="z7b-wq-dbW" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
+                                                            <customFormatter key="formatter" id="z7b-wq-dbW" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                                             <font key="font" metaFont="cellTitle"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1132,7 +1134,7 @@
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7pS-Ee-VKp">
                                                         <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="OHf-nx-sX8">
-                                                            <customFormatter key="formatter" id="f1B-ft-nbd" customClass="SampleRateFormatter" customModule="minimalTunes" customModuleProvider="target"/>
+                                                            <customFormatter key="formatter" id="f1B-ft-nbd" customClass="SampleRateFormatter" customModule="jmc" customModuleProvider="target"/>
                                                             <font key="font" metaFont="cellTitle"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1177,7 +1179,7 @@
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cNo-kS-XKg">
                                                         <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="cyO-gU-2wj">
-                                                            <customFormatter key="formatter" id="L6E-3c-4Ge" customClass="StupidNumberFormatter" customModule="minimalTunes" customModuleProvider="target"/>
+                                                            <customFormatter key="formatter" id="L6E-3c-4Ge" customClass="StupidNumberFormatter" customModule="jmc" customModuleProvider="target"/>
                                                             <font key="font" metaFont="cellTitle"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1457,7 +1459,7 @@
             </constraints>
             <point key="canvasLocation" x="1847" y="198"/>
         </customView>
-        <arrayController mode="entity" entityName="TrackView" automaticallyPreparesContent="YES" id="6rv-dK-iy8" customClass="DragAndDropArrayController" customModule="minimalTunes" customModuleProvider="target">
+        <arrayController mode="entity" entityName="TrackView" automaticallyPreparesContent="YES" id="6rv-dK-iy8" customClass="DragAndDropArrayController" customModule="jmc" customModuleProvider="target">
             <connections>
                 <binding destination="-2" name="managedObjectContext" keyPath="self.managedContext" id="L8y-Me-vAn"/>
             </connections>

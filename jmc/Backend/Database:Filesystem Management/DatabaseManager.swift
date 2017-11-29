@@ -556,17 +556,17 @@ class DatabaseManager: NSObject {
         
         if url.pathExtension.lowercased() == "flac" {
             
-            let flacReader = FlacDecoder(file: url, audioModule: nil)
-            flacReader!.initForMetadata()
-            
-            metadataDictionary[kSampleRateKey]  = flacReader?.sampleRate
-            let duration_seconds                = Double(flacReader!.totalFrames) / Double(flacReader!.sampleRate!)
+            guard let flacReader = FlacDecoder(file: url, audioModule: nil) else { return nil }
+            flacReader.initForMetadata()
+            guard flacReader.sampleRate != nil && flacReader.bitsPerSample != nil && flacReader.channels != nil else { return nil }
+            metadataDictionary[kSampleRateKey]  = flacReader.sampleRate
+            let duration_seconds                = Double(flacReader.totalFrames) / Double(flacReader.sampleRate!)
             let bitRate                         = ((Double(metadataDictionary[kSizeKey] as! Int) * 8) / 1000) / duration_seconds
             metadataDictionary[kBitRateKey]     = bitRate
             metadataDictionary[kTimeKey]        = duration_seconds * 1000
             
             //format-sensitive metadata
-            for item in flacReader!.metadataDictionary {
+            for item in flacReader.metadataDictionary {
                 switch item.key.lowercased() {
                 case "artist":
                     metadataDictionary[kArtistKey]          = item.value

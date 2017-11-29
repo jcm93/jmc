@@ -13,9 +13,9 @@ class FlacDecoder: NSObject, FileBufferer {
     
     var decoder: FLAC__StreamDecoder?
     var blockBuffer = [[Float32]]()
-    var sampleRate: UInt32?
-    var channels: UInt32?
-    var bitsPerSample: UInt32?
+    var sampleRate: UInt32!
+    var channels: UInt32!
+    var bitsPerSample: UInt32!
     var totalFrames: UInt32 = 0
     var file: URL
     var currentBufferSampleIndex: UInt32?
