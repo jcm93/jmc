@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13770" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13770"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -31,7 +31,7 @@
                                 <color key="backgroundColor" red="0.0" green="0.41176470588235292" blue="0.85098039215686272" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
-                                    <tableColumn width="264" minWidth="150" maxWidth="500" id="egr-Q3-P5d">
+                                    <tableColumn identifier="" width="264" minWidth="150" maxWidth="500" id="egr-Q3-P5d">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -135,26 +135,10 @@
                                                             <binding destination="VzQ-q9-Y9W" name="value" keyPath="objectValue.item.name" id="u7g-AP-P8q"/>
                                                         </connections>
                                                     </textField>
-                                                    <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nIS-VM-3pC">
-                                                        <rect key="frame" x="108" y="1" width="16" height="16"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="16" id="TYP-Oe-L2J"/>
-                                                            <constraint firstAttribute="width" constant="16" id="y9Z-Up-Gge"/>
-                                                        </constraints>
-                                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSActionTemplate" imagePosition="overlaps" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="2fJ-MJ-NwQ">
-                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="allSourcesAction:" target="-2" id="SpS-8t-nNb"/>
-                                                        </connections>
-                                                    </button>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="ie1-Lv-hfk" firstAttribute="top" secondItem="VzQ-q9-Y9W" secondAttribute="top" constant="1" id="0yO-CU-rM4"/>
                                                     <constraint firstItem="ie1-Lv-hfk" firstAttribute="leading" secondItem="gjn-sy-I9U" secondAttribute="trailing" constant="8" id="2uO-Zi-ruG"/>
-                                                    <constraint firstItem="nIS-VM-3pC" firstAttribute="leading" secondItem="ie1-Lv-hfk" secondAttribute="trailing" constant="8" id="TmP-O5-HB2"/>
-                                                    <constraint firstItem="nIS-VM-3pC" firstAttribute="top" secondItem="VzQ-q9-Y9W" secondAttribute="top" constant="3" id="Tng-TN-eIT"/>
                                                     <constraint firstItem="gjn-sy-I9U" firstAttribute="top" secondItem="VzQ-q9-Y9W" secondAttribute="top" constant="-1" id="WfM-r2-wdo"/>
                                                     <constraint firstItem="gjn-sy-I9U" firstAttribute="leading" secondItem="VzQ-q9-Y9W" secondAttribute="leading" constant="3" id="hfz-mN-Z97"/>
                                                 </constraints>
@@ -468,7 +452,6 @@
     </objects>
     <resources>
         <image name="Master Library" width="32" height="32"/>
-        <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSFolder" width="32" height="32"/>
         <image name="Playlist" width="24" height="24"/>
         <image name="Shared Library" width="32" height="32"/>

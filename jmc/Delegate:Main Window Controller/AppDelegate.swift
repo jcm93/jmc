@@ -150,6 +150,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidUndo), name: Notification.Name.NSUndoManagerDidUndoChange, object: managedObjectContext.undoManager)
         self.mediaKeyListener = MediaKeyListener(self)
         self.menuDelegate.delegate = self
+        self.menuDelegate.mainWindowController = self.mainWindowController
     }
     
     @objc func managedObjectsDidUndo() {

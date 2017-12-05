@@ -288,12 +288,13 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     
     func getNextTrack() -> Track? {
         let track: Track?
+        //todo fix so this isn't a reference to repeatButton
         if repeatButton.state == NSControl.StateValue.on {
             return currentTrack
         } else {
             track = trackQueueViewController?.getNextTrack()//this function might change the interface around
             if trackQueueViewController?.currentAudioSource?.is_network == true {
-                delegate?.serviceBrowser?.askPeerForSong(trackQueueViewController!.currentAudioSource!.library!.peer as! MCPeerID, id: Int(track!.id!))
+            delegate?.serviceBrowser?.askPeerForSong(trackQueueViewController!.currentAudioSource!.library!.peer as! MCPeerID, id: Int(track!.id!))
                 DispatchQueue.main.async {
                     self.initializeInterfaceForNetworkTrack()
                     self.timer?.invalidate()
@@ -919,14 +920,14 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         barViewToggle.isHidden = true
         //self.window?.invalidateShadow()
         self.durationShowsTimeRemaining = UserDefaults.standard.bool(forKey: DEFAULTS_DURATION_SHOWS_TIME_REMAINING)
-        if #available(OSX 10.13, *) {
+        /*if #available(OSX 10.13, *) {
             self.airplayButton.isHidden = false
         } else {
             self.airplayButton.isHidden = true
             // Fallback on earlier versions
-        }
+        }*/
     }
-    @IBAction func airPlayButtonPressed(_ sender: Any) {
+    /*@IBAction func airPlayButtonPressed(_ sender: Any) {
         let popover = NSPopover()
         if #available(OSX 10.13, *) {
             (self.delegate.audioModule.routeDetector as! AVRouteDetector).multipleRoutesDetected
@@ -934,5 +935,5 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             // Fallback on earlier versions
         }
         
-    }
+    }*/
 }

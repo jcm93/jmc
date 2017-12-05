@@ -16,7 +16,6 @@
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="jmc" customModuleProvider="target">
             <connections>
                 <outlet property="menuDelegate" destination="a4U-cM-VOZ" id="y40-ZZ-old"/>
-                <outlet property="repeatMenuItem" destination="2KZ-Mz-PQy" id="OpJ-kz-a3W"/>
             </connections>
         </customObject>
         <customObject id="a4U-cM-VOZ" userLabel="Menu Delegate" customClass="MainMenuDelegate" customModule="jmc" customModuleProvider="target">

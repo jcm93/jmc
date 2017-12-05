@@ -467,7 +467,7 @@
                             <outlet property="menu" destination="WAr-lr-0sM" id="tZk-Ww-b2z"/>
                         </connections>
                     </segmentedControl>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yRB-VI-EGH">
+                    <button hidden="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yRB-VI-EGH">
                         <rect key="frame" x="332" y="4" width="44" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="c0m-Jk-e4f"/>
@@ -476,9 +476,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="airPlayButtonPressed:" target="-2" id="Tkm-fS-ocA"/>
-                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Nyd-Mi-qKV">
                         <rect key="frame" x="1568" y="4" width="44" height="25"/>

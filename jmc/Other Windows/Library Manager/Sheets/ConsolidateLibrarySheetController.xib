@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13770" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13770"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -10,7 +10,7 @@
             <connections>
                 <outlet property="progressBar" destination="GtP-Hk-WyF" id="6Xi-3I-P4a"/>
                 <outlet property="progressTextLabel" destination="X1q-I0-Mdz" id="RKh-pM-elM"/>
-                <outlet property="targetView" destination="WAL-sq-jFN" id="j6R-Xz-WN8"/>
+                <outlet property="targetView" destination="MFd-Wj-PLF" id="epV-eS-E0E"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -88,7 +88,7 @@ Gw
                             <action selector="cancelPressed:" target="-2" id="MIf-4w-tOl"/>
                         </connections>
                     </button>
-                    <progressIndicator hidden="YES" wantsLayer="YES" ambiguous="YES" maxValue="100" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="GtP-Hk-WyF">
+                    <progressIndicator hidden="YES" wantsLayer="YES" maxValue="100" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="GtP-Hk-WyF">
                         <rect key="frame" x="20" y="52" width="797" height="20"/>
                     </progressIndicator>
                     <textField hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="X1q-I0-Mdz">
@@ -99,26 +99,27 @@ Gw
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="WAL-sq-jFN" customClass="NSSplitView">
+                    <splitView arrangesAllSubviews="NO" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MFd-Wj-PLF">
                         <rect key="frame" x="20" y="125" width="797" height="285"/>
-                    </customView>
+                    </splitView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="5ux-3v-gEs" firstAttribute="leading" secondItem="TJw-Cj-9eN" secondAttribute="trailing" constant="12" id="1za-5k-uYn"/>
                     <constraint firstItem="GtP-Hk-WyF" firstAttribute="top" secondItem="p3r-Lu-9Nn" secondAttribute="bottom" constant="8" id="2wg-wd-8NZ"/>
+                    <constraint firstAttribute="trailing" secondItem="GtP-Hk-WyF" secondAttribute="trailing" constant="20" id="3kH-xy-rIU"/>
+                    <constraint firstItem="MFd-Wj-PLF" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="4LZ-Gb-pVM"/>
                     <constraint firstItem="GtP-Hk-WyF" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="7G6-cx-aEj"/>
+                    <constraint firstItem="MFd-Wj-PLF" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="20" id="9jB-Ve-xDQ"/>
                     <constraint firstItem="tTM-Jy-PPi" firstAttribute="leading" secondItem="iYL-2N-1q7" secondAttribute="trailing" constant="12" id="BET-sE-VVR"/>
+                    <constraint firstItem="rpR-j6-0wn" firstAttribute="top" secondItem="MFd-Wj-PLF" secondAttribute="bottom" constant="8" id="FCS-ou-NAF"/>
                     <constraint firstItem="iYL-2N-1q7" firstAttribute="leading" secondItem="5ux-3v-gEs" secondAttribute="trailing" constant="12" id="L2H-64-UYK"/>
                     <constraint firstAttribute="trailing" secondItem="tTM-Jy-PPi" secondAttribute="trailing" constant="20" id="NaS-i1-j6t"/>
                     <constraint firstAttribute="bottom" secondItem="X1q-I0-Mdz" secondAttribute="bottom" constant="37" id="TpX-Io-IJr"/>
                     <constraint firstItem="rpR-j6-0wn" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="WNe-l1-MzD"/>
-                    <constraint firstItem="WAL-sq-jFN" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="WmS-DK-cn8"/>
-                    <constraint firstItem="WAL-sq-jFN" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="20" id="Z7g-lt-0QL"/>
-                    <constraint firstItem="rpR-j6-0wn" firstAttribute="top" secondItem="WAL-sq-jFN" secondAttribute="bottom" constant="8" id="a46-NC-GJg"/>
+                    <constraint firstAttribute="trailing" secondItem="MFd-Wj-PLF" secondAttribute="trailing" constant="20" id="YEo-Ro-OWA"/>
                     <constraint firstAttribute="bottom" secondItem="5ux-3v-gEs" secondAttribute="bottom" constant="20" id="cUM-uc-Avz"/>
                     <constraint firstItem="X1q-I0-Mdz" firstAttribute="top" secondItem="GtP-Hk-WyF" secondAttribute="bottom" constant="2" id="ctL-qb-dTT"/>
                     <constraint firstItem="X1q-I0-Mdz" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="dD3-z9-kuC"/>
-                    <constraint firstAttribute="trailing" secondItem="WAL-sq-jFN" secondAttribute="trailing" constant="20" id="jJM-c1-nU2"/>
                     <constraint firstAttribute="bottom" secondItem="iYL-2N-1q7" secondAttribute="bottom" constant="20" id="nGR-Xu-CEc"/>
                     <constraint firstAttribute="bottom" secondItem="tTM-Jy-PPi" secondAttribute="bottom" constant="20" id="rnm-iz-vFB"/>
                     <constraint firstItem="p3r-Lu-9Nn" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="ryL-s4-pds"/>

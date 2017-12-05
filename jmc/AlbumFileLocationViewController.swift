@@ -14,14 +14,19 @@ class AlbumFilePathNode: NSObject {
     var children = [AlbumFilePathNode]()
     var parent: AlbumFilePathNode?
     var totalFiles = Set<NSObject>()
+    var objectPathDictionaryIfRoot: [NSObject: URL]?
     
     
     init(pathComponent: String, parent: AlbumFilePathNode? = nil) {
         self.pathComponent = pathComponent
         self.parent = parent
         super.init()
-        if parent != nil {
-            parent?.children.append(self)
+        if let parent = parent {
+            if let index = parent.children.index(where: {$0.pathComponent.localizedStandardCompare(pathComponent) == ComparisonResult.orderedDescending}) {
+                parent.children.insert(self, at: index)
+            } else {
+                parent.children.append(self)
+            }
         }
     }
     
@@ -76,6 +81,14 @@ class AlbumFilePathNode: NSObject {
         }
     }
     
+    func getChildrenWithObject(object: NSObject) {
+        if self.totalFiles.contains(object) {
+            for child in self.children {
+                
+            }
+        }
+    }
+    
 }
 
 class AlbumFilePathTree: NSObject {
@@ -123,6 +136,7 @@ class AlbumFilePathTree: NSObject {
     init(files: inout [NSObject : URL]) {
         self.rootNode = AlbumFilePathNode(pathComponent: "/")
         self.rootNode.totalFiles = Set(files.keys)
+        self.rootNode.objectPathDictionaryIfRoot = files
         super.init()
         for file in files {
             let url = file.value
@@ -131,18 +145,69 @@ class AlbumFilePathTree: NSObject {
             createNode(with: &path, with: object)
         }
     }
+    
+    func getFilteredTree(withSearchString searchString: String) -> AlbumFilePathTree {
+        let currentFiles = self.rootNode.objectPathDictionaryIfRoot!
+        var filteredFiles = currentFiles.filter({ (key: NSObject, value: URL) -> Bool in
+            return value.path.localizedCaseInsensitiveContains(searchString)
+        })
+        return AlbumFilePathTree(files: &filteredFiles)
+    }
+    
+    func getNodesForObjects(objects: Set<NSObject>) {
+        
+    }
 }
 
-class AlbumFileLocationViewController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDelegate {
+class AlbumFileLocationViewController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDelegate, NSSearchFieldDelegate {
     
-    var tree: AlbumFilePathTree!
+    var masterTree: AlbumFilePathTree!
+    var filteredTree: AlbumFilePathTree!
+    var parentController: ConsolidateLibrarySheetController!
+    
+    var isSearching = false
     
     @IBOutlet weak var outlineView: NSOutlineView!
+    @IBOutlet weak var tableLabel: NSTextField!
+    @IBOutlet weak var showSelectionButton: NSButton!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
+        self.outlineView.expandItem(nil, expandChildren: true)
+    }
+    
+    func setupForOldLocations() {
+        self.tableLabel.stringValue = "Current locations:"
+        self.showSelectionButton.stringValue = "Show New Location"
+    }
+    
+    func setupForNewLocations() {
+        self.tableLabel.stringValue = "New locations:"
+        self.showSelectionButton.title = "Show Old Location"
+    }
+    
+    func outlineViewSelectionDidChange(_ notification: Notification) {
+        if outlineView.selectedRowIndexes.count > 0 {
+            self.showSelectionButton.isEnabled = true
+        } else {
+            self.showSelectionButton.isEnabled = false
+        }
+    }
+    
+    @IBAction func showSelectionPressed(_ sender: Any) {
+        let pathNodes = outlineView.selectedRowIndexes.map({return outlineView.item(atRow: $0) as! AlbumFilePathNode})
+        var representedObjects = Set<NSObject>()
+        for pathNode in pathNodes {
+            representedObjects.formUnion(pathNode.totalFiles)
+        }
+        self.parentController.showSelectionPressed(sender: self, items: representedObjects)
+    }
+    
+    func showItems(items: Set<NSObject>) {
+        
+        self.outlineView.selectRowIndexes(<#T##indexes: IndexSet##IndexSet#>, byExtendingSelection: <#T##Bool#>)
     }
     
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
@@ -156,6 +221,8 @@ class AlbumFileLocationViewController: NSViewController, NSOutlineViewDataSource
         } else {
             if node.children.count > 0 {
                 view.imageView?.image = NSImage(named: NSImage.Name.folder)
+            } else {
+                view.imageView?.image = NSImage(named: NSImage.Name.multipleDocuments)
             }
         }
         view.textField?.stringValue = node.pathComponent
@@ -163,18 +230,44 @@ class AlbumFileLocationViewController: NSViewController, NSOutlineViewDataSource
     }
     
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
-        guard let node = item as? AlbumFilePathNode else { return self.tree.rootNode.children.count }
-        return node.children.count
+        switch self.isSearching {
+        case true:
+            guard let node = item as? AlbumFilePathNode else { return self.filteredTree.rootNode.children.count }
+            return node.children.count
+        case false:
+            guard let node = item as? AlbumFilePathNode else { return self.masterTree.rootNode.children.count }
+            return node.children.count
+        }
     }
     
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
-        guard let node = item as? AlbumFilePathNode else { return self.tree.rootNode }
-        return node.children[index]
+        switch self.isSearching {
+        case true:
+            guard let node = item as? AlbumFilePathNode else { return self.filteredTree.rootNode }
+            return node.children[index]
+        case false:
+            guard let node = item as? AlbumFilePathNode else { return self.masterTree.rootNode }
+            return node.children[index]
+        }
     }
     
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         guard let node = item as? AlbumFilePathNode else { return false }
         return node.children.count > 0
+    }
+    
+    //searching
+    func searchFieldDidStartSearching(_ sender: NSSearchField) {
+        self.isSearching = true
+        self.filteredTree = self.masterTree.getFilteredTree(withSearchString: sender.stringValue)
+        self.outlineView.reloadData()
+        self.outlineView.expandItem(nil, expandChildren: true)
+    }
+    
+    func searchFieldDidEndSearching(_ sender: NSSearchField) {
+        self.isSearching = false
+        self.outlineView.reloadData()
+        self.outlineView.expandItem(nil, expandChildren: true)
     }
     
 }

@@ -69,19 +69,29 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
         self.window?.close()
     }
     
+    func showSelectionPressed(sender: AlbumFileLocationViewController, items: Set<NSObject>) {
+        if sender == self.preConsolidationFileViewController {
+            self.postConsolidationFileViewController.showItems(items: items)
+        } else {
+            self.preConsolidationFileViewController.showItems(items: items)
+        }
+    }
+    
     override func windowDidLoad() {
         super.windowDidLoad()
         self.preConsolidationFileViewController = AlbumFileLocationViewController(nibName: NSNib.Name(rawValue: "AlbumFileLocationViewController"), bundle: nil)
         var currentTrackLocations = getCurrentLocations(visualUpdateHandler: nil)
-        self.preConsolidationFileViewController.tree = AlbumFilePathTree(files: &currentTrackLocations)
-        self.targetView.addSubview(self.preConsolidationFileViewController.view)
+        self.preConsolidationFileViewController.masterTree = AlbumFilePathTree(files: &currentTrackLocations)
+        self.targetView.addArrangedSubview(self.preConsolidationFileViewController.view)
+        self.preConsolidationFileViewController.setupForOldLocations()
         self.postConsolidationFileViewController = AlbumFileLocationViewController(nibName: NSNib.Name(rawValue: "AlbumFileLocationViewController"), bundle: nil)
-        self.postConsolidationFileViewController.tree = AlbumFilePathTree(files: &self.things)
-        self.targetView.addSubview(postConsolidationFileViewController.view)
-        self.postConsolidationFileViewController!.view.topAnchor.constraint(equalTo: targetView.topAnchor).isActive = true
+        self.postConsolidationFileViewController.masterTree = AlbumFilePathTree(files: &self.things)
+        self.targetView.addArrangedSubview(postConsolidationFileViewController.view)
+        self.postConsolidationFileViewController.setupForNewLocations()
+        /*self.postConsolidationFileViewController!.view.topAnchor.constraint(equalTo: targetView.topAnchor).isActive = true
         self.postConsolidationFileViewController!.view.rightAnchor.constraint(equalTo: targetView.rightAnchor).isActive = true
         self.postConsolidationFileViewController!.view.bottomAnchor.constraint(equalTo: targetView.bottomAnchor).isActive = true
-        self.postConsolidationFileViewController!.view.leftAnchor.constraint(equalTo: targetView.leftAnchor).isActive = true
+        self.postConsolidationFileViewController!.view.leftAnchor.constraint(equalTo: targetView.leftAnchor).isActive = true*/
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     }
     
