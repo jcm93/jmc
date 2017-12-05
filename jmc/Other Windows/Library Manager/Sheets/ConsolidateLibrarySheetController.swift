@@ -84,10 +84,12 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
         self.preConsolidationFileViewController.masterTree = AlbumFilePathTree(files: &currentTrackLocations)
         self.targetView.addArrangedSubview(self.preConsolidationFileViewController.view)
         self.preConsolidationFileViewController.setupForOldLocations()
+        self.preConsolidationFileViewController.parentController = self
         self.postConsolidationFileViewController = AlbumFileLocationViewController(nibName: NSNib.Name(rawValue: "AlbumFileLocationViewController"), bundle: nil)
         self.postConsolidationFileViewController.masterTree = AlbumFilePathTree(files: &self.things)
         self.targetView.addArrangedSubview(postConsolidationFileViewController.view)
         self.postConsolidationFileViewController.setupForNewLocations()
+        self.postConsolidationFileViewController.parentController = self
         /*self.postConsolidationFileViewController!.view.topAnchor.constraint(equalTo: targetView.topAnchor).isActive = true
         self.postConsolidationFileViewController!.view.rightAnchor.constraint(equalTo: targetView.rightAnchor).isActive = true
         self.postConsolidationFileViewController!.view.bottomAnchor.constraint(equalTo: targetView.bottomAnchor).isActive = true

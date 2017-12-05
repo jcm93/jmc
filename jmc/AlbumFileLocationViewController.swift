@@ -81,11 +81,16 @@ class AlbumFilePathNode: NSObject {
         }
     }
     
-    func getChildrenWithObject(object: NSObject) {
-        if self.totalFiles.contains(object) {
+    func getLowestChildWithObject(object: NSObject) -> AlbumFilePathNode? {
+        if self.totalFiles.contains(where: {($0 as! NSManagedObject).objectID == (object as! NSManagedObject).objectID}) {
             for child in self.children {
-                
+                if let childObject = child.getLowestChildWithObject(object: object) {
+                    return childObject
+                }
             }
+            return self
+        } else {
+            return nil
         }
     }
     
@@ -154,8 +159,12 @@ class AlbumFilePathTree: NSObject {
         return AlbumFilePathTree(files: &filteredFiles)
     }
     
-    func getNodesForObjects(objects: Set<NSObject>) {
-        
+    func getNodesForObjects(objects: Set<NSObject>) -> Set<AlbumFilePathNode> {
+        var nodeSet = Set<AlbumFilePathNode>()
+        for object in objects {
+            nodeSet.insert(self.rootNode.getLowestChildWithObject(object: object)!)
+        }
+        return nodeSet
     }
 }
 
@@ -206,8 +215,18 @@ class AlbumFileLocationViewController: NSViewController, NSOutlineViewDataSource
     }
     
     func showItems(items: Set<NSObject>) {
-        
-        self.outlineView.selectRowIndexes(<#T##indexes: IndexSet##IndexSet#>, byExtendingSelection: <#T##Bool#>)
+        if self.isSearching == true {
+            self.isSearching = false
+            self.outlineView.reloadData()
+        }
+        let nodes = self.masterTree.getNodesForObjects(objects: items)
+        var indexSet = IndexSet()
+        for node in nodes {
+            let row = self.outlineView.row(forItem: node)
+            indexSet.insert(row)
+        }
+        self.outlineView.selectRowIndexes(indexSet, byExtendingSelection: false)
+        self.outlineView.scrollRowToVisible(indexSet.last!)
     }
     
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
