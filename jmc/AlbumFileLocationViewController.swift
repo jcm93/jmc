@@ -162,7 +162,9 @@ class AlbumFilePathTree: NSObject {
     func getNodesForObjects(objects: Set<NSObject>) -> Set<AlbumFilePathNode> {
         var nodeSet = Set<AlbumFilePathNode>()
         for object in objects {
-            nodeSet.insert(self.rootNode.getLowestChildWithObject(object: object)!)
+            if let lowestChild = self.rootNode.getLowestChildWithObject(object: object) {
+                nodeSet.insert(lowestChild)
+            }
         }
         return nodeSet
     }

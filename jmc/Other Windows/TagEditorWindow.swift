@@ -527,7 +527,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     @IBOutlet weak var locationPathControl: NSPathControl!
     
     func populateFileInfo() {
-        //todo correct tags if inconsistent
+        //todo touch the actual file if we have to
         let url = NSURL(string: self.currentTrack!.location!)!
         self.locationPathControl.url = url as URL
         
@@ -537,17 +537,29 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
             flacMDItem?.initForMetadata()
         }
         let kind = MDItemCopyAttribute(mdItem, kMDItemKind) as? String
-        kindLabel.stringValue = kind!
-        let duration = MDItemCopyAttribute(mdItem, kMDItemDurationSeconds) as? Int ?? (Int(flacMDItem!.totalFrames / flacMDItem!.sampleRate!))
-        durationLabel.stringValue = getTimeAsString(Double(duration))!
-        let size = MDItemCopyAttribute(mdItem, kMDItemFSSize) as! Int
-        sizeLabel.stringValue = fileSizeFormatter.string(fromByteCount: Int64(size))
-        let bitRateCheck = (MDItemCopyAttribute(mdItem, kMDItemAudioBitRate) as? Int ?? (((size ) * 8) / 1000) / duration) / 1000
-        bitRateLabel.stringValue = bitRateFormatter.string(for: bitRateCheck)!
-        let sampleRateCheck = MDItemCopyAttribute(mdItem, kMDItemAudioSampleRate) as? Int ?? Int(flacMDItem!.sampleRate!)
-        sampleRateLabel.stringValue = sampleRateFormatter.string(for: sampleRateCheck)!
-        let channels = MDItemCopyAttribute(mdItem, kMDItemAudioChannelCount) as? Int ?? Int(flacMDItem!.channels!)
-        channelsLabel.stringValue = String(describing: channels)
+        if let kind = kind {
+            kindLabel.stringValue = kind
+        }
+        let duration = MDItemCopyAttribute(mdItem, kMDItemDurationSeconds) as? Int ?? (flacMDItem != nil ? (Int(flacMDItem!.totalFrames / flacMDItem!.sampleRate!)) : nil)
+        if let duration = duration {
+            durationLabel.stringValue = getTimeAsString(Double(duration))!
+        }
+        let size = MDItemCopyAttribute(mdItem, kMDItemFSSize) as? Int
+        if let size = size {
+            sizeLabel.stringValue = fileSizeFormatter.string(fromByteCount: Int64(size))
+        }
+        let bitRateCheck = MDItemCopyAttribute(mdItem, kMDItemAudioBitRate) as? Int ?? (size != nil && duration != nil ? ((((size!) * 8) / 1000) / duration!) / 1000 : nil)
+        if let bitRateCheck = bitRateCheck {
+            bitRateLabel.stringValue = bitRateFormatter.string(for: bitRateCheck)!
+        }
+        let sampleRateCheck = MDItemCopyAttribute(mdItem, kMDItemAudioSampleRate) as? Int ?? (flacMDItem != nil ? Int(flacMDItem!.sampleRate!) : nil)
+        if let sampleRateCheck = sampleRateCheck {
+            sampleRateLabel.stringValue = sampleRateFormatter.string(for: sampleRateCheck)!
+        }
+        let channels = MDItemCopyAttribute(mdItem, kMDItemAudioChannelCount) as? Int ?? (flacMDItem != nil ? Int(flacMDItem!.channels!) : nil)
+        if let channels = channels {
+            channelsLabel.stringValue = String(describing: channels)
+        }
         let encoder = MDItemCopyAttribute(mdItem, kMDItemAudioEncodingApplication) as? String
         encoderLabel.stringValue = encoder != nil ? encoder! : "No encoder information available."
         let dateModified = MDItemCopyAttribute(mdItem, kMDItemContentModificationDate) as? NSDate
