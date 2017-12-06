@@ -289,7 +289,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     func getNextTrack() -> Track? {
         let track: Track?
         //todo fix so this isn't a reference to repeatButton
-        if repeatButton.state == NSControl.StateValue.on {
+        if self.will_repeat == true {
             return currentTrack
         } else {
             track = trackQueueViewController?.getNextTrack()//this function might change the interface around

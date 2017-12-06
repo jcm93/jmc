@@ -202,11 +202,17 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         DispatchQueue.global(qos: .default).async {
             let things = determineTemplateLocations(visualUpdateHandler: parent.someOtherSheet)
             DispatchQueue.main.async {
-                parent.someOtherSheet?.finish()
+                //parent.someOtherSheet?.finish()
                 parent.consolidateSheet = ConsolidateLibrarySheetController(windowNibName: NSNib.Name(rawValue: "ConsolidateLibrarySheetController"))
                 parent.consolidateSheet?.things = things
-                parent.window?.beginSheet(parent.consolidateSheet!.window!, completionHandler: nil)
-                parent.consolidateSheet?.libraryManager = self
+                DispatchQueue.global(qos: .default).async {
+                    parent.consolidateSheet?.initialize(visualUpdateHandler: parent.someOtherSheet)
+                    DispatchQueue.main.async {
+                        parent.someOtherSheet?.finish()
+                        parent.window?.beginSheet(parent.consolidateSheet!.window!, completionHandler: nil)
+                        parent.consolidateSheet?.libraryManager = self
+                    }
+                }
             }
         }
     }

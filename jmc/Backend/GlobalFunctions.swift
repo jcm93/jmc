@@ -191,6 +191,10 @@ func determineTemplateLocations(visualUpdateHandler: ProgressBarController?) -> 
             print("url conflict; this is bad");
             return first
         })
+        index += album.tracks?.count ?? 0
+        DispatchQueue.main.async {
+            visualUpdateHandler?.increment(thingsDone: index)
+        }
     }
     return newFileLocations
 }

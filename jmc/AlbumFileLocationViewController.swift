@@ -138,16 +138,26 @@ class AlbumFilePathTree: NSObject {
         }
     }
     
-    init(files: inout [NSObject : URL]) {
+    init(files: inout [NSObject : URL], visualUpdateHandler: ProgressBarController?) {
         self.rootNode = AlbumFilePathNode(pathComponent: "/")
         self.rootNode.totalFiles = Set(files.keys)
         self.rootNode.objectPathDictionaryIfRoot = files
+        let count = files.keys.count
+        DispatchQueue.main.async {
+            visualUpdateHandler?.prepareForNewTask(actionName: "Processing", thingName: "tracks", thingCount: count)
+        }
         super.init()
+        var index = 0
         for file in files {
             let url = file.value
             var path = url.path.components(separatedBy: "/").filter({$0 != ""})
             let object = file.key
             createNode(with: &path, with: object)
+            index += 1
+            DispatchQueue.main.async {
+                visualUpdateHandler?.increment(thingsDone: index)
+                print("incrementing \(index)")
+            }
         }
     }
     
@@ -156,7 +166,7 @@ class AlbumFilePathTree: NSObject {
         var filteredFiles = currentFiles.filter({ (key: NSObject, value: URL) -> Bool in
             return value.path.localizedCaseInsensitiveContains(searchString)
         })
-        return AlbumFilePathTree(files: &filteredFiles)
+        return AlbumFilePathTree(files: &filteredFiles, visualUpdateHandler: nil)
     }
     
     func getNodesForObjects(objects: Set<NSObject>) -> Set<AlbumFilePathNode> {

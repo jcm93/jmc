@@ -77,24 +77,23 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
         }
     }
     
+    func initialize(visualUpdateHandler: ProgressBarController?) {
+        self.preConsolidationFileViewController = AlbumFileLocationViewController(nibName: NSNib.Name(rawValue: "AlbumFileLocationViewController"), bundle: nil)
+        var currentTrackLocations = getCurrentLocations(visualUpdateHandler: visualUpdateHandler)
+        self.preConsolidationFileViewController.masterTree = AlbumFilePathTree(files: &currentTrackLocations, visualUpdateHandler: visualUpdateHandler)
+        self.postConsolidationFileViewController = AlbumFileLocationViewController(nibName: NSNib.Name(rawValue: "AlbumFileLocationViewController"), bundle: nil)
+        self.postConsolidationFileViewController.masterTree = AlbumFilePathTree(files: &self.things, visualUpdateHandler: visualUpdateHandler)
+    }
+    
     override func windowDidLoad() {
         super.windowDidLoad()
-        self.preConsolidationFileViewController = AlbumFileLocationViewController(nibName: NSNib.Name(rawValue: "AlbumFileLocationViewController"), bundle: nil)
-        var currentTrackLocations = getCurrentLocations(visualUpdateHandler: nil)
-        self.preConsolidationFileViewController.masterTree = AlbumFilePathTree(files: &currentTrackLocations)
         self.targetView.addArrangedSubview(self.preConsolidationFileViewController.view)
         self.preConsolidationFileViewController.setupForOldLocations()
         self.preConsolidationFileViewController.parentController = self
-        self.postConsolidationFileViewController = AlbumFileLocationViewController(nibName: NSNib.Name(rawValue: "AlbumFileLocationViewController"), bundle: nil)
-        self.postConsolidationFileViewController.masterTree = AlbumFilePathTree(files: &self.things)
-        self.targetView.addArrangedSubview(postConsolidationFileViewController.view)
+        self.targetView.addArrangedSubview(self.postConsolidationFileViewController.view)
         self.postConsolidationFileViewController.setupForNewLocations()
         self.postConsolidationFileViewController.parentController = self
-        /*self.postConsolidationFileViewController!.view.topAnchor.constraint(equalTo: targetView.topAnchor).isActive = true
-        self.postConsolidationFileViewController!.view.rightAnchor.constraint(equalTo: targetView.rightAnchor).isActive = true
-        self.postConsolidationFileViewController!.view.bottomAnchor.constraint(equalTo: targetView.bottomAnchor).isActive = true
-        self.postConsolidationFileViewController!.view.leftAnchor.constraint(equalTo: targetView.leftAnchor).isActive = true*/
-        // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+        
     }
     
 }
