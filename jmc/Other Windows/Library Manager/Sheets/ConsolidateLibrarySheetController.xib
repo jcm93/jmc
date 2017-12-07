@@ -8,6 +8,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ConsolidateLibrarySheetController" customModule="jmc" customModuleProvider="target">
             <connections>
+                <outlet property="copyFilesRadioButton" destination="p3r-Lu-9Nn" id="i2W-OO-wtg"/>
+                <outlet property="moveFilesRadioButton" destination="rpR-j6-0wn" id="y9h-yy-7EE"/>
                 <outlet property="targetView" destination="MFd-Wj-PLF" id="epV-eS-E0E"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>

@@ -31,7 +31,9 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
     var progressSheet: GenericProgressBarSheetController?
     var databaseManager = DatabaseManager()
     var moves = true
-
+    @IBOutlet weak var copyFilesRadioButton: NSButton!
+    @IBOutlet weak var moveFilesRadioButton: NSButton!
+    
     var libraryManager: LibraryManagerViewController?
     
     @IBAction func cancelPressed(_ sender: Any) {
@@ -39,7 +41,11 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
     }
     
     @IBAction func radioActio(_ sender: Any) {
-        
+        if copyFilesRadioButton.state == NSOnState {
+            self.moves = false
+        } else {
+            self.moves = true
+        }
     }
     
     func prepareForNewTask(actionName: String, thingName: String, thingCount: Int) {

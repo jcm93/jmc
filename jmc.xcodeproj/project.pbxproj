@@ -56,7 +56,6 @@
 		0D51C8A81EAC1646002F6182 /* URLStringFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C8A71EAC1646002F6182 /* URLStringFormatter.swift */; };
 		0D51C8AA1EAC1866002F6182 /* TransformerURLStringToURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C8A91EAC1866002F6182 /* TransformerURLStringToURL.swift */; };
 		0D51C8B21EB01731002F6182 /* JMTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C8B11EB01731002F6182 /* JMTabView.swift */; };
-		0D5682731FD8A3AD0031C94B /* AtomicFileMoveOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5682721FD8A3AD0031C94B /* AtomicFileMoveOperation.swift */; };
 		0D58F7491D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */; };
 		0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */; };
 		0D592A221EDF6BCE0054D553 /* TrackExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A211EDF6BCE0054D553 /* TrackExtension.swift */; };
@@ -277,7 +276,6 @@
 		0D51C8A71EAC1646002F6182 /* URLStringFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLStringFormatter.swift; path = Backend/Formatters/URLStringFormatter.swift; sourceTree = "<group>"; };
 		0D51C8A91EAC1866002F6182 /* TransformerURLStringToURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransformerURLStringToURL.swift; path = Backend/Formatters/TransformerURLStringToURL.swift; sourceTree = "<group>"; };
 		0D51C8B11EB01731002F6182 /* JMTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JMTabView.swift; path = "Other Windows/JMTabView.swift"; sourceTree = "<group>"; };
-		0D5682721FD8A3AD0031C94B /* AtomicFileMoveOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicFileMoveOperation.swift; sourceTree = "<group>"; };
 		0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableViewYouCanPressSpacebarOn.swift; path = "Main Interface Components/Main Table View/TableViewYouCanPressSpacebarOn.swift"; sourceTree = "<group>"; };
 		0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SourceListThatYouCanPressSpacebarOn.swift; path = "Main Interface Components/Subview Controllers/SourceListThatYouCanPressSpacebarOn.swift"; sourceTree = "<group>"; };
 		0D592A211EDF6BCE0054D553 /* TrackExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TrackExtension.swift; path = "Core Data Shit/TrackExtension.swift"; sourceTree = "<group>"; };
@@ -799,7 +797,6 @@
 			isa = PBXGroup;
 			children = (
 				0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */,
-				0D5682721FD8A3AD0031C94B /* AtomicFileMoveOperation.swift */,
 				0DA02D311EF9D41A00DDE5A9 /* MediaMetadataHandler.swift */,
 				0DAA85891EDFE90E004BF089 /* OrganizationFieldToken.swift */,
 				0DE486931EA92B78009B226B /* AddFilesQueueLoop.swift */,
@@ -1086,7 +1083,6 @@
 				0D592A411EDF6C8B0054D553 /* Composer+CoreDataClass.swift in Sources */,
 				0D0C2AA71E88D8DA00CA82C3 /* MTImageCell.swift in Sources */,
 				0D2D06D01EE32FB600A8EC66 /* Album+CoreDataProperties.swift in Sources */,
-				0D5682731FD8A3AD0031C94B /* AtomicFileMoveOperation.swift in Sources */,
 				0DA02D321EF9D41A00DDE5A9 /* MediaMetadataHandler.swift in Sources */,
 				0D447BB91EB2B73F00372A80 /* JMTextField.swift in Sources */,
 				0D592A421EDF6C8B0054D553 /* Composer+CoreDataProperties.swift in Sources */,
