@@ -41,7 +41,7 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
     }
     
     @IBAction func radioActio(_ sender: Any) {
-        if copyFilesRadioButton.state == NSOnState {
+        if copyFilesRadioButton.state == NSControl.StateValue.on {
             self.moves = false
         } else {
             self.moves = true
@@ -110,7 +110,5 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
                 }
             }
         }
-        
     }
-    
 }

@@ -56,6 +56,8 @@
 		0D51C8A81EAC1646002F6182 /* URLStringFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C8A71EAC1646002F6182 /* URLStringFormatter.swift */; };
 		0D51C8AA1EAC1866002F6182 /* TransformerURLStringToURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C8A91EAC1866002F6182 /* TransformerURLStringToURL.swift */; };
 		0D51C8B21EB01731002F6182 /* JMTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C8B11EB01731002F6182 /* JMTabView.swift */; };
+		0D5682761FD9D08A0031C94B /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0D5682751FD9D08A0031C94B /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0D5682781FD9D40C0031C94B /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D5682751FD9D08A0031C94B /* Sparkle.framework */; };
 		0D58F7491D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */; };
 		0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */; };
 		0D592A221EDF6BCE0054D553 /* TrackExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A211EDF6BCE0054D553 /* TrackExtension.swift */; };
@@ -154,7 +156,6 @@
 		0DC397AC1E5282920009792B /* LibraryManagerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DC397AA1E5282920009792B /* LibraryManagerViewController.xib */; };
 		0DC7127C1E2F115A0054ECE6 /* ImportErrorWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC7127A1E2F115A0054ECE6 /* ImportErrorWindowController.swift */; };
 		0DC7127D1E2F115A0054ECE6 /* ImportErrorWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DC7127B1E2F115A0054ECE6 /* ImportErrorWindowController.xib */; };
-		0DCF1D1C1F1D113600240202 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0DCF1D191F1D10DC00240202 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0DCF1D251F1D3C6300240202 /* AirPlayDeviceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DCF1D241F1D3C6300240202 /* AirPlayDeviceHandler.swift */; };
 		0DD0DB0E1E54425800807CAC /* FlacDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD0DB0D1E54425800807CAC /* FlacDecoder.swift */; };
 		0DD274EF1D3190360055C43B /* GlobalFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD274EE1D3190360055C43B /* GlobalFunctions.swift */; };
@@ -220,7 +221,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				0DCF1D1C1F1D113600240202 /* Sparkle.framework in CopyFiles */,
+				0D5682761FD9D08A0031C94B /* Sparkle.framework in CopyFiles */,
 				0D2300D51F28E77F007D392A /* libogg.dylib in CopyFiles */,
 				0D2300D61F28E781007D392A /* libFLAC.dylib in CopyFiles */,
 			);
@@ -276,6 +277,7 @@
 		0D51C8A71EAC1646002F6182 /* URLStringFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLStringFormatter.swift; path = Backend/Formatters/URLStringFormatter.swift; sourceTree = "<group>"; };
 		0D51C8A91EAC1866002F6182 /* TransformerURLStringToURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransformerURLStringToURL.swift; path = Backend/Formatters/TransformerURLStringToURL.swift; sourceTree = "<group>"; };
 		0D51C8B11EB01731002F6182 /* JMTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JMTabView.swift; path = "Other Windows/JMTabView.swift"; sourceTree = "<group>"; };
+		0D5682751FD9D08A0031C94B /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableViewYouCanPressSpacebarOn.swift; path = "Main Interface Components/Main Table View/TableViewYouCanPressSpacebarOn.swift"; sourceTree = "<group>"; };
 		0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SourceListThatYouCanPressSpacebarOn.swift; path = "Main Interface Components/Subview Controllers/SourceListThatYouCanPressSpacebarOn.swift"; sourceTree = "<group>"; };
 		0D592A211EDF6BCE0054D553 /* TrackExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TrackExtension.swift; path = "Core Data Shit/TrackExtension.swift"; sourceTree = "<group>"; };
@@ -381,7 +383,6 @@
 		0DC397AA1E5282920009792B /* LibraryManagerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LibraryManagerViewController.xib; path = "Other Windows/Library Manager/LibraryManagerViewController.xib"; sourceTree = "<group>"; };
 		0DC7127A1E2F115A0054ECE6 /* ImportErrorWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImportErrorWindowController.swift; path = "Other Windows/ImportErrorWindowController.swift"; sourceTree = "<group>"; };
 		0DC7127B1E2F115A0054ECE6 /* ImportErrorWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImportErrorWindowController.xib; path = "Other Windows/ImportErrorWindowController.xib"; sourceTree = "<group>"; };
-		0DCF1D191F1D10DC00240202 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = "../../Downloads/Sparkle-1.18.0/Sparkle.framework"; sourceTree = "<group>"; };
 		0DCF1D241F1D3C6300240202 /* AirPlayDeviceHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirPlayDeviceHandler.swift; sourceTree = "<group>"; };
 		0DD0DB0D1E54425800807CAC /* FlacDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlacDecoder.swift; path = Backend/Audio/FlacDecoder.swift; sourceTree = "<group>"; };
 		0DD274EE1D3190360055C43B /* GlobalFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GlobalFunctions.swift; path = Backend/GlobalFunctions.swift; sourceTree = "<group>"; };
@@ -440,6 +441,7 @@
 				0DA4E1961F27F8BE00EC80B2 /* libreplaygain_analysis.a in Frameworks */,
 				0DF491F91F27EC4800D23AD1 /* libFLAC.dylib in Frameworks */,
 				0DA4E1951F27F8BE00EC80B2 /* libplugin_common.a in Frameworks */,
+				0D5682781FD9D40C0031C94B /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -612,6 +614,13 @@
 			name = "Main Table View";
 			sourceTree = "<group>";
 		};
+		0D5682771FD9D40C0031C94B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		0D606EF71E7B4C2A007AE152 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
@@ -732,12 +741,13 @@
 		0DAB30841CFBA3340028928F = {
 			isa = PBXGroup;
 			children = (
+				0D5682751FD9D08A0031C94B /* Sparkle.framework */,
 				0DF491EE1F27EC2600D23AD1 /* FLAC */,
 				0DAB308F1CFBA3340028928F /* jmc */,
 				0DAB30A21CFBA3340028928F /* jmcTests */,
 				0DAB30AD1CFBA3340028928F /* jmcUITests */,
 				0DAB308E1CFBA3340028928F /* Products */,
-				0DCF1D181F1D10DC00240202 /* Frameworks */,
+				0D5682771FD9D40C0031C94B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -835,14 +845,6 @@
 				0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */,
 			);
 			name = Miscellaneous;
-			sourceTree = "<group>";
-		};
-		0DCF1D181F1D10DC00240202 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				0DCF1D191F1D10DC00240202 /* Sparkle.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		0DE486801EA579D8009B226B /* Sheets */ = {
@@ -1322,9 +1324,13 @@
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = jmc/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../ @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/1.3.2/lib",
@@ -1355,9 +1361,13 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				GCC_OPTIMIZATION_LEVEL = s;
 				INFOPLIST_FILE = jmc/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../ @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/1.3.2/lib",

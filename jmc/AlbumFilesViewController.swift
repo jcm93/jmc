@@ -114,8 +114,11 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
         print("should select items called")
         if indexPaths.count == 1 {
             print("initialzing new primary image")
-            let viewItem = collectionView.item(at: indexPaths.first!) as! ImageCollectionViewItem
-            changePrimaryImage(imageURL: viewItem.imageURL!)
+            if let viewItem = collectionView.item(at: indexPaths.first!) as? ImageCollectionViewItem {
+                if viewItem.imageURL != nil {
+                    changePrimaryImage(imageURL: viewItem.imageURL!)
+                }
+            }
         }
         return indexPaths
     }
