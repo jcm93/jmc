@@ -332,11 +332,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         self.skipBackward()
     }
     @IBAction func tempBreak(_ sender: AnyObject) {
-        //self.skip()
-        print("dongels")
+        self.skip()
+        /*print("dongels")
         let fr = NSFetchRequest<Track>(entityName: "Track")
         let result = try? managedContext.fetch(fr)
-        print(result?.count)
+        print(result?.count)*/
     }
     @IBAction func addPlaylistButton(_ sender: AnyObject) {
         sourceListViewController!.createPlaylist(nil, smart_criteria: nil)

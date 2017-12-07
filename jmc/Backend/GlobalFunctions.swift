@@ -253,12 +253,12 @@ func getVolumeOfURL(url: URL) -> URL {
     }
 }
 
-func checkIfVolumeExists(withURL url: URL) -> Volume? {
+func checkIfVolumeExists(withURL url: URL, subcontext: NSManagedObjectContext? = nil) -> Volume? {
     let fetch = NSFetchRequest<Volume>(entityName: "Volume")
     let predicate = NSPredicate(format: "location == %@", url.absoluteString)
     fetch.predicate = predicate
     do {
-        let results = try managedContext.fetch(fetch)
+        let results = subcontext != nil ? (try subcontext!.fetch(fetch)) : (try managedContext.fetch(fetch))
         if results.count > 0 {
             return results[0]
         } else {
@@ -503,12 +503,12 @@ var jmcUnknownComposer = {() -> Composer in
     }
 }
 
-func checkIfArtistExists(_ name: String) -> Artist? {
+func checkIfArtistExists(_ name: String, subcontext: NSManagedObjectContext? = nil) -> Artist? {
     let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Artist")
     let predicate = NSPredicate(format: "name == %@", name)
     request.predicate = predicate
     do {
-        let result = try managedContext.fetch(request) as! [Artist]
+        let result = subcontext != nil ? (try subcontext!.fetch(request) as! [Artist]) : (try managedContext.fetch(request) as! [Artist])
         if result.count > 0 {
             return result[0]
         } else {
@@ -520,12 +520,12 @@ func checkIfArtistExists(_ name: String) -> Artist? {
     }
 }
 
-func checkIfAlbumExists(withName name: String, withArtist artist: Artist) -> Album? {
+func checkIfAlbumExists(withName name: String, withArtist artist: Artist, subcontext: NSManagedObjectContext? = nil) -> Album? {
     let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Album")
     let predicate = NSPredicate(format: "name == %@ and album_artist == %@", name, artist)
     request.predicate = predicate
     do {
-        let result = try managedContext.fetch(request) as! [Album]
+        let result = subcontext != nil ? (try subcontext!.fetch(request) as! [Album]) : (try managedContext.fetch(request) as! [Album])
         if result.count > 0 {
             return result[0]
         } else {
@@ -537,12 +537,12 @@ func checkIfAlbumExists(withName name: String, withArtist artist: Artist) -> Alb
     }
 }
 
-func checkIfComposerExists(_ name: String) -> Composer? {
+func checkIfComposerExists(_ name: String, subcontext: NSManagedObjectContext? = nil) -> Composer? {
     let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Composer")
     let predicate = NSPredicate(format: "name == %@", name)
     request.predicate = predicate
     do {
-        let result = try managedContext.fetch(request) as! [Composer]
+        let result = subcontext != nil ? (try subcontext!.fetch(request) as! [Composer]) : (try managedContext.fetch(request) as! [Composer])
         if result.count > 0 {
             return result[0]
         } else {
@@ -554,12 +554,12 @@ func checkIfComposerExists(_ name: String) -> Composer? {
     }
 }
 
-func checkIfCachedOrderExists(_ name: String) -> CachedOrder? {
+func checkIfCachedOrderExists(_ name: String, subcontext: NSManagedObjectContext? = nil) -> CachedOrder? {
     let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CachedOrder")
     let predicate = NSPredicate(format: "order == %@", name)
     request.predicate = predicate
     do {
-        let result = try managedContext.fetch(request) as! [CachedOrder]
+        let result = subcontext != nil ? (try subcontext!.fetch(request) as! [CachedOrder]) : (try managedContext.fetch(request) as! [CachedOrder])
         if result.count > 0 {
             return result[0]
         } else {

@@ -156,7 +156,6 @@ class AlbumFilePathTree: NSObject {
             index += 1
             DispatchQueue.main.async {
                 visualUpdateHandler?.increment(thingsDone: index)
-                print("incrementing \(index)")
             }
         }
     }
@@ -230,6 +229,7 @@ class AlbumFileLocationViewController: NSViewController, NSOutlineViewDataSource
         if self.isSearching == true {
             self.isSearching = false
             self.outlineView.reloadData()
+            self.outlineView.expandItem(nil, expandChildren: true)
         }
         let nodes = self.masterTree.getNodesForObjects(objects: items)
         var indexSet = IndexSet()

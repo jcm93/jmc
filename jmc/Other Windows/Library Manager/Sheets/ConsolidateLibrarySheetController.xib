@@ -23,16 +23,6 @@
                 <rect key="frame" x="0.0" y="0.0" width="837" height="430"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button translatesAutoresizingMaskIntoConstraints="NO" id="rpR-j6-0wn">
-                        <rect key="frame" x="19" y="41" width="84" height="18"/>
-                        <buttonCell key="cell" type="radio" title="Move files" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Khg-Id-0Ze">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="radioActio:" target="-2" id="y7d-mh-UiH"/>
-                        </connections>
-                    </button>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="p3r-Lu-9Nn">
                         <rect key="frame" x="19" y="19" width="83" height="18"/>
                         <buttonCell key="cell" type="radio" title="Copy files" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="x5h-co-iTE">
@@ -43,8 +33,8 @@
                             <action selector="radioActio:" target="-2" id="CXE-Bd-Cc5"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TJw-Cj-9eN">
-                        <rect key="frame" x="361" y="13" width="82" height="32"/>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TJw-Cj-9eN">
+                        <rect key="frame" x="629" y="13" width="82" height="32"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="RNm-WS-CkA">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -57,19 +47,48 @@ Gw
                         </connections>
                     </button>
                     <splitView arrangesAllSubviews="NO" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MFd-Wj-PLF">
-                        <rect key="frame" x="20" y="66" width="797" height="344"/>
+                        <rect key="frame" x="20" y="56" width="797" height="354"/>
                     </splitView>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yfh-hR-vxh">
+                        <rect key="frame" x="711" y="13" width="112" height="32"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="100" id="JKn-wu-HA9"/>
+                        </constraints>
+                        <buttonCell key="cell" type="push" title="Consolidate" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="uP0-bO-FwQ">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="consolidatePressed:" target="-2" id="Mau-va-6BZ"/>
+                        </connections>
+                    </button>
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="rpR-j6-0wn">
+                        <rect key="frame" x="115" y="19" width="84" height="18"/>
+                        <buttonCell key="cell" type="radio" title="Move files" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Khg-Id-0Ze">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="radioActio:" target="-2" id="y7d-mh-UiH"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="MFd-Wj-PLF" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="4LZ-Gb-pVM"/>
                     <constraint firstItem="MFd-Wj-PLF" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="20" id="9jB-Ve-xDQ"/>
-                    <constraint firstItem="rpR-j6-0wn" firstAttribute="top" secondItem="MFd-Wj-PLF" secondAttribute="bottom" constant="8" id="FCS-ou-NAF"/>
+                    <constraint firstItem="rpR-j6-0wn" firstAttribute="top" secondItem="MFd-Wj-PLF" secondAttribute="bottom" constant="20" id="FCS-ou-NAF"/>
+                    <constraint firstItem="yfh-hR-vxh" firstAttribute="leading" secondItem="TJw-Cj-9eN" secondAttribute="trailing" constant="12" id="HhC-Ok-oTW"/>
+                    <constraint firstItem="rpR-j6-0wn" firstAttribute="leading" secondItem="p3r-Lu-9Nn" secondAttribute="trailing" constant="16" id="MCQ-XG-S1g"/>
                     <constraint firstAttribute="bottom" secondItem="p3r-Lu-9Nn" secondAttribute="bottom" constant="20" id="Oe7-VH-ssl"/>
-                    <constraint firstItem="rpR-j6-0wn" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="WNe-l1-MzD"/>
+                    <constraint firstAttribute="bottom" secondItem="rpR-j6-0wn" secondAttribute="bottom" constant="20" id="TXB-uJ-KVZ"/>
+                    <constraint firstAttribute="trailing" secondItem="yfh-hR-vxh" secondAttribute="trailing" constant="20" id="VSG-cL-CQj"/>
                     <constraint firstAttribute="trailing" secondItem="MFd-Wj-PLF" secondAttribute="trailing" constant="20" id="YEo-Ro-OWA"/>
+                    <constraint firstAttribute="bottom" secondItem="yfh-hR-vxh" secondAttribute="bottom" constant="20" id="d00-v9-1Q0"/>
                     <constraint firstItem="p3r-Lu-9Nn" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="ryL-s4-pds"/>
                     <constraint firstAttribute="bottom" secondItem="TJw-Cj-9eN" secondAttribute="bottom" constant="20" id="uZj-Q1-eCx"/>
-                    <constraint firstItem="p3r-Lu-9Nn" firstAttribute="top" secondItem="rpR-j6-0wn" secondAttribute="bottom" constant="6" id="vy9-jQ-VNw"/>
                 </constraints>
             </view>
             <connections>

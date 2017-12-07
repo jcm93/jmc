@@ -28,6 +28,9 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
     var things = [NSObject : URL]()
     @IBOutlet weak var progressBar: NSProgressIndicator!
     @IBOutlet weak var progressTextLabel: NSTextField!
+    var progressSheet: GenericProgressBarSheetController?
+    var databaseManager = DatabaseManager()
+    var moves = true
 
     var libraryManager: LibraryManagerViewController?
     
@@ -36,17 +39,6 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
     }
     
     @IBAction func radioActio(_ sender: Any) {
-        
-    }
-
-    @IBAction func consolidatePressed(_ sender: Any) {
-        /*let selectedTracks = self.postConsolidationFileViewController?.trackViewArrayController.selectedObjects as! [DisparateTrack]
-        self.libraryManager?.databaseManager.batchMoveTracks(tracks: selectedTracks.map({return $0.track}), visualUpdateHandler: self)
-        self.progressBar.isHidden = false
-        self.progressTextLabel.isHidden = false
-        self.progressBar.maxValue = Double(selectedTracks.count)
-        self.progressTextLabel.stringValue = "Consolidating tracks..."
-        self.thingCount = selectedTracks.count*/
         
     }
     
@@ -93,6 +85,25 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
         self.targetView.addArrangedSubview(self.postConsolidationFileViewController.view)
         self.postConsolidationFileViewController.setupForNewLocations()
         self.postConsolidationFileViewController.parentController = self
+    }
+    
+    @IBAction func consolidatePressed(_ sender: Any) {
+        let alert = NSAlert()
+        alert.addButton(withTitle: "OK")
+        alert.addButton(withTitle: "Cancel")
+        alert.informativeText = "Are you sure you want to consolidate your music library? This operation cannot be undone."
+        let response = alert.runModal()
+        if response == NSApplication.ModalResponse.alertFirstButtonReturn {
+            print("consolidating library")
+            self.progressSheet = GenericProgressBarSheetController(windowNibName: .init("GenericProgressBarSheetController"))
+            self.window?.beginSheet(self.progressSheet!.window!, completionHandler: nil)
+            DispatchQueue.global(qos: .default).async {
+                self.databaseManager.consolidateLibrary(withLocations: self.postConsolidationFileViewController.masterTree.rootNode.objectPathDictionaryIfRoot!, visualUpdateHandler: self.progressSheet, moves: self.moves)
+                DispatchQueue.main.async {
+                    self.window?.close()
+                }
+            }
+        }
         
     }
     

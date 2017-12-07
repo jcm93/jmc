@@ -47,6 +47,7 @@ class DatabaseManager: NSObject {
     let fileManager = FileManager.default
     var undoFileLocations = [Track : [String]]()
     var currentTrack: Track?
+    var consolidationShouldStop: Bool = false
     
     func getArtworkFromFile(_ urlString: String) -> Data? {
         print("checking for art in file")
@@ -510,6 +511,88 @@ class DatabaseManager: NSObject {
         return (mediaURLs, errors)
     }
     
+    func consolidateLibrary(withLocations newLocationDictionary: [NSObject : URL], visualUpdateHandler: ProgressBarController?, moves: Bool) {
+        //assume called on not-main queue
+        let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        subContext.parent = managedContext
+        var index = 0
+        let count = newLocationDictionary.count
+        DispatchQueue.main.async {
+            visualUpdateHandler?.prepareForNewTask(actionName: "Consolidating", thingName: "tracks", thingCount: count)
+        }
+        for (object, newURL) in newLocationDictionary {
+            guard self.consolidationShouldStop != true else { break }
+            defer {
+                index += 1
+                DispatchQueue.main.async {
+                    visualUpdateHandler?.increment(thingsDone: index)
+                }
+            }
+            let object = object as! NSManagedObject
+            let subContextObject = subContext.object(with: object.objectID)
+            guard let oldURL = {() -> URL? in
+                switch subContextObject {
+                case let subContextObject as Track:
+                    return URL(string: subContextObject.location ?? "")
+                case let subContextObject as AlbumFile:
+                    return URL(string: subContextObject.location ?? "")
+                case let subContextObject as AlbumArtwork:
+                    return URL(string: subContextObject.location ?? "")
+                default:
+                    return nil
+                }
+            }() else { continue }
+            do {
+                try fileManager.createDirectory(at: newURL.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                print(error)
+            }
+            do {
+                switch moves {
+                case true:
+                    try fileManager.moveItem(at: oldURL, to: newURL)
+                case false:
+                    try fileManager.copyItem(at: oldURL, to: newURL)
+                }
+            } catch {
+                print(error)
+                //append error
+                continue
+            }
+            switch subContextObject {
+            case let subContextObject as Track:
+                subContextObject.location = newURL.absoluteString
+            case let subContextObject as AlbumFile:
+                subContextObject.location = newURL.absoluteString
+            case let subContextObject as AlbumArtwork:
+                subContextObject.location = newURL.absoluteString
+            default:
+                break
+            }
+            do {
+                try subContext.save()
+                DispatchQueue.main.async {
+                    do {
+                        try managedContext.save()
+                    } catch {
+                        self.consolidationShouldStop = true
+                    }
+                }
+            } catch {
+                self.consolidationShouldStop = true
+                continue
+            }
+        }
+        if self.consolidationShouldStop == true {
+            print("failure")
+        } else {
+            print("success")
+        }
+        DispatchQueue.main.async {
+            visualUpdateHandler?.finish()
+        }
+    }
+    
     func removeNetworkedLibrary(_ library: Library) {
         removeSource(library: library)
     }
@@ -659,7 +742,7 @@ class DatabaseManager: NSObject {
             let volumeURL = getVolumeOfURL(url: url)
             if let existingVolume = addedVolumes[volumeURL]  {
                 track.volume = existingVolume
-            } else if let existingVolume = checkIfVolumeExists(withURL: volumeURL) {
+            } else if let existingVolume = checkIfVolumeExists(withURL: volumeURL, subcontext: subContext) {
                 track.volume = subContext.object(with: existingVolume.objectID) as! Volume
             } else {
                 let newVolume = NSEntityDescription.insertNewObject(forEntityName: "Volume", into: subContext) as! Volume
@@ -696,7 +779,7 @@ class DatabaseManager: NSObject {
             let artistCheck = fileMetadataDictionary[kArtistKey] as? String ?? ""
             if let alreadyAddedArtist = addedArtists[artistCheck] {
                 track.artist = alreadyAddedArtist
-            } else if let alreadyAddedArtist = checkIfArtistExists(artistCheck) {
+            } else if let alreadyAddedArtist = checkIfArtistExists(artistCheck, subcontext: subContext) {
                 track.artist = subContext.object(with: alreadyAddedArtist.objectID) as! Artist
             } else {
                 let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: subContext) as! Artist
@@ -710,7 +793,7 @@ class DatabaseManager: NSObject {
             let albumCheck = fileMetadataDictionary[kAlbumKey] as? String ?? ""
             if let alreadyAddedAlbum = addedAlbums[track.artist!]?[albumCheck] {
                 track.album = alreadyAddedAlbum
-            } else if let alreadyAddedAlbum = checkIfAlbumExists(withName: albumCheck, withArtist: track.artist!) {
+            } else if let alreadyAddedAlbum = checkIfAlbumExists(withName: albumCheck, withArtist: track.artist!, subcontext: subContext) {
                 track.album = subContext.object(with: alreadyAddedAlbum.objectID) as! Album
             } else {
                 let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: subContext) as! Album
@@ -734,7 +817,7 @@ class DatabaseManager: NSObject {
             if let composerCheck = fileMetadataDictionary[kComposerKey] as? String {
                 if let alreadyAddedComposer = addedComposers[composerCheck] {
                     track.composer = alreadyAddedComposer
-                } else if let alreadyAddedComposer = checkIfComposerExists(composerCheck) {
+                } else if let alreadyAddedComposer = checkIfComposerExists(composerCheck, subcontext: subContext) {
                     track.composer = subContext.object(with: alreadyAddedComposer.objectID) as! Composer
                 }  else {
                     let newComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: subContext) as! Composer
