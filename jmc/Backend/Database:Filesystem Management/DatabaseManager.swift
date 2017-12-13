@@ -28,7 +28,7 @@ func instanceCheck(_ entity: String, name: String) -> NSManagedObject? {
         return results![0]
     }
     else {
-        return nil
+        return nil 
     }
 }
 

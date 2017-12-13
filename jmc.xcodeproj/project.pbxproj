@@ -81,6 +81,7 @@
 		0D69659D1EA02EC50050D505 /* ProgressBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D69659C1EA02EC50050D505 /* ProgressBarController.swift */; };
 		0D6E041B1ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6E04191ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift */; };
 		0D6E041C1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D6E041A1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib */; };
+		0D7111401FE1CA0D006E460E /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 0D71113F1FE1CA0C006E460E /* dsa_pub.pem */; };
 		0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */; };
 		0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */; };
 		0D76F6A81D24B9AC00C6E70F /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */; };
@@ -301,6 +302,7 @@
 		0D69659C1EA02EC50050D505 /* ProgressBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressBarController.swift; path = "Main Interface Components/Miscellaneous/ProgressBarController.swift"; sourceTree = "<group>"; };
 		0D6E04191ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewTrackListViewController.swift; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewTrackListViewController.swift"; sourceTree = "<group>"; };
 		0D6E041A1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistViewTrackListViewController.xib; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewTrackListViewController.xib"; sourceTree = "<group>"; };
+		0D71113F1FE1CA0C006E460E /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = SOURCE_ROOT; };
 		0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TagEditorWindow.swift; path = "Other Windows/TagEditorWindow.swift"; sourceTree = "<group>"; };
 		0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TagEditorWindow.xib; path = "Other Windows/TagEditorWindow.xib"; sourceTree = "<group>"; };
 		0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DatabaseManager.swift; path = "Backend/Database:Filesystem Management/DatabaseManager.swift"; sourceTree = "<group>"; };
@@ -517,6 +519,7 @@
 			isa = PBXGroup;
 			children = (
 				0D87867C1E3EFC000091785B /* jmc-Bridging-Header.h */,
+				0D71113F1FE1CA0C006E460E /* dsa_pub.pem */,
 				0D9CE6771D3442D3004FA8CB /* Preferences.plist */,
 				0DAB30951CFBA3340028928F /* Assets.xcassets */,
 				0DAB309A1CFBA3340028928F /* Info.plist */,
@@ -1001,6 +1004,7 @@
 				0DAB30961CFBA3340028928F /* Assets.xcassets in Resources */,
 				0D3756C11EAADBD700016136 /* PreferencesWindowController.xib in Resources */,
 				0D800C091ED3B3C800EA2889 /* ArtistListViewController.xib in Resources */,
+				0D7111401FE1CA0D006E460E /* dsa_pub.pem in Resources */,
 				0DF4BEF41CFD0D4E00AC5824 /* MainWindowController.xib in Resources */,
 				0DA4E1841F27F8BE00EC80B2 /* example_c_encode_file in Resources */,
 				0DF188811EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib in Resources */,
