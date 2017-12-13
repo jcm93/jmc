@@ -56,8 +56,6 @@
 		0D51C8A81EAC1646002F6182 /* URLStringFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C8A71EAC1646002F6182 /* URLStringFormatter.swift */; };
 		0D51C8AA1EAC1866002F6182 /* TransformerURLStringToURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C8A91EAC1866002F6182 /* TransformerURLStringToURL.swift */; };
 		0D51C8B21EB01731002F6182 /* JMTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C8B11EB01731002F6182 /* JMTabView.swift */; };
-		0D5682761FD9D08A0031C94B /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0D5682751FD9D08A0031C94B /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		0D5682781FD9D40C0031C94B /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D5682751FD9D08A0031C94B /* Sparkle.framework */; };
 		0D58F7491D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */; };
 		0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */; };
 		0D592A221EDF6BCE0054D553 /* TrackExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A211EDF6BCE0054D553 /* TrackExtension.swift */; };
@@ -82,6 +80,8 @@
 		0D6E041B1ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6E04191ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift */; };
 		0D6E041C1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D6E041A1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib */; };
 		0D7111401FE1CA0D006E460E /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 0D71113F1FE1CA0C006E460E /* dsa_pub.pem */; };
+		0D7111491FE1DB15006E460E /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0D7111471FE1DAD9006E460E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0D71114A1FE1DB1B006E460E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7111471FE1DAD9006E460E /* Sparkle.framework */; };
 		0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */; };
 		0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */; };
 		0D76F6A81D24B9AC00C6E70F /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */; };
@@ -222,9 +222,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				0D5682761FD9D08A0031C94B /* Sparkle.framework in CopyFiles */,
 				0D2300D51F28E77F007D392A /* libogg.dylib in CopyFiles */,
 				0D2300D61F28E781007D392A /* libFLAC.dylib in CopyFiles */,
+				0D7111491FE1DB15006E460E /* Sparkle.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,7 +278,6 @@
 		0D51C8A71EAC1646002F6182 /* URLStringFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLStringFormatter.swift; path = Backend/Formatters/URLStringFormatter.swift; sourceTree = "<group>"; };
 		0D51C8A91EAC1866002F6182 /* TransformerURLStringToURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransformerURLStringToURL.swift; path = Backend/Formatters/TransformerURLStringToURL.swift; sourceTree = "<group>"; };
 		0D51C8B11EB01731002F6182 /* JMTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JMTabView.swift; path = "Other Windows/JMTabView.swift"; sourceTree = "<group>"; };
-		0D5682751FD9D08A0031C94B /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableViewYouCanPressSpacebarOn.swift; path = "Main Interface Components/Main Table View/TableViewYouCanPressSpacebarOn.swift"; sourceTree = "<group>"; };
 		0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SourceListThatYouCanPressSpacebarOn.swift; path = "Main Interface Components/Subview Controllers/SourceListThatYouCanPressSpacebarOn.swift"; sourceTree = "<group>"; };
 		0D592A211EDF6BCE0054D553 /* TrackExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TrackExtension.swift; path = "Core Data Shit/TrackExtension.swift"; sourceTree = "<group>"; };
@@ -303,6 +302,7 @@
 		0D6E04191ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewTrackListViewController.swift; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewTrackListViewController.swift"; sourceTree = "<group>"; };
 		0D6E041A1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistViewTrackListViewController.xib; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewTrackListViewController.xib"; sourceTree = "<group>"; };
 		0D71113F1FE1CA0C006E460E /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = SOURCE_ROOT; };
+		0D7111471FE1DAD9006E460E /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = "../../Downloads/Sparkle-1.18.1(1)/Sparkle.framework"; sourceTree = "<group>"; };
 		0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TagEditorWindow.swift; path = "Other Windows/TagEditorWindow.swift"; sourceTree = "<group>"; };
 		0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TagEditorWindow.xib; path = "Other Windows/TagEditorWindow.xib"; sourceTree = "<group>"; };
 		0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DatabaseManager.swift; path = "Backend/Database:Filesystem Management/DatabaseManager.swift"; sourceTree = "<group>"; };
@@ -437,13 +437,13 @@
 				0DA4E1971F27F8BE00EC80B2 /* libreplaygain_synthesis.a in Frameworks */,
 				0DA4E1931F27F8BE00EC80B2 /* libgetopt.a in Frameworks */,
 				0DA4E1921F27F8BE00EC80B2 /* libFLAC.a in Frameworks */,
+				0D71114A1FE1DB1B006E460E /* Sparkle.framework in Frameworks */,
 				0DA4E1981F27F8BE00EC80B2 /* libtest_libs_common.a in Frameworks */,
 				0DA4E1911F27F8BE00EC80B2 /* libFLAC++.a in Frameworks */,
 				0DA4E1941F27F8BE00EC80B2 /* libgrabbag.a in Frameworks */,
 				0DA4E1961F27F8BE00EC80B2 /* libreplaygain_analysis.a in Frameworks */,
 				0DF491F91F27EC4800D23AD1 /* libFLAC.dylib in Frameworks */,
 				0DA4E1951F27F8BE00EC80B2 /* libplugin_common.a in Frameworks */,
-				0D5682781FD9D40C0031C94B /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -744,7 +744,7 @@
 		0DAB30841CFBA3340028928F = {
 			isa = PBXGroup;
 			children = (
-				0D5682751FD9D08A0031C94B /* Sparkle.framework */,
+				0D7111471FE1DAD9006E460E /* Sparkle.framework */,
 				0DF491EE1F27EC2600D23AD1 /* FLAC */,
 				0DAB308F1CFBA3340028928F /* jmc */,
 				0DAB30A21CFBA3340028928F /* jmcTests */,
@@ -1331,6 +1331,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks",
+					"$(PROJECT_DIR)",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = jmc/Info.plist;
@@ -1368,6 +1369,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks",
+					"$(PROJECT_DIR)",
 				);
 				GCC_OPTIMIZATION_LEVEL = s;
 				INFOPLIST_FILE = jmc/Info.plist;

@@ -5,7 +5,7 @@
     <description>Most recent changes with links to updates.</description>
     <language>en</language>
       <item>
-        <title>Version 0.2 beta 7</title>
+        <title>Version 0.3 beta</title>
         <description>
           <![CDATA[
             <ul>
@@ -14,7 +14,7 @@
           ]]>
         </description>
         <pubDate>Thu, 13 Dec 2017 14:20:11 +0000</pubDate>
-        <enclosure url="https://github.com/jcm93/jmc/releases/download/v0.2-beta.7/jmc.app.zip" sparkle:version="2.0" length="9219160" type="application/octet-stream" sparkle:dsaSignature="MEQCIDJymB6IgR/HDMrb8C18nF922BzGtGamof9ojX0vqyhrAiB+vlOp2OAwYHwTqGXTZQySXpsookvkI+dhcGPAiOc07A==" />
+        <enclosure url="https://github.com/jcm93/jmc/releases/download/v0.3-beta/jmc.app.zip" sparkle:version="2.0" length="9219160" type="application/octet-stream" sparkle:dsaSignature="MEYCIQDEFzOMJw0f8/FK7aYAADJvs0qoO0jkZSYQgx6AH2kfaAIhALsYWqgOLUIogp+DwHH4bU1gwG/tUqerDCmNPIcnDIVq" />
       </item>
   </channel>
 </rss>
