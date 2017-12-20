@@ -137,7 +137,7 @@ class MissingFilesViewController: NSViewController, NSOutlineViewDataSource, NSO
     var pathTree: MissingTrackPathTree
     var fileManager = FileManager.default
     var missingTracks = Set<Track>()
-    var libraryManager: LibraryManagerViewController?
+    var libraryManager: LibraryManagerViewController!
     
     init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, tracks: inout [Track]) {
         self.pathTree = MissingTrackPathTree(with: &tracks)
@@ -235,7 +235,7 @@ class MissingFilesViewController: NSViewController, NSOutlineViewDataSource, NSO
                 outlineView.removeItems(at: IndexSet(integer: rowOfThing), inParent: highestThing.parent, withAnimation: NSTableView.AnimationOptions.slideUp)
             }
             node!.purge()
-            libraryManager?.updateMissingTracks(count: missingTracks.count)
+            libraryManager.updateMissingTracks(count: missingTracks.count)
         }
     }
     

@@ -8,11 +8,40 @@
 
 import Foundation
 import CoreData
+import Cocoa
 
 
 public class Track: NSManagedObject {
     
     // Insert code here to add functionality to your managed object subclass
+    
+    func getArtistAlbumString() -> String {
+        var artistString = ""
+        if self.artist != nil {
+            artistString += self.artist!.name!
+            if self.album != nil && self.album?.name != "" {
+                artistString += " - \(self.album!.name!)"
+            }
+        } else {
+            if self.album != nil {
+                artistString += "\(self.album!.name!)"
+            }
+        }
+        return artistString
+    }
+    
+    func getAlbumArt() -> NSImage? {
+        if let art = self.album?.primary_art {
+            if let path = art.location {
+                if let url = URL(string: path) {
+                    if let image = NSImage(contentsOf: url) {
+                        return image
+                    }
+                }
+            }
+        }
+        return nil
+    }
     
     func dictRepresentation(_ fields: [String]) -> NSDictionary {
         let dict = NSMutableDictionary()

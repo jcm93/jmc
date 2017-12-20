@@ -253,7 +253,7 @@ class AlbumFileLocationViewController: NSViewController, NSOutlineViewDataSource
             if node.children.count > 0 {
                 view.imageView?.image = NSImage(named: NSImage.Name.folder)
             } else {
-                view.imageView?.image = NSImage(named: NSImage.Name.multipleDocuments)
+                view.imageView?.image = NSWorkspace.shared.icon(forFileType: UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, url.pathExtension as CFString, nil)!.takeRetainedValue() as String)
             }
         }
         view.textField?.stringValue = node.pathComponent

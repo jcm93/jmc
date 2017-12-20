@@ -53,18 +53,35 @@ class TrackQueueView: NSObject {
 }
 
 class TrackNameTableCell: NSTableCellView {
-    
+    @IBOutlet var artistAlbumField: NSTextField!
+    @IBOutlet var trackNameField: NSTextField!
+    @IBOutlet var albumArtView: NSImageView!
 }
 
-class NowPlayingCell: NSTableCellView {}
+class NowPlayingCell: NSTableCellView {
+    @IBOutlet var artistAlbumField: NSTextField!
+    @IBOutlet var trackNameField: NSTextField!
+    @IBOutlet var albumArtView: NSImageView!
+    @IBOutlet var nowPlayingImageView: NSImageView!
+}
 
-class FutureTrackCell: NSTableCellView {}
+class FutureTrackCell: NSTableCellView {
+    @IBOutlet var artistAlbumField: NSTextField!
+    @IBOutlet var trackNameField: NSTextField!
+    @IBOutlet var albumArtView: NSImageView!
+}
 
-class PastTrackCell: NSTableCellView {}
+class PastTrackCell: NSTableCellView {
+    @IBOutlet var artistAlbumField: NSTextField!
+    @IBOutlet var trackNameField: NSTextField!
+    @IBOutlet var albumArtView: NSImageView!
+}
 
 class FromSourceDividerCell: NSTableCellView {}
 
-class FromSourceCell: NSTableCellView {}
+class FromSourceCell: NSTableCellView {
+    @IBOutlet var sourceNameField: NSTextField!
+}
 
 class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NSMenuDelegate {
     
@@ -635,116 +652,37 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        //uses cell.subviews[x] because IB can't connect outlets from elements to nstablecellview subclasses using .xibs, apparently
-        var object = trackQueue[row]
-        if tableColumn?.identifier.rawValue == "Is Playing" {
-            switch object.viewType! {
-            case .currentTrack:
-                return tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "nowPlaying"), owner: nil) as! NowPlayingCell
-            default:
-                return nil
-            }
-        }
-        else {
-            switch object.viewType! {
-            case .pastTrack:
-                let result = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "pastTrack"), owner: nil) as! PastTrackCell
-                (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
-                var artist_aa_string = ""
-                if object.track!.artist != nil {
-                    artist_aa_string += object.track!.artist!.name!
-                }
-                if object.track!.album != nil {
-                    artist_aa_string += " - " + object.track!.album!.name!
-                }
-                (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
-                if object.track!.album?.primary_art != nil {
-                    let art = object.track?.album?.primary_art
-                    let path = art?.location!
-                    let url = URL(string: path!)
-                    let image = NSImage(contentsOf: url!)
-                    (result.subviews[0] as! NSImageView).image = image
-                }
-                else {
-                    (result.subviews[0] as! NSImageView).image = nil
-                }
-                return result
-            case .currentTrack:
-                let result = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "currentTrack"), owner: nil) as! TrackNameTableCell
-                (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
-                var artist_aa_string = ""
-                if object.track!.artist != nil {
-                    artist_aa_string += object.track!.artist!.name!
-                }
-                if object.track!.album != nil {
-                    artist_aa_string += " - " + object.track!.album!.name!
-                }
-                (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
-                if object.track!.album?.primary_art != nil {
-                    let art = object.track?.album?.primary_art
-                    let path = art?.location!
-                    let url = URL(string: path!)
-                    let image = NSImage(contentsOf: url!)
-                    (result.subviews[0] as! NSImageView).image = image
-                }
-                else {
-                    (result.subviews[0] as! NSImageView).image = nil
-                }
-                if mainWindowController?.paused != true {
-                    (result.subviews[3] as! NSImageView).image = NSImage(named: NSImage.Name(rawValue: "NSTouchBarAudioOutputVolumeMedTemplate"))
-                } else {
-                    (result.subviews[3] as! NSImageView).image = NSImage(named: NSImage.Name(rawValue: "NSTouchBarAudioOutputVolumeOffTemplate"))
-                }
-                return result
-            case .source:
-                let result = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "source"), owner: nil) as! FromSourceCell
-                (result.subviews[1] as! NSTextField).stringValue = object.source!
-                return result
-            case .futureTrack:
-                let result = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "futureTrack"), owner: nil) as! TrackNameTableCell
-                (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
-                var artist_aa_string = ""
-                if object.track!.artist != nil {
-                    artist_aa_string += object.track!.artist!.name!
-                }
-                if object.track!.album != nil {
-                    artist_aa_string += " - " + object.track!.album!.name!
-                }
-                (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
-                if object.track!.album?.primary_art != nil {
-                    let art = object.track?.album?.primary_art
-                    let path = art?.location!
-                    let url = URL(string: path!)
-                    let image = NSImage(contentsOf: url!)
-                    (result.subviews[0] as! NSImageView).image = image
-                }
-                else {
-                    (result.subviews[0] as! NSImageView).image = nil
-                }
-                return result
-            case .transient:
-                let result = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "futureTrack"), owner: nil) as! TrackNameTableCell
-                (result.subviews[2] as! NSTextField).stringValue = object.track!.name!
-                var artist_aa_string = ""
-                if object.track!.artist != nil {
-                    artist_aa_string += object.track!.artist!.name!
-                }
-                if object.track!.album != nil {
-                    artist_aa_string += " - " + object.track!.album!.name!
-                }
-                (result.subviews[1] as! NSTextField).stringValue = artist_aa_string
-                if object.track!.album?.primary_art != nil {
-                    let art = object.track?.album?.primary_art
-                    let path = art?.location!
-                    let url = URL(string: path!)
-                    let image = NSImage(contentsOf: url!)
-                    (result.subviews[0] as! NSImageView).image = image
-                }
-                else {
-                    (result.subviews[0] as! NSImageView).image = nil
-                }
-                return result
-            }
+        guard trackQueue.count > row else { return nil }
+        let object = trackQueue[row]
+        switch object.viewType! {
+        case .pastTrack:
+            let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "pastTrack"), owner: self) as! PastTrackCell
+            view.artistAlbumField.stringValue = object.track?.getArtistAlbumString() ?? ""
+            view.trackNameField.stringValue = object.track?.name ?? ""
+            view.albumArtView.image = object.track?.getAlbumArt()
+            return view
+        case .currentTrack:
+            let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "currentTrack"), owner: self) as! NowPlayingCell
+            view.artistAlbumField.stringValue = object.track?.getArtistAlbumString() ?? ""
+            view.trackNameField.stringValue = object.track?.name ?? ""
+            view.albumArtView.image = object.track?.getAlbumArt()
+            return view
+        case .futureTrack:
+            let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "futureTrack"), owner: self) as! FutureTrackCell
+            view.artistAlbumField.stringValue = object.track?.getArtistAlbumString() ?? ""
+            view.trackNameField.stringValue = object.track?.name ?? ""
+            view.albumArtView.image = object.track?.getAlbumArt()
+            return view
+        case .source:
+            let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "source"), owner: self) as! FromSourceCell
+            view.sourceNameField.stringValue = object.source ?? ""
+            return view
+        case .transient:
+            let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "futureTrack"), owner: self) as! FutureTrackCell
+            view.artistAlbumField.stringValue = object.track?.getArtistAlbumString() ?? ""
+            view.trackNameField.stringValue = object.track?.name ?? ""
+            view.albumArtView.image = object.track?.getAlbumArt()
+            return view
         }
     }
     
