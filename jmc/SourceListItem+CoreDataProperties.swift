@@ -2,8 +2,9 @@
 //  SourceListItem+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 6/10/17.
+//  Created by John Moody on 12/22/17.
 //  Copyright © 2017 John Moody. All rights reserved.
+//
 //
 
 import Foundation
@@ -22,6 +23,7 @@ extension SourceListItem {
     @NSManaged public var is_root: NSNumber?
     @NSManaged public var name: String?
     @NSManaged public var sort_order: NSNumber?
+    @NSManaged public var playOrderObject: PlaylistOrderObject?
     @NSManaged public var children: NSOrderedSet?
     @NSManaged public var library: Library?
     @NSManaged public var master_playlist: SongCollection?
@@ -35,11 +37,7 @@ extension SourceListItem {
 extension SourceListItem {
 
     @objc(insertObject:inChildrenAtIndex:)
-    func insertIntoChildren(_ value: SourceListItem, at idx: Int) {
-        let currentChildren = self.children?.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
-        currentChildren.insert(value, at: idx)
-        self.children = currentChildren as NSOrderedSet
-    }
+    @NSManaged public func insertIntoChildren(_ value: SourceListItem, at idx: Int)
 
     @objc(removeObjectFromChildrenAtIndex:)
     @NSManaged public func removeFromChildren(at idx: Int)
@@ -57,21 +55,13 @@ extension SourceListItem {
     @NSManaged public func replaceChildren(at indexes: NSIndexSet, with values: [SourceListItem])
 
     @objc(addChildrenObject:)
-    func addToChildren(_ value: SourceListItem) {
-        let currentChildren = self.children?.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
-        currentChildren.add(value)
-        self.children = currentChildren as NSOrderedSet
-    }
+    @NSManaged public func addToChildren(_ value: SourceListItem)
 
     @objc(removeChildrenObject:)
     @NSManaged public func removeFromChildren(_ value: SourceListItem)
 
     @objc(addChildren:)
-    func addToChildren(_ values: [Any]) {
-        let currentChildren = self.children?.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
-        currentChildren.addObjects(from: values)
-        self.children = currentChildren as NSOrderedSet
-    }
+    @NSManaged public func addToChildren(_ values: NSOrderedSet)
 
     @objc(removeChildren:)
     @NSManaged public func removeFromChildren(_ values: NSOrderedSet)

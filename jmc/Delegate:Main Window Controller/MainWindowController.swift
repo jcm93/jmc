@@ -842,6 +842,10 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }
     }
     
+    func cachePlayOrderObject() {
+        
+    }
+    
     //mark album art
     
     func makeDark() {

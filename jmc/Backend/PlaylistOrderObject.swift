@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class PlaylistOrderObject: Equatable, Hashable {
+public class PlaylistOrderObject: NSObject, NSCoding {
     
     var shuffled_play_order: [Int]?
     var current_play_order: [Int]?
@@ -17,12 +17,6 @@ class PlaylistOrderObject: Equatable, Hashable {
     
     init(sli: SourceListItem) {
         self.sourceListItem = sli
-    }
-    
-    var hashValue: Int {
-        get {
-            return self.sourceListItem.hashValue
-        }
     }
     
     func libraryStatusNeedsUpdate() {
@@ -46,8 +40,38 @@ class PlaylistOrderObject: Equatable, Hashable {
             }
         }
     }
-}
-
-func ==(lpoo: PlaylistOrderObject, rpoo: PlaylistOrderObject) -> Bool {
-    return lpoo.sourceListItem == rpoo.sourceListItem
+    
+    public func encode(with aCoder: NSCoder) {
+        if let shuffled_play_order = self.shuffled_play_order {
+            aCoder.encode(shuffled_play_order, forKey: "shuffled_play_order")
+        }
+        if let current_play_order = self.current_play_order {
+            aCoder.encode(current_play_order, forKey: "current_play_order")
+        }
+        if let inorderNeedsUpdate = self.inorderNeedsUpdate {
+            aCoder.encode(inorderNeedsUpdate, forKey: "inorderNeedsUpdate")
+        }
+        aCoder.encode(self.sourceListItem.objectID.uriRepresentation(), forKey: "sourceListItem")
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        if let spo = aDecoder.decodeObject(forKey: "shuffled_play_order") as? [Int] {
+            self.shuffled_play_order = spo
+        }
+        if let cpo = aDecoder.decodeObject(forKey: "current_play_order") as? [Int] {
+            self.current_play_order = cpo
+        }
+        if let inu = aDecoder.decodeObject(forKey: "inorderNeedsUpdate") as? Bool {
+            self.inorderNeedsUpdate = inu
+        }
+        if let sourceListURI = aDecoder.decodeObject(forKey: "sourceListItem") as? URL {
+            if let managedObjectID = managedContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: sourceListURI) {
+                if let sli = managedContext.object(with: managedObjectID) as? SourceListItem {
+                    self.sourceListItem = sli
+                    return
+                }
+            }
+        }
+        return nil
+    }
 }

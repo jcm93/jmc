@@ -464,7 +464,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "arrangedObjects" {
-            if self.hasCreatedPlayOrder == false && (self.trackViewArrayController.arrangedObjects as! NSArray).count > 0 {
+            if self.hasCreatedPlayOrder == false && (self.trackViewArrayController.arrangedObjects as! NSArray).count > 0 && self.item?.playOrderObject == nil {
                 initializePlayOrderObject()
                 mainWindowController?.trackQueueViewController?.activePlayOrders.append(self.item!.playOrderObject!)
                 self.item!.tableViewController = self

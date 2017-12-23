@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13240" systemVersion="16G29" minimumToolsVersion="Xcode 7.3" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17C88" minimumToolsVersion="Xcode 7.3" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Album" representedClassName=".Album" syncable="YES">
         <attribute name="disc_count" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -120,6 +120,7 @@
         <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_root" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="playOrderObject" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="sort_order" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SourceListItem" inverseName="parent" inverseEntity="SourceListItem" syncable="YES"/>
         <relationship name="library" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="local_items" inverseEntity="Library" syncable="YES"/>
@@ -205,7 +206,7 @@
         <element name="OrganizationTemplateBundle" positionX="-1539" positionY="-54" width="128" height="90"/>
         <element name="SmartCriteria" positionX="-1557" positionY="180" width="128" height="120"/>
         <element name="SongCollection" positionX="-954" positionY="108" width="128" height="180"/>
-        <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="225"/>
+        <element name="SourceListItem" positionX="-558" positionY="75" width="128" height="240"/>
         <element name="Track" positionX="-1143" positionY="-27" width="128" height="630"/>
         <element name="TrackView" positionX="-1548" positionY="-216" width="128" height="268"/>
         <element name="Volume" positionX="-1548" positionY="-63" width="128" height="120"/>
