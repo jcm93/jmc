@@ -813,7 +813,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         if self.currentTableViewController == nil {
             return
         }
-        DispatchQueue.main.async {
+        managedContext.perform {
             let trackArray = (self.currentTableViewController?.trackViewArrayController?.arrangedObjects as! [TrackView])
             let numItems = trackArray.count as NSNumber
             let totalSize = trackArray.lazy.map({return (($0.track)!.size?.int64Value)}).reduce(0, {$0 + ($1 != nil ? $1! : 0)})
