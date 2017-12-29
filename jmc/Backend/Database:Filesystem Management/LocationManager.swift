@@ -274,7 +274,7 @@ class LocationManager: NSObject {
                         let fr = NSFetchRequest<Track>(entityName: "Track")
                         fr.predicate = NSPredicate(format: "location beginswith[c] %@", URL(fileURLWithPath: path).absoluteString)
                         do {
-                            let tracks = try managedContext.fetch(fr)
+                            let tracks = try privateQueueParentContext.fetch(fr)
                             return tracks
                         } catch {
                             print(error)

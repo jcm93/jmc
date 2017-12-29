@@ -148,19 +148,25 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
     }
     
     func saveData() {
-        withUndoBlock(name: "Edit Organization Template") {
-            let templateBundle = globalRootLibrary?.organization_template
-            templateBundle?.default_template?.tokens = self.tokenField.objectValue as! [OrganizationFieldToken] as NSArray
-            templateBundle?.default_template?.base_url_string = self.pathControl.url?.absoluteString
-            for rule in ruleControllers {
-                let template = rule.template ?? NSEntityDescription.insertNewObject(forEntityName: "OrganizationTemplate", into: managedContext) as! OrganizationTemplate
-                template.base_url_string = rule.pathControl.url!.absoluteString
-                template.predicate = rule.predicateEditor.predicate!
-                template.tokens = rule.tokenField.objectValue as? NSObject
+        let newDefaultTemplateTokens = self.tokenField.objectValue as! [OrganizationFieldToken] as NSArray
+        let newDefaultTemplateBaseURLString = self.pathControl.url?.absoluteString
+        
+        privateQueueParentContext.perform {
+            withUndoBlock(name: "Edit Organization Template") {
+                let globalRootLibrary = getGlobalRootLibrary(forContext: privateQueueParentContext)
+                let templateBundle = globalRootLibrary?.organization_template
+                templateBundle?.default_template?.tokens = newDefaultTemplateTokens
+                templateBundle?.default_template?.base_url_string = newDefaultTemplateBaseURLString
+                for rule in self.ruleControllers {
+                    let template = rule.template ?? NSEntityDescription.insertNewObject(forEntityName: "OrganizationTemplate", into: privateQueueParentContext) as! OrganizationTemplate
+                    template.base_url_string = rule.pathControl.url!.absoluteString
+                    template.predicate = rule.predicateEditor.predicate!
+                    template.tokens = rule.tokenField.objectValue as? NSObject
+                }
+                let templateArray = ruleControllers.map({return $0.template!})
+                let orderedSet = NSOrderedSet(array: templateArray)
+                templateBundle?.other_templates = orderedSet
             }
-            let templateArray = ruleControllers.map({return $0.template!})
-            let orderedSet = NSOrderedSet(array: templateArray)
-            templateBundle?.other_templates = orderedSet
         }
     }
     func initializeData() {

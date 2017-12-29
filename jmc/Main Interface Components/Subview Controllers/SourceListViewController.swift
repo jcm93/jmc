@@ -60,7 +60,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         do {
             let predicate = NSPredicate(format: "is_root == true")
             request.predicate = predicate
-            let result = try self.managedContext.fetch(request) as! [SourceListItem]
+            let result = try mainQueueChildContext.fetch(request) as! [SourceListItem]
             if result.count > 0 {
                 return result[0]
             } else {
@@ -71,10 +71,6 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             return nil
         }
     }()
-    
-    lazy var managedContext: NSManagedObjectContext = {
-        return (NSApplication.shared.delegate
-            as? AppDelegate)?.managedObjectContext }()!
     
     func getCurrentSelection() -> SourceListItem {
         let node = self.sourceList.item(atRow: sourceList.selectedRow) as! SourceListItem
@@ -177,7 +173,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     func createPlaylistFolder(_ items: [SourceListItem]?) {
-        let playlistFolderItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
+        let playlistFolderItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: privateQueueParentContext) as! SourceListItem
         playlistFolderItem.is_folder = true
         playlistFolderItem.name = "New Playlist Folder"
         if items != nil {
@@ -201,8 +197,9 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     
     func createPlaylist(_ tracks: [Track]?, smart_criteria: SmartCriteria?) {
         //create playlist
-        let playlist = NSEntityDescription.insertNewObject(forEntityName: "SongCollection", into: managedContext) as! SongCollection
-        let playlistItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
+        let globalRootLibrary = getGlobalRootLibrary(forContext: mainQueueChildContext)
+        let playlist = NSEntityDescription.insertNewObject(forEntityName: "SongCollection", into: privateQueueParentContext) as! SongCollection
+        let playlistItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: privateQueueParentContext) as! SourceListItem
         playlistItem.playlist = playlist
         playlistItem.name = "New Playlist"
         playlist.name = "New Playlist"
@@ -225,11 +222,11 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     func addNetworkedLibrary(_ peer: MCPeerID) {
-        let newSourceListItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
+        let newSourceListItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: privateQueueParentContext) as! SourceListItem
         newSourceListItem.parent = sharedHeaderNode
         newSourceListItem.name = peer.displayName
         newSourceListItem.is_network = true
-        let newLibrary = NSEntityDescription.insertNewObject(forEntityName: "Library", into: managedContext) as! Library
+        let newLibrary = NSEntityDescription.insertNewObject(forEntityName: "Library", into: privateQueueParentContext) as! Library
         newLibrary.is_network = true
         newLibrary.name = peer.displayName
         newLibrary.peer = peer
@@ -250,13 +247,13 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         print("looking up \(peer) in shared library identifier dictionary")
         let item = self.sharedLibraryIdentifierDictionary[peer] as! SourceListItem
         //create sourcelistitem
-        let masterItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
+        let masterItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: privateQueueParentContext) as! SourceListItem
         masterItem.name = "Music"
         masterItem.parent = item
         masterItem.is_network = true
         masterItem.library = item.library
         //create expandable sourcelistitem for playlists
-        let playlistsItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
+        let playlistsItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: privateQueueParentContext) as! SourceListItem
         playlistsItem.name = "Playlists"
         playlistsItem.parent = item
         playlistsItem.is_network = true
@@ -264,13 +261,13 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         //create node for source list tree controller
         for playlist in sourceData {
             //create sourcelistitem
-            let newItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: managedContext) as! SourceListItem
+            let newItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: privateQueueParentContext) as! SourceListItem
             newItem.sort_order = playlist["sort_order"] as! Int as NSNumber?
             newItem.name = playlist["name"] as? String
             newItem.parent = playlistsItem
             newItem.library = item.library
             //create playlist object
-            let newPlaylist = NSEntityDescription.insertNewObject(forEntityName: "SongCollection", into: managedContext) as! SongCollection
+            let newPlaylist = NSEntityDescription.insertNewObject(forEntityName: "SongCollection", into: privateQueueParentContext) as! SongCollection
             newPlaylist.id = playlist["id"] as! Int as NSNumber?
             newItem.playlist = newPlaylist
             newItem.parent = playlistsItem
@@ -480,7 +477,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         }
         let sourceListItems = validIndicesToDelete.map({return sourceList.item(atRow: $0)})
         for item in sourceListItems {
-            managedContext.delete(item as! NSManagedObject)
+            privateQueueParentContext.delete(item as! NSManagedObject)
         }
         let viewIndices = IndexSet(validIndicesToDelete.map({return $0 - playlistHeaderIndex - 1}))
         sourceList.removeItems(at: viewIndices, inParent: playlistHeaderNode, withAnimation: NSTableView.AnimationOptions.effectFade)
@@ -541,8 +538,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             let tracks = { () -> [Track] in
                 var result = [Track]()
                 for trackURI in unCodedThing {
-                    let id = managedContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: trackURI as! URL)
-                    result.append(managedContext.object(with: id!) as! Track)
+                    let id = privateQueueParentContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: trackURI as! URL)
+                    result.append(privateQueueParentContext.object(with: id!) as! Track)
                 }
                 return result
             }()
@@ -556,8 +553,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             let tracks = { () -> [Track] in
                 var result = [Track]()
                 for trackURI in unCodedThing {
-                    let id = managedContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: trackURI as! URL)
-                    result.append(managedContext.object(with: id!) as! Track)
+                    let id = privateQueueParentContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: trackURI as! URL)
+                    result.append(privateQueueParentContext.object(with: id!) as! Track)
                 }
                 return result
             }()

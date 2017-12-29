@@ -35,11 +35,13 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 }*/
 
 
-var managedContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext
+var privateQueueParentContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext
+var mainQueueChildContext = (NSApplication.shared.delegate as! AppDelegate).childContext
+
 
 func saveContext() { //does not handle errors
     do {
-        try managedContext.save()
+        try privateQueueParentContext.save()
     } catch {
         print(error)
     }
@@ -50,8 +52,7 @@ func informAppDelegateOfErrors(errors: [Error]) {
     delegate.alertForErrors(errors)
 }
 
-
-var globalRootLibrary: Library! = {() -> Library! in
+func getGlobalRootLibrary(forContext managedContext: NSManagedObjectContext) -> Library! {
     let fetchReq = NSFetchRequest<NSFetchRequestResult>(entityName: "Library")
     let predicate = NSPredicate(format: "parent == nil")
     fetchReq.predicate = predicate
@@ -61,30 +62,17 @@ var globalRootLibrary: Library! = {() -> Library! in
     } catch {
         return nil
     }
-}()
+}
 
-var globalRootLibrarySourceListItem = {() -> SourceListItem? in
+func getGlobalRootLibrarySourceListItem(forContext managedContext: NSManagedObjectContext) -> SourceListItem? {
     print("creating global root library source list item")
     let fetchReq = NSFetchRequest<NSFetchRequestResult>(entityName: "SourceListItem")
-    let predicate = NSPredicate(format: "library == %@", globalRootLibrary!)
+    let predicate = NSPredicate(format: "library == %@", getGlobalRootLibrary(forContext: managedContext))
     fetchReq.predicate = predicate
     do {
         let result = try managedContext.fetch(fetchReq)[0] as! SourceListItem
         return result
     } catch {
-        return nil
-    }
-}()
-
-func getLibrary(withName name: String) -> [Library]? {
-    let request = NSFetchRequest<Library>(entityName: "Library")
-    let predicate = NSPredicate(format: "name == %@", name)
-    request.predicate = predicate
-    do {
-        let result = try managedContext.fetch(request)
-        return result
-    } catch {
-        print(error)
         return nil
     }
 }
@@ -108,7 +96,7 @@ func purgeCurrentlyPlaying() {
     let predicate = NSPredicate(format: "is_playing == true")
     fetchRequest.predicate = predicate
     do {
-        let results = try managedContext.fetch(fetchRequest) as! [Track]
+        let results = try privateQueueParentContext.fetch(fetchRequest) as! [Track]
         for result in results {
             result.is_playing = nil
         }
@@ -151,7 +139,7 @@ var cachedOrders: [String : CachedOrder]? = {
     var result = [String : CachedOrder]()
     let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CachedOrder")
     do {
-        let list = try managedContext.fetch(request) as! [CachedOrder]
+        let list = try privateQueueParentContext.fetch(request) as! [CachedOrder]
         for order in list {
             result[order.order!] = order
             //order.mutableCachedOrder = order.track_views!.mutableCopy() as! NSMutableOrderedSet
@@ -258,7 +246,7 @@ func checkIfVolumeExists(withURL url: URL, subcontext: NSManagedObjectContext? =
     let predicate = NSPredicate(format: "location == %@", url.absoluteString)
     fetch.predicate = predicate
     do {
-        let results = subcontext != nil ? (try subcontext!.fetch(fetch)) : (try managedContext.fetch(fetch))
+        let results = subcontext != nil ? (try subcontext!.fetch(fetch)) : (try privateQueueParentContext.fetch(fetch))
         if results.count > 0 {
             return results[0]
         } else {
@@ -359,7 +347,7 @@ func getTrackWithID(_ id: Int) -> Track? {
     fetch_req.predicate = pred
     let result: Track? = {() -> Track? in
         do {
-            let trackList = try managedContext.fetch(fetch_req) as? [Track]
+            let trackList = try privateQueueParentContext.fetch(fetch_req) as? [Track]
             if trackList!.count > 0 {
                 return trackList![0]
             } else {
@@ -379,7 +367,7 @@ func getNetworkTrackWithID(_ id: Int) -> Track? {
     fetch_req.predicate = pred
     let result: Track? = {() -> Track? in
         do {
-            return try (managedContext.fetch(fetch_req) as! [Track])[0]
+            return try (privateQueueParentContext.fetch(fetch_req) as! [Track])[0]
         }
         catch {
             return nil
@@ -463,10 +451,10 @@ var jmcUnknownArtist = {() -> Artist in
     let predicate = NSPredicate(format: "id == 1")
     request.predicate = predicate
     do {
-        let result = try managedContext.fetch(request) as! [Artist]
+        let result = try privateQueueParentContext.fetch(request) as! [Artist]
         return result[0]
     } catch {
-        let unknownArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
+        let unknownArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: privateQueueParentContext) as! Artist
         unknownArtist.id = 1
         unknownArtist.name = ""
         return unknownArtist
@@ -478,10 +466,10 @@ var jmcUnknownAlbum = {() -> Album in
     let predicate = NSPredicate(format: "id == 1")
     request.predicate = predicate
     do {
-        let result = try managedContext.fetch(request) as! [Album]
+        let result = try privateQueueParentContext.fetch(request) as! [Album]
         return result[0]
     } catch {
-        let unknownAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+        let unknownAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: privateQueueParentContext) as! Album
         unknownAlbum.id = 1
         unknownAlbum.name = ""
         return unknownAlbum
@@ -493,10 +481,10 @@ var jmcUnknownComposer = {() -> Composer in
     let predicate = NSPredicate(format: "id == 1")
     request.predicate = predicate
     do {
-        let result = try managedContext.fetch(request) as! [Composer]
+        let result = try privateQueueParentContext.fetch(request) as! [Composer]
         return result[0]
     } catch {
-        let unknownComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: managedContext) as! Composer
+        let unknownComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: privateQueueParentContext) as! Composer
         unknownComposer.id = 1
         unknownComposer.name = "Unknown Composer"
         return unknownComposer
@@ -508,7 +496,7 @@ func checkIfArtistExists(_ name: String, subcontext: NSManagedObjectContext? = n
     let predicate = NSPredicate(format: "name == %@", name)
     request.predicate = predicate
     do {
-        let result = subcontext != nil ? (try subcontext!.fetch(request) as! [Artist]) : (try managedContext.fetch(request) as! [Artist])
+        let result = subcontext != nil ? (try subcontext!.fetch(request) as! [Artist]) : (try privateQueueParentContext.fetch(request) as! [Artist])
         if result.count > 0 {
             return result[0]
         } else {
@@ -525,7 +513,7 @@ func checkIfAlbumExists(withName name: String, withArtist artist: Artist, subcon
     let predicate = NSPredicate(format: "name == %@ and album_artist == %@", name, artist)
     request.predicate = predicate
     do {
-        let result = subcontext != nil ? (try subcontext!.fetch(request) as! [Album]) : (try managedContext.fetch(request) as! [Album])
+        let result = subcontext != nil ? (try subcontext!.fetch(request) as! [Album]) : (try privateQueueParentContext.fetch(request) as! [Album])
         if result.count > 0 {
             return result[0]
         } else {
@@ -542,7 +530,7 @@ func checkIfComposerExists(_ name: String, subcontext: NSManagedObjectContext? =
     let predicate = NSPredicate(format: "name == %@", name)
     request.predicate = predicate
     do {
-        let result = subcontext != nil ? (try subcontext!.fetch(request) as! [Composer]) : (try managedContext.fetch(request) as! [Composer])
+        let result = subcontext != nil ? (try subcontext!.fetch(request) as! [Composer]) : (try privateQueueParentContext.fetch(request) as! [Composer])
         if result.count > 0 {
             return result[0]
         } else {
@@ -559,7 +547,7 @@ func checkIfCachedOrderExists(_ name: String, subcontext: NSManagedObjectContext
     let predicate = NSPredicate(format: "order == %@", name)
     request.predicate = predicate
     do {
-        let result = subcontext != nil ? (try subcontext!.fetch(request) as! [CachedOrder]) : (try managedContext.fetch(request) as! [CachedOrder])
+        let result = subcontext != nil ? (try subcontext!.fetch(request) as! [CachedOrder]) : (try privateQueueParentContext.fetch(request) as! [CachedOrder])
         if result.count > 0 {
             return result[0]
         } else {
@@ -617,7 +605,7 @@ func addIDsAndMakeNonNetwork(_ track: Track) {
         let predicate = NSPredicate(format: "is_network == nil OR is_network == false")
         fetchReq.predicate = predicate
         do {
-            let result = try managedContext.fetch(fetchReq)[0] as! Library
+            let result = try privateQueueParentContext.fetch(fetchReq)[0] as! Library
             return result
         } catch {
             return nil
@@ -648,7 +636,7 @@ func getInstanceWithHighestIDForEntity(_ entityName: String) -> NSManagedObject?
     let sortDescriptor = NSSortDescriptor(key: "id", ascending: false)
     fetchRequest.sortDescriptors = [sortDescriptor]
     do {
-        let result = try managedContext.fetch(fetchRequest) as! [NSManagedObject]
+        let result = try privateQueueParentContext.fetch(fetchRequest) as! [NSManagedObject]
         return result[0]
     } catch {
         print("error getting instance with highest id: \(error)")
@@ -777,7 +765,7 @@ func testFixIndices(_ set: NSMutableOrderedSet, order: String) {
 
 
 func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder, subContext: NSManagedObjectContext?) {
-    let actualTracks = subContext != nil ? tracks : tracks.map({return managedContext.object(with: $0.objectID) as! Track})
+    let actualTracks = subContext != nil ? tracks : tracks.map({return privateQueueParentContext.object(with: $0.objectID) as! Track})
     print("reordering for tracks for cached order \(cachedOrder.order!)")
     let comparator: (Track) -> (Track) -> ComparisonResult
     switch cachedOrder.order! {

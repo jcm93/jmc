@@ -32,7 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @IBOutlet var menuDelegate: MainMenuDelegate!
     
     
-    func alertForErrors(_ errors: [Error]) {
+    func presentSevereErrors(_ errors: [Error]) {
         //todo check docs for how to show mult. errors
         for error in errors {
             let alertModal = NSAlert(error: error)
@@ -43,7 +43,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func initializeLibraryAndShowMainWindow() {
         if !UserDefaults.standard.bool(forKey: DEFAULTS_ARE_INITIALIZED_STRING) {
             self.setupWindowController = InitialSetupWindowController(windowNibName: NSNib.Name(rawValue: "InitialSetupWindowController"))
-            self.setupWindowController?.setupForNilLibrary()
+            privateQueueParentContext.perform {
+                self.setupWindowController?.setupForNilLibrary()
+            }
         }
         self.locationManager = LocationManager(delegate: self)
         self.addFilesQueueLoop = AddFilesQueueLoop(delegate: self)
@@ -125,16 +127,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        for fetchRequest in BATCH_PURGE_NETWORK_FETCH_REQUESTS {
-            do {
-                fetchRequest.predicate = IS_NETWORK_PREDICATE
-                let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-                try persistentStoreCoordinator.execute(deleteRequest, with: managedObjectContext)
-            } catch {
-                print(error)
+        managedObjectContext.perform {
+            for fetchRequest in BATCH_PURGE_NETWORK_FETCH_REQUESTS {
+                do {
+                    fetchRequest.predicate = IS_NETWORK_PREDICATE
+                    let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+                    try self.persistentStoreCoordinator.execute(deleteRequest, with: self.managedObjectContext)
+                } catch {
+                    print(error)
+                }
             }
+            purgeCurrentlyPlaying()
         }
-        purgeCurrentlyPlaying()
         // Insert code here to initialize your application
         let dumbTransform = TransformerURLStringToURL()
         ValueTransformer.setValueTransformer(dumbTransform, forName: NSValueTransformerName("TransformURLStringToURL"))
@@ -147,7 +151,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             mainWindowController?.window?.beginSheet(setupWindowController!.window!, completionHandler: nil)
         }
         //NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidChangeDebug), name: Notification.Name.NSManagedObjectContextObjectsDidChange, object: managedObjectContext)
-        NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidUndo), name: Notification.Name.NSUndoManagerDidUndoChange, object: managedObjectContext.undoManager)
+        self.managedObjectContext.perform {
+            NotificationCenter.default.addObserver(self, selector: #selector(self.managedObjectsDidUndo), name: Notification.Name.NSUndoManagerDidUndoChange, object: self.managedObjectContext.undoManager)
+        }
         self.mediaKeyListener = MediaKeyListener(self)
         self.menuDelegate.delegate = self
         self.menuDelegate.mainWindowController = self.mainWindowController
@@ -290,6 +296,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         //managedObjectContext.undoManager = UndoManager()
         return managedObjectContext
         
+    }()
+    
+    lazy var childContext: NSManagedObjectContext = {
+        var context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        context.parent = self.managedObjectContext
+        return context
     }()
     
 

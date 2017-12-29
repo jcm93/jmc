@@ -14,7 +14,7 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate {
     @IBOutlet weak var tableView: NSTableView!
     
     var artistViewController: ArtistViewController?
-    var managedContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext
+    var privateQueueParentContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext
     
     func tableViewSelectionDidChange(_ notification: Notification) {
         let selectedArtists = artistArrayController.selectedObjects as! [Artist]

@@ -44,7 +44,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     var rightMouseDownTarget: [TrackView]?
     var rightMouseDownRow: Int?
     var item: SourceListItem?
-    @objc var managedContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext
+    @objc var managedContext: NSManagedObjectContext!
     var searchString: String?
     var playlist: SongCollection?
     var advancedFilterVisible: Bool = false
@@ -302,7 +302,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackView")
         fetchRequest.predicate = smart_predicate
         do {
-            var results = try managedContext.fetch(fetchRequest) as? NSArray
+            var results = try self.managedContext.fetch(fetchRequest) as? NSArray
             if results != nil {
                 results = (results as! [TrackView]).map({return $0.track!}) as NSArray
                 if smart_criteria?.ordering_criterion != nil {
@@ -381,7 +381,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             print(error)
         }
         do {
-            try managedContext.save()
+            try self.managedContext.save()
         } catch {
             print(error)
         }

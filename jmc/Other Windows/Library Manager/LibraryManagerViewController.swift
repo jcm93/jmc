@@ -110,7 +110,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         if let textField = sender as? NSTextField, textField.stringValue != "" {
             library?.name = textField.stringValue
             do {
-                try managedContext.save()
+                try privateQueueParentContext.save()
             } catch {
                 print(error)
             }

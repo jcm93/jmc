@@ -21,7 +21,7 @@ class ImportWindowController: NSWindowController, NSTableViewDelegate {
     var iTunesParser: iTunesLibraryParser?
     var mainWindowController: MainWindowController?
     
-    let managedContext: NSManagedObjectContext = {
+    let privateQueueParentContext: NSManagedObjectContext = {
         return (NSApplication.shared.delegate
             as? AppDelegate)?.managedObjectContext }()!
     

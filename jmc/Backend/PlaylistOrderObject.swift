@@ -65,8 +65,8 @@ public class PlaylistOrderObject: NSObject, NSCoding {
             self.inorderNeedsUpdate = inu
         }
         if let sourceListURI = aDecoder.decodeObject(forKey: "sourceListItem") as? URL {
-            if let managedObjectID = managedContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: sourceListURI) {
-                if let sli = managedContext.object(with: managedObjectID) as? SourceListItem {
+            if let managedObjectID = privateQueueParentContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: sourceListURI) {
+                if let sli = privateQueueParentContext.object(with: managedObjectID) as? SourceListItem {
                     self.sourceListItem = sli
                     return
                 }

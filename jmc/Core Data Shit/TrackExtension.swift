@@ -16,7 +16,7 @@ extension Track {
         if let volumeObject = checkIfVolumeExists(withURL: volume) {
             self.volume = volumeObject
         } else {
-            let newVolume = NSEntityDescription.insertNewObject(forEntityName: "Volume", into: managedContext) as! Volume
+            let newVolume = NSEntityDescription.insertNewObject(forEntityName: "Volume", into: privateQueueParentContext) as! Volume
             newVolume.location = volume.absoluteString
             self.volume = newVolume
         }

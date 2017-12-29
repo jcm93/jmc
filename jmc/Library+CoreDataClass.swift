@@ -58,7 +58,7 @@ public class Library: NSManagedObject {
     }
     
     func initialSetup(withCentralDirectory url: URL, organizationType: Int, renamesFiles: Bool) {
-        let newTemplateBundle = NSEntityDescription.insertNewObject(forEntityName: "OrganizationTemplateBundle", into: managedContext) as! OrganizationTemplateBundle
+        let newTemplateBundle = NSEntityDescription.insertNewObject(forEntityName: "OrganizationTemplateBundle", into: privateQueueParentContext) as! OrganizationTemplateBundle
         newTemplateBundle.initializeWithDefaults(centralFolder: url)
         self.organization_template = newTemplateBundle
         self.name = NSFullUserName() + "'s library"
