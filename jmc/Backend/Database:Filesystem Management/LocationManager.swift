@@ -28,7 +28,9 @@ class LocationManager: NSObject {
     var activeMonitoringFileDescriptors = [String : Int32]()
     var fileManager = FileManager.default
     var firstHalfRenameEvents = [FSEventStreamEventId : TrackFirstRenameEvent]()
-    var databaseManager = DatabaseManager()
+    var context: NSManagedObjectContext!
+    var databaseManager: DatabaseManager!
+    var globalRootLibrary: Library!
     var pendingCreatePaths = [String]()
     var urlsToAddToDatabase = [URL]()
     var unpopulatedMetadataURLs = [URL]()
@@ -58,6 +60,9 @@ class LocationManager: NSObject {
     
     init(delegate: AppDelegate) {
         self.delegate = delegate
+        self.context = privateQueueParentContext
+        self.databaseManager = DatabaseManager(context: privateQueueParentContext)
+        self.globalRootLibrary = getGlobalRootLibrary(forContext: privateQueueParentContext)
     }
     
     func tryAddNewFilesToDatabase() {

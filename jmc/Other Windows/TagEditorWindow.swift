@@ -13,14 +13,10 @@ import CoreServices
 
 class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate {
     
-    lazy var privateQueueParentContext: NSManagedObjectContext = {
-        return (NSApplication.shared.delegate
-            as? AppDelegate)?.managedObjectContext }()!
-    
     lazy var artistList: [Artist] = {
         let fetch_req = NSFetchRequest<NSFetchRequestResult>(entityName: "Artist")
         do {
-            return try (self.privateQueueParentContext.fetch(fetch_req) as! [Artist])
+            return try (mainQueueChildContext.fetch(fetch_req) as! [Artist])
         } catch {
             print("error: \(error)")
             return [Artist]()
@@ -68,7 +64,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     let fileSizeFormatter = ByteCountFormatter()
     let bitRateFormatter = BitRateFormatter()
     let sampleRateFormatter = SampleRateFormatter()
-    let databaseManager = DatabaseManager()
+    let databaseManager = DatabaseManager(context: privateQueueParentContext)
     let kMultipleThingsString = "Multiple"
     
     var nameIfAllEqual: String?

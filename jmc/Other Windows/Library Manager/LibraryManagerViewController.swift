@@ -34,7 +34,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     
     @IBOutlet weak var tabView: NSTabView!
     var fileManager = FileManager.default
-    var databaseManager = DatabaseManager()
+    var databaseManager = DatabaseManager(context: privateQueueParentContext)
     var locationManager = (NSApplication.shared.delegate as! AppDelegate).locationManager!
     var library: Library?
     var missingTracks: [Track]?

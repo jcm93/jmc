@@ -96,7 +96,7 @@ class DatabaseManager: NSObject {
             DispatchQueue.main.async {
                 var results = [AlbumArtwork]()
                 for image in validImages {
-                    if let result = self.addArtForTrack(track, from: image, managedContext: self.context, organizes: true) {
+                    if let result = self.addArtForTrack(track, from: image, organizes: true) {
                         results.append(result)
                     }
                 }
@@ -109,7 +109,7 @@ class DatabaseManager: NSObject {
         } else {
             if let art = getArtworkFromFile(track.location!) {
                 DispatchQueue.main.async {
-                    if self.addArtForTrack(track, fromData: art, managedContext: self.context) == true {
+                    if self.addArtForTrack(track, fromData: art) == true {
                         callback?(track, true)
                     } else {
                         callback?(track, false)
@@ -752,7 +752,7 @@ class DatabaseManager: NSObject {
             let volumeURL = getVolumeOfURL(url: url)
             if let existingVolume = addedVolumes[volumeURL]  {
                 track.volume = existingVolume
-            } else if let existingVolume = checkIfVolumeExists(withURL: volumeURL, context: self.context) {
+            } else if let existingVolume = checkIfVolumeExists(withURL: volumeURL) {
                 track.volume = existingVolume
             } else {
                 let newVolume = NSEntityDescription.insertNewObject(forEntityName: "Volume", into: self.context) as! Volume

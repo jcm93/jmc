@@ -29,7 +29,7 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
     @IBOutlet weak var progressBar: NSProgressIndicator!
     @IBOutlet weak var progressTextLabel: NSTextField!
     var progressSheet: GenericProgressBarSheetController?
-    var databaseManager = DatabaseManager()
+    var databaseManager = DatabaseManager(context: privateQueueParentContext)
     var moves = true
     @IBOutlet weak var copyFilesRadioButton: NSButton!
     @IBOutlet weak var moveFilesRadioButton: NSButton!

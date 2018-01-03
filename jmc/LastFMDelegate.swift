@@ -36,7 +36,7 @@ class LastFMDelegate: NSObject {
             let task = URLSession.shared.dataTask(with: tokenRequestURLComponents!.url!, completionHandler: handleGetAuthTokenResponse)
             task.resume()
         } else {
-            self.sessionKey = globalRootLibrary.last_fm_session_key
+            self.sessionKey = globalRootLibrary.last_fm_session_key ?? ""
         }
     }
     
@@ -85,6 +85,7 @@ class LastFMDelegate: NSObject {
             }
         }
         do {
+            let globalRootLibrary = getGlobalRootLibrary(forContext: privateQueueParentContext)
             let responseData = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! NSDictionary
             guard let session = responseData["session"] as? NSDictionary else { print("couldn't get session"); return }
             guard let key = session["key"] as? String else { print("couldn't get session key"); return }
@@ -104,6 +105,7 @@ class LastFMDelegate: NSObject {
     }
     
     func scrobble(track: Track, timestamp: Date) {
+        let globalRootLibrary = getGlobalRootLibrary(forContext: privateQueueParentContext)
         guard self.scrobbles, self.sessionKey != "" else { return }
         guard track.artist?.name != nil , track.name != nil else { print("can't scrobble nil track"); return }
         var request = URLRequest(url: baseURL)
