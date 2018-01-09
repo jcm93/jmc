@@ -110,7 +110,16 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     
     @IBAction func libraryNameFieldEdtied(_ sender: Any) {
         guard let field = sender as? NSTextField, field.stringValue != "" else { return }
-        globalRootLibrary?.name = field.stringValue
+        privateQueueParentContext.perform {
+            let globalRootLibrary = getGlobalRootLibrary(forContext: privateQueueParentContext)
+            globalRootLibrary?.name = field.stringValue
+            do {
+                try privateQueueParentContext.save()
+            } catch {
+                print(error)
+                //handle error
+            }
+        }
     }
     
     //Last.fm
@@ -233,6 +242,7 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     
     override func windowDidLoad() {
         super.windowDidLoad()
+        let globalRootLibrary = getGlobalRootLibrary(forContext: mainQueueChildContext)
         toolbar.selectedItemIdentifier = NSToolbarItem.Identifier(rawValue: "general")
         self.trackQueueNumTracksField.integerValue = UserDefaults.standard.integer(forKey: DEFAULTS_NUM_PAST_TRACKS)
         if UserDefaults.standard.bool(forKey: DEFAULTS_ARTWORK_SHOWS_SELECTED) {

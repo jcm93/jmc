@@ -268,7 +268,7 @@ class LocationManager: NSObject {
                             }
                         } else {
                             if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
-                                databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: globalRootLibrary!, visualUpdateHandler: nil, callback: nil) //ignores errors :(
+                                databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], visualUpdateHandler: nil, callback: nil) //ignores errors :(
                             }
                         }
                         //metadata should already exist.

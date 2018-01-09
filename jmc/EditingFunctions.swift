@@ -30,10 +30,10 @@ func editMovementNum(_ tracks: [Track]?, num: Int) {
         track.movement_number = num as NSNumber
     }
 }
-func editArtist(_ tracks: [Track]?, artistName: String) {
+func editArtist(_ tracks: [Track]?, artistName: String, context: NSManagedObjectContext) {
     guard let tracks = tracks else { return }
     print(artistName)
-    let artistCheck = checkIfArtistExists(artistName)
+    let artistCheck = checkIfArtistExists(artistName, context: context)
     if artistCheck != nil {
         for track in tracks {
             track.artist = artistCheck!
@@ -44,7 +44,8 @@ func editArtist(_ tracks: [Track]?, artistName: String) {
             }
         }
     } else {
-        let new_artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: privateQueueParentContext) as! Artist
+        let globalRootLibrary = getGlobalRootLibrary(forContext: context)
+        let new_artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: context) as! Artist
         new_artist.name = artistName
         new_artist.id = globalRootLibrary?.next_artist_id
         globalRootLibrary!.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
@@ -57,12 +58,12 @@ func editArtist(_ tracks: [Track]?, artistName: String) {
         }
     }
     let tracksWithoutAlbumArtists = tracks.filter({ return $0.album?.album_artist != nil })
-    editAlbumArtist(tracksWithoutAlbumArtists, albumArtistName: artistName)
+    editAlbumArtist(tracksWithoutAlbumArtists, albumArtistName: artistName, context: context)
 }
 
-func editComposer(_ tracks: [Track]?, composerName: String) {
+func editComposer(_ tracks: [Track]?, composerName: String, context: NSManagedObjectContext) {
     print(composerName)
-    let composerCheck = checkIfComposerExists(composerName)
+    let composerCheck = checkIfComposerExists(composerName, context: context)
     if composerCheck != nil {
         for track in tracks! {
             track.composer = composerCheck!
@@ -72,7 +73,8 @@ func editComposer(_ tracks: [Track]?, composerName: String) {
             }
         }
     } else {
-        let new_composer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: privateQueueParentContext) as! Composer
+        let globalRootLibrary = getGlobalRootLibrary(forContext: context)
+        let new_composer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: context) as! Composer
         new_composer.name = composerName
         new_composer.id = globalRootLibrary?.next_composer_id
         globalRootLibrary!.next_composer_id = Int(globalRootLibrary!.next_composer_id!) + 1 as NSNumber
@@ -86,7 +88,7 @@ func editComposer(_ tracks: [Track]?, composerName: String) {
     }
 }
 
-func editAlbum(_ tracks: [Track]?, albumName: String) {
+func editAlbum(_ tracks: [Track]?, albumName: String, context: NSManagedObjectContext) {
     print(albumName)
     guard let tracks = tracks else { return }
     var artistTrackDictionary = [Artist : [Track]]()
@@ -97,7 +99,7 @@ func editAlbum(_ tracks: [Track]?, albumName: String) {
         artistTrackDictionary[track.artist!]?.append(track)
     }
     for (artist, tracks) in artistTrackDictionary {
-        if let albumCheck = checkIfAlbumExists(withName: albumName, withArtist: artist) {
+        if let albumCheck = checkIfAlbumExists(withName: albumName, withArtist: artist, context: context) {
             for track in tracks {
                 track.album = albumCheck
                 let albumName = albumCheck.name!
@@ -107,7 +109,8 @@ func editAlbum(_ tracks: [Track]?, albumName: String) {
                 }
             }
         } else {
-            let new_album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: privateQueueParentContext) as! Album
+            let globalRootLibrary = getGlobalRootLibrary(forContext: context)
+            let new_album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: context) as! Album
             new_album.name = albumName
             new_album.id = globalRootLibrary?.next_album_id
             new_album.album_artist = artist
@@ -123,10 +126,10 @@ func editAlbum(_ tracks: [Track]?, albumName: String) {
     }
 }
 
-func editAlbumArtist(_ tracks: [Track]?, albumArtistName: String) {
+func editAlbumArtist(_ tracks: [Track]?, albumArtistName: String, context: NSManagedObjectContext) {
     guard let tracks = tracks else { return }
     print(albumArtistName)
-    let artistCheck = checkIfArtistExists(albumArtistName)
+    let artistCheck = checkIfArtistExists(albumArtistName, context: context)
     let albums = Set(tracks.map({return $0.album!}))
     var nameAlbumDictionary = [String : [Album]]()
     for album in albums {
@@ -153,7 +156,8 @@ func editAlbumArtist(_ tracks: [Track]?, albumArtistName: String) {
             }
         }
     } else {
-        let new_artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: privateQueueParentContext) as! Artist
+        let globalRootLibrary = getGlobalRootLibrary(forContext: context)
+        let new_artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: context) as! Artist
         new_artist.name = albumArtistName
         new_artist.id = globalRootLibrary?.next_artist_id
         globalRootLibrary!.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber

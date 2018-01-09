@@ -279,6 +279,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     func newSourceAdded() {
+        let globalRootLibrarySourceListItem = getGlobalRootLibrarySourceListItem(forContext: mainQueueChildContext)
         if self.currentSourceListItem == globalRootLibrarySourceListItem {
             self.currentTableViewController?.hasCreatedPlayOrder = false
             self.currentTableViewController?.initializeForLibrary()

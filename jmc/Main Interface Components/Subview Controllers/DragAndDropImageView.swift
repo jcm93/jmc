@@ -50,23 +50,27 @@ class DragAndDropImageView: NSImageView {
         if let board = sender.draggingPasteboard().propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType")) as? NSArray {
             let urls = board.map({return URL(fileURLWithPath: $0 as! String)})
             if let currentTrack = viewController?.mainWindow?.currentTrack {
-                let databaseManager = DatabaseManager()
-                var results = [AnyObject]()
-                for url in urls {
-                    if let urlUTI = getUTIFrom(url: url) {
-                        if UTTypeConformsTo(urlUTI as CFString, kUTTypeImage) || UTTypeConformsTo(urlUTI as CFString, kUTTypePDF) {
-                            if let result = databaseManager.addArtForTrack(currentTrack, from: url, privateQueueParentContext: privateQueueParentContext, organizes: true) {
-                                results.append(result)
-                            }
-                        } else {
-                            if let result = databaseManager.addMiscellaneousFile(forTrack: currentTrack, from: url, privateQueueParentContext: privateQueueParentContext, organizes: true) {
-                                results.append(result)
+                let databaseManager = DatabaseManager(context: privateQueueParentContext)
+                privateQueueParentContext.perform {
+                    var results = [AnyObject]()
+                    for url in urls {
+                        if let urlUTI = getUTIFrom(url: url) {
+                            if UTTypeConformsTo(urlUTI as CFString, kUTTypeImage) || UTTypeConformsTo(urlUTI as CFString, kUTTypePDF) {
+                                if let result = databaseManager.addArtForTrack(currentTrack, from: url, organizes: true) {
+                                    results.append(result)
+                                }
+                            } else {
+                                if let result = databaseManager.addMiscellaneousFile(forTrack: currentTrack, from: url, organizes: true) {
+                                    results.append(result)
+                                }
                             }
                         }
                     }
-                }
-                if results.count > 0 {
-                    self.viewController?.initAlbumArt(currentTrack)
+                    if results.count > 0 {
+                        DispatchQueue.main.async {
+                            self.viewController?.initAlbumArt(currentTrack)
+                        }
+                    }
                 }
             }
             else {

@@ -129,8 +129,9 @@ func purgeCurrentlyPlaying() {
 
  */
 
-func numberOfTracksInsideDirectory(with url: URL) -> Int {
+func numberOfTracksInsideDirectory(with url: URL, context: NSManagedObjectContext) -> Int {
     let absString = url.absoluteString
+    let globalRootLibrary = getGlobalRootLibrary(forContext: context)
     return (globalRootLibrary!.tracks as! Set<Track>).filter({return ($0.location ?? "").localizedCaseInsensitiveContains(absString)}).count
 }
 
@@ -166,14 +167,15 @@ func volumeIsAvailable(volume: Volume) -> Bool {
 }
 
 func determineTemplateLocations(visualUpdateHandler: ProgressBarController?) -> [NSObject : URL] {
-    let templateBundle = globalRootLibrary.organization_template!
-    let count = globalRootLibrary.tracks!.count
+    let globalRootLibrary = getGlobalRootLibrary(forContext: privateQueueParentContext)
+    let templateBundle = globalRootLibrary!.organization_template!
+    let count = globalRootLibrary!.tracks!.count
     DispatchQueue.main.async {
         visualUpdateHandler?.prepareForNewTask(actionName: "Checking organization template for", thingName: "files", thingCount: count)
     }
     var index = 0
     var newFileLocations = [NSObject : URL]()
-    let allAlbums = Set(globalRootLibrary.tracks!.flatMap({return ($0 as? Track)?.album}))
+    let allAlbums = Set(globalRootLibrary!.tracks!.flatMap({return ($0 as? Track)?.album}))
     for album in allAlbums {
         newFileLocations.merge(templateBundle.match(wholeAlbum: album), uniquingKeysWith: {(first, second) -> URL in
             print("url conflict; this is bad");
@@ -189,7 +191,8 @@ func determineTemplateLocations(visualUpdateHandler: ProgressBarController?) -> 
 
 func getCurrentLocations(visualUpdateHandler: ProgressBarController?) -> [NSObject : URL] {
     var result = [NSObject : URL]()
-    for track in globalRootLibrary.tracks! {
+    let globalRootLibrary = getGlobalRootLibrary(forContext: privateQueueParentContext)
+    for track in globalRootLibrary!.tracks! {
         let track = track as! Track
         if let location = track.location, let url = URL(string: location) {
             result[track] = url
@@ -198,7 +201,8 @@ func getCurrentLocations(visualUpdateHandler: ProgressBarController?) -> [NSObje
     return result
 }
 
-func changeVolumeLocation(volume: Volume, newLocation: URL) {
+func changeVolumeLocation(volume: Volume, newLocation: URL, context: NSManagedObjectContext, visualUpdateHandler: ProgressBarController?) {
+    let globalRootLibrary = getGlobalRootLibrary(forContext: context)
     let oldVolumeURL = URL(string: volume.location!)!
     let oldVolumeURLAbsoluteString = oldVolumeURL.absoluteString
     let newAbsoluteString = newLocation.absoluteString
@@ -258,9 +262,10 @@ func checkIfVolumeExists(withURL url: URL, subcontext: NSManagedObjectContext? =
     }
 }
 
-func createNonTemplateDirectoryFor(album albumOptional: Album?, dry: Bool) -> URL? { // does not handle errors
+func createNonTemplateDirectoryFor(album albumOptional: Album?, dry: Bool, context: NSManagedObjectContext) -> URL? { // does not handle errors
+    let globalRootLibrary = getGlobalRootLibrary(forContext: context)
     guard let album = albumOptional else { return nil }
-    let baseURL = globalRootLibrary.getCentralMediaFolder()!
+    let baseURL = globalRootLibrary!.getCentralMediaFolder()!
     var albumDirectory = baseURL.appendingPathComponent("Album Files")
     if album.is_compilation == true {
         albumDirectory.appendPathComponent("Compilations")
@@ -491,12 +496,12 @@ var jmcUnknownComposer = {() -> Composer in
     }
 }
 
-func checkIfArtistExists(_ name: String, subcontext: NSManagedObjectContext? = nil) -> Artist? {
+func checkIfArtistExists(_ name: String, context: NSManagedObjectContext) -> Artist? {
     let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Artist")
     let predicate = NSPredicate(format: "name == %@", name)
     request.predicate = predicate
     do {
-        let result = subcontext != nil ? (try subcontext!.fetch(request) as! [Artist]) : (try privateQueueParentContext.fetch(request) as! [Artist])
+        let result = try context.fetch(request) as! [Artist]
         if result.count > 0 {
             return result[0]
         } else {
@@ -508,12 +513,12 @@ func checkIfArtistExists(_ name: String, subcontext: NSManagedObjectContext? = n
     }
 }
 
-func checkIfAlbumExists(withName name: String, withArtist artist: Artist, subcontext: NSManagedObjectContext? = nil) -> Album? {
+func checkIfAlbumExists(withName name: String, withArtist artist: Artist, context: NSManagedObjectContext) -> Album? {
     let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Album")
     let predicate = NSPredicate(format: "name == %@ and album_artist == %@", name, artist)
     request.predicate = predicate
     do {
-        let result = subcontext != nil ? (try subcontext!.fetch(request) as! [Album]) : (try privateQueueParentContext.fetch(request) as! [Album])
+        let result = try context.fetch(request) as! [Album]
         if result.count > 0 {
             return result[0]
         } else {
@@ -525,12 +530,12 @@ func checkIfAlbumExists(withName name: String, withArtist artist: Artist, subcon
     }
 }
 
-func checkIfComposerExists(_ name: String, subcontext: NSManagedObjectContext? = nil) -> Composer? {
+func checkIfComposerExists(_ name: String, context: NSManagedObjectContext) -> Composer? {
     let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Composer")
     let predicate = NSPredicate(format: "name == %@", name)
     request.predicate = predicate
     do {
-        let result = subcontext != nil ? (try subcontext!.fetch(request) as! [Composer]) : (try privateQueueParentContext.fetch(request) as! [Composer])
+        let result = try context.fetch(request) as! [Composer]
         if result.count > 0 {
             return result[0]
         } else {
@@ -542,12 +547,12 @@ func checkIfComposerExists(_ name: String, subcontext: NSManagedObjectContext? =
     }
 }
 
-func checkIfCachedOrderExists(_ name: String, subcontext: NSManagedObjectContext? = nil) -> CachedOrder? {
+func checkIfCachedOrderExists(_ name: String, context: NSManagedObjectContext) -> CachedOrder? {
     let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CachedOrder")
     let predicate = NSPredicate(format: "order == %@", name)
     request.predicate = predicate
     do {
-        let result = subcontext != nil ? (try subcontext!.fetch(request) as! [CachedOrder]) : (try privateQueueParentContext.fetch(request) as! [CachedOrder])
+        let result = try context.fetch(request) as! [CachedOrder]
         if result.count > 0 {
             return result[0]
         } else {
@@ -764,8 +769,8 @@ func testFixIndices(_ set: NSMutableOrderedSet, order: String) {
 }
 
 
-func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder, subContext: NSManagedObjectContext?) {
-    let actualTracks = subContext != nil ? tracks : tracks.map({return privateQueueParentContext.object(with: $0.objectID) as! Track})
+func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder, context: NSManagedObjectContext?) {
+    let actualTracks = context != nil ? tracks : tracks.map({return privateQueueParentContext.object(with: $0.objectID) as! Track})
     print("reordering for tracks for cached order \(cachedOrder.order!)")
     let comparator: (Track) -> (Track) -> ComparisonResult
     switch cachedOrder.order! {

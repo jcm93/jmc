@@ -426,7 +426,7 @@ class DatabaseManager: NSObject {
         if directoriesSet.count == 1 {
             return directoriesSet.first!
         } else {
-            return createNonTemplateDirectoryFor(album: album, dry: true)!
+            return createNonTemplateDirectoryFor(album: album, dry: true, context: self.context)!
         }
     }
     
@@ -451,7 +451,7 @@ class DatabaseManager: NSObject {
             }
         } else {
             //construct directory for album files since album is spread across disparate locations
-            guard let albumDirectory = createNonTemplateDirectoryFor(album: track.album, dry: false) else { return }
+            guard let albumDirectory = createNonTemplateDirectoryFor(album: track.album, dry: false, context: self.context) else { return }
             for albumFile in albumFiles {
                 do {
                     let fileURL = URL(string: albumFile.value(forKey: "location") as! String)!
@@ -717,7 +717,7 @@ class DatabaseManager: NSObject {
         return metadataDictionary
     }
     
-    func addTracksFromURLs(_ mediaURLs: [URL], to library: Library, visualUpdateHandler: ProgressBarController?, callback: (() -> Void)?) -> [FileAddToDatabaseError] { //does not handle errors good
+    func addTracksFromURLs(_ mediaURLs: [URL], visualUpdateHandler: ProgressBarController?, callback: (() -> Void)?) -> [FileAddToDatabaseError] { //does not handle errors good
         var errors = [FileAddToDatabaseError]()
         var addedArtists = [String : Artist]()
         var addedAlbums = [Artist : [String : Album]]()
@@ -730,6 +730,7 @@ class DatabaseManager: NSObject {
         DispatchQueue.main.async {
             visualUpdateHandler?.prepareForNewTask(actionName: "Importing", thingName: "tracks", thingCount: mediaURLs.count)
         }
+        let library = getGlobalRootLibrary(forContext: self.context)
         for url in mediaURLs {
             guard let fileMetadataDictionary = getAudioMetadata(url: url) else {
                 print("failure getting audio metadata, error")
@@ -866,15 +867,15 @@ class DatabaseManager: NSObject {
             
             //move file to the appropriate location, if we're organizing
             var result = true
-            switch library.organization_type! {
+            switch library!.organization_type! {
             case NSNumber(integerLiteral: 1):
                 result = moveFileAfterEdit(track, copies: false)
             case NSNumber(integerLiteral: 2):
                 result = moveFileAfterEdit(track, copies: true)
             default: result = true
             }
-            if hasArt {
-                addArtForTrack(track, fromData: art!, context: self.context)
+            if let art = art {
+                addArtForTrack(track, fromData: art)
             }
             if result == false {
                 print("error moving")
@@ -900,11 +901,11 @@ class DatabaseManager: NSObject {
                 if let addableFiles = getNonAudioFiles(inDirectory: directoryURL) {
                     for file in addableFiles {
                         if UTTypeConformsTo(file.1 as CFString, kUTTypeImage) || UTTypeConformsTo(file.1 as CFString, kUTTypePDF) {
-                            if let art = addArtForTrack(track, from: file.0, context: self.context, organizes: false) {
+                            if let art = addArtForTrack(track, from: file.0, organizes: false) {
                                 addedAlbumFiles.append(art)
                             }
                         } else {
-                            if let otherFile = addMiscellaneousFile(forTrack: track, from: file.0, context: self.context, organizes: false) {
+                            if let otherFile = addMiscellaneousFile(forTrack: track, from: file.0, organizes: false) {
                                 addedAlbumFiles.append(otherFile)
                             }
                         }
@@ -994,7 +995,7 @@ class DatabaseManager: NSObject {
         self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editName(tracks, name: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
+            reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
@@ -1006,9 +1007,9 @@ class DatabaseManager: NSObject {
     func artistEdited(tracks: [Track], value: String) {
         self.context.undoManager?.beginUndoGrouping()
         self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
-        editArtist(tracks, artistName: value)
+        editArtist(tracks, artistName: value, context: self.context)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
+            reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
@@ -1020,9 +1021,9 @@ class DatabaseManager: NSObject {
     func albumArtistEdited(tracks: [Track], value: String) {
         self.context.undoManager?.beginUndoGrouping()
         self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
-        editAlbumArtist(tracks, albumArtistName: value)
+        editAlbumArtist(tracks, albumArtistName: value, context: self.context)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
+            reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
@@ -1034,9 +1035,9 @@ class DatabaseManager: NSObject {
     func albumEdited(tracks: [Track], value: String) {
         self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         self.context.undoManager?.beginUndoGrouping()
-        editAlbum(tracks, albumName: value)
+        editAlbum(tracks, albumName: value, context: self.context)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
+            reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
@@ -1050,7 +1051,7 @@ class DatabaseManager: NSObject {
         self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editTrackNum(tracks, num: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
+            reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
@@ -1074,7 +1075,7 @@ class DatabaseManager: NSObject {
         self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editDiscNum(tracks, num: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
+            reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
@@ -1095,9 +1096,9 @@ class DatabaseManager: NSObject {
     
     func composerEdited(tracks: [Track], value: String) {
         self.context.undoManager?.beginUndoGrouping()
-        editComposer(tracks, composerName: value)
+        editComposer(tracks, composerName: value, context: self.context)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
+            reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
@@ -1121,7 +1122,7 @@ class DatabaseManager: NSObject {
         self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editIsComp(tracks, isComp: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
+            reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
@@ -1163,7 +1164,7 @@ class DatabaseManager: NSObject {
         self.context.undoManager?.beginUndoGrouping()
         editSortAlbum(tracks, sortAlbum: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
+            reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
         self.context.undoManager?.endUndoGrouping()
         self.context.undoManager?.setActionName("Edit Sort Album")
@@ -1173,7 +1174,7 @@ class DatabaseManager: NSObject {
         self.context.undoManager?.beginUndoGrouping()
         editSortAlbumArtist(tracks, sortAlbumArtist: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
+            reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
         self.context.undoManager?.endUndoGrouping()
         self.context.undoManager?.setActionName("Edit Sort Album Artist")
@@ -1183,7 +1184,7 @@ class DatabaseManager: NSObject {
         self.context.undoManager?.beginUndoGrouping()
         editSortArtist(tracks, sortArtist: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
+            reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
         self.context.undoManager?.endUndoGrouping()
         self.context.undoManager?.setActionName("Edit Sort Artist")
@@ -1193,7 +1194,7 @@ class DatabaseManager: NSObject {
         self.context.undoManager?.beginUndoGrouping()
         editSortComposer(tracks, sortComposer: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
+            reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
         self.context.undoManager?.endUndoGrouping()
         self.context.undoManager?.setActionName("Edit Sort Composer")
@@ -1203,7 +1204,7 @@ class DatabaseManager: NSObject {
         self.context.undoManager?.beginUndoGrouping()
         editSortName(tracks, sortName: value)
         for order in cachedOrders!.values {
-            reorderForTracks(tracks, cachedOrder: order, subContext: nil)
+            reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
         self.context.undoManager?.endUndoGrouping()
         self.context.undoManager?.setActionName("Edit Sort Name")
@@ -1213,7 +1214,7 @@ class DatabaseManager: NSObject {
         withUndoBlock(name: "Edit Release Date") {
             editReleaseDate(tracks, date: value)
             for order in cachedOrders!.values {
-                reorderForTracks(tracks, cachedOrder: order, subContext: nil)
+                reorderForTracks(tracks, cachedOrder: order, context: self.context)
             }
             for track in tracks {
                 moveFileAfterEdit(track, copies: false)
@@ -1323,7 +1324,7 @@ class DatabaseManager: NSObject {
             case "artist":
                 let artistName = trackMetadata["artist"] as! String
                 let artist: Artist = {() -> Artist in
-                    let artistCheck = checkIfArtistExists(artistName)
+                    let artistCheck = checkIfArtistExists(artistName, context: self.context)
                     if artistCheck == nil {
                         let artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: self.context) as! Artist
                         addedArtist = artist
@@ -1341,7 +1342,7 @@ class DatabaseManager: NSObject {
             case "album":
                 let albumName = trackMetadata["album"] as! String
                 let album: Album = {
-                    let albumCheck = checkIfAlbumExists(withName: albumName, withArtist: track.artist!)
+                    let albumCheck = checkIfAlbumExists(withName: albumName, withArtist: track.artist!, context: self.context)
                     if albumCheck == nil {
                         let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: self.context) as! Album
                         addedAlbum = album
@@ -1368,7 +1369,7 @@ class DatabaseManager: NSObject {
             case "composer":
                 let composerName = trackMetadata["composer"] as! String
                 let composer: Composer = {
-                    let composerCheck = checkIfComposerExists(composerName)
+                    let composerCheck = checkIfComposerExists(composerName, context: self.context)
                     if composerCheck == nil {
                         let composer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: self.context) as! Composer
                         addedComposer = composer
@@ -1428,7 +1429,7 @@ class DatabaseManager: NSObject {
             case "album_artist":
                 let artistName = trackMetadata["album_artist"] as! String
                 let artist: Artist = {
-                    let artistCheck = checkIfArtistExists(artistName)
+                    let artistCheck = checkIfArtistExists(artistName, context: self.context)
                     if artistCheck == nil {
                         let artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: self.context) as! Artist
                         addedAlbumArtist = artist
@@ -1446,7 +1447,7 @@ class DatabaseManager: NSObject {
         }
         if moveFileForNetworkTrackToAppropriateLocationWithData(newTrack, data: data) == true {
             for order in cachedOrders! {
-                reorderForTracks([newTrack], cachedOrder: order.value, subContext: nil)
+                reorderForTracks([newTrack], cachedOrder: order.value, context: self.context)
             }
         } else {
             self.context.delete(newTrack)
@@ -1681,7 +1682,7 @@ class DatabaseManager: NSObject {
                         if addedArtists[artistName] != nil {
                             return addedArtists[artistName] as! Artist
                         } else {
-                            let artistCheck = checkIfArtistExists(artistName)
+                            let artistCheck = checkIfArtistExists(artistName, context: self.context)
                             if artistCheck == nil {
                                 let artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: self.context) as! Artist
                                 artist.name = artistName
@@ -1704,7 +1705,7 @@ class DatabaseManager: NSObject {
                         if addedAlbums[albumName] != nil {
                             return addedAlbums[albumName] as! Album
                         } else {
-                            let albumCheck = checkIfAlbumExists(withName: albumName, withArtist: newTrack.artist!)
+                            let albumCheck = checkIfAlbumExists(withName: albumName, withArtist: newTrack.artist!, context: self.context)
                             if albumCheck == nil {
                                 let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: self.context) as! Album
                                 album.name = albumName
@@ -1736,7 +1737,7 @@ class DatabaseManager: NSObject {
                         if addedComposers[composerName] != nil {
                             return addedComposers[composerName] as! Composer
                         } else {
-                            let composerCheck = checkIfComposerExists(composerName)
+                            let composerCheck = checkIfComposerExists(composerName, context: self.context)
                             if composerCheck == nil {
                                 let composer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: self.context) as! Composer
                                 composer.name = composerName
@@ -1802,7 +1803,7 @@ class DatabaseManager: NSObject {
                         if addedArtists[artistName] != nil {
                             return addedArtists[artistName] as! Artist
                         } else {
-                            let artistCheck = checkIfArtistExists(artistName)
+                            let artistCheck = checkIfArtistExists(artistName, context: self.context)
                             if artistCheck == nil {
                                 let artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: self.context) as! Artist
                                 artist.name = artistName

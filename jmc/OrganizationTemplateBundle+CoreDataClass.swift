@@ -46,7 +46,7 @@ public class OrganizationTemplateBundle: NSManagedObject {
             return
         }
         let directories = Set(urlDict.values.map({return $0.deletingLastPathComponent()}))
-        let albumFileDirectory = directories.count == 1 ? directories.first! : createNonTemplateDirectoryFor(album: album, dry: true)
+        let albumFileDirectory = directories.count == 1 ? directories.first! : createNonTemplateDirectoryFor(album: album, dry: true, context: album.managedObjectContext!)
         for albumFile in albumFiles {
             if let fileURL = URL(string: albumFile.value(forKey: "location") as? String ?? "") {
                 let fileName = fileURL.lastPathComponent

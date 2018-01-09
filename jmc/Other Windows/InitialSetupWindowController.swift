@@ -86,7 +86,8 @@ class InitialSetupWindowController: NSWindowController {
         if myFileDialog.url!.path != nil && response.rawValue == NSFileHandlingPanelOKButton {
             directoryURL = myFileDialog.url!
             libraryPathControl.url = directoryURL
-            globalRootLibrary?.changeCentralFolderLocation(newURL: directoryURL!)
+            let globalRootLibrary = getGlobalRootLibrary(forContext: mainQueueChildContext)
+            globalRootLibrary!.changeCentralFolderLocation(newURL: directoryURL!)
         }
         // Make sure that a path was chosen
     }

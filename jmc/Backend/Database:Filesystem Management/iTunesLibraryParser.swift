@@ -6,7 +6,7 @@
 //  Copyright © 2016 John Moody. All rights reserved.
 //
 
-//Parses iTunes libraries and puts the metadata in Core Data
+//Parses iTunes libraries and adds the tracks and metadata to the jmc library
 
 import Foundation
 import CoreData
@@ -34,8 +34,7 @@ class iTunesLibraryParser: NSObject {
     var addedTracks = [Int : Track]()
     var albumsWithUnknownArtists = [Album]()
     
-    func makeLibrary(parentLibrary: Library?, visualUpdateHandler: ProgressBarController?) {
-        //volume?
+    func makeLibrary(visualUpdateHandler: ProgressBarController?) {
         let library = getGlobalRootLibrary(forContext: privateQueueParentContext)
         let count = self.XMLTrackDictionaryDictionary.allKeys.count
         DispatchQueue.main.async {
@@ -82,7 +81,7 @@ class iTunesLibraryParser: NSObject {
                 let artistName              = trackDict[iTunesImporterArtistNameKey] as? String ?? ""
                 if let addedArtist = self.addedArtists[artistName] {
                     cd_track.artist = addedArtist
-                } else if let artistFromParentContext = checkIfArtistExists(artistName) {
+                } else if let artistFromParentContext = checkIfArtistExists(artistName, context: privateQueueParentContext) {
                     cd_track.artist = artistFromParentContext
                 } else {
                     let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: privateQueueParentContext) as! Artist
@@ -95,7 +94,7 @@ class iTunesLibraryParser: NSObject {
                 let albumName               = trackDict[iTunesImporterAlbumNameKey] as? String ?? ""
                 if let addedAlbum = self.addedAlbums[cd_track.artist!]?[albumName] {
                     cd_track.album = addedAlbum
-                } else if let albumFromParentContext = checkIfAlbumExists(withName: albumName, withArtist: cd_track.artist!) {
+                } else if let albumFromParentContext = checkIfAlbumExists(withName: albumName, withArtist: cd_track.artist!, context: privateQueueParentContext) {
                     cd_track.album = albumFromParentContext
                 } else {
                     let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: privateQueueParentContext) as! Album
@@ -112,7 +111,7 @@ class iTunesLibraryParser: NSObject {
                 if let albumArtistName         = trackDict[iTunesImporterAlbumArtistKey] as? String {
                     if let addedArtist = self.addedArtists[albumArtistName] {
                         cd_track.album?.album_artist = addedArtist
-                    } else if let artistFromParentContext = checkIfArtistExists(albumArtistName) {
+                    } else if let artistFromParentContext = checkIfArtistExists(albumArtistName, context: privateQueueParentContext) {
                         cd_track.album?.album_artist = artistFromParentContext
                     } else {
                         let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: privateQueueParentContext) as! Artist
@@ -129,7 +128,7 @@ class iTunesLibraryParser: NSObject {
                 if let composerName         = trackDict[iTunesImporterComposerKey] as? String {
                     if let addedComposer = self.addedComposers[composerName] {
                         cd_track.composer = addedComposer
-                    } else if let composerFromParentContext = checkIfComposerExists(composerName) {
+                    } else if let composerFromParentContext = checkIfComposerExists(composerName, context: privateQueueParentContext) {
                         cd_track.composer = composerFromParentContext
                     } else {
                         let newComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: privateQueueParentContext) as! Composer
@@ -225,7 +224,7 @@ class iTunesLibraryParser: NSObject {
         }
         index = 0
         for order in cachedOrders!.values {
-            reorderForTracks(trackArray, cachedOrder: order, subContext: privateQueueParentContext)
+            reorderForTracks(trackArray, cachedOrder: order, context: privateQueueParentContext)
             DispatchQueue.main.async {
                 visualUpdateHandler?.increment(thingsDone: index)
             }
