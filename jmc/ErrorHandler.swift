@@ -24,6 +24,8 @@ class ErrorHandler: NSObject {
 
 class SaveErrorHandler: ErrorHandler {
     override func presentErrors() {
-        self.delegate.presentSevereErrors(self.errors)
+        if errors.count > 0 {
+            self.delegate.presentSevereErrors(self.errors)
+        }
     }
 }

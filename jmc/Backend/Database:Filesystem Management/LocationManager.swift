@@ -61,8 +61,8 @@ class LocationManager: NSObject {
     init(delegate: AppDelegate) {
         self.delegate = delegate
         self.context = privateQueueParentContext
-        self.databaseManager = DatabaseManager(context: privateQueueParentContext)
-        self.globalRootLibrary = getGlobalRootLibrary(forContext: privateQueueParentContext)
+        self.databaseManager = delegate.databaseManager
+        self.globalRootLibrary = delegate.databaseManager?.globalRootLibrary
     }
     
     func tryAddNewFilesToDatabase() {

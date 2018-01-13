@@ -19,7 +19,7 @@ class FileAddQueueChunk: NSObject {
 class AddFilesQueueLoop: NSObject, ProgressBarController {
     
     var urlsToAddChunks = [FileAddQueueChunk]()
-    var databaseManager = DatabaseManager(context: privateQueueParentContext)
+    var databaseManager: DatabaseManager
     var showsProgressBar = true
     var canAddMoreFiles = true
     var delegate: AppDelegate
@@ -31,6 +31,7 @@ class AddFilesQueueLoop: NSObject, ProgressBarController {
     
     init(delegate: AppDelegate) {
         self.delegate = delegate
+        self.databaseManager = delegate.databaseManager!
         super.init()
     }
     
@@ -63,11 +64,9 @@ class AddFilesQueueLoop: NSObject, ProgressBarController {
     
     func start() {
         print("queue here, starting")
-        DispatchQueue.main.async {
-            if self.timer == nil {
-                self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.loopAction), userInfo: nil, repeats: true)
-                CFRunLoopAddTimer(CFRunLoopGetMain(), self.timer!, CFRunLoopMode.commonModes)
-            }
+        if self.timer == nil {
+            self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.loopAction), userInfo: nil, repeats: true)
+            CFRunLoopAddTimer(CFRunLoopGetCurrent(), self.timer!, CFRunLoopMode.commonModes)
         }
     }
     
@@ -118,6 +117,7 @@ class AddFilesQueueLoop: NSObject, ProgressBarController {
                 self.consecutiveEmptyLoops += 1
                 if self.consecutiveEmptyLoops >= 5 {
                     self.stop()
+                    self.consecutiveEmptyLoops = 0
                 }
             }
         }
@@ -143,17 +143,15 @@ class AddFilesQueueLoop: NSObject, ProgressBarController {
     
     func stop() {
         print("stop called")
-        DispatchQueue.main.async {
-            CFRunLoopRemoveTimer(CFRunLoopGetMain(), self.timer, CFRunLoopMode.commonModes)
-            self.timer?.invalidate()
-            self.timer = nil
-            self.isRunning = false
-            self.thingCount = 0
-            self.thingsDone = 0
+        CFRunLoopRemoveTimer(CFRunLoopGetCurrent(), self.timer, CFRunLoopMode.commonModes)
+        self.timer?.invalidate()
+        self.timer = nil
+        self.isRunning = false
+        self.thingCount = 0
+        self.thingsDone = 0
+        self.delegate.backgroundAddFilesHandler?.finish()
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
             self.delegate.backgroundAddFilesHandler?.finish()
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-                self.delegate.backgroundAddFilesHandler?.finish()
-            }
         }
     }
 }
