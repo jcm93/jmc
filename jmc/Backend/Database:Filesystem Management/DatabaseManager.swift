@@ -40,6 +40,30 @@ class DatabaseManager: NSObject {
         self.context = context
     }
     
+    func saveAndCommitGlobal(errorHandler: ErrorHandler?) {
+        func commitChildContext(errorHandler: ErrorHandler?) {
+            do {
+                try mainQueueChildContext.save()
+            } catch {
+                errorHandler?.addError(error: error)
+            }
+        }
+        func commitParentContext(errorHandler: ErrorHandler?) {
+            do {
+                try privateQueueParentContext.save()
+            } catch {
+                errorHandler?.addError(error: error)
+            }
+        }
+        mainQueueChildContext.perform {
+            commitChildContext(errorHandler: errorHandler)
+            privateQueueParentContext.perform {
+                commitParentContext(errorHandler: errorHandler)
+                errorHandler?.presentErrors()
+            }
+        }
+    }
+    
     func saveAndCommit(errorHandler: ErrorHandler?) {
         func commitChildContext(errorHandler: ErrorHandler?) {
             do {
@@ -1210,7 +1234,7 @@ class DatabaseManager: NSObject {
     }
     
     func releaseDateEdited(tracks: [Track], value: JMDate) {
-        withUndoBlock(name: "Edit Release Date") {
+        withUndoBlock(context: self.context, name: "Edit Release Date") {
             editReleaseDate(tracks, date: value)
             for order in cachedOrders!.values {
                 reorderForTracks(tracks, cachedOrder: order, context: self.context)

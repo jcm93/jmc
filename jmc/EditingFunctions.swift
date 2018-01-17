@@ -205,19 +205,19 @@ func combineAlbums(_ firstAlbum: Album, _ secondAlbum: Album) -> Album {
     return firstAlbum
 }
 
-func notEnablingUndo(stuff: () -> Void) {
-    privateQueueParentContext.processPendingChanges()
-    privateQueueParentContext.undoManager?.disableUndoRegistration()
+func notEnablingUndo(context: NSManagedObjectContext, stuff: () -> Void) {
+    context.processPendingChanges()
+    context.undoManager?.disableUndoRegistration()
     stuff()
-    privateQueueParentContext.processPendingChanges()
-    privateQueueParentContext.undoManager?.enableUndoRegistration()
+    context.processPendingChanges()
+    context.undoManager?.enableUndoRegistration()
 }
 
-func withUndoBlock(name: String, stuff: () -> Void) {
-    privateQueueParentContext.undoManager?.beginUndoGrouping()
+func withUndoBlock(context: NSManagedObjectContext, name: String, stuff: () -> Void) {
+    context.undoManager?.beginUndoGrouping()
     stuff()
-    privateQueueParentContext.undoManager?.endUndoGrouping()
-    privateQueueParentContext.undoManager?.setActionName(name)
+    context.undoManager?.endUndoGrouping()
+    context.undoManager?.setActionName(name)
 }
 
 func editTrackNum(_ tracks: [Track]?, num: Int) {

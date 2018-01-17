@@ -412,7 +412,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             delegate?.audioModule.stopForNetworkTrack()
             delegate?.serviceBrowser?.getTrack(Int(track.id!), peer: peer)
             if self.currentTrack != nil {
-                notEnablingUndo {
+                notEnablingUndo(context: mainQueueChildContext) {
                     currentTrack?.is_playing = false
                 }
                 currentTableViewController?.reloadNowPlayingForTrack(self.currentTrack!)
@@ -517,7 +517,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         guard trackQueueViewController!.currentTrack != nil else {return}
         guard self.isDoneWithSkipOperation else {print("can't skip");return}
         self.isDoneWithSkipOperation = false
-        notEnablingUndo {
+        notEnablingUndo(context: mainQueueChildContext) {
             self.currentTrack?.is_playing = false
         }
         timer?.invalidate()
@@ -528,7 +528,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         guard trackQueueViewController!.currentTrack != nil else {return}
         guard self.isDoneWithSkipBackOperation else {print("can't skip backward");return}
         self.isDoneWithSkipBackOperation = false
-        notEnablingUndo {
+        notEnablingUndo(context: mainQueueChildContext) {
             self.currentTrack?.is_playing = false
         }
         timer?.invalidate()
@@ -756,7 +756,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
                     trackQueueViewController.upcomingTrack = nil
                 }
                 self.progressBarView.blockSeekEvents()
-                notEnablingUndo {
+                notEnablingUndo(context: mainQueueChildContext) {
                     self.currentTrack?.is_playing = false
                 }
                 if currentTrack != nil {
@@ -776,7 +776,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
                 }
                 timer?.invalidate()
                 initializeInterfaceForNewTrack()
-                notEnablingUndo {
+                notEnablingUndo(context: mainQueueChildContext) {
                     self.currentTrack?.is_playing = true
                 }
                 currentTableViewController?.reloadNowPlayingForTrack(currentTrack!)

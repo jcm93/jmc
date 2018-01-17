@@ -198,8 +198,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     func createPlaylist(_ tracks: [Track]?, smart_criteria: SmartCriteria?) {
         //create playlist
         let globalRootLibrary = getGlobalRootLibrary(forContext: mainQueueChildContext)
-        let playlist = NSEntityDescription.insertNewObject(forEntityName: "SongCollection", into: privateQueueParentContext) as! SongCollection
-        let playlistItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: privateQueueParentContext) as! SourceListItem
+        let playlist = NSEntityDescription.insertNewObject(forEntityName: "SongCollection", into: mainQueueChildContext) as! SongCollection
+        let playlistItem = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: mainQueueChildContext) as! SourceListItem
         playlistItem.playlist = playlist
         playlistItem.name = "New Playlist"
         playlist.name = "New Playlist"
@@ -539,8 +539,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             let tracks = { () -> [Track] in
                 var result = [Track]()
                 for trackURI in unCodedThing {
-                    let id = privateQueueParentContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: trackURI as! URL)
-                    result.append(privateQueueParentContext.object(with: id!) as! Track)
+                    let id = mainQueueChildContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: trackURI as! URL)
+                    result.append(mainQueueChildContext.object(with: id!) as! Track)
                 }
                 return result
             }()
@@ -554,8 +554,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             let tracks = { () -> [Track] in
                 var result = [Track]()
                 for trackURI in unCodedThing {
-                    let id = privateQueueParentContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: trackURI as! URL)
-                    result.append(privateQueueParentContext.object(with: id!) as! Track)
+                    let id = mainQueueChildContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: trackURI as! URL)
+                    result.append(mainQueueChildContext.object(with: id!) as! Track)
                 }
                 return result
             }()
