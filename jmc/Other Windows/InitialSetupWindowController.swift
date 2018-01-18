@@ -103,7 +103,7 @@ class InitialSetupWindowController: NSWindowController {
             libraryFetchRequest.predicate = predicate
             var result: Library?
             do {
-                let libraryResult = try privateQueueParentContext.fetch(libraryFetchRequest) as? [Library]
+                let libraryResult = try mainQueueChildContext.fetch(libraryFetchRequest) as? [Library]
                 if libraryResult?.count > 0 {
                     print("has library")
                     result = libraryResult![0]
@@ -127,79 +127,79 @@ class InitialSetupWindowController: NSWindowController {
             print(error)
         }
         
-        let newActualLibrary = NSEntityDescription.insertNewObject(forEntityName: "Library", into: privateQueueParentContext) as! Library
-        newActualLibrary.initialSetup(withCentralDirectory: centralURL!, organizationType: organizationType.rawValue, renamesFiles: modifyMetadata)
-        let defaultVolume = NSEntityDescription.insertNewObject(forEntityName: "Volume", into: privateQueueParentContext) as! Volume
+        let newActualLibrary = NSEntityDescription.insertNewObject(forEntityName: "Library", into: mainQueueChildContext) as! Library
+        newActualLibrary.initialSetup(withCentralDirectory: centralURL!, organizationType: organizationType.rawValue, renamesFiles: modifyMetadata, context: mainQueueChildContext)
+        let defaultVolume = NSEntityDescription.insertNewObject(forEntityName: "Volume", into: mainQueueChildContext) as! Volume
         defaultVolume.location = getVolumeOfURL(url: centralURL!).absoluteString
         defaultVolume.name = (try? centralURL!.resourceValues(forKeys: [.volumeNameKey]))?.volumeName
         newActualLibrary.addToVolumes(defaultVolume)
         
-        let newActualLibrarySLI = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: privateQueueParentContext) as! SourceListItem
+        let newActualLibrarySLI = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: mainQueueChildContext) as! SourceListItem
         newActualLibrarySLI.library = newActualLibrary
         newActualLibrarySLI.name = newActualLibrary.name
         //create dummy source list item as root of source list
-        let source_list_root = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: privateQueueParentContext) as! SourceListItem
+        let source_list_root = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: mainQueueChildContext) as! SourceListItem
         source_list_root.is_root = true
         
         //create SLI for default volume
-        let defaultVolumeSLI = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: privateQueueParentContext) as! SourceListItem
+        let defaultVolumeSLI = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: mainQueueChildContext) as! SourceListItem
         defaultVolumeSLI.volume = defaultVolume
         newActualLibrarySLI.addToChildren(defaultVolumeSLI)
         
         //create source list headers
-        let cd_library_header = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: privateQueueParentContext) as! SourceListItem
+        let cd_library_header = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: mainQueueChildContext) as! SourceListItem
         cd_library_header.is_header = true
         cd_library_header.name = "Library"
         cd_library_header.sort_order = 0
         cd_library_header.parent = source_list_root
         newActualLibrarySLI.parent = cd_library_header
-        let cd_shared_header = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: privateQueueParentContext) as! SourceListItem
+        let cd_shared_header = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: mainQueueChildContext) as! SourceListItem
         cd_shared_header.is_header = true
         cd_shared_header.name = "Shared Libraries"
         cd_shared_header.sort_order = 1
         cd_shared_header.parent = source_list_root
-        let cd_playlists_header = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: privateQueueParentContext) as! SourceListItem
+        let cd_playlists_header = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: mainQueueChildContext) as! SourceListItem
         cd_playlists_header.is_header = true
         cd_playlists_header.name = "Playlists"
         cd_playlists_header.sort_order = 2
         cd_playlists_header.parent = source_list_root
         
         //create cached orders
-        let cachedArtistOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: privateQueueParentContext) as! CachedOrder
+        let cachedArtistOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: mainQueueChildContext) as! CachedOrder
         cachedArtistOrder.order = "Artist"
         
-        let cachedAlbumOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: privateQueueParentContext) as! CachedOrder
+        let cachedAlbumOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: mainQueueChildContext) as! CachedOrder
         cachedAlbumOrder.order = "Album"
         
-        let dateAddedOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: privateQueueParentContext) as! CachedOrder
+        let dateAddedOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: mainQueueChildContext) as! CachedOrder
         dateAddedOrder.order = "Date Added"
         
-        let cachedAlbumArtistOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: privateQueueParentContext) as! CachedOrder
+        let cachedAlbumArtistOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: mainQueueChildContext) as! CachedOrder
         cachedAlbumArtistOrder.order = "Album Artist"
 
-        let cachedKindOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: privateQueueParentContext) as! CachedOrder
+        let cachedKindOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: mainQueueChildContext) as! CachedOrder
         cachedKindOrder.order = "Kind"
         
-        let cachedDateReleasedOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: privateQueueParentContext) as! CachedOrder
+        let cachedDateReleasedOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: mainQueueChildContext) as! CachedOrder
         cachedDateReleasedOrder.order = "Date Released"
         
-        let cachedGenreOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: privateQueueParentContext) as! CachedOrder
+        let cachedGenreOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: mainQueueChildContext) as! CachedOrder
         cachedGenreOrder.order = "Genre"
         
-        let cachedNameOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: privateQueueParentContext) as! CachedOrder
+        let cachedNameOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: mainQueueChildContext) as! CachedOrder
         cachedNameOrder.order = "Name"
         
-        let cachedComposerOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: privateQueueParentContext) as! CachedOrder
+        let cachedComposerOrder = NSEntityDescription.insertNewObject(forEntityName: "CachedOrder", into: mainQueueChildContext) as! CachedOrder
         cachedComposerOrder.order = "Composer"
         
         //create blank entities
-        let unknownArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: privateQueueParentContext) as! Artist
+        let unknownArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: mainQueueChildContext) as! Artist
         unknownArtist.id = 1
         unknownArtist.name = ""
-        let unknownAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: privateQueueParentContext) as! Album
+        let unknownAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: mainQueueChildContext) as! Album
         unknownAlbum.id = 1
         unknownAlbum.name = ""
-        let unknownComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: privateQueueParentContext) as! Composer
+        let unknownComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: mainQueueChildContext) as! Composer
         unknownComposer.id = 1
         unknownComposer.name = ""
         
@@ -220,9 +220,9 @@ class InitialSetupWindowController: NSWindowController {
     
     @IBAction func OKPressed(_ sender: AnyObject) {
         UserDefaults.standard.set(true, forKey: DEFAULTS_ARE_INITIALIZED_STRING)
-        privateQueueParentContext.perform {
+        mainQueueChildContext.perform {
             do {
-                try privateQueueParentContext.save()
+                try mainQueueChildContext.save()
             } catch {
                 print(error)
             }

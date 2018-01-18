@@ -839,7 +839,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     func refreshCurrentSortOrder() {
         if let key = self.currentTableViewController?.tableView.sortDescriptors.first?.key,
             let orderName = keyToCachedOrderDictionary[key],
-            let order = cachedOrders![orderName] {
+            let order = cachedOrdersMainQueue![orderName] {
             print("fixing indices for current order")
             fixIndicesImmutable(order: order)
             self.currentTableViewController?.trackViewArrayController.rearrangeObjects()

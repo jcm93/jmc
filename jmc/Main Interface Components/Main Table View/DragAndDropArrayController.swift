@@ -191,7 +191,7 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         let newDescriptor = tableColumn.sortDescriptorPrototype?.key
         let cachedOrderName = keyToCachedOrderDictionary[newDescriptor!]
         if cachedOrderName != nil {
-            let cachedOrder = cachedOrders![cachedOrderName!]
+            let cachedOrder = cachedOrdersMainQueue![cachedOrderName!]
             if cachedOrder?.needs_update == true {
                 fixIndicesImmutable(order: cachedOrder!)
             }

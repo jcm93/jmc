@@ -220,10 +220,10 @@ class iTunesLibraryParser: NSObject {
         }
         let trackArray = Array(addedTracks.values)
         DispatchQueue.main.async {
-            visualUpdateHandler?.prepareForNewTask(actionName: "Reordering", thingName: "sort caches", thingCount: cachedOrders!.count)
+            visualUpdateHandler?.prepareForNewTask(actionName: "Reordering", thingName: "sort caches", thingCount: cachedOrdersBackgroundQueue!.count)
         }
         index = 0
-        for order in cachedOrders!.values {
+        for order in cachedOrdersBackgroundQueue!.values {
             reorderForTracks(trackArray, cachedOrder: order, context: privateQueueParentContext)
             DispatchQueue.main.async {
                 visualUpdateHandler?.increment(thingsDone: index)

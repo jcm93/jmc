@@ -141,7 +141,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         if item == nil {
-            let children = rootSourceListItem.children!
+            guard let children = rootSourceListItem.children else { return item }
             if (children[index] as? SourceListItem)?.children?.count > 0 {
                 return children[index]
             } else {

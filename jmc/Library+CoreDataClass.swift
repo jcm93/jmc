@@ -57,9 +57,9 @@ public class Library: NSManagedObject {
 
     }
     
-    func initialSetup(withCentralDirectory url: URL, organizationType: Int, renamesFiles: Bool) {
-        let newTemplateBundle = NSEntityDescription.insertNewObject(forEntityName: "OrganizationTemplateBundle", into: privateQueueParentContext) as! OrganizationTemplateBundle
-        newTemplateBundle.initializeWithDefaults(centralFolder: url)
+    func initialSetup(withCentralDirectory url: URL, organizationType: Int, renamesFiles: Bool, context: NSManagedObjectContext) {
+        let newTemplateBundle = NSEntityDescription.insertNewObject(forEntityName: "OrganizationTemplateBundle", into: context) as! OrganizationTemplateBundle
+        newTemplateBundle.initializeWithDefaults(centralFolder: url, context: context)
         self.organization_template = newTemplateBundle
         self.name = NSFullUserName() + "'s library"
         self.parent = nil

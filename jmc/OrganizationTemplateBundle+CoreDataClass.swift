@@ -55,13 +55,13 @@ public class OrganizationTemplateBundle: NSManagedObject {
         }
     }
     
-    func initializeWithDefaults(centralFolder: URL) {
-        let defaultTemplate = NSEntityDescription.insertNewObject(forEntityName: "OrganizationTemplate", into: privateQueueParentContext) as! OrganizationTemplate
+    func initializeWithDefaults(centralFolder: URL, context: NSManagedObjectContext) {
+        let defaultTemplate = NSEntityDescription.insertNewObject(forEntityName: "OrganizationTemplate", into: context) as! OrganizationTemplate
         defaultTemplate.base_url_string = centralFolder.absoluteString
         defaultTemplate.tokens = DEFAULT_TEMPLATE_TOKEN_ARRAY as NSArray
         self.default_template = defaultTemplate
         
-        let compilationRule = NSEntityDescription.insertNewObject(forEntityName: "OrganizationTemplate", into: privateQueueParentContext) as! OrganizationTemplate
+        let compilationRule = NSEntityDescription.insertNewObject(forEntityName: "OrganizationTemplate", into: context) as! OrganizationTemplate
         compilationRule.base_url_string = centralFolder.absoluteString
         compilationRule.predicate = COMPILATION_PREDICATE
         compilationRule.tokens = COMPILATION_TOKEN_ARRAY as NSArray
