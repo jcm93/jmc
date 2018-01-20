@@ -346,13 +346,13 @@ func shuffleMutableOrderedSet(_ mos: inout NSMutableOrderedSet) {
     }
 }
 
-func getTrackWithID(_ id: Int, context: NSManagedObjectContext) -> Track? {
+func getTrackWithID(_ id: Int) -> Track? {
     let fetch_req = NSFetchRequest<NSFetchRequestResult>(entityName: "Track")
     let pred = NSPredicate(format: "id == \(id)")
     fetch_req.predicate = pred
     let result: Track? = {() -> Track? in
         do {
-            let trackList = try context.fetch(fetch_req) as? [Track]
+            let trackList = try privateQueueParentContext.fetch(fetch_req) as? [Track]
             if trackList!.count > 0 {
                 return trackList![0]
             } else {
@@ -670,7 +670,7 @@ func insert(_ tracks: NSOrderedSet, track: TrackView, isGreater: ((Track) -> (Tr
 }
 
 func fixIndicesImmutable(order: CachedOrder) {
-    notEnablingUndo(context: mainQueueChildContext) {
+    notEnablingUndo {
         var key: String
         switch order.order! {
         case "Artist":

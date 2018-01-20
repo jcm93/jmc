@@ -204,18 +204,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
-        do {
-            try mainQueueChildContext.save()
-        } catch {
-            print(error)
-        }
-        privateQueueParentContext.performAndWait {
-            do {
-                try privateQueueParentContext.save()
-            } catch {
-                print(error)
-            }
-        }
     }
     
     func showMainWindow() {
@@ -376,7 +364,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             }
             
             do {
-                self.databaseManager!.saveAndCommit(errorHandler: nil)
+                try managedObjectContext.save()
             } catch {
                 let nserror = error as NSError
                 // Customize this code block to include application-specific recovery steps.
@@ -384,8 +372,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 if (result) {
                     returnValueFromBlock = .terminateCancel
                 }
+                
                 let question = NSLocalizedString("Could not save changes while quitting. Quit anyway?", comment: "Quit without saves error question message")
-                let info = NSLocalizedString("Quitting now will lose any changes you have made since the last successful save", comment: "Quit without saves error question info")
+                let info = NSLocalizedString("Quitting now will lose any changes you have made since the last successful save", comment: "Quit without saves error question info");
                 let quitButton = NSLocalizedString("Quit anyway", comment: "Quit anyway button title")
                 let cancelButton = NSLocalizedString("Cancel", comment: "Cancel button title")
                 let alert = NSAlert()

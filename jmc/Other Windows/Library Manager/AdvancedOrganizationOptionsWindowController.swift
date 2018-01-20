@@ -152,7 +152,7 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
         let newDefaultTemplateBaseURLString = self.pathControl.url?.absoluteString
         //fix
         privateQueueParentContext.perform {
-            withUndoBlock(context: privateQueueParentContext, name: "Edit Organization Template") {
+            withUndoBlock(name: "Edit Organization Template") {
                 let globalRootLibrary = getGlobalRootLibrary(forContext: privateQueueParentContext)
                 let templateBundle = globalRootLibrary?.organization_template
                 templateBundle?.default_template?.tokens = newDefaultTemplateTokens

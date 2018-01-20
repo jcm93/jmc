@@ -109,7 +109,11 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     @IBAction func sourceNameWasEdited(_ sender: Any) {
         if let textField = sender as? NSTextField, textField.stringValue != "" {
             library?.name = textField.stringValue
-            self.databaseManager.saveAndCommitGlobal(errorHandler: nil)
+            do {
+                try privateQueueParentContext.save()
+            } catch {
+                print(error)
+            }
             initializeForLibrary(library: library!)
         }
     }

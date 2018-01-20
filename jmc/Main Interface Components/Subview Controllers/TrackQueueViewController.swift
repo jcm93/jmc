@@ -342,20 +342,20 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                     currentTrackIndex! -= 1
                     mainWindowController?.delegate?.audioModule.currentTrackLocation = track.track?.location
                     mainWindowController?.delegate?.audioModule.skip_backward()
-                    notEnablingUndo(context: mainQueueChildContext) {
+                    notEnablingUndo {
                         self.mainWindowController?.currentTrack?.is_playing = false
                     }
                     mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                     mainWindowController?.currentTrack = track.track
                     mainWindowController?.timer?.invalidate()
                     mainWindowController?.initializeInterfaceForNewTrack()
-                    notEnablingUndo(context: mainQueueChildContext) {
+                    notEnablingUndo {
                         self.mainWindowController?.currentTrack?.is_playing = true
                     }
                     mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                     mainWindowController?.delegate?.audioModule.trackQueue.insert(newFutureTrack.track!, at: 0)
                 } else {
-                    notEnablingUndo(context: mainQueueChildContext) {
+                    notEnablingUndo {
                         self.mainWindowController?.currentTrack?.is_playing = false
                     }
                     mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
@@ -369,7 +369,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             } else {
                 print("uninitializing track queue")
                 uninitializeTrackQueue()
-                notEnablingUndo(context: mainQueueChildContext) {
+                notEnablingUndo {
                     self.mainWindowController?.currentTrack?.is_playing = false
                 }
                 mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
@@ -407,7 +407,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 if currentAudioSource?.is_network == true {
                     next_track = getNetworkTrackWithID(id!)
                 } else {
-                    next_track = getTrackWithID(id!, context: mainQueueChildContext)
+                    next_track = getTrackWithID(id!)
                 }
                 if !fileManager.fileExists(atPath: URL(string: next_track!.location!)!.path) {
                     self.currentAudioSource?.playOrderObject?.libraryStatusNeedsUpdate()
@@ -421,7 +421,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                     if currentAudioSource?.is_network == true {
                         next_track = getNetworkTrackWithID(id!)
                     } else {
-                        next_track = getTrackWithID(id!, context: mainQueueChildContext)
+                        next_track = getTrackWithID(id!)
                     }
                 }
                 self.upcomingTrack = next_track!
@@ -565,8 +565,8 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             let tracks = { () -> [Track] in
                 var result = [Track]()
                 for trackURI in unCodedThing {
-                    let id = mainQueueChildContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: trackURI as! URL)
-                    result.append(mainQueueChildContext.object(with: id!) as! Track)
+                    let id = privateQueueParentContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: trackURI as! URL)
+                    result.append(privateQueueParentContext.object(with: id!) as! Track)
                 }
                 return result
             }()

@@ -213,7 +213,7 @@ class InitialSetupWindowController: NSWindowController {
         library?.next_album_artwork_id = 1
         library?.next_album_artwork_collection_id = 1
         
-        notEnablingUndo(context: mainQueueChildContext) {
+        notEnablingUndo {
             UserDefaults.standard.setValuesForKeys(DEFAULTS_INITIAL_DEFAULTS)
         }
     }

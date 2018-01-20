@@ -550,7 +550,6 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         }
         super.viewDidLoad()
         // Do view setup here.
-        self.tableView.canDrawConcurrently = false
     }
     
 }
