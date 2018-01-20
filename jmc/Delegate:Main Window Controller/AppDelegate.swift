@@ -47,12 +47,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 self.setupWindowController?.setupForNilLibrary()
             }
         }
-        privateQueueParentContext.perform {
-            self.locationManager = LocationManager(delegate: self)
-            self.addFilesQueueLoop = AddFilesQueueLoop(delegate: self)
-            self.locationManager?.initializeEventStream()
-            self.lastFMDelegate = LastFMDelegate()
-        }
+        self.locationManager = LocationManager(delegate: self)
+        self.addFilesQueueLoop = AddFilesQueueLoop(delegate: self)
+        self.locationManager?.initializeEventStream()
+        self.lastFMDelegate = LastFMDelegate()
         mainWindowController = MainWindowController(windowNibName: NSNib.Name(rawValue: "MainWindowController"))
         mainWindowController?.delegate = self
         mainWindowController?.showWindow(self)
@@ -149,9 +147,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let dumbTransform = TransformerURLStringToURL()
         ValueTransformer.setValueTransformer(dumbTransform, forName: NSValueTransformerName("TransformURLStringToURL"))
         let fuckTransform = TransformerIntegerToTimestamp()
-        privateQueueParentContext.perform {
-            self.databaseManager = DatabaseManager(context: privateQueueParentContext)
-        }
+        databaseManager = DatabaseManager(context: privateQueueParentContext)
         ValueTransformer.setValueTransformer(fuckTransform, forName: NSValueTransformerName("AssTransform"))
         initializeLibraryAndShowMainWindow()
         if UserDefaults.standard.bool(forKey: DEFAULTS_ARE_INITIALIZED_STRING) != true {
@@ -204,6 +200,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
+         do {
+         try managedObjectContext.save()
+         } catch {
+         fatalError("Failure to save context: \(error)")
+         }
     }
     
     func showMainWindow() {
@@ -338,60 +339,54 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        // Save changes in the application's managed object context before the application terminates.l
-        var returnValueFromBlock: NSApplication.TerminateReply = .terminateNow
-        managedObjectContext.performAndWait {
-            for fetchRequest in BATCH_PURGE_NETWORK_FETCH_REQUESTS {
-                do {
-                    fetchRequest.predicate = IS_NETWORK_PREDICATE
-                    let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-                    try self.persistentStoreCoordinator.execute(deleteRequest, with: self.managedObjectContext)
-                } catch {
-                    print(error)
-                }
-            }
-            purgeCurrentlyPlaying()
-            //mainWindowController.cachePlayOrderObject()
-            if !managedObjectContext.commitEditing() {
-                NSLog("\(NSStringFromClass(type(of: self))) unable to commit editing to terminate")
-                returnValueFromBlock = .terminateCancel
-                return
-            }
-            
-            if !managedObjectContext.hasChanges {
-                returnValueFromBlock = .terminateNow
-                return
-            }
-            
+        // Save changes in the application's managed object context before the application terminates.
+        for fetchRequest in BATCH_PURGE_NETWORK_FETCH_REQUESTS {
             do {
-                try managedObjectContext.save()
+                fetchRequest.predicate = IS_NETWORK_PREDICATE
+                let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+                try persistentStoreCoordinator.execute(deleteRequest, with: managedObjectContext)
             } catch {
-                let nserror = error as NSError
-                // Customize this code block to include application-specific recovery steps.
-                let result = sender.presentError(nserror)
-                if (result) {
-                    returnValueFromBlock = .terminateCancel
-                }
-                
-                let question = NSLocalizedString("Could not save changes while quitting. Quit anyway?", comment: "Quit without saves error question message")
-                let info = NSLocalizedString("Quitting now will lose any changes you have made since the last successful save", comment: "Quit without saves error question info");
-                let quitButton = NSLocalizedString("Quit anyway", comment: "Quit anyway button title")
-                let cancelButton = NSLocalizedString("Cancel", comment: "Cancel button title")
-                let alert = NSAlert()
-                alert.messageText = question
-                alert.informativeText = info
-                alert.addButton(withTitle: quitButton)
-                alert.addButton(withTitle: cancelButton)
-                
-                let answer = alert.runModal()
-                if answer == NSApplication.ModalResponse.alertFirstButtonReturn {
-                    returnValueFromBlock = .terminateCancel
-                    return
-                }
+                print(error)
+            }
+        }
+        purgeCurrentlyPlaying()
+        //mainWindowController.cachePlayOrderObject()
+        if !managedObjectContext.commitEditing() {
+            NSLog("\(NSStringFromClass(type(of: self))) unable to commit editing to terminate")
+            return .terminateCancel
+        }
+        
+        if !managedObjectContext.hasChanges {
+            return .terminateNow
+        }
+        
+        do {
+            try managedObjectContext.save()
+        } catch {
+            let nserror = error as NSError
+            // Customize this code block to include application-specific recovery steps.
+            let result = sender.presentError(nserror)
+            if (result) {
+                return .terminateCancel
+            }
+            
+            let question = NSLocalizedString("Could not save changes while quitting. Quit anyway?", comment: "Quit without saves error question message")
+            let info = NSLocalizedString("Quitting now will lose any changes you have made since the last successful save", comment: "Quit without saves error question info");
+            let quitButton = NSLocalizedString("Quit anyway", comment: "Quit anyway button title")
+            let cancelButton = NSLocalizedString("Cancel", comment: "Cancel button title")
+            let alert = NSAlert()
+            alert.messageText = question
+            alert.informativeText = info
+            alert.addButton(withTitle: quitButton)
+            alert.addButton(withTitle: cancelButton)
+            
+            let answer = alert.runModal()
+            if answer == NSApplication.ModalResponse.alertFirstButtonReturn {
+                return .terminateCancel
             }
         }
         // If we got here, it is time to quit.
-        return returnValueFromBlock
+        return .terminateNow
     }
 
 }

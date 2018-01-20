@@ -15,7 +15,7 @@ class AlbumArtViewController: NSViewController {
     
     var artWindow: AlbumArtWindowController?
     var mainWindow: MainWindowController?
-    var databaseManager = DatabaseManager(context: mainQueueChildContext)
+    var databaseManager = DatabaseManager(context: privateQueueParentContext)
     var currentTrack: Track?
     var currentURL: URL?
 
@@ -69,7 +69,7 @@ class AlbumArtViewController: NSViewController {
             }
         } else {
             if track.library?.finds_artwork == true {
-                self.databaseManager.context.perform {
+                DispatchQueue.global(qos: .default).async {
                     self.databaseManager.tryFindPrimaryArtForTrack(track, callback: self.artCallback)
                 }
             } else {

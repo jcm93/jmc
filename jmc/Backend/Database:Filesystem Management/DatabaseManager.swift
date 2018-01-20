@@ -126,7 +126,6 @@ class DatabaseManager: NSObject {
     }
     
     func searchAlbumDirectoryForArt(_ track: Track) -> [URL] { //handles errors ok
-        
         let locationURL = URL(string: track.location!)
         let albumDirectoryURL = locationURL!.deletingLastPathComponent()
         do {
@@ -947,22 +946,24 @@ class DatabaseManager: NSObject {
         
         //insert new tracks to necessary sort caches, on the main queue
         DispatchQueue.main.async {
+            //nesting async statements seems only reliable way to make progress bars actually update
             visualUpdateHandler?.makeIndeterminate(actionName: "Repopulating sort cache...")
-        }
-        for order in cachedOrders! {
-            reorderForTracks(tracks, cachedOrder: order.value, context: self.context)
-        }
-        DispatchQueue.main.async {
-            visualUpdateHandler?.makeIndeterminate(actionName: "Committing changes...")
-        }
-        let errorHandler = SaveErrorHandler()
-        self.saveAndCommit(errorHandler: errorHandler)
-        DispatchQueue.main.async {
-            visualUpdateHandler?.finish()
-            if callback != nil {
-                callback!()
+            DispatchQueue.main.async {
+                for order in cachedOrders! {
+                    reorderForTracks(tracks, cachedOrder: order.value, context: self.context)
+                }
+                visualUpdateHandler?.makeIndeterminate(actionName: "Committing changes...")
+                let errorHandler = SaveErrorHandler()
+                self.saveAndCommit(errorHandler: errorHandler)
+                DispatchQueue.main.async {
+                    visualUpdateHandler?.finish()
+                    if callback != nil {
+                        callback!()
+                    }
+                }
             }
         }
+        
         return errors
     }
     

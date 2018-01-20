@@ -119,6 +119,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     var isDoneWithSkipBackOperation = true
     var durationShowsTimeRemaining = false
     var viewHasLoaded = false
+    var subContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     
     //initialize managed object context
     
@@ -168,7 +169,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     func createPlaylistViewController(_ item: SourceListItem) -> LibraryTableViewController {
         let newPlaylistViewController = LibraryTableViewControllerCellBased(nibName: NSNib.Name(rawValue: "LibraryTableViewControllerCellBased"), bundle: nil)
         newPlaylistViewController.mainWindowController = self
-        newPlaylistViewController.managedContext = mainQueueChildContext
+        newPlaylistViewController.managedContext = self.subContext
         newPlaylistViewController.playlist = item.playlist
         newPlaylistViewController.item = item
         return newPlaylistViewController
@@ -177,7 +178,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     func addObserversAndInitializeNewTableView(_ table: LibraryTableViewController, item: SourceListItem) {
         table.item = item
         table.mainWindowController = self
-        table.managedContext = mainQueueChildContext
+        table.managedContext = self.subContext
     }
     
     func switchToPlaylist(_ item: SourceListItem) {
