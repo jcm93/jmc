@@ -13,14 +13,14 @@ import CoreServices
 
 class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate {
     
-    lazy var privateQueueParentContext: NSManagedObjectContext = {
+    lazy var managedContext: NSManagedObjectContext = {
         return (NSApplication.shared.delegate
             as? AppDelegate)?.managedObjectContext }()!
     
     lazy var artistList: [Artist] = {
         let fetch_req = NSFetchRequest<NSFetchRequestResult>(entityName: "Artist")
         do {
-            return try (self.privateQueueParentContext.fetch(fetch_req) as! [Artist])
+            return try (self.managedContext.fetch(fetch_req) as! [Artist])
         } catch {
             print("error: \(error)")
             return [Artist]()
@@ -100,7 +100,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     @objc dynamic var currentTrack: Track?
     
     func windowWillReturnUndoManager(_ window: NSWindow) -> UndoManager? {
-        return privateQueueParentContext.undoManager
+        return managedContext.undoManager
     }
     
     @IBAction func nameEdited(_ sender: Any) {

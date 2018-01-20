@@ -44,7 +44,7 @@ func editArtist(_ tracks: [Track]?, artistName: String) {
             }
         }
     } else {
-        let new_artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: privateQueueParentContext) as! Artist
+        let new_artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
         new_artist.name = artistName
         new_artist.id = globalRootLibrary?.next_artist_id
         globalRootLibrary!.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
@@ -72,7 +72,7 @@ func editComposer(_ tracks: [Track]?, composerName: String) {
             }
         }
     } else {
-        let new_composer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: privateQueueParentContext) as! Composer
+        let new_composer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: managedContext) as! Composer
         new_composer.name = composerName
         new_composer.id = globalRootLibrary?.next_composer_id
         globalRootLibrary!.next_composer_id = Int(globalRootLibrary!.next_composer_id!) + 1 as NSNumber
@@ -107,7 +107,7 @@ func editAlbum(_ tracks: [Track]?, albumName: String) {
                 }
             }
         } else {
-            let new_album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: privateQueueParentContext) as! Album
+            let new_album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
             new_album.name = albumName
             new_album.id = globalRootLibrary?.next_album_id
             new_album.album_artist = artist
@@ -153,7 +153,7 @@ func editAlbumArtist(_ tracks: [Track]?, albumArtistName: String) {
             }
         }
     } else {
-        let new_artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: privateQueueParentContext) as! Artist
+        let new_artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
         new_artist.name = albumArtistName
         new_artist.id = globalRootLibrary?.next_artist_id
         globalRootLibrary!.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
@@ -202,18 +202,18 @@ func combineAlbums(_ firstAlbum: Album, _ secondAlbum: Album) -> Album {
 }
 
 func notEnablingUndo(stuff: () -> Void) {
-    privateQueueParentContext.processPendingChanges()
-    privateQueueParentContext.undoManager?.disableUndoRegistration()
+    managedContext.processPendingChanges()
+    managedContext.undoManager?.disableUndoRegistration()
     stuff()
-    privateQueueParentContext.processPendingChanges()
-    privateQueueParentContext.undoManager?.enableUndoRegistration()
+    managedContext.processPendingChanges()
+    managedContext.undoManager?.enableUndoRegistration()
 }
 
 func withUndoBlock(name: String, stuff: () -> Void) {
-    privateQueueParentContext.undoManager?.beginUndoGrouping()
+    managedContext.undoManager?.beginUndoGrouping()
     stuff()
-    privateQueueParentContext.undoManager?.endUndoGrouping()
-    privateQueueParentContext.undoManager?.setActionName(name)
+    managedContext.undoManager?.endUndoGrouping()
+    managedContext.undoManager?.setActionName(name)
 }
 
 func editTrackNum(_ tracks: [Track]?, num: Int) {

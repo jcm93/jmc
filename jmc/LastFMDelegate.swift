@@ -14,7 +14,7 @@ class LastFMDelegate: NSObject {
     var apiSecret: String = "91d7f5dc1f622d90b5949741021d4869"
     var baseURL = URL(string: "https://ws.audioscrobbler.com/2.0/?")!
     var token: String = ""
-    var sessionKey = ""
+    var sessionKey = globalRootLibrary!.last_fm_session_key ?? ""
     var scrobbles = UserDefaults.standard.bool(forKey: DEFAULTS_SCROBBLES)
     
     var callback: ((String) -> Void)?
@@ -26,8 +26,7 @@ class LastFMDelegate: NSObject {
     }
     
     func setup() {
-        let globalRootLibrary = getGlobalRootLibrary(forContext: privateQueueParentContext)!
-        if globalRootLibrary.last_fm_session_key == nil {
+        if globalRootLibrary?.last_fm_session_key == nil {
             let methodParameter = URLQueryItem(name: "method", value: "auth.getToken")
             let apiKeyParameter = URLQueryItem(name: "api_key", value: apiKey)
             let formatParameter = URLQueryItem(name: "format", value: "json")
@@ -35,8 +34,6 @@ class LastFMDelegate: NSObject {
             tokenRequestURLComponents!.queryItems = [methodParameter, apiKeyParameter, formatParameter]
             let task = URLSession.shared.dataTask(with: tokenRequestURLComponents!.url!, completionHandler: handleGetAuthTokenResponse)
             task.resume()
-        } else {
-            self.sessionKey = globalRootLibrary.last_fm_session_key
         }
     }
     

@@ -36,7 +36,10 @@ class iTunesLibraryParser: NSObject {
     
     func makeLibrary(parentLibrary: Library?, visualUpdateHandler: ProgressBarController?) {
         //volume?
-        let library = getGlobalRootLibrary(forContext: privateQueueParentContext)
+        let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        subContext.parent = managedContext
+        let library = subContext.object(with: parentLibrary!.objectID) as? Library
+        let rootLibrary = subContext.object(with: globalRootLibrary!.objectID) as? Library
         let count = self.XMLTrackDictionaryDictionary.allKeys.count
         DispatchQueue.main.async {
             visualUpdateHandler?.prepareForNewTask(actionName: "Importing", thingName: "tracks", thingCount: count)
@@ -44,8 +47,8 @@ class iTunesLibraryParser: NSObject {
         var index = 1
         for (key, value) in self.XMLTrackDictionaryDictionary {
             if let trackDict = value as? NSDictionary, trackDict[iTunesImporterTrackTypeKey] as? String != "URL" {
-                let cd_track = NSEntityDescription.insertNewObject(forEntityName: "Track", into: privateQueueParentContext) as! Track
-                let new_track_view = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: privateQueueParentContext) as! TrackView
+                let cd_track = NSEntityDescription.insertNewObject(forEntityName: "Track", into: subContext) as! Track
+                let new_track_view = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: subContext) as! TrackView
                 cd_track.view = new_track_view
                 cd_track.library = library
                 cd_track.id                 = (trackDict[iTunesImporterTrackIDKey] as! NSNumber)
@@ -83,12 +86,12 @@ class iTunesLibraryParser: NSObject {
                 if let addedArtist = self.addedArtists[artistName] {
                     cd_track.artist = addedArtist
                 } else if let artistFromParentContext = checkIfArtistExists(artistName) {
-                    cd_track.artist = artistFromParentContext
+                    cd_track.artist = subContext.object(with: artistFromParentContext.objectID) as? Artist
                 } else {
-                    let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: privateQueueParentContext) as! Artist
+                    let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: subContext) as! Artist
                     newArtist.name = artistName
-                    newArtist.id = library!.next_artist_id
-                    library!.next_artist_id = library!.next_artist_id!.intValue + 1 as NSNumber
+                    newArtist.id = rootLibrary!.next_artist_id
+                    rootLibrary!.next_artist_id = rootLibrary!.next_artist_id!.intValue + 1 as NSNumber
                     cd_track.artist = newArtist
                     self.addedArtists[artistName] = newArtist
                 }
@@ -96,12 +99,12 @@ class iTunesLibraryParser: NSObject {
                 if let addedAlbum = self.addedAlbums[cd_track.artist!]?[albumName] {
                     cd_track.album = addedAlbum
                 } else if let albumFromParentContext = checkIfAlbumExists(withName: albumName, withArtist: cd_track.artist!) {
-                    cd_track.album = albumFromParentContext
+                    cd_track.album = subContext.object(with: albumFromParentContext.objectID) as? Album
                 } else {
-                    let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: privateQueueParentContext) as! Album
+                    let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: subContext) as! Album
                     newAlbum.name = albumName
-                    newAlbum.id = library!.next_album_id
-                    library!.next_album_id = library!.next_album_id!.intValue + 1 as NSNumber
+                    newAlbum.id = rootLibrary!.next_album_id
+                    rootLibrary!.next_album_id = rootLibrary!.next_album_id!.intValue + 1 as NSNumber
                     cd_track.album = newAlbum
                     if self.addedAlbums[cd_track.artist!] == nil {
                         self.addedAlbums[cd_track.artist!] = [String : Album]()
@@ -113,12 +116,12 @@ class iTunesLibraryParser: NSObject {
                     if let addedArtist = self.addedArtists[albumArtistName] {
                         cd_track.album?.album_artist = addedArtist
                     } else if let artistFromParentContext = checkIfArtistExists(albumArtistName) {
-                        cd_track.album?.album_artist = artistFromParentContext
+                        cd_track.album?.album_artist = subContext.object(with: artistFromParentContext.objectID) as? Artist
                     } else {
-                        let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: privateQueueParentContext) as! Artist
+                        let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: subContext) as! Artist
                         newArtist.name = albumArtistName
-                        newArtist.id = library!.next_artist_id
-                        library!.next_artist_id = library!.next_artist_id!.intValue + 1 as NSNumber
+                        newArtist.id = rootLibrary!.next_artist_id
+                        rootLibrary!.next_artist_id = rootLibrary!.next_artist_id!.intValue + 1 as NSNumber
                         cd_track.album?.album_artist = newArtist
                         self.addedArtists[albumArtistName] = newArtist
                     }
@@ -130,12 +133,12 @@ class iTunesLibraryParser: NSObject {
                     if let addedComposer = self.addedComposers[composerName] {
                         cd_track.composer = addedComposer
                     } else if let composerFromParentContext = checkIfComposerExists(composerName) {
-                        cd_track.composer = composerFromParentContext
+                        cd_track.composer = subContext.object(with: composerFromParentContext.objectID) as? Composer
                     } else {
-                        let newComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: privateQueueParentContext) as! Composer
+                        let newComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: subContext) as! Composer
                         newComposer.name = composerName
-                        newComposer.id = library!.next_composer_id
-                        library!.next_composer_id = library!.next_composer_id!.intValue + 1 as NSNumber
+                        newComposer.id = rootLibrary!.next_composer_id
+                        rootLibrary!.next_composer_id = rootLibrary!.next_composer_id!.intValue + 1 as NSNumber
                         cd_track.composer = newComposer
                         self.addedComposers[composerName] = newComposer
                     }
@@ -182,8 +185,8 @@ class iTunesLibraryParser: NSObject {
             let pr = NSPredicate(format: "name == 'Playlists' AND is_header == true")
             fr.predicate = pr
             do {
-                let res = try privateQueueParentContext.fetch(fr) as! [SourceListItem]
-                return privateQueueParentContext.object(with: res[0].objectID) as! SourceListItem
+                let res = try managedContext.fetch(fr) as! [SourceListItem]
+                return subContext.object(with: res[0].objectID) as! SourceListItem
             } catch {
                 print(error)
             }
@@ -195,7 +198,7 @@ class iTunesLibraryParser: NSObject {
         }
         for thing in self.XMLPlaylistArray {
             let playlistDictionary = thing as! NSDictionary
-            let cd_playlist = NSEntityDescription.insertNewObject(forEntityName: "SongCollection", into: privateQueueParentContext) as! SongCollection
+            let cd_playlist = NSEntityDescription.insertNewObject(forEntityName: "SongCollection", into: subContext) as! SongCollection
             cd_playlist.name = playlistDictionary["Name"] as? String
             cd_playlist.id = playlistDictionary["Playlist ID"] as? NSNumber
             if let playlistItems = playlistDictionary["Playlist Items"] as? NSArray {
@@ -204,10 +207,10 @@ class iTunesLibraryParser: NSObject {
             }
             
             //create source list item for playlist
-            let cd_playlist_source_list_item = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: privateQueueParentContext) as! SourceListItem
+            let cd_playlist_source_list_item = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: subContext) as! SourceListItem
             cd_playlist_source_list_item.parent = playlistsHeader!
             cd_playlist_source_list_item.name = cd_playlist.name
-            cd_playlist_source_list_item.playlist = cd_playlist
+            cd_playlist_source_list_item.playlist = subContext.object(with: cd_playlist.objectID) as? SongCollection
             DispatchQueue.main.async {
                 visualUpdateHandler?.increment(thingsDone: index)
             }
@@ -215,7 +218,7 @@ class iTunesLibraryParser: NSObject {
         }
         
         do {
-            try privateQueueParentContext.save()
+            try subContext.save()
         } catch {
             print(error)
         }
@@ -224,15 +227,15 @@ class iTunesLibraryParser: NSObject {
             visualUpdateHandler?.prepareForNewTask(actionName: "Reordering", thingName: "sort caches", thingCount: cachedOrders!.count)
         }
         index = 0
-        for order in cachedOrders!.values {
-            reorderForTracks(trackArray, cachedOrder: order, subContext: privateQueueParentContext)
+        for order in cachedOrders!.values.map({return subContext.object(with: $0.objectID) as! CachedOrder}){
+            reorderForTracks(trackArray, cachedOrder: order, subContext: subContext)
             DispatchQueue.main.async {
                 visualUpdateHandler?.increment(thingsDone: index)
             }
             index += 1
         }
         do {
-            try privateQueueParentContext.save()
+            try subContext.save()
         } catch {
             print(error)
         }
@@ -240,16 +243,16 @@ class iTunesLibraryParser: NSObject {
             visualUpdateHandler?.makeIndeterminate(actionName: "Committing changes...")
             DispatchQueue.main.async {
                 do {
-                    try privateQueueParentContext.save()
+                    try managedContext.save()
                     print("done saving main context")
                 } catch {
                     print("error: \(error)")
                 }
                 let highestTrackID = (getInstanceWithHighestIDForEntity("Track") as! Track).id
-                (privateQueueParentContext.object(with: library!.objectID) as! Library).next_track_id = highestTrackID
+                (managedContext.object(with: library!.objectID) as! Library).next_track_id = highestTrackID
                 
                 let highestPlaylistID = (getInstanceWithHighestIDForEntity("SongCollection") as! SongCollection).id
-                (privateQueueParentContext.object(with: library!.objectID) as! Library).next_playlist_id = highestPlaylistID
+                (managedContext.object(with: library!.objectID) as! Library).next_playlist_id = highestPlaylistID
                 visualUpdateHandler?.finish()
                 (NSApp.delegate as! AppDelegate).doneImportingiTunesLibrary()
             }

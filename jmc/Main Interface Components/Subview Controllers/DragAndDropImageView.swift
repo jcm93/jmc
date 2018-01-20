@@ -55,11 +55,11 @@ class DragAndDropImageView: NSImageView {
                 for url in urls {
                     if let urlUTI = getUTIFrom(url: url) {
                         if UTTypeConformsTo(urlUTI as CFString, kUTTypeImage) || UTTypeConformsTo(urlUTI as CFString, kUTTypePDF) {
-                            if let result = databaseManager.addArtForTrack(currentTrack, from: url, privateQueueParentContext: privateQueueParentContext, organizes: true) {
+                            if let result = databaseManager.addArtForTrack(currentTrack, from: url, managedContext: managedContext, organizes: true) {
                                 results.append(result)
                             }
                         } else {
-                            if let result = databaseManager.addMiscellaneousFile(forTrack: currentTrack, from: url, privateQueueParentContext: privateQueueParentContext, organizes: true) {
+                            if let result = databaseManager.addMiscellaneousFile(forTrack: currentTrack, from: url, managedContext: managedContext, organizes: true) {
                                 results.append(result)
                             }
                         }

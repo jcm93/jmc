@@ -48,7 +48,6 @@
 		0D3E00871E3F1DC4007C1C83 /* jmc.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0D3E00851E3F1DC4007C1C83 /* jmc.xcdatamodeld */; };
 		0D40A9F21D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */; };
 		0D447BB91EB2B73F00372A80 /* JMTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D447BB81EB2B73F00372A80 /* JMTextField.swift */; };
-		0D456E041FF5F5BD003F1DB1 /* ErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D456E031FF5F5BD003F1DB1 /* ErrorHandler.swift */; };
 		0D48D0DF1F3D444B00ABAAC6 /* MediaKeyListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D48D0DE1F3D444B00ABAAC6 /* MediaKeyListener.swift */; };
 		0D51C8A11EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C89F1EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift */; };
 		0D51C8A21EABD74B002F6182 /* ChangePrimaryFolderSheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D51C8A01EABD74B002F6182 /* ChangePrimaryFolderSheetController.xib */; };
@@ -271,7 +270,6 @@
 		0D3E00861E3F1DC4007C1C83 /* jmc.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = jmc.xcdatamodel; sourceTree = "<group>"; };
 		0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransformerIntegerToTimestamp.swift; path = Backend/Formatters/TransformerIntegerToTimestamp.swift; sourceTree = "<group>"; };
 		0D447BB81EB2B73F00372A80 /* JMTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JMTextField.swift; path = "Other Windows/JMTextField.swift"; sourceTree = "<group>"; };
-		0D456E031FF5F5BD003F1DB1 /* ErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandler.swift; sourceTree = "<group>"; };
 		0D48D0DE1F3D444B00ABAAC6 /* MediaKeyListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaKeyListener.swift; sourceTree = "<group>"; };
 		0D51C89F1EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangePrimaryFolderSheetController.swift; path = "Other Windows/Library Manager/Sheets/ChangePrimaryFolderSheetController.swift"; sourceTree = "<group>"; };
 		0D51C8A01EABD74B002F6182 /* ChangePrimaryFolderSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ChangePrimaryFolderSheetController.xib; path = "Other Windows/Library Manager/Sheets/ChangePrimaryFolderSheetController.xib"; sourceTree = "<group>"; };
@@ -533,7 +531,6 @@
 		0D01AD971D707E8700F9211F /* Delegate/Main Window Controller */ = {
 			isa = PBXGroup;
 			children = (
-				0D456E031FF5F5BD003F1DB1 /* ErrorHandler.swift */,
 				0DAB30901CFBA3340028928F /* AppDelegate.swift */,
 				0DF4BEF11CFD0D4E00AC5824 /* MainWindowController.swift */,
 				0DA02D371EFB098900DDE5A9 /* StupidSearchField.swift */,
@@ -1188,7 +1185,6 @@
 				0D34A4771F7306D400CAA6C4 /* AlbumArtwork+CoreDataClass.swift in Sources */,
 				0DE957DB1EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift in Sources */,
 				0DFE2E5A1EC0DAB6007EEF04 /* TrackQueueTableView.swift in Sources */,
-				0D456E041FF5F5BD003F1DB1 /* ErrorHandler.swift in Sources */,
 				0DB996D41ED287D400594939 /* AlbumArtCollectionView.swift in Sources */,
 				0DB996C51ECE233000594939 /* AlbumArtWindowController.swift in Sources */,
 			);

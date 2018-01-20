@@ -119,7 +119,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     var isDoneWithSkipBackOperation = true
     var durationShowsTimeRemaining = false
     var viewHasLoaded = false
-    var subContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     
     //initialize managed object context
     
@@ -169,7 +168,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     func createPlaylistViewController(_ item: SourceListItem) -> LibraryTableViewController {
         let newPlaylistViewController = LibraryTableViewControllerCellBased(nibName: NSNib.Name(rawValue: "LibraryTableViewControllerCellBased"), bundle: nil)
         newPlaylistViewController.mainWindowController = self
-        newPlaylistViewController.managedContext = self.subContext
         newPlaylistViewController.playlist = item.playlist
         newPlaylistViewController.item = item
         return newPlaylistViewController
@@ -178,7 +176,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     func addObserversAndInitializeNewTableView(_ table: LibraryTableViewController, item: SourceListItem) {
         table.item = item
         table.mainWindowController = self
-        table.managedContext = self.subContext
     }
     
     func switchToPlaylist(_ item: SourceListItem) {
@@ -312,7 +309,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     func windowWillReturnUndoManager(_ window: NSWindow) -> UndoManager? {
-        return mainQueueChildContext.undoManager
+        return managedContext.undoManager
     }
     
     @IBAction func repeatButtonPressed(_ sender: AnyObject) {
@@ -338,7 +335,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         self.skip()
         /*print("dongels")
         let fr = NSFetchRequest<Track>(entityName: "Track")
-        let result = try? privateQueueParentContext.fetch(fr)
+        let result = try? managedContext.fetch(fr)
         print(result?.count)*/
     }
     @IBAction func addPlaylistButton(_ sender: AnyObject) {
@@ -816,12 +813,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         if self.currentTableViewController == nil {
             return
         }
-        privateQueueParentContext.perform {
-            let trackArray = (self.currentTableViewController?.trackViewArrayController?.arrangedObjects as! [TrackView]).map({return privateQueueParentContext.object(with: $0.objectID) as! TrackView})
-            print("finished casting items")
+        managedContext.perform {
+            let trackArray = (self.currentTableViewController?.trackViewArrayController?.arrangedObjects as! [TrackView])
             let numItems = trackArray.count as NSNumber
-            let totalSize = trackArray.lazy.flatMap({return ($0.track?.size?.int64Value)}).reduce(0, {$0 + $1})
-            let totalTime = trackArray.lazy.flatMap({return ($0.track?.time?.doubleValue)}).reduce(0, {$0 + $1})
+            let totalSize = trackArray.lazy.map({return (($0.track)!.size?.int64Value)}).reduce(0, {$0 + ($1 != nil ? $1! : 0)})
+            let totalTime = trackArray.lazy.map({return (($0.track)!.time?.doubleValue)}).reduce(0, {$0 + ($1 != nil ? $1! : 0)})
             let numString = self.numberFormatter.string(from: numItems)
             let sizeString = self.sizeFormatter.string(fromByteCount: totalSize)
             let timeString = self.dateFormatter.string(from: totalTime/1000)

@@ -107,7 +107,7 @@ class AdvancedFilterViewController: NSViewController {
     }
     
     @IBAction func createSmartPlaylistButtonPressed(_ sender: AnyObject) {
-        let newSmartCriteria = NSEntityDescription.insertNewObject(forEntityName: "SmartCriteria", into: privateQueueParentContext) as! SmartCriteria
+        let newSmartCriteria = NSEntityDescription.insertNewObject(forEntityName: "SmartCriteria", into: managedContext) as! SmartCriteria
         if limitCheck.state == NSControl.StateValue.on {
             newSmartCriteria.fetch_limit = itemLimitField.integerValue as NSNumber?
             newSmartCriteria.fetch_limit_type = playlistLengthDeterminantSelector.titleOfSelectedItem

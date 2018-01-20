@@ -17,7 +17,7 @@ class SharedLibraryRequestHandler {
         fetchRequest.predicate = predicate
         var results: [SourceListItem]?
         do {
-            results = try privateQueueParentContext.fetch(fetchRequest) as? [SourceListItem]
+            results = try managedContext.fetch(fetchRequest) as? [SourceListItem]
         }catch {
             print("error: \(error)")
         }
@@ -44,7 +44,7 @@ class SharedLibraryRequestHandler {
         playlistRequest.predicate = playlistPredicate
         let result: SongCollection? = {
             do {
-                let thing = try privateQueueParentContext.fetch(playlistRequest) as! [SongCollection]
+                let thing = try managedContext.fetch(playlistRequest) as! [SongCollection]
                 if thing.count > 0 {
                     return thing[0]
                 } else {
@@ -64,7 +64,7 @@ class SharedLibraryRequestHandler {
         playlistSongsRequest.predicate = playlistSongsPredicate
         let results: [Track]? = {
             do {
-                let thing = try privateQueueParentContext.fetch(playlistSongsRequest) as! [Track]
+                let thing = try managedContext.fetch(playlistSongsRequest) as! [Track]
                 if thing.count > 0 {
                     return thing
                 } else {
@@ -92,7 +92,7 @@ class SharedLibraryRequestHandler {
         trackFetchRequest.predicate = trackFetchPredicate
         let track: Track? = {() -> Track? in
             do {
-                let result = try privateQueueParentContext.fetch(trackFetchRequest) as! [Track]
+                let result = try managedContext.fetch(trackFetchRequest) as! [Track]
                 return result[0]
             } catch {
                 print("error: \(error)")
@@ -116,7 +116,7 @@ class SharedLibraryRequestHandler {
             let fetch_request = NSFetchRequest<NSFetchRequestResult>(entityName: "CachedOrder")
             let result = [CachedOrder]()
             do {
-                let thing = try privateQueueParentContext.fetch(fetch_request) as! [CachedOrder]
+                let thing = try managedContext.fetch(fetch_request) as! [CachedOrder]
                 if thing.count != 0 {
                     return thing
                 }
@@ -155,7 +155,7 @@ class SharedLibraryRequestHandler {
         songRequest.predicate = songPredicate
         let result: Track? = {
             do {
-                let thing = try privateQueueParentContext.fetch(songRequest) as! [Track]
+                let thing = try managedContext.fetch(songRequest) as! [Track]
                 if thing.count > 0 {
                     return thing[0]
                 } else {

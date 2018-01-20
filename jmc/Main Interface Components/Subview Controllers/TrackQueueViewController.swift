@@ -565,8 +565,8 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             let tracks = { () -> [Track] in
                 var result = [Track]()
                 for trackURI in unCodedThing {
-                    let id = privateQueueParentContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: trackURI as! URL)
-                    result.append(privateQueueParentContext.object(with: id!) as! Track)
+                    let id = managedContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: trackURI as! URL)
+                    result.append(managedContext.object(with: id!) as! Track)
                 }
                 return result
             }()

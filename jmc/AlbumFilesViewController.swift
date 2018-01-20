@@ -68,12 +68,12 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
                 for url in urls {
                     if let urlUTI = getUTIFrom(url: url) {
                         if UTTypeConformsTo(urlUTI as CFString, kUTTypeImage) || UTTypeConformsTo(urlUTI as CFString, kUTTypePDF) {
-                            if let result = databaseManager.addArtForTrack(currentTrack, from: url, privateQueueParentContext: privateQueueParentContext, organizes: true) {
+                            if let result = databaseManager.addArtForTrack(currentTrack, from: url, managedContext: managedContext, organizes: true) {
                                 results.append(result)
                                 otherArtImages.append(result)
                             }
                         } else {
-                            if let result = databaseManager.addMiscellaneousFile(forTrack: currentTrack, from: url, privateQueueParentContext: privateQueueParentContext, organizes: true) {
+                            if let result = databaseManager.addMiscellaneousFile(forTrack: currentTrack, from: url, managedContext: managedContext, organizes: true) {
                                 results.append(result)
                                 otherArtImages.append(result)
                             }
@@ -197,10 +197,10 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
                 } else if art.album_multiple != nil {
                     art.album_multiple = nil
                 }
-                privateQueueParentContext.delete(art)
+                managedContext.delete(art)
             } else if let file = item as? AlbumFile {
                 file.album = nil
-                privateQueueParentContext.delete(file)
+                managedContext.delete(file)
             }
         }
         collectionView.reloadData()

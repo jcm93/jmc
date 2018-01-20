@@ -11,6 +11,27 @@ import CoreFoundation
 import CoreServices
 import AVFoundation
 
+func instanceCheck(_ entity: String, name: String) -> NSManagedObject? {
+    let managedContext: NSManagedObjectContext = {
+        return (NSApplication.shared.delegate
+            as? AppDelegate)?.managedObjectContext }()!
+    let fetch_req = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
+    let predicate = NSPredicate(format: "name == %@", name)
+    fetch_req.predicate = predicate
+    var results: [NSManagedObject]?
+    do {
+        results = try managedContext.fetch(fetch_req) as! [NSManagedObject]
+    } catch {
+        print("err: \(error)")
+    }
+    if results != nil && results!.count > 0 {
+        return results![0]
+    }
+    else {
+        return nil 
+    }
+}
+
 class FileAddToDatabaseError: NSObject {
     var urlString: String
     var error: String
@@ -27,50 +48,6 @@ class DatabaseManager: NSObject {
     var undoFileLocations = [Track : [String]]()
     var currentTrack: Track?
     var consolidationShouldStop: Bool = false
-    var globalRootLibrary: Library!
-    var context: NSManagedObjectContext!
-    
-    init(context: NSManagedObjectContext) {
-        switch context {
-        case privateQueueParentContext:
-            self.globalRootLibrary = getGlobalRootLibrary(forContext: privateQueueParentContext)
-        default:
-            self.globalRootLibrary = getGlobalRootLibrary(forContext: mainQueueChildContext)
-        }
-        self.context = context
-    }
-    
-    func saveAndCommit(errorHandler: ErrorHandler?) {
-        func commitChildContext(errorHandler: ErrorHandler?) {
-            do {
-                try mainQueueChildContext.save()
-            } catch {
-                errorHandler?.addError(error: error)
-            }
-        }
-        func commitParentContext(errorHandler: ErrorHandler?) {
-            do {
-                try privateQueueParentContext.save()
-            } catch {
-                errorHandler?.addError(error: error)
-            }
-        }
-        switch self.context {
-        case privateQueueParentContext:
-            privateQueueParentContext.perform {
-                commitParentContext(errorHandler: errorHandler)
-                errorHandler?.presentErrors()
-            }
-        default:
-            mainQueueChildContext.perform {
-                commitChildContext(errorHandler: errorHandler)
-                privateQueueParentContext.perform {
-                    commitParentContext(errorHandler: errorHandler)
-                    errorHandler?.presentErrors()
-                }
-            }
-        }
-    }
     
     func getArtworkFromFile(_ urlString: String) -> Data? {
         print("checking for art in file")
@@ -96,7 +73,7 @@ class DatabaseManager: NSObject {
             DispatchQueue.main.async {
                 var results = [AlbumArtwork]()
                 for image in validImages {
-                    if let result = self.addArtForTrack(track, from: image, managedContext: self.context, organizes: true) {
+                    if let result = self.addArtForTrack(track, from: image, managedContext: managedContext, organizes: true) {
                         results.append(result)
                     }
                 }
@@ -109,7 +86,7 @@ class DatabaseManager: NSObject {
         } else {
             if let art = getArtworkFromFile(track.location!) {
                 DispatchQueue.main.async {
-                    if self.addArtForTrack(track, fromData: art, managedContext: self.context) == true {
+                    if self.addArtForTrack(track, fromData: art, managedContext: managedContext) == true {
                         callback?(track, true)
                     } else {
                         callback?(track, false)
@@ -170,12 +147,12 @@ class DatabaseManager: NSObject {
         informAppDelegateOfErrors(errors: errors)
     }
     
-    func addMiscellaneousFile(forTrack track: Track, from url: URL, organizes: Bool) -> AlbumFile? {
+    func addMiscellaneousFile(forTrack track: Track, from url: URL, managedContext: NSManagedObjectContext, organizes: Bool) -> AlbumFile? {
         //returns true if file was successfully added
         guard let album = track.album else { return nil }
         guard let uti = getUTIFrom(url: url) else { return nil }
         guard UTTypeConformsTo(uti as CFString, kUTTypeText) else { return nil }
-        let fileObject = NSEntityDescription.insertNewObject(forEntityName: "AlbumFile", into: self.context) as! AlbumFile
+        let fileObject = NSEntityDescription.insertNewObject(forEntityName: "AlbumFile", into: managedContext) as! AlbumFile
         fileObject.album = album
         fileObject.location = url.absoluteString
         if UTTypeConformsTo(uti as CFString, CUE_SHEET_UTI_STRING as CFString) {
@@ -218,7 +195,7 @@ class DatabaseManager: NSObject {
         }
     }
     
-    func addArtForTrack(_ track: Track, from url: URL, organizes: Bool) -> AlbumArtwork? {
+    func addArtForTrack(_ track: Track, from url: URL, managedContext: NSManagedObjectContext, organizes: Bool) -> AlbumArtwork? {
         //returns true if art was successfully added, so a receiver can display the image, if needed
         guard let album = track.album else { return nil }
         let image = NSImage(byReferencing: url)
@@ -234,14 +211,14 @@ class DatabaseManager: NSObject {
         let filename = url.lastPathComponent
         var newArt: AlbumArtwork
         if track.album?.primary_art == nil {
-            let newPrimaryArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: self.context) as! AlbumArtwork
+            let newPrimaryArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
             newArt = newPrimaryArt
             newPrimaryArt.album = album
             newPrimaryArt.location = url.absoluteString
             newPrimaryArt.id = globalRootLibrary?.next_album_artwork_id
             globalRootLibrary?.next_album_artwork_id = globalRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
         } else {
-            let newOtherArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: self.context) as! AlbumArtwork
+            let newOtherArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
             newArt = newOtherArt
             newOtherArt.album_multiple = album
             newOtherArt.location = url.absoluteString
@@ -254,7 +231,7 @@ class DatabaseManager: NSObject {
         return newArt
     }
     
-    func addArtForTrack(_ track: Track, fromData data: Data) -> Bool { //does not handle errors good
+    func addArtForTrack(_ track: Track, fromData data: Data, managedContext: NSManagedObjectContext) -> Bool { //does not handle errors good
         //returns true if art was successfully added, so a receiver can display the image, if needed
         guard let album = track.album else { return false }
         let hashString = createMD5HashOf(data: data)
@@ -308,14 +285,14 @@ class DatabaseManager: NSObject {
             return false
         }
         if track.album?.primary_art == nil {
-            let newPrimaryArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: self.context) as! AlbumArtwork
+            let newPrimaryArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
             newPrimaryArt.album = album
             newPrimaryArt.location = artworkURL.absoluteString
             newPrimaryArt.id = globalRootLibrary?.next_album_artwork_id
             globalRootLibrary?.next_album_artwork_id = globalRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
             return true
         } else {
-            let newOtherArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: self.context) as! AlbumArtwork
+            let newOtherArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
             newOtherArt.album_multiple = album
             newOtherArt.location = artworkURL.absoluteString
             newOtherArt.id = globalRootLibrary?.next_album_artwork_id
@@ -536,6 +513,8 @@ class DatabaseManager: NSObject {
     
     func consolidateLibrary(withLocations newLocationDictionary: [NSObject : URL], visualUpdateHandler: ProgressBarController?, moves: Bool) {
         //assume called on not-main queue
+        let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        subContext.parent = managedContext
         var index = 0
         let count = newLocationDictionary.count
         DispatchQueue.main.async {
@@ -550,14 +529,15 @@ class DatabaseManager: NSObject {
                 }
             }
             let object = object as! NSManagedObject
+            let subContextObject = subContext.object(with: object.objectID)
             guard let oldURL = {() -> URL? in
-                switch object {
-                case let object as Track:
-                    return URL(string: object.location ?? "")
-                case let object as AlbumFile:
-                    return URL(string: object.location ?? "")
-                case let object as AlbumArtwork:
-                    return URL(string: object.location ?? "")
+                switch subContextObject {
+                case let subContextObject as Track:
+                    return URL(string: subContextObject.location ?? "")
+                case let subContextObject as AlbumFile:
+                    return URL(string: subContextObject.location ?? "")
+                case let subContextObject as AlbumArtwork:
+                    return URL(string: subContextObject.location ?? "")
                 default:
                     return nil
                 }
@@ -579,18 +559,25 @@ class DatabaseManager: NSObject {
                 //append error
                 continue
             }
-            switch object {
-            case let object as Track:
-                object.location = newURL.absoluteString
-            case let object as AlbumFile:
-                object.location = newURL.absoluteString
-            case let object as AlbumArtwork:
-                object.location = newURL.absoluteString
+            switch subContextObject {
+            case let subContextObject as Track:
+                subContextObject.location = newURL.absoluteString
+            case let subContextObject as AlbumFile:
+                subContextObject.location = newURL.absoluteString
+            case let subContextObject as AlbumArtwork:
+                subContextObject.location = newURL.absoluteString
             default:
                 break
             }
             do {
-                try self.context.save()
+                try subContext.save()
+                DispatchQueue.main.async {
+                    do {
+                        try managedContext.save()
+                    } catch {
+                        self.consolidationShouldStop = true
+                    }
+                }
             } catch {
                 self.consolidationShouldStop = true
                 continue
@@ -613,23 +600,23 @@ class DatabaseManager: NSObject {
     func removeSource(library: Library) {
         guard library != globalRootLibrary else {return}
         for track in (library.tracks! as! Set<Track>) {
-            self.context.delete(track.view!)
+            managedContext.delete(track.view!)
             if track.artist?.tracks?.count != nil && track.artist!.tracks!.count <= 1 {
-                self.context.delete(track.artist!)
+                managedContext.delete(track.artist!)
             }
             if track.album?.tracks?.count != nil && track.album!.tracks!.count <= 1 {
-                self.context.delete(track.album!)
+                managedContext.delete(track.album!)
             }
-            self.context.delete(track)
+            managedContext.delete(track)
         }
         if library.local_items != nil {
             for item in library.local_items! {
-                self.context.delete(item as! NSManagedObject)
+                managedContext.delete(item as! NSManagedObject)
             }
         }
-        self.context.delete(library)
+        managedContext.delete(library)
         do {
-            try self.context.save()
+            try managedContext.save()
         } catch {
             print(error)
         }
@@ -718,6 +705,9 @@ class DatabaseManager: NSObject {
     }
     
     func addTracksFromURLs(_ mediaURLs: [URL], to library: Library, visualUpdateHandler: ProgressBarController?, callback: (() -> Void)?) -> [FileAddToDatabaseError] { //does not handle errors good
+        let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        subContext.parent = managedContext
+        let subContextLibrary = subContext.object(with: library.objectID)
         var errors = [FileAddToDatabaseError]()
         var addedArtists = [String : Artist]()
         var addedAlbums = [Artist : [String : Album]]()
@@ -741,8 +731,8 @@ class DatabaseManager: NSObject {
             var addedAlbumArtist: Artist?
             
             //create track and track view objects
-            let track = NSEntityDescription.insertNewObject(forEntityName: "Track", into: self.context) as! Track
-            let trackView = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: self.context) as! TrackView
+            let track = NSEntityDescription.insertNewObject(forEntityName: "Track", into: subContext) as! Track
+            let trackView = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: subContext) as! TrackView
             trackView.track = track
             track.location = url.absoluteString
             track.date_added = Date() as NSDate
@@ -752,23 +742,22 @@ class DatabaseManager: NSObject {
             let volumeURL = getVolumeOfURL(url: url)
             if let existingVolume = addedVolumes[volumeURL]  {
                 track.volume = existingVolume
-            } else if let existingVolume = checkIfVolumeExists(withURL: volumeURL, context: self.context) {
-                track.volume = existingVolume
+            } else if let existingVolume = checkIfVolumeExists(withURL: volumeURL, subcontext: subContext) {
+                track.volume = subContext.object(with: existingVolume.objectID) as! Volume
             } else {
-                let newVolume = NSEntityDescription.insertNewObject(forEntityName: "Volume", into: self.context) as! Volume
+                let newVolume = NSEntityDescription.insertNewObject(forEntityName: "Volume", into: subContext) as! Volume
                 newVolume.location = volumeURL.absoluteString
                 newVolume.name = (try? volumeURL.resourceValues(forKeys: [.volumeNameKey]))?.volumeName
                 track.volume = newVolume
-                let newSourceListItemForVolume = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: self.context) as! SourceListItem
+                let newSourceListItemForVolume = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: subContext) as! SourceListItem
                 newSourceListItemForVolume.volume = newVolume
                 newSourceListItemForVolume.name = newVolume.name
-                let globalRootLibrarySourceListItem = getGlobalRootLibrarySourceListItem(forContext: self.context)
-                globalRootLibrarySourceListItem!.addToChildren(newSourceListItemForVolume)
+                (subContext.object(with: globalRootLibrarySourceListItem!.objectID) as! SourceListItem).addToChildren(newSourceListItemForVolume)
                 addedVolumes[volumeURL] = newVolume
             }
             
             //associate track with library
-            track.library = self.globalRootLibrary
+            track.library = subContextLibrary as! Library
             
             //populate metadata from getAudioMetadata
             track.bit_rate      = fileMetadataDictionary[kBitRateKey] as? NSNumber
@@ -790,10 +779,10 @@ class DatabaseManager: NSObject {
             let artistCheck = fileMetadataDictionary[kArtistKey] as? String ?? ""
             if let alreadyAddedArtist = addedArtists[artistCheck] {
                 track.artist = alreadyAddedArtist
-            } else if let alreadyAddedArtist = checkIfArtistExists(artistCheck, context: self.context) {
-                track.artist = alreadyAddedArtist
+            } else if let alreadyAddedArtist = checkIfArtistExists(artistCheck, subcontext: subContext) {
+                track.artist = subContext.object(with: alreadyAddedArtist.objectID) as! Artist
             } else {
-                let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: self.context) as! Artist
+                let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: subContext) as! Artist
                 newArtist.name = artistCheck
                 newArtist.id = globalRootLibrary?.next_artist_id
                 globalRootLibrary?.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
@@ -804,10 +793,10 @@ class DatabaseManager: NSObject {
             let albumCheck = fileMetadataDictionary[kAlbumKey] as? String ?? ""
             if let alreadyAddedAlbum = addedAlbums[track.artist!]?[albumCheck] {
                 track.album = alreadyAddedAlbum
-            } else if let alreadyAddedAlbum = checkIfAlbumExists(withName: albumCheck, withArtist: track.artist!, context: self.context) {
-                track.album = alreadyAddedAlbum
+            } else if let alreadyAddedAlbum = checkIfAlbumExists(withName: albumCheck, withArtist: track.artist!, subcontext: subContext) {
+                track.album = subContext.object(with: alreadyAddedAlbum.objectID) as! Album
             } else {
-                let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: self.context) as! Album
+                let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: subContext) as! Album
                 newAlbum.name = albumCheck
                 newAlbum.id = globalRootLibrary?.next_album_id
                 addedAlbum = albumCheck
@@ -828,10 +817,10 @@ class DatabaseManager: NSObject {
             if let composerCheck = fileMetadataDictionary[kComposerKey] as? String {
                 if let alreadyAddedComposer = addedComposers[composerCheck] {
                     track.composer = alreadyAddedComposer
-                } else if let alreadyAddedComposer = checkIfComposerExists(composerCheck, context: self.context) {
-                    track.composer = alreadyAddedComposer
+                } else if let alreadyAddedComposer = checkIfComposerExists(composerCheck, subcontext: subContext) {
+                    track.composer = subContext.object(with: alreadyAddedComposer.objectID) as! Composer
                 }  else {
-                    let newComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: self.context) as! Composer
+                    let newComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: subContext) as! Composer
                     newComposer.name = composerCheck
                     newComposer.id = globalRootLibrary?.next_composer_id
                     globalRootLibrary?.next_composer_id = Int(globalRootLibrary!.next_composer_id!) + 1 as NSNumber
@@ -874,21 +863,21 @@ class DatabaseManager: NSObject {
             default: result = true
             }
             if hasArt {
-                addArtForTrack(track, fromData: art!, context: self.context)
+                addArtForTrack(track, fromData: art!, managedContext: subContext)
             }
             if result == false {
                 print("error moving")
                 errors.append(FileAddToDatabaseError(url: url.absoluteString, error: "Couldn't move/copy file to album directory"))
                 if addedAlbum != nil {
-                    self.context.delete(track.album!)
+                    subContext.delete(track.album!)
                 }
-                self.context.delete(track)
-                self.context.delete(trackView)
+                subContext.delete(track)
+                subContext.delete(trackView)
                 if addedArtist != nil {
-                    self.context.delete(addedArtist!)
+                    subContext.delete(addedArtist!)
                 }
                 if addedComposer != nil {
-                    self.context.delete(addedComposer!)
+                    subContext.delete(addedComposer!)
                 }
             } else {
                 tracks.append(track)
@@ -900,11 +889,11 @@ class DatabaseManager: NSObject {
                 if let addableFiles = getNonAudioFiles(inDirectory: directoryURL) {
                     for file in addableFiles {
                         if UTTypeConformsTo(file.1 as CFString, kUTTypeImage) || UTTypeConformsTo(file.1 as CFString, kUTTypePDF) {
-                            if let art = addArtForTrack(track, from: file.0, context: self.context, organizes: false) {
+                            if let art = addArtForTrack(track, from: file.0, managedContext: subContext, organizes: false) {
                                 addedAlbumFiles.append(art)
                             }
                         } else {
-                            if let otherFile = addMiscellaneousFile(forTrack: track, from: file.0, context: self.context, organizes: false) {
+                            if let otherFile = addMiscellaneousFile(forTrack: track, from: file.0, managedContext: subContext, organizes: false) {
                                 addedAlbumFiles.append(otherFile)
                             }
                         }
@@ -938,7 +927,7 @@ class DatabaseManager: NSObject {
         }
         
         do {
-            try self.context.save()
+            try subContext.save()
         } catch {
             print(error)
         }
@@ -949,12 +938,15 @@ class DatabaseManager: NSObject {
             visualUpdateHandler?.makeIndeterminate(actionName: "Repopulating sort cache...")
             DispatchQueue.main.async {
                 for order in cachedOrders! {
-                    reorderForTracks(tracks, cachedOrder: order.value, context: self.context)
+                    reorderForTracks(tracks, cachedOrder: order.value, subContext: nil)
                 }
                 visualUpdateHandler?.makeIndeterminate(actionName: "Committing changes...")
-                let errorHandler = SaveErrorHandler()
-                self.saveAndCommit(errorHandler: errorHandler)
                 DispatchQueue.main.async {
+                    do {
+                        try managedContext.save()
+                    } catch {
+                        print(error)
+                    }
                     visualUpdateHandler?.finish()
                     if callback != nil {
                         callback!()
@@ -970,28 +962,28 @@ class DatabaseManager: NSObject {
         print("removing tracks")
         for track in tracks {
             print("removing track \(track.name)")
-            self.context.delete(track)
-            self.context.delete(track.view!)
+            managedContext.delete(track)
+            managedContext.delete(track.view!)
             if track.artist != nil && track.artist!.tracks!.count <= 1 {
-                self.context.delete(track.artist!)
+                managedContext.delete(track.artist!)
             }
             if track.album != nil && track.album!.tracks!.count <= 1 {
-                self.context.delete(track.album!)
+                managedContext.delete(track.album!)
             }
             if track.composer != nil && track.composer!.tracks!.count <= 1 {
-                self.context.delete(track.composer!)
+                managedContext.delete(track.composer!)
             }
         }
         do {
-            try self.context.save()
+            try managedContext.save()
         } catch {
             print(error)
         }
     }
     
     func nameEdited(tracks: [Track], value: String) {
-        self.context.undoManager?.beginUndoGrouping()
-        self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        managedContext.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editName(tracks, name: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
@@ -999,13 +991,13 @@ class DatabaseManager: NSObject {
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Name")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Name")
     }
     
     func artistEdited(tracks: [Track], value: String) {
-        self.context.undoManager?.beginUndoGrouping()
-        self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        managedContext.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editArtist(tracks, artistName: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
@@ -1013,13 +1005,13 @@ class DatabaseManager: NSObject {
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Artist")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Artist")
     }
     
     func albumArtistEdited(tracks: [Track], value: String) {
-        self.context.undoManager?.beginUndoGrouping()
-        self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        managedContext.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editAlbumArtist(tracks, albumArtistName: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
@@ -1027,13 +1019,13 @@ class DatabaseManager: NSObject {
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Album Artist")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Album Artist")
     }
     
     func albumEdited(tracks: [Track], value: String) {
-        self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
-        self.context.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        managedContext.undoManager?.beginUndoGrouping()
         editAlbum(tracks, albumName: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
@@ -1041,13 +1033,13 @@ class DatabaseManager: NSObject {
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Album")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Album")
     }
     
     func trackNumEdited(tracks: [Track], value: Int) {
-        self.context.undoManager?.beginUndoGrouping()
-        self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        managedContext.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editTrackNum(tracks, num: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
@@ -1055,23 +1047,23 @@ class DatabaseManager: NSObject {
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Track Number")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Track Number")
     }
     
     func trackNumOfEdited(tracks: [Track], value: Int) {
-        self.context.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.beginUndoGrouping()
         editTrackNumOf(tracks, num: value)
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Total Tracks")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Total Tracks")
     }
     
     func discNumEdited(tracks: [Track], value: Int) {
-        self.context.undoManager?.beginUndoGrouping()
-        self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        managedContext.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editDiscNum(tracks, num: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
@@ -1079,22 +1071,22 @@ class DatabaseManager: NSObject {
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Disc Number")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Disc Number")
     }
     
     func totalDiscsEdited(tracks: [Track], value: Int) {
-        self.context.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.beginUndoGrouping()
         editDiscNumOf(tracks, num: value)
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Total Discs")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Total Discs")
     }
     
     func composerEdited(tracks: [Track], value: String) {
-        self.context.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.beginUndoGrouping()
         editComposer(tracks, composerName: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
@@ -1102,23 +1094,23 @@ class DatabaseManager: NSObject {
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Composer")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Composer")
     }
     
     func genreEdited(tracks: [Track], value: String) {
-        self.context.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.beginUndoGrouping()
         editGenre(tracks, genre: value)
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Genre")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Genre")
     }
     
     func compilationChanged(tracks: [Track], value: Bool) {
-        self.context.undoManager?.beginUndoGrouping()
-        self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
+        managedContext.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editIsComp(tracks, isComp: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
@@ -1126,87 +1118,87 @@ class DatabaseManager: NSObject {
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Compilation")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Compilation")
     }
     
     func commentsEdited(tracks: [Track], value: String) {
-        self.context.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.beginUndoGrouping()
         editComments(tracks, comments: value)
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Comments")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Comments")
     }
     
     func movementNameEdited(tracks: [Track], value: String) {
         //needs work
-        self.context.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.beginUndoGrouping()
         editMovementName(tracks, name: value)
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Movement Name")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Movement Name")
     }
     
     func movementNumEdited(tracks: [Track], value: Int) {
         //needs work
-        self.context.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.beginUndoGrouping()
         editMovementNum(tracks, num: value)
         for track in tracks {
             moveFileAfterEdit(track, copies: false)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Movement Number")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Movement Number")
     }
     
     func sortAlbumEdited(tracks: [Track], value: String) {
-        self.context.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.beginUndoGrouping()
         editSortAlbum(tracks, sortAlbum: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Sort Album")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Sort Album")
     }
     
     func sortAlbumArtistEdited(tracks: [Track], value: String) {
-        self.context.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.beginUndoGrouping()
         editSortAlbumArtist(tracks, sortAlbumArtist: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Sort Album Artist")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Sort Album Artist")
     }
     
     func sortArtistEdited(tracks: [Track], value: String) {
-        self.context.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.beginUndoGrouping()
         editSortArtist(tracks, sortArtist: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Sort Artist")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Sort Artist")
     }
     
     func sortComposerEdited(tracks: [Track], value: String) {
-        self.context.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.beginUndoGrouping()
         editSortComposer(tracks, sortComposer: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Sort Composer")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Sort Composer")
     }
     
     func sortNameEdited(tracks: [Track], value: String) {
-        self.context.undoManager?.beginUndoGrouping()
+        managedContext.undoManager?.beginUndoGrouping()
         editSortName(tracks, sortName: value)
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, subContext: nil)
         }
-        self.context.undoManager?.endUndoGrouping()
-        self.context.undoManager?.setActionName("Edit Sort Name")
+        managedContext.undoManager?.endUndoGrouping()
+        managedContext.undoManager?.setActionName("Edit Sort Name")
     }
     
     func releaseDateEdited(tracks: [Track], value: JMDate) {
@@ -1224,9 +1216,12 @@ class DatabaseManager: NSObject {
     
     
     func batchMoveTracks(tracks: [Track], visualUpdateHandler: ProgressBarController?) {
-       self.context.perform {
+        let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        subContext.parent = managedContext
+        let subContextTracks = tracks.map({return subContext.object(with: $0.objectID) as! Track})
+        DispatchQueue.global(qos: .default).async {
             var index = 0
-            for track in tracks {
+            for track in subContextTracks {
                 self.moveFileAfterEdit(track, copies: false)
                 index += 1
                 DispatchQueue.main.async {
@@ -1237,13 +1232,16 @@ class DatabaseManager: NSObject {
                 visualUpdateHandler?.makeIndeterminate(actionName: "")
             }
             do {
-                try self.context.save()
+                try subContext.save()
             } catch {
                 print("error saving subcontext")
             }
-            let saveErrorHandler = SaveErrorHandler()
-            self.saveAndCommit(errorHandler: saveErrorHandler)
             DispatchQueue.main.async {
+                do {
+                    try managedContext.save()
+                } catch {
+                    print("error saving subcontext")
+                }
                 visualUpdateHandler?.finish()
             }
         }
@@ -1300,8 +1298,8 @@ class DatabaseManager: NSObject {
     }
     
     func createFileForNetworkTrack(_ track: Track, data: Data, trackMetadata: NSDictionary) -> Bool {
-        let newTrack = NSEntityDescription.insertNewObject(forEntityName: "Track", into: self.context) as! Track
-        let newTrackView = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: self.context) as! TrackView
+        let newTrack = NSEntityDescription.insertNewObject(forEntityName: "Track", into: managedContext) as! Track
+        let newTrackView = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: managedContext) as! TrackView
         newTrackView.track = newTrack
         newTrack.id = globalRootLibrary?.next_track_id
         newTrack.status = nil
@@ -1325,7 +1323,7 @@ class DatabaseManager: NSObject {
                 let artist: Artist = {() -> Artist in
                     let artistCheck = checkIfArtistExists(artistName)
                     if artistCheck == nil {
-                        let artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: self.context) as! Artist
+                        let artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
                         addedArtist = artist
                         artist.name = artistName
                         artist.id = globalRootLibrary?.next_artist_id
@@ -1343,7 +1341,7 @@ class DatabaseManager: NSObject {
                 let album: Album = {
                     let albumCheck = checkIfAlbumExists(withName: albumName, withArtist: track.artist!)
                     if albumCheck == nil {
-                        let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: self.context) as! Album
+                        let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
                         addedAlbum = album
                         album.name = albumName
                         album.id = globalRootLibrary?.next_album_id
@@ -1370,7 +1368,7 @@ class DatabaseManager: NSObject {
                 let composer: Composer = {
                     let composerCheck = checkIfComposerExists(composerName)
                     if composerCheck == nil {
-                        let composer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: self.context) as! Composer
+                        let composer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: managedContext) as! Composer
                         addedComposer = composer
                         composer.name = composerName
                         composer.id = globalRootLibrary?.next_composer_id
@@ -1430,7 +1428,7 @@ class DatabaseManager: NSObject {
                 let artist: Artist = {
                     let artistCheck = checkIfArtistExists(artistName)
                     if artistCheck == nil {
-                        let artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: self.context) as! Artist
+                        let artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
                         addedAlbumArtist = artist
                         artist.name = artistName
                         return artist
@@ -1449,19 +1447,19 @@ class DatabaseManager: NSObject {
                 reorderForTracks([newTrack], cachedOrder: order.value, subContext: nil)
             }
         } else {
-            self.context.delete(newTrack)
-            self.context.delete(newTrackView)
+            managedContext.delete(newTrack)
+            managedContext.delete(newTrackView)
             if addedArtist != nil {
-                self.context.delete(addedArtist!)
+                managedContext.delete(addedArtist!)
             }
             if addedComposer != nil {
-                self.context.delete(addedComposer!)
+                managedContext.delete(addedComposer!)
             }
             if addedAlbum != nil {
-                self.context.delete(addedAlbum!)
+                managedContext.delete(addedAlbum!)
             }
             if addedAlbumArtist != nil {
-                self.context.delete(addedAlbumArtist!)
+                managedContext.delete(addedAlbumArtist!)
             }
         }
         return true
@@ -1473,7 +1471,7 @@ class DatabaseManager: NSObject {
         let trackPredicate = NSPredicate(format: "id == \(id)")
         trackFetch.predicate = trackPredicate
         do {
-            let results = try self.context.fetch(trackFetch) as! [Track]
+            let results = try managedContext.fetch(trackFetch) as! [Track]
             if results.count > 0 {
                 if results[0].location == track["location"] as? String {
                     return false
@@ -1493,7 +1491,7 @@ class DatabaseManager: NSObject {
         let fileManager = FileManager.default
         request.predicate = predicate
         do {
-            let tracks = try self.context.fetch(request)
+            let tracks = try managedContext.fetch(request)
             let count = tracks.count
             if visualUpdateHandler != nil {
                 DispatchQueue.main.async {
@@ -1548,7 +1546,7 @@ class DatabaseManager: NSObject {
         request.predicate = predicate
         var locations: Set<String>
         do {
-            let tracks = try self.context.fetch(request)
+            let tracks = try managedContext.fetch(request)
             if visualUpdateHandler != nil {
                 DispatchQueue.main.async {
                     visualUpdateHandler!.initializeForSetCreation()
@@ -1638,7 +1636,7 @@ class DatabaseManager: NSObject {
             let predicate = NSPredicate(format: "is_network == nil OR is_network == false")
             fetchReq.predicate = predicate
             do {
-                let result = try self.context.fetch(fetchReq)[0] as! Library
+                let result = try managedContext.fetch(fetchReq)[0] as! Library
                 return result
             } catch {
                 return nil
@@ -1655,8 +1653,8 @@ class DatabaseManager: NSObject {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         for track in tracks {
             guard trackDoesNotExist(track) else {continue}
-            let newTrack = NSEntityDescription.insertNewObject(forEntityName: "Track", into: self.context) as! Track
-            let newTrackView = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: self.context) as! TrackView
+            let newTrack = NSEntityDescription.insertNewObject(forEntityName: "Track", into: managedContext) as! Track
+            let newTrackView = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: managedContext) as! TrackView
             newTrackView.is_network = true
             newTrackView.track = newTrack
             newTrack.is_network = true
@@ -1683,7 +1681,7 @@ class DatabaseManager: NSObject {
                         } else {
                             let artistCheck = checkIfArtistExists(artistName)
                             if artistCheck == nil {
-                                let artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: self.context) as! Artist
+                                let artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
                                 artist.name = artistName
                                 artist.id = globalRootLibrary?.next_artist_id
                                 globalRootLibrary?.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
@@ -1706,7 +1704,7 @@ class DatabaseManager: NSObject {
                         } else {
                             let albumCheck = checkIfAlbumExists(withName: albumName, withArtist: newTrack.artist!)
                             if albumCheck == nil {
-                                let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: self.context) as! Album
+                                let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
                                 album.name = albumName
                                 album.id = library?.next_album_id
                                 globalRootLibrary?.next_album_id = Int(globalRootLibrary!.next_album_id!) + 1 as NSNumber
@@ -1738,7 +1736,7 @@ class DatabaseManager: NSObject {
                         } else {
                             let composerCheck = checkIfComposerExists(composerName)
                             if composerCheck == nil {
-                                let composer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: self.context) as! Composer
+                                let composer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: managedContext) as! Composer
                                 composer.name = composerName
                                 composer.id = globalRootLibrary?.next_composer_id
                                 globalRootLibrary?.next_composer_id = Int(globalRootLibrary!.next_composer_id!) + 1 as NSNumber
@@ -1804,7 +1802,7 @@ class DatabaseManager: NSObject {
                         } else {
                             let artistCheck = checkIfArtistExists(artistName)
                             if artistCheck == nil {
-                                let artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: self.context) as! Artist
+                                let artist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: managedContext) as! Artist
                                 artist.name = artistName
                                 artist.is_network = true
                                 addedArtists[artistName] = artist
