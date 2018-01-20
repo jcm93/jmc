@@ -109,7 +109,6 @@ class MissingTrackPathTree: NSObject {
     }
     
     init(with missingTracks: inout [Track]) {
-        let globalRootLibrary = getGlobalRootLibrary(forContext: mainQueueChildContext)
         self.rootNode = MissingTrackPathNode(pathComponent: "/")
         let allTrackSet = globalRootLibrary!.tracks as! Set<Track>
         self.rootNode.totalTracks = allTrackSet

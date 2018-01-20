@@ -45,7 +45,7 @@ class ImportWindowController: NSWindowController, NSTableViewDelegate {
         appDelegate.iTunesParser = self.iTunesParser
         appDelegate.launchAddFilesDialog()
         DispatchQueue.global(qos: .default).async {
-            appDelegate.iTunesParser?.makeLibrary(visualUpdateHandler: appDelegate.backgroundAddFilesHandler)
+            appDelegate.iTunesParser?.makeLibrary(parentLibrary: globalRootLibrary, visualUpdateHandler: appDelegate.backgroundAddFilesHandler)
         }
         self.iTunesParser = nil
         self.window?.close()

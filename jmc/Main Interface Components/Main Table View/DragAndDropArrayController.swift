@@ -262,19 +262,16 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
             let urls = files.map({return URL(fileURLWithPath: $0 as! String)})
             let appDelegate = (NSApplication.shared.delegate as! AppDelegate)
             var errors = [FileAddToDatabaseError]()
-            let databaseManager = DatabaseManager(context: privateQueueParentContext)
-            privateQueueParentContext.perform {
-                //todo fix this crap
-                let urlParseResult = databaseManager.getMediaURLsInDirectoryURLs(urls)
-                errors.append(contentsOf: urlParseResult.1)
-                let mediaURLs = urlParseResult.0
-                let newErrors = databaseManager.addTracksFromURLs(mediaURLs, visualUpdateHandler: nil, callback: nil)
-                errors.append(contentsOf: newErrors)
-                for error in errors {
-                    error.urlString = error.urlString.removingPercentEncoding!
-                }
-                appDelegate.showImportErrors(errors)
+            let databaseManager = DatabaseManager()
+            let urlParseResult = databaseManager.getMediaURLsInDirectoryURLs(urls)
+            errors.append(contentsOf: urlParseResult.1)
+            let mediaURLs = urlParseResult.0
+            let newErrors = databaseManager.addTracksFromURLs(mediaURLs, visualUpdateHandler: nil, callback: nil)
+            errors.append(contentsOf: newErrors)
+            for error in errors {
+                error.urlString = error.urlString.removingPercentEncoding!
             }
+            appDelegate.showImportErrors(errors)
             return true
         } else {
             //if we've reached this point, we must be in a playlist with a valid track id list, and the table must be sorted by playlist order

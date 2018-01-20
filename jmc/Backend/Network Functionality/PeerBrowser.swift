@@ -18,7 +18,6 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
     let interface: SourceListViewController?
     let metadataDelegate: SharedLibraryRequestHandler?
     let databaseManager: DatabaseManager
-    let globalRootLibrary: Library
     var requestedTrackDatas = [Int : Track]()
     
     var delegate: AppDelegate?
@@ -32,8 +31,7 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
     init(delegate: AppDelegate, slvc: SourceListViewController) {
         self.interface = slvc
         self.delegate = delegate
-        self.databaseManager = DatabaseManager(context: privateQueueParentContext)
-        self.globalRootLibrary = getGlobalRootLibrary(forContext: privateQueueParentContext)
+        self.databaseManager = DatabaseManager()
         self.metadataDelegate = SharedLibraryRequestHandler()
         self.serviceAdvertiser = MCNearbyServiceAdvertiser(peer: thisPeerID, discoveryInfo: nil, serviceType: serviceIdentifier)
         self.serviceBrowser = MCNearbyServiceBrowser(peer: thisPeerID, serviceType: serviceIdentifier)
@@ -174,8 +172,8 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
             let trackB64 = requestDict["track"] as! String
             guard let trackData = Data(base64Encoded: trackB64, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters) else {return}
             guard let trackMetadata = requestDict["metadata"] as? NSDictionary else {return}
-            let databaseManager = DatabaseManager(context: privateQueueParentContext)
-            privateQueueParentContext.perform {
+            let databaseManager = DatabaseManager()
+            DispatchQueue.main.async {
                 databaseManager.createFileForNetworkTrack(track, data: trackData, trackMetadata: trackMetadata)
             }
             print("the tingler got a song download")
@@ -213,7 +211,7 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
         let playlistPayloadDictionary = NSMutableDictionary()
         playlistPayloadDictionary["type"] = "payload"
         playlistPayloadDictionary["payload"] = "playlist"
-        playlistPayloadDictionary["library"] = globalRootLibrary.name
+        playlistPayloadDictionary["library"] = globalRootLibrary?.name
         playlistPayloadDictionary["id"] = playlistID
         playlistPayloadDictionary["playlist"] = playlist
         var serializedDict: Data!
@@ -259,7 +257,6 @@ class ConnectivityManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearby
     }
     
     func sendPeerLibraryName(_ peer: MCPeerID) {
-        let globalRootLibrary = getGlobalRootLibrary(forContext: privateQueueParentContext)
         let libraryName = globalRootLibrary?.name
         let libraryNameDictionary = NSMutableDictionary()
         libraryNameDictionary["type"] = "payload"

@@ -63,26 +63,24 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
         if let board = draggingInfo.draggingPasteboard().propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType")) as? NSArray {
             let urls = board.map({return URL(fileURLWithPath: $0 as! String)})
             if let currentTrack = self.track {
-                let databaseManager = DatabaseManager(context: mainQueueChildContext)
-                mainQueueChildContext.perform {
-                    var results = [AnyObject]()
-                    for url in urls {
-                        if let urlUTI = getUTIFrom(url: url) {
-                            if UTTypeConformsTo(urlUTI as CFString, kUTTypeImage) || UTTypeConformsTo(urlUTI as CFString, kUTTypePDF) {
-                                if let result = databaseManager.addArtForTrack(currentTrack, from: url, organizes: true) {
-                                    results.append(result)
-                                    self.otherArtImages.append(result)
-                                }
-                            } else {
-                                if let result = databaseManager.addMiscellaneousFile(forTrack: currentTrack, from: url, organizes: true) {
-                                    results.append(result)
-                                    self.otherArtImages.append(result)
-                                }
+                let databaseManager = DatabaseManager()
+                var results = [AnyObject]()
+                for url in urls {
+                    if let urlUTI = getUTIFrom(url: url) {
+                        if UTTypeConformsTo(urlUTI as CFString, kUTTypeImage) || UTTypeConformsTo(urlUTI as CFString, kUTTypePDF) {
+                            if let result = databaseManager.addArtForTrack(currentTrack, from: url, privateQueueParentContext: privateQueueParentContext, organizes: true) {
+                                results.append(result)
+                                otherArtImages.append(result)
+                            }
+                        } else {
+                            if let result = databaseManager.addMiscellaneousFile(forTrack: currentTrack, from: url, privateQueueParentContext: privateQueueParentContext, organizes: true) {
+                                results.append(result)
+                                otherArtImages.append(result)
                             }
                         }
                     }
-                    collectionView.reloadData()
                 }
+                collectionView.reloadData()
                 return true
             }
             else {

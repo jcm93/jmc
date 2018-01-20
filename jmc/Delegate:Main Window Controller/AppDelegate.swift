@@ -101,10 +101,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         
     }
     
-    func alertForErrors(_ errors: [Error]) {
-        //stub
-    }
-    
     func showImportErrors(_ errors: [FileAddToDatabaseError]) {
         if errors.count > 0 {
             self.importErrorWindowController = ImportErrorWindowController(windowNibName: NSNib.Name(rawValue: "ImportErrorWindowController"))
@@ -114,7 +110,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
     
     func addURLsToLibrary(_ urls: [URL], library: Library) -> [FileAddToDatabaseError] {
-        let result = databaseManager?.addTracksFromURLs(urls, visualUpdateHandler: nil, callback: nil)
+        let result = databaseManager?.addTracksFromURLs(urls, to: library, visualUpdateHandler: nil, callback: nil)
         return result!
     }
 
@@ -147,7 +143,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let dumbTransform = TransformerURLStringToURL()
         ValueTransformer.setValueTransformer(dumbTransform, forName: NSValueTransformerName("TransformURLStringToURL"))
         let fuckTransform = TransformerIntegerToTimestamp()
-        databaseManager = DatabaseManager(context: privateQueueParentContext)
+        databaseManager = DatabaseManager()
         ValueTransformer.setValueTransformer(fuckTransform, forName: NSValueTransformerName("AssTransform"))
         initializeLibraryAndShowMainWindow()
         if UserDefaults.standard.bool(forKey: DEFAULTS_ARE_INITIALIZED_STRING) != true {
@@ -214,9 +210,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     
     func application(_ sender: NSApplication, openFiles filenames: [String]) {
         self.launchAddFilesDialog()
-        privateQueueParentContext.perform {
-            self.databaseManager!.addTracksFromURLs(filenames.map({return URL(fileURLWithPath: $0)}), visualUpdateHandler: self.backgroundAddFilesHandler, callback: nil)
-        }
+        databaseManager!.addTracksFromURLs(filenames.map({return URL(fileURLWithPath: $0)}), to: globalRootLibrary!, visualUpdateHandler: self.backgroundAddFilesHandler, callback: nil)
     }
 
     // MARK: - Core Data stack
