@@ -230,19 +230,28 @@ class iTunesLibraryParser: NSObject {
             }
             index += 1
         }
-        let highestTrackID = (getInstanceWithHighestIDForEntity("Track") as! Track).id
-        (privateQueueParentContext.object(with: library!.objectID) as! Library).next_track_id = highestTrackID
-        
-        let highestPlaylistID = (getInstanceWithHighestIDForEntity("SongCollection") as! SongCollection).id
-        (privateQueueParentContext.object(with: library!.objectID) as! Library).next_playlist_id = highestPlaylistID
         do {
             try privateQueueParentContext.save()
         } catch {
             print(error)
         }
         DispatchQueue.main.async {
-            visualUpdateHandler?.finish()
-            (NSApp.delegate as! AppDelegate).doneImportingiTunesLibrary()
+            visualUpdateHandler?.makeIndeterminate(actionName: "Committing changes...")
+            DispatchQueue.main.async {
+                do {
+                    try privateQueueParentContext.save()
+                    print("done saving main context")
+                } catch {
+                    print("error: \(error)")
+                }
+                let highestTrackID = (getInstanceWithHighestIDForEntity("Track") as! Track).id
+                (privateQueueParentContext.object(with: library!.objectID) as! Library).next_track_id = highestTrackID
+                
+                let highestPlaylistID = (getInstanceWithHighestIDForEntity("SongCollection") as! SongCollection).id
+                (privateQueueParentContext.object(with: library!.objectID) as! Library).next_playlist_id = highestPlaylistID
+                visualUpdateHandler?.finish()
+                (NSApp.delegate as! AppDelegate).doneImportingiTunesLibrary()
+            }
         }
     }
 }

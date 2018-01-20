@@ -79,6 +79,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             //self.mainWindowController?.delegate?.openLibraryManager(self)
             self.mainWindowController?.delegate?.preferencesWindowController?.libraryManagerViewController?.tabView.selectTabViewItem(at: 1)
             self.mainWindowController?.delegate?.preferencesWindowController?.libraryManagerViewController?.verifyLocationsPressed(self)
+            
         }
     }
     
