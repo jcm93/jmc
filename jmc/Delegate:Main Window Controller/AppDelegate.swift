@@ -159,6 +159,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             }
         } else {
             privateQueueParentContext.performAndWait {
+                self.databaseManager = DatabaseManager(context: privateQueueParentContext)
                 self.locationManager = LocationManager(delegate: self)
                 self.addFilesQueueLoop = AddFilesQueueLoop(delegate: self)
                 self.locationManager?.initializeEventStream()
