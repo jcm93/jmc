@@ -430,7 +430,6 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     func export(playlists: [SongCollection]) { //does not handle errors good
-        let globalRootLibrary = getGlobalRootLibrary(forContext: privateQueueParentContext)
         let playlistsFolder = globalRootLibrary!.getCentralMediaFolder()!.appendingPathComponent("Exported Playlists")
         let visualUpdateHandler = (NSApplication.shared.delegate as! AppDelegate).backgroundAddFilesHandler
         var index = 0

@@ -19,7 +19,7 @@ class FileAddQueueChunk: NSObject {
 class AddFilesQueueLoop: NSObject, ProgressBarController {
     
     var urlsToAddChunks = [FileAddQueueChunk]()
-    var databaseManager = DatabaseManager(context: privateQueueParentContext)
+    var databaseManager = DatabaseManager()
     var showsProgressBar = true
     var canAddMoreFiles = true
     var delegate: AppDelegate

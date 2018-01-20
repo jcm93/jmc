@@ -15,7 +15,7 @@ class AlbumArtViewController: NSViewController {
     
     var artWindow: AlbumArtWindowController?
     var mainWindow: MainWindowController?
-    var databaseManager = DatabaseManager(context: privateQueueParentContext)
+    var databaseManager = DatabaseManager()
     var currentTrack: Track?
     var currentURL: URL?
 

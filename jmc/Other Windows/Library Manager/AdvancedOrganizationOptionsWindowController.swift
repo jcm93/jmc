@@ -150,7 +150,7 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
     func saveData() {
         let newDefaultTemplateTokens = self.tokenField.objectValue as! [OrganizationFieldToken] as NSArray
         let newDefaultTemplateBaseURLString = self.pathControl.url?.absoluteString
-        //fix
+        
         privateQueueParentContext.perform {
             withUndoBlock(name: "Edit Organization Template") {
                 let globalRootLibrary = getGlobalRootLibrary(forContext: privateQueueParentContext)
@@ -163,14 +163,13 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
                     template.predicate = rule.predicateEditor.predicate!
                     template.tokens = rule.tokenField.objectValue as? NSObject
                 }
-                let templateArray = self.ruleControllers.map({return $0.template!})
+                let templateArray = ruleControllers.map({return $0.template!})
                 let orderedSet = NSOrderedSet(array: templateArray)
                 templateBundle?.other_templates = orderedSet
             }
         }
     }
     func initializeData() {
-        let globalRootLibrary = getGlobalRootLibrary(forContext: privateQueueParentContext)
         if let organizationTemplateBundle = globalRootLibrary?.organization_template {
             tokenField.objectValue = organizationTemplateBundle.default_template?.tokens
             pathControl.url = URL(string: organizationTemplateBundle.default_template!.base_url_string!)
