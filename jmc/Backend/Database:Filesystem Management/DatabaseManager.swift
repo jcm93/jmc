@@ -55,9 +55,9 @@ class DatabaseManager: NSObject {
                 errorHandler?.addError(error: error)
             }
         }
-        mainQueueChildContext.performAndWait {
+        mainQueueChildContext.perform {
             commitChildContext(errorHandler: errorHandler)
-            privateQueueParentContext.performAndWait {
+            privateQueueParentContext.perform {
                 commitParentContext(errorHandler: errorHandler)
                 errorHandler?.presentErrors()
             }
@@ -973,14 +973,6 @@ class DatabaseManager: NSObject {
         DispatchQueue.main.async {
             visualUpdateHandler?.makeIndeterminate(actionName: "Repopulating sort cache...")
         }
-        let cachedOrders = {() -> [String : CachedOrder]? in
-            switch self.context {
-            case mainQueueChildContext:
-                return cachedOrdersMainQueue
-            default:
-                return cachedOrdersBackgroundQueue
-            }
-        }()
         for order in cachedOrders! {
             reorderForTracks(tracks, cachedOrder: order.value, context: self.context)
         }
@@ -1025,14 +1017,6 @@ class DatabaseManager: NSObject {
         self.context.undoManager?.beginUndoGrouping()
         self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editName(tracks, name: value)
-        let cachedOrders = {() -> [String : CachedOrder]? in
-            switch self.context {
-            case mainQueueChildContext:
-                return cachedOrdersMainQueue
-            default:
-                return cachedOrdersBackgroundQueue
-            }
-        }()
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
@@ -1047,14 +1031,6 @@ class DatabaseManager: NSObject {
         self.context.undoManager?.beginUndoGrouping()
         self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editArtist(tracks, artistName: value, context: self.context)
-        let cachedOrders = {() -> [String : CachedOrder]? in
-            switch self.context {
-            case mainQueueChildContext:
-                return cachedOrdersMainQueue
-            default:
-                return cachedOrdersBackgroundQueue
-            }
-        }()
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
@@ -1069,14 +1045,6 @@ class DatabaseManager: NSObject {
         self.context.undoManager?.beginUndoGrouping()
         self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editAlbumArtist(tracks, albumArtistName: value, context: self.context)
-        let cachedOrders = {() -> [String : CachedOrder]? in
-            switch self.context {
-            case mainQueueChildContext:
-                return cachedOrdersMainQueue
-            default:
-                return cachedOrdersBackgroundQueue
-            }
-        }()
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
@@ -1091,14 +1059,6 @@ class DatabaseManager: NSObject {
         self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         self.context.undoManager?.beginUndoGrouping()
         editAlbum(tracks, albumName: value, context: self.context)
-        let cachedOrders = {() -> [String : CachedOrder]? in
-            switch self.context {
-            case mainQueueChildContext:
-                return cachedOrdersMainQueue
-            default:
-                return cachedOrdersBackgroundQueue
-            }
-        }()
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
@@ -1113,14 +1073,6 @@ class DatabaseManager: NSObject {
         self.context.undoManager?.beginUndoGrouping()
         self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editTrackNum(tracks, num: value)
-        let cachedOrders = {() -> [String : CachedOrder]? in
-            switch self.context {
-            case mainQueueChildContext:
-                return cachedOrdersMainQueue
-            default:
-                return cachedOrdersBackgroundQueue
-            }
-        }()
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
@@ -1145,14 +1097,6 @@ class DatabaseManager: NSObject {
         self.context.undoManager?.beginUndoGrouping()
         self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editDiscNum(tracks, num: value)
-        let cachedOrders = {() -> [String : CachedOrder]? in
-            switch self.context {
-            case mainQueueChildContext:
-                return cachedOrdersMainQueue
-            default:
-                return cachedOrdersBackgroundQueue
-            }
-        }()
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
@@ -1176,14 +1120,6 @@ class DatabaseManager: NSObject {
     func composerEdited(tracks: [Track], value: String) {
         self.context.undoManager?.beginUndoGrouping()
         editComposer(tracks, composerName: value, context: self.context)
-        let cachedOrders = {() -> [String : CachedOrder]? in
-            switch self.context {
-            case mainQueueChildContext:
-                return cachedOrdersMainQueue
-            default:
-                return cachedOrdersBackgroundQueue
-            }
-        }()
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
@@ -1208,14 +1144,6 @@ class DatabaseManager: NSObject {
         self.context.undoManager?.beginUndoGrouping()
         self.context.undoManager?.registerUndo(withTarget: self, selector: #selector(undoOperationThatMovedFiles), object: tracks)
         editIsComp(tracks, isComp: value)
-        let cachedOrders = {() -> [String : CachedOrder]? in
-            switch self.context {
-            case mainQueueChildContext:
-                return cachedOrdersMainQueue
-            default:
-                return cachedOrdersBackgroundQueue
-            }
-        }()
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
@@ -1258,14 +1186,6 @@ class DatabaseManager: NSObject {
     func sortAlbumEdited(tracks: [Track], value: String) {
         self.context.undoManager?.beginUndoGrouping()
         editSortAlbum(tracks, sortAlbum: value)
-        let cachedOrders = {() -> [String : CachedOrder]? in
-            switch self.context {
-            case mainQueueChildContext:
-                return cachedOrdersMainQueue
-            default:
-                return cachedOrdersBackgroundQueue
-            }
-        }()
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
@@ -1276,14 +1196,6 @@ class DatabaseManager: NSObject {
     func sortAlbumArtistEdited(tracks: [Track], value: String) {
         self.context.undoManager?.beginUndoGrouping()
         editSortAlbumArtist(tracks, sortAlbumArtist: value)
-        let cachedOrders = {() -> [String : CachedOrder]? in
-            switch self.context {
-            case mainQueueChildContext:
-                return cachedOrdersMainQueue
-            default:
-                return cachedOrdersBackgroundQueue
-            }
-        }()
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
@@ -1294,14 +1206,6 @@ class DatabaseManager: NSObject {
     func sortArtistEdited(tracks: [Track], value: String) {
         self.context.undoManager?.beginUndoGrouping()
         editSortArtist(tracks, sortArtist: value)
-        let cachedOrders = {() -> [String : CachedOrder]? in
-            switch self.context {
-            case mainQueueChildContext:
-                return cachedOrdersMainQueue
-            default:
-                return cachedOrdersBackgroundQueue
-            }
-        }()
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
@@ -1312,14 +1216,6 @@ class DatabaseManager: NSObject {
     func sortComposerEdited(tracks: [Track], value: String) {
         self.context.undoManager?.beginUndoGrouping()
         editSortComposer(tracks, sortComposer: value)
-        let cachedOrders = {() -> [String : CachedOrder]? in
-            switch self.context {
-            case mainQueueChildContext:
-                return cachedOrdersMainQueue
-            default:
-                return cachedOrdersBackgroundQueue
-            }
-        }()
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
@@ -1330,14 +1226,6 @@ class DatabaseManager: NSObject {
     func sortNameEdited(tracks: [Track], value: String) {
         self.context.undoManager?.beginUndoGrouping()
         editSortName(tracks, sortName: value)
-        let cachedOrders = {() -> [String : CachedOrder]? in
-            switch self.context {
-            case mainQueueChildContext:
-                return cachedOrdersMainQueue
-            default:
-                return cachedOrdersBackgroundQueue
-            }
-        }()
         for order in cachedOrders!.values {
             reorderForTracks(tracks, cachedOrder: order, context: self.context)
         }
@@ -1348,14 +1236,6 @@ class DatabaseManager: NSObject {
     func releaseDateEdited(tracks: [Track], value: JMDate) {
         withUndoBlock(context: self.context, name: "Edit Release Date") {
             editReleaseDate(tracks, date: value)
-            let cachedOrders = {() -> [String : CachedOrder]? in
-                switch self.context {
-                case mainQueueChildContext:
-                    return cachedOrdersMainQueue
-                default:
-                    return cachedOrdersBackgroundQueue
-                }
-            }()
             for order in cachedOrders!.values {
                 reorderForTracks(tracks, cachedOrder: order, context: self.context)
             }
@@ -1589,14 +1469,6 @@ class DatabaseManager: NSObject {
             }
         }
         if moveFileForNetworkTrackToAppropriateLocationWithData(newTrack, data: data) == true {
-            let cachedOrders = {() -> [String : CachedOrder]? in
-                switch self.context {
-                case mainQueueChildContext:
-                    return cachedOrdersMainQueue
-                default:
-                    return cachedOrdersBackgroundQueue
-                }
-            }()
             for order in cachedOrders! {
                 reorderForTracks([newTrack], cachedOrder: order.value, context: self.context)
             }

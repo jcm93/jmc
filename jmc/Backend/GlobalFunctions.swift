@@ -57,11 +57,8 @@ func getGlobalRootLibrary(forContext managedContext: NSManagedObjectContext) -> 
     let predicate = NSPredicate(format: "parent == nil")
     fetchReq.predicate = predicate
     do {
-        if let result = try? managedContext.fetch(fetchReq), result.count > 0 {
-            return result[0] as? Library
-        } else {
-            return nil
-        }
+        let result = try managedContext.fetch(fetchReq)[0] as! Library
+        return result
     } catch {
         return nil
     }
@@ -138,24 +135,7 @@ func numberOfTracksInsideDirectory(with url: URL, context: NSManagedObjectContex
     return (globalRootLibrary!.tracks as! Set<Track>).filter({return ($0.location ?? "").localizedCaseInsensitiveContains(absString)}).count
 }
 
-var cachedOrdersMainQueue: [String : CachedOrder]? = {
-    print("accessing cached orders")
-    var result = [String : CachedOrder]()
-    let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CachedOrder")
-    do {
-        let list = try mainQueueChildContext.fetch(request) as! [CachedOrder]
-        for order in list {
-            result[order.order!] = order
-            //order.mutableCachedOrder = order.track_views!.mutableCopy() as! NSMutableOrderedSet
-        }
-        return result
-    } catch {
-        print(error)
-        return nil
-    }
-}()
-
-var cachedOrdersBackgroundQueue: [String : CachedOrder]? = {
+var cachedOrders: [String : CachedOrder]? = {
     print("accessing cached orders")
     var result = [String : CachedOrder]()
     let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CachedOrder")

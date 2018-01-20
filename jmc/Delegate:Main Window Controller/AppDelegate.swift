@@ -41,6 +41,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     
     
     func initializeLibraryAndShowMainWindow() {
+        if !UserDefaults.standard.bool(forKey: DEFAULTS_ARE_INITIALIZED_STRING) {
+            self.setupWindowController = InitialSetupWindowController(windowNibName: NSNib.Name(rawValue: "InitialSetupWindowController"))
+            privateQueueParentContext.perform {
+                self.setupWindowController?.setupForNilLibrary()
+            }
+        }
+        privateQueueParentContext.perform {
+            self.locationManager = LocationManager(delegate: self)
+            self.addFilesQueueLoop = AddFilesQueueLoop(delegate: self)
+            self.locationManager?.initializeEventStream()
+            self.lastFMDelegate = LastFMDelegate()
+        }
         mainWindowController = MainWindowController(windowNibName: NSNib.Name(rawValue: "MainWindowController"))
         mainWindowController?.delegate = self
         mainWindowController?.showWindow(self)
@@ -133,42 +145,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             }
             purgeCurrentlyPlaying()
         }
-        if !UserDefaults.standard.bool(forKey: DEFAULTS_ARE_INITIALIZED_STRING) {
-            self.setupWindowController = InitialSetupWindowController(windowNibName: NSNib.Name(rawValue: "InitialSetupWindowController"))
-            mainQueueChildContext.performAndWait {
-                self.setupWindowController!.setupForNilLibrary()
-                do {
-                    try mainQueueChildContext.save()
-                } catch {
-                    print(error)
-                }
-                privateQueueParentContext.performAndWait {
-                    do {
-                        try privateQueueParentContext.save()
-                    } catch {
-                        print(error)
-                    }
-                    self.databaseManager = DatabaseManager(context: privateQueueParentContext)
-                }
-                privateQueueParentContext.performAndWait {
-                    self.locationManager = LocationManager(delegate: self)
-                    self.addFilesQueueLoop = AddFilesQueueLoop(delegate: self)
-                    self.locationManager?.initializeEventStream()
-                    self.lastFMDelegate = LastFMDelegate()
-                }
-            }
-        } else {
-            privateQueueParentContext.performAndWait {
-                self.locationManager = LocationManager(delegate: self)
-                self.addFilesQueueLoop = AddFilesQueueLoop(delegate: self)
-                self.locationManager?.initializeEventStream()
-                self.lastFMDelegate = LastFMDelegate()
-            }
-        }
         // Insert code here to initialize your application
         let dumbTransform = TransformerURLStringToURL()
         ValueTransformer.setValueTransformer(dumbTransform, forName: NSValueTransformerName("TransformURLStringToURL"))
         let fuckTransform = TransformerIntegerToTimestamp()
+        privateQueueParentContext.perform {
+            self.databaseManager = DatabaseManager(context: privateQueueParentContext)
+        }
         ValueTransformer.setValueTransformer(fuckTransform, forName: NSValueTransformerName("AssTransform"))
         initializeLibraryAndShowMainWindow()
         if UserDefaults.standard.bool(forKey: DEFAULTS_ARE_INITIALIZED_STRING) != true {
