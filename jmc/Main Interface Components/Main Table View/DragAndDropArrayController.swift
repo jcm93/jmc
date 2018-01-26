@@ -188,8 +188,8 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
     }
     
     func tableView(_ tableView: NSTableView, mouseDownInHeaderOf tableColumn: NSTableColumn) {
-        let newDescriptor = tableColumn.sortDescriptorPrototype?.key
-        let cachedOrderName = keyToCachedOrderDictionary[newDescriptor!]
+        guard let newDescriptor = tableColumn.sortDescriptorPrototype?.key else { return }
+        let cachedOrderName = keyToCachedOrderDictionary[newDescriptor]
         if cachedOrderName != nil {
             let cachedOrder = cachedOrders![cachedOrderName!]
             if cachedOrder?.needs_update == true {
