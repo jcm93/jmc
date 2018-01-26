@@ -809,7 +809,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         if self.currentTableViewController == nil {
             return
         }
-        if let statusString = self.currentSourceListItem?.playOrderObject?.statusString {
+        if let statusString = self.currentSourceListItem?.playOrderObject?.statusString, self.currentTableViewController.statusStringNeedsUpdate != true {
             print("cache hit")
             self.infoString = statusString
             self.infoField.stringValue = self.infoString!

@@ -52,6 +52,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     var hasCreatedPlayOrder = false
     var needsPlaylistRefresh = false
     var currentTrackRow = 0
+    var statusStringNeedsUpdate = false
     
     let getInfoMenuItem = NSMenuItem(title: "Get Info", action: #selector(getInfoFromTableView), keyEquivalent: "")
     let addToQueueMenuItem = NSMenuItem(title: "Add to Queue", action: #selector(addToQueueFromTableView), keyEquivalent: "")
@@ -448,18 +449,23 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     func initializePlayOrderObject() {
         print("creating play order object")
+        guard let item = self.item else { return }
+        if item.playOrderObject == nil {
+            let newObject = NSEntityDescription.insertNewObject(forEntityName: "PlayOrderObject", into: managedContext) as! PlayOrderObject
+            item.playOrderObject = newObject
+        }
+        let playOrderObject = item.playOrderObject!
         print((self.trackViewArrayController.arrangedObjects as! NSArray).count)
         let currentIDArray = (self.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
-        let newPoo = NSEntityDescription.insertNewObject(forEntityName: "PlayOrderObject", into: managedContext) as! PlayOrderObject
         var shuffledArray = currentIDArray
         shuffle_array(&shuffledArray)
-        newPoo.shuffledPlayOrder = shuffledArray
+        playOrderObject.shuffledPlayOrder = shuffledArray
         if mainWindowController?.shuffle == true {
-            newPoo.currentPlayOrder = shuffledArray
+            playOrderObject.currentPlayOrder = shuffledArray
         } else {
-            newPoo.currentPlayOrder = currentIDArray
+            playOrderObject.currentPlayOrder = currentIDArray
         }
-        self.item?.playOrderObject = newPoo
+        self.statusStringNeedsUpdate = true
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
