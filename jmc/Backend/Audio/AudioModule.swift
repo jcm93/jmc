@@ -497,11 +497,11 @@ enum completionHandlerType: Int {
         }
     }
     
-    func tryGetMoreTracks() {
+    func tryGetMoreTracks(background: Bool) {
         if trackQueue.count > 0 {
             currentTrackLocation = trackQueue.removeFirst().location!
         } else {
-            let nextTrack = mainWindowController?.getNextTrack()
+            let nextTrack = mainWindowController?.getNextTrack(background: background)
             if nextTrack?.is_network == true {
                 networkFlag = true
             }
@@ -683,7 +683,9 @@ enum completionHandlerType: Int {
         print("handle completion called")
         switch currentHandlerType {
         case .natural:
-            tryGetMoreTracks()
+            backgroundContext.performAndWait {
+                tryGetMoreTracks(background: true)
+            }
             if networkFlag == true {
                 networkFlag = false
                 return
@@ -723,7 +725,7 @@ enum completionHandlerType: Int {
     }
     
     func skip() {
-        tryGetMoreTracks()
+        tryGetMoreTracks(background: false)
         if networkFlag == true {
             currentHandlerType = .natural
             networkFlag = false

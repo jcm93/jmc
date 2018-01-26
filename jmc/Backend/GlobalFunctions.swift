@@ -34,8 +34,17 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   }
 }*/
 
+func resolve(_ object: NSManagedObject, inBackground: Bool) -> NSManagedObject {
+    return inBackground ? backgroundContext.object(with: object.objectID) : object
+}
+
 
 var managedContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext
+var backgroundContext = {() -> NSManagedObjectContext in
+    let newContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+    newContext.parent = managedContext
+    return newContext
+}()
 
 func saveContext() { //does not handle errors
     do {
@@ -353,13 +362,14 @@ func shuffleMutableOrderedSet(_ mos: inout NSMutableOrderedSet) {
     }
 }
 
-func getTrackWithID(_ id: Int) -> Track? {
+func getTrackWithID(_ id: Int, background: Bool) -> Track? {
     let fetch_req = NSFetchRequest<NSFetchRequestResult>(entityName: "Track")
     let pred = NSPredicate(format: "id == \(id)")
     fetch_req.predicate = pred
     let result: Track? = {() -> Track? in
         do {
-            let trackList = try managedContext.fetch(fetch_req) as? [Track]
+            let context = background ? backgroundContext : managedContext
+            let trackList = try context.fetch(fetch_req) as? [Track]
             if trackList!.count > 0 {
                 return trackList![0]
             } else {

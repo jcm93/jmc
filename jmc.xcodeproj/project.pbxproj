@@ -76,6 +76,8 @@
 		0D606EF91E7B4DB0007AE152 /* AVAudioFileBufferer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */; };
 		0D60F5261E86F77900CA5420 /* TimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D60F5251E86F77900CA5420 /* TimeFormatter.swift */; };
 		0D60F5291E8720A300CA5420 /* PlaylistOrderObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */; };
+		0D61248D201AAA9300574118 /* PlayOrderObject+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D61248B201AAA9300574118 /* PlayOrderObject+CoreDataClass.swift */; };
+		0D61248E201AAA9300574118 /* PlayOrderObject+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D61248C201AAA9300574118 /* PlayOrderObject+CoreDataProperties.swift */; };
 		0D69659D1EA02EC50050D505 /* ProgressBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D69659C1EA02EC50050D505 /* ProgressBarController.swift */; };
 		0D6E041B1ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6E04191ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift */; };
 		0D6E041C1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D6E041A1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib */; };
@@ -298,6 +300,8 @@
 		0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AVAudioFileBufferer.swift; path = Backend/Audio/AVAudioFileBufferer.swift; sourceTree = "<group>"; };
 		0D60F5251E86F77900CA5420 /* TimeFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimeFormatter.swift; path = Backend/Formatters/TimeFormatter.swift; sourceTree = "<group>"; };
 		0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlaylistOrderObject.swift; path = Backend/PlaylistOrderObject.swift; sourceTree = "<group>"; };
+		0D61248B201AAA9300574118 /* PlayOrderObject+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayOrderObject+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0D61248C201AAA9300574118 /* PlayOrderObject+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayOrderObject+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D69659C1EA02EC50050D505 /* ProgressBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressBarController.swift; path = "Main Interface Components/Miscellaneous/ProgressBarController.swift"; sourceTree = "<group>"; };
 		0D6E04191ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewTrackListViewController.swift; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewTrackListViewController.swift"; sourceTree = "<group>"; };
 		0D6E041A1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistViewTrackListViewController.xib; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewTrackListViewController.xib"; sourceTree = "<group>"; };
@@ -545,6 +549,8 @@
 		0D01AD981D707ED900F9211F /* Core Data Shit */ = {
 			isa = PBXGroup;
 			children = (
+				0D61248B201AAA9300574118 /* PlayOrderObject+CoreDataClass.swift */,
+				0D61248C201AAA9300574118 /* PlayOrderObject+CoreDataProperties.swift */,
 				0D34A4751F7306D300CAA6C4 /* AlbumArtwork+CoreDataClass.swift */,
 				0D34A4761F7306D300CAA6C4 /* AlbumArtwork+CoreDataProperties.swift */,
 				0DE957D91EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift */,
@@ -1084,6 +1090,7 @@
 				0DA02D381EFB098900DDE5A9 /* StupidSearchField.swift in Sources */,
 				0D800C0C1ED3B54100EA2889 /* ArtistViewAlbumViewController.swift in Sources */,
 				0D299B131DF10FFF0009CF7A /* SourceListViewController.swift in Sources */,
+				0D61248E201AAA9300574118 /* PlayOrderObject+CoreDataProperties.swift in Sources */,
 				0DE486861EA58C67009B226B /* JMPathControl.swift in Sources */,
 				0DE957C91EE9D5D0008CBECF /* Volume+CoreDataClass.swift in Sources */,
 				0D592A411EDF6C8B0054D553 /* Composer+CoreDataClass.swift in Sources */,
@@ -1095,6 +1102,7 @@
 				0DC397AB1E5282920009792B /* LibraryManagerViewController.swift in Sources */,
 				0D51C8A51EAC01F8002F6182 /* ConsolidateLibrarySheetController.swift in Sources */,
 				0D51C8AA1EAC1866002F6182 /* TransformerURLStringToURL.swift in Sources */,
+				0D61248D201AAA9300574118 /* PlayOrderObject+CoreDataClass.swift in Sources */,
 				0D592A431EDF6C8B0054D553 /* SmartCriteria+CoreDataClass.swift in Sources */,
 				0DAA858A1EDFE90E004BF089 /* OrganizationFieldToken.swift in Sources */,
 				0D2D06CD1EE32FB600A8EC66 /* AlbumFile+CoreDataClass.swift in Sources */,

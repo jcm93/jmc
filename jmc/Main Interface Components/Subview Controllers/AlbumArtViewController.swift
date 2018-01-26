@@ -69,8 +69,8 @@ class AlbumArtViewController: NSViewController {
             }
         } else {
             if track.library?.finds_artwork == true {
-                DispatchQueue.global(qos: .default).async {
-                    self.databaseManager.tryFindPrimaryArtForTrack(track, callback: self.artCallback)
+                backgroundContext.perform {
+                    self.databaseManager.tryFindPrimaryArtForTrack(track, callback: self.artCallback, background: true)
                 }
             } else {
                 self.albumArtView.image = nil

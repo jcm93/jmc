@@ -2,8 +2,8 @@
 //  SourceListItem+CoreDataProperties.swift
 //  jmc
 //
-//  Created by John Moody on 12/22/17.
-//  Copyright © 2017 John Moody. All rights reserved.
+//  Created by John Moody on 1/25/18.
+//  Copyright © 2018 John Moody. All rights reserved.
 //
 //
 
@@ -23,13 +23,13 @@ extension SourceListItem {
     @NSManaged public var is_root: NSNumber?
     @NSManaged public var name: String?
     @NSManaged public var sort_order: NSNumber?
-    @NSManaged public var playOrderObject: PlaylistOrderObject?
     @NSManaged public var children: NSOrderedSet?
     @NSManaged public var library: Library?
     @NSManaged public var master_playlist: SongCollection?
     @NSManaged public var parent: SourceListItem?
     @NSManaged public var playlist: SongCollection?
     @NSManaged public var volume: Volume?
+    @NSManaged public var playOrderObject: PlayOrderObject?
 
 }
 

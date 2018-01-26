@@ -357,7 +357,6 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
                 view.textField?.stringValue = source.volume!.name ?? ""
                 return view
             }
-
         } else {
             let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "PlaylistCell"), owner: self) as! SourceListCellView
             view.node = source
@@ -392,12 +391,6 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     func outlineViewSelectionDidChange(_ notification: Notification) {
         if let selection = (sourceList.item(atRow: sourceList.selectedRow) as? SourceListItem) {
             self.currentSourceListItem = selection
-            //let track_id_list = selection.playlist?.track_id_list as? [Int]
-            /*if track_id_list == nil && selection.is_network == true && selection.playlist?.id != nil {
-                print("outline view detected network playlist")
-                requestedSharedPlaylists[selection.playlist!.id!] = selection
-                self.server!.getDataForPlaylist(selection)
-            }*/
             mainWindowController?.switchToPlaylist(selection)
         }
     }

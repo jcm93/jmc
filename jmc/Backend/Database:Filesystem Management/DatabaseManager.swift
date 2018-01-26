@@ -64,13 +64,15 @@ class DatabaseManager: NSObject {
         return art
     }
     
-    func tryFindPrimaryArtForTrack(_ track: Track, callback: ((Track, Bool) -> Void)?) { //does not handle errors good
+    func tryFindPrimaryArtForTrack(_ track: Track, callback: ((Track, Bool) -> Void)?, background: Bool) { //does not handle errors good
         //we know primary_art is nil
         //may be called form background thread
+        let track = resolve(track, inBackground: background) as! Track
         self.currentTrack = track
         let validImages = searchAlbumDirectoryForArt(track)
         if validImages.count > 0 {
-            DispatchQueue.main.async {
+            managedContext.perform {
+                let track = managedContext.object(with: track.objectID) as! Track
                 var results = [AlbumArtwork]()
                 for image in validImages {
                     if let result = self.addArtForTrack(track, from: image, managedContext: managedContext, organizes: true) {
@@ -85,7 +87,8 @@ class DatabaseManager: NSObject {
             }
         } else {
             if let art = getArtworkFromFile(track.location!) {
-                DispatchQueue.main.async {
+                managedContext.perform {
+                    let track = managedContext.object(with: track.objectID) as! Track
                     if self.addArtForTrack(track, fromData: art, managedContext: managedContext) == true {
                         callback?(track, true)
                     } else {

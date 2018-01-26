@@ -96,6 +96,13 @@
         <relationship name="library" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="organization_template" inverseEntity="Library" syncable="YES"/>
         <relationship name="other_templates" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="OrganizationTemplate" inverseName="bundle_multiple" inverseEntity="OrganizationTemplate" syncable="YES"/>
     </entity>
+    <entity name="PlayOrderObject" representedClassName=".PlayOrderObject" syncable="YES">
+        <attribute name="currentPlayOrder" optional="YES" attributeType="Transformable" customClassName="[Int]" syncable="YES"/>
+        <attribute name="inorderNeedsUpdate" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="shuffledPlayOrder" optional="YES" attributeType="Transformable" customClassName="[Int]" syncable="YES"/>
+        <attribute name="statusString" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="sourceListItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SourceListItem" inverseName="playOrderObject" inverseEntity="SourceListItem" syncable="YES"/>
+    </entity>
     <entity name="SmartCriteria" representedClassName=".SmartCriteria" syncable="YES">
         <attribute name="fetch_limit" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="fetch_limit_type" optional="YES" attributeType="String" syncable="YES"/>
@@ -120,13 +127,13 @@
         <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_root" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="playOrderObject" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="sort_order" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SourceListItem" inverseName="parent" inverseEntity="SourceListItem" syncable="YES"/>
         <relationship name="library" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="local_items" inverseEntity="Library" syncable="YES"/>
         <relationship name="master_playlist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SongCollection" inverseName="if_master_list_item" inverseEntity="SongCollection" syncable="YES"/>
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SourceListItem" inverseName="children" inverseEntity="SourceListItem" syncable="YES"/>
         <relationship name="playlist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SongCollection" inverseName="list_item" inverseEntity="SongCollection" syncable="YES"/>
+        <relationship name="playOrderObject" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PlayOrderObject" inverseName="sourceListItem" inverseEntity="PlayOrderObject" syncable="YES"/>
         <relationship name="volume" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Volume" inverseName="source_list_item" inverseEntity="Volume" syncable="YES"/>
     </entity>
     <entity name="Track" representedClassName=".Track" syncable="YES">
@@ -210,5 +217,6 @@
         <element name="Track" positionX="-1143" positionY="-27" width="128" height="630"/>
         <element name="TrackView" positionX="-1548" positionY="-216" width="128" height="268"/>
         <element name="Volume" positionX="-1548" positionY="-63" width="128" height="120"/>
+        <element name="PlayOrderObject" positionX="-1548" positionY="-63" width="128" height="120"/>
     </elements>
 </model>

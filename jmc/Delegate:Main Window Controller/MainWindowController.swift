@@ -97,11 +97,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     var currentTrackView: TrackView?
     var currentNetworkTrack: Track?
     var currentNetworkTrackView: TrackView?
-    //var current_source_play_order: PlaylistOrderObject?
-    var current_source_temp_shuffle: PlaylistOrderObject?
-    //var current_source_unshuffled_play_order: PlaylistOrderObject?
+    //var current_source_play_order: PlayOrderObject?
+    var current_source_temp_shuffle: PlayOrderObject?
+    //var current_source_unshuffledPlayOrder: PlayOrderObject?
     //var current_source_index: Int?
-    var currentPlaylistOrderObject: PlaylistOrderObject?
+    var currentPlayOrderObject: PlayOrderObject?
     var current_source_index_temp: Int?
     @objc var infoString: String?
     var auxArrayController: NSArrayController?
@@ -179,7 +179,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     func switchToPlaylist(_ item: SourceListItem) {
-        if item == currentSourceListItem {return}
+        if item == currentSourceListItem { return }
         currentTableViewController?.hasInitialized = false
         trackQueueViewController?.currentSourceListItem = item
         currentSourceListItem = item
@@ -216,10 +216,6 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }
         populateSearchBar()
         currentTableViewController?.tableView.reloadData()
-        /*print("doing thing")
-        let testView = ArtistViewController(nibName: "ArtistViewController", bundle: nil)
-        librarySplitView.addArrangedSubview(testView!.view)
-        self.testView = testView*/
     }
     
     func populateSearchBar() {
@@ -286,15 +282,15 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         return currentTableViewController!.getUpcomingIDsForPlayEvent(self.shuffleButton.state.rawValue, id: id, row: row)
     }
     
-    func getNextTrack() -> Track? {
+    func getNextTrack(background: Bool) -> Track? {
         let track: Track?
-        //todo fix so this isn't a reference to repeatButton
         if self.will_repeat == true {
             return currentTrack
         } else {
-            track = trackQueueViewController?.getNextTrack()//this function might change the interface around
-            if trackQueueViewController?.currentAudioSource?.is_network == true {
-            delegate?.serviceBrowser?.askPeerForSong(trackQueueViewController!.currentAudioSource!.library!.peer as! MCPeerID, id: Int(track!.id!))
+            track = trackQueueViewController?.getNextTrack(background: background)//this function might change the interface around
+            let currentAudioSource = resolve(trackQueueViewController!.currentAudioSource!, inBackground: background) as! SourceListItem
+            if currentAudioSource.is_network == true {
+                delegate?.serviceBrowser?.askPeerForSong(trackQueueViewController!.currentAudioSource!.library!.peer as! MCPeerID, id: Int(track!.id!))
                 DispatchQueue.main.async {
                     self.initializeInterfaceForNetworkTrack()
                     self.timer?.invalidate()
@@ -765,7 +761,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
                     currentTableViewController?.reloadNowPlayingForTrack(currentTrack!)
                 }
                 trackQueueViewController!.nextTrack()
-                currentTrack = trackQueueViewController?.trackQueue[trackQueueViewController!.currentTrackIndex!].track
+                currentTrack = managedContext.object(with: trackQueueViewController!.trackQueue[trackQueueViewController!.currentTrackIndex!].track!.objectID) as! Track
                 if is_initialized == false {
                     //trackQueueViewController!.createPlayOrderArray(self.currentTrack!, row: nil)
                     paused = false
@@ -813,17 +809,24 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         if self.currentTableViewController == nil {
             return
         }
-        managedContext.perform {
-            let trackArray = (self.currentTableViewController?.trackViewArrayController?.arrangedObjects as! [TrackView])
-            let numItems = trackArray.count as NSNumber
-            let totalSize = trackArray.lazy.map({return (($0.track)!.size?.int64Value)}).reduce(0, {$0 + ($1 != nil ? $1! : 0)})
-            let totalTime = trackArray.lazy.map({return (($0.track)!.time?.doubleValue)}).reduce(0, {$0 + ($1 != nil ? $1! : 0)})
-            let numString = self.numberFormatter.string(from: numItems)
-            let sizeString = self.sizeFormatter.string(fromByteCount: totalSize)
-            let timeString = self.dateFormatter.string(from: totalTime/1000)
-            DispatchQueue.main.async {
-                self.infoString = "\(numString!) items; \(timeString!); \(sizeString)"
-                self.infoField.stringValue = self.self.infoString!
+        if let statusString = self.currentSourceListItem?.playOrderObject?.statusString {
+            print("cache hit")
+            self.infoString = statusString
+            self.infoField.stringValue = self.infoString!
+        } else {
+            managedContext.perform {
+                let trackArray = (self.currentTableViewController?.trackViewArrayController?.arrangedObjects as! [TrackView])
+                let numItems = trackArray.count as NSNumber
+                let totalSize = trackArray.lazy.map({return (($0.track)!.size?.int64Value)}).reduce(0, {$0 + ($1 != nil ? $1! : 0)})
+                let totalTime = trackArray.lazy.map({return (($0.track)!.time?.doubleValue)}).reduce(0, {$0 + ($1 != nil ? $1! : 0)})
+                let numString = self.numberFormatter.string(from: numItems)
+                let sizeString = self.sizeFormatter.string(fromByteCount: totalSize)
+                let timeString = self.dateFormatter.string(from: totalTime/1000)
+                DispatchQueue.main.async {
+                    self.infoString = "\(numString!) items; \(timeString!); \(sizeString)"
+                    self.infoField.stringValue = self.infoString!
+                    self.currentSourceListItem?.playOrderObject?.statusString = self.infoString
+                }
             }
         }
     }
