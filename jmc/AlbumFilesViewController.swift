@@ -255,7 +255,6 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
             }
             if imageURL != nil {
                 changePrimaryImage(imageURL: imageURL!)
-                initializePrimaryImageConstraint()
             }
         }
     }

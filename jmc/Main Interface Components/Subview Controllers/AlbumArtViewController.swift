@@ -44,8 +44,9 @@ class AlbumArtViewController: NSViewController {
     
     func artCallback(track: Track, found: Bool) {
         //might be called from background thread
-        guard track == self.currentTrack else { return }
-        DispatchQueue.main.async {
+        managedContext.perform {
+            let track = managedContext.object(with: track.objectID) as! Track
+            guard track == self.currentTrack else { return }
             if !found {
                 self.albumArtView.image = nil
                 self.currentURL = nil
