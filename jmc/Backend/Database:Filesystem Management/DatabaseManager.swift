@@ -106,8 +106,8 @@ class DatabaseManager: NSObject {
     }
     
     func searchAlbumDirectoryForArt(_ track: Track) -> [URL] { //handles errors ok
-        let locationURL = URL(string: track.location!)
-        let albumDirectoryURL = locationURL!.deletingLastPathComponent()
+        guard let location = track.location, let locationURL = URL(string: location) else { return [URL]() }
+        let albumDirectoryURL = locationURL.deletingLastPathComponent()
         do {
             let albumDirectoryContents = try fileManager.contentsOfDirectory(at: albumDirectoryURL, includingPropertiesForKeys: [.typeIdentifierKey], options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
             let validImages = albumDirectoryContents.filter({url in
