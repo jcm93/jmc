@@ -60,7 +60,7 @@ enum completionHandlerType: Int {
     var networkFlag = false
     var fileBuffererDictionary = [URL : FileBufferer]()
     var currentFileBufferer: FileBufferer?
-    var trackTransitionBufferGuardStop = false
+    var isInitializingPlayback = false
     var fileManager = FileManager.default
     var upcomingTrackURL: URL?
     var endOfCurrentTrackFrame: AVAudioFramePosition?
@@ -119,7 +119,7 @@ enum completionHandlerType: Int {
     var lastTrackCompletionType: LastTrackCompletionType = .natural
     var routeDetector: NSObject?
     
-    @objc dynamic var is_initialized = false
+    @objc dynamic var canPlay = false
     @objc dynamic var track_changed = false
     @objc dynamic var needs_tracks = false
     @objc dynamic var done_playing = true
@@ -146,7 +146,6 @@ enum completionHandlerType: Int {
     
     var total_offset_frames:   Int64 = 0
     var total_offset_seconds: Double = 0
-    var nextBufferStartFrame: Int64 = 0
     var nextFileIsDifferentFormat = false
     var nextFileInitialBuffer: AVAudioPCMBuffer?
     
@@ -177,21 +176,19 @@ enum completionHandlerType: Int {
         audioEngine.connect(curPlayerNode, to: sampleRateMixer, format: nil)
         audioEngine.connect(sampleRateMixer, to: equalizer, format: nil)
         audioEngine.connect(equalizer, to: audioEngine.mainMixerNode, format: nil)
-        if #available(OSX 10.13, *) {
-            self.routeDetector = AVRouteDetector()
-        } else {
-            // Fallback on earlier versions
-        }
     }
     
     func resetEngineCompletely() {
-        self.audioEngine.stop() //hmm
-        audioEngine.detach(curPlayerNode)
-        audioEngine.detach(self.sampleRateMixer)
-        audioEngine.detach(self.equalizer)
+        self.audioEngine.stop()
+        self.audioEngine.detach(curPlayerNode)
+        self.audioEngine.detach(self.sampleRateMixer)
+        self.audioEngine.detach(self.equalizer)
         self.curPlayerNode = AVAudioPlayerNode()
         self.curPlayerNode.reset()
         doInitialization()
+        self.total_offset_frames = 0
+        self.total_offset_seconds = 0
+        self.track_frame_offset = 0
     }
     
     func getDefaultAudioOutputDevice () -> AudioObjectID {
@@ -272,7 +269,7 @@ enum completionHandlerType: Int {
         currentHandlerType = .destroy
         currentTrackLocation = track.location
         print("paused value is \(is_paused)")
-        initializePlayback()
+        initializeCurrentTrackPlayback()
         play()
         print(audioEngine)
         currentHandlerType = .natural
@@ -289,7 +286,7 @@ enum completionHandlerType: Int {
         currentHandlerType = .destroy
         print("paused value is \(is_paused)")
         currentTrackLocation = trackLocation
-        initializePlayback()
+        initializeCurrentTrackPlayback()
         if (is_paused == false || is_paused == nil) {
             print("reached play clause")
             play()
@@ -304,16 +301,13 @@ enum completionHandlerType: Int {
         currentHandlerType = .destroy
         print("paused value is \(is_paused)")
         currentTrackLocation = trackLocation
-        initializePlayback()
+        initializeCurrentTrackPlayback()
         if (is_paused == false || is_paused == nil) {
             print("reached play clause")
             play()
         }
         print(audioEngine)
         currentHandlerType = .natural
-    }
-    
-    func removeTracksFromQueue(_ indexes: [Int]) {
     }
     
     func addTrackToQueue(_ track: Track, index: Int?) {
@@ -349,53 +343,41 @@ enum completionHandlerType: Int {
         }
     }
     
-    func initializePlayback() { // does not handle errors
-        if currentTrackLocation == nil {
-            return
-        }
-        else {
-            do {
-                print("initializing playback for new thing, resetting node")
-                self.trackTransitionBufferGuardStop = true
-                total_offset_frames = 0
-                total_offset_seconds = 0
-                nextBufferStartFrame = 0
-                resetEngineCompletely()
-                let location = currentTrackLocation!
-                let url = URL(string: location)
-                if verbotenFileTypes.contains(url!.pathExtension) {
-                    return
-                }
-                self.currentFileBufferer = createFileBufferer(url: url!)
-                let initialBuffer = self.currentFileBufferer!.prepareFirstBuffer()
-                nextBufferStartFrame += Int64(initialBuffer!.frameLength)
-                audioEngine.disconnectNodeInput(sampleRateMixer)
-                audioEngine.connect(curPlayerNode, to: sampleRateMixer, format: currentFileBufferer?.format)
-                self.curPlayerNode.scheduleBuffer(initialBuffer!, at: nil, options: .interrupts, completionHandler: fileBuffererCompletion)
-                DispatchQueue.global(qos: .default).async {
-                    print("dispatching second buffer fill for new track")
-                    self.finalBuffer = false
-                    self.currentFileBufferer!.fillNextBuffer()
-                }
-                //print("scheduling initial buffer of length \(initialBuffer!.frameLength)")
-                //print("nextBufferStartFrame is \(self.nextBufferStartFrame)")
-                //print(curFile?.processingFormat)
-                //print(audioEngine.outputNode)
-                resetValues()
-                if (audioEngine.isRunning == false) {
-                    try audioEngine.start()
-                }
-                is_initialized = true
-                self.track_frame_offset = 0
-            }
-            catch {
-                print("audio player error: \(error)")
-            }
-        }
+    func setMixerInputFormatToCurrentFileFormat() {
+        self.audioEngine.disconnectNodeInput(self.sampleRateMixer)
+        self.audioEngine.connect(self.curPlayerNode, to: self.sampleRateMixer, format: self.currentFileBufferer!.format)
     }
     
-    func prepareEngineForNewFormat(_ format: AVAudioFormat) {
-        
+    func initializeCurrentTrackPlayback() { // does not handle errors properly
+        print("initializing playback for current track")
+        self.isInitializingPlayback = true
+        guard let currentTrackLocation = currentTrackLocation,
+            let url = URL(string: currentTrackLocation),
+            !verbotenFileTypes.contains(url.pathExtension),
+            let buffererObject = createFileBufferer(url: url),
+            let initialBuffer = self.currentFileBufferer!.prepareFirstBuffer()
+        else {
+            self.isInitializingPlayback = false
+            return
+        }
+        self.currentFileBufferer = buffererObject
+        resetEngineCompletely()
+        setMixerInputFormatToCurrentFileFormat()
+        self.curPlayerNode.scheduleBuffer(initialBuffer, at: nil, options: .interrupts, completionHandler: fileBuffererCompletion)
+        DispatchQueue.global(qos: .default).async {
+            print("dispatching second buffer fill for new track")
+            self.finalBuffer = false
+            self.currentFileBufferer!.fillNextBuffer()
+        }
+        setCurrentDuration()
+        do {
+            if (audioEngine.isRunning == false) {
+                try audioEngine.start()
+            }
+            self.canPlay = true
+        } catch {
+            print("audio player error: \(error)")
+        }
     }
     
     func changeTrack(changeEventID: Int) {
@@ -416,7 +398,7 @@ enum completionHandlerType: Int {
                     }
                 }
             } else {
-                let frameLastPlayed = self.curPlayerNode.playerTime(forNodeTime: self.curPlayerNode.lastRenderTime!)?.sampleTime ?? self.lastRenderedFrame ?? 0//uh
+                let frameLastPlayed = self.curPlayerNode.playerTime(forNodeTime: self.curPlayerNode.lastRenderTime!)?.sampleTime ?? self.lastRenderedFrame ?? 0 //uh
                 if frameLastPlayed >= self.endOfCurrentTrackFrame! {
                     if self.nextFileIsDifferentFormat != false {
                         print("different format thingy change")
@@ -424,7 +406,6 @@ enum completionHandlerType: Int {
                         audioEngine.connect(curPlayerNode, to: sampleRateMixer, format: nextFileInitialBuffer!.format)
                         let time = curPlayerNode.playerTime(forNodeTime: AVAudioTime(sampleTime: self.endOfCurrentTrackFrame!, atRate: self.currentFileBufferer!.format.sampleRate))
                         curPlayerNode.scheduleBuffer(self.nextFileInitialBuffer!, at: time, options: .interrupts, completionHandler: fileBuffererCompletion)
-                        self.nextBufferStartFrame = Int64(nextFileInitialBuffer!.frameLength)
                         self.nextFileIsDifferentFormat = false
                         self.nextFileInitialBuffer = nil
                         self.differentFileScheduleTime = nil
@@ -448,7 +429,7 @@ enum completionHandlerType: Int {
                             self.currentFileBufferer?.fillNextBuffer()
                         }
                         self.upcomingTrackURL = nil
-                        self.resetValues()
+                        self.setCurrentDuration()
                         if self.track_changed == false {
                             self.track_changed = true
                         }
@@ -515,7 +496,7 @@ enum completionHandlerType: Int {
             let fileBufferer = FlacDecoder(file: url, audioModule: self)
             fileBufferer?.actualInitTest()
             self.fileBuffererDictionary[url] = fileBufferer
-            self.trackTransitionBufferGuardStop = false
+            self.isInitializingPlayback = false
             print("end create file bufferer")
             return fileBufferer
         } else {
@@ -524,12 +505,12 @@ enum completionHandlerType: Int {
                 let fileBufferer = AVAudioFileBufferer(file: newFile, audioModule: self)
                 self.fileBuffererDictionary[url] = fileBufferer
                 print("end create file bufferer")
-                self.trackTransitionBufferGuardStop = false
+                self.isInitializingPlayback = false
                 return fileBufferer
             } catch {
                 print(error)
                 print("end create file bufferer")
-                self.trackTransitionBufferGuardStop = false
+                self.isInitializingPlayback = false
                 return nil
             }
         }
@@ -544,7 +525,7 @@ enum completionHandlerType: Int {
         //swap decode buffer
         let bufferThatCompleted = currentFileBufferer?.currentDecodeBuffer == currentFileBufferer?.bufferA ? currentFileBufferer?.bufferA : currentFileBufferer?.bufferB
         //print("buffer that just played is \(bufferThatCompleted)")
-        //print("\(Date()): file bufferer completion called, finalBuffer is \(finalBuffer) and trackTransitionBufferGuardStop is \(trackTransitionBufferGuardStop)")
+        //print("\(Date()): file bufferer completion called, finalBuffer is \(finalBuffer) and isInitializingPlayback is \(isInitializingPlayback)")
         if self.isSeeking == true {
             print("is seeking, file bufferer completion finished")
             return
@@ -554,11 +535,25 @@ enum completionHandlerType: Int {
             self.finalBuffer = true
         } else if self.finalBuffer == true {
             self.finalBuffer = false
-        } else if self.trackTransitionBufferGuardStop != true {
+        } else if self.isInitializingPlayback != true {
             //print("filling next buffer")
              self.currentFileBufferer!.fillNextBuffer()
         }
         //print("file bufferer completion finished")
+    }
+    
+    func reinitializePlayerNode() {
+        self.curPlayerNode.stop()
+        self.audioEngine.stop()
+        self.audioEngine.detach(self.curPlayerNode)
+        self.curPlayerNode = AVAudioPlayerNode()
+        self.audioEngine.attach(self.curPlayerNode)
+        self.audioEngine.connect(self.curPlayerNode, to: self.sampleRateMixer, format: self.currentFileBufferer!.format)
+        do {
+            try self.audioEngine.start()
+        } catch {
+            print(error)
+        }
     }
     
     func fileBuffererSeekDecodeCallback(isFinalBuffer: Bool) {
@@ -569,16 +564,9 @@ enum completionHandlerType: Int {
         }
         let newBuffer = self.currentFileBufferer!.currentDecodeBuffer
         self.currentHandlerType = .seek
-        curPlayerNode.stop()
-        audioEngine.stop()
-        audioEngine.detach(self.curPlayerNode)
-        self.curPlayerNode = AVAudioPlayerNode()
-        audioEngine.attach(self.curPlayerNode)
-        audioEngine.connect(self.curPlayerNode, to: self.sampleRateMixer, format: self.currentFileBufferer!.format)
-        do {try audioEngine.start()} catch {print(error);return}
+        reinitializePlayerNode()
         self.total_offset_frames = 0
         self.total_offset_seconds = 0
-        self.nextBufferStartFrame = 0
         total_offset_frames = 0
         total_offset_seconds = 0
         curPlayerNode.scheduleBuffer(newBuffer, at: nil, options: .interrupts, completionHandler: fileBuffererCompletion)
@@ -591,7 +579,6 @@ enum completionHandlerType: Int {
             self.finalBuffer = true
             self.finalBufferQueued = false
             print("is final buffer")
-            nextBufferStartFrame += Int64(newBuffer.frameLength)
             //handle this differently..
             let thisQueueEventID = self.queueNextTrackEventCounter
             self.queueNextTrackEventCounter += 1
@@ -602,7 +589,6 @@ enum completionHandlerType: Int {
             self.finalBuffer = false
             self.finalBufferQueued = false
             //print("is not final buffer")
-            nextBufferStartFrame += Int64(newBuffer.frameLength)
             self.currentFileBufferer?.fillNextBuffer()
         }
         currentHandlerType = .natural
@@ -625,13 +611,11 @@ enum completionHandlerType: Int {
         if isFinalBuffer == true {
             self.finalBufferQueued = true
             self.finalBuffer = false
-            nextBufferStartFrame += Int64(newBuffer.frameLength)
             handleCompletion(optionalID: nil)
             //schedule next file
         } else {
             self.finalBufferQueued = false
             self.finalBuffer = false
-            nextBufferStartFrame += Int64(newBuffer.frameLength)
         }
         //print("end of file buffer decode callback")
     }
@@ -646,12 +630,11 @@ enum completionHandlerType: Int {
                     if self.seekInterrupted == true {
                         self.seekInterrupted = false
                     }
-                    let fileBufferer = self.createFileBufferer(url: url!)//modify
+                    let fileBufferer = self.createFileBufferer(url: url!)
                     let sampleRate = self.curFile?.processingFormat.sampleRate ?? self.currentFileBufferer!.currentDecodeBuffer.format.sampleRate
                     let length = self.curFile?.length ?? (Int64(self.currentFileBufferer!.totalFrames))
                     let gapless_duration = AVAudioTime(sampleTime: length - Int64(self.track_frame_offset!) + self.total_offset_frames, atRate: sampleRate)
                     let initialBuffer = fileBufferer!.prepareFirstBuffer()
-                    self.nextBufferStartFrame += Int64(initialBuffer!.frameLength)
                     print("scheduling initial buffer at frame \(gapless_duration)")
                     self.endOfCurrentTrackFrame = gapless_duration.sampleTime
                     
@@ -704,7 +687,7 @@ enum completionHandlerType: Int {
                     self.observerDonePlaying()
                     self.total_offset_frames = 0
                     self.total_offset_seconds = 0
-                    self.is_initialized = false
+                    self.canPlay = false
                     self.track_frame_offset = 0
                     self.audioEngine.reset()
                     print("done handling completion")
@@ -742,7 +725,7 @@ enum completionHandlerType: Int {
             self.observerDonePlaying()
             self.total_offset_frames = 0
             self.total_offset_seconds = 0
-            self.is_initialized = false
+            self.canPlay = false
             self.track_frame_offset = 0
             self.audioEngine.reset()
         }
@@ -760,7 +743,7 @@ enum completionHandlerType: Int {
             self.observerDonePlaying()
             self.total_offset_frames = 0
             self.total_offset_seconds = 0
-            self.is_initialized = false
+            self.canPlay = false
             self.track_frame_offset = 0
             self.audioEngine.reset()
         }
@@ -792,7 +775,7 @@ enum completionHandlerType: Int {
         
     }
     
-    func resetValues() {
+    func setCurrentDuration() {
         if (curFile != nil) {
             self.duration_seconds = Double((curFile?.length)!) / (curFile?.processingFormat.sampleRate)!
             self.duration_frames = curFile?.length
