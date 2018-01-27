@@ -27,7 +27,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
         }
     }()
     
-    var mainWindowController: MainWindowController?
+    var mainWindowController: MainWindowController!
     
     @IBOutlet weak var tabView: JMTabView!
     @IBOutlet weak var segControl: NSSegmentedControl!
@@ -581,11 +581,19 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     @IBOutlet weak var sortingComposerSortAsField: NSTextField!
     
     @IBAction func previousTrackPressed(_ sender: Any) {
-        
+        guard let currentTrack = self.currentTrack else { return }
+        if let newTrack = self.mainWindowController.getPreviousTrackForTagEditor(track: currentTrack) {
+            self.selectedTracks = [newTrack]
+            initForSelection()
+        }
     }
     
     @IBAction func nextTrackPressed(_ sender: Any) {
-        
+        guard let currentTrack = self.currentTrack else { return }
+        if let newTrack = self.mainWindowController.getNextTrackForTagEditor(track: currentTrack) {
+            self.selectedTracks = [newTrack]
+            initForSelection()
+        }
     }
 
     override func windowDidLoad() {

@@ -304,6 +304,20 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }
     }
     
+    func getNextTrackForTagEditor(track: Track) -> Track? {
+        guard let arrangedObjects = self.currentTableViewController.trackViewArrayController.arrangedObjects as? NSArray else { return nil }
+        let currentIndex = arrangedObjects.index(of: track.view)
+        guard arrangedObjects.count >= currentIndex else { return nil }
+        return (arrangedObjects[currentIndex + 1] as! TrackView).track
+    }
+    
+    func getPreviousTrackForTagEditor(track: Track) -> Track? {
+        guard let arrangedObjects = self.currentTableViewController.trackViewArrayController.arrangedObjects as? NSArray else { return nil }
+        let currentIndex = arrangedObjects.index(of: track.view)
+        guard currentIndex != 0 else { return nil }
+        return (arrangedObjects[currentIndex - 1] as! TrackView).track
+    }
+    
     func windowWillReturnUndoManager(_ window: NSWindow) -> UndoManager? {
         return managedContext.undoManager
     }

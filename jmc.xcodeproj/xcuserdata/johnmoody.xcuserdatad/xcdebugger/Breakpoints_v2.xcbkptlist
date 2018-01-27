@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "jmc/Delegate:Main Window Controller/MainWindowController.swift"
-            timestampString = "538690086.34454"
+            timestampString = "538734678.662401"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "332"
-            endingLineNumber = "332"
+            startingLineNumber = "346"
+            endingLineNumber = "346"
             landmarkName = "tempBreak(_:)"
             landmarkType = "7">
          </BreakpointContent>
