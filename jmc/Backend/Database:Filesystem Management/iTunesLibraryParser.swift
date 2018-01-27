@@ -47,6 +47,7 @@ class iTunesLibraryParser: NSObject {
         var index = 1
         for (key, value) in self.XMLTrackDictionaryDictionary {
             if let trackDict = value as? NSDictionary, trackDict[iTunesImporterTrackTypeKey] as? String != "URL" {
+                guard let location = trackDict[iTunesImporterLocationKey] as? String else { continue }
                 let cd_track = NSEntityDescription.insertNewObject(forEntityName: "Track", into: subContext) as! Track
                 let new_track_view = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: subContext) as! TrackView
                 cd_track.view = new_track_view
@@ -66,7 +67,7 @@ class iTunesLibraryParser: NSObject {
                 cd_track.date_added         = trackDict[iTunesImporterDateAddedKey] as? NSDate
                 cd_track.size               = trackDict[iTunesImporterSizeKey] as? NSNumber
                 cd_track.disc_number        = trackDict[iTunesImporterDiscNumberKey] as? NSNumber
-                cd_track.location           = trackDict[iTunesImporterLocationKey] as? String
+                cd_track.location           = location
                 cd_track.track_num          = trackDict[iTunesImporterTrackNumberKey] as? NSNumber
                 cd_track.name               = trackDict[iTunesImporterNameKey] as? String
                 cd_track.skip_count         = trackDict[iTunesImporterSkipCountKey] as? NSNumber
