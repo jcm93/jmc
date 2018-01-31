@@ -148,7 +148,6 @@ class FlacDecoder: NSObject, FileBufferer {
             self.seekGuardCheckThing = false
             fillNextBufferSynchronously()
             self.isSeeking = false
-            self.audioModule!.seekCallback()
         }
     }
     
@@ -163,7 +162,6 @@ class FlacDecoder: NSObject, FileBufferer {
         self.frameShouldSeekTo = 0
         self.fillNextBufferSynchronously()
         self.isSeeking = false
-        self.audioModule!.seekCallback()
     }
     
     let flacErrorCallback: @convention(c) (Optional<UnsafePointer<FLAC__StreamDecoder>>, FLAC__StreamDecoderErrorStatus, Optional<UnsafeMutableRawPointer>) -> () = {
