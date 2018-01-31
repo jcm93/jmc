@@ -14,7 +14,7 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
     var bufferA: AVAudioPCMBuffer
     var bufferB: AVAudioPCMBuffer
     var currentDecodeBuffer: AVAudioPCMBuffer
-    var bufferFrameLength: UInt32 = 90000
+    var bufferFrameLength: UInt32 = 90000 //magic number
     var file: AVAudioFile
     var currentBufferSampleIndex = 0
     var lastFrameDecoded: UInt32 = 0
@@ -90,7 +90,6 @@ class AVAudioFileBufferer: NSObject, FileBufferer {
                 let lastBuffer = self.lastFrameDecoded >= UInt32(self.file.length)
                 print("lastBuffer is \(lastBuffer)")
                 self.audioModule.fileBuffererSeekDecodeCallback(isFinalBuffer: lastBuffer)
-                self.audioModule.seekCallback()
             } else {
                 print("currently decoding, setting seek break")
                 self.needsSeek = true
