@@ -432,7 +432,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         } else {
             self.is_streaming = false
         }
-        if (paused == true && delegate?.audioModule.canPlay == true) {
+        if (paused == true && delegate?.audioModule.is_initialized == true) {
             unpause()
         }
         trackQueueViewController?.createPlayOrderArray(track, row: row)
