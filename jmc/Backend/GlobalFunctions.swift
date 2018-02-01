@@ -172,6 +172,21 @@ var cachedOrders: [String : CachedOrder]? = {
     }
 }()
 
+func getCachedOrders(for context: NSManagedObjectContext) -> [String : CachedOrder]? {
+    var result = [String : CachedOrder]()
+    let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CachedOrder")
+    do {
+        let list = try context.fetch(request) as! [CachedOrder]
+        for order in list {
+            result[order.order!] = order
+        }
+        return result
+    } catch {
+        print(error)
+        return nil
+    }
+}
+
 func validateStringForFilename(_ string: String) -> String {
     let newString = String(string.characters.map({
         $0 == "/" ? ":" : $0

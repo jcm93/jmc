@@ -41,7 +41,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     
     
     func initializeLibraryAndShowMainWindow() {
-        if !UserDefaults.standard.bool(forKey: DEFAULTS_ARE_INITIALIZED_STRING) {
+        if !UserDefaults.standard.bool(forKey: DEFAULTS_ARE_INITIALIZED_STRING) || globalRootLibrary == nil {
             self.setupWindowController = InitialSetupWindowController(windowNibName: NSNib.Name(rawValue: "InitialSetupWindowController"))
             self.setupWindowController?.setupForNilLibrary()
         }

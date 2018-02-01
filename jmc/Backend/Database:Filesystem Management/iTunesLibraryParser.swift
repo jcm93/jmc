@@ -34,13 +34,12 @@ class iTunesLibraryParser: NSObject {
     var addedTracks = [Int : Track]()
     var albumsWithUnknownArtists = [Album]()
     
-    func makeLibrary(parentLibrary: Library?, visualUpdateHandler: ProgressBarController?) {
+    func makeLibrary(parentLibrary: Library?, visualUpdateHandler: ProgressBarController?, subContext: NSManagedObjectContext) {
         //volume?
-        let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        subContext.parent = managedContext
         let library = subContext.object(with: parentLibrary!.objectID) as? Library
         let rootLibrary = subContext.object(with: globalRootLibrary!.objectID) as? Library
         let count = self.XMLTrackDictionaryDictionary.allKeys.count
+        var kinds = [String : [Track]]()
         DispatchQueue.main.async {
             visualUpdateHandler?.prepareForNewTask(actionName: "Importing", thingName: "tracks", thingCount: count)
         }
@@ -48,6 +47,9 @@ class iTunesLibraryParser: NSObject {
         for (key, value) in self.XMLTrackDictionaryDictionary {
             if let trackDict = value as? NSDictionary, trackDict[iTunesImporterTrackTypeKey] as? String != "URL" {
                 guard let location = trackDict[iTunesImporterLocationKey] as? String else { continue }
+                guard let file_kind = trackDict[iTunesImporterKindKey] as? String, file_kind != "Protected AAC audio file" else {
+                    continue
+                }
                 let cd_track = NSEntityDescription.insertNewObject(forEntityName: "Track", into: subContext) as! Track
                 let new_track_view = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: subContext) as! TrackView
                 cd_track.view = new_track_view
@@ -60,7 +62,7 @@ class iTunesLibraryParser: NSObject {
                 cd_track.file_kind          = trackDict[iTunesImporterTrackTypeKey] as? String
                 cd_track.date_last_skipped  = trackDict[iTunesImporterSkipDateKey] as? NSDate
                 cd_track.sample_rate        = trackDict[iTunesImporterSampleRateKey] as? NSNumber
-                cd_track.file_kind          = trackDict[iTunesImporterKindKey] as? String
+                cd_track.file_kind          = file_kind
                 cd_track.comments           = trackDict[iTunesImporterCommentsKey] as? String
                 cd_track.date_last_played   = trackDict[iTunesImporterPlayDateUTCKey] as? NSDate
                 cd_track.date_last_played   = trackDict[iTunesImporterPlayDateKey] as? NSDate
@@ -86,7 +88,7 @@ class iTunesLibraryParser: NSObject {
                 let artistName              = trackDict[iTunesImporterArtistNameKey] as? String ?? ""
                 if let addedArtist = self.addedArtists[artistName] {
                     cd_track.artist = addedArtist
-                } else if let artistFromParentContext = checkIfArtistExists(artistName) {
+                } else if let artistFromParentContext = checkIfArtistExists(artistName, subcontext: subContext) {
                     cd_track.artist = subContext.object(with: artistFromParentContext.objectID) as? Artist
                 } else {
                     let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: subContext) as! Artist
@@ -99,7 +101,7 @@ class iTunesLibraryParser: NSObject {
                 let albumName               = trackDict[iTunesImporterAlbumNameKey] as? String ?? ""
                 if let addedAlbum = self.addedAlbums[cd_track.artist!]?[albumName] {
                     cd_track.album = addedAlbum
-                } else if let albumFromParentContext = checkIfAlbumExists(withName: albumName, withArtist: cd_track.artist!) {
+                } else if let albumFromParentContext = checkIfAlbumExists(withName: albumName, withArtist: cd_track.artist!, subcontext: subContext) {
                     cd_track.album = subContext.object(with: albumFromParentContext.objectID) as? Album
                 } else {
                     let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: subContext) as! Album
@@ -116,7 +118,7 @@ class iTunesLibraryParser: NSObject {
                 if let albumArtistName         = trackDict[iTunesImporterAlbumArtistKey] as? String {
                     if let addedArtist = self.addedArtists[albumArtistName] {
                         cd_track.album?.album_artist = addedArtist
-                    } else if let artistFromParentContext = checkIfArtistExists(albumArtistName) {
+                    } else if let artistFromParentContext = checkIfArtistExists(albumArtistName, subcontext: subContext) {
                         cd_track.album?.album_artist = subContext.object(with: artistFromParentContext.objectID) as? Artist
                     } else {
                         let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: subContext) as! Artist
@@ -133,7 +135,7 @@ class iTunesLibraryParser: NSObject {
                 if let composerName         = trackDict[iTunesImporterComposerKey] as? String {
                     if let addedComposer = self.addedComposers[composerName] {
                         cd_track.composer = addedComposer
-                    } else if let composerFromParentContext = checkIfComposerExists(composerName) {
+                    } else if let composerFromParentContext = checkIfComposerExists(composerName, subcontext: subContext) {
                         cd_track.composer = subContext.object(with: composerFromParentContext.objectID) as? Composer
                     } else {
                         let newComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: subContext) as! Composer
@@ -158,9 +160,21 @@ class iTunesLibraryParser: NSObject {
                 DispatchQueue.main.async {
                     visualUpdateHandler?.increment(thingsDone: index)
                 }
+                /*if kinds[file_kind] != nil {
+                    kinds[file_kind]!.append(cd_track)
+                } else {
+                    kinds[file_kind] = [Track]()
+                    kinds[file_kind]!.append(cd_track)
+                }*/
                 index += 1
             }
         }
+        /*if let purchasedTracks = kinds["Protected AAC audio file"] {
+            for track in purchasedTracks {
+                //delete this track
+                print("dooblekjjkt")
+            }
+        }*/
         index = 0
         DispatchQueue.main.async {
             visualUpdateHandler?.prepareForNewTask(actionName: "Messing with", thingName: "albums", thingCount: self.albumsWithUnknownArtists.count)
@@ -186,8 +200,8 @@ class iTunesLibraryParser: NSObject {
             let pr = NSPredicate(format: "name == 'Playlists' AND is_header == true")
             fr.predicate = pr
             do {
-                let res = try managedContext.fetch(fr) as! [SourceListItem]
-                return subContext.object(with: res[0].objectID) as! SourceListItem
+                let res = try subContext.fetch(fr) as! [SourceListItem]
+                return res[0]
             } catch {
                 print(error)
             }
@@ -228,7 +242,8 @@ class iTunesLibraryParser: NSObject {
             visualUpdateHandler?.prepareForNewTask(actionName: "Reordering", thingName: "sort caches", thingCount: cachedOrders!.count)
         }
         index = 0
-        for order in cachedOrders!.values.map({return subContext.object(with: $0.objectID) as! CachedOrder}){
+        let orders = getCachedOrders(for: subContext)
+        for order in orders!.values {
             reorderForTracks(trackArray, cachedOrder: order, subContext: subContext)
             DispatchQueue.main.async {
                 visualUpdateHandler?.increment(thingsDone: index)

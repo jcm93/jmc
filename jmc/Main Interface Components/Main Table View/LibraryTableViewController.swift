@@ -74,6 +74,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     @IBAction func tableViewAction(_ sender: Any) {
         guard tableView.clickedColumn == 0 else { return }
+        guard tableView.clickedRow > -1 else { return }
         guard let track = ((self.trackViewArrayController.arrangedObjects as? NSArray)?[tableView.clickedRow] as? TrackView)?.track else { return }
         if track.is_available == false {
             print("clicked unavailable \(track.name)")

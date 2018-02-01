@@ -44,8 +44,10 @@ class ImportWindowController: NSWindowController, NSTableViewDelegate {
         self.iTunesParser?.XMLPlaylistArray = self.iTunesParser!.XMLPlaylistArray.filter({set.contains(($0 as! NSDictionary)["Name"] as! String)}) as NSArray
         appDelegate.iTunesParser = self.iTunesParser
         appDelegate.launchAddFilesDialog()
-        DispatchQueue.global(qos: .default).async {
-            appDelegate.iTunesParser?.makeLibrary(parentLibrary: globalRootLibrary, visualUpdateHandler: appDelegate.backgroundAddFilesHandler)
+        let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        subContext.parent = managedContext
+        subContext.perform {
+            appDelegate.iTunesParser?.makeLibrary(parentLibrary: globalRootLibrary, visualUpdateHandler: appDelegate.backgroundAddFilesHandler, subContext: subContext)
         }
         self.iTunesParser = nil
         self.window?.close()
