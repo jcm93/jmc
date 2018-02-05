@@ -123,7 +123,7 @@
                                                             <constraint firstAttribute="height" constant="48" id="1uZ-u1-uq1"/>
                                                             <constraint firstAttribute="width" constant="48" id="k7o-BS-Iig"/>
                                                         </constraints>
-                                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="dmz-s7-42D"/>
+                                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSAudioOutputVolumeMedTemplate" id="dmz-s7-42D"/>
                                                     </imageView>
                                                 </subviews>
                                                 <constraints>
@@ -274,6 +274,7 @@ MgA3AEEARwBQAFcAXABkAHkAewB9AH8AgQCJAJAAlQCgAKMApQCnAKkArgC5AMIAygDNANYA2wDoAOwA
         <menu id="WI7-MJ-gex"/>
     </objects>
     <resources>
+        <image name="NSAudioOutputVolumeMedTemplate" width="128" height="128"/>
         <image name="Playlist" width="24" height="24"/>
     </resources>
 </document>

@@ -37,7 +37,7 @@
 		0D2D06CE1EE32FB600A8EC66 /* AlbumFile+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D06CA1EE32FB600A8EC66 /* AlbumFile+CoreDataProperties.swift */; };
 		0D2D06CF1EE32FB600A8EC66 /* Album+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D06CB1EE32FB600A8EC66 /* Album+CoreDataClass.swift */; };
 		0D2D06D01EE32FB600A8EC66 /* Album+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D06CC1EE32FB600A8EC66 /* Album+CoreDataProperties.swift */; };
-		0D34A4771F7306D400CAA6C4 /* AlbumArtwork+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D34A4751F7306D300CAA6C4 /* AlbumArtwork+CoreDataClass.swift */; };
+		0D34A4771F7306D400CAA6C4 /* Album+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D34A4751F7306D300CAA6C4 /* Album+CoreDataClass.swift */; };
 		0D34A4781F7306D400CAA6C4 /* AlbumArtwork+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D34A4761F7306D300CAA6C4 /* AlbumArtwork+CoreDataProperties.swift */; };
 		0D3756C01EAADBD700016136 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3756BE1EAADBD700016136 /* PreferencesWindowController.swift */; };
 		0D3756C11EAADBD700016136 /* PreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D3756BF1EAADBD700016136 /* PreferencesWindowController.xib */; };
@@ -257,12 +257,12 @@
 		0D299B1E1DF151220009CF7A /* LibraryTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LibraryTableViewController.xib; path = "Main Interface Components/Main Table View/LibraryTableViewController.xib"; sourceTree = "<group>"; };
 		0D299B211DF158A60009CF7A /* AdvancedFilterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdvancedFilterViewController.swift; path = "Main Interface Components/Subview Controllers/AdvancedFilterViewController.swift"; sourceTree = "<group>"; };
 		0D299B221DF158A60009CF7A /* AdvancedFilterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AdvancedFilterViewController.xib; path = "Main Interface Components/Subview Controllers/AdvancedFilterViewController.xib"; sourceTree = "<group>"; };
-		0D2D06C91EE32FB600A8EC66 /* AlbumFile+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AlbumFile+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0D2D06C91EE32FB600A8EC66 /* AlbumFile+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "AlbumFile+CoreDataClass.swift"; path = "Core Data Shit/AlbumFile+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D2D06CA1EE32FB600A8EC66 /* AlbumFile+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AlbumFile+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D2D06CB1EE32FB600A8EC66 /* Album+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Album+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D2D06CC1EE32FB600A8EC66 /* Album+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Album+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0D34A4751F7306D300CAA6C4 /* AlbumArtwork+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumArtwork+CoreDataClass.swift"; sourceTree = "<group>"; };
-		0D34A4761F7306D300CAA6C4 /* AlbumArtwork+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumArtwork+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0D34A4751F7306D300CAA6C4 /* Album+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Album+CoreDataClass.swift"; path = "Core Data Shit/Album+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0D34A4761F7306D300CAA6C4 /* AlbumArtwork+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "AlbumArtwork+CoreDataProperties.swift"; path = "Core Data Shit/AlbumArtwork+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D3756BE1EAADBD700016136 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferencesWindowController.swift; path = "Other Windows/PreferencesWindowController.swift"; sourceTree = "<group>"; };
 		0D3756BF1EAADBD700016136 /* PreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PreferencesWindowController.xib; path = "Other Windows/PreferencesWindowController.xib"; sourceTree = "<group>"; };
 		0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BitRateFormatter.swift; path = Backend/Formatters/BitRateFormatter.swift; sourceTree = "<group>"; };
@@ -389,7 +389,7 @@
 		0DC397AA1E5282920009792B /* LibraryManagerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LibraryManagerViewController.xib; path = "Other Windows/Library Manager/LibraryManagerViewController.xib"; sourceTree = "<group>"; };
 		0DC7127A1E2F115A0054ECE6 /* ImportErrorWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImportErrorWindowController.swift; path = "Other Windows/ImportErrorWindowController.swift"; sourceTree = "<group>"; };
 		0DC7127B1E2F115A0054ECE6 /* ImportErrorWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImportErrorWindowController.xib; path = "Other Windows/ImportErrorWindowController.xib"; sourceTree = "<group>"; };
-		0DCF1D241F1D3C6300240202 /* AirPlayDeviceHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirPlayDeviceHandler.swift; sourceTree = "<group>"; };
+		0DCF1D241F1D3C6300240202 /* AirPlayDeviceHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AirPlayDeviceHandler.swift; path = Backend/Audio/AirPlayDeviceHandler.swift; sourceTree = "<group>"; };
 		0DD0DB0D1E54425800807CAC /* FlacDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlacDecoder.swift; path = Backend/Audio/FlacDecoder.swift; sourceTree = "<group>"; };
 		0DD274EE1D3190360055C43B /* GlobalFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GlobalFunctions.swift; path = Backend/GlobalFunctions.swift; sourceTree = "<group>"; };
 		0DD7A3BB1EF4738F00FEDD71 /* StupidTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StupidTableView.swift; sourceTree = "<group>"; };
@@ -551,7 +551,7 @@
 			children = (
 				0D61248B201AAA9300574118 /* PlayOrderObject+CoreDataClass.swift */,
 				0D61248C201AAA9300574118 /* PlayOrderObject+CoreDataProperties.swift */,
-				0D34A4751F7306D300CAA6C4 /* AlbumArtwork+CoreDataClass.swift */,
+				0D34A4751F7306D300CAA6C4 /* Album+CoreDataClass.swift */,
 				0D34A4761F7306D300CAA6C4 /* AlbumArtwork+CoreDataProperties.swift */,
 				0DE957D91EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift */,
 				0DE957DA1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift */,
@@ -1190,7 +1190,7 @@
 				0D23CA6D1E03242400CAF529 /* PeerBrowser.swift in Sources */,
 				0D40A9F21D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift in Sources */,
 				0DB996D21ED287C400594939 /* AlbumArtPDFView.swift in Sources */,
-				0D34A4771F7306D400CAA6C4 /* AlbumArtwork+CoreDataClass.swift in Sources */,
+				0D34A4771F7306D400CAA6C4 /* Album+CoreDataClass.swift in Sources */,
 				0DE957DB1EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift in Sources */,
 				0DFE2E5A1EC0DAB6007EEF04 /* TrackQueueTableView.swift in Sources */,
 				0DB996D41ED287D400594939 /* AlbumArtCollectionView.swift in Sources */,
