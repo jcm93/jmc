@@ -233,105 +233,105 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0D015AC31E00A30900EBAB6E /* LibraryTableViewControllerCellBased.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LibraryTableViewControllerCellBased.xib; path = "Main Interface Components/Main Table View/LibraryTableViewControllerCellBased.xib"; sourceTree = "<group>"; };
-		0D015AC51E00A31C00EBAB6E /* LibraryTableViewControllerCellBased.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LibraryTableViewControllerCellBased.swift; path = "Main Interface Components/Main Table View/LibraryTableViewControllerCellBased.swift"; sourceTree = "<group>"; };
-		0D01AD8F1D7079D900F9211F /* EqualizerWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EqualizerWindowController.swift; path = "Other Windows/EqualizerWindowController.swift"; sourceTree = "<group>"; };
-		0D01AD901D7079D900F9211F /* EqualizerWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EqualizerWindowController.xib; path = "Other Windows/EqualizerWindowController.xib"; sourceTree = "<group>"; };
-		0D0747681EDF6DF500E252DF /* CachedOrder+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CachedOrder+CoreDataClass.swift"; path = "Core Data Shit/CachedOrder+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0D015AC31E00A30900EBAB6E /* LibraryTableViewControllerCellBased.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LibraryTableViewControllerCellBased.xib; sourceTree = "<group>"; };
+		0D015AC51E00A31C00EBAB6E /* LibraryTableViewControllerCellBased.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTableViewControllerCellBased.swift; sourceTree = "<group>"; };
+		0D01AD8F1D7079D900F9211F /* EqualizerWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EqualizerWindowController.swift; sourceTree = "<group>"; };
+		0D01AD901D7079D900F9211F /* EqualizerWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EqualizerWindowController.xib; sourceTree = "<group>"; };
+		0D0747681EDF6DF500E252DF /* CachedOrder+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CachedOrder+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D0C28171FCB4FFB008A178C /* MainMenuDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuDelegate.swift; sourceTree = "<group>"; };
-		0D0C2AA61E88D8DA00CA82C3 /* MTImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MTImageCell.swift; path = "Main Interface Components/Main Table View/MTImageCell.swift"; sourceTree = "<group>"; };
-		0D0C2AA81E88D8FF00CA82C3 /* MTButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MTButtonCell.swift; path = "Main Interface Components/Main Table View/MTButtonCell.swift"; sourceTree = "<group>"; };
-		0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DragAndDropImageView.swift; path = "Main Interface Components/Subview Controllers/DragAndDropImageView.swift"; sourceTree = "<group>"; };
-		0D116B841E5800FD00C759FD /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationManager.swift; path = "Backend/Database:Filesystem Management/LocationManager.swift"; sourceTree = "<group>"; };
-		0D1BDFA41D0F44A70092FBA0 /* AudioModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AudioModule.swift; path = Backend/Audio/AudioModule.swift; sourceTree = "<group>"; };
+		0D0C2AA61E88D8DA00CA82C3 /* MTImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTImageCell.swift; sourceTree = "<group>"; };
+		0D0C2AA81E88D8FF00CA82C3 /* MTButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTButtonCell.swift; sourceTree = "<group>"; };
+		0D0E5FAE1D3E909D009E0FA3 /* DragAndDropImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragAndDropImageView.swift; sourceTree = "<group>"; };
+		0D116B841E5800FD00C759FD /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		0D1BDFA41D0F44A70092FBA0 /* AudioModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioModule.swift; sourceTree = "<group>"; };
 		0D2300D71F29108B007D392A /* LastFMDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LastFMDelegate.swift; sourceTree = "<group>"; };
-		0D23CA6C1E03242400CAF529 /* PeerBrowser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PeerBrowser.swift; path = "Backend/Network Functionality/PeerBrowser.swift"; sourceTree = "<group>"; };
-		0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = artAPIRequestDelegate.swift; path = "Backend/Network Functionality/artAPIRequestDelegate.swift"; sourceTree = "<group>"; };
-		0D299B111DF10FFF0009CF7A /* SourceListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SourceListViewController.swift; path = "Main Interface Components/Subview Controllers/SourceListViewController.swift"; sourceTree = "<group>"; };
-		0D299B121DF10FFF0009CF7A /* SourceListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SourceListViewController.xib; path = "Main Interface Components/Subview Controllers/SourceListViewController.xib"; sourceTree = "<group>"; };
-		0D299B151DF111490009CF7A /* AlbumArtViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlbumArtViewController.swift; path = "Main Interface Components/Subview Controllers/AlbumArtViewController.swift"; sourceTree = "<group>"; };
-		0D299B161DF111490009CF7A /* AlbumArtViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AlbumArtViewController.xib; path = "Main Interface Components/Subview Controllers/AlbumArtViewController.xib"; sourceTree = "<group>"; };
-		0D299B191DF11F140009CF7A /* TrackQueueViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TrackQueueViewController.swift; path = "Main Interface Components/Subview Controllers/TrackQueueViewController.swift"; sourceTree = "<group>"; };
-		0D299B1A1DF11F140009CF7A /* TrackQueueViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TrackQueueViewController.xib; path = "Main Interface Components/Subview Controllers/TrackQueueViewController.xib"; sourceTree = "<group>"; };
-		0D299B1D1DF151220009CF7A /* LibraryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LibraryTableViewController.swift; path = "Main Interface Components/Main Table View/LibraryTableViewController.swift"; sourceTree = "<group>"; };
-		0D299B1E1DF151220009CF7A /* LibraryTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LibraryTableViewController.xib; path = "Main Interface Components/Main Table View/LibraryTableViewController.xib"; sourceTree = "<group>"; };
-		0D299B211DF158A60009CF7A /* AdvancedFilterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdvancedFilterViewController.swift; path = "Main Interface Components/Subview Controllers/AdvancedFilterViewController.swift"; sourceTree = "<group>"; };
-		0D299B221DF158A60009CF7A /* AdvancedFilterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AdvancedFilterViewController.xib; path = "Main Interface Components/Subview Controllers/AdvancedFilterViewController.xib"; sourceTree = "<group>"; };
-		0D2D06C91EE32FB600A8EC66 /* AlbumFile+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "AlbumFile+CoreDataClass.swift"; path = "Core Data Shit/AlbumFile+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0D23CA6C1E03242400CAF529 /* PeerBrowser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerBrowser.swift; sourceTree = "<group>"; };
+		0D2410A21D6735F200F95494 /* artAPIRequestDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = artAPIRequestDelegate.swift; sourceTree = "<group>"; };
+		0D299B111DF10FFF0009CF7A /* SourceListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListViewController.swift; sourceTree = "<group>"; };
+		0D299B121DF10FFF0009CF7A /* SourceListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SourceListViewController.xib; sourceTree = "<group>"; };
+		0D299B151DF111490009CF7A /* AlbumArtViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumArtViewController.swift; sourceTree = "<group>"; };
+		0D299B161DF111490009CF7A /* AlbumArtViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumArtViewController.xib; sourceTree = "<group>"; };
+		0D299B191DF11F140009CF7A /* TrackQueueViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackQueueViewController.swift; sourceTree = "<group>"; };
+		0D299B1A1DF11F140009CF7A /* TrackQueueViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackQueueViewController.xib; sourceTree = "<group>"; };
+		0D299B1D1DF151220009CF7A /* LibraryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTableViewController.swift; sourceTree = "<group>"; };
+		0D299B1E1DF151220009CF7A /* LibraryTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LibraryTableViewController.xib; sourceTree = "<group>"; };
+		0D299B211DF158A60009CF7A /* AdvancedFilterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedFilterViewController.swift; sourceTree = "<group>"; };
+		0D299B221DF158A60009CF7A /* AdvancedFilterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdvancedFilterViewController.xib; sourceTree = "<group>"; };
+		0D2D06C91EE32FB600A8EC66 /* AlbumFile+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AlbumFile+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D2D06CA1EE32FB600A8EC66 /* AlbumFile+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AlbumFile+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D2D06CB1EE32FB600A8EC66 /* Album+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Album+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D2D06CC1EE32FB600A8EC66 /* Album+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Album+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0D34A4751F7306D300CAA6C4 /* Album+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Album+CoreDataClass.swift"; path = "Core Data Shit/Album+CoreDataClass.swift"; sourceTree = "<group>"; };
-		0D34A4761F7306D300CAA6C4 /* AlbumArtwork+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "AlbumArtwork+CoreDataProperties.swift"; path = "Core Data Shit/AlbumArtwork+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0D3756BE1EAADBD700016136 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferencesWindowController.swift; path = "Other Windows/PreferencesWindowController.swift"; sourceTree = "<group>"; };
-		0D3756BF1EAADBD700016136 /* PreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PreferencesWindowController.xib; path = "Other Windows/PreferencesWindowController.xib"; sourceTree = "<group>"; };
-		0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BitRateFormatter.swift; path = Backend/Formatters/BitRateFormatter.swift; sourceTree = "<group>"; };
-		0D3878B91DD12530004CC3C1 /* SampleRateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SampleRateFormatter.swift; path = Backend/Formatters/SampleRateFormatter.swift; sourceTree = "<group>"; };
-		0D3878BB1DD125E9004CC3C1 /* StupidNumberFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StupidNumberFormatter.swift; path = Backend/Formatters/StupidNumberFormatter.swift; sourceTree = "<group>"; };
-		0D388AAC1E1F2C8800D25A7D /* AddPlaylistButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddPlaylistButton.swift; path = "Main Interface Components/Miscellaneous/AddPlaylistButton.swift"; sourceTree = "<group>"; };
+		0D34A4751F7306D300CAA6C4 /* Album+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Album+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0D34A4761F7306D300CAA6C4 /* AlbumArtwork+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumArtwork+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0D3756BE1EAADBD700016136 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
+		0D3756BF1EAADBD700016136 /* PreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesWindowController.xib; sourceTree = "<group>"; };
+		0D3878B71DD11926004CC3C1 /* BitRateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitRateFormatter.swift; sourceTree = "<group>"; };
+		0D3878B91DD12530004CC3C1 /* SampleRateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleRateFormatter.swift; sourceTree = "<group>"; };
+		0D3878BB1DD125E9004CC3C1 /* StupidNumberFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StupidNumberFormatter.swift; sourceTree = "<group>"; };
+		0D388AAC1E1F2C8800D25A7D /* AddPlaylistButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPlaylistButton.swift; sourceTree = "<group>"; };
 		0D3E00861E3F1DC4007C1C83 /* jmc.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = jmc.xcdatamodel; sourceTree = "<group>"; };
-		0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransformerIntegerToTimestamp.swift; path = Backend/Formatters/TransformerIntegerToTimestamp.swift; sourceTree = "<group>"; };
-		0D447BB81EB2B73F00372A80 /* JMTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JMTextField.swift; path = "Other Windows/JMTextField.swift"; sourceTree = "<group>"; };
+		0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransformerIntegerToTimestamp.swift; sourceTree = "<group>"; };
+		0D447BB81EB2B73F00372A80 /* JMTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTextField.swift; sourceTree = "<group>"; };
 		0D48D0DE1F3D444B00ABAAC6 /* MediaKeyListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaKeyListener.swift; sourceTree = "<group>"; };
-		0D51C89F1EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangePrimaryFolderSheetController.swift; path = "Other Windows/Library Manager/Sheets/ChangePrimaryFolderSheetController.swift"; sourceTree = "<group>"; };
-		0D51C8A01EABD74B002F6182 /* ChangePrimaryFolderSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ChangePrimaryFolderSheetController.xib; path = "Other Windows/Library Manager/Sheets/ChangePrimaryFolderSheetController.xib"; sourceTree = "<group>"; };
-		0D51C8A31EAC01F8002F6182 /* ConsolidateLibrarySheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConsolidateLibrarySheetController.swift; path = "Other Windows/Library Manager/Sheets/ConsolidateLibrarySheetController.swift"; sourceTree = "<group>"; };
-		0D51C8A41EAC01F8002F6182 /* ConsolidateLibrarySheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConsolidateLibrarySheetController.xib; path = "Other Windows/Library Manager/Sheets/ConsolidateLibrarySheetController.xib"; sourceTree = "<group>"; };
-		0D51C8A71EAC1646002F6182 /* URLStringFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLStringFormatter.swift; path = Backend/Formatters/URLStringFormatter.swift; sourceTree = "<group>"; };
-		0D51C8A91EAC1866002F6182 /* TransformerURLStringToURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransformerURLStringToURL.swift; path = Backend/Formatters/TransformerURLStringToURL.swift; sourceTree = "<group>"; };
-		0D51C8B11EB01731002F6182 /* JMTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JMTabView.swift; path = "Other Windows/JMTabView.swift"; sourceTree = "<group>"; };
-		0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableViewYouCanPressSpacebarOn.swift; path = "Main Interface Components/Main Table View/TableViewYouCanPressSpacebarOn.swift"; sourceTree = "<group>"; };
-		0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SourceListThatYouCanPressSpacebarOn.swift; path = "Main Interface Components/Subview Controllers/SourceListThatYouCanPressSpacebarOn.swift"; sourceTree = "<group>"; };
-		0D592A211EDF6BCE0054D553 /* TrackExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TrackExtension.swift; path = "Core Data Shit/TrackExtension.swift"; sourceTree = "<group>"; };
-		0D592A261EDF6C8B0054D553 /* CachedOrder+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CachedOrder+CoreDataProperties.swift"; path = "Core Data Shit/CachedOrder+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0D592A2A1EDF6C8B0054D553 /* SongCollection+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SongCollection+CoreDataClass.swift"; path = "Core Data Shit/SongCollection+CoreDataClass.swift"; sourceTree = "<group>"; };
-		0D592A2B1EDF6C8B0054D553 /* SongCollection+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SongCollection+CoreDataProperties.swift"; path = "Core Data Shit/SongCollection+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0D592A2C1EDF6C8B0054D553 /* Composer+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Composer+CoreDataClass.swift"; path = "Core Data Shit/Composer+CoreDataClass.swift"; sourceTree = "<group>"; };
-		0D592A2D1EDF6C8B0054D553 /* Composer+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Composer+CoreDataProperties.swift"; path = "Core Data Shit/Composer+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0D592A2E1EDF6C8B0054D553 /* SmartCriteria+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SmartCriteria+CoreDataClass.swift"; path = "Core Data Shit/SmartCriteria+CoreDataClass.swift"; sourceTree = "<group>"; };
-		0D592A2F1EDF6C8B0054D553 /* SmartCriteria+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SmartCriteria+CoreDataProperties.swift"; path = "Core Data Shit/SmartCriteria+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0D592A321EDF6C8B0054D553 /* Track+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Track+CoreDataClass.swift"; path = "Core Data Shit/Track+CoreDataClass.swift"; sourceTree = "<group>"; };
-		0D592A341EDF6C8B0054D553 /* Artist+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Artist+CoreDataClass.swift"; path = "Core Data Shit/Artist+CoreDataClass.swift"; sourceTree = "<group>"; };
-		0D592A351EDF6C8B0054D553 /* Artist+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Artist+CoreDataProperties.swift"; path = "Core Data Shit/Artist+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0D592A381EDF6C8B0054D553 /* TrackView+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TrackView+CoreDataClass.swift"; path = "Core Data Shit/TrackView+CoreDataClass.swift"; sourceTree = "<group>"; };
-		0D592A391EDF6C8B0054D553 /* TrackView+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TrackView+CoreDataProperties.swift"; path = "Core Data Shit/TrackView+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SourceListCellView.swift; path = "Main Interface Components/Subview Controllers/SourceListCellView.swift"; sourceTree = "<group>"; };
-		0D606EF51E7B4C21007AE152 /* FileBufferer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileBufferer.swift; path = Backend/Audio/FileBufferer.swift; sourceTree = "<group>"; };
-		0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AVAudioFileBufferer.swift; path = Backend/Audio/AVAudioFileBufferer.swift; sourceTree = "<group>"; };
-		0D60F5251E86F77900CA5420 /* TimeFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimeFormatter.swift; path = Backend/Formatters/TimeFormatter.swift; sourceTree = "<group>"; };
-		0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlaylistOrderObject.swift; path = Backend/PlaylistOrderObject.swift; sourceTree = "<group>"; };
+		0D51C89F1EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangePrimaryFolderSheetController.swift; path = Sheets/ChangePrimaryFolderSheetController.swift; sourceTree = "<group>"; };
+		0D51C8A01EABD74B002F6182 /* ChangePrimaryFolderSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ChangePrimaryFolderSheetController.xib; path = Sheets/ChangePrimaryFolderSheetController.xib; sourceTree = "<group>"; };
+		0D51C8A31EAC01F8002F6182 /* ConsolidateLibrarySheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConsolidateLibrarySheetController.swift; path = Sheets/ConsolidateLibrarySheetController.swift; sourceTree = "<group>"; };
+		0D51C8A41EAC01F8002F6182 /* ConsolidateLibrarySheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConsolidateLibrarySheetController.xib; path = Sheets/ConsolidateLibrarySheetController.xib; sourceTree = "<group>"; };
+		0D51C8A71EAC1646002F6182 /* URLStringFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLStringFormatter.swift; sourceTree = "<group>"; };
+		0D51C8A91EAC1866002F6182 /* TransformerURLStringToURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransformerURLStringToURL.swift; sourceTree = "<group>"; };
+		0D51C8B11EB01731002F6182 /* JMTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTabView.swift; sourceTree = "<group>"; };
+		0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
+		0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListThatYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
+		0D592A211EDF6BCE0054D553 /* TrackExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackExtension.swift; sourceTree = "<group>"; };
+		0D592A261EDF6C8B0054D553 /* CachedOrder+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CachedOrder+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0D592A2A1EDF6C8B0054D553 /* SongCollection+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SongCollection+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0D592A2B1EDF6C8B0054D553 /* SongCollection+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SongCollection+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0D592A2C1EDF6C8B0054D553 /* Composer+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Composer+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0D592A2D1EDF6C8B0054D553 /* Composer+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Composer+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0D592A2E1EDF6C8B0054D553 /* SmartCriteria+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SmartCriteria+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0D592A2F1EDF6C8B0054D553 /* SmartCriteria+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SmartCriteria+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0D592A321EDF6C8B0054D553 /* Track+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Track+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0D592A341EDF6C8B0054D553 /* Artist+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Artist+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0D592A351EDF6C8B0054D553 /* Artist+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Artist+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0D592A381EDF6C8B0054D553 /* TrackView+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TrackView+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0D592A391EDF6C8B0054D553 /* TrackView+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TrackView+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0D5A55E81DDBE16600E46F08 /* SourceListCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListCellView.swift; sourceTree = "<group>"; };
+		0D606EF51E7B4C21007AE152 /* FileBufferer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBufferer.swift; sourceTree = "<group>"; };
+		0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVAudioFileBufferer.swift; sourceTree = "<group>"; };
+		0D60F5251E86F77900CA5420 /* TimeFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeFormatter.swift; sourceTree = "<group>"; };
+		0D60F5281E8720A300CA5420 /* PlaylistOrderObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistOrderObject.swift; sourceTree = "<group>"; };
 		0D61248B201AAA9300574118 /* PlayOrderObject+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayOrderObject+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D61248C201AAA9300574118 /* PlayOrderObject+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayOrderObject+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0D69659C1EA02EC50050D505 /* ProgressBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressBarController.swift; path = "Main Interface Components/Miscellaneous/ProgressBarController.swift"; sourceTree = "<group>"; };
-		0D6E04191ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewTrackListViewController.swift; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewTrackListViewController.swift"; sourceTree = "<group>"; };
-		0D6E041A1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistViewTrackListViewController.xib; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewTrackListViewController.xib"; sourceTree = "<group>"; };
+		0D69659C1EA02EC50050D505 /* ProgressBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarController.swift; sourceTree = "<group>"; };
+		0D6E04191ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewTrackListViewController.swift; path = "Artist View/ArtistViewTrackListViewController.swift"; sourceTree = "<group>"; };
+		0D6E041A1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistViewTrackListViewController.xib; path = "Artist View/ArtistViewTrackListViewController.xib"; sourceTree = "<group>"; };
 		0D71113F1FE1CA0C006E460E /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = SOURCE_ROOT; };
 		0D7111471FE1DAD9006E460E /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = "../../Downloads/Sparkle-1.18.1(1)/Sparkle.framework"; sourceTree = "<group>"; };
-		0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TagEditorWindow.swift; path = "Other Windows/TagEditorWindow.swift"; sourceTree = "<group>"; };
-		0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TagEditorWindow.xib; path = "Other Windows/TagEditorWindow.xib"; sourceTree = "<group>"; };
-		0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DatabaseManager.swift; path = "Backend/Database:Filesystem Management/DatabaseManager.swift"; sourceTree = "<group>"; };
-		0D76F6A91D270EB900C6E70F /* DragAndDropArrayController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DragAndDropArrayController.swift; path = "Main Interface Components/Main Table View/DragAndDropArrayController.swift"; sourceTree = "<group>"; };
-		0D800C061ED3B3C800EA2889 /* ArtistListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistListViewController.swift; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistListViewController.swift"; sourceTree = "<group>"; };
-		0D800C071ED3B3C800EA2889 /* ArtistListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistListViewController.xib; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistListViewController.xib"; sourceTree = "<group>"; };
-		0D800C0A1ED3B54100EA2889 /* ArtistViewAlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewAlbumViewController.swift; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewAlbumViewController.swift"; sourceTree = "<group>"; };
-		0D800C0B1ED3B54100EA2889 /* ArtistViewAlbumViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistViewAlbumViewController.xib; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewAlbumViewController.xib"; sourceTree = "<group>"; };
-		0D800C0E1ED3B6BF00EA2889 /* ArtistViewTableCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewTableCellView.swift; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewTableCellView.swift"; sourceTree = "<group>"; };
+		0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagEditorWindow.swift; sourceTree = "<group>"; };
+		0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagEditorWindow.xib; sourceTree = "<group>"; };
+		0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		0D76F6A91D270EB900C6E70F /* DragAndDropArrayController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragAndDropArrayController.swift; sourceTree = "<group>"; };
+		0D800C061ED3B3C800EA2889 /* ArtistListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistListViewController.swift; path = "Artist View/ArtistListViewController.swift"; sourceTree = "<group>"; };
+		0D800C071ED3B3C800EA2889 /* ArtistListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistListViewController.xib; path = "Artist View/ArtistListViewController.xib"; sourceTree = "<group>"; };
+		0D800C0A1ED3B54100EA2889 /* ArtistViewAlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewAlbumViewController.swift; path = "Artist View/ArtistViewAlbumViewController.swift"; sourceTree = "<group>"; };
+		0D800C0B1ED3B54100EA2889 /* ArtistViewAlbumViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistViewAlbumViewController.xib; path = "Artist View/ArtistViewAlbumViewController.xib"; sourceTree = "<group>"; };
+		0D800C0E1ED3B6BF00EA2889 /* ArtistViewTableCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewTableCellView.swift; path = "Artist View/ArtistViewTableCellView.swift"; sourceTree = "<group>"; };
 		0D87867C1E3EFC000091785B /* jmc-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "jmc-Bridging-Header.h"; sourceTree = "<group>"; };
-		0D8A8B3E1F61CB54007529A0 /* AlbumFileLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumFileLocationViewController.swift; sourceTree = "<group>"; };
-		0D8A8B3F1F61CB54007529A0 /* AlbumFileLocationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumFileLocationViewController.xib; sourceTree = "<group>"; };
+		0D8A8B3E1F61CB54007529A0 /* AlbumFileLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlbumFileLocationViewController.swift; path = Sheets/AlbumFileLocationViewController.swift; sourceTree = "<group>"; };
+		0D8A8B3F1F61CB54007529A0 /* AlbumFileLocationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AlbumFileLocationViewController.xib; path = Sheets/AlbumFileLocationViewController.xib; sourceTree = "<group>"; };
 		0D8A8B421F61E524007529A0 /* DefaultsAndConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultsAndConstants.swift; sourceTree = "<group>"; };
 		0D8A8B441F61E5B4007529A0 /* EditingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditingFunctions.swift; sourceTree = "<group>"; };
-		0D8AFE521E6CB3E7004AC584 /* LocationVerifierSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationVerifierSheetController.swift; path = "Other Windows/Library Manager/Sheets/LocationVerifierSheetController.swift"; sourceTree = "<group>"; };
-		0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LocationVerifierSheetController.xib; path = "Other Windows/Library Manager/Sheets/LocationVerifierSheetController.xib"; sourceTree = "<group>"; };
-		0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaScannerSheet.swift; path = "Other Windows/Library Manager/Sheets/MediaScannerSheet.swift"; sourceTree = "<group>"; };
-		0D8AFE571E6D136D004AC584 /* MediaScannerSheet.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MediaScannerSheet.xib; path = "Other Windows/Library Manager/Sheets/MediaScannerSheet.xib"; sourceTree = "<group>"; };
-		0D8B98661ED2ACF000283DD1 /* ArtistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewController.swift; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewController.swift"; sourceTree = "<group>"; };
-		0D8B98671ED2ACF000283DD1 /* ArtistViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistViewController.xib; path = "Main Interface Components/Alternate Main Views/Artist View/ArtistViewController.xib"; sourceTree = "<group>"; };
+		0D8AFE521E6CB3E7004AC584 /* LocationVerifierSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationVerifierSheetController.swift; path = Sheets/LocationVerifierSheetController.swift; sourceTree = "<group>"; };
+		0D8AFE531E6CB3E7004AC584 /* LocationVerifierSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LocationVerifierSheetController.xib; path = Sheets/LocationVerifierSheetController.xib; sourceTree = "<group>"; };
+		0D8AFE561E6D136D004AC584 /* MediaScannerSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaScannerSheet.swift; path = Sheets/MediaScannerSheet.swift; sourceTree = "<group>"; };
+		0D8AFE571E6D136D004AC584 /* MediaScannerSheet.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MediaScannerSheet.xib; path = Sheets/MediaScannerSheet.xib; sourceTree = "<group>"; };
+		0D8B98661ED2ACF000283DD1 /* ArtistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewController.swift; path = "Artist View/ArtistViewController.swift"; sourceTree = "<group>"; };
+		0D8B98671ED2ACF000283DD1 /* ArtistViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistViewController.xib; path = "Artist View/ArtistViewController.xib"; sourceTree = "<group>"; };
 		0D99D4A01EF216F200264CFF /* OrganizationRuleCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganizationRuleCellView.swift; sourceTree = "<group>"; };
-		0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImportWindowController.swift; path = "Other Windows/ImportWindowController.swift"; sourceTree = "<group>"; };
-		0D9CE6701D334F97004FA8CB /* ImportWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImportWindowController.xib; path = "Other Windows/ImportWindowController.xib"; sourceTree = "<group>"; };
-		0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InitialSetupWindowController.swift; path = "Other Windows/InitialSetupWindowController.swift"; sourceTree = "<group>"; };
-		0D9CE6741D34128B004FA8CB /* InitialSetupWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = InitialSetupWindowController.xib; path = "Other Windows/InitialSetupWindowController.xib"; sourceTree = "<group>"; };
+		0D9CE66F1D334F97004FA8CB /* ImportWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportWindowController.swift; sourceTree = "<group>"; };
+		0D9CE6701D334F97004FA8CB /* ImportWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImportWindowController.xib; sourceTree = "<group>"; };
+		0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InitialSetupWindowController.swift; sourceTree = "<group>"; };
+		0D9CE6741D34128B004FA8CB /* InitialSetupWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InitialSetupWindowController.xib; sourceTree = "<group>"; };
 		0D9CE6771D3442D3004FA8CB /* Preferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Preferences.plist; sourceTree = "<group>"; };
 		0DA02D311EF9D41A00DDE5A9 /* MediaMetadataHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMetadataHandler.swift; sourceTree = "<group>"; };
 		0DA02D331EFA046A00DDE5A9 /* JMDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMDate.swift; sourceTree = "<group>"; };
@@ -364,12 +364,12 @@
 		0DA4E1801F27F8BE00EC80B2 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		0DA4E1811F27F8BE00EC80B2 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		0DA4E1821F27F8BE00EC80B2 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
-		0DA7E9581ECC141900719678 /* ImageCollectionViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageCollectionViewItem.swift; path = "Other Windows/ImageCollectionViewItem.swift"; sourceTree = "<group>"; };
-		0DA7E9591ECC141900719678 /* ImageCollectionViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImageCollectionViewItem.xib; path = "Other Windows/ImageCollectionViewItem.xib"; sourceTree = "<group>"; };
-		0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressBarView.swift; path = "Main Interface Components/Miscellaneous/ProgressBarView.swift"; sourceTree = "<group>"; };
+		0DA7E9581ECC141900719678 /* ImageCollectionViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewItem.swift; sourceTree = "<group>"; };
+		0DA7E9591ECC141900719678 /* ImageCollectionViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageCollectionViewItem.xib; sourceTree = "<group>"; };
+		0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		0DAA85891EDFE90E004BF089 /* OrganizationFieldToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganizationFieldToken.swift; sourceTree = "<group>"; };
 		0DAB308D1CFBA3340028928F /* jmc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = jmc.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0DAB30901CFBA3340028928F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = AppDelegate.swift; path = "Delegate:Main Window Controller/AppDelegate.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		0DAB30901CFBA3340028928F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		0DAB30951CFBA3340028928F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0DAB30981CFBA3340028928F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		0DAB309A1CFBA3340028928F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -379,30 +379,30 @@
 		0DAB30AA1CFBA3340028928F /* jmc.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = jmc.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0DAB30AE1CFBA3340028928F /* jmcUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jmcUITests.swift; sourceTree = "<group>"; };
 		0DAB30B01CFBA3340028928F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0DB996C31ECE233000594939 /* AlbumArtWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlbumArtWindowController.swift; path = "Other Windows/Album Art Window/AlbumArtWindowController.swift"; sourceTree = "<group>"; };
-		0DB996C41ECE233000594939 /* AlbumArtWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AlbumArtWindowController.xib; path = "Other Windows/Album Art Window/AlbumArtWindowController.xib"; sourceTree = "<group>"; };
-		0DB996CF1ED2874F00594939 /* AlbumArtImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlbumArtImageView.swift; path = "Other Windows/Album Art Window/AlbumArtImageView.swift"; sourceTree = "<group>"; };
-		0DB996D11ED287C400594939 /* AlbumArtPDFView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlbumArtPDFView.swift; path = "Other Windows/Album Art Window/AlbumArtPDFView.swift"; sourceTree = "<group>"; };
-		0DB996D31ED287D400594939 /* AlbumArtCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlbumArtCollectionView.swift; path = "Other Windows/Album Art Window/AlbumArtCollectionView.swift"; sourceTree = "<group>"; };
-		0DC2E8F41E0110D200671D83 /* MTTextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MTTextFieldCell.swift; path = "Main Interface Components/Main Table View/MTTextFieldCell.swift"; sourceTree = "<group>"; };
-		0DC397A91E5282920009792B /* LibraryManagerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LibraryManagerViewController.swift; path = "Other Windows/Library Manager/LibraryManagerViewController.swift"; sourceTree = "<group>"; };
-		0DC397AA1E5282920009792B /* LibraryManagerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LibraryManagerViewController.xib; path = "Other Windows/Library Manager/LibraryManagerViewController.xib"; sourceTree = "<group>"; };
-		0DC7127A1E2F115A0054ECE6 /* ImportErrorWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImportErrorWindowController.swift; path = "Other Windows/ImportErrorWindowController.swift"; sourceTree = "<group>"; };
-		0DC7127B1E2F115A0054ECE6 /* ImportErrorWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImportErrorWindowController.xib; path = "Other Windows/ImportErrorWindowController.xib"; sourceTree = "<group>"; };
-		0DCF1D241F1D3C6300240202 /* AirPlayDeviceHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AirPlayDeviceHandler.swift; path = Backend/Audio/AirPlayDeviceHandler.swift; sourceTree = "<group>"; };
-		0DD0DB0D1E54425800807CAC /* FlacDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlacDecoder.swift; path = Backend/Audio/FlacDecoder.swift; sourceTree = "<group>"; };
-		0DD274EE1D3190360055C43B /* GlobalFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GlobalFunctions.swift; path = Backend/GlobalFunctions.swift; sourceTree = "<group>"; };
+		0DB996C31ECE233000594939 /* AlbumArtWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumArtWindowController.swift; sourceTree = "<group>"; };
+		0DB996C41ECE233000594939 /* AlbumArtWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumArtWindowController.xib; sourceTree = "<group>"; };
+		0DB996CF1ED2874F00594939 /* AlbumArtImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumArtImageView.swift; sourceTree = "<group>"; };
+		0DB996D11ED287C400594939 /* AlbumArtPDFView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumArtPDFView.swift; sourceTree = "<group>"; };
+		0DB996D31ED287D400594939 /* AlbumArtCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumArtCollectionView.swift; sourceTree = "<group>"; };
+		0DC2E8F41E0110D200671D83 /* MTTextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTTextFieldCell.swift; sourceTree = "<group>"; };
+		0DC397A91E5282920009792B /* LibraryManagerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryManagerViewController.swift; sourceTree = "<group>"; };
+		0DC397AA1E5282920009792B /* LibraryManagerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LibraryManagerViewController.xib; sourceTree = "<group>"; };
+		0DC7127A1E2F115A0054ECE6 /* ImportErrorWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportErrorWindowController.swift; sourceTree = "<group>"; };
+		0DC7127B1E2F115A0054ECE6 /* ImportErrorWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImportErrorWindowController.xib; sourceTree = "<group>"; };
+		0DCF1D241F1D3C6300240202 /* AirPlayDeviceHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirPlayDeviceHandler.swift; sourceTree = "<group>"; };
+		0DD0DB0D1E54425800807CAC /* FlacDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlacDecoder.swift; sourceTree = "<group>"; };
+		0DD274EE1D3190360055C43B /* GlobalFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalFunctions.swift; sourceTree = "<group>"; };
 		0DD7A3BB1EF4738F00FEDD71 /* StupidTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StupidTableView.swift; sourceTree = "<group>"; };
 		0DD7A3BD1EF4940E00FEDD71 /* MissingFilesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MissingFilesViewController.swift; sourceTree = "<group>"; };
 		0DD7A3BE1EF4940E00FEDD71 /* MissingFilesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MissingFilesViewController.xib; sourceTree = "<group>"; };
 		0DD7A3C11EF4B60D00FEDD71 /* MissingFileTableCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MissingFileTableCellView.swift; sourceTree = "<group>"; };
-		0DE486811EA579FD009B226B /* AddWatchFolderSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddWatchFolderSheetController.swift; path = "Other Windows/Library Manager/Sheets/AddWatchFolderSheetController.swift"; sourceTree = "<group>"; };
-		0DE486821EA579FD009B226B /* AddWatchFolderSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddWatchFolderSheetController.xib; path = "Other Windows/Library Manager/Sheets/AddWatchFolderSheetController.xib"; sourceTree = "<group>"; };
-		0DE486851EA58C67009B226B /* JMPathControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JMPathControl.swift; path = "Other Windows/Library Manager/JMPathControl.swift"; sourceTree = "<group>"; };
-		0DE4868F1EA83FBA009B226B /* AddFilesProgressSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = AddFilesProgressSheet.swift; path = "Main Interface Components/Miscellaneous/AddFilesProgressSheet.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		0DE486901EA83FBA009B226B /* GenericProgressBarSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GenericProgressBarSheetController.xib; path = "Main Interface Components/Miscellaneous/GenericProgressBarSheetController.xib"; sourceTree = "<group>"; };
-		0DE486931EA92B78009B226B /* AddFilesQueueLoop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddFilesQueueLoop.swift; path = "Backend/Database:Filesystem Management/AddFilesQueueLoop.swift"; sourceTree = "<group>"; };
-		0DE74A521D7D9457005211E6 /* SharedLibraryRequestHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharedLibraryRequestHandler.swift; path = "Backend/Network Functionality/SharedLibraryRequestHandler.swift"; sourceTree = "<group>"; };
+		0DE486811EA579FD009B226B /* AddWatchFolderSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddWatchFolderSheetController.swift; path = Sheets/AddWatchFolderSheetController.swift; sourceTree = "<group>"; };
+		0DE486821EA579FD009B226B /* AddWatchFolderSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddWatchFolderSheetController.xib; path = Sheets/AddWatchFolderSheetController.xib; sourceTree = "<group>"; };
+		0DE486851EA58C67009B226B /* JMPathControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMPathControl.swift; sourceTree = "<group>"; };
+		0DE4868F1EA83FBA009B226B /* AddFilesProgressSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AddFilesProgressSheet.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		0DE486901EA83FBA009B226B /* GenericProgressBarSheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GenericProgressBarSheetController.xib; sourceTree = "<group>"; };
+		0DE486931EA92B78009B226B /* AddFilesQueueLoop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddFilesQueueLoop.swift; sourceTree = "<group>"; };
+		0DE74A521D7D9457005211E6 /* SharedLibraryRequestHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedLibraryRequestHandler.swift; sourceTree = "<group>"; };
 		0DE957C41EE9D5D0008CBECF /* Track+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Track+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0DE957C51EE9D5D0008CBECF /* Volume+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Volume+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0DE957C61EE9D5D0008CBECF /* Volume+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Volume+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -415,18 +415,18 @@
 		0DE957D41EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OrganizationTemplateBundle+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0DE957D91EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SourceListItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0DE957DA1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SourceListItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0DEE9D9C1EF7AB280025AA11 /* StupidTableCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StupidTableCellView.swift; sourceTree = "<group>"; };
-		0DF1887E1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdvancedOrganizationOptionsWindowController.swift; path = "Other Windows/Library Manager/AdvancedOrganizationOptionsWindowController.swift"; sourceTree = "<group>"; };
-		0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AdvancedOrganizationOptionsWindowController.xib; path = "Other Windows/Library Manager/AdvancedOrganizationOptionsWindowController.xib"; sourceTree = "<group>"; };
-		0DF188821EDD072B00241785 /* OrganizationRuleViewcontroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrganizationRuleViewcontroller.swift; path = "Other Windows/Library Manager/OrganizationRuleViewcontroller.swift"; sourceTree = "<group>"; };
-		0DF188831EDD072B00241785 /* OrganizationRuleViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OrganizationRuleViewController.xib; path = "Other Windows/Library Manager/OrganizationRuleViewController.xib"; sourceTree = "<group>"; };
+		0DEE9D9C1EF7AB280025AA11 /* StupidTableCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StupidTableCellView.swift; path = Sheets/StupidTableCellView.swift; sourceTree = "<group>"; };
+		0DF1887E1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedOrganizationOptionsWindowController.swift; sourceTree = "<group>"; };
+		0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdvancedOrganizationOptionsWindowController.xib; sourceTree = "<group>"; };
+		0DF188821EDD072B00241785 /* OrganizationRuleViewcontroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganizationRuleViewcontroller.swift; sourceTree = "<group>"; };
+		0DF188831EDD072B00241785 /* OrganizationRuleViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OrganizationRuleViewController.xib; sourceTree = "<group>"; };
 		0DF491F61F27EC4800D23AD1 /* stream_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stream_decoder.h; path = FLAC/stream_decoder.h; sourceTree = "<group>"; };
 		0DF491F81F27EC4800D23AD1 /* libFLAC.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libFLAC.dylib; path = FLAC/libFLAC.dylib; sourceTree = "<group>"; };
 		0DF491FA1F27EECC00D23AD1 /* libogg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libogg.dylib; path = FLAC/libogg.dylib; sourceTree = "<group>"; };
-		0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = iTunesLibraryParser.swift; path = "Backend/Database:Filesystem Management/iTunesLibraryParser.swift"; sourceTree = "<group>"; };
-		0DF4BEF11CFD0D4E00AC5824 /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MainWindowController.swift; path = "Delegate:Main Window Controller/MainWindowController.swift"; sourceTree = "<group>"; };
-		0DF4BEF21CFD0D4E00AC5824 /* MainWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainWindowController.xib; path = "Delegate:Main Window Controller/MainWindowController.xib"; sourceTree = "<group>"; };
-		0DFE2E591EC0DAB6007EEF04 /* TrackQueueTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TrackQueueTableView.swift; path = "Main Interface Components/Subview Controllers/TrackQueueTableView.swift"; sourceTree = "<group>"; };
+		0DF4BEED1CFBE4CB00AC5824 /* iTunesLibraryParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesLibraryParser.swift; sourceTree = "<group>"; };
+		0DF4BEF11CFD0D4E00AC5824 /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
+		0DF4BEF21CFD0D4E00AC5824 /* MainWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindowController.xib; sourceTree = "<group>"; };
+		0DFE2E591EC0DAB6007EEF04 /* TrackQueueTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackQueueTableView.swift; sourceTree = "<group>"; };
 		0DFE725A1F0190DC00EACE66 /* AlbumFilesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumFilesViewController.swift; sourceTree = "<group>"; };
 		0DFE725B1F0190DC00EACE66 /* AlbumFilesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumFilesViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -480,7 +480,7 @@
 				0DB996C71ECE607B00594939 /* Network Functionality */,
 				0DB996C81ECE60C800594939 /* Database/Filesystem Management */,
 			);
-			name = Backend;
+			path = Backend;
 			sourceTree = "<group>";
 		};
 		0D01AD941D707CFB00F9211F /* Main Interface Components */ = {
@@ -491,7 +491,7 @@
 				0DB996C91ECE614600594939 /* Subview Controllers */,
 				0DB996CA1ECE629D00594939 /* Miscellaneous */,
 			);
-			name = "Main Interface Components";
+			path = "Main Interface Components";
 			sourceTree = "<group>";
 		};
 		0D01AD951D707D2600F9211F /* Other Windows */ = {
@@ -516,7 +516,7 @@
 				0D9CE6731D34128B004FA8CB /* InitialSetupWindowController.swift */,
 				0D9CE6741D34128B004FA8CB /* InitialSetupWindowController.xib */,
 			);
-			name = "Other Windows";
+			path = "Other Windows";
 			sourceTree = "<group>";
 		};
 		0D01AD961D707DD800F9211F /* Miscellaneous */ = {
@@ -544,6 +544,7 @@
 				0D48D0DE1F3D444B00ABAAC6 /* MediaKeyListener.swift */,
 			);
 			name = "Delegate/Main Window Controller";
+			path = "Delegate:Main Window Controller";
 			sourceTree = "<group>";
 		};
 		0D01AD981D707ED900F9211F /* Core Data Shit */ = {
@@ -584,7 +585,7 @@
 				0D592A391EDF6C8B0054D553 /* TrackView+CoreDataProperties.swift */,
 				0D592A211EDF6BCE0054D553 /* TrackExtension.swift */,
 			);
-			name = "Core Data Shit";
+			path = "Core Data Shit";
 			sourceTree = "<group>";
 		};
 		0D01D40F1E5E507F002B352D /* Library Manager */ = {
@@ -604,7 +605,7 @@
 				0DE486851EA58C67009B226B /* JMPathControl.swift */,
 				0DE486801EA579D8009B226B /* Sheets */,
 			);
-			name = "Library Manager";
+			path = "Library Manager";
 			sourceTree = "<group>";
 		};
 		0D5514941E8879090034D742 /* Main Table View */ = {
@@ -620,7 +621,7 @@
 				0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */,
 				0D76F6A91D270EB900C6E70F /* DragAndDropArrayController.swift */,
 			);
-			name = "Main Table View";
+			path = "Main Table View";
 			sourceTree = "<group>";
 		};
 		0D5682771FD9D40C0031C94B /* Frameworks */ = {
@@ -639,7 +640,7 @@
 				0D606EF51E7B4C21007AE152 /* FileBufferer.swift */,
 				0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */,
 			);
-			name = Audio;
+			path = Audio;
 			sourceTree = "<group>";
 		};
 		0D60F5271E86F78300CA5420 /* Formatters */ = {
@@ -655,7 +656,7 @@
 				0D51C8A71EAC1646002F6182 /* URLStringFormatter.swift */,
 				0DA02D331EFA046A00DDE5A9 /* JMDate.swift */,
 			);
-			name = Formatters;
+			path = Formatters;
 			sourceTree = "<group>";
 		};
 		0D6E04181ED3B8B100AD9321 /* Artist View */ = {
@@ -685,7 +686,7 @@
 				0DFE725A1F0190DC00EACE66 /* AlbumFilesViewController.swift */,
 				0DFE725B1F0190DC00EACE66 /* AlbumFilesViewController.xib */,
 			);
-			name = "Album Art Window";
+			path = "Album Art Window";
 			sourceTree = "<group>";
 		};
 		0D8B986A1ED2ACFA00283DD1 /* Alternate Main Views */ = {
@@ -693,7 +694,7 @@
 			children = (
 				0D6E04181ED3B8B100AD9321 /* Artist View */,
 			);
-			name = "Alternate Main Views";
+			path = "Alternate Main Views";
 			sourceTree = "<group>";
 		};
 		0DA4E1651F27F8BE00EC80B2 /* release */ = {
@@ -809,7 +810,7 @@
 				0DE74A521D7D9457005211E6 /* SharedLibraryRequestHandler.swift */,
 				0D23CA6C1E03242400CAF529 /* PeerBrowser.swift */,
 			);
-			name = "Network Functionality";
+			path = "Network Functionality";
 			sourceTree = "<group>";
 		};
 		0DB996C81ECE60C800594939 /* Database/Filesystem Management */ = {
@@ -823,6 +824,7 @@
 				0D116B841E5800FD00C759FD /* LocationManager.swift */,
 			);
 			name = "Database/Filesystem Management";
+			path = "Database:Filesystem Management";
 			sourceTree = "<group>";
 		};
 		0DB996C91ECE614600594939 /* Subview Controllers */ = {
@@ -841,7 +843,7 @@
 				0D299B111DF10FFF0009CF7A /* SourceListViewController.swift */,
 				0D299B121DF10FFF0009CF7A /* SourceListViewController.xib */,
 			);
-			name = "Subview Controllers";
+			path = "Subview Controllers";
 			sourceTree = "<group>";
 		};
 		0DB996CA1ECE629D00594939 /* Miscellaneous */ = {
@@ -853,7 +855,7 @@
 				0DE486901EA83FBA009B226B /* GenericProgressBarSheetController.xib */,
 				0DA8D03F1D1B1128009FEC28 /* ProgressBarView.swift */,
 			);
-			name = Miscellaneous;
+			path = Miscellaneous;
 			sourceTree = "<group>";
 		};
 		0DE486801EA579D8009B226B /* Sheets */ = {
