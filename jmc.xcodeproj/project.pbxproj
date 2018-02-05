@@ -11,21 +11,7 @@
 		0D2300D61F28E781007D392A /* libFLAC.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0DF491F81F27EC4800D23AD1 /* libFLAC.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		0D7111491FE1DB15006E460E /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0D7111471FE1DAD9006E460E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0D71114A1FE1DB1B006E460E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7111471FE1DAD9006E460E /* Sparkle.framework */; };
-		0D893BBF20290A070050DE54 /* jmc in Resources */ = {isa = PBXBuildFile; fileRef = 0D893BBE20290A070050DE54 /* jmc */; };
-		0DA4E1831F27F8BE00EC80B2 /* example_c_decode_file in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E1671F27F8BE00EC80B2 /* example_c_decode_file */; };
-		0DA4E1841F27F8BE00EC80B2 /* example_c_encode_file in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E1681F27F8BE00EC80B2 /* example_c_encode_file */; };
-		0DA4E1851F27F8BE00EC80B2 /* example_cpp_decode_file in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E1691F27F8BE00EC80B2 /* example_cpp_decode_file */; };
-		0DA4E1861F27F8BE00EC80B2 /* example_cpp_encode_file in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E16A1F27F8BE00EC80B2 /* example_cpp_encode_file */; };
 		0DA4E1871F27F8BE00EC80B2 /* flac in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E16B1F27F8BE00EC80B2 /* flac */; };
-		0DA4E1881F27F8BE00EC80B2 /* Makefile.am in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E16C1F27F8BE00EC80B2 /* Makefile.am */; };
-		0DA4E1891F27F8BE00EC80B2 /* Makefile.in in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E16D1F27F8BE00EC80B2 /* Makefile.in */; };
-		0DA4E18A1F27F8BE00EC80B2 /* metaflac in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E16E1F27F8BE00EC80B2 /* metaflac */; };
-		0DA4E18B1F27F8BE00EC80B2 /* test_cuesheet in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E16F1F27F8BE00EC80B2 /* test_cuesheet */; };
-		0DA4E18C1F27F8BE00EC80B2 /* test_libFLAC in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E1701F27F8BE00EC80B2 /* test_libFLAC */; };
-		0DA4E18D1F27F8BE00EC80B2 /* test_libFLAC++ in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E1711F27F8BE00EC80B2 /* test_libFLAC++ */; };
-		0DA4E18E1F27F8BE00EC80B2 /* test_picture in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E1721F27F8BE00EC80B2 /* test_picture */; };
-		0DA4E18F1F27F8BE00EC80B2 /* test_seeking in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E1731F27F8BE00EC80B2 /* test_seeking */; };
-		0DA4E1901F27F8BE00EC80B2 /* test_streams in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E1741F27F8BE00EC80B2 /* test_streams */; };
 		0DA4E1911F27F8BE00EC80B2 /* libFLAC++.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA4E1761F27F8BE00EC80B2 /* libFLAC++.a */; };
 		0DA4E1921F27F8BE00EC80B2 /* libFLAC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA4E1771F27F8BE00EC80B2 /* libFLAC.a */; };
 		0DA4E1931F27F8BE00EC80B2 /* libgetopt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA4E1781F27F8BE00EC80B2 /* libgetopt.a */; };
@@ -35,10 +21,6 @@
 		0DA4E1971F27F8BE00EC80B2 /* libreplaygain_synthesis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA4E17C1F27F8BE00EC80B2 /* libreplaygain_synthesis.a */; };
 		0DA4E1981F27F8BE00EC80B2 /* libtest_libs_common.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA4E17D1F27F8BE00EC80B2 /* libtest_libs_common.a */; };
 		0DA4E1991F27F8BE00EC80B2 /* libutf8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA4E17E1F27F8BE00EC80B2 /* libutf8.a */; };
-		0DA4E19A1F27F8BE00EC80B2 /* Makefile.am in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E17F1F27F8BE00EC80B2 /* Makefile.am */; };
-		0DA4E19B1F27F8BE00EC80B2 /* Makefile.in in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E1801F27F8BE00EC80B2 /* Makefile.in */; };
-		0DA4E19C1F27F8BE00EC80B2 /* Makefile.am in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E1811F27F8BE00EC80B2 /* Makefile.am */; };
-		0DA4E19D1F27F8BE00EC80B2 /* Makefile.in in Resources */ = {isa = PBXBuildFile; fileRef = 0DA4E1821F27F8BE00EC80B2 /* Makefile.in */; };
 		0DAB30A41CFBA3340028928F /* jmcTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30A31CFBA3340028928F /* jmcTests.swift */; };
 		0DAB30AF1CFBA3340028928F /* jmcUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAB30AE1CFBA3340028928F /* jmcUITests.swift */; };
 		0DF491F91F27EC4800D23AD1 /* libFLAC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DF491F81F27EC4800D23AD1 /* libFLAC.dylib */; };
@@ -377,24 +359,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0DA4E1871F27F8BE00EC80B2 /* flac in Resources */,
-				0DA4E18C1F27F8BE00EC80B2 /* test_libFLAC in Resources */,
-				0DA4E1841F27F8BE00EC80B2 /* example_c_encode_file in Resources */,
-				0DA4E1831F27F8BE00EC80B2 /* example_c_decode_file in Resources */,
-				0DA4E18F1F27F8BE00EC80B2 /* test_seeking in Resources */,
-				0DA4E1861F27F8BE00EC80B2 /* example_cpp_encode_file in Resources */,
-				0D893BBF20290A070050DE54 /* jmc in Resources */,
-				0DA4E1881F27F8BE00EC80B2 /* Makefile.am in Resources */,
-				0DA4E1851F27F8BE00EC80B2 /* example_cpp_decode_file in Resources */,
-				0DA4E18E1F27F8BE00EC80B2 /* test_picture in Resources */,
-				0DA4E19A1F27F8BE00EC80B2 /* Makefile.am in Resources */,
-				0DA4E1891F27F8BE00EC80B2 /* Makefile.in in Resources */,
-				0DA4E18A1F27F8BE00EC80B2 /* metaflac in Resources */,
-				0DA4E19C1F27F8BE00EC80B2 /* Makefile.am in Resources */,
-				0DA4E18D1F27F8BE00EC80B2 /* test_libFLAC++ in Resources */,
-				0DA4E19B1F27F8BE00EC80B2 /* Makefile.in in Resources */,
-				0DA4E19D1F27F8BE00EC80B2 /* Makefile.in in Resources */,
-				0DA4E18B1F27F8BE00EC80B2 /* test_cuesheet in Resources */,
-				0DA4E1901F27F8BE00EC80B2 /* test_streams in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
