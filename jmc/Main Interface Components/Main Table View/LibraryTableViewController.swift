@@ -481,7 +481,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                 self.hasCreatedPlayOrder = true
                 self.trackViewArrayController.hasInitialized = true
             } else {
-                if (self.trackViewArrayController.arrangedObjects as! NSArray).count > self.item?.playOrderObject?.shuffledPlayOrder?.count ?? 0 {
+                if (self.trackViewArrayController.arrangedObjects as! NSArray).count != self.item?.playOrderObject?.shuffledPlayOrder?.count ?? 0 {
                     self.initializePlayOrderObject()
                     print("reinitializing poo")
                 }
@@ -514,7 +514,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         print("view did load")
         self.normalMenuItemsArray = [self.getInfoMenuItem, self.addToQueueMenuItem, self.playMenuItem, self.separatorMenuItem, self.toggleEnabledMenuItem, self.showInFinderMenuItem]
         trackViewArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .new, context: &my_context)
-        self.trackViewArrayController?.addObserver(self.mainWindowController!, forKeyPath: "arrangedObjects", options: .new, context: &self.mainWindowController!.my_context)
+        self.trackViewArrayController.addObserver(self.mainWindowController!, forKeyPath: "arrangedObjects", options: .new, context: &self.mainWindowController!.my_context)
         self.trackViewArrayController.addObserver(self.mainWindowController!, forKeyPath: "filterPredicate", options: .new, context: &self.mainWindowController!.my_context)
         self.trackViewArrayController.addObserver(self.mainWindowController!, forKeyPath: "sortDescriptors", options: .new, context: &self.mainWindowController!.my_context)
         trackViewArrayController.tableViewController = self as! LibraryTableViewControllerCellBased

@@ -357,7 +357,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     
     @IBAction func importSelectedPressed(_ sender: Any) {
         let mediaURLsToAdd = (newTracksArrayController.arrangedObjects as! [NewMediaURL]).filter({return $0.toImport == true}).map({return $0.url})
-        let errors = databaseManager.addTracksFromURLs(mediaURLsToAdd, to: self.library!, visualUpdateHandler: nil, callback: nil)
+        let errors = databaseManager.addTracksFromURLs(mediaURLsToAdd, to: self.library!, context: managedContext, visualUpdateHandler: nil, callback: nil)
         for url in mediaURLsToAdd {
             newMediaURLs!.remove(at: newMediaURLs!.index(of: url)!)
         }

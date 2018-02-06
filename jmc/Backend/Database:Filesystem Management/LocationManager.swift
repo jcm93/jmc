@@ -263,7 +263,12 @@ class LocationManager: NSObject {
                             }
                         } else {
                             if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
-                                databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: globalRootLibrary!, visualUpdateHandler: nil, callback: nil) //ignores errors :(
+                                let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+                                subContext.parent = managedContext
+                                subContext.perform {
+                                    self.databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: globalRootLibrary!, context: subContext, visualUpdateHandler: nil, callback: nil)
+                                    //ignores errors :(
+                                }
                             }
                         }
                         //metadata should already exist.

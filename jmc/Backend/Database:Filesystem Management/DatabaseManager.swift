@@ -237,6 +237,10 @@ class DatabaseManager: NSObject {
     func addArtForTrack(_ track: Track, fromData data: Data, managedContext: NSManagedObjectContext) -> Bool { //does not handle errors good
         //returns true if art was successfully added, so a receiver can display the image, if needed
         guard let album = track.album else { return false }
+        guard let globalRootLibrary = track.library else {
+            print("ruh roh")
+            return false
+        }
         let hashString = createMD5HashOf(data: data)
         if let existingPrimaryArt = track.album?.primary_art {
             var existingHash = ""
@@ -291,15 +295,15 @@ class DatabaseManager: NSObject {
             let newPrimaryArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
             newPrimaryArt.album = album
             newPrimaryArt.location = artworkURL.absoluteString
-            newPrimaryArt.id = globalRootLibrary?.next_album_artwork_id
-            globalRootLibrary?.next_album_artwork_id = globalRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
+            newPrimaryArt.id = globalRootLibrary.next_album_artwork_id
+            globalRootLibrary.next_album_artwork_id = globalRootLibrary.next_album_artwork_id!.intValue + 1 as NSNumber?
             return true
         } else {
             let newOtherArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
             newOtherArt.album_multiple = album
             newOtherArt.location = artworkURL.absoluteString
-            newOtherArt.id = globalRootLibrary?.next_album_artwork_id
-            globalRootLibrary?.next_album_artwork_id = globalRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
+            newOtherArt.id = globalRootLibrary.next_album_artwork_id
+            globalRootLibrary.next_album_artwork_id = globalRootLibrary.next_album_artwork_id!.intValue + 1 as NSNumber?
             return true
         }
     }
@@ -707,10 +711,9 @@ class DatabaseManager: NSObject {
         return metadataDictionary
     }
     
-    func addTracksFromURLs(_ mediaURLs: [URL], to library: Library, visualUpdateHandler: ProgressBarController?, callback: (() -> Void)?) -> [FileAddToDatabaseError] { //does not handle errors good
-        let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        subContext.parent = managedContext
-        let subContextLibrary = subContext.object(with: library.objectID)
+    func addTracksFromURLs(_ mediaURLs: [URL], to library: Library, context: NSManagedObjectContext, visualUpdateHandler: ProgressBarController?, callback: (() -> Void)?) -> [FileAddToDatabaseError] { //does not handle errors good
+        let subContextLibrary = context.object(with: library.objectID)
+        let globalRootLibrary = subContextLibrary as? Library
         var errors = [FileAddToDatabaseError]()
         var addedArtists = [String : Artist]()
         var addedAlbums = [Artist : [String : Album]]()
@@ -734,8 +737,8 @@ class DatabaseManager: NSObject {
             var addedAlbumArtist: Artist?
             
             //create track and track view objects
-            let track = NSEntityDescription.insertNewObject(forEntityName: "Track", into: subContext) as! Track
-            let trackView = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: subContext) as! TrackView
+            let track = NSEntityDescription.insertNewObject(forEntityName: "Track", into: context) as! Track
+            let trackView = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: context) as! TrackView
             trackView.track = track
             track.location = url.absoluteString
             track.date_added = Date() as NSDate
@@ -745,17 +748,17 @@ class DatabaseManager: NSObject {
             let volumeURL = getVolumeOfURL(url: url)
             if let existingVolume = addedVolumes[volumeURL]  {
                 track.volume = existingVolume
-            } else if let existingVolume = checkIfVolumeExists(withURL: volumeURL, subcontext: subContext) {
-                track.volume = subContext.object(with: existingVolume.objectID) as! Volume
+            } else if let existingVolume = checkIfVolumeExists(withURL: volumeURL, subcontext: context) {
+                track.volume = context.object(with: existingVolume.objectID) as! Volume
             } else {
-                let newVolume = NSEntityDescription.insertNewObject(forEntityName: "Volume", into: subContext) as! Volume
+                let newVolume = NSEntityDescription.insertNewObject(forEntityName: "Volume", into: context) as! Volume
                 newVolume.location = volumeURL.absoluteString
                 newVolume.name = (try? volumeURL.resourceValues(forKeys: [.volumeNameKey]))?.volumeName
                 track.volume = newVolume
-                let newSourceListItemForVolume = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: subContext) as! SourceListItem
+                let newSourceListItemForVolume = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: context) as! SourceListItem
                 newSourceListItemForVolume.volume = newVolume
                 newSourceListItemForVolume.name = newVolume.name
-                (subContext.object(with: globalRootLibrarySourceListItem!.objectID) as! SourceListItem).addToChildren(newSourceListItemForVolume)
+                (context.object(with: globalRootLibrarySourceListItem!.objectID) as! SourceListItem).addToChildren(newSourceListItemForVolume)
                 addedVolumes[volumeURL] = newVolume
             }
             
@@ -782,10 +785,10 @@ class DatabaseManager: NSObject {
             let artistCheck = fileMetadataDictionary[kArtistKey] as? String ?? ""
             if let alreadyAddedArtist = addedArtists[artistCheck] {
                 track.artist = alreadyAddedArtist
-            } else if let alreadyAddedArtist = checkIfArtistExists(artistCheck, subcontext: subContext) {
-                track.artist = subContext.object(with: alreadyAddedArtist.objectID) as! Artist
+            } else if let alreadyAddedArtist = checkIfArtistExists(artistCheck, subcontext: context) {
+                track.artist = context.object(with: alreadyAddedArtist.objectID) as! Artist
             } else {
-                let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: subContext) as! Artist
+                let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: context) as! Artist
                 newArtist.name = artistCheck
                 newArtist.id = globalRootLibrary?.next_artist_id
                 globalRootLibrary?.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
@@ -796,10 +799,10 @@ class DatabaseManager: NSObject {
             let albumCheck = fileMetadataDictionary[kAlbumKey] as? String ?? ""
             if let alreadyAddedAlbum = addedAlbums[track.artist!]?[albumCheck] {
                 track.album = alreadyAddedAlbum
-            } else if let alreadyAddedAlbum = checkIfAlbumExists(withName: albumCheck, withArtist: track.artist!, subcontext: subContext) {
-                track.album = subContext.object(with: alreadyAddedAlbum.objectID) as! Album
+            } else if let alreadyAddedAlbum = checkIfAlbumExists(withName: albumCheck, withArtist: track.artist!, subcontext: context) {
+                track.album = context.object(with: alreadyAddedAlbum.objectID) as! Album
             } else {
-                let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: subContext) as! Album
+                let newAlbum = NSEntityDescription.insertNewObject(forEntityName: "Album", into: context) as! Album
                 newAlbum.name = albumCheck
                 newAlbum.id = globalRootLibrary?.next_album_id
                 addedAlbum = albumCheck
@@ -820,10 +823,10 @@ class DatabaseManager: NSObject {
             if let composerCheck = fileMetadataDictionary[kComposerKey] as? String {
                 if let alreadyAddedComposer = addedComposers[composerCheck] {
                     track.composer = alreadyAddedComposer
-                } else if let alreadyAddedComposer = checkIfComposerExists(composerCheck, subcontext: subContext) {
-                    track.composer = subContext.object(with: alreadyAddedComposer.objectID) as! Composer
+                } else if let alreadyAddedComposer = checkIfComposerExists(composerCheck, subcontext: context) {
+                    track.composer = context.object(with: alreadyAddedComposer.objectID) as! Composer
                 }  else {
-                    let newComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: subContext) as! Composer
+                    let newComposer = NSEntityDescription.insertNewObject(forEntityName: "Composer", into: context) as! Composer
                     newComposer.name = composerCheck
                     newComposer.id = globalRootLibrary?.next_composer_id
                     globalRootLibrary?.next_composer_id = Int(globalRootLibrary!.next_composer_id!) + 1 as NSNumber
@@ -858,7 +861,7 @@ class DatabaseManager: NSObject {
             
             //move file to the appropriate location, if we're organizing
             var result = true
-            switch library.organization_type! {
+            switch globalRootLibrary!.organization_type! {
             case NSNumber(integerLiteral: 1):
                 result = moveFileAfterEdit(track, copies: false)
             case NSNumber(integerLiteral: 2):
@@ -866,21 +869,21 @@ class DatabaseManager: NSObject {
             default: result = true
             }
             if hasArt {
-                addArtForTrack(track, fromData: art!, managedContext: subContext)
+                addArtForTrack(track, fromData: art!, managedContext: context)
             }
             if result == false {
                 print("error moving")
                 errors.append(FileAddToDatabaseError(url: url.absoluteString, error: "Couldn't move/copy file to album directory"))
                 if addedAlbum != nil {
-                    subContext.delete(track.album!)
+                    context.delete(track.album!)
                 }
-                subContext.delete(track)
-                subContext.delete(trackView)
+                context.delete(track)
+                context.delete(trackView)
                 if addedArtist != nil {
-                    subContext.delete(addedArtist!)
+                    context.delete(addedArtist!)
                 }
                 if addedComposer != nil {
-                    subContext.delete(addedComposer!)
+                    context.delete(addedComposer!)
                 }
             } else {
                 tracks.append(track)
@@ -892,11 +895,11 @@ class DatabaseManager: NSObject {
                 if let addableFiles = getNonAudioFiles(inDirectory: directoryURL) {
                     for file in addableFiles {
                         if UTTypeConformsTo(file.1 as CFString, kUTTypeImage) || UTTypeConformsTo(file.1 as CFString, kUTTypePDF) {
-                            if let art = addArtForTrack(track, from: file.0, managedContext: subContext, organizes: false) {
+                            if let art = addArtForTrack(track, from: file.0, managedContext: context, organizes: false) {
                                 addedAlbumFiles.append(art)
                             }
                         } else {
-                            if let otherFile = addMiscellaneousFile(forTrack: track, from: file.0, managedContext: subContext, organizes: false) {
+                            if let otherFile = addMiscellaneousFile(forTrack: track, from: file.0, managedContext: context, organizes: false) {
                                 addedAlbumFiles.append(otherFile)
                             }
                         }
@@ -929,35 +932,33 @@ class DatabaseManager: NSObject {
             }
         }
         
+        
+        DispatchQueue.main.async {
+            visualUpdateHandler?.makeIndeterminate(actionName: "Repopulating sort cache...")
+        }
+        let cachedOrders = getCachedOrders(for: context)
+        for order in cachedOrders! {
+            reorderForTracks(tracks, cachedOrder: order.value, subContext: context)
+        }
+        DispatchQueue.main.async {
+            visualUpdateHandler?.makeIndeterminate(actionName: "Committing changes...")
+        }
         do {
-            try subContext.save()
+            try context.save()
         } catch {
             print(error)
         }
-        
-        //insert new tracks to necessary sort caches, on the main queue
         DispatchQueue.main.async {
-            //nesting async statements seems only reliable way to make progress bars actually update
-            visualUpdateHandler?.makeIndeterminate(actionName: "Repopulating sort cache...")
-            DispatchQueue.main.async {
-                for order in cachedOrders! {
-                    reorderForTracks(tracks, cachedOrder: order.value, subContext: nil)
-                }
-                visualUpdateHandler?.makeIndeterminate(actionName: "Committing changes...")
-                DispatchQueue.main.async {
-                    do {
-                        try managedContext.save()
-                    } catch {
-                        print(error)
-                    }
-                    visualUpdateHandler?.finish()
-                    if callback != nil {
-                        callback!()
-                    }
-                }
+            do {
+                try managedContext.save()
+            } catch {
+                print(error)
+            }
+            visualUpdateHandler?.finish()
+            if callback != nil {
+                callback!()
             }
         }
-        
         return errors
     }
     

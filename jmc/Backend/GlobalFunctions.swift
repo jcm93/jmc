@@ -828,7 +828,8 @@ func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder, subContext: N
         comparator = Track.compareArtist
     }
     if let cachedOrderTrackViews = cachedOrder.track_views, actualTracks.count > cachedOrderTrackViews.count {
-        let allTracks = (cachedOrder.track_views!.array as! [TrackView]).map({return $0.track!}) + actualTracks as NSArray
+        let allTracksDisparateContexts = (cachedOrder.track_views!.array as! [TrackView]).map({return $0.track!}) + actualTracks
+        let allTracks = allTracksDisparateContexts.map( { return $0.managedObjectContext == subContext ? $0 : (subContext!.object(with: $0.objectID) as! Track) } ) as NSArray
         let newTracks: NSArray
         let key: String
         switch cachedOrder.order! {
