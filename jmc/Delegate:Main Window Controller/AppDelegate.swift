@@ -29,6 +29,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     var addFilesQueueLoop: AddFilesQueueLoop?
     var lastFMDelegate: LastFMDelegate?
     var mediaKeyListener: MediaKeyListener?
+    var mediaKeyListenerQueue: DispatchQueue!
+    
     @IBOutlet var menuDelegate: MainMenuDelegate!
     
     
@@ -148,7 +150,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         //NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidChangeDebug), name: Notification.Name.NSManagedObjectContextObjectsDidChange, object: managedObjectContext)
         NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidUndo), name: Notification.Name.NSUndoManagerDidUndoChange, object: managedObjectContext.undoManager)
-        self.mediaKeyListener = MediaKeyListener(self)
+        let mediaKeyListenerQueue = DispatchQueue(label: "com.jcm.jmc.media-key-listener", qos: .default, attributes: [], autoreleaseFrequency: .inherit, target: nil)
+        mediaKeyListenerQueue.async {
+            self.mediaKeyListener = MediaKeyListener(self)
+        }
+        self.mediaKeyListenerQueue = mediaKeyListenerQueue
         self.menuDelegate.delegate = self
         self.menuDelegate.mainWindowController = self.mainWindowController
     }

@@ -15,6 +15,7 @@ class MediaKeyListener: NSObject {
     //adapted from SPMediaKeyTap: https://github.com/nevyn/SPMediaKeyTap/
     
     let delegate: AppDelegate
+    var machPort: CFMachPort!
     
     var shouldInterceptMediaKeys: Bool {
         get {
@@ -74,6 +75,10 @@ class MediaKeyListener: NSObject {
 
     let callback: @convention(c) (OpaquePointer, CGEventType, CGEvent, Optional<UnsafeMutableRawPointer>) -> Optional<Unmanaged<CGEvent>> = {
         (proxy: OpaquePointer, type: CGEventType, event: CGEvent, refcon: Optional<UnsafeMutableRawPointer>) -> Optional<Unmanaged<CGEvent>> in
+        if type == CGEventType.tapDisabledByTimeout || type == CGEventType.tapDisabledByUserInput {
+            let this = Unmanaged<MediaKeyListener>.fromOpaque(refcon!).takeUnretainedValue()
+            CGEvent.tapEnable(tap: this.machPort, enable: true)
+        }
         guard type == CGEventType(rawValue: UInt32(NX_SYSDEFINED)) else { return Unmanaged.passUnretained(event) }
         guard let keyEvent = NSEvent(cgEvent: event) else { return Unmanaged.passUnretained(event) }
         guard keyEvent.subtype == NSEvent.EventSubtype.init(rawValue: 8) else { return Unmanaged.passUnretained(event) }
@@ -151,9 +156,11 @@ class MediaKeyListener: NSObject {
         let options = CGEventTapOptions.defaultTap
         let eventsOfInterest: UInt64 = UInt64(1 << NX_SYSDEFINED)
         let machPort = CGEvent.tapCreate(tap: .cgSessionEventTap, place: .headInsertEventTap, options: options, eventsOfInterest: eventsOfInterest, callback: self.callback, userInfo: Unmanaged.passUnretained(self).toOpaque())
+        self.machPort = machPort
         let eventPortSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, machPort!, 0)
         CFRunLoopAddSource(CFRunLoopGetCurrent(), eventPortSource, CFRunLoopMode.commonModes)
         print("created event tap")
         self.startListeningToAppSwitching()
+        CFRunLoopRun()
     }
 }
