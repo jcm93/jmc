@@ -1489,13 +1489,13 @@ class DatabaseManager: NSObject {
         return true
     }
     
-    func verifyTrackLocations(visualUpdateHandler: LocationVerifierSheetController?, library: Library) -> [Track]? {
+    func verifyTrackLocations(visualUpdateHandler: LocationVerifierSheetController?, library: Library, context: NSManagedObjectContext) -> [Track]? {
         let request = NSFetchRequest<Track>(entityName: "Track")
         let predicate = library != globalRootLibrary ? NSPredicate(format: "(is_network == false or is_network == nil) and library == %@", library) : NSPredicate(format: "is_network == false or is_network == nil")
         let fileManager = FileManager.default
         request.predicate = predicate
         do {
-            let tracks = try managedContext.fetch(request)
+            let tracks = try context.fetch(request)
             let count = tracks.count
             if visualUpdateHandler != nil {
                 DispatchQueue.main.async {

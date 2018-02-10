@@ -151,6 +151,9 @@ class MediaKeyListener: NSObject {
     }
     
     init(_ delegate: AppDelegate) {
+        defer {
+            CFRunLoopRun()
+        }
         self.delegate = delegate
         super.init()
         let options = CGEventTapOptions.defaultTap
@@ -161,6 +164,5 @@ class MediaKeyListener: NSObject {
         CFRunLoopAddSource(CFRunLoopGetCurrent(), eventPortSource, CFRunLoopMode.commonModes)
         print("created event tap")
         self.startListeningToAppSwitching()
-        CFRunLoopRun()
     }
 }

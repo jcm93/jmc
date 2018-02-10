@@ -275,9 +275,13 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         let parent = self.view.window?.windowController as! PreferencesWindowController
         parent.verifyLocationsSheet = LocationVerifierSheetController(windowNibName: NSNib.Name(rawValue: "LocationVerifierSheetController"))
         parent.window?.beginSheet(parent.verifyLocationsSheet!.window!, completionHandler: verifyLocationsModalComplete)
-        DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async {
-            self.missingTracks = self.databaseManager.verifyTrackLocations(visualUpdateHandler: parent.verifyLocationsSheet, library: self.library!)
+        let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        subContext.parent = managedContext
+        subContext.perform {
+            let library = subContext.object(with: self.library!.objectID) as! Library
+            self.missingTracks = self.databaseManager.verifyTrackLocations(visualUpdateHandler: parent.verifyLocationsSheet, library: library, context: subContext)
             DispatchQueue.main.async {
+                self.missingTracks = self.missingTracks?.map({ return managedContext.object(with: $0.objectID) as! Track })
                 self.verifyLocationsModalComplete(response: NSApplication.ModalResponse(rawValue: 1))
             }
         }
