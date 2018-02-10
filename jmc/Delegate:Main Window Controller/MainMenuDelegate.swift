@@ -15,7 +15,14 @@ class MainMenuDelegate: NSObject, NSMenuDelegate {
     @IBOutlet weak var shuffleMenuItem: NSMenuItem!
     @IBOutlet weak var repeatMenuItem: NSMenuItem!
     
-
+    @IBAction func getInfoAction(_ sender: Any) {
+        
+    }
+    
+    @IBAction func deleteFromLibraryAction(_ sender: Any) {
+        
+    }
+    
     @IBAction func openFiles(_ sender: Any) {
         self.delegate.openFiles()
     }

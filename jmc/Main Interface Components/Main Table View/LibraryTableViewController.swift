@@ -468,6 +468,13 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         }
         self.statusStringNeedsUpdate = true
     }
+    @IBAction func getInfoAction(_ sender: Any) {
+        self.getInfoFromTableView(sender as! AnyObject)
+        
+    }
+    @IBAction func deleteMenuItemAction(_ sender: Any) {
+        self.interpretDeleteEvent()
+    }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "arrangedObjects" {

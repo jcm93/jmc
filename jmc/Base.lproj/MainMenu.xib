@@ -161,9 +161,16 @@
                             </menuItem>
                             <menuItem title="Select None" keyEquivalent="A" id="t7F-ek-xXO"/>
                             <menuItem isSeparatorItem="YES" id="uyl-h8-XO2"/>
-                            <menuItem title="Get Info" keyEquivalent="i" id="442-xp-ylh"/>
+                            <menuItem title="Get Info" keyEquivalent="i" id="442-xp-ylh">
+                                <connections>
+                                    <action selector="getInfoAction:" target="-1" id="LyM-Yn-WnD"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Delete from Library" id="ctL-ek-bbT">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="deleteMenuItemAction:" target="-1" id="Rl2-Ko-7gv"/>
+                                </connections>
                             </menuItem>
                         </items>
                     </menu>
