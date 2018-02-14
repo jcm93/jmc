@@ -518,10 +518,8 @@ class DatabaseManager: NSObject {
         return (mediaURLs, errors)
     }
     
-    func consolidateLibrary(withLocations newLocationDictionary: [NSObject : URL], visualUpdateHandler: ProgressBarController?, moves: Bool) {
+    func consolidateLibrary(withLocations newLocationDictionary: [NSObject : URL], context: NSManagedObjectContext, visualUpdateHandler: ProgressBarController?, moves: Bool) {
         //assume called on not-main queue
-        let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        subContext.parent = managedContext
         var index = 0
         let count = newLocationDictionary.count
         DispatchQueue.main.async {
@@ -536,7 +534,7 @@ class DatabaseManager: NSObject {
                 }
             }
             let object = object as! NSManagedObject
-            let subContextObject = subContext.object(with: object.objectID)
+            let subContextObject = context.object(with: object.objectID)
             guard let oldURL = {() -> URL? in
                 switch subContextObject {
                 case let subContextObject as Track:
@@ -577,7 +575,7 @@ class DatabaseManager: NSObject {
                 break
             }
             do {
-                try subContext.save()
+                try context.save()
                 DispatchQueue.main.async {
                     do {
                         try managedContext.save()

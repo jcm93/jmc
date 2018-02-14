@@ -199,14 +199,16 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         let parent = self.view.window?.windowController as! PreferencesWindowController
         parent.someOtherSheet = GenericProgressBarSheetController(windowNibName: NSNib.Name(rawValue: "GenericProgressBarSheetController"))
         parent.window?.beginSheet(parent.someOtherSheet!.window!, completionHandler: nil)
-        DispatchQueue.global(qos: .default).async {
-            let things = determineTemplateLocations(visualUpdateHandler: parent.someOtherSheet)
+        let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        subContext.parent = managedContext
+        subContext.perform {
+            let things = determineTemplateLocations(context: subContext, visualUpdateHandler: parent.someOtherSheet)
             DispatchQueue.main.async {
                 //parent.someOtherSheet?.finish()
                 parent.consolidateSheet = ConsolidateLibrarySheetController(windowNibName: NSNib.Name(rawValue: "ConsolidateLibrarySheetController"))
                 parent.consolidateSheet?.things = things
-                DispatchQueue.global(qos: .default).async {
-                    parent.consolidateSheet?.initialize(visualUpdateHandler: parent.someOtherSheet)
+                subContext.perform {
+                    parent.consolidateSheet?.initialize(context: subContext, visualUpdateHandler: parent.someOtherSheet)
                     DispatchQueue.main.async {
                         parent.someOtherSheet?.finish()
                         parent.window?.beginSheet(parent.consolidateSheet!.window!, completionHandler: nil)

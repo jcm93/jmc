@@ -201,15 +201,16 @@ func volumeIsAvailable(volume: Volume) -> Bool {
     return fileManager.fileExists(atPath: libraryPath, isDirectory: &isDirectory) && isDirectory.boolValue
 }
 
-func determineTemplateLocations(visualUpdateHandler: ProgressBarController?) -> [NSObject : URL] {
-    let templateBundle = globalRootLibrary.organization_template!
-    let count = globalRootLibrary.tracks!.count
+func determineTemplateLocations(context: NSManagedObjectContext, visualUpdateHandler: ProgressBarController?) -> [NSObject : URL] {
+    let library = context.object(with: globalRootLibrary!.objectID) as! Library
+    let templateBundle = library.organization_template!
+    let count = library.tracks!.count
     DispatchQueue.main.async {
         visualUpdateHandler?.prepareForNewTask(actionName: "Checking organization template for", thingName: "files", thingCount: count)
     }
     var index = 0
     var newFileLocations = [NSObject : URL]()
-    let allAlbums = Set(globalRootLibrary.tracks!.flatMap({return ($0 as? Track)?.album}))
+    let allAlbums = Set(library.tracks!.flatMap({return ($0 as? Track)?.album}))
     for album in allAlbums {
         newFileLocations.merge(templateBundle.match(wholeAlbum: album), uniquingKeysWith: {(first, second) -> URL in
             print("url conflict; this is bad");
@@ -223,9 +224,10 @@ func determineTemplateLocations(visualUpdateHandler: ProgressBarController?) -> 
     return newFileLocations
 }
 
-func getCurrentLocations(visualUpdateHandler: ProgressBarController?) -> [NSObject : URL] {
+func getCurrentLocations(context: NSManagedObjectContext, visualUpdateHandler: ProgressBarController?) -> [NSObject : URL] {
+    let library = context.object(with: globalRootLibrary!.objectID) as! Library
     var result = [NSObject : URL]()
-    for track in globalRootLibrary.tracks! {
+    for track in library.tracks! {
         let track = track as! Track
         if let location = track.location, let url = URL(string: location) {
             result[track] = url

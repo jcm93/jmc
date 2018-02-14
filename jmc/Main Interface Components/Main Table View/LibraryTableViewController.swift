@@ -487,6 +487,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
                 print("initialized poo for new view")
                 self.hasCreatedPlayOrder = true
                 self.trackViewArrayController.hasInitialized = true
+                (self.trackViewArrayController.arrangedObjects as! NSArray).map({return ($0 as! TrackView).track?.id}) //fire faults
             } else {
                 if (self.trackViewArrayController.arrangedObjects as! NSArray).count != self.item?.playOrderObject?.shuffledPlayOrder?.count ?? 0 {
                     self.initializePlayOrderObject()

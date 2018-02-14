@@ -75,9 +75,9 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
         }
     }
     
-    func initialize(visualUpdateHandler: ProgressBarController?) {
+    func initialize(context: NSManagedObjectContext, visualUpdateHandler: ProgressBarController?) {
         self.preConsolidationFileViewController = AlbumFileLocationViewController(nibName: NSNib.Name(rawValue: "AlbumFileLocationViewController"), bundle: nil)
-        var currentTrackLocations = getCurrentLocations(visualUpdateHandler: visualUpdateHandler)
+        var currentTrackLocations = getCurrentLocations(context: context, visualUpdateHandler: visualUpdateHandler)
         self.preConsolidationFileViewController.masterTree = AlbumFilePathTree(files: &currentTrackLocations, visualUpdateHandler: visualUpdateHandler)
         self.postConsolidationFileViewController = AlbumFileLocationViewController(nibName: NSNib.Name(rawValue: "AlbumFileLocationViewController"), bundle: nil)
         self.postConsolidationFileViewController.masterTree = AlbumFilePathTree(files: &self.things, visualUpdateHandler: visualUpdateHandler)
@@ -103,8 +103,8 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
             print("consolidating library")
             self.progressSheet = GenericProgressBarSheetController(windowNibName: .init("GenericProgressBarSheetController"))
             self.window?.beginSheet(self.progressSheet!.window!, completionHandler: nil)
-            DispatchQueue.global(qos: .default).async {
-                self.databaseManager.consolidateLibrary(withLocations: self.postConsolidationFileViewController.masterTree.rootNode.objectPathDictionaryIfRoot!, visualUpdateHandler: self.progressSheet, moves: self.moves)
+            backgroundContext.perform {
+                self.databaseManager.consolidateLibrary(withLocations: self.postConsolidationFileViewController.masterTree.rootNode.objectPathDictionaryIfRoot!, context: backgroundContext, visualUpdateHandler: self.progressSheet, moves: self.moves)
                 DispatchQueue.main.async {
                     self.window?.close()
                 }
