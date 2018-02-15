@@ -229,7 +229,33 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     func interpretDeleteEvent() {
         guard trackViewArrayController.selectedObjects.count > 0 else {return}
         let selectedObjects = trackViewArrayController.selectedObjects as! [TrackView]
-        mainWindowController!.interpretDeleteEvent(selectedObjects)
+        if self.item?.playlist?.tracks?.count ?? 0 > 0 {
+            if UserDefaults.standard.bool(forKey: DEFAULTS_DOESNT_ASKS_DELETE_PLAYLIST) != true {
+                let alert = NSAlert()
+                alert.addButton(withTitle: "OK")
+                alert.addButton(withTitle: "Cancel")
+                alert.messageText = "Are you sure you want to remove the selected tracks from this playlist?"
+                alert.showsSuppressionButton = true
+                let response = alert.runModal()
+                if response == NSApplication.ModalResponse.alertFirstButtonReturn {
+                    print("deleting tracks")
+                    self.remove(tracks: selectedObjects, from: self.item!.playlist!)
+                }
+                if alert.suppressionButton?.state == .on {
+                    UserDefaults.standard.set(true, forKey: DEFAULTS_DOESNT_ASKS_DELETE_PLAYLIST)
+                }
+            } else {
+                self.remove(tracks: selectedObjects, from: self.item!.playlist!)
+            }
+        } else {
+            mainWindowController!.interpretDeleteEvent(selectedObjects)
+        }
+    }
+    
+    func remove(tracks: [TrackView], from playlist: SongCollection) {
+        playlist.removeFromTracks(NSOrderedSet(array: tracks))
+        self.initializeForPlaylist()
+        //self.tableView.reloadData()
     }
     
     func modifyPlayOrderForSortDescriptors(_ poo: PlayOrderObject, trackID: Int) -> Int {

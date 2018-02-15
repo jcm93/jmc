@@ -39,6 +39,7 @@ let DEFAULTS_TRACK_PLAY_REGISTER_POINT = "registerTrackPlayPoint"
 let DEFAULTS_TRACK_QUEUE_VISIBLE = "queueVisible"
 let DEFAULTS_SCROBBLES = "scrobbles"
 var DEFAULTS_DURATION_SHOWS_TIME_REMAINING = "durationShowsTimeRemaining"
+let DEFAULTS_DOESNT_ASKS_DELETE_PLAYLIST = "doesntAskBeforeRemovingTracksFromPlaylist"
 
 enum TableSortBehavior: Int {
     case followsNothing, followsSelection, followsCurrentTrack
