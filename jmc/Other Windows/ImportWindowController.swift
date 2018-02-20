@@ -14,7 +14,7 @@ class ImportWindowController: NSWindowController, NSTableViewDelegate {
     
     @IBOutlet weak var pathController: NSPathControl!
     @IBOutlet weak var OKButton: NSButton!
-    var playlists = [NSDictionary]()
+    @objc var playlists = [NSDictionary]()
     @IBOutlet var playlistArrayController: NSArrayController!
     @IBOutlet weak var playlistTableView: NSTableView!
     var path: String?

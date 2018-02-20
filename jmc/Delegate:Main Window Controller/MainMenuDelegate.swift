@@ -84,12 +84,14 @@ class MainMenuDelegate: NSObject, NSMenuDelegate {
     }
     
     @IBAction func openLibraryManager(_ sender: Any) {
+        guard self.delegate.preferencesWindowController?.window == nil else { return }
         self.delegate.openPreferences(self)
         self.delegate.preferencesWindowController!.toolbar.selectedItemIdentifier = NSToolbarItem.Identifier(rawValue: "library")
         self.delegate.preferencesWindowController!.selectLibrary(self)
     }
     
     @IBAction func openImportWindow(_ sender: AnyObject) {
+        guard self.delegate.importWindowController?.window == nil else { return }
         self.delegate.importWindowController = ImportWindowController(windowNibName: NSNib.Name(rawValue: "ImportWindowController"))
         self.delegate.importWindowController!.mainWindowController = mainWindowController
         self.delegate.importWindowController!.showWindow(self)
