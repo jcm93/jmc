@@ -263,10 +263,8 @@ class LocationManager: NSObject {
                             }
                         } else {
                             if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
-                                let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-                                subContext.parent = managedContext
-                                subContext.perform {
-                                    self.databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: globalRootLibrary!, context: subContext, visualUpdateHandler: nil, callback: nil)
+                                backgroundContext.perform {
+                                    self.databaseManager.addTracksFromURLs([URL(fileURLWithPath: path)], to: globalRootLibrary!, context: backgroundContext, visualUpdateHandler: nil, callback: nil)
                                     //ignores errors :(
                                 }
                             }
@@ -304,6 +302,11 @@ class LocationManager: NSObject {
     func updateLastEventID() {
         notEnablingUndo {
             globalRootLibrary?.last_fs_event = FSEventStreamGetLatestEventId(self.eventStreamRef!) as NSNumber?
+            do {
+                try managedContext.save()
+            } catch {
+                print(error)
+            }
         }
     }
     

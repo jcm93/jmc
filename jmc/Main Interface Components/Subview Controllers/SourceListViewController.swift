@@ -417,7 +417,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         let selectedPlaylists = sourceList.selectedRowIndexes.flatMap({return (sourceList.item(atRow: $0) as? SourceListItem)?.playlist})
         let delegate = (NSApplication.shared.delegate as! AppDelegate)
         delegate.launchAddFilesDialog()
-        DispatchQueue.global(qos: .default).async {
+        backgroundContext.perform {
             self.export(playlists: selectedPlaylists)
         }
     }
@@ -426,11 +426,14 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     func export(playlists: [SongCollection]) { //does not handle errors good
-        let playlistsFolder = globalRootLibrary!.getCentralMediaFolder()!.appendingPathComponent("Exported Playlists")
+        let backgroundContextGlobalRootLibrary = backgroundContext.object(with: globalRootLibrary!.objectID) as! Library
+        let playlists = playlists.map({return backgroundContext.object(with: $0.objectID) as! SongCollection})
+        let playlistsFolder = backgroundContextGlobalRootLibrary.getCentralMediaFolder()!.appendingPathComponent("Exported Playlists")
         let visualUpdateHandler = (NSApplication.shared.delegate as! AppDelegate).backgroundAddFilesHandler
         var index = 0
+        let count = playlists.reduce(0, { return $0 + $1.tracks!.count })
         DispatchQueue.main.async {
-            visualUpdateHandler?.prepareForNewTask(actionName: "Copying", thingName: "files", thingCount: playlists.reduce(0, { return $0 + $1.tracks!.count }))
+            visualUpdateHandler?.prepareForNewTask(actionName: "Copying", thingName: "files", thingCount: count)
         }
         var playlistFolders = [URL]()
         for playlist in playlists {

@@ -91,16 +91,14 @@ class AddFilesQueueLoop: NSObject, ProgressBarController {
             self.delegate.backgroundAddFilesHandler?.increment(thingsDone: self.thingsDone)
             self.isRunning = true
         }
-        let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        subContext.parent = managedContext
-        subContext.perform {
+        backgroundContext.perform {
             if self.urlsToAddChunks.count > 0 && self.canAddMoreFiles == true {
                 self.canAddMoreFiles = false
                 self.consecutiveEmptyLoops = 0
                 //do some chunk optimization
                 let chunk = self.getURLsToAdd()
                 //get errors that indicate we can retry on the current thread, do the rest of the work on the main thread
-                let errors = self.databaseManager.addTracksFromURLs(chunk.urls, to: globalRootLibrary!, context: subContext, visualUpdateHandler: self, callback: self.finishedAddingChunkCallback)
+                let errors = self.databaseManager.addTracksFromURLs(chunk.urls, to: globalRootLibrary!, context: backgroundContext, visualUpdateHandler: self, callback: self.finishedAddingChunkCallback)
                 let retryableErrors = errors.filter({return $0.error == kFileAddErrorMetadataNotYetPopulated})
                 let retryableURLs = retryableErrors.map({return URL(string: $0.urlString)!}).filter({url in
                     if let retryCount = self.retryCounts[url] {
