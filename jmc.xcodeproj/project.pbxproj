@@ -188,7 +188,7 @@
 		0DEE9D9D1EF7AB280025AA11 /* StupidTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEE9D9C1EF7AB280025AA11 /* StupidTableCellView.swift */; };
 		0DF188801EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF1887E1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift */; };
 		0DF188811EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */; };
-		0DF188841EDD072B00241785 /* OrganizationRuleViewcontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF188821EDD072B00241785 /* OrganizationRuleViewcontroller.swift */; };
+		0DF188841EDD072B00241785 /* OrganizationRuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF188821EDD072B00241785 /* OrganizationRuleViewController.swift */; };
 		0DF188851EDD072B00241785 /* OrganizationRuleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DF188831EDD072B00241785 /* OrganizationRuleViewController.xib */; };
 		0DF491F91F27EC4800D23AD1 /* libFLAC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DF491F81F27EC4800D23AD1 /* libFLAC.dylib */; };
 		0DF491FB1F27EECC00D23AD1 /* libogg.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DF491FA1F27EECC00D23AD1 /* libogg.dylib */; };
@@ -418,7 +418,7 @@
 		0DEE9D9C1EF7AB280025AA11 /* StupidTableCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StupidTableCellView.swift; path = Sheets/StupidTableCellView.swift; sourceTree = "<group>"; };
 		0DF1887E1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedOrganizationOptionsWindowController.swift; sourceTree = "<group>"; };
 		0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdvancedOrganizationOptionsWindowController.xib; sourceTree = "<group>"; };
-		0DF188821EDD072B00241785 /* OrganizationRuleViewcontroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganizationRuleViewcontroller.swift; sourceTree = "<group>"; };
+		0DF188821EDD072B00241785 /* OrganizationRuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganizationRuleViewController.swift; sourceTree = "<group>"; };
 		0DF188831EDD072B00241785 /* OrganizationRuleViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OrganizationRuleViewController.xib; sourceTree = "<group>"; };
 		0DF491F61F27EC4800D23AD1 /* stream_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stream_decoder.h; path = FLAC/stream_decoder.h; sourceTree = "<group>"; };
 		0DF491F81F27EC4800D23AD1 /* libFLAC.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libFLAC.dylib; path = FLAC/libFLAC.dylib; sourceTree = "<group>"; };
@@ -600,7 +600,7 @@
 				0DD7A3BB1EF4738F00FEDD71 /* StupidTableView.swift */,
 				0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */,
 				0D99D4A01EF216F200264CFF /* OrganizationRuleCellView.swift */,
-				0DF188821EDD072B00241785 /* OrganizationRuleViewcontroller.swift */,
+				0DF188821EDD072B00241785 /* OrganizationRuleViewController.swift */,
 				0DF188831EDD072B00241785 /* OrganizationRuleViewController.xib */,
 				0DE486851EA58C67009B226B /* JMPathControl.swift */,
 				0DE486801EA579D8009B226B /* Sheets */,
@@ -1081,7 +1081,7 @@
 				0DD0DB0E1E54425800807CAC /* FlacDecoder.swift in Sources */,
 				0DF188801EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift in Sources */,
 				0D58F7491D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift in Sources */,
-				0DF188841EDD072B00241785 /* OrganizationRuleViewcontroller.swift in Sources */,
+				0DF188841EDD072B00241785 /* OrganizationRuleViewController.swift in Sources */,
 				0D388AAD1E1F2C8800D25A7D /* AddPlaylistButton.swift in Sources */,
 				0D69659D1EA02EC50050D505 /* ProgressBarController.swift in Sources */,
 				0D8A8B401F61CB54007529A0 /* AlbumFileLocationViewController.swift in Sources */,

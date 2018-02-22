@@ -499,7 +499,8 @@ enum completionHandlerType: Int {
     
     func tryGetMoreTracks(background: Bool) {
         if trackQueue.count > 0 {
-            currentTrackLocation = trackQueue.removeFirst().location!
+            let currentTrack = background ? backgroundContext.object(with: trackQueue.removeFirst().objectID) as! Track : trackQueue.removeFirst()
+            currentTrackLocation = currentTrack.location!
         } else {
             let nextTrack = mainWindowController?.getNextTrack(background: background)
             if nextTrack?.is_network == true {

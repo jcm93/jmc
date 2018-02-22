@@ -75,7 +75,6 @@ class OrganizationRuleViewController: NSViewController, NSTokenFieldDelegate {
     }
     
     @IBAction func predicateEditorAction(_ sender: Any) {
-        print("doingus")
         DispatchQueue.main.async {
             let parentWC = self.view.window?.windowController as? AdvancedOrganizationOptionsWindowController
             let indexOfSelf = parentWC?.ruleControllers.index(of: self)

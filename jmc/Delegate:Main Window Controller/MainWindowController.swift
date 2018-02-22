@@ -579,6 +579,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             paused = true
         }
     }
+    
     @IBAction func advancedFilterButtonPressed(_ sender: AnyObject) {
         if sender is AppDelegate {
             self.advancedSearchToggle.state = self.advancedSearchToggle.state == NSControl.StateValue.on ? NSControl.StateValue.off : NSControl.StateValue.on
