@@ -115,8 +115,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     @IBAction func openPreferences(_ sender: AnyObject) {
-        preferencesWindowController = PreferencesWindowController(windowNibName: NSNib.Name(rawValue: "PreferencesWindowController"))
-        preferencesWindowController?.showWindow(self)
+        guard self.preferencesWindowController?.window == nil else { return }
+        self.preferencesWindowController = PreferencesWindowController(windowNibName: NSNib.Name(rawValue: "PreferencesWindowController"))
+        self.preferencesWindowController?.showWindow(self)
     }
 
     @IBAction func showAdvancedFilter(_ sender: AnyObject) {

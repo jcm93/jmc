@@ -78,10 +78,21 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         guard let track = ((self.trackViewArrayController.arrangedObjects as? NSArray)?[tableView.clickedRow] as? TrackView)?.track else { return }
         if track.is_available == false {
             print("clicked unavailable \(track.name)")
-            //self.mainWindowController?.delegate?.openLibraryManager(self)
-            self.mainWindowController?.delegate?.preferencesWindowController?.libraryManagerViewController?.tabView.selectTabViewItem(at: 1)
-            self.mainWindowController?.delegate?.preferencesWindowController?.libraryManagerViewController?.verifyLocationsPressed(self)
-            
+            locateTrack(track: track)
+        }
+    }
+    
+    func locateTrack(track: Track) {
+        let openPanel = NSOpenPanel()
+        openPanel.allowsMultipleSelection = false
+        openPanel.canChooseDirectories = false
+        openPanel.allowedFileTypes = ["public.audio"]
+        let panelResponse = openPanel.runModal()
+        if panelResponse == NSApplication.ModalResponse.OK {
+            guard let url = openPanel.url else { return }
+            track.location = url.absoluteString
+            track.is_available = true
+            //todo rescan metadata
         }
     }
     

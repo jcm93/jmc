@@ -226,6 +226,7 @@ class MissingFilesViewController: NSViewController, NSOutlineViewDataSource, NSO
             for track in node!.missingTracks {
                 track.location = URL(string: track.location!.replacingOccurrences(of: oldAbsoluteString, with: newAbsoluteString, options: .anchored, range: nil))!.standardizedFileURL.absoluteString
                 if fileManager.fileExists(atPath: URL(string: track.location!)!.path) {
+                    track.is_available = true
                     self.missingTracks.remove(track)
                     node!.removeTrackRecursive(track)
                 }
