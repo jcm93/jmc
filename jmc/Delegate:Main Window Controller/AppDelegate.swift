@@ -153,9 +153,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(managedObjectsDidUndo), name: Notification.Name.NSUndoManagerDidUndoChange, object: managedObjectContext.undoManager)
         let mediaKeyListenerQueue = DispatchQueue(label: "com.jcm.jmc.media-key-listener", qos: .default, attributes: [], autoreleaseFrequency: .inherit, target: nil)
         mediaKeyListenerQueue.async {
-            self.mediaKeyListener = MediaKeyListener(self)
+            //self.mediaKeyListener = MediaKeyListener(self) temp
         }
-        self.mediaKeyListenerQueue = mediaKeyListenerQueue
+        //self.mediaKeyListenerQueue = mediaKeyListenerQueue temp
         self.menuDelegate.delegate = self
         self.menuDelegate.mainWindowController = self.mainWindowController
     }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13770" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13770"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -221,7 +221,7 @@
                                                             <rect key="frame" x="2" y="0.0" width="696" height="13"/>
                                                             <subviews>
                                                                 <progressIndicator wantsLayer="YES" maxValue="100" displayedWhenStopped="NO" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="c8A-nk-1SH">
-                                                                    <rect key="frame" x="0.0" y="3" width="696" height="8"/>
+                                                                    <rect key="frame" x="0.0" y="3" width="696" height="7"/>
                                                                 </progressIndicator>
                                                             </subviews>
                                                             <constraints>
@@ -352,7 +352,7 @@
                         </customSpacing>
                     </stackView>
                     <button toolTip="Toggle shuffle" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qNB-cP-szA">
-                        <rect key="frame" x="20" y="4" width="44" height="25"/>
+                        <rect key="frame" x="20" y="5" width="44" height="23"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="LmL-mZ-ewB"/>
                             <constraint firstAttribute="width" constant="44" id="gYh-9b-vgN"/>
@@ -367,7 +367,7 @@
                         </connections>
                     </button>
                     <button toolTip="Toggle track repeat" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eg4-23-xqc" userLabel="Repeat Button">
-                        <rect key="frame" x="72" y="4" width="44" height="25"/>
+                        <rect key="frame" x="72" y="5" width="44" height="23"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="PRo-qA-k4d"/>
                             <constraint firstAttribute="width" constant="44" id="wAQ-FL-cXz"/>
@@ -382,7 +382,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gzN-xP-Utz" userLabel="Queue Button">
-                        <rect key="frame" x="1620" y="4" width="44" height="25"/>
+                        <rect key="frame" x="1620" y="5" width="44" height="23"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="hy6-BX-4Jm"/>
                         </constraints>
@@ -400,7 +400,7 @@
                         </connections>
                     </button>
                     <button toolTip="Toggle library sharing" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rfk-1e-A3X" userLabel="Sharing Button">
-                        <rect key="frame" x="176" y="4" width="44" height="25"/>
+                        <rect key="frame" x="176" y="5" width="44" height="23"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="2rr-OL-nC8"/>
                             <constraint firstAttribute="width" constant="44" id="Cdj-p4-8Uw"/>
@@ -411,7 +411,7 @@
                         </buttonCell>
                     </button>
                     <button toolTip="Toggle advanced search" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0eg-hu-JdK" userLabel="Sharing Button">
-                        <rect key="frame" x="228" y="4" width="44" height="25"/>
+                        <rect key="frame" x="228" y="5" width="44" height="23"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="GHm-oO-umr"/>
                             <constraint firstAttribute="width" constant="44" id="vfw-Jn-GzP"/>
@@ -436,7 +436,7 @@
                         </connections>
                     </textField>
                     <button toolTip="Hide or show album art" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aLT-7j-MYS" userLabel="Sharing Button">
-                        <rect key="frame" x="124" y="4" width="44" height="25"/>
+                        <rect key="frame" x="124" y="5" width="44" height="23"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="Iw5-0h-g0a"/>
                             <constraint firstAttribute="height" constant="22" id="OXP-kQ-rwT"/>
@@ -467,8 +467,8 @@
                             <outlet property="menu" destination="WAr-lr-0sM" id="tZk-Ww-b2z"/>
                         </connections>
                     </segmentedControl>
-                    <button hidden="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yRB-VI-EGH">
-                        <rect key="frame" x="332" y="4" width="44" height="25"/>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yRB-VI-EGH">
+                        <rect key="frame" x="332" y="5" width="44" height="23"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="c0m-Jk-e4f"/>
                         </constraints>
@@ -478,7 +478,7 @@
                         </buttonCell>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Nyd-Mi-qKV">
-                        <rect key="frame" x="1568" y="4" width="44" height="25"/>
+                        <rect key="frame" x="1568" y="5" width="44" height="23"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="3gM-Kw-Fxj"/>
                             <constraint firstAttribute="width" constant="44" id="dxO-qC-0lj"/>

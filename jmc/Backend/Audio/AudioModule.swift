@@ -182,6 +182,12 @@ enum completionHandlerType: Int {
         } else {
             // Fallback on earlier versions
         }
+        //let audioSession = AVAudioSession.sharedInstance()
+        do {
+            //try audioSession.setRouteSharingPolicy(.longForm)
+        } catch {
+            //print(error)
+        }
     }
     
     func resetEngineCompletely() {
