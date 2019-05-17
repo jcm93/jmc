@@ -107,7 +107,7 @@ func getAllMiscellaneousAlbumFiles(for album: Album) -> [String] {
     if let otherFiles = album.other_files {
         albumFiles.append(contentsOf: otherFiles.map({return ($0 as! AlbumFile).location}))
     }
-    return albumFiles.flatMap({return $0})
+    return albumFiles.compactMap({return $0})
 }
 
 
@@ -210,7 +210,7 @@ func determineTemplateLocations(context: NSManagedObjectContext, visualUpdateHan
     }
     var index = 0
     var newFileLocations = [NSObject : URL]()
-    let allAlbums = Set(library.tracks!.flatMap({return ($0 as? Track)?.album}))
+    let allAlbums = Set(library.tracks!.compactMap({return ($0 as? Track)?.album}))
     for album in allAlbums {
         newFileLocations.merge(templateBundle.match(wholeAlbum: album), uniquingKeysWith: {(first, second) -> URL in
             print("url conflict; this is bad");
@@ -306,7 +306,7 @@ func createNonTemplateDirectoryFor(album albumOptional: Album?, dry: Bool) -> UR
         if album.album_artist != nil {
             albumDirectory.appendPathComponent(album.album_artist!.name ?? UNKNOWN_ARTIST_STRING)
         } else {
-            let set = Set(album.tracks!.flatMap({return ($0 as! Track).artist?.name}))
+            let set = Set(album.tracks!.compactMap({return ($0 as! Track).artist?.name}))
             if set.count > 1 {
                 albumDirectory.appendPathComponent(UNKNOWN_ALBUM_ARTIST_STRING)
             } else {

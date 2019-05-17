@@ -325,7 +325,7 @@ func editSortComposer(_ tracks: [Track]?, sortComposer: String) {
 
 func editReleaseDate(_ tracks: [Track]?, date: JMDate) {
     if tracks != nil {
-        for album in Set(tracks!.flatMap({return $0.album})) {
+        for album in Set(tracks!.compactMap({return $0.album})) {
             album.release_date = date
         }
     }

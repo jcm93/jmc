@@ -389,7 +389,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
             }
         }
         let ratings = selectedTracks!.map({return $0.rating})
-        let sortNames = selectedTracks!.flatMap({return $0.sort_name})
+        let sortNames = selectedTracks!.compactMap({return $0.sort_name})
         let sortNamesSet = Set(sortNames)
         if sortNamesSet.count == 1 && sortNames.count == selectedTracks?.count {
             sortingNameSortAsField.stringValue = sortNames.first!
@@ -399,7 +399,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
                 sortingNameSortAsField.placeholderString = kMultipleThingsString
             }
         }
-        let sortAlbums = selectedTracks!.flatMap({return $0.sort_album})
+        let sortAlbums = selectedTracks!.compactMap({return $0.sort_album})
         let sortAlbumsSet = Set(sortAlbums)
         if sortAlbumsSet.count == 1 && sortAlbums.count == selectedTracks?.count {
             sortingAlbumSortAsField.stringValue = sortAlbums.first!
@@ -409,7 +409,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
                 sortingAlbumSortAsField.placeholderString = kMultipleThingsString
             }
         }
-        let sortArtists = selectedTracks!.flatMap({return $0.sort_artist})
+        let sortArtists = selectedTracks!.compactMap({return $0.sort_artist})
         let sortArtistsSet = Set(sortArtists)
         if sortArtistsSet.count == 1 && sortArtists.count == selectedTracks?.count {
             sortingArtistSortAsField.stringValue = sortArtists.first!
@@ -419,7 +419,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
                 sortingArtistSortAsField.placeholderString = kMultipleThingsString
             }
         }
-        let sortAlbumArtists = selectedTracks!.flatMap({return $0.sort_album_artist})
+        let sortAlbumArtists = selectedTracks!.compactMap({return $0.sort_album_artist})
         let sortAlbumArtistsSet = Set(sortAlbumArtists)
         if sortAlbumArtistsSet.count == 1 && sortAlbumArtists.count == selectedTracks?.count {
             sortingAlbumArtistSortAsField.stringValue = sortAlbumArtists.first!
@@ -429,7 +429,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
                 sortingAlbumArtistSortAsField.placeholderString = kMultipleThingsString
             }
         }
-        let sortComposers = selectedTracks!.flatMap({return $0.sort_composer})
+        let sortComposers = selectedTracks!.compactMap({return $0.sort_composer})
         let sortComposersSet = Set(sortComposers)
         if sortComposersSet.count == 1 && sortComposers.count == selectedTracks?.count{
             sortingComposerSortAsField.stringValue = sortComposers.first!
@@ -491,7 +491,7 @@ class TagEditorWindow: NSWindowController, NSTextFieldDelegate, NSWindowDelegate
     func populateArtwork() {
         guard let album = selectedTracks![0].album else { return }
         //change some layout stuff
-        self.albumFilesViewController = AlbumFilesViewController(nibName: NSNib.Name(rawValue: "AlbumFilesViewController"), bundle: nil)
+        self.albumFilesViewController = AlbumFilesViewController(nibName: "AlbumFilesViewController", bundle: nil)
         self.albumFilesViewController?.track = selectedTracks![0]
         self.artworkTargetView.addSubview(self.albumFilesViewController!.view)
         self.albumFilesViewController!.view.leadingAnchor.constraint(equalTo: self.artworkTargetView.leadingAnchor).isActive = true

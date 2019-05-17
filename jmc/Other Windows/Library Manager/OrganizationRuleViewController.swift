@@ -58,7 +58,7 @@ class OrganizationRuleViewController: NSViewController, NSTokenFieldDelegate {
         }
     }
     
-    override func controlTextDidChange(_ obj: Notification) {
+    func controlTextDidChange(_ obj: Notification) {
         if tokenField.stringValue.contains("\\") {
             tokenField.stringValue = tokenField.stringValue.replacingOccurrences(of: "\\", with: "")
             tokenField.menu?.popUp(positioning: nil, at: tokenField.frame.origin.applying(CGAffineTransform(translationX: 0.0, y: -8.0)), in: self.view)

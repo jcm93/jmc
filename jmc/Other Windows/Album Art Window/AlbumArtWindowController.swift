@@ -47,7 +47,7 @@ class AlbumArtWindowController: NSWindowController {
         self.window?.isMovableByWindowBackground = true
         
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
-        self.albumFilesViewController = AlbumFilesViewController(nibName: NSNib.Name(rawValue: "AlbumFilesViewController"), bundle: nil)
+        self.albumFilesViewController = AlbumFilesViewController(nibName: "AlbumFilesViewController", bundle: nil)
         self.albumFilesViewController?.track = self.track
         self.albumFilesViewController?.windowController = self
         self.contentView.addSubview(self.albumFilesViewController!.view)

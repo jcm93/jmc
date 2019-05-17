@@ -23,7 +23,7 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate {
     
     init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, artistViewController: ArtistViewController) {
         self.artistViewController = artistViewController
-        super.init(nibName: nibNameOrNil.map { NSNib.Name(rawValue: $0) }, bundle: nibBundleOrNil)
+        super.init(nibName: nibNameOrNil.map { $0 }, bundle: nibBundleOrNil)
     }
     
     required init?(coder: NSCoder) {

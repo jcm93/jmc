@@ -44,14 +44,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     
     func initializeLibraryAndShowMainWindow() {
         if !UserDefaults.standard.bool(forKey: DEFAULTS_ARE_INITIALIZED_STRING) || globalRootLibrary == nil {
-            self.setupWindowController = InitialSetupWindowController(windowNibName: NSNib.Name(rawValue: "InitialSetupWindowController"))
+            self.setupWindowController = InitialSetupWindowController(windowNibName: "InitialSetupWindowController")
             self.setupWindowController?.setupForNilLibrary()
         }
         self.locationManager = LocationManager(delegate: self)
         self.addFilesQueueLoop = AddFilesQueueLoop(delegate: self)
         self.locationManager?.initializeEventStream()
         self.lastFMDelegate = LastFMDelegate()
-        mainWindowController = MainWindowController(windowNibName: NSNib.Name(rawValue: "MainWindowController"))
+        mainWindowController = MainWindowController(windowNibName: "MainWindowController")
         mainWindowController?.delegate = self
         mainWindowController?.showWindow(self)
         //self.serviceBrowser = ConnectivityManager(delegate: self, slvc: mainWindowController!.sourceListViewController!)
@@ -61,7 +61,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     
     func launchAddFilesDialog() {
         print("launch add files called")
-        self.backgroundAddFilesHandler = GenericProgressBarSheetController(windowNibName: NSNib.Name(rawValue: "GenericProgressBarSheetController"))
+        self.backgroundAddFilesHandler = GenericProgressBarSheetController(windowNibName: "GenericProgressBarSheetController")
         self.mainWindowController?.window?.addChildWindow(self.backgroundAddFilesHandler!.window!, ordered: .above)
         //self.backgroundAddFilesHandler?.window?.level = Int(CGWindowLevelForKey(CGWindowLevelKey.floatingWindow))
     }
@@ -103,7 +103,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     
     func showImportErrors(_ errors: [FileAddToDatabaseError]) {
         if errors.count > 0 {
-            self.importErrorWindowController = ImportErrorWindowController(windowNibName: NSNib.Name(rawValue: "ImportErrorWindowController"))
+            self.importErrorWindowController = ImportErrorWindowController(windowNibName: "ImportErrorWindowController")
             self.importErrorWindowController?.errors = errors
             self.importErrorWindowController?.showWindow(self)
         }
@@ -116,7 +116,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @IBAction func openPreferences(_ sender: AnyObject) {
         guard self.preferencesWindowController?.window == nil else { return }
-        self.preferencesWindowController = PreferencesWindowController(windowNibName: NSNib.Name(rawValue: "PreferencesWindowController"))
+        self.preferencesWindowController = PreferencesWindowController(windowNibName: "PreferencesWindowController")
         self.preferencesWindowController?.showWindow(self)
     }
 
@@ -205,7 +205,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
     
     func showMainWindow() {
-        mainWindowController = MainWindowController(windowNibName: NSNib.Name(rawValue: "MainWindowController"))
+        mainWindowController = MainWindowController(windowNibName: "MainWindowController")
         mainWindowController!.showWindow(self)
     }
     

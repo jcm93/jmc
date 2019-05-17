@@ -15,7 +15,7 @@ public class PlayOrderObject: NSManagedObject {
 
     func libraryStatusNeedsUpdate() {
         let viewController = self.sourceListItem?.tableViewController
-        let volumes = Set((viewController?.trackViewArrayController.arrangedObjects as! [TrackView]).flatMap({return $0.track!.volume}))
+        let volumes = Set((viewController?.trackViewArrayController.arrangedObjects as! [TrackView]).compactMap({return $0.track!.volume}))
         var count = 0
         var missingVolumes = [Volume]()
         for volume in volumes {

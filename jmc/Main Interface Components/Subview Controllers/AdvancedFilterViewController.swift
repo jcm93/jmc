@@ -26,7 +26,7 @@ class AdvancedFilterViewController: NSViewController {
     var isInitialized = false
     
     init(tableViewController: LibraryTableViewController) {
-        super.init(nibName: NSNib.Name(rawValue: "AdvancedFilterViewController"), bundle: nil)
+        super.init(nibName: "AdvancedFilterViewController", bundle: nil)
         self.tableViewController = tableViewController
         self.tableViewController.advancedFilterVisible = true
     }

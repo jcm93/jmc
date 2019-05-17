@@ -75,11 +75,11 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     @IBAction func enableMonitoringCheckAction(_ sender: Any) {
         if enableDirectoryMonitoringCheck.state == NSControl.StateValue.on {
             library?.keeps_track_of_files = true as NSNumber
-            sourceMonitorStatusImageView.image = NSImage(named: NSImage.Name.statusAvailable)
+            sourceMonitorStatusImageView.image = NSImage(named: NSImage.statusAvailableName)
             sourceMonitorStatusTextField.stringValue = "Directory monitoring is enabled."
         } else {
             library?.keeps_track_of_files = false as NSNumber
-            sourceMonitorStatusImageView.image = NSImage(named: NSImage.Name.statusUnavailable)
+            sourceMonitorStatusImageView.image = NSImage(named: NSImage.statusUnavailableName)
             sourceMonitorStatusTextField.stringValue = "Directory monitoring inactive."
         }
         initializeForLibrary(library: library!)
@@ -120,7 +120,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     
     @IBAction func changeSourceCentralMediaFolderButtonPressed(_ sender: Any) {
         let parent = self.view.window?.windowController as! PreferencesWindowController
-        parent.changeFolderSheet = ChangePrimaryFolderSheetController(windowNibName: NSNib.Name(rawValue: "ChangePrimaryFolderSheetController"))
+        parent.changeFolderSheet = ChangePrimaryFolderSheetController(windowNibName: "ChangePrimaryFolderSheetController")
         parent.changeFolderSheet?.libraryManager = self
         parent.window?.beginSheet(parent.changeFolderSheet!.window!, completionHandler: nil)
         
@@ -140,7 +140,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         }
     }
     @IBAction func advancedOrganizationPressed(_ sender: Any) {
-        self.advancedOrganizationOptionsWindowController = AdvancedOrganizationOptionsWindowController(windowNibName: NSNib.Name(rawValue: "AdvancedOrganizationOptionsWindowController"))
+        self.advancedOrganizationOptionsWindowController = AdvancedOrganizationOptionsWindowController(windowNibName: "AdvancedOrganizationOptionsWindowController")
         self.view.window?.addChildWindow(self.advancedOrganizationOptionsWindowController!.window!, ordered: .above)
     }
     
@@ -168,7 +168,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     
     @IBAction func addWatchFolderPressed(_ sender: Any) {
         let parent = self.view.window?.windowController as! PreferencesWindowController
-        parent.watchFolderSheet = AddWatchFolderSheetController(windowNibName: NSNib.Name(rawValue: "AddWatchFolderSheetController"))
+        parent.watchFolderSheet = AddWatchFolderSheetController(windowNibName: "AddWatchFolderSheetController")
         parent.watchFolderSheet?.libraryManager = self
         parent.window?.beginSheet(parent.watchFolderSheet!.window!, completionHandler: nil)
     }
@@ -197,7 +197,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     
     @IBAction func consolidateLibraryPressed(_ sender: Any) {
         let parent = self.view.window?.windowController as! PreferencesWindowController
-        parent.someOtherSheet = GenericProgressBarSheetController(windowNibName: NSNib.Name(rawValue: "GenericProgressBarSheetController"))
+        parent.someOtherSheet = GenericProgressBarSheetController(windowNibName: "GenericProgressBarSheetController")
         parent.window?.beginSheet(parent.someOtherSheet!.window!, completionHandler: nil)
         let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         subContext.parent = managedContext
@@ -205,7 +205,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
             let things = determineTemplateLocations(context: subContext, visualUpdateHandler: parent.someOtherSheet)
             DispatchQueue.main.async {
                 //parent.someOtherSheet?.finish()
-                parent.consolidateSheet = ConsolidateLibrarySheetController(windowNibName: NSNib.Name(rawValue: "ConsolidateLibrarySheetController"))
+                parent.consolidateSheet = ConsolidateLibrarySheetController(windowNibName: "ConsolidateLibrarySheetController")
                 parent.consolidateSheet?.things = things
                 subContext.perform {
                     parent.consolidateSheet?.initialize(context: subContext, visualUpdateHandler: parent.someOtherSheet)
@@ -258,11 +258,11 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         }
         if library.keeps_track_of_files == true {
             enableDirectoryMonitoringCheck.state = NSControl.StateValue.on
-            sourceMonitorStatusImageView.image = NSImage(named: NSImage.Name.statusAvailable)
+            sourceMonitorStatusImageView.image = NSImage(named: NSImage.statusAvailableName)
             sourceMonitorStatusTextField.stringValue = "Directory monitoring is active."
         } else {
             enableDirectoryMonitoringCheck.state = NSControl.StateValue.off
-            sourceMonitorStatusImageView.image = NSImage(named: NSImage.Name.statusUnavailable)
+            sourceMonitorStatusImageView.image = NSImage(named: NSImage.statusUnavailableName)
             sourceMonitorStatusTextField.stringValue = "Directory monitoring inactive."
         }
     }
@@ -275,7 +275,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     
     @IBAction func verifyLocationsPressed(_ sender: Any) {
         let parent = self.view.window?.windowController as! PreferencesWindowController
-        parent.verifyLocationsSheet = LocationVerifierSheetController(windowNibName: NSNib.Name(rawValue: "LocationVerifierSheetController"))
+        parent.verifyLocationsSheet = LocationVerifierSheetController(windowNibName: "LocationVerifierSheetController")
         parent.window?.beginSheet(parent.verifyLocationsSheet!.window!, completionHandler: verifyLocationsModalComplete)
         let subContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         subContext.parent = managedContext
@@ -314,21 +314,21 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
                     return TrackNotFound(path: nil, track: track)
                 }
             })
-            self.libraryLocationStatusImageView.image = NSImage(named: NSImage.Name(rawValue: "NSStatusPartiallyAvailable"))
+            self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
             self.trackLocationStatusText.stringValue = "\(self.missingTracks!.count) tracks not found."
             tracksNotFoundArrayController.content = trackNotFoundArray
         } else {
-            self.libraryLocationStatusImageView.image = NSImage(named: NSImage.Name(rawValue: "NSStatusAvailable"))
+            self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusAvailable")
             self.trackLocationStatusText.stringValue = "All tracks located."
         }
     }
     
     func updateMissingTracks(count: Int) {
         if count > 0 {
-            self.libraryLocationStatusImageView.image = NSImage(named: NSImage.Name(rawValue: "NSStatusPartiallyAvailable"))
+            self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusPartiallyAvailable")
             self.trackLocationStatusText.stringValue = "\(count) tracks not found."
         } else {
-            self.libraryLocationStatusImageView.image = NSImage(named: NSImage.Name(rawValue: "NSStatusAvailable"))
+            self.libraryLocationStatusImageView.image = NSImage(named: "NSStatusAvailable")
             self.trackLocationStatusText.stringValue = "All tracks located."
         }
     }
@@ -340,7 +340,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     
     @IBAction func scanSourceButtonPressed(_ sender: Any) {
         let parent = self.view.window?.windowController as! PreferencesWindowController
-        parent.mediaScannerSheet = MediaScannerSheet(windowNibName: NSNib.Name(rawValue: "MediaScannerSheet"))
+        parent.mediaScannerSheet = MediaScannerSheet(windowNibName: "MediaScannerSheet")
         parent.window?.beginSheet(parent.mediaScannerSheet!.window!, completionHandler: scanMediaModalComplete)
         DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async {
             self.newMediaURLs = self.databaseManager.scanForNewMedia(visualUpdateHandler: parent.mediaScannerSheet, library: self.library!)

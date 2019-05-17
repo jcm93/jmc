@@ -228,7 +228,7 @@ class InitialSetupWindowController: NSWindowController {
         self.window?.close()
     }
     @IBAction func launchAdvancedOptions(_ sender: Any) {
-        self.advancedOptionsController = AdvancedOrganizationOptionsWindowController(windowNibName: NSNib.Name(rawValue: "AdvancedOrganizationOptionsWindowController"))
+        self.advancedOptionsController = AdvancedOrganizationOptionsWindowController(windowNibName: "AdvancedOrganizationOptionsWindowController")
         self.window?.beginSheet(self.advancedOptionsController!.window!, completionHandler: nil)
     }
     

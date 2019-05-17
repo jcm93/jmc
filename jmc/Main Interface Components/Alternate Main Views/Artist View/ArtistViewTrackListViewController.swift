@@ -21,7 +21,7 @@ class ArtistViewTrackListViewController: NSViewController {
             let secondValue = t2.track_num?.intValue ?? 0
             return firstValue < secondValue
             })
-        super.init(nibName: nibNameOrNil.map { NSNib.Name(rawValue: $0) }, bundle: nibBundleOrNil)
+        super.init(nibName: nibNameOrNil.map { $0 }, bundle: nibBundleOrNil)
     }
     
     required init?(coder: NSCoder) {

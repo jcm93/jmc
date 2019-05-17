@@ -138,7 +138,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         print("set object value called")
     }
     
-    override func controlTextDidEndEditing(_ obj: Notification) {
+    func controlTextDidEndEditing(_ obj: Notification) {
         let item = sourceList.item(atRow: sourceList.row(for: (obj.object as! NSTextField))) as? SourceListItem
         item?.name = (obj.object as! NSTextField).stringValue
     }
@@ -408,13 +408,13 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     override func keyDown(with event: NSEvent) {
-        if event.charactersIgnoringModifiers == String(Character(UnicodeScalar(NSDeleteCharacter)!)) {
+        if event.charactersIgnoringModifiers == String(Character(UnicodeScalar(NSEvent.SpecialKey.delete.rawValue)!)) {
             deleteSelection()
         }
     }
     
     @IBAction func exportPlaylist(_ sender: Any) {
-        let selectedPlaylists = sourceList.selectedRowIndexes.flatMap({return (sourceList.item(atRow: $0) as? SourceListItem)?.playlist})
+        let selectedPlaylists = sourceList.selectedRowIndexes.compactMap({return (sourceList.item(atRow: $0) as? SourceListItem)?.playlist})
         let delegate = (NSApplication.shared.delegate as! AppDelegate)
         delegate.launchAddFilesDialog()
         backgroundContext.perform {
@@ -484,7 +484,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
         print("validate drop called on source list")
-        print(info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "Track")))
+        print(info.draggingPasteboard.data(forType: NSPasteboard.PasteboardType(rawValue: "Track")))
         let source = item as? SourceListItem
         if draggedNodes != nil {
             print(index)
@@ -498,12 +498,12 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
                 print("returning none")
                 return NSDragOperation()
             }
-        } else if info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "Track")) != nil {
+        } else if info.draggingPasteboard.data(forType: NSPasteboard.PasteboardType(rawValue: "Track")) != nil {
             print("non nil track data")
             if source != nil && source!.parent!.name == "Playlists" {
                 return .generic
             }
-        } else if info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "NetworkTrack")) != nil {
+        } else if info.draggingPasteboard.data(forType: NSPasteboard.PasteboardType(rawValue: "NetworkTrack")) != nil {
             print("non nil networktrack data")
             if source != nil {
                 let itemParentName = source!.parent?.name
@@ -528,11 +528,11 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             draggedNodes = nil
             self.reloadData()
             return true
-        } else if info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "Track")) != nil {
+        } else if info.draggingPasteboard.data(forType: NSPasteboard.PasteboardType(rawValue: "Track")) != nil {
             print("doing stuff")
             let playlistItem = item as! SourceListItem
             let playlist = playlistItem.playlist
-            let data = info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "Track"))
+            let data = info.draggingPasteboard.data(forType: NSPasteboard.PasteboardType(rawValue: "Track"))
             let unCodedThing = NSKeyedUnarchiver.unarchiveObject(with: data!) as! NSMutableArray
             let tracks = { () -> [Track] in
                 var result = [Track]()
@@ -544,11 +544,11 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
             }()
             playlist?.addToTracks(tracks.map({return $0.view!}))
             playlistItem.tableViewController?.initializeForPlaylist()
-        } else if info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "NetworkTrack")) != nil {
+        } else if info.draggingPasteboard.data(forType: NSPasteboard.PasteboardType(rawValue: "NetworkTrack")) != nil {
             print("processing network track transfers")
             let playlistItem = item as! SourceListItem
             let playlist = playlistItem.playlist
-            let data = info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "NetworkTrack"))
+            let data = info.draggingPasteboard.data(forType: NSPasteboard.PasteboardType(rawValue: "NetworkTrack"))
             let unCodedThing = NSKeyedUnarchiver.unarchiveObject(with: data!) as! NSMutableArray
             let tracks = { () -> [Track] in
                 var result = [Track]()

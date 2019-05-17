@@ -10,7 +10,7 @@ import Cocoa
 
 class DisparateTrack: NSObject {
     var track: Track
-    dynamic var potentialNewURL: URL
+    @objc dynamic var potentialNewURL: URL
     init(track: Track, potentialURL: URL) {
         self.track = track
         self.potentialNewURL = potentialURL
@@ -76,10 +76,10 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
     }
     
     func initialize(context: NSManagedObjectContext, visualUpdateHandler: ProgressBarController?) {
-        self.preConsolidationFileViewController = AlbumFileLocationViewController(nibName: NSNib.Name(rawValue: "AlbumFileLocationViewController"), bundle: nil)
+        self.preConsolidationFileViewController = AlbumFileLocationViewController(nibName: "AlbumFileLocationViewController", bundle: nil)
         var currentTrackLocations = getCurrentLocations(context: context, visualUpdateHandler: visualUpdateHandler)
         self.preConsolidationFileViewController.masterTree = AlbumFilePathTree(files: &currentTrackLocations, visualUpdateHandler: visualUpdateHandler)
-        self.postConsolidationFileViewController = AlbumFileLocationViewController(nibName: NSNib.Name(rawValue: "AlbumFileLocationViewController"), bundle: nil)
+        self.postConsolidationFileViewController = AlbumFileLocationViewController(nibName: "AlbumFileLocationViewController", bundle: nil)
         self.postConsolidationFileViewController.masterTree = AlbumFilePathTree(files: &self.things, visualUpdateHandler: visualUpdateHandler)
     }
     
@@ -101,7 +101,7 @@ class ConsolidateLibrarySheetController: NSWindowController, ProgressBarControll
         let response = alert.runModal()
         if response == NSApplication.ModalResponse.alertFirstButtonReturn {
             print("consolidating library")
-            self.progressSheet = GenericProgressBarSheetController(windowNibName: .init("GenericProgressBarSheetController"))
+            self.progressSheet = GenericProgressBarSheetController(windowNibName: "GenericProgressBarSheetController")
             self.window?.beginSheet(self.progressSheet!.window!, completionHandler: nil)
             backgroundContext.perform {
                 self.databaseManager.consolidateLibrary(withLocations: self.postConsolidationFileViewController.masterTree.rootNode.objectPathDictionaryIfRoot!, context: backgroundContext, visualUpdateHandler: self.progressSheet, moves: self.moves)

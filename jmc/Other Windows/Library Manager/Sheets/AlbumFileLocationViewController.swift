@@ -251,7 +251,7 @@ class AlbumFileLocationViewController: NSViewController, NSOutlineViewDataSource
             view.imageView?.image = values.customIcon ?? values.effectiveIcon as? NSImage
         } else {
             if node.children.count > 0 {
-                view.imageView?.image = NSImage(named: NSImage.Name.folder)
+                view.imageView?.image = NSImage(named: NSImage.folderName)
             } else {
                 view.imageView?.image = NSWorkspace.shared.icon(forFileType: UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, url.pathExtension as CFString, nil)!.takeRetainedValue() as String)
             }

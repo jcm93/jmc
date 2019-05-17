@@ -278,7 +278,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     }
 
     func getUpcomingIDsForPlayEvent(_ shuffleState: Int, id: Int, row: Int?) -> Int {
-        let volumes = Set((trackViewArrayController.arrangedObjects as! [TrackView]).flatMap({return $0.track?.volume}))
+        let volumes = Set((trackViewArrayController.arrangedObjects as! [TrackView]).compactMap({return $0.track?.volume}))
         var count = 0
         for volume in volumes {
             if !volumeIsAvailable(volume: volume) {
@@ -506,7 +506,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         self.statusStringNeedsUpdate = true
     }
     @IBAction func getInfoAction(_ sender: Any) {
-        self.getInfoFromTableView(sender as! AnyObject)
+        self.getInfoFromTableView(sender as AnyObject)
         
     }
     @IBAction func deleteMenuItemAction(_ sender: Any) {

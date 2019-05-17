@@ -561,8 +561,8 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     
     func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
         print("accept drop")
-        if (info.draggingPasteboard().types!.contains(NSPasteboard.PasteboardType(rawValue: "Track"))) {
-            let thing = info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "Track"))
+        if (info.draggingPasteboard.types!.contains(NSPasteboard.PasteboardType(rawValue: "Track"))) {
+            let thing = info.draggingPasteboard.data(forType: NSPasteboard.PasteboardType(rawValue: "Track"))
             self.temporaryPooForDragging = nil
             self.temporaryPooIndexForDragging = nil
             let unCodedThing = NSKeyedUnarchiver.unarchiveObject(with: thing!) as! NSMutableArray
@@ -576,8 +576,8 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             }()
             addTracksToQueue(row, tracks: tracks)
         }
-        if (info.draggingPasteboard().types!.contains(NSPasteboard.PasteboardType(rawValue: "public.TrackQueueView"))) {
-            let codedViews = info.draggingPasteboard().data(forType: NSPasteboard.PasteboardType(rawValue: "public.TrackQueueView"))
+        if (info.draggingPasteboard.types!.contains(NSPasteboard.PasteboardType(rawValue: "public.TrackQueueView"))) {
+            let codedViews = info.draggingPasteboard.data(forType: NSPasteboard.PasteboardType(rawValue: "public.TrackQueueView"))
             let rows = NSKeyedUnarchiver.unarchiveObject(with: codedViews!) as! IndexSet
             var item_offset = 0
             var index_offset = 0

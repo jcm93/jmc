@@ -128,7 +128,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     var librarySortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "artist_sort_order", ascending: true)]
     
     @IBAction func importButtonPressed(_ sender: AnyObject) {
-        importWindowController = ImportWindowController(windowNibName: NSNib.Name(rawValue: "ImportWindowController"))
+        importWindowController = ImportWindowController(windowNibName: "ImportWindowController")
         importWindowController?.mainWindowController = self
         importWindowController?.showWindow(self)
     }
@@ -166,7 +166,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     func createPlaylistViewController(_ item: SourceListItem) -> LibraryTableViewController {
-        let newPlaylistViewController = LibraryTableViewControllerCellBased(nibName: NSNib.Name(rawValue: "LibraryTableViewControllerCellBased"), bundle: nil)
+        let newPlaylistViewController = LibraryTableViewControllerCellBased(nibName: "LibraryTableViewControllerCellBased", bundle: nil)
         newPlaylistViewController.mainWindowController = self
         newPlaylistViewController.playlist = item.playlist
         newPlaylistViewController.item = item
@@ -255,7 +255,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     @IBAction func toggleEqualizer(_ sender: Any) {
         print("show equalizer called")
         if self.delegate.equalizerWindowController == nil {
-            self.delegate.equalizerWindowController = EqualizerWindowController(windowNibName: NSNib.Name(rawValue: "EqualizerWindowController"))
+            self.delegate.equalizerWindowController = EqualizerWindowController(windowNibName: "EqualizerWindowController")
             self.delegate.equalizerWindowController?.audioModule = self.delegate.audioModule
         }
         if self.delegate.equalizerWindowController?.window?.isVisible == nil || self.delegate.equalizerWindowController?.window?.isVisible == false {
@@ -265,7 +265,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     func launchGetInfo(_ tracks: [Track]) {
-        self.tagWindowController = TagEditorWindow(windowNibName: NSNib.Name(rawValue: "TagEditorWindow"))
+        self.tagWindowController = TagEditorWindow(windowNibName: "TagEditorWindow")
         self.tagWindowController?.mainWindowController = self
         self.tagWindowController?.selectedTracks = tracks
         self.window?.addChildWindow(self.tagWindowController!.window!, ordered: .above)
@@ -493,7 +493,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         updateValuesUnsafe()
         delegate?.audioModule.pause()
         timer!.invalidate()
-        playButton.image = NSImage(named: NSImage.Name(rawValue: "NSPlayTemplate"))
+        playButton.image = NSImage(named: "NSPlayTemplate")
     }
     
     func unpause() {
@@ -502,8 +502,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         lastTimerDate = Date()
         delegate?.audioModule.play()
         timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateValuesSafe), userInfo: nil, repeats: true)
-        RunLoop.current.add(timer!, forMode: RunLoopMode.commonModes)
-        playButton.image = NSImage(named: NSImage.Name(rawValue: "NSPauseTemplate"))
+        RunLoop.current.add(timer!, forMode: RunLoop.Mode.common)
+        playButton.image = NSImage(named: "NSPauseTemplate")
     }
     
     func seek(_ frac: Double) {
@@ -667,8 +667,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     func startTimer() {
         //timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(updateValuesUnsafe), userInfo: nil, repeats: true)
         timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateValuesSafe), userInfo: nil, repeats: true)
-        RunLoop.current.add(timer!, forMode: RunLoopMode.commonModes)
-        playButton.image = NSImage(named: NSImage.Name(rawValue: "NSPauseTemplate"))
+        RunLoop.current.add(timer!, forMode: RunLoop.Mode.common)
+        playButton.image = NSImage(named: "NSPauseTemplate")
     }
     
     func updateValuesUnsafe() {
@@ -868,26 +868,26 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     
     func makeDark() {
         self.window?.appearance = NSAppearance(named: NSAppearance.Name.vibrantDark)
-        theBox.fillColor = NSColor(patternImage: NSImage(named: NSImage.Name(rawValue: "Inverted Gradient"))!)
+        theBox.fillColor = NSColor(patternImage: NSImage(named: "Inverted Gradient")!)
         let color = NSColor.white
-        let attrs = [NSAttributedStringKey.foregroundColor : color]
+        let attrs = [NSAttributedString.Key.foregroundColor : color]
         let newAttributedString = NSAttributedString(string: "Search", attributes: attrs)
         (searchField.cell as! NSSearchFieldCell).placeholderAttributedString = newAttributedString
     }
     
     override func windowDidLoad() {
-        self.sourceListViewController = SourceListViewController(nibName: NSNib.Name(rawValue: "SourceListViewController"), bundle: nil)
+        self.sourceListViewController = SourceListViewController(nibName: "SourceListViewController", bundle: nil)
         sourceListTargetView.addSubview(sourceListViewController!.view)
         self.sourceListViewController!.view.frame = sourceListTargetView.bounds
         let sourceListLayoutConstraints = [NSLayoutConstraint(item: sourceListViewController!.view, attribute: .left, relatedBy: .equal, toItem: sourceListTargetView, attribute: .left, multiplier: 1, constant: 0), NSLayoutConstraint(item: sourceListViewController!.view, attribute: .right, relatedBy: .equal, toItem: sourceListTargetView, attribute: .right, multiplier: 1, constant: 0), NSLayoutConstraint(item: sourceListViewController!.view, attribute: .top, relatedBy: .equal, toItem: sourceListTargetView, attribute: .top, multiplier: 1, constant: 0), NSLayoutConstraint(item: sourceListViewController!.view, attribute: .bottom, relatedBy: .equal, toItem: sourceListTargetView, attribute: .bottom, multiplier: 1, constant: 0)]
         NSLayoutConstraint.activate(sourceListLayoutConstraints)
         self.sourceListViewController?.mainWindowController = self
-        self.albumArtViewController = AlbumArtViewController(nibName: NSNib.Name(rawValue: "AlbumArtViewController"), bundle: nil)
+        self.albumArtViewController = AlbumArtViewController(nibName: "AlbumArtViewController", bundle: nil)
         artworkTargetView.addSubview(albumArtViewController!.view)
         let artworkLayoutConstraints = [NSLayoutConstraint(item: albumArtViewController!.view, attribute: .left, relatedBy: .equal, toItem: artworkTargetView, attribute: .left, multiplier: 1, constant: 0), NSLayoutConstraint(item: albumArtViewController!.view, attribute: .right, relatedBy: .equal, toItem: artworkTargetView, attribute: .right, multiplier: 1, constant: 0), NSLayoutConstraint(item: albumArtViewController!.view, attribute: .top, relatedBy: .equal, toItem: artworkTargetView, attribute: .top, multiplier: 1, constant: 0), NSLayoutConstraint(item: albumArtViewController!.view, attribute: .bottom, relatedBy: .equal, toItem: artworkTargetView, attribute: .bottom, multiplier: 1, constant: 0)]
         NSLayoutConstraint.activate(artworkLayoutConstraints)
         self.albumArtViewController!.view.frame = artworkTargetView.bounds
-        self.trackQueueViewController = TrackQueueViewController(nibName: NSNib.Name(rawValue: "TrackQueueViewController"), bundle: nil)
+        self.trackQueueViewController = TrackQueueViewController(nibName: "TrackQueueViewController", bundle: nil)
         trackQueueTargetView.addSubview(trackQueueViewController!.view)
         self.trackQueueViewController!.view.frame = trackQueueTargetView.bounds
         let trackQueueLayoutConstraints = [NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .left, relatedBy: .equal, toItem: trackQueueTargetView, attribute: .left, multiplier: 1, constant: 0), NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .right, relatedBy: .equal, toItem: trackQueueTargetView, attribute: .right, multiplier: 1, constant: 0), NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .top, relatedBy: .equal, toItem: trackQueueTargetView, attribute: .top, multiplier: 1, constant: 0), NSLayoutConstraint(item: trackQueueViewController!.view, attribute: .bottom, relatedBy: .equal, toItem: trackQueueTargetView, attribute: .bottom, multiplier: 1, constant: 0)]
@@ -906,7 +906,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         theBox.borderType = .bezelBorder
         theBox.borderWidth = 1.1
         theBox.cornerRadius = 3
-        theBox.fillColor = NSColor(patternImage: NSImage(named: NSImage.Name(rawValue: "Gradient"))!)
+        theBox.fillColor = NSColor(patternImage: NSImage(named: "Gradient")!)
         searchField.delegate = self
         //searchField.drawsBackground = false
         self.delegate?.audioModule.addObserver(self, forKeyPath: "track_changed", options: .new, context: &my_context)

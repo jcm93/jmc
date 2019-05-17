@@ -22,6 +22,6 @@ public class Album: NSManagedObject {
         if let otherFiles = self.other_files?.allObjects {
             albumFiles.append(contentsOf: otherFiles as! [NSObject])
         }
-        return albumFiles.flatMap({return $0})
+        return albumFiles.compactMap({return $0})
     }
 }

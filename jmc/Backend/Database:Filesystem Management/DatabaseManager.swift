@@ -128,7 +128,7 @@ class DatabaseManager: NSObject {
         }
     }
     
-    func undoOperationThatMovedFiles(for tracks: [Track]) {//handles errors
+    @objc func undoOperationThatMovedFiles(for tracks: [Track]) {//handles errors
         print("undoing a move operation")
         var errors = [Error]()
         for track in tracks {
@@ -404,8 +404,8 @@ class DatabaseManager: NSObject {
     }
     
     func getAlbumDirectory(for album: Album) -> URL {
-        let currentTrackLocations = album.tracks?.flatMap({return ($0 as! Track).location})
-        let currentTrackDirectories = currentTrackLocations?.flatMap({return URL(string: $0)?.deletingLastPathComponent()}) ?? [URL]()
+        let currentTrackLocations = album.tracks?.compactMap({return ($0 as! Track).location})
+        let currentTrackDirectories = currentTrackLocations?.compactMap({return URL(string: $0)?.deletingLastPathComponent()}) ?? [URL]()
         let directoriesSet = Set(currentTrackDirectories)
         if directoriesSet.count == 1 {
             return directoriesSet.first!
@@ -416,8 +416,8 @@ class DatabaseManager: NSObject {
     
     func trimDirectoryFollowingMoveOperation(track: Track, oldLocation: URL) { //does not handle errors good
         let oldDirectory = oldLocation.deletingLastPathComponent()
-        let currentTrackLocations = track.album?.tracks?.flatMap({return ($0 as! Track).location})
-        let currentTrackDirectories = currentTrackLocations?.flatMap({return URL(string: $0)?.deletingLastPathComponent()}) ?? [URL]()
+        let currentTrackLocations = track.album?.tracks?.compactMap({return ($0 as! Track).location})
+        let currentTrackDirectories = currentTrackLocations?.compactMap({return URL(string: $0)?.deletingLastPathComponent()}) ?? [URL]()
         let directoriesSet = Set(currentTrackDirectories)
         guard directoriesSet.contains(oldDirectory) == false else { return }
         //no files left in old directory
@@ -1554,7 +1554,7 @@ class DatabaseManager: NSObject {
                     visualUpdateHandler!.initializeForSetCreation()
                 }
             }
-            locations = Set(tracks.flatMap({return $0.location?.lowercased()}))
+            locations = Set(tracks.compactMap({return $0.location?.lowercased()}))
         } catch {
             print(error)
             return [URL]()

@@ -60,7 +60,7 @@ class AlbumFilesViewController: NSViewController, NSCollectionViewDataSource, NS
     
     func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionView.DropOperation) -> Bool {
         print("accepting drop")
-        if let board = draggingInfo.draggingPasteboard().propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType")) as? NSArray {
+        if let board = draggingInfo.draggingPasteboard.propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType")) as? NSArray {
             let urls = board.map({return URL(fileURLWithPath: $0 as! String)})
             if let currentTrack = self.track {
                 let databaseManager = DatabaseManager()

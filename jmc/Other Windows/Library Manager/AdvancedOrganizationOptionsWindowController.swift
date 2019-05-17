@@ -91,7 +91,7 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
     }
     
     func addRule(template: OrganizationTemplate?) {
-        let newViewController = OrganizationRuleViewController(nibName: NSNib.Name(rawValue: "OrganizationRuleViewController"), bundle: nil)
+        let newViewController = OrganizationRuleViewController(nibName: "OrganizationRuleViewController", bundle: nil)
         newViewController.template = template
         ruleControllers.append(newViewController)
         if template == nil {
@@ -122,7 +122,7 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
         }
     }
     
-    override func controlTextDidChange(_ obj: Notification) {
+    func controlTextDidChange(_ obj: Notification) {
         if tokenField.stringValue.contains("\\") {
             tokenField.stringValue = tokenField.stringValue.replacingOccurrences(of: "\\", with: "")
             tokenField.menu?.popUp(positioning: nil, at: tokenField.frame.origin.applying(CGAffineTransform(translationX: 0.0, y: -8.0)), in: self.window!.contentView!)

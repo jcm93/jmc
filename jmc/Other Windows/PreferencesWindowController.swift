@@ -173,7 +173,7 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
     }
     
     func authSucceeded(name: String) {
-        self.authStatusImage.image = NSImage(named: NSImage.Name.statusAvailable)
+        self.authStatusImage.image = NSImage(named: NSImage.statusAvailableName)
         self.authStatusLabel.stringValue = "Authenticated with Last.fm for user \(name)"
         authFailedLabel.isHidden = true
         startAuthButton.isHidden = false
@@ -272,7 +272,7 @@ class PreferencesWindowController: NSWindowController, NSToolbarDelegate {
         if globalRootLibrary?.last_fm_session_key != nil {
             lastFMSessionAuthenticated(username: globalRootLibrary!.last_fm_username!)
         }
-        self.libraryManagerViewController = LibraryManagerViewController(nibName: NSNib.Name(rawValue: "LibraryManagerViewController"), bundle: nil)
+        self.libraryManagerViewController = LibraryManagerViewController(nibName: "LibraryManagerViewController", bundle: nil)
         self.libraryManagerTargetView.addSubview(self.libraryManagerViewController!.view)
         self.libraryManagerViewController?.initializeForLibrary(library: globalRootLibrary!)
         

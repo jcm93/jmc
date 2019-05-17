@@ -17,7 +17,7 @@ class AlbumArtCollectionView: NSCollectionView {
     }
     
     override func keyDown(with event: NSEvent) {
-        if event.charactersIgnoringModifiers == String(Character(UnicodeScalar(NSDeleteCharacter)!)) {
+        if event.charactersIgnoringModifiers == String(Character(UnicodeScalar(NSEvent.SpecialKey.delete.rawValue)!)) {
             viewController?.deleteSelection()
         }
     }

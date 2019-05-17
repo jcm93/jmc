@@ -18,8 +18,8 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     
     init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, artist: Artist) {
         self.artist = artist
-        self.albums = Array(Set(self.artist.tracks!.flatMap({return ($0 as! Track).album})))
-        super.init(nibName: nibNameOrNil.map { NSNib.Name(rawValue: $0) }, bundle: nibBundleOrNil)
+        self.albums = Array(Set(self.artist.tracks!.compactMap({return ($0 as! Track).album})))
+        super.init(nibName: nibNameOrNil.map { $0 }, bundle: nibBundleOrNil)
     }
     
     required init?(coder: NSCoder) {
