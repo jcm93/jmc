@@ -190,7 +190,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
     func removeWatchFolder(_ watchFolder: URL) {
         watchFoldersArrayController.removeObject(watchFolder)
         var currentLibraryWatchDirs = self.library?.watch_dirs as? [URL] ?? [URL]()
-        currentLibraryWatchDirs.remove(at: currentLibraryWatchDirs.index(of: watchFolder)!)
+        currentLibraryWatchDirs.remove(at: currentLibraryWatchDirs.firstIndex(of: watchFolder)!)
         self.library?.watch_dirs = currentLibraryWatchDirs as NSObject
         self.locationManager.reinitializeEventStream()
     }
@@ -365,7 +365,7 @@ class LibraryManagerViewController: NSViewController, NSTableViewDelegate, NSTab
         let mediaURLsToAdd = (newTracksArrayController.arrangedObjects as! [NewMediaURL]).filter({return $0.toImport == true}).map({return $0.url})
         let errors = databaseManager.addTracksFromURLs(mediaURLsToAdd, to: self.library!, context: managedContext, visualUpdateHandler: nil, callback: nil)
         for url in mediaURLsToAdd {
-            newMediaURLs!.remove(at: newMediaURLs!.index(of: url)!)
+            newMediaURLs!.remove(at: newMediaURLs!.firstIndex(of: url)!)
         }
         newTracksArrayController.content = self.newMediaURLs!.map({return NewMediaURL(url: $0)})
         newMediaTableView.reloadData()

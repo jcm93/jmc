@@ -63,7 +63,7 @@ class MediaKeyListener: NSObject {
     
     @objc func activeApplicationDidChange(_ notification: Notification) {
         guard let application = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication else { return }
-        if let bundleIdentifier = application.bundleIdentifier, let index = bundleList.index(of: bundleIdentifier) {
+        if let bundleIdentifier = application.bundleIdentifier, let index = bundleList.firstIndex(of: bundleIdentifier) {
             bundleList.remove(at: index)
             bundleList.insert(bundleIdentifier, at: 0)
         }

@@ -74,7 +74,7 @@ class MissingTrackPathNode: NSObject {
             child.purge()
         }
         if self.missingTracks.count < 1 {
-            self.parent!.children.remove(at: self.parent!.children.index(of: self)!)
+            self.parent!.children.remove(at: self.parent!.children.firstIndex(of: self)!)
         }
     }
     
@@ -232,7 +232,7 @@ class MissingFilesViewController: NSViewController, NSOutlineViewDataSource, NSO
                 }
             }
             var nodesToRemove = node!.getEmptyNodesBeneath()
-            while let highestThing = nodesToRemove.popLast(), let rowOfThing = highestThing.parent!.children.index(of: highestThing) {
+            while let highestThing = nodesToRemove.popLast(), let rowOfThing = highestThing.parent!.children.firstIndex(of: highestThing) {
                 outlineView.removeItems(at: IndexSet(integer: rowOfThing), inParent: highestThing.parent, withAnimation: NSTableView.AnimationOptions.slideUp)
             }
             node!.purge()

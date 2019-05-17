@@ -60,7 +60,7 @@ func informAppDelegateOfErrors(errors: [Error]) {
 }
 
 
-var globalRootLibrary: Library! = {() -> Library! in
+var globalRootLibrary: Library! = {() -> Library? in
     let fetchReq = NSFetchRequest<NSFetchRequestResult>(entityName: "Library")
     let predicate = NSPredicate(format: "parent == nil")
     fetchReq.predicate = predicate

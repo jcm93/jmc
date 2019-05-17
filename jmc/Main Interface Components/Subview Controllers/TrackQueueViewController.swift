@@ -412,7 +412,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 }
                 if !fileManager.fileExists(atPath: URL(string: next_track!.location!)!.path) {
                     currentAudioSource?.playOrderObject?.libraryStatusNeedsUpdate()
-                    self.currentSourceIndex = currentAudioSource?.playOrderObject?.currentPlayOrder?.index(of: Int(self.currentTrack!.id!))
+                    self.currentSourceIndex = currentAudioSource?.playOrderObject?.currentPlayOrder?.firstIndex(of: Int(self.currentTrack!.id!))
                     if currentAudioSource!.playOrderObject!.currentPlayOrder!.count <= currentSourceIndex! + 1 {
                         self.currentAudioSource = nil
                         return nil
@@ -470,7 +470,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 self.currentSourceListItem!.playOrderObject!.currentPlayOrder = (self.currentSourceListItem?.tableViewController?.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
             }
             if currentSourceListItem == currentAudioSource {
-                self.currentSourceIndex = self.currentSourceListItem?.playOrderObject?.currentPlayOrder?.index(of: Int(self.currentTrack!.id!))
+                self.currentSourceIndex = self.currentSourceListItem?.playOrderObject?.currentPlayOrder?.firstIndex(of: Int(self.currentTrack!.id!))
             }
         }
     }
@@ -492,9 +492,9 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 var shuffled_array = idArray
                 shuffle_array(&shuffled_array!)
                 if self.currentTrack != nil {
-                    if let indexOfPlayedTrack = shuffled_array?.index(of: Int(self.currentTrack!.id!)) {
+                    if let indexOfPlayedTrack = shuffled_array?.firstIndex(of: Int(self.currentTrack!.id!)) {
                         if indexOfPlayedTrack != 0 {
-                            shuffled_array!.swapAt(shuffled_array!.index(of: Int(self.currentTrack!.id!))!, 0)
+                            shuffled_array!.swapAt(shuffled_array!.firstIndex(of: Int(self.currentTrack!.id!))!, 0)
                         }
                     }
                 }
@@ -516,7 +516,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 if currentAudioSource?.playOrderObject == poo {
                     let queuedTrackIDs = Set(trackQueue.filter({$0.viewType == .futureTrack})).map({return Int($0.track!.id!)})
                     poo.currentPlayOrder = poo.currentPlayOrder!.filter({!queuedTrackIDs.contains($0)})
-                    self.currentSourceIndex = poo.currentPlayOrder?.index(of: Int(self.currentTrack!.id!))
+                    self.currentSourceIndex = poo.currentPlayOrder?.firstIndex(of: Int(self.currentTrack!.id!))
                 }
             }
         }
@@ -527,7 +527,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         let transientTQVs = trackQueue.filter({return $0.viewType == .transient})
         for transientTQV in transientTQVs {
             mainWindowController?.delegate?.audioModule.trackQueue.removeFirst()
-            trackQueue.remove(at: trackQueue.index(of: transientTQV)!)
+            trackQueue.remove(at: trackQueue.firstIndex(of: transientTQV)!)
         }
         tableView.reloadData()
     }

@@ -140,7 +140,7 @@ class AdvancedOrganizationOptionsWindowController: NSWindowController, NSTokenFi
     }
     
     func removeRule(_ vc: OrganizationRuleViewController) {
-        let index = ruleControllers.index(of: vc)
+        let index = ruleControllers.firstIndex(of: vc)
         tableView.removeRows(at: IndexSet(integer: index!), withAnimation: NSTableView.AnimationOptions.slideUp)
         let removedRuleController = ruleControllers.remove(at: index!)
         removedRuleControllers.append(removedRuleController)

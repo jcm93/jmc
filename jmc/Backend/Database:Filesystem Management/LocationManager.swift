@@ -232,7 +232,7 @@ class LocationManager: NSObject {
                 if VALID_FILE_TYPES.contains(URL(fileURLWithPath: path).pathExtension) {
                     self.urlsToAddToDatabase.append(URL(fileURLWithPath: path))
                 }
-                self.pendingCreatePaths.remove(at: self.pendingCreatePaths.index(of: path)!)
+                self.pendingCreatePaths.remove(at: self.pendingCreatePaths.firstIndex(of: path)!)
             }
         }
         if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemRenamed)) > 0 {

@@ -110,7 +110,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     }
     
     func reloadNowPlayingForTrack(_ track: Track) {
-        if let row = (trackViewArrayController.arrangedObjects as! [TrackView]).index(of: track.view!) {
+        if let row = (trackViewArrayController.arrangedObjects as! [TrackView]).firstIndex(of: track.view!) {
             self.currentTrackRow = row
             let tableRowIndexSet = IndexSet(integer: row)
             let indexOfPlaysColumn = self.tableView.column(withIdentifier: NSUserInterfaceItemIdentifier.init("play_count"))
@@ -124,7 +124,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         if let row = row {
             tableView.reloadData(forRowIndexes: IndexSet(integer: row), columnIndexes: IndexSet(0..<tableView.tableColumns.count))
         } else {
-            let row = (trackViewArrayController.arrangedObjects as! [TrackView]).index(of: track.view!)!
+            let row = (trackViewArrayController.arrangedObjects as! [TrackView]).firstIndex(of: track.view!)!
             tableView.reloadData(forRowIndexes: IndexSet(integer: row), columnIndexes: IndexSet(0..<tableView.tableColumns.count))
         }
     }
@@ -184,7 +184,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     func jumpToCurrentSong(_ track: Track?) {
         if track != nil {
-            let index = (trackViewArrayController.arrangedObjects as! [TrackView]).index(of: track!.view!)
+            let index = (trackViewArrayController.arrangedObjects as! [TrackView]).firstIndex(of: track!.view!)
             if index != nil {
                 tableView.scrollRowToVisible(index!)
             }
@@ -274,7 +274,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         poo.currentPlayOrder = idArray
         let queuedTrackIDs = Set(mainWindowController!.trackQueueViewController!.trackQueue.filter({$0.viewType == .futureTrack})).map({return Int($0.track!.id!)})
         poo.currentPlayOrder = poo.currentPlayOrder!.filter({!queuedTrackIDs.contains($0)})
-        return idArray.index(of: trackID)!
+        return idArray.firstIndex(of: trackID)!
     }
 
     func getUpcomingIDsForPlayEvent(_ shuffleState: Int, id: Int, row: Int?) -> Int {
@@ -293,7 +293,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         if shuffleState == NSControl.StateValue.on.rawValue {
             //secretly adjust the shuffled array such that it behaves mysteriously like a ring buffer. ssshhhh
             let currentShuffleArray = self.item!.playOrderObject!.shuffledPlayOrder!
-            let indexToSwap = currentShuffleArray.index(of: id)!
+            let indexToSwap = currentShuffleArray.firstIndex(of: id)!
             let beginningOfArray = currentShuffleArray[0..<indexToSwap]
             let endOfArray = currentShuffleArray[indexToSwap..<currentShuffleArray.count]
             let newArraySliceConcatenation = endOfArray + beginningOfArray
@@ -310,7 +310,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             if row != nil {
                 return row!
             } else {
-                return idArray.index(of: id)!
+                return idArray.firstIndex(of: id)!
             }
         }
     }
@@ -324,7 +324,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         } else {
             self.item?.playOrderObject?.currentPlayOrder = (trackViewArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int})
             if mainWindowController?.trackQueueViewController?.currentAudioSource == self.item {
-                if let index = self.item?.playOrderObject?.currentPlayOrder?.index(of: Int(mainWindowController!.currentTrack!.id!)) {
+                if let index = self.item?.playOrderObject?.currentPlayOrder?.firstIndex(of: Int(mainWindowController!.currentTrack!.id!)) {
                     mainWindowController?.trackQueueViewController?.currentSourceIndex = index
                 } else {
                     mainWindowController?.trackQueueViewController?.currentSourceIndex = -1

@@ -77,7 +77,7 @@ class OrganizationRuleViewController: NSViewController, NSTokenFieldDelegate {
     @IBAction func predicateEditorAction(_ sender: Any) {
         DispatchQueue.main.async {
             let parentWC = self.view.window?.windowController as? AdvancedOrganizationOptionsWindowController
-            let indexOfSelf = parentWC?.ruleControllers.index(of: self)
+            let indexOfSelf = parentWC?.ruleControllers.firstIndex(of: self)
             if parentWC != nil && indexOfSelf != nil {
                 parentWC!.tableView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: indexOfSelf!))
             }
