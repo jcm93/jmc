@@ -11,7 +11,7 @@ import Cocoa
 class ArtistViewTrackListViewController: NSViewController {
     
     var album: Album
-    var trackArray = [Track]()
+    @objc var trackArray = [Track]()
     @IBOutlet weak var tableView: NSTableView!
     
     init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, album: Album) {

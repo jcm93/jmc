@@ -64,8 +64,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     var sourceListViewController: SourceListViewController!
     var trackQueueViewController: TrackQueueViewController!
     var otherLocalTableViewControllers = NSMutableDictionary()
+    var otherLocalArtistViewControllers = NSMutableDictionary()
     var otherSharedTableViewControllers = NSMutableDictionary()
+    var otherSharedArtistViewControllers = NSMutableDictionary()
     var currentTableViewController: LibraryTableViewController!
+    var currentArtistViewController: ArtistViewController! //AVC
     var albumArtViewController: AlbumArtViewController!
     var advancedFilterViewController: AdvancedFilterViewController?
     
@@ -173,9 +176,21 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         return newPlaylistViewController
     }
     
+    func createArtistViewController(_ item: SourceListItem) -> ArtistViewController {
+        let newPlaylistViewController = ArtistViewController(nibName: "ArtistViewController", bundle: nil)
+        newPlaylistViewController.mainWindowController = self
+        newPlaylistViewController.playlist = item.playlist
+        newPlaylistViewController.item = item
+        return newPlaylistViewController
+    }
+    
     func addObserversAndInitializeNewTableView(_ table: LibraryTableViewController, item: SourceListItem) {
         table.item = item
         table.mainWindowController = self
+    }
+    func addObserversAndInitializeNewArtistView(_ avc: ArtistViewController, item: SourceListItem) {
+        avc.item = item
+        avc.mainWindowController = self
     }
     
     func switchToPlaylist(_ item: SourceListItem) {
@@ -216,6 +231,46 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }
         populateSearchBar()
         currentTableViewController?.tableView.reloadData()
+    }
+    
+    func switchToPlaylistArtistView(_ item: SourceListItem) {
+        if item == currentSourceListItem { return }
+        self.currentArtistViewController?.hasInitialized = false
+        trackQueueViewController?.currentSourceListItem = item
+        currentSourceListItem = item
+        let objectID = item.objectID
+        currentArtistViewController?.view.removeFromSuperview()
+        if otherLocalArtistViewControllers.object(forKey: objectID) != nil && item.is_network != true {
+            let playlistViewController = otherLocalArtistViewControllers.object(forKey: objectID) as! ArtistViewController
+            librarySplitView.addArrangedSubview(playlistViewController.view)
+            currentArtistViewController = playlistViewController
+            updateInfo()
+        }
+        else if otherSharedArtistViewControllers.object(forKey: objectID) != nil && item.is_network == true {
+            let playlistViewController = otherSharedArtistViewControllers.object(forKey: objectID) as! ArtistViewController
+            librarySplitView.addArrangedSubview(playlistViewController.view)
+            currentArtistViewController = playlistViewController
+            currentArtistViewController?.initializeForPlaylist()
+            updateInfo()
+        }
+        else {
+            let newPlaylistViewController = createArtistViewController(item)
+            if item.is_network == true {
+                self.otherSharedArtistViewControllers[objectID] = newPlaylistViewController
+            } else {
+                self.otherLocalArtistViewControllers[objectID] = newPlaylistViewController
+            }
+            librarySplitView.addArrangedSubview(newPlaylistViewController.view)
+            addObserversAndInitializeNewArtistView(newPlaylistViewController, item: item)
+            currentArtistViewController = newPlaylistViewController
+        }
+        if currentArtistViewController?.advancedFilterVisible == true {
+            showAdvancedFilter()
+        } else {
+            hideAdvancedFilter()
+        }
+        populateSearchBar()
+        //currentArtistViewController?.tableView.reloadData()
     }
     
     func populateSearchBar() {

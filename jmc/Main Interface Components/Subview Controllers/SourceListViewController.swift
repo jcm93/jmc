@@ -391,7 +391,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     func outlineViewSelectionDidChange(_ notification: Notification) {
         if let selection = (sourceList.item(atRow: sourceList.selectedRow) as? SourceListItem) {
             self.currentSourceListItem = selection
-            mainWindowController?.switchToPlaylist(selection)
+            //mainWindowController?.switchToPlaylist(selection) //avc
+            mainWindowController?.switchToPlaylistArtistView(selection)
         }
     }
     

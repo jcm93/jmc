@@ -188,7 +188,7 @@ func getCachedOrders(for context: NSManagedObjectContext) -> [String : CachedOrd
 }
 
 func validateStringForFilename(_ string: String) -> String {
-    let newString = String(string.characters.map({
+    let newString = String(string.map({
         $0 == "/" ? ":" : $0
     }))
     return newString
@@ -604,7 +604,7 @@ func getSortName(_ name: String?) -> String? {
     if name != nil {
         for prefix in defaultSortPrefixDictionary.allKeys {
             if name!.lowercased().hasPrefix(prefix as! String) {
-                let range = name!.startIndex...name!.characters.index(name!.startIndex, offsetBy: (prefix as! String).characters.count - 1)
+                let range = name!.startIndex...name!.index(name!.startIndex, offsetBy: (prefix as! String).count - 1)
                 sortName!.removeSubrange(range)
                 return sortName
             }

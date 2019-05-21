@@ -11,8 +11,9 @@ import Cocoa
 class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate {
     
     @IBOutlet weak var tableView: NSTableView!
+    @IBOutlet weak var albumArtworkView: NSImageView!
     var artist: Artist
-    var albums = [Album]()
+    @objc var albums = [Album]()
     var views = [Int : ArtistViewTableCellView]()
     @IBOutlet var albumArrayController: NSArrayController!
     

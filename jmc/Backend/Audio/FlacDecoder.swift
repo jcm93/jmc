@@ -123,7 +123,7 @@ class FlacDecoder: NSObject, FileBufferer {
             if comments != nil {
                 for commentIndex in 0..<count {
                     let commentValue = String(cString: comments![Int(commentIndex)].entry)
-                    let thing = commentValue.characters.split(separator: "=", maxSplits: 1, omittingEmptySubsequences: true).map({return String($0)})
+                    let thing = commentValue.split(separator: "=", maxSplits: 1, omittingEmptySubsequences: true).map({return String($0)})
                     if thing.count > 1 {
                         flacDecoder.metadataDictionary[thing[0]] = thing[1]
                     }

@@ -17,6 +17,11 @@ class ArtistViewController: NSViewController {
     
     var artistListView: ArtistListViewController?
     var albumsView: ArtistViewAlbumViewController?
+    var hasInitialized: Bool = false
+    var item: SourceListItem!
+    var playlist: SongCollection!
+    var mainWindowController: MainWindowController!
+    var advancedFilterVisible: Bool = false
     
     var cachedViewControllers = [Artist : ArtistViewAlbumViewController]()
     
@@ -26,6 +31,11 @@ class ArtistViewController: NSViewController {
         splitView.addArrangedSubview(newAlbumsView!.view)
         self.albumsView = newAlbumsView
         self.cachedViewControllers[artist] = newAlbumsView
+    }
+    
+    func initializeForPlaylist() {
+        print("initializing for playlist")
+        
     }
     
     override func viewDidLoad() {

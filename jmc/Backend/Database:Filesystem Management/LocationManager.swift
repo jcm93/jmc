@@ -238,7 +238,7 @@ class LocationManager: NSObject {
         if (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemRenamed)) > 0 {
             print("item renamed")
             let rootDirectoryPaths = activeMonitoringFileDescriptors.map({return $0.key}).filter({return path.lowercased().hasPrefix($0.lowercased())})
-            let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.characters.count < $0.characters.count})!
+            let rootDirectoryPath = rootDirectoryPaths.max(by: {$1.count < $0.count})!
             if let firstEvent = firstHalfRenameEvents[id - 1] {
                 //this is definitely the second half of another rename event, which we may or may not care about
                 if firstEvent.tracks != nil && globalRootLibrary!.keeps_track_of_files == true {
