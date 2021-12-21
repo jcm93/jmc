@@ -756,6 +756,7 @@ class DatabaseManager: NSObject {
                 let newSourceListItemForVolume = NSEntityDescription.insertNewObject(forEntityName: "SourceListItem", into: context) as! SourceListItem
                 newSourceListItemForVolume.volume = newVolume
                 newSourceListItemForVolume.name = newVolume.name
+                let globalRootLibrarySourceListItem = getGlobalRootLibrarySourceListItem(context: context)
                 (context.object(with: globalRootLibrarySourceListItem!.objectID) as! SourceListItem).addToChildren(newSourceListItemForVolume)
                 addedVolumes[volumeURL] = newVolume
             }

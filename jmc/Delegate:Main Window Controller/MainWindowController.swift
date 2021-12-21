@@ -183,6 +183,13 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         newPlaylistViewController.item = item
         return newPlaylistViewController
     }
+    @IBAction func airPlayButtonPressed(_ sender: Any) {
+        if #available(macOS 10.15, *) {
+            let popover = AVRoutePickerView()
+        } else {
+            // Fallback on earlier versions
+        }
+    }
     
     func addObserversAndInitializeNewTableView(_ table: LibraryTableViewController, item: SourceListItem) {
         table.item = item

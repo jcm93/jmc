@@ -1,5 +1,6 @@
 #  FLAC - Free Lossless Audio Codec
-#  Copyright (C) 2002,2003,2004,2005,2006,2007,2008,2009  Josh Coalson
+#  Copyright (C) 2002-2009  Josh Coalson
+#  Copyright (C) 2011-2016  Xiph.Org Foundation
 #
 #  This file is part the FLAC project.  FLAC is comprised of several
 #  components distributed under different licenses.  The codec libraries
@@ -14,3 +15,9 @@
 #  it may be distributed under the Xiph.Org license, which is the least
 #  restrictive of those mentioned above.  See the file COPYING.Xiph in this
 #  distribution.
+
+EXTRA_DIST = \
+	compile.mk \
+	config.mk \
+	exe.mk \
+	lib.mk

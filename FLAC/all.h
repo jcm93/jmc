@@ -147,7 +147,7 @@
  * library.
  *
  * Also, there are several places in the libFLAC code with comments marked
- * with "OPT:" where a #define can be changed to enable code that might be
+ * with "OPT:" where a \#define can be changed to enable code that might be
  * faster on a specific platform.  Experimenting with these can yield faster
  * binaries.
  */
@@ -159,9 +159,9 @@
  * the libraries to newer versions of FLAC.
  *
  * One simple facility for making porting easier that has been added
- * in FLAC 1.1.3 is a set of \c #defines in \c export.h of each
+ * in FLAC 1.1.3 is a set of \#defines in \c export.h of each
  * library's includes (e.g. \c include/FLAC/export.h).  The
- * \c #defines mirror the libraries'
+ * \#defines mirror the libraries'
  * <A HREF="http://www.gnu.org/software/libtool/manual/libtool.html#Libtool-versioning">libtool version numbers</A>,
  * e.g. in libFLAC there are \c FLAC_API_VERSION_CURRENT,
  * \c FLAC_API_VERSION_REVISION, and \c FLAC_API_VERSION_AGE.
@@ -321,7 +321,7 @@
  *
  * The \a bytes parameter to FLAC__StreamDecoderReadCallback,
  * FLAC__StreamEncoderReadCallback, and FLAC__StreamEncoderWriteCallback
- * is now \c size_t instead of \c unsigned.
+ * is now \c size_t instead of \c uint32_t.
  */
 
 /** \defgroup porting_1_1_3_to_1_1_4 Porting from FLAC 1.1.3 to 1.1.4
