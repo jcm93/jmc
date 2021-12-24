@@ -46,10 +46,10 @@ class iTunesLibraryParser: NSObject {
         var index = 1
         for (key, value) in self.XMLTrackDictionaryDictionary {
             if let trackDict = value as? NSDictionary, trackDict[iTunesImporterTrackTypeKey] as? String != "URL" {
-                guard let location = trackDict[iTunesImporterLocationKey] as? String else { continue }
-                guard let file_kind = trackDict[iTunesImporterKindKey] as? String, file_kind != "Protected AAC audio file" else {
-                    continue
-                }
+                let location = trackDict[iTunesImporterLocationKey] as? String
+                guard let file_kind = trackDict[iTunesImporterKindKey] as? String else { continue }//, file_kind != "Protected AAC audio file" else {
+                    //continue
+                //}
                 let cd_track = NSEntityDescription.insertNewObject(forEntityName: "Track", into: subContext) as! Track
                 let new_track_view = NSEntityDescription.insertNewObject(forEntityName: "TrackView", into: subContext) as! TrackView
                 cd_track.view = new_track_view

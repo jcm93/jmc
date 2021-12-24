@@ -51,16 +51,16 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Hz6-mo-xeY">
-            <rect key="frame" x="0.0" y="0.0" width="3922" height="512"/>
+            <rect key="frame" x="0.0" y="0.0" width="3922" height="517"/>
             <subviews>
                 <scrollView focusRingType="none" placeholderIntrinsicWidth="436" placeholderIntrinsicHeight="512" borderType="none" autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" horizontalScrollElasticity="none" verticalScrollElasticity="allowed" scrollerKnobStyle="dark" translatesAutoresizingMaskIntoConstraints="NO" id="LLt-nN-be2" userLabel="Library Table Scroll View">
-                    <rect key="frame" x="0.0" y="0.0" width="3922" height="512"/>
+                    <rect key="frame" x="0.0" y="0.0" width="3922" height="517"/>
                     <clipView key="contentView" autoresizesSubviews="NO" placeholderIntrinsicWidth="708" placeholderIntrinsicHeight="606" drawsBackground="NO" copiesOnScroll="NO" id="WYy-aH-0Ud">
-                        <rect key="frame" x="0.0" y="0.0" width="3922" height="497"/>
+                        <rect key="frame" x="0.0" y="0.0" width="3922" height="502"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView verticalHuggingPriority="750" placeholderIntrinsicWidth="833" placeholderIntrinsicHeight="583" allowsExpansionToolTips="YES" columnAutoresizingStyle="none" alternatingRowBackgroundColors="YES" autosaveName="poop" rowHeight="20" headerView="x7Z-Ii-Jp5" id="bX0-m9-9Ad" userLabel="Library Table View" customClass="TableViewYouCanPressSpacebarOn" customModule="jmc" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="3985" height="474"/>
+                                <rect key="frame" x="0.0" y="0.0" width="3985" height="479"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -555,7 +555,7 @@
                         <nil key="backgroundColor"/>
                     </clipView>
                     <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="ipS-jB-32M">
-                        <rect key="frame" x="0.0" y="497" width="3922" height="15"/>
+                        <rect key="frame" x="0.0" y="502" width="3922" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                     <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="n50-Tl-r5V">

@@ -688,12 +688,12 @@ class DatabaseManager: NSObject {
                 }
             }
         } else {
-            //what if we have a valid audio file, but can't retrieve audio metadata?
-            //for now, abandon ship
-            guard let sampleRate = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioSampleRate" as CFString) as? Int as NSNumber?,
-                  let bitRate = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioBitRate" as CFString?) as? Double, // / 1000
-                  let duration = MDItemCopyAttribute(mediaFileObject, "kMDItemDurationSeconds" as CFString?) as? Double // * 1000
-                  else { return nil }
+            
+            //this method for getting metadata appears to not work on macOS 12.0
+            /*
+            let sampleRate = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioSampleRate" as CFString) as? Int as NSNumber?
+            let bitRate = MDItemCopyAttribute(mediaFileObject, "kMDItemAudioBitRate" as CFString?) as! Double // / 1000
+            let duration = MDItemCopyAttribute(mediaFileObject, "kMDItemDurationSeconds" as CFString?) as! Double // * 1000
             metadataDictionary[kSampleRateKey]  = sampleRate
             metadataDictionary[kBitRateKey]     = bitRate / 1000
             metadataDictionary[kTimeKey]        = duration * 1000
@@ -703,6 +703,40 @@ class DatabaseManager: NSObject {
             metadataDictionary[kAlbumKey]       = MDItemCopyAttribute(mediaFileObject, "kMDItemAlbum" as CFString?) as? String
             metadataDictionary[kArtistKey]      = (MDItemCopyAttribute(mediaFileObject, "kMDItemAuthors" as CFString?) as? [String])?[0]
             metadataDictionary[kComposerKey]    = MDItemCopyAttribute(mediaFileObject, "kMDItemComposer" as CFString?) as? String
+             */
+            //let's replace it with AVAsset which seems to work on 10.10+
+            let asset = AVAsset(url: url)
+            let assetMetadata = asset.metadata
+            let assetAudioTrack = asset.tracks.first!
+            let assetFormatInformation = assetAudioTrack.formatDescriptions[0] as! CMAudioFormatDescription
+            let assetStreamBasicDescription = CMAudioFormatDescriptionGetStreamBasicDescription(assetFormatInformation)!.pointee
+            
+            metadataDictionary[kSampleRateKey] = Int(assetStreamBasicDescription.mSampleRate) as NSNumber?
+            metadataDictionary[kBitRateKey] = Double(assetAudioTrack.estimatedDataRate / 1000.0)
+            metadataDictionary[kTimeKey] = asset.duration.seconds
+            for metadataItem in assetMetadata {
+                if let commonKey = metadataItem.commonKey {
+                    switch commonKey {
+                    case .commonKeyArtist:
+                        metadataDictionary[kArtistKey] = metadataItem.stringValue
+                    case .commonKeyTitle:
+                        metadataDictionary[kNameKey] = metadataItem.stringValue
+                    case .commonKeyAlbumName:
+                        metadataDictionary[kAlbumKey] = metadataItem.stringValue
+                    case .commonKeyType:
+                        //this is genre in a lot of files?
+                        metadataDictionary[kGenreKey] = metadataItem.stringValue
+                    default:
+                        break
+                    }
+                } else {
+                    if let metadataKey = metadataItem.key as? String {
+                        if metadataKey == "TRCK" || metadataKey == "TPOS" {
+                            metadataDictionary[kTrackNumKey] = metadataItem.stringValue
+                        }
+                    }
+                }
+            }
         }
         
         //other stuff?

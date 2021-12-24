@@ -185,7 +185,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     @IBAction func airPlayButtonPressed(_ sender: Any) {
         if #available(macOS 10.15, *) {
-            let popover = AVRoutePickerView()
+            let popover = AirPlayPopover()
+            popover.loadView()
+            
         } else {
             // Fallback on earlier versions
         }
@@ -403,6 +405,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     @IBAction func skipBackward(_ sender: Any) {
         self.skipBackward()
     }
+    
     @IBAction func tempBreak(_ sender: AnyObject) {
         self.skip()
         /*print("dongels")
@@ -935,6 +938,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         let attrs = [NSAttributedString.Key.foregroundColor : color]
         let newAttributedString = NSAttributedString(string: "Search", attributes: attrs)
         (searchField.cell as! NSSearchFieldCell).placeholderAttributedString = newAttributedString
+        progressBar.isBezeled = true
     }
     
     override func windowDidLoad() {
@@ -1001,8 +1005,15 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         delegate?.menuDelegate.repeatMenuItem.state = repeatButton.state
         self.window?.isMovableByWindowBackground = true
         UserDefaults.standard.set(false, forKey: jmcDarkAppearanceOption)
-        if UserDefaults.standard.bool(forKey: jmcDarkAppearanceOption) {
+        if NSAppearance.current.name == NSAppearance.Name.vibrantDark {
             makeDark()
+        }
+        if #available(macOS 10.14, *) {
+            if NSAppearance.current.name == NSAppearance.Name.darkAqua {
+                makeDark()
+            }
+        } else {
+            // Fallback on earlier versions
         }
         barViewToggle.isHidden = true
         //self.window?.invalidateShadow()
@@ -1014,13 +1025,4 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             // Fallback on earlier versions
         }*/
     }
-    /*@IBAction func airPlayButtonPressed(_ sender: Any) {
-        let popover = NSPopover()
-        if #available(OSX 10.13, *) {
-            (self.delegate.audioModule.routeDetector as! AVRouteDetector).multipleRoutesDetected
-        } else {
-            // Fallback on earlier versions
-        }
-        
-    }*/
 }
