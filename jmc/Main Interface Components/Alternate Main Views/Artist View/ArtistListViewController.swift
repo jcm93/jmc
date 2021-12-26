@@ -21,6 +21,10 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate {
         artistViewController!.newArtistSelected(artist: selectedArtists[0])
     }
     
+    func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+        return CGFloat(27)
+    }
+    
     init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, artistViewController: ArtistViewController) {
         self.artistViewController = artistViewController
         super.init(nibName: nibNameOrNil.map { $0 }, bundle: nibBundleOrNil)
@@ -32,6 +36,8 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let newSortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+        self.artistArrayController.sortDescriptors = [newSortDescriptor]
         // Do view setup here.
     }
     

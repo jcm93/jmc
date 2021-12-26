@@ -43,10 +43,12 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         return IndexSet()
     }
     
-    /*func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        let view = views[row]!
-        return CGFloat(view.album!.tracks!.count * 25)
-    }*/
+    func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+        let numTracks = self.albums[row].tracks?.count ?? 300
+        let prospectiveHeight = CGFloat(numTracks * 25)
+        return prospectiveHeight > 300 ? prospectiveHeight : 300
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

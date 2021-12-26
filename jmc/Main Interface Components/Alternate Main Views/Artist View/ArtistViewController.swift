@@ -40,6 +40,9 @@ class ArtistViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        for view in self.splitView.subviews {
+            self.splitView.removeArrangedSubview(view)
+        }
         // Do view setup here.
         self.artistListView = ArtistListViewController(nibName: "ArtistListViewController", bundle: nil, artistViewController: self)
         self.splitView.addArrangedSubview(artistListView!.view)

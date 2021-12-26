@@ -58,6 +58,7 @@
 		0D51C8A81EAC1646002F6182 /* URLStringFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C8A71EAC1646002F6182 /* URLStringFormatter.swift */; };
 		0D51C8AA1EAC1866002F6182 /* TransformerURLStringToURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C8A91EAC1866002F6182 /* TransformerURLStringToURL.swift */; };
 		0D51C8B21EB01731002F6182 /* JMTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C8B11EB01731002F6182 /* JMTabView.swift */; };
+		0D5279162777EE70008271CE /* ArtistViewAlbumTrackListTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5279152777EE70008271CE /* ArtistViewAlbumTrackListTableViewDelegate.swift */; };
 		0D58F7491D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */; };
 		0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */; };
 		0D592A221EDF6BCE0054D553 /* TrackExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A211EDF6BCE0054D553 /* TrackExtension.swift */; };
@@ -81,8 +82,6 @@
 		0D61248D201AAA9300574118 /* PlayOrderObject+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D61248B201AAA9300574118 /* PlayOrderObject+CoreDataClass.swift */; };
 		0D61248E201AAA9300574118 /* PlayOrderObject+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D61248C201AAA9300574118 /* PlayOrderObject+CoreDataProperties.swift */; };
 		0D69659D1EA02EC50050D505 /* ProgressBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D69659C1EA02EC50050D505 /* ProgressBarController.swift */; };
-		0D6E041B1ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6E04191ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift */; };
-		0D6E041C1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D6E041A1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib */; };
 		0D7111401FE1CA0D006E460E /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 0D71113F1FE1CA0C006E460E /* dsa_pub.pem */; };
 		0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */; };
 		0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */; };
@@ -272,6 +271,7 @@
 		0D51C8A71EAC1646002F6182 /* URLStringFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLStringFormatter.swift; sourceTree = "<group>"; };
 		0D51C8A91EAC1866002F6182 /* TransformerURLStringToURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransformerURLStringToURL.swift; sourceTree = "<group>"; };
 		0D51C8B11EB01731002F6182 /* JMTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTabView.swift; sourceTree = "<group>"; };
+		0D5279152777EE70008271CE /* ArtistViewAlbumTrackListTableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ArtistViewAlbumTrackListTableViewDelegate.swift; path = "Artist View/ArtistViewAlbumTrackListTableViewDelegate.swift"; sourceTree = "<group>"; };
 		0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
 		0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListThatYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
 		0D592A211EDF6BCE0054D553 /* TrackExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackExtension.swift; sourceTree = "<group>"; };
@@ -295,8 +295,6 @@
 		0D61248B201AAA9300574118 /* PlayOrderObject+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayOrderObject+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D61248C201AAA9300574118 /* PlayOrderObject+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayOrderObject+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D69659C1EA02EC50050D505 /* ProgressBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarController.swift; sourceTree = "<group>"; };
-		0D6E04191ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewTrackListViewController.swift; path = "Artist View/ArtistViewTrackListViewController.swift"; sourceTree = "<group>"; };
-		0D6E041A1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistViewTrackListViewController.xib; path = "Artist View/ArtistViewTrackListViewController.xib"; sourceTree = "<group>"; };
 		0D71113F1FE1CA0C006E460E /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = SOURCE_ROOT; };
 		0D76F6991D24622F00C6E70F /* TagEditorWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagEditorWindow.swift; sourceTree = "<group>"; };
 		0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagEditorWindow.xib; sourceTree = "<group>"; };
@@ -649,8 +647,7 @@
 		0D6E04181ED3B8B100AD9321 /* Artist View */ = {
 			isa = PBXGroup;
 			children = (
-				0D6E04191ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift */,
-				0D6E041A1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib */,
+				0D5279152777EE70008271CE /* ArtistViewAlbumTrackListTableViewDelegate.swift */,
 				0D800C0E1ED3B6BF00EA2889 /* ArtistViewTableCellView.swift */,
 				0D800C0A1ED3B54100EA2889 /* ArtistViewAlbumViewController.swift */,
 				0D800C0B1ED3B54100EA2889 /* ArtistViewAlbumViewController.xib */,
@@ -988,7 +985,6 @@
 				0DA4E1861F27F8BE00EC80B2 /* example_cpp_encode_file in Resources */,
 				0DAB30991CFBA3340028928F /* MainMenu.xib in Resources */,
 				0D8AFE591E6D136D004AC584 /* MediaScannerSheet.xib in Resources */,
-				0D6E041C1ED3C08C00AD9321 /* ArtistViewTrackListViewController.xib in Resources */,
 				0D51C8A61EAC01F8002F6182 /* ConsolidateLibrarySheetController.xib in Resources */,
 				0DA4E1851F27F8BE00EC80B2 /* example_cpp_decode_file in Resources */,
 				0DA4E18E1F27F8BE00EC80B2 /* test_picture in Resources */,
@@ -1047,6 +1043,7 @@
 				0D69659D1EA02EC50050D505 /* ProgressBarController.swift in Sources */,
 				0D8A8B401F61CB54007529A0 /* AlbumFileLocationViewController.swift in Sources */,
 				0D592A3B1EDF6C8B0054D553 /* CachedOrder+CoreDataProperties.swift in Sources */,
+				0D5279162777EE70008271CE /* ArtistViewAlbumTrackListTableViewDelegate.swift in Sources */,
 				0D51C8A81EAC1646002F6182 /* URLStringFormatter.swift in Sources */,
 				0DE74A531D7D9457005211E6 /* SharedLibraryRequestHandler.swift in Sources */,
 				0D592A221EDF6BCE0054D553 /* TrackExtension.swift in Sources */,
@@ -1141,7 +1138,6 @@
 				0D8AFE581E6D136D004AC584 /* MediaScannerSheet.swift in Sources */,
 				0D592A4D1EDF6C8B0054D553 /* TrackView+CoreDataClass.swift in Sources */,
 				0DE957CC1EE9DCE5008CBECF /* VolumeExtension.swift in Sources */,
-				0D6E041B1ED3C08C00AD9321 /* ArtistViewTrackListViewController.swift in Sources */,
 				0D592A3F1EDF6C8B0054D553 /* SongCollection+CoreDataClass.swift in Sources */,
 				0DD274EF1D3190360055C43B /* GlobalFunctions.swift in Sources */,
 				0DD7A3C21EF4B60D00FEDD71 /* MissingFileTableCellView.swift in Sources */,
