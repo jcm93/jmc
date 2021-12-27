@@ -59,6 +59,7 @@
 		0D51C8AA1EAC1866002F6182 /* TransformerURLStringToURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C8A91EAC1866002F6182 /* TransformerURLStringToURL.swift */; };
 		0D51C8B21EB01731002F6182 /* JMTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C8B11EB01731002F6182 /* JMTabView.swift */; };
 		0D5279162777EE70008271CE /* ArtistViewAlbumTrackListTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5279152777EE70008271CE /* ArtistViewAlbumTrackListTableViewDelegate.swift */; };
+		0D52791827783DFC008271CE /* DumbScrollVew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D52791727783DFC008271CE /* DumbScrollVew.swift */; };
 		0D58F7491D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */; };
 		0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */; };
 		0D592A221EDF6BCE0054D553 /* TrackExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D592A211EDF6BCE0054D553 /* TrackExtension.swift */; };
@@ -272,6 +273,7 @@
 		0D51C8A91EAC1866002F6182 /* TransformerURLStringToURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransformerURLStringToURL.swift; sourceTree = "<group>"; };
 		0D51C8B11EB01731002F6182 /* JMTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTabView.swift; sourceTree = "<group>"; };
 		0D5279152777EE70008271CE /* ArtistViewAlbumTrackListTableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ArtistViewAlbumTrackListTableViewDelegate.swift; path = "Artist View/ArtistViewAlbumTrackListTableViewDelegate.swift"; sourceTree = "<group>"; };
+		0D52791727783DFC008271CE /* DumbScrollVew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DumbScrollVew.swift; path = "Artist View/DumbScrollVew.swift"; sourceTree = "<group>"; };
 		0D58F7481D18E84F001A99F5 /* TableViewYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
 		0D58F74A1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceListThatYouCanPressSpacebarOn.swift; sourceTree = "<group>"; };
 		0D592A211EDF6BCE0054D553 /* TrackExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackExtension.swift; sourceTree = "<group>"; };
@@ -651,6 +653,7 @@
 				0D800C0E1ED3B6BF00EA2889 /* ArtistViewTableCellView.swift */,
 				0D800C0A1ED3B54100EA2889 /* ArtistViewAlbumViewController.swift */,
 				0D800C0B1ED3B54100EA2889 /* ArtistViewAlbumViewController.xib */,
+				0D52791727783DFC008271CE /* DumbScrollVew.swift */,
 				0D8B98661ED2ACF000283DD1 /* ArtistViewController.swift */,
 				0D8B98671ED2ACF000283DD1 /* ArtistViewController.xib */,
 				0D800C061ED3B3C800EA2889 /* ArtistListViewController.swift */,
@@ -1084,6 +1087,7 @@
 				0D9CE6711D334F97004FA8CB /* ImportWindowController.swift in Sources */,
 				0DE486911EA83FBA009B226B /* AddFilesProgressSheet.swift in Sources */,
 				0D0C28181FCB4FFB008A178C /* MainMenuDelegate.swift in Sources */,
+				0D52791827783DFC008271CE /* DumbScrollVew.swift in Sources */,
 				0D116B851E5800FD00C759FD /* LocationManager.swift in Sources */,
 				0DE957DC1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift in Sources */,
 				0D99D4A11EF216F200264CFF /* OrganizationRuleCellView.swift in Sources */,

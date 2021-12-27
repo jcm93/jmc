@@ -22,12 +22,13 @@ class ArtistViewController: NSViewController {
     var playlist: SongCollection!
     var mainWindowController: MainWindowController!
     var advancedFilterVisible: Bool = false
+    var databaseManager = DatabaseManager()
     
     var cachedViewControllers = [Artist : ArtistViewAlbumViewController]()
     
     func newArtistSelected(artist: Artist) {
         albumsView?.view.removeFromSuperview()
-        let newAlbumsView = ArtistViewAlbumViewController(nibName: "ArtistViewAlbumViewController", bundle: nil, artist: artist)
+        let newAlbumsView = ArtistViewAlbumViewController(nibName: "ArtistViewAlbumViewController", bundle: nil, artist: artist, artistViewController: self)
         splitView.addArrangedSubview(newAlbumsView!.view)
         self.albumsView = newAlbumsView
         self.cachedViewControllers[artist] = newAlbumsView

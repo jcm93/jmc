@@ -16,10 +16,12 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     @objc var albums = [Album]()
     var views = [Int : ArtistViewTableCellView]()
     @IBOutlet var albumArrayController: NSArrayController!
+    var artistViewController: ArtistViewController
     
-    init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, artist: Artist) {
+    init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, artist: Artist, artistViewController: ArtistViewController) {
         self.artist = artist
         self.albums = Array(Set(self.artist.tracks!.compactMap({return ($0 as! Track).album})))
+        self.artistViewController = artistViewController
         super.init(nibName: nibNameOrNil.map { $0 }, bundle: nibBundleOrNil)
     }
     
@@ -29,7 +31,7 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ArtistViewTableCellView"), owner: self) as! ArtistViewTableCellView
-        view.populateTracksTable((albumArrayController.arrangedObjects as! NSArray)[row] as! Album)
+        view.populateTracksTable(album: (albumArrayController.arrangedObjects as! NSArray)[row] as! Album, artistViewController: self.artistViewController)
         //self.views[row] = view
         return view
     }
@@ -44,9 +46,9 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     }
     
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        let numTracks = self.albums[row].tracks?.count ?? 300
-        let prospectiveHeight = CGFloat(numTracks * 25)
-        return prospectiveHeight > 300 ? prospectiveHeight : 300
+        let numTracks = self.albums[row].tracks?.count ?? 0
+        let prospectiveHeight = CGFloat(numTracks * 24) + 100
+        return prospectiveHeight > 400 ? prospectiveHeight : 400
         
     }
     

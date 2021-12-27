@@ -64,41 +64,62 @@ class DatabaseManager: NSObject {
         return art
     }
     
-    func tryFindPrimaryArtForTrack(_ track: Track, callback: ((Track, Bool) -> Void)?, background: Bool) { //does not handle errors good
+    func tryFindPrimaryArtForTrack(_ track: Track, callback: ((Track, Bool, Bool) -> Void)?, background: Bool) { //does not handle errors good
         //we know primary_art is nil
-        //may be called form background thread
+        //may be called from background thread
+        let currentContext = background ? backgroundContext : managedContext
         let track = resolve(track, inBackground: background) as! Track
         self.currentTrack = track
-        let validImages = searchAlbumDirectoryForArt(track)
+        var validImages = searchAlbumDirectoryForArt(track)
+        validImages = removeDuplicateArt(for: validImages)
         if validImages.count > 0 {
-            managedContext.perform {
-                let track = managedContext.object(with: track.objectID) as! Track
+            currentContext.perform {
+                let track = currentContext.object(with: track.objectID) as! Track
                 var results = [AlbumArtwork]()
                 for image in validImages {
-                    if let result = self.addArtForTrack(track, from: image, managedContext: managedContext, organizes: true) {
+                    if let result = self.addArtForTrack(track, from: image, managedContext: currentContext, organizes: true) {
                         results.append(result)
                     }
                 }
                 if results.count > 0 {
-                    callback?(track, true)
+                    callback?(track, true, background)
                 } else {
-                    callback?(track, false)
+                    callback?(track, false, background)
                 }
             }
         } else {
             if let art = getArtworkFromFile(track.location!) {
-                managedContext.perform {
-                    let track = managedContext.object(with: track.objectID) as! Track
-                    if self.addArtForTrack(track, fromData: art, managedContext: managedContext) == true {
-                        callback?(track, true)
+                currentContext.perform {
+                    let track = currentContext.object(with: track.objectID) as! Track
+                    if self.addArtForTrack(track, fromData: art, managedContext: currentContext) == true {
+                        callback?(track, true, background)
                     } else {
-                        callback?(track, false)
+                        callback?(track, false, background)
                     }
                 }
             } else {
-                callback?(track, false)
+                callback?(track, false, background)
             }
         }
+    }
+    
+    func removeDuplicateArt(for urls: [URL]) -> [URL] {
+        struct ImageWithHash {
+            let url: URL
+            let image: NSImage
+            let hash: String
+        }
+        let images = urls.map( {
+            return ImageWithHash(url: $0, image: NSImage(byReferencing: $0), hash: createMD5HashOf(data: NSImage(byReferencing: $0).tiffRepresentation!))
+        })
+        var result = [ImageWithHash]()
+        for image in images {
+            if !result.contains(where: {$0.hash == image.hash}) {
+                result.append(image)
+            }
+        }
+        let resultURLs = result.map({return $0.url})
+        return resultURLs
     }
     
     func artFoundCallback(for track: Track) {
@@ -200,6 +221,8 @@ class DatabaseManager: NSObject {
     
     func addArtForTrack(_ track: Track, from url: URL, managedContext: NSManagedObjectContext, organizes: Bool) -> AlbumArtwork? {
         //returns true if art was successfully added, so a receiver can display the image, if needed
+        let rootLibraryID = globalRootLibrary.objectID
+        let currentRootLibrary = managedContext.object(with: rootLibraryID) as? Library
         guard let album = track.album else { return nil }
         let image = NSImage(byReferencing: url)
         guard image.isValid else { return nil }
@@ -218,15 +241,15 @@ class DatabaseManager: NSObject {
             newArt = newPrimaryArt
             newPrimaryArt.album = album
             newPrimaryArt.location = url.absoluteString
-            newPrimaryArt.id = globalRootLibrary?.next_album_artwork_id
-            globalRootLibrary?.next_album_artwork_id = globalRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
+            newPrimaryArt.id = currentRootLibrary?.next_album_artwork_id
+            currentRootLibrary?.next_album_artwork_id = currentRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
         } else {
             let newOtherArt = NSEntityDescription.insertNewObject(forEntityName: "AlbumArtwork", into: managedContext) as! AlbumArtwork
             newArt = newOtherArt
             newOtherArt.album_multiple = album
             newOtherArt.location = url.absoluteString
-            newOtherArt.id = globalRootLibrary?.next_album_artwork_id
-            globalRootLibrary?.next_album_artwork_id = globalRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
+            newOtherArt.id = currentRootLibrary?.next_album_artwork_id
+            currentRootLibrary?.next_album_artwork_id = currentRootLibrary!.next_album_artwork_id!.intValue + 1 as NSNumber?
         }
         if organizes {
             moveAlbumFileToAppropriateDirectory(albumArt: newArt, filename: filename)
@@ -241,21 +264,18 @@ class DatabaseManager: NSObject {
             print("ruh roh")
             return false
         }
-        let hashString = createMD5HashOf(data: data)
+        guard let image = NSImage(data: data) else { return false }
+        let hashString = createMD5HashOf(data: image.tiffRepresentation!)
         if let existingPrimaryArt = track.album?.primary_art {
             var existingHash = ""
             if existingPrimaryArt.image_hash != nil {
                 existingHash = existingPrimaryArt.image_hash!
             } else {
-                do {
-                    let url = URL(string: existingPrimaryArt.location!)!
-                    let data = try Data(contentsOf: url, options: [])
-                    let hash = createMD5HashOf(data: data)
-                    existingPrimaryArt.image_hash = hash
-                    existingHash = hash
-                } catch {
-                    print(error)
-                }
+                let url = URL(string: existingPrimaryArt.location!)!
+                let data = NSImage(byReferencing: url).tiffRepresentation!
+                let hash = createMD5HashOf(data: data)
+                existingPrimaryArt.image_hash = hash
+                existingHash = hash
             }
             guard existingHash != hashString else { return false }
         }
@@ -266,17 +286,11 @@ class DatabaseManager: NSObject {
                 if existingOtherArt.image_hash != nil {
                     existingHash = existingOtherArt.image_hash!
                 } else {
-                    do {
-                        let url = URL(string: existingOtherArt.location!)!
-                        let data = try Data(contentsOf: url, options: [])
-                        let hash = createMD5HashOf(data: data)
-                        existingOtherArt.image_hash = hash
-                        existingHash = hash
-                    } catch {
-                        print(error)
-                        //image from other art cannot be opened. what do?
-                        continue
-                    }
+                    let url = URL(string: existingOtherArt.location!)!
+                    let data = NSImage(byReferencing: url).tiffRepresentation!
+                    let hash = createMD5HashOf(data: data)
+                    existingOtherArt.image_hash = hash
+                    existingHash = hash
                 }
                 guard existingHash != hashString else { return false }
             }
