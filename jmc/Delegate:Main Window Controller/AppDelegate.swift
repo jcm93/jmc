@@ -163,7 +163,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @objc func managedObjectsDidUndo() {
         print("managed objects did undo")
         self.mainWindowController?.trackQueueViewController?.refreshForChangedData()
-        self.mainWindowController?.currentTableViewController?.trackViewArrayController.rearrangeObjects()
+        self.mainWindowController?.currentLibraryViewController?.rearrangeObjects()
     }
     
     func managedObjectsDidChangeDebug(_ notification: Notification) {
@@ -319,7 +319,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     
     func undo(_ sender: Any) {
         managedObjectContext.undoManager?.undo()
-        mainWindowController?.currentTableViewController?.trackViewArrayController.fetch(nil)
+        mainWindowController?.currentLibraryViewController?.reloadData()
     }
     
     func windowWillReturnUndoManager(_ window: NSWindow) -> UndoManager? {

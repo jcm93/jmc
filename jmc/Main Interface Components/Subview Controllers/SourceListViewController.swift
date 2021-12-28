@@ -370,8 +370,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     }
     
     @IBAction func checkBoxPressed(_ sender: Any) {
-        if mainWindowController?.currentTableViewController?.playlist == nil {
-            mainWindowController?.currentTableViewController?.initializeForLibrary()
+        if mainWindowController?.currentLibraryViewController?.playlist == nil {
+            mainWindowController?.currentLibraryViewController?.initializeForLibrary()
         }
     }
     
@@ -391,8 +391,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     func outlineViewSelectionDidChange(_ notification: Notification) {
         if let selection = (sourceList.item(atRow: sourceList.selectedRow) as? SourceListItem) {
             self.currentSourceListItem = selection
-            //mainWindowController?.switchToPlaylist(selection) //avc
-            mainWindowController?.switchToPlaylistArtistView(selection)
+            mainWindowController?.switchToPlaylist(selection) //avc
+            //mainWindowController?.switchToPlaylistArtistView(selection)
         }
     }
     
@@ -570,7 +570,7 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
     func selectStuff() {
         let indexSet = IndexSet(integer: 1)
         sourceList.selectRowIndexes(indexSet, byExtendingSelection: false)
-        mainWindowController?.currentTableViewController?.item = libraryHeaderNode?.children?[0] as! SourceListItem
+        mainWindowController?.currentLibraryViewController?.item = libraryHeaderNode?.children?[0] as! SourceListItem
     }
     
     override func viewDidLoad() {

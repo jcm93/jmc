@@ -63,12 +63,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     //subview controllers
     var sourceListViewController: SourceListViewController!
     var trackQueueViewController: TrackQueueViewController!
-    var otherLocalTableViewControllers = NSMutableDictionary()
-    var otherLocalArtistViewControllers = NSMutableDictionary()
-    var otherSharedTableViewControllers = NSMutableDictionary()
-    var otherSharedArtistViewControllers = NSMutableDictionary()
-    var currentTableViewController: LibraryTableViewController!
-    var currentArtistViewController: ArtistViewController! //AVC
+    var otherLocalLibraryViewControllers = NSMutableDictionary()
+    var otherSharedLibraryViewControllers = NSMutableDictionary()
+    var currentLibraryViewController: LibraryViewController!
     var albumArtViewController: AlbumArtViewController!
     var advancedFilterViewController: AdvancedFilterViewController?
     
@@ -151,21 +148,24 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }
         if subPredicates.count > 0 {
             let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: subPredicates)
-            currentTableViewController?.trackViewArrayController.filterPredicate = predicate
-            currentTableViewController?.searchString = searchFieldContent
+            currentLibraryViewController?.setFilterPredicate(predicate)
+            //currentLibraryViewController?.trackViewArrayController.filterPredicate = predicate
+            currentLibraryViewController?.searchString = searchFieldContent
         } else {
-            currentTableViewController?.trackViewArrayController.filterPredicate = nil
-            currentTableViewController?.searchString = nil
+            currentLibraryViewController.setFilterPredicate(nil)
+            //currentLibraryViewController?.trackViewArrayController.filterPredicate = nil
+            currentLibraryViewController?.searchString = nil
         }
     }
     
     func networkPlaylistCallback(_ id: Int, idList: [Int]) {
         print("made it to network playlist callback")
-        guard self.otherSharedTableViewControllers.object(forKey: id) != nil else {return}
-        let playlistViewController = otherSharedTableViewControllers.object(forKey: id) as! LibraryTableViewControllerCellBased
-        playlistViewController.trackViewArrayController.fetchPredicate = NSPredicate(format: "track.id in %@ AND track.is_network == %@", idList, NSNumber(booleanLiteral: true))
+        guard self.otherSharedLibraryViewControllers.object(forKey: id) != nil else {return}
+        let playlistViewController = otherSharedLibraryViewControllers.object(forKey: id) as! LibraryViewController
+        playlistViewController.setFetchPredicate(NSPredicate(format: "track.id in %@ AND track.is_network == %@", idList, NSNumber(booleanLiteral: true)))
+        //playlistViewController.trackViewArrayController.fetchPredicate = NSPredicate(format: "track.id in %@ AND track.is_network == %@", idList, NSNumber(booleanLiteral: true))
         playlistViewController.initializeForPlaylist()
-        playlistViewController.tableView.reloadData()
+        playlistViewController.reloadData()
     }
     
     func createPlaylistViewController(_ item: SourceListItem) -> LibraryTableViewController {
@@ -193,56 +193,56 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }
     }
     
-    func addObserversAndInitializeNewTableView(_ table: LibraryTableViewController, item: SourceListItem) {
+    func addObserversAndInitializeNewTableView(_ table: LibraryViewController, item: SourceListItem) {
         table.item = item
         table.mainWindowController = self
     }
-    func addObserversAndInitializeNewArtistView(_ avc: ArtistViewController, item: SourceListItem) {
+    /*func addObserversAndInitializeNewArtistView(_ avc: ArtistViewController, item: SourceListItem) {
         avc.item = item
         avc.mainWindowController = self
-    }
+    }*/
     
     func switchToPlaylist(_ item: SourceListItem) {
         if item == currentSourceListItem { return }
-        currentTableViewController?.hasInitialized = false
+        currentLibraryViewController?.hasInitialized = false
         trackQueueViewController?.currentSourceListItem = item
         currentSourceListItem = item
         let objectID = item.objectID
-        currentTableViewController?.view.removeFromSuperview()
-        if otherLocalTableViewControllers.object(forKey: objectID) != nil && item.is_network != true {
-            let playlistViewController = otherLocalTableViewControllers.object(forKey: objectID) as! LibraryTableViewController
+        currentLibraryViewController?.view.removeFromSuperview()
+        if otherLocalLibraryViewControllers.object(forKey: objectID) != nil && item.is_network != true {
+            let playlistViewController = otherLocalLibraryViewControllers.object(forKey: objectID) as! LibraryViewController
             librarySplitView.addArrangedSubview(playlistViewController.view)
-            currentTableViewController = playlistViewController
+            currentLibraryViewController = playlistViewController
             updateInfo()
         }
-        else if otherSharedTableViewControllers.object(forKey: objectID) != nil && item.is_network == true {
-            let playlistViewController = otherSharedTableViewControllers.object(forKey: objectID) as! LibraryTableViewController
+        else if otherSharedLibraryViewControllers.object(forKey: objectID) != nil && item.is_network == true {
+            let playlistViewController = otherSharedLibraryViewControllers.object(forKey: objectID) as! LibraryViewController
             librarySplitView.addArrangedSubview(playlistViewController.view)
-            currentTableViewController = playlistViewController
-            currentTableViewController?.initializeForPlaylist()
+            currentLibraryViewController = playlistViewController
+            currentLibraryViewController?.initializeForPlaylist()
             updateInfo()
         }
         else {
             let newPlaylistViewController = createPlaylistViewController(item)
             if item.is_network == true {
-                self.otherSharedTableViewControllers[objectID] = newPlaylistViewController
+                self.otherSharedLibraryViewControllers[objectID] = newPlaylistViewController
             } else {
-                self.otherLocalTableViewControllers[objectID] = newPlaylistViewController
+                self.otherLocalLibraryViewControllers[objectID] = newPlaylistViewController
             }
             librarySplitView.addArrangedSubview(newPlaylistViewController.view)
             addObserversAndInitializeNewTableView(newPlaylistViewController, item: item)
-            currentTableViewController = newPlaylistViewController
+            currentLibraryViewController = newPlaylistViewController
         }
-        if currentTableViewController?.advancedFilterVisible == true {
+        if currentLibraryViewController?.advancedFilterVisible == true {
             showAdvancedFilter()
         } else {
             hideAdvancedFilter()
         }
         populateSearchBar()
-        currentTableViewController?.tableView.reloadData()
+        currentLibraryViewController?.reloadData()
     }
     
-    func switchToPlaylistArtistView(_ item: SourceListItem) {
+    /*func switchToPlaylistArtistView(_ item: SourceListItem) {
         if item == currentSourceListItem { return }
         self.currentArtistViewController?.hasInitialized = false
         trackQueueViewController?.currentSourceListItem = item
@@ -280,22 +280,22 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }
         populateSearchBar()
         //currentArtistViewController?.tableView.reloadData()
-    }
+    }*/
     
     func populateSearchBar() {
-        if currentTableViewController?.searchString != nil {
-            searchField.stringValue = currentTableViewController!.searchString!
+        if currentLibraryViewController?.searchString != nil {
+            searchField.stringValue = currentLibraryViewController!.searchString!
         } else {
             searchField.stringValue = ""
         }
     }
     
     func jumpToCurrentSong() {
-        currentTableViewController?.jumpToCurrentSong(currentTrack)
+        currentLibraryViewController?.jumpToCurrentSong(currentTrack)
     }
     
     func jumpToSelection() {
-        currentTableViewController?.jumpToSelection()
+        currentLibraryViewController?.jumpToSelection()
     }
     
     @IBAction func volumeDidChange(_ sender: AnyObject) {
@@ -337,13 +337,13 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     
     func newSourceAdded() {
         if self.currentSourceListItem == globalRootLibrarySourceListItem {
-            self.currentTableViewController?.hasCreatedPlayOrder = false
-            self.currentTableViewController?.initializeForLibrary()
+            self.currentLibraryViewController?.hasCreatedPlayOrder = false
+            self.currentLibraryViewController?.initializeForLibrary()
         }
     }
     
-    func createPlayOrderForTrackID(_ id: Int, row: Int?) -> Int {
-        return currentTableViewController!.getUpcomingIDsForPlayEvent(self.shuffleButton.state.rawValue, id: id, row: row)
+    func createPlayOrderForTrackID(_ id: Int, row: Int) -> Int {
+        return currentLibraryViewController!.getUpcomingIDsForPlayEvent(self.shuffleButton.state.rawValue, id: id, row: row)
     }
     
     func getNextTrack(background: Bool) -> Track? {
@@ -362,21 +362,23 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
                 delegate?.audioModule.networkFlag = true
             }
             if track == nil && self.currentTrack != nil {
-                currentTableViewController?.reloadNowPlayingForTrack(self.currentTrack!)
+                currentLibraryViewController?.reloadNowPlayingForTrack(self.currentTrack!)
             }
             return track
         }
     }
     
     func getNextTrackForTagEditor(track: Track) -> Track? {
-        guard let arrangedObjects = self.currentTableViewController.trackViewArrayController.arrangedObjects as? NSArray else { return nil }
+        //guard let arrangedObjects = self.currentLibraryViewController.trackViewArrayController.arrangedObjects as? NSArray else { return nil }
+        guard let arrangedObjects = self.currentLibraryViewController.getArrangedObjects() as? NSArray else { return nil }
         let currentIndex = arrangedObjects.index(of: track.view)
         guard arrangedObjects.count >= currentIndex else { return nil }
         return (arrangedObjects[currentIndex + 1] as! TrackView).track
     }
     
     func getPreviousTrackForTagEditor(track: Track) -> Track? {
-        guard let arrangedObjects = self.currentTableViewController.trackViewArrayController.arrangedObjects as? NSArray else { return nil }
+        //guard let arrangedObjects = self.currentLibraryViewController.trackViewArrayController.arrangedObjects as? NSArray else { return nil }
+        guard let arrangedObjects = self.currentLibraryViewController.getArrangedObjects() as? NSArray else { return nil }
         let currentIndex = arrangedObjects.index(of: track.view)
         guard currentIndex != 0 else { return nil }
         return (arrangedObjects[currentIndex - 1] as! TrackView).track
@@ -470,11 +472,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         track.is_available = false
     }
     
-    func playSong(_ track: Track, row: Int?) -> Bool {
+    func playSong(_ track: Track, row: Int) -> Bool {
         guard fileManager.fileExists(atPath: URL(string: track.location!)!.path) else {
             sourceListViewController!.reloadData()
             handleTrackMissing(track: track)
-            currentTableViewController?.reloadDataForTrack(track, orRow: row)
+            currentLibraryViewController?.reloadDataForTrack(track, orRow: row)
             return false
         }
         if track.is_network == true {
@@ -487,7 +489,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
                 notEnablingUndo {
                     currentTrack?.is_playing = false
                 }
-                currentTableViewController?.reloadNowPlayingForTrack(self.currentTrack!)
+                currentLibraryViewController?.reloadNowPlayingForTrack(self.currentTrack!)
             }
             currentTrack = track
             networkSongWasPlayed = true
@@ -519,9 +521,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     
     func playAnything() {
         if trackQueueViewController?.trackQueue.count == 0 {
-            let trackToPlay = currentTableViewController!.getTrackWithNoContext(shuffleButton.state.rawValue)
+            let trackToPlay = currentLibraryViewController!.getTrackWithNoContext(shuffleButton.state.rawValue)
             if trackToPlay != nil {
-                playSong(trackToPlay!, row: nil)
+                playSong(trackToPlay!, row: -1)
             }
         } else {
             delegate?.audioModule.skip()
@@ -658,7 +660,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     
     func showAdvancedFilter() {
         if advancedFilterViewController?.view == nil {
-            self.advancedFilterViewController = AdvancedFilterViewController(tableViewController: self.currentTableViewController!)
+            self.advancedFilterViewController = AdvancedFilterViewController(libraryViewController: self.currentLibraryViewController!)
             //self.advancedFilterViewController = AdvancedFilterViewController(nibName: "AdvancedFilterViewController", bundle: nil)
             advancedFilterViewController!.mainWindowController = self
             librarySplitView.insertArrangedSubview(advancedFilterViewController!.view, at: 0)
@@ -671,7 +673,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         if advancedFilterViewController != nil {
             advancedFilterViewController!.view.removeFromSuperview()
             self.advancedFilterViewController = nil
-            currentTableViewController?.advancedFilterVisible = false
+            currentLibraryViewController?.advancedFilterVisible = false
         }
         self.advancedSearchToggle.state = NSControl.StateValue.off
     }
@@ -838,7 +840,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
                     } else {
                         checkPlayFractionForSkip()
                     }
-                    currentTableViewController?.reloadNowPlayingForTrack(currentTrack!)
+                    currentLibraryViewController?.reloadNowPlayingForTrack(currentTrack!)
                 }
                 trackQueueViewController!.nextTrack()
                 currentTrack = managedContext.object(with: trackQueueViewController!.trackQueue[trackQueueViewController!.currentTrackIndex!].track!.objectID) as! Track
@@ -852,11 +854,11 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
                 notEnablingUndo {
                     self.currentTrack?.is_playing = true
                 }
-                currentTableViewController?.reloadNowPlayingForTrack(currentTrack!)
+                currentLibraryViewController?.reloadNowPlayingForTrack(currentTrack!)
                 self.isDoneWithSkipOperation = true
                 self.isDoneWithSkipBackOperation = true
                 if UserDefaults.standard.bool(forKey: DEFAULTS_TABLE_SKIP_SHOWS_NEW_TRACK) {
-                    currentTableViewController?.scrollToNewTrack()
+                    currentLibraryViewController?.scrollToNewTrack()
                 }
             }
             else if keyPath! == "done_playing" {
@@ -869,7 +871,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             }
             else if keyPath! == "filterPredicate" {
                 print("filter predicate changed")
-                currentTableViewController?.fixPlayOrderForChangedFilterPredicate(shuffleButton.state.rawValue)
+                currentLibraryViewController?.fixPlayOrderForChangedFilterPredicate(shuffleButton.state.rawValue)
                 /*if (trackQueueViewController!.currentSourceListItem == trackQueueViewController!.currentAudioSource) && trackQueueViewController?.currentAudioSource!.playOrderObject != nil {
                     currentTableViewController!.fixPlayOrderForChangedFilterPredicate(trackQueueViewController!.currentAudioSource!.playOrderObject!, shuffleState: shuffleButton.state)
                 }*/
@@ -886,16 +888,16 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     
     func updateInfo() {
         print("updateinfo called")
-        if self.currentTableViewController == nil {
+        if self.currentLibraryViewController == nil {
             return
         }
-        if let statusString = self.currentSourceListItem?.playOrderObject?.statusString, self.currentTableViewController.statusStringNeedsUpdate != true {
+        if let statusString = self.currentSourceListItem?.playOrderObject?.statusString, self.currentLibraryViewController.statusStringNeedsUpdate != true {
             print("cache hit")
             self.infoString = statusString
             self.infoField.stringValue = self.infoString!
         } else {
             managedContext.perform {
-                let trackArray = (self.currentTableViewController?.trackViewArrayController?.arrangedObjects as! [TrackView])
+                let trackArray = (self.currentLibraryViewController?.getArrangedObjects() as! [TrackView])
                 let numItems = trackArray.count as NSNumber
                 let totalSize = trackArray.lazy.map({return (($0.track)!.size?.int64Value)}).reduce(0, {$0 + ($1 != nil ? $1! : 0)})
                 let totalTime = trackArray.lazy.map({return (($0.track)!.time?.doubleValue)}).reduce(0, {$0 + ($1 != nil ? $1! : 0)})
@@ -916,12 +918,13 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     func refreshCurrentSortOrder() {
-        if let key = self.currentTableViewController?.tableView.sortDescriptors.first?.key,
+        guard let currentLibraryController = self.currentLibraryViewController as? LibraryTableViewController else { return }
+        if let key = currentLibraryController.tableView.sortDescriptors.first?.key,
             let orderName = keyToCachedOrderDictionary[key],
             let order = cachedOrders![orderName] {
             print("fixing indices for current order")
             fixIndicesImmutable(order: order)
-            self.currentTableViewController?.trackViewArrayController.rearrangeObjects()
+            self.currentLibraryViewController?.rearrangeObjects()
         }
     }
     

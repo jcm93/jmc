@@ -33,8 +33,41 @@ fileprivate func >= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 private var my_context = 0
 
-class LibraryTableViewController: NSViewController, NSMenuDelegate {
-
+class LibraryTableViewController: NSViewController, LibraryViewController, NSMenuDelegate {
+    
+    func getFilterPredicate() -> NSPredicate? {
+        return self.trackViewArrayController.filterPredicate
+    }
+    
+    func getSelectedObjects() -> [TrackView] {
+        return self.trackViewArrayController.selectedObjects as! [TrackView]
+    }
+    
+    func setArrayControllerContent(_ content: Any?) {
+        self.trackViewArrayController.content = content
+    }
+    
+    func reloadData() {
+        self.tableView.reloadData()
+    }
+    
+    func setFilterPredicate(_ predicate: NSPredicate?) {
+        self.trackViewArrayController.filterPredicate = predicate
+    }
+    
+    func getArrangedObjects() -> [TrackView] {
+        return self.trackViewArrayController.arrangedObjects as! [TrackView]
+    }
+    
+    func rearrangeObjects() {
+        self.trackViewArrayController.rearrangeObjects()
+    }
+    
+    func setFetchPredicate(_ predicate: NSPredicate?) {
+        self.trackViewArrayController.fetchPredicate = predicate
+    }
+    
+    
     @IBOutlet weak var libraryTableScrollView: NSScrollView!
     @IBOutlet var columnVisibilityMenu: NSMenu!
     @IBOutlet var trackViewArrayController: DragAndDropArrayController!
@@ -42,7 +75,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
     
     var mainWindowController: MainWindowController?
     var rightMouseDownTarget: [TrackView]?
-    var rightMouseDownRow: Int?
+    var rightMouseDownRow: Int = 0
     var item: SourceListItem?
     @objc var managedContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext
     var searchString: String?
@@ -120,8 +153,8 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         }
     }
     
-    func reloadDataForTrack(_ track: Track, orRow row: Int?) {
-        if let row = row {
+    func reloadDataForTrack(_ track: Track, orRow row: Int) {
+        if row > -1 {
             tableView.reloadData(forRowIndexes: IndexSet(integer: row), columnIndexes: IndexSet(0..<tableView.tableColumns.count))
         } else {
             let row = (trackViewArrayController.arrangedObjects as! [TrackView]).firstIndex(of: track.view!)!
@@ -157,7 +190,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             return
         }
         var items = (trackViewArrayController.selectedObjects as! [TrackView]).map({return $0.track!})
-        if mainWindowController!.playSong(items.removeFirst(), row: nil) {
+        if mainWindowController!.playSong(items.removeFirst(), row: -1) {
             mainWindowController?.trackQueueViewController?.addTracksToQueue(nil, tracks: items)
         }
     }
@@ -277,7 +310,7 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
         return idArray.firstIndex(of: trackID)!
     }
 
-    func getUpcomingIDsForPlayEvent(_ shuffleState: Int, id: Int, row: Int?) -> Int {
+    func getUpcomingIDsForPlayEvent(_ shuffleState: Int, id: Int, row: Int) -> Int {
         let volumes = Set((trackViewArrayController.arrangedObjects as! [TrackView]).compactMap({return $0.track?.volume}))
         var count = 0
         for volume in volumes {
@@ -307,8 +340,8 @@ class LibraryTableViewController: NSViewController, NSMenuDelegate {
             return 0
         } else {
             self.item?.playOrderObject?.currentPlayOrder = idArray
-            if row != nil {
-                return row!
+            if row > -1 {
+                return row
             } else {
                 return idArray.firstIndex(of: id)!
             }

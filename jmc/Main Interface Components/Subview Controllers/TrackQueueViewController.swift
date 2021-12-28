@@ -208,7 +208,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         }
         newFutureTrackView.track = track
         if currentSourceListItem != currentAudioSource && manually == true {
-            createPlayOrderArray(track, row: nil)
+            createPlayOrderArray(track, row: -1)
         }
         newFutureTrackView.sourcePlaylistOrder = currentAudioSource!.playOrderObject
         if manually == true {
@@ -345,20 +345,20 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                     notEnablingUndo {
                         self.mainWindowController?.currentTrack?.is_playing = false
                     }
-                    mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                    mainWindowController?.currentLibraryViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                     mainWindowController?.currentTrack = track.track
                     mainWindowController?.timer?.invalidate()
                     mainWindowController?.initializeInterfaceForNewTrack()
                     notEnablingUndo {
                         self.mainWindowController?.currentTrack?.is_playing = true
                     }
-                    mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                    mainWindowController?.currentLibraryViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                     mainWindowController?.delegate?.audioModule.trackQueue.insert(newFutureTrack.track!, at: 0)
                 } else {
                     notEnablingUndo {
                         self.mainWindowController?.currentTrack?.is_playing = false
                     }
-                    mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                    mainWindowController?.currentLibraryViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                     mainWindowController?.currentTrack = nil
                     self.currentTrack = nil
                     self.currentAudioSource = nil
@@ -372,7 +372,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 notEnablingUndo {
                     self.mainWindowController?.currentTrack?.is_playing = false
                 }
-                mainWindowController?.currentTableViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
+                mainWindowController?.currentLibraryViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
                 mainWindowController?.currentTrack = nil
                 self.currentAudioSource = nil
                 self.currentTrack = nil
@@ -458,7 +458,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     
     func makePlayOrderChangesIfNecessaryForQueuedTracks(_ tracks: [Track]) {
         if currentSourceListItem != currentAudioSource {
-            createPlayOrderArray(tracks.last!, row: nil)
+            createPlayOrderArray(tracks.last!, row: -1)
         } else {
             modifyPlayOrderArrayForQueuedTracks(tracks)
         }
@@ -475,7 +475,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
         }
     }
     
-    func createPlayOrderArray(_ track: Track, row: Int?) {
+    func createPlayOrderArray(_ track: Track, row: Int) {
         print("initialize array called")
         currentAudioSource = currentSourceListItem
         self.currentSourceIndex = mainWindowController?.createPlayOrderForTrackID(Int(track.id!), row: row)

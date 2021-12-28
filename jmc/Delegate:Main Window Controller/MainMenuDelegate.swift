@@ -44,7 +44,7 @@ class MainMenuDelegate: NSObject, NSMenuDelegate {
     }
     
     @IBAction func newPlaylistFromSelection(_ sender: AnyObject) {
-        self.mainWindowController.createPlaylistFromTracks((self.mainWindowController.currentTableViewController?.trackViewArrayController.selectedObjects as! [TrackView]).map({return $0.track!}))
+        self.mainWindowController.createPlaylistFromTracks(self.mainWindowController.currentLibraryViewController!.getSelectedObjects().map({return $0.track!}))
     }
     
     @IBAction func newSmartPlaylist(_ sender: Any) {
