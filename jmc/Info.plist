@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>jmc is a music library manager and player. Allows the user to play music in their Apple Music library.</string>
 	<key>CFBundleVersion</key>
 	<string>0.3 beta</string>
 	<key>CFBundleDevelopmentRegion</key>

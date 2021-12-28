@@ -29,6 +29,7 @@ class ArtistViewController: NSViewController {
     func newArtistSelected(artist: Artist) {
         albumsView?.view.removeFromSuperview()
         let newAlbumsView = ArtistViewAlbumViewController(nibName: "ArtistViewAlbumViewController", bundle: nil, artist: artist, artistViewController: self)
+        newAlbumsView?.artistViewController = self
         splitView.addArrangedSubview(newAlbumsView!.view)
         self.albumsView = newAlbumsView
         self.cachedViewControllers[artist] = newAlbumsView

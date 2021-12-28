@@ -52,6 +52,8 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         
     }
     
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.

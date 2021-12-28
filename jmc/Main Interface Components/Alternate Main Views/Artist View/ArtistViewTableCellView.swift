@@ -13,13 +13,14 @@ class ArtistViewTableCellView: NSTableCellView {
     @IBOutlet var artistImageView: NSImageView!
     @IBOutlet var albumNameLabel: NSTextField!
     @IBOutlet var albumInfoLabel: NSTextField!
-    @IBOutlet weak var tracksTableView: NSTableView!
+    @IBOutlet weak var tracksTableView: ArtistViewTracksTableView!
     var trackListTableViewDelegate: ArtistViewAlbumTrackListTableViewDelegate!
     var numberFormatter = NumberFormatter()
     var dateFormatter = DateComponentsFormatter()
     var sizeFormatter = ByteCountFormatter()
     var infoString = ""
     var artistViewController: ArtistViewController!
+    var rightMouseDownTarget: [Track]?
     //var tracksViewController: ArtistViewTrackListViewController?
     
     var album: Album?
@@ -83,6 +84,7 @@ class ArtistViewTableCellView: NSTableCellView {
         self.trackListTableViewDelegate = ArtistViewAlbumTrackListTableViewDelegate(album: album)
         self.tracksTableView.delegate = self.trackListTableViewDelegate
         self.tracksTableView.dataSource = self.trackListTableViewDelegate
+        self.tracksTableView.artistViewTableCellView = self
         
         
         //self.tracksViewController = ArtistViewTrackListViewController(nibName: "ArtistViewTrackListViewController", bundle: nil, album: self.album!)
@@ -123,6 +125,24 @@ class ArtistViewTableCellView: NSTableCellView {
         let infoString = "\(numString!) items; \(timeString!); \(sizeString)"
         self.albumInfoLabel.stringValue = infoString
     }
+    
+    func interpretSpacebarEvent() {
+        
+    }
+    
+    func interpretEnterEvent() {
+        
+    }
+    
+    func interpretDeleteEvent() {
+        
+    }
+    
+    func determineRightMouseDownTarget() {
+        
+    }
+    
+    
 
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)

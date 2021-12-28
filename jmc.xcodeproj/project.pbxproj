@@ -49,6 +49,8 @@
 		0D40A9F21D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */; };
 		0D447BB91EB2B73F00372A80 /* JMTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D447BB81EB2B73F00372A80 /* JMTextField.swift */; };
 		0D48D0DF1F3D444B00ABAAC6 /* MediaKeyListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D48D0DE1F3D444B00ABAAC6 /* MediaKeyListener.swift */; };
+		0D4B4A0827796D9D00161441 /* ArtistViewTracksTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4B4A0727796D9D00161441 /* ArtistViewTracksTableView.swift */; };
+		0D4B4A0A2779778700161441 /* LibraryViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4B4A092779778700161441 /* LibraryViewer.swift */; };
 		0D50CF3C22A5CBB30010629A /* AirPlayPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D50CF3A22A5CBB30010629A /* AirPlayPopover.swift */; };
 		0D50CF3D22A5CBB30010629A /* AirPlayPopover.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D50CF3B22A5CBB30010629A /* AirPlayPopover.xib */; };
 		0D51C8A11EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C89F1EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift */; };
@@ -263,6 +265,8 @@
 		0D40A9F11D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransformerIntegerToTimestamp.swift; sourceTree = "<group>"; };
 		0D447BB81EB2B73F00372A80 /* JMTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTextField.swift; sourceTree = "<group>"; };
 		0D48D0DE1F3D444B00ABAAC6 /* MediaKeyListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaKeyListener.swift; sourceTree = "<group>"; };
+		0D4B4A0727796D9D00161441 /* ArtistViewTracksTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ArtistViewTracksTableView.swift; path = "Artist View/ArtistViewTracksTableView.swift"; sourceTree = "<group>"; };
+		0D4B4A092779778700161441 /* LibraryViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LibraryViewer.swift; path = "jmc/Main Interface Components/LibraryViewer.swift"; sourceTree = SOURCE_ROOT; };
 		0D50CF3A22A5CBB30010629A /* AirPlayPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayPopover.swift; sourceTree = "<group>"; };
 		0D50CF3B22A5CBB30010629A /* AirPlayPopover.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AirPlayPopover.xib; sourceTree = "<group>"; };
 		0D51C89F1EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangePrimaryFolderSheetController.swift; path = Sheets/ChangePrimaryFolderSheetController.swift; sourceTree = "<group>"; };
@@ -471,6 +475,7 @@
 		0D01AD941D707CFB00F9211F /* Main Interface Components */ = {
 			isa = PBXGroup;
 			children = (
+				0D4B4A092779778700161441 /* LibraryViewer.swift */,
 				0D5514941E8879090034D742 /* Main Table View */,
 				0D8B986A1ED2ACFA00283DD1 /* Alternate Main Views */,
 				0DB996C91ECE614600594939 /* Subview Controllers */,
@@ -658,6 +663,7 @@
 				0D8B98671ED2ACF000283DD1 /* ArtistViewController.xib */,
 				0D800C061ED3B3C800EA2889 /* ArtistListViewController.swift */,
 				0D800C071ED3B3C800EA2889 /* ArtistListViewController.xib */,
+				0D4B4A0727796D9D00161441 /* ArtistViewTracksTableView.swift */,
 			);
 			name = "Artist View";
 			sourceTree = "<group>";
@@ -1048,6 +1054,7 @@
 				0D592A3B1EDF6C8B0054D553 /* CachedOrder+CoreDataProperties.swift in Sources */,
 				0D5279162777EE70008271CE /* ArtistViewAlbumTrackListTableViewDelegate.swift in Sources */,
 				0D51C8A81EAC1646002F6182 /* URLStringFormatter.swift in Sources */,
+				0D4B4A0A2779778700161441 /* LibraryViewer.swift in Sources */,
 				0DE74A531D7D9457005211E6 /* SharedLibraryRequestHandler.swift in Sources */,
 				0D592A221EDF6BCE0054D553 /* TrackExtension.swift in Sources */,
 				0DA02D381EFB098900DDE5A9 /* StupidSearchField.swift in Sources */,
@@ -1155,6 +1162,7 @@
 				0D40A9F21D0D255A00F71C96 /* TransformerIntegerToTimestamp.swift in Sources */,
 				0DB996D21ED287C400594939 /* AlbumArtPDFView.swift in Sources */,
 				0D34A4771F7306D400CAA6C4 /* AlbumArtwork+CoreDataClass.swift in Sources */,
+				0D4B4A0827796D9D00161441 /* ArtistViewTracksTableView.swift in Sources */,
 				0DE957DB1EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift in Sources */,
 				0DFE2E5A1EC0DAB6007EEF04 /* TrackQueueTableView.swift in Sources */,
 				0DB996D41ED287D400594939 /* AlbumArtCollectionView.swift in Sources */,
