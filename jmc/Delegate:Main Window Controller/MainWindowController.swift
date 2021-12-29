@@ -137,25 +137,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     @IBAction func searchFieldAction(_ sender: AnyObject) {
         print("search field action called")
         let searchFieldContent = searchField.stringValue
-        let searchTokens = searchFieldContent.components(separatedBy: " ").filter({return $0 != ""})
-        var subPredicates = [NSPredicate]()
-        for token in searchTokens {
-            //not accepted by NSPredicateEditor
-            //let newPredicate = NSPredicate(format: "ANY {track.name, track.artist.name, track.album.name, track.composer.name, track.comments, track.genre.name} contains[cd] %@", token)
-            //accepted by NSPredicateEditor
-            let newPredicate = NSPredicate(format: "track.name contains[cd] %@ OR track.artist.name contains[cd] %@ OR track.album.name contains[cd] %@ OR track.composer.name contains[cd] %@ OR track.comments contains[cd] %@ OR track.genre contains[cd] %@", token, token, token, token, token, token)
-            subPredicates.append(newPredicate)
-        }
-        if subPredicates.count > 0 {
-            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: subPredicates)
-            currentLibraryViewController?.setFilterPredicate(predicate)
-            //currentLibraryViewController?.trackViewArrayController.filterPredicate = predicate
-            currentLibraryViewController?.searchString = searchFieldContent
-        } else {
-            currentLibraryViewController.setFilterPredicate(nil)
-            //currentLibraryViewController?.trackViewArrayController.filterPredicate = nil
-            currentLibraryViewController?.searchString = nil
-        }
+        self.currentLibraryViewController.setFilterPredicate(searchFieldContent)
     }
     
     func networkPlaylistCallback(_ id: Int, idList: [Int]) {
@@ -197,10 +179,10 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         table.item = item
         table.mainWindowController = self
     }
-    /*func addObserversAndInitializeNewArtistView(_ avc: ArtistViewController, item: SourceListItem) {
+    func addObserversAndInitializeNewArtistView(_ avc: ArtistViewController, item: SourceListItem) {
         avc.item = item
         avc.mainWindowController = self
-    }*/
+    }
     
     func switchToPlaylist(_ item: SourceListItem) {
         if item == currentSourceListItem { return }
@@ -242,45 +224,45 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         currentLibraryViewController?.reloadData()
     }
     
-    /*func switchToPlaylistArtistView(_ item: SourceListItem) {
+    func switchToPlaylistArtistView(_ item: SourceListItem) {
         if item == currentSourceListItem { return }
-        self.currentArtistViewController?.hasInitialized = false
+        self.currentLibraryViewController?.hasInitialized = false
         trackQueueViewController?.currentSourceListItem = item
         currentSourceListItem = item
         let objectID = item.objectID
-        currentArtistViewController?.view.removeFromSuperview()
-        if otherLocalArtistViewControllers.object(forKey: objectID) != nil && item.is_network != true {
-            let playlistViewController = otherLocalArtistViewControllers.object(forKey: objectID) as! ArtistViewController
+        currentLibraryViewController?.view.removeFromSuperview()
+        if otherLocalLibraryViewControllers.object(forKey: objectID) != nil && item.is_network != true {
+            let playlistViewController = otherLocalLibraryViewControllers.object(forKey: objectID) as! ArtistViewController
             librarySplitView.addArrangedSubview(playlistViewController.view)
-            currentArtistViewController = playlistViewController
+            currentLibraryViewController = playlistViewController
             updateInfo()
         }
-        else if otherSharedArtistViewControllers.object(forKey: objectID) != nil && item.is_network == true {
-            let playlistViewController = otherSharedArtistViewControllers.object(forKey: objectID) as! ArtistViewController
+        else if otherSharedLibraryViewControllers.object(forKey: objectID) != nil && item.is_network == true {
+            let playlistViewController = otherSharedLibraryViewControllers.object(forKey: objectID) as! ArtistViewController
             librarySplitView.addArrangedSubview(playlistViewController.view)
-            currentArtistViewController = playlistViewController
-            currentArtistViewController?.initializeForPlaylist()
+            currentLibraryViewController = playlistViewController
+            currentLibraryViewController?.initializeForPlaylist()
             updateInfo()
         }
         else {
             let newPlaylistViewController = createArtistViewController(item)
             if item.is_network == true {
-                self.otherSharedArtistViewControllers[objectID] = newPlaylistViewController
+                self.otherSharedLibraryViewControllers[objectID] = newPlaylistViewController
             } else {
-                self.otherLocalArtistViewControllers[objectID] = newPlaylistViewController
+                self.otherLocalLibraryViewControllers[objectID] = newPlaylistViewController
             }
             librarySplitView.addArrangedSubview(newPlaylistViewController.view)
             addObserversAndInitializeNewArtistView(newPlaylistViewController, item: item)
-            currentArtistViewController = newPlaylistViewController
+            currentLibraryViewController = newPlaylistViewController
         }
-        if currentArtistViewController?.advancedFilterVisible == true {
+        if currentLibraryViewController?.advancedFilterVisible == true {
             showAdvancedFilter()
         } else {
             hideAdvancedFilter()
         }
         populateSearchBar()
         //currentArtistViewController?.tableView.reloadData()
-    }*/
+    }
     
     func populateSearchBar() {
         if currentLibraryViewController?.searchString != nil {

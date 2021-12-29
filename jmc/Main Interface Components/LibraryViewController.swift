@@ -40,7 +40,7 @@ protocol LibraryViewController: NSMenuDelegate {
     func initializeSmartPlaylist()
     func scrollToNewTrack()
     func fixPlayOrderForChangedFilterPredicate(_ shuffleState: Int)
-    func setFilterPredicate(_ predicate: NSPredicate?)
+    func setFilterPredicate(_ searchFieldContent: String)
     func getArrangedObjects() -> [TrackView]
     func rearrangeObjects()
     func setFetchPredicate(_ predicate: NSPredicate?)

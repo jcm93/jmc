@@ -12,17 +12,25 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var albumArtworkView: NSImageView!
-    var artist: Artist
+    var artists: [Artist]
     @objc var albums = [Album]()
     var views = [Int : ArtistViewTableCellView]()
     @IBOutlet var albumArrayController: NSArrayController!
     var artistViewController: ArtistViewController
+    var tracks: [TrackView]
     
-    init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, artist: Artist, artistViewController: ArtistViewController) {
-        self.artist = artist
-        self.albums = Array(Set(self.artist.tracks!.compactMap({return ($0 as! Track).album})))
+    init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, artists: [Artist], artistViewController: ArtistViewController) {
         self.artistViewController = artistViewController
+        self.artists = artists
+        self.tracks = (self.artistViewController.trackViewArrayController.arrangedObjects as! [TrackView]).filter({return artists.contains($0.track!.artist!)})
+        self.albums = Array(Set(self.tracks.map({return $0.track!.album!})))
         super.init(nibName: nibNameOrNil.map { $0 }, bundle: nibBundleOrNil)
+    }
+    
+    func refreshTable() {
+        self.tracks = (self.artistViewController.trackViewArrayController.arrangedObjects as! [TrackView]).filter({return artists.contains($0.track!.artist!)})
+        self.albums = Array(Set(self.tracks.map({return $0.track!.album!})))
+        self.reloadData()
     }
     
     required init?(coder: NSCoder) {
@@ -31,7 +39,8 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ArtistViewTableCellView"), owner: self) as! ArtistViewTableCellView
-        view.populateTracksTable(album: (albumArrayController.arrangedObjects as! NSArray)[row] as! Album, artistViewController: self.artistViewController)
+        let album = (albumArrayController.arrangedObjects as! NSArray)[row] as! Album
+        view.populateTracksTable(album: album, tracks: self.tracks.filter({$0.track!.album! == album}), artistViewController: self.artistViewController)
         //self.views[row] = view
         return view
     }
@@ -49,7 +58,46 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         let numTracks = self.albums[row].tracks?.count ?? 0
         let prospectiveHeight = CGFloat(numTracks * 24) + 100
         return prospectiveHeight > 400 ? prospectiveHeight : 400
-        
+    }
+    
+    func jumpToSelection() {
+        self.tableView.scrollRowToVisible(self.tableView.selectedRow)
+    }
+    
+    func reloadData() {
+        self.tableView.reloadData()
+    }
+    
+    func initializeForLibrary() {
+        self.albumArrayController.filterPredicate = nil
+        self.albumArrayController.fetchPredicate = nil
+    }
+    
+    func getUpcomingIDsForPlayEvent() {
+        /*let idArray = (trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
+        if shuffleState == NSControl.StateValue.on.rawValue {
+            //secretly adjust the shuffled array such that it behaves mysteriously like a ring buffer. ssshhhh
+            let currentShuffleArray = self.item!.playOrderObject!.shuffledPlayOrder!
+            let indexToSwap = currentShuffleArray.firstIndex(of: id)!
+            let beginningOfArray = currentShuffleArray[0..<indexToSwap]
+            let endOfArray = currentShuffleArray[indexToSwap..<currentShuffleArray.count]
+            let newArraySliceConcatenation = endOfArray + beginningOfArray
+            self.item?.playOrderObject?.shuffledPlayOrder = Array(newArraySliceConcatenation)
+            if self.item!.playOrderObject!.currentPlayOrder! != self.item!.playOrderObject!.shuffledPlayOrder! {
+                let idSet = Set(idArray)
+                self.item?.playOrderObject?.currentPlayOrder = self.item!.playOrderObject!.shuffledPlayOrder!.filter({idSet.contains($0)})
+            } else {
+                self.item?.playOrderObject?.currentPlayOrder = self.item!.playOrderObject!.shuffledPlayOrder!
+            }
+            return 0
+        } else {
+            self.item?.playOrderObject?.currentPlayOrder = idArray
+            if row > -1 {
+                return row
+            } else {
+                return idArray.firstIndex(of: id)!
+            }
+        }*/
     }
     
 

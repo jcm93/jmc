@@ -11,27 +11,32 @@ import Cocoa
 class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, NSTableViewDataSource {
     
     var album: Album
-    var tracks: [Track]
+    var tracks: [TrackView]
     var timeFormatter: TimeFormatter!
+    var tracksArrayController: NSArrayController!
 
-    init(album: Album) {
+    init(album: Album, tracks: [TrackView]) {
         self.album = album
-        self.tracks = (self.album.tracks!.allObjects as! [Track]).sorted(by: {(t1: Track, t2: Track) -> Bool in
-            let firstValue = t1.track_num?.intValue ?? 0
-            let secondValue = t2.track_num?.intValue ?? 0
+        self.tracks = tracks.sorted(by: {(t1: TrackView, t2: TrackView) -> Bool in
+            let firstValue = t1.track!.track_num?.intValue ?? 0
+            let secondValue = t2.track!.track_num?.intValue ?? 0
             return firstValue < secondValue
             })
+        self.tracksArrayController = NSArrayController(content: tracks)
+        print("array controller stuff added")
         self.timeFormatter = TimeFormatter()
+        self.tracksArrayController.sortDescriptors = [NSSortDescriptor(key: "track.track_num", ascending: true)]
+        self.tracksArrayController.rearrangeObjects()
     }
     
     func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
         switch tableColumn?.identifier.rawValue {
         case "Track":
-            return row + 1
+            return (self.tracksArrayController.arrangedObjects as! [TrackView])[row].track!.track_num
         case "Name":
-            return self.tracks[row].name
+            return (self.tracksArrayController.arrangedObjects as! [TrackView])[row].track!.name
         case "Time":
-            return timeFormatter.string(for: self.tracks[row].time)
+            return timeFormatter.string(for: (self.tracksArrayController.arrangedObjects as! [TrackView])[row].track!.time)
         default:
             return "poop"
         }

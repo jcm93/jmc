@@ -21,6 +21,7 @@ class ArtistViewTableCellView: NSTableCellView {
     var infoString = ""
     var artistViewController: ArtistViewController!
     var rightMouseDownTarget: [Track]?
+    var tracksArrayController: NSArrayController!
     //var tracksViewController: ArtistViewTrackListViewController?
     
     var album: Album?
@@ -78,10 +79,10 @@ class ArtistViewTableCellView: NSTableCellView {
         }
     }
     
-    func populateTracksTable(album: Album, artistViewController: ArtistViewController) {
+    func populateTracksTable(album: Album, tracks: [TrackView], artistViewController: ArtistViewController) {
         self.artistViewController = artistViewController
         self.album = album
-        self.trackListTableViewDelegate = ArtistViewAlbumTrackListTableViewDelegate(album: album)
+        self.trackListTableViewDelegate = ArtistViewAlbumTrackListTableViewDelegate(album: album, tracks: tracks)
         self.tracksTableView.delegate = self.trackListTableViewDelegate
         self.tracksTableView.dataSource = self.trackListTableViewDelegate
         self.tracksTableView.artistViewTableCellView = self
@@ -116,6 +117,7 @@ class ArtistViewTableCellView: NSTableCellView {
         self.artistImageView.layer?.cornerRadius = 10
         //self.tracksViewController!.view.frame = self.tracksView.bounds
         let trackArray = self.album!.tracks!.allObjects as! [Track]
+        
         let numItems = trackArray.count as NSNumber
         let totalSize = trackArray.lazy.map({return ($0.size?.int64Value)}).reduce(0, {$0 + ($1 != nil ? $1! : 0)})
         let totalTime = trackArray.lazy.map({return ($0.time?.doubleValue)}).reduce(0, {$0 + ($1 != nil ? $1! : 0)})

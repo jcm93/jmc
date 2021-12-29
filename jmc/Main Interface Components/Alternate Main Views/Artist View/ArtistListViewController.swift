@@ -8,25 +8,78 @@
 
 import Cocoa
 
-class ArtistListViewController: NSViewController, NSTableViewDelegate {
+class ArtistListViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource {
 
-    @IBOutlet var artistArrayController: NSArrayController!
+    var artistArrayController: NSArrayController!
     @IBOutlet weak var tableView: NSTableView!
     
-    var artistViewController: ArtistViewController?
+    var artistViewController: ArtistViewController!
     @objc var managedContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext
     
     func tableViewSelectionDidChange(_ notification: Notification) {
+        let selectedRows = self.tableView.selectedRowIndexes
+        artistArrayController.setSelectionIndexes(selectedRows)
         let selectedArtists = artistArrayController.selectedObjects as! [Artist]
-        artistViewController!.newArtistSelected(artist: selectedArtists[0])
+        artistViewController!.newArtistsSelected(artists: selectedArtists)
+    }
+    
+    func jumpToArtist(_ artist: Artist) {
+        let artists = artistArrayController.arrangedObjects as! [Artist]
+        let row = artists.startIndex.distance(to: artists.firstIndex(of: artist)!)
+        self.tableView.scrollRowToVisible(row)
+    }
+    
+    func jumpToSelection() {
+        self.tableView.scrollRowToVisible(self.tableView.selectedRow)
+    }
+    
+    func reloadData() {
+        self.tableView.reloadData()
+    }
+    
+    func initializeForLibrary() {
+        self.artistArrayController.filterPredicate = nil
+        self.artistArrayController.fetchPredicate = nil
+    }
+    
+    func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
+        return (self.artistArrayController.arrangedObjects as! [Artist])[row]
+    }
+    
+    func numberOfRows(in tableView: NSTableView) -> Int {
+        return (self.artistArrayController.arrangedObjects as! [Artist]).count
     }
     
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         return CGFloat(27)
     }
     
+    func setFilterPredicate(_ searchFieldContent: String) {
+        //naive
+        /*let searchTokens = searchFieldContent.components(separatedBy: " ").filter({return $0 != ""})
+        var subPredicates = [NSPredicate]()
+        for token in searchTokens {
+            //not accepted by NSPredicateEditor
+            //let newPredicate = NSPredicate(format: "ANY {track.name, track.artist.name, track.album.name, track.composer.name, track.comments, track.genre.name} contains[cd] %@", token)
+            //accepted by NSPredicateEditor
+            let newPredicate = NSPredicate(format: "tracks.name contains[cd] %@ OR name contains[cd] %@ OR albums.name contains[cd] %@ OR composers.name contains[cd] %@ OR track.genre contains[cd] %@", token, token, token, token, token, token)
+            subPredicates.append(newPredicate)
+        }
+        if subPredicates.count > 0 {
+            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: subPredicates)
+            self.trackViewArrayController.filterPredicate = predicate
+            //currentLibraryViewController?.trackViewArrayController.filterPredicate = predicate
+            self.searchString = searchFieldContent
+        } else {
+            self.trackViewArrayController.filterPredicate = nil
+            //currentLibraryViewController?.trackViewArrayController.filterPredicate = nil
+            self.searchString = nil
+        }*/
+    }
+    
     init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, artistViewController: ArtistViewController) {
         self.artistViewController = artistViewController
+        
         super.init(nibName: nibNameOrNil.map { $0 }, bundle: nibBundleOrNil)
     }
     
@@ -34,11 +87,31 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func refreshArtistArrayContent() {
+        let selectedRows = self.tableView.selectedRowIndexes
+        artistArrayController.setSelectionIndexes(selectedRows)
+        let selectedArtists = artistArrayController.selectedObjects as! [Artist]
+        let artists = (self.artistViewController.trackViewArrayController.arrangedObjects as! [TrackView]).map({return $0.track!.artist})
+        let uniqueArtists = Set(Array(artists))
+        self.artistArrayController.content = uniqueArtists
+        self.tableView.reloadData()
+        selectArtists(artists: selectedArtists)
+    }
+    
+    func selectArtists(artists: [Artist]) {
+        let currentArtistArray = self.artistArrayController.arrangedObjects as! [Artist]
+        let selectionIndexes = artists.map({return currentArtistArray.startIndex.distance(to: currentArtistArray.firstIndex(of: $0)!)})
+        let newIndexSet = IndexSet(selectionIndexes)
+        self.tableView.selectRowIndexes(newIndexSet, byExtendingSelection: false)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        let artists = (self.artistViewController.trackViewArrayController.arrangedObjects as! [TrackView]).map({return $0.track!.artist})
+        let uniqueArtists = Set(Array(artists))
+        self.artistArrayController = NSArrayController(content: uniqueArtists)
         let newSortDescriptor = NSSortDescriptor(key: "name", ascending: true)
         self.artistArrayController.sortDescriptors = [newSortDescriptor]
-        // Do view setup here.
     }
     
 }

@@ -169,7 +169,7 @@
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <prototypeCellViews>
                                                                                 <tableCellView id="aq8-ft-pV9">
-                                                                                    <rect key="frame" x="579.5" y="0.0" width="49" height="17"/>
+                                                                                    <rect key="frame" x="580" y="0.0" width="49" height="17"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EgC-GW-IBy">
@@ -254,9 +254,6 @@
         </customView>
         <arrayController objectClassName="Album" id="kXu-Mp-LLx">
             <classReference key="objectClass" className="Album"/>
-            <connections>
-                <binding destination="-2" name="contentArray" keyPath="self.albums" id="oce-g5-oEx"/>
-            </connections>
         </arrayController>
     </objects>
 </document>
