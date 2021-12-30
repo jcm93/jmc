@@ -40,6 +40,7 @@ let DEFAULTS_TRACK_QUEUE_VISIBLE = "queueVisible"
 let DEFAULTS_SCROBBLES = "scrobbles"
 var DEFAULTS_DURATION_SHOWS_TIME_REMAINING = "durationShowsTimeRemaining"
 let DEFAULTS_DOESNT_ASKS_DELETE_PLAYLIST = "doesntAskBeforeRemovingTracksFromPlaylist"
+let DEFAULTS_LAST_SELECTED_ARTIST_ROW = "lastSelectedArtistRowArtistView"
 
 enum TableSortBehavior: Int {
     case followsNothing, followsSelection, followsCurrentTrack

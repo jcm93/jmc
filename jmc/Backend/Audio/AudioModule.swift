@@ -64,7 +64,7 @@ enum completionHandlerType: Int {
     var fileManager = FileManager.default
     var upcomingTrackURL: URL?
     var endOfCurrentTrackFrame: AVAudioFramePosition?
-    //var airplayDeviceHandler: AirPlayDeviceHandler
+    var airplayDeviceHandler: AirPlayDeviceHandler
     
     let verbotenFileTypes = ["m4v", "m4p"]
     
@@ -159,7 +159,7 @@ enum completionHandlerType: Int {
     }
     
     override init() {
-        //self.airplayDeviceHandler = AirPlayDeviceHandler()
+        self.airplayDeviceHandler = AirPlayDeviceHandler()
         super.init()
         /*addListenerBlock(audioObjectPropertyListenerBlock,
                          onAudioObjectID: AudioObjectID(bitPattern: kAudioObjectSystemObject),

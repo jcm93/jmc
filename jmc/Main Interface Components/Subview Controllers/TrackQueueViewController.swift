@@ -94,7 +94,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     
     @IBOutlet weak var scrollView: NSScrollView!
     var currentContext: String?
-    var currentTrackIndex: Int?
+    var currentTrackIndex: Int? = 0
     var fileManager = FileManager.default
     var temporaryPooForDragging: PlayOrderObject?
     var temporaryPooIndexForDragging: Int?

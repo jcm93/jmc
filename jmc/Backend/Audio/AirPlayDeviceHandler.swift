@@ -64,7 +64,7 @@ class AirPlayDeviceHandler: NSObject {
         var sourceIDs = [UInt32](repeating: 0, count: Int(propsize))
         AudioObjectGetPropertyData(self.device, &addr, 0, nil, &propsize, &sourceIDs)
         for source in sourceIDs {
-            //print(source)
+            print(source)
             outputs.append(AirPlayDestination(id: source, airPlayDevice: self.device))
         }
     }

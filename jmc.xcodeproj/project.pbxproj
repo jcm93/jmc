@@ -51,6 +51,7 @@
 		0D48D0DF1F3D444B00ABAAC6 /* MediaKeyListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D48D0DE1F3D444B00ABAAC6 /* MediaKeyListener.swift */; };
 		0D4B4A0827796D9D00161441 /* ArtistViewTracksTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4B4A0727796D9D00161441 /* ArtistViewTracksTableView.swift */; };
 		0D4B4A0A2779778700161441 /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4B4A092779778700161441 /* LibraryViewController.swift */; };
+		0D4B4A0C277CF4AC00161441 /* AVPlayerAudioModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4B4A0B277CF4AC00161441 /* AVPlayerAudioModule.swift */; };
 		0D50CF3C22A5CBB30010629A /* AirPlayPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D50CF3A22A5CBB30010629A /* AirPlayPopover.swift */; };
 		0D50CF3D22A5CBB30010629A /* AirPlayPopover.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D50CF3B22A5CBB30010629A /* AirPlayPopover.xib */; };
 		0D51C8A11EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C89F1EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift */; };
@@ -267,6 +268,7 @@
 		0D48D0DE1F3D444B00ABAAC6 /* MediaKeyListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaKeyListener.swift; sourceTree = "<group>"; };
 		0D4B4A0727796D9D00161441 /* ArtistViewTracksTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ArtistViewTracksTableView.swift; path = "Artist View/ArtistViewTracksTableView.swift"; sourceTree = "<group>"; };
 		0D4B4A092779778700161441 /* LibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LibraryViewController.swift; path = "jmc/Main Interface Components/LibraryViewController.swift"; sourceTree = SOURCE_ROOT; };
+		0D4B4A0B277CF4AC00161441 /* AVPlayerAudioModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerAudioModule.swift; sourceTree = "<group>"; };
 		0D50CF3A22A5CBB30010629A /* AirPlayPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayPopover.swift; sourceTree = "<group>"; };
 		0D50CF3B22A5CBB30010629A /* AirPlayPopover.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AirPlayPopover.xib; sourceTree = "<group>"; };
 		0D51C89F1EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangePrimaryFolderSheetController.swift; path = Sheets/ChangePrimaryFolderSheetController.swift; sourceTree = "<group>"; };
@@ -631,6 +633,7 @@
 				0DCF1D241F1D3C6300240202 /* AirPlayDeviceHandler.swift */,
 				0D606EF51E7B4C21007AE152 /* FileBufferer.swift */,
 				0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */,
+				0D4B4A0B277CF4AC00161441 /* AVPlayerAudioModule.swift */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
@@ -1098,6 +1101,7 @@
 				0D116B851E5800FD00C759FD /* LocationManager.swift in Sources */,
 				0DE957DC1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift in Sources */,
 				0D99D4A11EF216F200264CFF /* OrganizationRuleCellView.swift in Sources */,
+				0D4B4A0C277CF4AC00161441 /* AVPlayerAudioModule.swift in Sources */,
 				0DE957D61EEC5465008CBECF /* OrganizationTemplate+CoreDataProperties.swift in Sources */,
 				0D3756C01EAADBD700016136 /* PreferencesWindowController.swift in Sources */,
 				0DAB30911CFBA3340028928F /* AppDelegate.swift in Sources */,
@@ -1323,7 +1327,7 @@
 					"$(PROJECT_DIR)/FLAC",
 				);
 				MACH_O_TYPE = mh_execute;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jcm.jmc;
 				PRODUCT_NAME = jmc;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1360,7 +1364,7 @@
 					"$(PROJECT_DIR)/FLAC",
 				);
 				MACH_O_TYPE = mh_execute;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jcm.jmc;
 				PRODUCT_NAME = jmc;
 				PROVISIONING_PROFILE_SPECIFIER = "";

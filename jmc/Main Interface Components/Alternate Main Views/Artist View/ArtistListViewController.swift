@@ -81,6 +81,11 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate, NSTableVi
         self.artistViewController = artistViewController
         
         super.init(nibName: nibNameOrNil.map { $0 }, bundle: nibBundleOrNil)
+        let artists = (self.artistViewController.trackViewArrayController.arrangedObjects as! [TrackView]).map({return $0.track!.artist})
+        let uniqueArtists = Set(Array(artists))
+        self.artistArrayController = NSArrayController(content: uniqueArtists)
+        let newSortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+        self.artistArrayController.sortDescriptors = [newSortDescriptor]
     }
     
     required init?(coder: NSCoder) {
@@ -107,11 +112,7 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate, NSTableVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let artists = (self.artistViewController.trackViewArrayController.arrangedObjects as! [TrackView]).map({return $0.track!.artist})
-        let uniqueArtists = Set(Array(artists))
-        self.artistArrayController = NSArrayController(content: uniqueArtists)
-        let newSortDescriptor = NSSortDescriptor(key: "name", ascending: true)
-        self.artistArrayController.sortDescriptors = [newSortDescriptor]
+    
     }
     
 }

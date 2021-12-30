@@ -32,15 +32,12 @@ class ArtistViewController: NSViewController, LibraryViewController {
     var advancedFilterVisible: Bool = false
     var databaseManager = DatabaseManager()
     
-    var cachedViewControllers = [[Artist] : ArtistViewAlbumViewController]()
-    
     func newArtistsSelected(artists: [Artist]) {
         albumsView?.view.removeFromSuperview()
         let newAlbumsView = ArtistViewAlbumViewController(nibName: "ArtistViewAlbumViewController", bundle: nil, artists: artists, artistViewController: self)
         newAlbumsView?.artistViewController = self
         splitView.addArrangedSubview(newAlbumsView!.view)
         self.albumsView = newAlbumsView
-        self.cachedViewControllers[artists] = newAlbumsView
     }
     
     func initializeForPlaylist() {
@@ -167,6 +164,8 @@ class ArtistViewController: NSViewController, LibraryViewController {
         }
         self.artistListView = ArtistListViewController(nibName: "ArtistListViewController", bundle: nil, artistViewController: self)
         self.splitView.addArrangedSubview(artistListView!.view)
-        
+        let lastSelectedArtistRow = UserDefaults.standard.integer(forKey: DEFAULTS_LAST_SELECTED_ARTIST_ROW)
+        let indexSet = IndexSet(integer: lastSelectedArtistRow)
+        self.artistListView.tableView.selectRowIndexes(indexSet, byExtendingSelection: false)
     }
 }

@@ -59,6 +59,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     @IBOutlet var artCollectionArrayController: NSArrayController!
     @IBOutlet weak var infoField: NSTextField!
     @IBOutlet weak var barViewToggle: NSView!
+    @IBOutlet weak var airplayRoutePickerButton: AVRoutePickerView!
     
     //subview controllers
     var sourceListViewController: SourceListViewController!
@@ -119,6 +120,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     var isDoneWithSkipBackOperation = true
     var durationShowsTimeRemaining = false
     var viewHasLoaded = false
+    var popover: NSPopover!
+    var popoverDelegate: AirPlayPopover!
+    var avPlayerAudioModule: AVPlayerAudioModule!
     
     //initialize managed object context
     
@@ -422,6 +426,21 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         albumArtViewController?.initAlbumArt(track)
     }
     @IBAction func airPlayPressed(_ sender: Any) {
+        let popoverViewController = AirPlayPopover()
+        let popover = NSPopover()
+        popover.contentSize = NSMakeSize(200.0, 200.0)
+        popover.behavior = NSPopover.Behavior.transient
+        popover.animates = true
+        popover.contentViewController = popoverViewController
+        let entryRect = (sender as! NSButton).convert((sender as! NSButton).bounds, to: NSApp.mainWindow!.contentView!)
+        //let entryRect = (sender as! NSButton).convert((sender as! NSButton).bounds, from: NSApp.mainWindow!.contentView)
+        popover.show(relativeTo: entryRect, of: NSApp.mainWindow!.contentView!, preferredEdge: .minY)
+        /*self.popover = NSPopover()
+        self.popoverDelegate = AirPlayPopover()
+        self.popover.contentViewController = self.popoverDelegate
+        self.popover.delegate = self.popoverDelegate
+        self.popover.contentSize = NSSize(width: 500, height: 500)
+        popover.show(relativeTo: NSRect(x: 500, y: 500, width: 500, height: 500), of: airplayButton, preferredEdge: .maxY)*/
         
     }
     
@@ -455,7 +474,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     func playSong(_ track: Track, row: Int) -> Bool {
-        guard fileManager.fileExists(atPath: URL(string: track.location!)!.path) else {
+        /*guard fileManager.fileExists(atPath: URL(string: track.location!)!.path) else {
             sourceListViewController!.reloadData()
             handleTrackMissing(track: track)
             currentLibraryViewController?.reloadDataForTrack(track, orRow: row)
@@ -488,7 +507,18 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         delegate?.audioModule.playImmediately(track.location!)
         trackQueueViewController?.changeCurrentTrack(track)
         paused = false
-        //currentTrack = track
+        currentTrack = track
+        return true*/
+        guard fileManager.fileExists(atPath: URL(string: track.location!)!.path) else {
+            sourceListViewController!.reloadData()
+            handleTrackMissing(track: track)
+            currentLibraryViewController?.reloadDataForTrack(track, orRow: row)
+            return false
+        }
+        self.trackQueueViewController?.createPlayOrderArray(track, row: row)
+        self.avPlayerAudioModule.playImmediately(track)
+        self.trackQueueViewController?.changeCurrentTrack(track)
+        self.paused = false
         return true
     }
     
@@ -540,7 +570,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         paused = true
         print("pause called")
         updateValuesUnsafe()
-        delegate?.audioModule.pause()
+        self.avPlayerAudioModule.pause()
         timer!.invalidate()
         playButton.image = NSImage(named: "NSPlayTemplate")
     }
@@ -549,15 +579,16 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         print("unpause called")
         paused = false
         lastTimerDate = Date()
-        delegate?.audioModule.play()
+        self.avPlayerAudioModule.play()
         timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateValuesSafe), userInfo: nil, repeats: true)
         RunLoop.current.add(timer!, forMode: RunLoop.Mode.common)
         playButton.image = NSImage(named: "NSPauseTemplate")
     }
     
     func seek(_ frac: Double) {
-        delegate?.audioModule.seek(frac)
+        self.avPlayerAudioModule.seek(frac)
         //callback is seekCompleted()
+        seekCompleted()
     }
     
     func seekCompleted() {
@@ -577,7 +608,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             self.currentTrack?.is_playing = false
         }
         timer?.invalidate()
-        delegate?.audioModule.skip()
+        self.avPlayerAudioModule.skip()
     }
     
     func skipBackward() {
@@ -697,7 +728,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         theBox.contentView!.isHidden = false
         songNameLabel.stringValue = name_string
         artistAlbumLabel.stringValue = aa_string
-        duration = delegate?.audioModule.duration_seconds
+        duration = self.avPlayerAudioModule.player.currentItem!.asset.duration.seconds
         if self.durationShowsTimeRemaining {
             durationLabel.stringValue = "-\(getTimeAsString(duration!)!)"
         } else {
@@ -722,21 +753,18 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     
     func updateValuesUnsafe() {
         print("unsafe called")
-        if self.delegate?.audioModule.isSeeking != true {
-            if let nodeTime = delegate?.audioModule.curPlayerNode.lastRenderTime, let playerTime = delegate?.audioModule.curPlayerNode.playerTime(forNodeTime: nodeTime), let duration = self.duration, duration != 0 {
-                let offset: Double = delegate?.audioModule.track_frame_offset ?? 0
-                let seconds = (Double(playerTime.sampleTime) + offset) / (playerTime.sampleRate) - delegate.audioModule.total_offset_seconds
-                if let seconds_string = getTimeAsString(seconds) {
-                    currentTimeLabel.stringValue = seconds_string
-                    print(seconds_string)
-                }
-                progressBar.doubleValue = (seconds * 100) / duration
-                if self.durationShowsTimeRemaining {
-                    durationLabel.stringValue = "-\(getTimeAsString(duration - secsPlayed)!)"
-                }
-                secsPlayed = seconds
-                lastTimerDate = Date()
+        if self.avPlayerAudioModule.isSeeking != true {
+            let seconds = self.avPlayerAudioModule.player.currentTime().seconds
+            if let seconds_string = getTimeAsString(seconds) {
+                currentTimeLabel.stringValue = seconds_string
+                print(seconds_string)
             }
+            progressBar.doubleValue = (seconds * 100) / self.avPlayerAudioModule.player.currentItem!.duration.seconds
+            if self.durationShowsTimeRemaining {
+                durationLabel.stringValue = "-\(getTimeAsString(self.avPlayerAudioModule.player.currentItem!.duration.seconds - secsPlayed)!)"
+            }
+            secsPlayed = seconds
+            lastTimerDate = Date()
         }
     }
     
@@ -927,6 +955,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     override func windowDidLoad() {
+        self.avPlayerAudioModule = AVPlayerAudioModule()
         self.sourceListViewController = SourceListViewController(nibName: "SourceListViewController", bundle: nil)
         sourceListTargetView.addSubview(sourceListViewController!.view)
         self.sourceListViewController!.view.frame = sourceListTargetView.bounds
@@ -961,7 +990,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         searchField.delegate = self
         //searchField.drawsBackground = false
         self.delegate?.audioModule.addObserver(self, forKeyPath: "track_changed", options: .new, context: &my_context)
+        self.avPlayerAudioModule.addObserver(self, forKeyPath: "track_changed", options: .new, context: &my_context)
         self.delegate?.audioModule.addObserver(self, forKeyPath: "done_playing", options: .new, context: &my_context)
+        self.avPlayerAudioModule.addObserver(self, forKeyPath: "done_playing", options: .new, context: &my_context)
         self.addObserver(self, forKeyPath: "paused", options: .new, context: &my_context)
         self.albumArtViewController?.addObserver(self, forKeyPath: "albumArtworkAdded", options: .new, context: &my_context)
         self.albumArtViewController?.mainWindow = self
@@ -1009,5 +1040,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             self.airplayButton.isHidden = true
             // Fallback on earlier versions
         }*/
+        self.airplayRoutePickerButton.isRoutePickerButtonBordered = false
+        self.avPlayerAudioModule.mainWindowController = self
     }
 }

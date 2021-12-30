@@ -9,7 +9,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="MainWindowController" customModule="jmc" customModuleProvider="target">
             <connections>
                 <outlet property="advancedSearchToggle" destination="0eg-hu-JdK" id="a8b-oC-Ej5"/>
-                <outlet property="airplayButton" destination="yRB-VI-EGH" id="ndV-3X-SmA"/>
+                <outlet property="airplayRoutePickerButton" destination="T0Z-5M-4dl" id="eXS-Er-pwv"/>
                 <outlet property="artToggle" destination="aLT-7j-MYS" id="GYM-BS-7lJ"/>
                 <outlet property="artistAlbumLabel" destination="WNx-p0-gWl" id="MpA-ce-7KD"/>
                 <outlet property="artworkTargetView" destination="M4o-nI-Oef" id="yz5-8p-vw5"/>
@@ -463,19 +463,6 @@
                             <outlet property="menu" destination="WAr-lr-0sM" id="tZk-Ww-b2z"/>
                         </connections>
                     </segmentedControl>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yRB-VI-EGH">
-                        <rect key="frame" x="331" y="4" width="46" height="23"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="44" id="c0m-Jk-e4f"/>
-                        </constraints>
-                        <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="AirPlay" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Dfw-IB-4vD">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                            <connections>
-                                <action selector="airPlayButtonPressed:" target="-2" id="qVY-hn-mH6"/>
-                            </connections>
-                        </buttonCell>
-                    </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Nyd-Mi-qKV">
                         <rect key="frame" x="1567" y="4" width="46" height="25"/>
                         <constraints>
@@ -490,22 +477,28 @@
                             <action selector="toggleEqualizer:" target="-2" id="bP4-5H-WX8"/>
                         </connections>
                     </button>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="T0Z-5M-4dl" customClass="AVRoutePickerView">
+                        <rect key="frame" x="332" y="6" width="44" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="44" id="7yQ-Wn-fdu"/>
+                            <constraint firstAttribute="height" constant="20" id="hFr-0x-TF5"/>
+                        </constraints>
+                    </customView>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="0eg-hu-JdK" secondAttribute="bottom" constant="6" id="1mf-qn-i1B"/>
                     <constraint firstItem="qNB-cP-szA" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="3Zf-1k-4fz"/>
                     <constraint firstItem="rfk-1e-A3X" firstAttribute="leading" secondItem="aLT-7j-MYS" secondAttribute="trailing" constant="8" id="8hA-tp-cFE"/>
                     <constraint firstItem="wUv-cJ-CeL" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="3" id="9dD-af-Zpw"/>
+                    <constraint firstAttribute="bottom" secondItem="T0Z-5M-4dl" secondAttribute="bottom" constant="6" id="BjT-gh-AMT"/>
                     <constraint firstItem="r3P-eO-TmU" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="60" id="FWU-KC-1lo"/>
                     <constraint firstItem="wUv-cJ-CeL" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="75" id="Gt8-ei-BxH"/>
                     <constraint firstAttribute="trailing" secondItem="wxs-uU-bSr" secondAttribute="trailing" id="Hgn-uz-KPD"/>
                     <constraint firstItem="wxs-uU-bSr" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="JFe-fa-ed3"/>
                     <constraint firstAttribute="bottom" secondItem="rfk-1e-A3X" secondAttribute="bottom" constant="6" id="Lh9-xM-6AE"/>
                     <constraint firstAttribute="bottom" secondItem="Nyd-Mi-qKV" secondAttribute="bottom" constant="6" id="P1x-bo-07C"/>
-                    <constraint firstAttribute="bottom" secondItem="yRB-VI-EGH" secondAttribute="bottom" constant="6" id="SHK-6D-H1M"/>
                     <constraint firstItem="r3P-eO-TmU" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="U90-gJ-aXX"/>
                     <constraint firstAttribute="bottom" secondItem="eg4-23-xqc" secondAttribute="bottom" constant="6" id="VzN-90-baa"/>
-                    <constraint firstItem="yRB-VI-EGH" firstAttribute="leading" secondItem="mb6-nw-TjG" secondAttribute="trailing" constant="8" id="YME-0A-fb1"/>
                     <constraint firstAttribute="bottom" secondItem="qNB-cP-szA" secondAttribute="bottom" constant="6" id="Z28-wH-waA"/>
                     <constraint firstItem="gzN-xP-Utz" firstAttribute="leading" secondItem="Nyd-Mi-qKV" secondAttribute="trailing" constant="8" id="aDT-Xk-kuJ"/>
                     <constraint firstAttribute="trailing" secondItem="wUv-cJ-CeL" secondAttribute="trailing" constant="50" id="ago-jV-Jha"/>
@@ -514,6 +507,7 @@
                     <constraint firstItem="0eg-hu-JdK" firstAttribute="leading" secondItem="rfk-1e-A3X" secondAttribute="trailing" constant="8" id="fXR-cT-641"/>
                     <constraint firstAttribute="bottom" secondItem="FOU-Bi-82q" secondAttribute="bottom" constant="10" id="gP9-zO-Tke"/>
                     <constraint firstAttribute="trailing" secondItem="r3P-eO-TmU" secondAttribute="trailing" id="hj8-Hy-9at"/>
+                    <constraint firstItem="T0Z-5M-4dl" firstAttribute="leading" secondItem="mb6-nw-TjG" secondAttribute="trailing" constant="8" id="jQW-Z6-b4h"/>
                     <constraint firstAttribute="trailing" secondItem="gzN-xP-Utz" secondAttribute="trailing" constant="19" id="kdg-jL-mMW"/>
                     <constraint firstItem="wxs-uU-bSr" firstAttribute="top" secondItem="r3P-eO-TmU" secondAttribute="bottom" id="lLX-1l-4Ka"/>
                     <constraint firstAttribute="bottom" secondItem="mb6-nw-TjG" secondAttribute="bottom" constant="6" id="lba-F2-zcv"/>
@@ -553,7 +547,6 @@
         </menu>
     </objects>
     <resources>
-        <image name="AirPlay" width="18" height="16"/>
         <image name="NSAddTemplate" width="14" height="13"/>
         <image name="NSFlowViewTemplate" width="18" height="10"/>
         <image name="NSPlayTemplate" width="25" height="23"/>

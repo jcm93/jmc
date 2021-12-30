@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class AirPlayPopover: NSViewController {
+class AirPlayPopover: NSViewController, NSPopoverDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
