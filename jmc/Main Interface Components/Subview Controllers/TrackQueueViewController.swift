@@ -334,14 +334,15 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 if currentTrackIndex! != 0 {
                     print("making tqv transient")
                     trackQueue[currentTrackIndex!].viewType = .transient
+                    let oldTrack = trackQueue[currentTrackIndex!].track
                     let track = trackQueue[currentTrackIndex! - 1]
                     self.currentTrack = track.track
                     let newFutureTrack = trackQueue[currentTrackIndex!]
                     newFutureTrack.viewType = .transient
                     trackQueue[currentTrackIndex! - 1].viewType = .currentTrack
                     currentTrackIndex! -= 1
-                    mainWindowController?.delegate?.audioModule.currentTrackLocation = track.track?.location
-                    mainWindowController?.delegate?.audioModule.skip_backward()
+                    mainWindowController?.avPlayerAudioModule.track = track.track!
+                    mainWindowController?.avPlayerAudioModule.skipBackward()
                     notEnablingUndo {
                         self.mainWindowController?.currentTrack?.is_playing = false
                     }
@@ -353,7 +354,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                         self.mainWindowController?.currentTrack?.is_playing = true
                     }
                     mainWindowController?.currentLibraryViewController?.reloadNowPlayingForTrack(mainWindowController!.currentTrack!)
-                    mainWindowController?.delegate?.audioModule.trackQueue.insert(newFutureTrack.track!, at: 0)
+                    mainWindowController?.avPlayerAudioModule.nextTrack = oldTrack
                 } else {
                     notEnablingUndo {
                         self.mainWindowController?.currentTrack?.is_playing = false
@@ -362,8 +363,8 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                     mainWindowController?.currentTrack = nil
                     self.currentTrack = nil
                     self.currentAudioSource = nil
-                    mainWindowController?.delegate?.audioModule.currentTrackLocation = nil
-                    mainWindowController?.delegate?.audioModule.skip_backward()
+                    mainWindowController?.avPlayerAudioModule.track = nil
+                    mainWindowController?.avPlayerAudioModule.skipBackward()
                     currentTrackIndex = nil
                 }
             } else {
@@ -376,8 +377,8 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 mainWindowController?.currentTrack = nil
                 self.currentAudioSource = nil
                 self.currentTrack = nil
-                mainWindowController?.delegate?.audioModule.currentTrackLocation = nil
-                mainWindowController?.delegate?.audioModule.skip_backward()
+                mainWindowController?.avPlayerAudioModule.track = nil
+                mainWindowController?.avPlayerAudioModule.skipBackward()
             }
         }
         print("current track index is \(currentTrackIndex)")
@@ -526,7 +527,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     func destroyTransientTracks() {
         let transientTQVs = trackQueue.filter({return $0.viewType == .transient})
         for transientTQV in transientTQVs {
-            mainWindowController?.delegate?.audioModule.trackQueue.removeFirst()
+            mainWindowController?.avPlayerAudioModule.nextTrack = nil
             trackQueue.remove(at: trackQueue.firstIndex(of: transientTQV)!)
         }
         tableView.reloadData()

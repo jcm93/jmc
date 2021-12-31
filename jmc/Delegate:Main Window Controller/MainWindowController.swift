@@ -618,26 +618,12 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         notEnablingUndo {
             self.currentTrack?.is_playing = false
         }
-        timer?.invalidate()
-        let nodeTime = delegate?.audioModule.curPlayerNode.lastRenderTime
-        let playerTime = delegate?.audioModule.curPlayerNode.playerTime(forNodeTime: nodeTime!)
-        var offset_thing: Double?
-        if delegate?.audioModule.track_frame_offset == nil {
-            offset_thing = 0
-        }
-        else {
-            offset_thing  = delegate?.audioModule.track_frame_offset!
-            print(offset_thing)
-        }
-        if playerTime != nil {
-            let seconds = ((Double((playerTime?.sampleTime)!) + offset_thing!) / (playerTime?.sampleRate)!) - Double(delegate!.audioModule.total_offset_seconds)
-            if seconds > 3 {
-                delegate?.audioModule.skip_backward()
-                initializeInterfaceForNewTrack()
-                self.isDoneWithSkipBackOperation = true
-            } else {
-                trackQueueViewController?.skipToPreviousTrack()
-            }
+        let seconds = self.avPlayerAudioModule.player.currentTime().seconds
+        print(seconds)
+        if seconds > 3 {
+            self.avPlayerAudioModule.skipBackward()
+            initializeInterfaceForNewTrack()
+            self.isDoneWithSkipBackOperation = true
         } else {
             trackQueueViewController?.skipToPreviousTrack()
         }

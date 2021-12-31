@@ -21,6 +21,7 @@ class AVPlayerAudioModule: NSObject {
     var isSeeking: Bool = false
     var networkFlag: Bool = false
     var mainWindowController: MainWindowController!
+    @objc dynamic var done_playing = false
     @objc dynamic var track_changed = false
     
     override init() {
@@ -33,6 +34,15 @@ class AVPlayerAudioModule: NSObject {
             self.track = track
             self.player = AVPlayer(url: trackURL)
             DispatchQueue.main.async {self.changeTrackObservers()}
+            self.player.play()
+        }
+    }
+    
+    func playImmediatelyNoObservers(_ track: Track) {
+        if let location = track.location {
+            let trackURL = URL(string: location)!
+            self.track = track
+            self.player = AVPlayer(url: trackURL)
             self.player.play()
         }
     }
@@ -56,7 +66,7 @@ class AVPlayerAudioModule: NSObject {
     }
     
     func play() {
-         guard fileManager.fileExists(atPath: URL(string: self.track.location!)!.path) else {return}
+        guard fileManager.fileExists(atPath: URL(string: self.track.location!)!.path) else {return}
         is_paused = false
         self.player.play()
         if upcomingTrack != nil {
@@ -84,6 +94,28 @@ class AVPlayerAudioModule: NSObject {
         playImmediately(self.track)
     }
     
+    func skipBackward() {
+        if (self.track != nil) {
+            print("skipping to new track")
+            playImmediatelyNoObservers(self.track)
+        }
+        else {
+            print("skipping, no new track")
+            //cleanly stop everything
+            self.player = AVPlayer()
+            self.observerDonePlaying()
+        }
+    }
+    
+    func observerDonePlaying() {
+        print("setting done playing")
+        if done_playing == true {
+            done_playing = false
+        } else if done_playing == false {
+            done_playing = true
+        }
+    }
+    
     func tryGetMoreTracks(background: Bool) {
         if self.nextTrack != nil {
             self.track = background ? backgroundContext.object(with: self.nextTrack.objectID) as? Track : self.nextTrack
@@ -93,6 +125,7 @@ class AVPlayerAudioModule: NSObject {
                 networkFlag = true
             }
             self.track = nextTrack
+            self.nextTrack = nil
         }
     }
     
