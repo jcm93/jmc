@@ -573,6 +573,11 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
         mainWindowController?.currentLibraryViewController?.item = libraryHeaderNode?.children?[0] as! SourceListItem
     }
     
+    func reselect() {
+        sourceList.deselectAll(nil)
+        self.selectStuff()
+    }
+    
     override func viewDidLoad() {
         libraryHeaderNode = rootSourceListItem?.children?[0] as? SourceListItem
         sharedHeaderNode = rootSourceListItem?.children?[1] as? SourceListItem

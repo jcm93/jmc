@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class ArtistViewTableCellView: NSTableCellView {
+class ArtistViewTableCellView: NSTableRowView {
     
     @IBOutlet var artistImageView: NSImageView!
     @IBOutlet var albumNameLabel: NSTextField!
@@ -23,6 +23,8 @@ class ArtistViewTableCellView: NSTableCellView {
     var rightMouseDownTarget: [Track]?
     var tracksArrayController: NSArrayController!
     //var tracksViewController: ArtistViewTrackListViewController?
+    var toBeSelected: [TrackView]?
+    
     
     var album: Album?
     
@@ -126,6 +128,19 @@ class ArtistViewTableCellView: NSTableCellView {
         let timeString = self.dateFormatter.string(from: totalTime/1000)
         let infoString = "\(numString!) items; \(timeString!); \(sizeString)"
         self.albumInfoLabel.stringValue = infoString
+    }
+    
+    func getSelectedObjects() -> [TrackView] {
+        let selection = self.tracksTableView.selectedRowIndexes
+        let albumTracks = self.trackListTableViewDelegate.tracks as NSArray
+        let selectedTracks = albumTracks.objects(at: selection) as! [TrackView]
+        return selectedTracks
+    }
+    
+    func selectTrackViews() {
+        self.trackListTableViewDelegate.selectTrackViews(self.toBeSelected!)
+        self.tracksTableView.selectRowIndexes(self.trackListTableViewDelegate.tracksArrayController.selectionIndexes, byExtendingSelection: false)
+        //self.tracksTableView.layout()
     }
     
     func interpretSpacebarEvent() {

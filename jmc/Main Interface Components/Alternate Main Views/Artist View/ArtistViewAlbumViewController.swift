@@ -18,6 +18,7 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     @IBOutlet var albumArrayController: NSArrayController!
     var artistViewController: ArtistViewController
     var tracks: [TrackView]
+    var toBeSelected: [TrackView]?
     
     init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, artists: [Artist], artistViewController: ArtistViewController) {
         self.artistViewController = artistViewController
@@ -41,7 +42,10 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ArtistViewTableCellView"), owner: self) as! ArtistViewTableCellView
         let album = (albumArrayController.arrangedObjects as! NSArray)[row] as! Album
         view.populateTracksTable(album: album, tracks: self.tracks.filter({$0.track!.album! == album}), artistViewController: self.artistViewController)
-        //self.views[row] = view
+        self.views[row] = view
+        //manage selection
+        view.toBeSelected = self.toBeSelected
+        view.selectTrackViews()
         return view
     }
     
@@ -100,6 +104,21 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         }*/
     }
     
+    func getSelectedTrackViews() -> [TrackView] {
+        var result = [TrackView]()
+        var count = 0
+        for _ in self.views {
+            let selection = self.views[count]!
+            result += selection.getSelectedObjects()
+            count += 1
+        }
+        return result
+    }
+    
+    func selectTrackViews(_ trackViews: [TrackView]) {
+        self.toBeSelected = trackViews
+    }
+    
 
     
     override func viewDidLoad() {
@@ -108,7 +127,9 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.albumArrayController.content = self.albums
-        self.tableView.deselectAll(nil)
+        for view in self.views {
+            view.value.selectTrackViews()
+        }
     }
     
 }

@@ -123,6 +123,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     var popover: NSPopover!
     var popoverDelegate: AirPlayPopover!
     var avPlayerAudioModule: AVPlayerAudioModule!
+    var viewType = UserDefaults.standard.string(forKey: DEFAULTS_VIEW_TYPE_STRING) ?? "songs"
     
     //initialize managed object context
     
@@ -189,20 +190,34 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     func switchToPlaylist(_ item: SourceListItem) {
-        if item == currentSourceListItem { return }
+        switch self.viewType {
+        case "songs":
+            self.switchToPlaylistSongsView(item)
+        case "artists":
+            self.switchToPlaylistArtistView(item)
+        default:
+            self.switchToPlaylistSongsView(item)
+        }
+    }
+    
+    func switchToPlaylistSongsView(_ item: SourceListItem) {
+        var selection = [TrackView]()
+        var needsToReselect = false
+        if item == currentSourceListItem {
+            selection = currentLibraryViewController.getSelectedObjects()
+            needsToReselect = true
+        }
         currentLibraryViewController?.hasInitialized = false
         trackQueueViewController?.currentSourceListItem = item
         currentSourceListItem = item
         let objectID = item.objectID
         currentLibraryViewController?.view.removeFromSuperview()
-        if otherLocalLibraryViewControllers.object(forKey: objectID) != nil && item.is_network != true {
-            let playlistViewController = otherLocalLibraryViewControllers.object(forKey: objectID) as! LibraryViewController
+        if let playlistViewController = otherLocalLibraryViewControllers.object(forKey: objectID) as? LibraryTableViewController, item.is_network != true {
             librarySplitView.addArrangedSubview(playlistViewController.view)
             currentLibraryViewController = playlistViewController
             updateInfo()
         }
-        else if otherSharedLibraryViewControllers.object(forKey: objectID) != nil && item.is_network == true {
-            let playlistViewController = otherSharedLibraryViewControllers.object(forKey: objectID) as! LibraryViewController
+        else if let playlistViewController = otherSharedLibraryViewControllers.object(forKey: objectID) as? LibraryTableViewController, item.is_network == true {
             librarySplitView.addArrangedSubview(playlistViewController.view)
             currentLibraryViewController = playlistViewController
             currentLibraryViewController?.initializeForPlaylist()
@@ -226,23 +241,29 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }
         populateSearchBar()
         currentLibraryViewController?.reloadData()
+        if selection.count > 0 && needsToReselect == true {
+            currentLibraryViewController.selectItems(selection)
+        }
     }
     
     func switchToPlaylistArtistView(_ item: SourceListItem) {
-        if item == currentSourceListItem { return }
+        var selection = [TrackView]()
+        var needsToReselect = false
+        if item == currentSourceListItem {
+            selection = currentLibraryViewController.getSelectedObjects()
+            needsToReselect = true
+        }
         self.currentLibraryViewController?.hasInitialized = false
         trackQueueViewController?.currentSourceListItem = item
         currentSourceListItem = item
         let objectID = item.objectID
         currentLibraryViewController?.view.removeFromSuperview()
-        if otherLocalLibraryViewControllers.object(forKey: objectID) != nil && item.is_network != true {
-            let playlistViewController = otherLocalLibraryViewControllers.object(forKey: objectID) as! ArtistViewController
+        if let playlistViewController = otherLocalLibraryViewControllers.object(forKey: objectID) as? ArtistViewController, item.is_network != true {
             librarySplitView.addArrangedSubview(playlistViewController.view)
             currentLibraryViewController = playlistViewController
             updateInfo()
         }
-        else if otherSharedLibraryViewControllers.object(forKey: objectID) != nil && item.is_network == true {
-            let playlistViewController = otherSharedLibraryViewControllers.object(forKey: objectID) as! ArtistViewController
+        else if let playlistViewController = otherSharedLibraryViewControllers.object(forKey: objectID) as? ArtistViewController, item.is_network == true {
             librarySplitView.addArrangedSubview(playlistViewController.view)
             currentLibraryViewController = playlistViewController
             currentLibraryViewController?.initializeForPlaylist()
@@ -254,6 +275,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
                 self.otherSharedLibraryViewControllers[objectID] = newPlaylistViewController
             } else {
                 self.otherLocalLibraryViewControllers[objectID] = newPlaylistViewController
+            }
+            if selection.count > 0 && needsToReselect == true {
+                newPlaylistViewController.selectItems(selection)
             }
             librarySplitView.addArrangedSubview(newPlaylistViewController.view)
             addObserversAndInitializeNewArtistView(newPlaylistViewController, item: item)
@@ -319,6 +343,20 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         self.tagWindowController?.mainWindowController = self
         self.tagWindowController?.selectedTracks = tracks
         self.window?.addChildWindow(self.tagWindowController!.window!, ordered: .above)
+    }
+    
+    func songsViewSelected() {
+        //self.songsView = true
+        UserDefaults.standard.set("songs", forKey: DEFAULTS_VIEW_TYPE_STRING)
+        self.viewType = "songs"
+        self.switchToPlaylistSongsView(self.currentSourceListItem!)
+    }
+    
+    func artistViewSelected() {
+        //self.songsView = false
+        UserDefaults.standard.set("artists", forKey: DEFAULTS_VIEW_TYPE_STRING)
+        self.viewType = "artists"
+        self.switchToPlaylistArtistView(self.currentSourceListItem!)
     }
     
     func newSourceAdded() {
@@ -1028,5 +1066,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }*/
         self.airplayRoutePickerButton.isRoutePickerButtonBordered = false
         self.avPlayerAudioModule.mainWindowController = self
+        self.airplayRoutePickerButton.player = self.avPlayerAudioModule.player
+        self.delegate.menuDelegate.initializeViewState()
     }
 }

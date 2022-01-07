@@ -47,4 +47,5 @@ protocol LibraryViewController: NSMenuDelegate {
     func getFilterPredicate() -> NSPredicate?
     func setArrayControllerContent(_ content: Any?)
     func getSelectedObjects() -> [TrackView]
+    func selectItems(_ selection: [TrackView])
 }

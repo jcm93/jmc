@@ -11,7 +11,7 @@ import AVFoundation
 
 class AVPlayerAudioModule: NSObject {
     //now that macos natively supports flac, no need for bundled .flac/.ogg, AudioModule, FileBufferer, etc....
-    var player: AVPlayer!
+    var player: AVQueuePlayer!
     var track: Track!
     var nextTrack: Track!
     var is_paused: Bool = false
@@ -25,14 +25,14 @@ class AVPlayerAudioModule: NSObject {
     @objc dynamic var track_changed = false
     
     override init() {
-        self.player = AVPlayer()
+        self.player = AVQueuePlayer()
     }
     
     func playImmediately(_ track: Track) {
         if let location = track.location {
             let trackURL = URL(string: location)!
             self.track = track
-            self.player = AVPlayer(url: trackURL)
+            self.player = AVQueuePlayer(url: trackURL)
             DispatchQueue.main.async {self.changeTrackObservers()}
             self.player.play()
         }
@@ -42,7 +42,7 @@ class AVPlayerAudioModule: NSObject {
         if let location = track.location {
             let trackURL = URL(string: location)!
             self.track = track
-            self.player = AVPlayer(url: trackURL)
+            self.player = AVQueuePlayer(url: trackURL)
             self.player.play()
         }
     }
@@ -102,7 +102,7 @@ class AVPlayerAudioModule: NSObject {
         else {
             print("skipping, no new track")
             //cleanly stop everything
-            self.player = AVPlayer()
+            self.player = AVQueuePlayer()
             self.observerDonePlaying()
         }
     }

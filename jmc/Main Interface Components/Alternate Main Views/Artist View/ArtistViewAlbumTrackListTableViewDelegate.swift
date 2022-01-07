@@ -13,7 +13,7 @@ class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, 
     var album: Album
     var tracks: [TrackView]
     var timeFormatter: TimeFormatter!
-    var tracksArrayController: NSArrayController!
+    @objc dynamic var tracksArrayController: NSArrayController!
 
     init(album: Album, tracks: [TrackView]) {
         self.album = album
@@ -27,6 +27,16 @@ class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, 
         self.timeFormatter = TimeFormatter()
         self.tracksArrayController.sortDescriptors = [NSSortDescriptor(key: "track.track_num", ascending: true)]
         self.tracksArrayController.rearrangeObjects()
+    }
+    
+    func selectTrackViews(_ trackViews: [TrackView]) {
+        var objects = [TrackView]()
+        for trackView in trackViews {
+            if self.album == trackView.track!.album {
+                objects.append(trackView)
+            }
+        }
+        self.tracksArrayController.setSelectedObjects(objects)
     }
     
     func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {

@@ -17,6 +17,7 @@ class ArtistViewTracksTableView: NSTableView {
     
     var shouldDrawFocusRing = false
     
+    
     let types = ["Track"]
 
 

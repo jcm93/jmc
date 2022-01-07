@@ -35,6 +35,7 @@ private var my_context = 0
 
 class LibraryTableViewController: NSViewController, LibraryViewController, NSMenuDelegate {
     
+    
     func getFilterPredicate() -> NSPredicate? {
         return self.trackViewArrayController.filterPredicate
     }
@@ -49,6 +50,10 @@ class LibraryTableViewController: NSViewController, LibraryViewController, NSMen
     
     func reloadData() {
         self.tableView.reloadData()
+    }
+    
+    func selectItems(_ selection: [TrackView]) {
+        self.trackViewArrayController.setSelectedObjects(selection)
     }
     
     func setFilterPredicate(_ searchFieldContent: String) {

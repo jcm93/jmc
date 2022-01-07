@@ -14,6 +14,8 @@ class MainMenuDelegate: NSObject, NSMenuDelegate {
     var delegate: AppDelegate!
     @IBOutlet weak var shuffleMenuItem: NSMenuItem!
     @IBOutlet weak var repeatMenuItem: NSMenuItem!
+    @IBOutlet weak var songsViewMenuItem: NSMenuItem!
+    @IBOutlet weak var artistViewMenuItem: NSMenuItem!
     
     @IBAction func getInfoAction(_ sender: Any) {
         
@@ -21,6 +23,30 @@ class MainMenuDelegate: NSObject, NSMenuDelegate {
     
     @IBAction func deleteFromLibraryAction(_ sender: Any) {
         
+    }
+    @IBAction func songsViewMenuItemAction(_ sender: Any) {
+        self.artistViewMenuItem.state = .off
+        self.songsViewMenuItem.state = .on
+        self.mainWindowController.songsViewSelected()
+    }
+    @IBAction func artistViewMenuItemAction(_ sender: Any) {
+        self.songsViewMenuItem.state = .off
+        self.artistViewMenuItem.state = .on
+        self.mainWindowController.artistViewSelected()
+    }
+    
+    func initializeViewState() {
+        let viewTypeDefault = UserDefaults.standard.string(forKey: DEFAULTS_VIEW_TYPE_STRING)
+        if viewTypeDefault == "songs" {
+            songsViewMenuItem.state = .on
+            artistViewMenuItem.state = .off
+        } else if viewTypeDefault == "artists" {
+            songsViewMenuItem.state = .off
+            artistViewMenuItem.state = .on
+        } else {
+            songsViewMenuItem.state = .on
+            artistViewMenuItem.state = .off
+        }
     }
     
     @IBAction func openFiles(_ sender: Any) {

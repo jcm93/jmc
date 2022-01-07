@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19455"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -20,8 +20,10 @@
         </customObject>
         <customObject id="a4U-cM-VOZ" userLabel="Menu Delegate" customClass="MainMenuDelegate" customModule="jmc" customModuleProvider="target">
             <connections>
+                <outlet property="artistViewMenuItem" destination="7ky-ve-Bmx" id="0Am-Ug-nDg"/>
                 <outlet property="repeatMenuItem" destination="2KZ-Mz-PQy" id="r3i-Sp-MFX"/>
                 <outlet property="shuffleMenuItem" destination="b4e-W9-bct" id="ZeS-zi-te4"/>
+                <outlet property="songsViewMenuItem" destination="SHu-Yr-u1X" id="Xto-OI-nvJ"/>
             </connections>
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
@@ -179,6 +181,25 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="View" id="HyV-fh-RgO">
                         <items>
+                            <menuItem title="View As..." id="auB-Zr-yyQ">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="View As..." id="3Eb-IE-Su8">
+                                    <items>
+                                        <menuItem title="Songs" id="SHu-Yr-u1X">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="songsViewMenuItemAction:" target="a4U-cM-VOZ" id="apY-kN-a8N"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Artists" id="7ky-ve-Bmx">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="artistViewMenuItemAction:" target="a4U-cM-VOZ" id="CZ2-K3-pNA"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Advanced Filter" keyEquivalent="S" id="JJs-Z9-CEf">
                                 <connections>
                                     <action selector="showAdvancedFilter:" target="Voe-Tx-rLC" id="HtO-ub-jp0"/>
@@ -302,6 +323,7 @@
             <connections>
                 <outlet property="delegate" destination="a4U-cM-VOZ" id="smF-FH-nzD"/>
             </connections>
+            <point key="canvasLocation" x="139" y="114"/>
         </menu>
     </objects>
 </document>

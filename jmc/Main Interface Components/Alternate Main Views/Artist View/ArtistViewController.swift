@@ -23,6 +23,7 @@ class ArtistViewController: NSViewController, LibraryViewController {
     var normalMenuItemsArray: [NSMenuItem]!
     var mainWindowController: MainWindowController?
     var trackViewArrayController: NSArrayController!
+    var itemsToSelect: [TrackView]! = [TrackView]()
     
     @IBOutlet weak var splitView: NSSplitView!
     
@@ -36,8 +37,11 @@ class ArtistViewController: NSViewController, LibraryViewController {
         albumsView?.view.removeFromSuperview()
         let newAlbumsView = ArtistViewAlbumViewController(nibName: "ArtistViewAlbumViewController", bundle: nil, artists: artists, artistViewController: self)
         newAlbumsView?.artistViewController = self
-        splitView.addArrangedSubview(newAlbumsView!.view)
         self.albumsView = newAlbumsView
+        self.albumsView.selectTrackViews(self.itemsToSelect)
+        DispatchQueue.main.async {
+            self.splitView.addArrangedSubview(newAlbumsView!.view)
+        }
     }
     
     func initializeForPlaylist() {
@@ -144,7 +148,12 @@ class ArtistViewController: NSViewController, LibraryViewController {
     }
     
     func getSelectedObjects() -> [TrackView] {
-        return [TrackView]()
+        let selection = self.albumsView.getSelectedTrackViews()
+        return selection
+    }
+    
+    func selectItems(_ selection: [TrackView]) {
+        self.itemsToSelect = selection
     }
     
     override func viewDidLoad() {
@@ -163,9 +172,8 @@ class ArtistViewController: NSViewController, LibraryViewController {
             print (error)
         }
         self.artistListView = ArtistListViewController(nibName: "ArtistListViewController", bundle: nil, artistViewController: self)
-        self.splitView.addArrangedSubview(artistListView!.view)
-        let lastSelectedArtistRow = UserDefaults.standard.integer(forKey: DEFAULTS_LAST_SELECTED_ARTIST_ROW)
-        let indexSet = IndexSet(integer: lastSelectedArtistRow)
-        self.artistListView.tableView.selectRowIndexes(indexSet, byExtendingSelection: false)
+        let artists = Array(Set(self.itemsToSelect.compactMap({return $0.track?.artist})))
+        self.artistListView.selectArtists(artists: artists)
+        self.splitView.addArrangedSubview(self.artistListView!.view)
     }
 }
