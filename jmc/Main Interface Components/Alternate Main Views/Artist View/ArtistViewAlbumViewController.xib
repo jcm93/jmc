@@ -111,7 +111,7 @@
                                                                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                             </textFieldCell>
                                                                                             <connections>
-                                                                                                <binding destination="nLZ-R9-dXM" name="value" keyPath="objectValue" id="EzO-Ai-OfN"/>
+                                                                                                <binding destination="nLZ-R9-dXM" name="value" keyPath="objectValue" id="mUd-6a-gLc"/>
                                                                                             </connections>
                                                                                         </textField>
                                                                                     </subviews>
@@ -134,11 +134,11 @@
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <prototypeCellViews>
                                                                                 <tableCellView id="lea-am-9Qc">
-                                                                                    <rect key="frame" x="73" y="0.0" width="489" height="24"/>
+                                                                                    <rect key="frame" x="73" y="0.0" width="490" height="24"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZI5-ZM-OoM">
-                                                                                            <rect key="frame" x="0.0" y="4" width="489" height="16"/>
+                                                                                            <rect key="frame" x="0.0" y="4" width="490" height="16"/>
                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="fah-Sy-Ee7">
                                                                                                 <font key="font" metaFont="cellTitle"/>
@@ -146,7 +146,7 @@
                                                                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                             </textFieldCell>
                                                                                             <connections>
-                                                                                                <binding destination="lea-am-9Qc" name="value" keyPath="objectValue" id="tey-L0-pyY"/>
+                                                                                                <binding destination="lea-am-9Qc" name="value" keyPath="objectValue" id="dzA-rD-r0l"/>
                                                                                             </connections>
                                                                                         </textField>
                                                                                     </subviews>
@@ -169,11 +169,11 @@
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <prototypeCellViews>
                                                                                 <tableCellView id="aq8-ft-pV9">
-                                                                                    <rect key="frame" x="579.5" y="0.0" width="49" height="17"/>
+                                                                                    <rect key="frame" x="580" y="0.0" width="48" height="17"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EgC-GW-IBy">
-                                                                                            <rect key="frame" x="0.0" y="1" width="49" height="16"/>
+                                                                                            <rect key="frame" x="0.0" y="1" width="48" height="16"/>
                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="WQh-3T-SaX">
                                                                                                 <font key="font" metaFont="cellTitle"/>
@@ -181,7 +181,7 @@
                                                                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                             </textFieldCell>
                                                                                             <connections>
-                                                                                                <binding destination="aq8-ft-pV9" name="value" keyPath="objectValue" id="mCc-1I-hGq"/>
+                                                                                                <binding destination="aq8-ft-pV9" name="value" keyPath="objectValue" id="poY-75-RbC"/>
                                                                                             </connections>
                                                                                         </textField>
                                                                                     </subviews>
@@ -192,9 +192,6 @@
                                                                             </prototypeCellViews>
                                                                         </tableColumn>
                                                                     </tableColumns>
-                                                                    <connections>
-                                                                        <binding destination="kXu-Mp-LLx" name="selectionIndexes" keyPath="selectionIndexes" id="wYc-64-V0W"/>
-                                                                    </connections>
                                                                 </tableView>
                                                             </subviews>
                                                         </clipView>
@@ -255,8 +252,9 @@
             </constraints>
             <point key="canvasLocation" x="319" y="339"/>
         </customView>
-        <arrayController objectClassName="Album" id="kXu-Mp-LLx">
+        <arrayController objectClassName="Album" id="kXu-Mp-LLx" userLabel="Album Array Controller">
             <classReference key="objectClass" className="Album"/>
         </arrayController>
+        <arrayController id="kON-1B-Kms" userLabel="Tracks Array Controller"/>
     </objects>
 </document>

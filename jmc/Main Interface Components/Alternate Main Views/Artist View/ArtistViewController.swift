@@ -8,7 +8,6 @@
 
 import Cocoa
 
-
 class ArtistViewController: NSViewController, LibraryViewController {
     
     
@@ -24,6 +23,7 @@ class ArtistViewController: NSViewController, LibraryViewController {
     var mainWindowController: MainWindowController?
     var trackViewArrayController: NSArrayController!
     var itemsToSelect: [TrackView]! = [TrackView]()
+    var avc_context = 0
     
     @IBOutlet weak var splitView: NSSplitView!
     
@@ -71,8 +71,63 @@ class ArtistViewController: NSViewController, LibraryViewController {
         self.albumsView.initializeForLibrary()
     }
     
-    func getUpcomingIDsForPlayEvent(_ state: Int, id: Int, row: Int) -> Int {
-        return -1
+    func initializePlayOrderObject() {
+        print("creating play order object")
+        guard let item = self.item else { return }
+        if item.artistPlayOrderObject == nil {
+            let newObject = NSEntityDescription.insertNewObject(forEntityName: "PlayOrderObject", into: managedContext) as! PlayOrderObject
+            item.artistPlayOrderObject = newObject
+        }
+        let playOrderObject = item.artistPlayOrderObject!
+        print((self.trackViewArrayController.arrangedObjects as! NSArray).count)
+        let currentIDArray = self.albumsView.getCurrentShownTrackViews().map({return Int($0.track!.id!)})
+        var shuffledArray = currentIDArray
+        shuffle_array(&shuffledArray)
+        playOrderObject.shuffledPlayOrder = shuffledArray
+        if mainWindowController?.shuffle == true {
+            playOrderObject.currentPlayOrder = shuffledArray
+        } else {
+            playOrderObject.currentPlayOrder = currentIDArray
+        }
+        self.statusStringNeedsUpdate = true
+    }
+    
+    func getUpcomingIDsForPlayEvent(_ shuffleState: Int, id: Int, row: Int) -> Int {
+        let volumes = Set(self.albumsView.getCurrentShownTrackViews().compactMap({return $0.track?.volume}))
+        var count = 0
+        for volume in volumes {
+            if !volumeIsAvailable(volume: volume) {
+                count += 1
+            }
+        }
+        if count > 0 {
+            print("library status has changed, reloading data")
+            self.mainWindowController?.sourceListViewController?.reloadData()
+        }
+        let idArray = self.albumsView.getCurrentShownTrackViews().map({return Int($0.track!.id!)})
+        if shuffleState == NSControl.StateValue.on.rawValue {
+            //secretly adjust the shuffled array such that it behaves mysteriously like a ring buffer. ssshhhh
+            let currentShuffleArray = self.item!.artistPlayOrderObject!.shuffledPlayOrder!
+            let indexToSwap = currentShuffleArray.firstIndex(of: id)!
+            let beginningOfArray = currentShuffleArray[0..<indexToSwap]
+            let endOfArray = currentShuffleArray[indexToSwap..<currentShuffleArray.count]
+            let newArraySliceConcatenation = endOfArray + beginningOfArray
+            self.item?.artistPlayOrderObject?.shuffledPlayOrder = Array(newArraySliceConcatenation)
+            if self.item!.artistPlayOrderObject!.currentPlayOrder! != self.item!.artistPlayOrderObject!.shuffledPlayOrder! {
+                let idSet = Set(idArray)
+                self.item?.artistPlayOrderObject?.currentPlayOrder = self.item!.artistPlayOrderObject!.shuffledPlayOrder!.filter({idSet.contains($0)})
+            } else {
+                self.item?.artistPlayOrderObject?.currentPlayOrder = self.item!.artistPlayOrderObject!.shuffledPlayOrder!
+            }
+            return 0
+        } else {
+            self.item?.artistPlayOrderObject?.currentPlayOrder = idArray
+            if row > -1 {
+                return row
+            } else {
+                return idArray.firstIndex(of: id)!
+            }
+        }
     }
     
     func reloadNowPlayingForTrack(_ track: Track) {
@@ -89,6 +144,28 @@ class ArtistViewController: NSViewController, LibraryViewController {
     
     func initializeSmartPlaylist() {
         
+    }
+    
+    func interpretSpacebarEvent() {
+        self.mainWindowController?.interpretSpacebarEvent()
+    }
+    
+    func interpretEnterEvent() {
+        //should be in artistviewalbumviewcontroller
+        var items = [Track]()
+        for album in self.albumsView.views {
+            let albumViewController = album.value
+            if albumViewController.tracksTableView.selectedRowIndexes.count > 0 && albumViewController.trackListTableViewDelegate.tracksArrayController.selectedObjects.count > 0 {
+                items.append(contentsOf: (albumViewController.trackListTableViewDelegate.tracksArrayController.selectedObjects as! [TrackView]).map({return $0.track!}))
+            }
+        }
+        if self.mainWindowController!.playSong(items.removeFirst(), row: -1) {
+            self.mainWindowController!.trackQueueViewController?.addTracksToQueue(nil, tracks: items)
+        }
+    }
+    
+    func playSong(_ track: Track, row: Int) -> Bool {
+        return self.mainWindowController!.playSong(track, row: row)
     }
     
     func scrollToNewTrack() {
@@ -154,6 +231,27 @@ class ArtistViewController: NSViewController, LibraryViewController {
     
     func selectItems(_ selection: [TrackView]) {
         self.itemsToSelect = selection
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "arrangedObjects" {
+            if self.hasCreatedPlayOrder == false && self.albumsView.getCurrentShownTrackViews().count > 0 {
+                if self.item?.artistPlayOrderObject == nil {
+                    self.initializePlayOrderObject()
+                }
+                mainWindowController!.trackQueueViewController!.activePlayOrders.append(self.item!.artistPlayOrderObject!)
+                self.item!.artistViewController = self
+                print("initialized poo for new view")
+                self.hasCreatedPlayOrder = true
+                //self.trackViewArrayController.hasInitialized = true
+                //(self.trackViewArrayController.arrangedObjects as! NSArray).map({return ($0 as! TrackView).track?.id}) //fire faults
+            } else {
+                if self.albumsView.getCurrentShownTrackViews().count != self.item?.artistPlayOrderObject?.shuffledPlayOrder?.count ?? 0 {
+                    self.initializePlayOrderObject()
+                    print("reinitializing poo")
+                }
+            }
+        }
     }
     
     override func viewDidLoad() {

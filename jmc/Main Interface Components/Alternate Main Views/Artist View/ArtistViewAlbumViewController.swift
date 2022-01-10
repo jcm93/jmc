@@ -77,7 +77,36 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         self.albumArrayController.fetchPredicate = nil
     }
     
-    func getUpcomingIDsForPlayEvent() {
+    func getCurrentShownTrackViews() -> [TrackView] {
+        return self.views.flatMap({return ($0.value.trackListTableViewDelegate.tracksArrayController.arrangedObjects as! [TrackView])})
+    }
+    
+    func getUpcomingIDsForPlayEvent(_ shuffleState: Int, id: Int, row: Int) -> Int {
+        let trackArray = self.views.flatMap({return ($0.value.trackListTableViewDelegate.tracksArrayController.arrangedObjects as! [TrackView]).compactMap({return $0.track})})
+        let idArray = trackArray.map({return Int($0.id!)})
+        if shuffleState == NSControl.StateValue.on.rawValue {
+            //if the array is already shuffled, but we're picking a new track
+            let currentShuffleArray = self.artistViewController.item!.artistPlayOrderObject!.shuffledPlayOrder!
+            let indexToSwap = currentShuffleArray.firstIndex(of: id)!
+            let beginningOfArray = currentShuffleArray[0..<indexToSwap]
+            let endOfArray = currentShuffleArray[indexToSwap..<currentShuffleArray.count]
+            let newArraySliceConcatenation = endOfArray + beginningOfArray
+            self.artistViewController.item?.artistPlayOrderObject?.shuffledPlayOrder = Array(newArraySliceConcatenation)
+            if self.artistViewController.item!.artistPlayOrderObject!.currentPlayOrder! != self.artistViewController.item!.artistPlayOrderObject!.shuffledPlayOrder! {
+                let idSet = Set(idArray)
+                self.artistViewController.item?.artistPlayOrderObject?.currentPlayOrder = self.artistViewController.item!.artistPlayOrderObject!.shuffledPlayOrder!.filter({idSet.contains($0)})
+            } else {
+                self.artistViewController.item?.artistPlayOrderObject?.currentPlayOrder = self.artistViewController.item!.artistPlayOrderObject!.shuffledPlayOrder!
+            }
+            return 0
+        } else {
+            self.artistViewController.item?.artistPlayOrderObject?.currentPlayOrder = idArray
+            if row > -1 {
+                return row
+            } else {
+                return idArray.firstIndex(of: id)!
+            }
+        }
         /*let idArray = (trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
         if shuffleState == NSControl.StateValue.on.rawValue {
             //secretly adjust the shuffled array such that it behaves mysteriously like a ring buffer. ssshhhh
@@ -127,9 +156,6 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.albumArrayController.content = self.albums
-        for view in self.views {
-            view.value.selectTrackViews()
-        }
     }
     
 }

@@ -207,9 +207,9 @@ let fieldsToCachedOrdersDictionary: NSDictionary = [
 
 
 //other constants
-var LIBRARY_MOVES_DESCRIPTION = "Added media will be moved into a subdirectory of this directory"
-var LIBRARY_COPIES_DESCRIPTION = "Added media will be copied into a subdirectory of this directory"
-var LIBRARY_DOES_NOTHING_DESCRIPTION = "Added media will not be organized"
+let LIBRARY_MOVES_DESCRIPTION = "Added media will be moved into a subdirectory of this directory"
+let LIBRARY_COPIES_DESCRIPTION = "Added media will be copied into a subdirectory of this directory"
+let LIBRARY_DOES_NOTHING_DESCRIPTION = "Added media will not be organized"
 let NO_ORGANIZATION_TYPE = 0
 let MOVE_ORGANIZATION_TYPE = 1
 let COPY_ORGANIZATION_TYPE = 2
@@ -222,6 +222,8 @@ let MIN_VOLUME_BAR_WIDTH_FRACTION: CGFloat = 0.03
 let MIN_SEARCH_BAR_WIDTH_FRACTION: CGFloat = 0.145
 let MAX_VOLUME_BAR_WIDTH_FRACTION: CGFloat = 0.101
 let MIN_DISTANCE_BETWEEN_VOLUME_AND_SONG_BAR_FRACTION: CGFloat = 0.025
+let SOURCE_LIST_ITEM_VIEW_TYPE_SONGS = 0
+let SOURCE_LIST_ITEM_VIEW_TYPE_ARTISTS = 1
 
 let CUE_SHEET_UTI_STRING = "com.goldenhawk.cdrwin-cuesheet"
 

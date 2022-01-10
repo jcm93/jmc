@@ -14,8 +14,8 @@ import CoreData
 public class PlayOrderObject: NSManagedObject {
 
     func libraryStatusNeedsUpdate() {
-        let viewController = self.sourceListItem?.tableViewController
-        let volumes = Set((viewController?.trackViewArrayController.arrangedObjects as! [TrackView]).compactMap({return $0.track!.volume}))
+        let viewController = (self.sourceListItem?.libraryTableViewController ?? self.sourceListItem?.artistViewController) as! LibraryViewController
+        let volumes = Set((viewController.getArrangedObjects()).compactMap({return $0.track!.volume}))
         var count = 0
         var missingVolumes = [Volume]()
         for volume in volumes {
@@ -30,7 +30,7 @@ public class PlayOrderObject: NSManagedObject {
         }
         if count > 0 {
             DispatchQueue.main.async {
-                viewController?.mainWindowController?.sourceListViewController?.reloadData()
+                viewController.mainWindowController?.sourceListViewController?.reloadData()
             }
         }
     }

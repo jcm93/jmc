@@ -116,6 +116,7 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate, NSTableVi
             let newIndexSet = IndexSet(selectionIndexes)
             self.tableView.selectRowIndexes(newIndexSet, byExtendingSelection: false)
             self.tableView.scrollRowToVisible(newIndexSet.first!)
+            self.artistsToSelect = [Artist]()
         }
     }
     

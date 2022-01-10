@@ -14,8 +14,10 @@ class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, 
     var tracks: [TrackView]
     var timeFormatter: TimeFormatter!
     @objc dynamic var tracksArrayController: NSArrayController!
+    var parent: ArtistViewTableCellView!
 
-    init(album: Album, tracks: [TrackView]) {
+    init(album: Album, tracks: [TrackView], parent: ArtistViewTableCellView) {
+        self.parent = parent
         self.album = album
         self.tracks = tracks.sorted(by: {(t1: TrackView, t2: TrackView) -> Bool in
             let firstValue = t1.track!.track_num?.intValue ?? 0
@@ -27,6 +29,7 @@ class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, 
         self.timeFormatter = TimeFormatter()
         self.tracksArrayController.sortDescriptors = [NSSortDescriptor(key: "track.track_num", ascending: true)]
         self.tracksArrayController.rearrangeObjects()
+        self.tracksArrayController.addObserver(self.parent.artistViewController, forKeyPath: "arrangedObjects", options: .new, context: &self.parent.artistViewController.avc_context)
     }
     
     func selectTrackViews(_ trackViews: [TrackView]) {
@@ -37,6 +40,10 @@ class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, 
             }
         }
         self.tracksArrayController.setSelectedObjects(objects)
+    }
+    
+    func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+        return EmphasizedTableRowView()
     }
     
     func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
@@ -58,5 +65,9 @@ class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, 
     
     func numberOfRows(in tableView: NSTableView) -> Int {
         return self.tracks.count
+    }
+    
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        self.tracksArrayController.setSelectionIndexes(self.parent.tracksTableView.selectedRowIndexes)
     }
 }

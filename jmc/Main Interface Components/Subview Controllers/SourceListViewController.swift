@@ -544,7 +544,8 @@ class SourceListViewController: NSViewController, NSOutlineViewDelegate, NSOutli
                 return result
             }()
             playlist?.addToTracks(tracks.map({return $0.view!}))
-            playlistItem.tableViewController?.initializeForPlaylist()
+            playlistItem.libraryTableViewController?.initializeForPlaylist()
+            playlistItem.artistViewController?.initializeForPlaylist()
         } else if info.draggingPasteboard.data(forType: NSPasteboard.PasteboardType(rawValue: "NetworkTrack")) != nil {
             print("processing network track transfers")
             let playlistItem = item as! SourceListItem

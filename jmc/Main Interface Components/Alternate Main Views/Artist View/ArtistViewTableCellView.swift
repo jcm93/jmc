@@ -21,7 +21,7 @@ class ArtistViewTableCellView: NSTableRowView {
     var infoString = ""
     var artistViewController: ArtistViewController!
     var rightMouseDownTarget: [Track]?
-    var tracksArrayController: NSArrayController!
+    //var tracksArrayController: NSArrayController!
     //var tracksViewController: ArtistViewTrackListViewController?
     var toBeSelected: [TrackView]?
     
@@ -82,12 +82,13 @@ class ArtistViewTableCellView: NSTableRowView {
     }
     
     func populateTracksTable(album: Album, tracks: [TrackView], artistViewController: ArtistViewController) {
-        self.artistViewController = artistViewController
         self.album = album
-        self.trackListTableViewDelegate = ArtistViewAlbumTrackListTableViewDelegate(album: album, tracks: tracks)
+        self.artistViewController = artistViewController
+        self.trackListTableViewDelegate = ArtistViewAlbumTrackListTableViewDelegate(album: album, tracks: tracks, parent: self)
         self.tracksTableView.delegate = self.trackListTableViewDelegate
         self.tracksTableView.dataSource = self.trackListTableViewDelegate
         self.tracksTableView.artistViewTableCellView = self
+        self.tracksTableView.doubleAction = #selector(doubleAction)
         
         
         //self.tracksViewController = ArtistViewTrackListViewController(nibName: "ArtistViewTrackListViewController", bundle: nil, album: self.album!)
@@ -128,6 +129,7 @@ class ArtistViewTableCellView: NSTableRowView {
         let timeString = self.dateFormatter.string(from: totalTime/1000)
         let infoString = "\(numString!) items; \(timeString!); \(sizeString)"
         self.albumInfoLabel.stringValue = infoString
+        
     }
     
     func getSelectedObjects() -> [TrackView] {
@@ -138,20 +140,29 @@ class ArtistViewTableCellView: NSTableRowView {
     }
     
     func selectTrackViews() {
-        self.trackListTableViewDelegate.selectTrackViews(self.toBeSelected!)
-        self.tracksTableView.selectRowIndexes(self.trackListTableViewDelegate.tracksArrayController.selectionIndexes, byExtendingSelection: false)
+        //self.trackListTableViewDelegate.selectTrackViews(self.toBeSelected!)
+        //self.tracksTableView.selectRowIndexes(self.trackListTableViewDelegate.tracksArrayController.selectionIndexes, byExtendingSelection: false)
         //self.tracksTableView.layout()
     }
     
     func interpretSpacebarEvent() {
+        self.artistViewController.interpretSpacebarEvent()
+    }
+    
+    @objc func doubleAction() {
+        guard self.tracksTableView!.selectedRow >= 0 && self.tracksTableView!.clickedRow >= 0 else {
+            return
+        }
+        let item = (self.trackListTableViewDelegate.tracksArrayController.arrangedObjects as! [TrackView])[self.tracksTableView.selectedRow].track
+        self.artistViewController.playSong(item!, row: self.tracksTableView!.selectedRow)
+    }
+    
+    func interpretDeleteEvent() {
         
     }
     
     func interpretEnterEvent() {
-        
-    }
-    
-    func interpretDeleteEvent() {
+        self.artistViewController.interpretEnterEvent()
         
     }
     

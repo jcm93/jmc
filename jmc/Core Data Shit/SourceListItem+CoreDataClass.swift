@@ -21,6 +21,8 @@ public class SourceListItem: NSManagedObject {
         return dict
     }
     
-    var tableViewController: LibraryTableViewController?
+    var libraryTableViewController: LibraryTableViewController?
+    var artistViewController: ArtistViewController?
+    var currentViewController: LibraryViewController?
     
 }

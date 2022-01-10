@@ -550,12 +550,12 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         guard fileManager.fileExists(atPath: URL(string: track.location!)!.path) else {
             sourceListViewController!.reloadData()
             handleTrackMissing(track: track)
-            currentLibraryViewController?.reloadDataForTrack(track, orRow: row)
+            currentLibraryViewController!.reloadDataForTrack(track, orRow: row)
             return false
         }
-        self.trackQueueViewController?.createPlayOrderArray(track, row: row)
+        self.trackQueueViewController!.createPlayOrderArray(track, row: row)
         self.avPlayerAudioModule.playImmediately(track)
-        self.trackQueueViewController?.changeCurrentTrack(track)
+        self.trackQueueViewController!.changeCurrentTrack(track)
         self.paused = false
         return true
     }
@@ -925,7 +925,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         if self.currentLibraryViewController == nil {
             return
         }
-        if let statusString = self.currentSourceListItem?.playOrderObject?.statusString, self.currentLibraryViewController.statusStringNeedsUpdate != true {
+        if let statusString = self.currentSourceListItem?.currentPlayOrderObject?.statusString, self.currentLibraryViewController.statusStringNeedsUpdate != true {
             print("cache hit")
             self.infoString = statusString
             self.infoField.stringValue = self.infoString!
@@ -941,7 +941,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
                 DispatchQueue.main.async {
                     self.infoString = "\(numString!) items; \(timeString!); \(sizeString)"
                     self.infoField.stringValue = self.infoString!
-                    self.currentSourceListItem?.playOrderObject?.statusString = self.infoString
+                    self.currentSourceListItem?.currentPlayOrderObject?.statusString = self.infoString
                 }
             }
         }

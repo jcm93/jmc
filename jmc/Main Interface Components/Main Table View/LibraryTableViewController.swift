@@ -348,21 +348,21 @@ class LibraryTableViewController: NSViewController, LibraryViewController, NSMen
         let idArray = (trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
         if shuffleState == NSControl.StateValue.on.rawValue {
             //secretly adjust the shuffled array such that it behaves mysteriously like a ring buffer. ssshhhh
-            let currentShuffleArray = self.item!.playOrderObject!.shuffledPlayOrder!
+            let currentShuffleArray = self.item!.songsPlayOrderObject!.shuffledPlayOrder!
             let indexToSwap = currentShuffleArray.firstIndex(of: id)!
             let beginningOfArray = currentShuffleArray[0..<indexToSwap]
             let endOfArray = currentShuffleArray[indexToSwap..<currentShuffleArray.count]
             let newArraySliceConcatenation = endOfArray + beginningOfArray
-            self.item?.playOrderObject?.shuffledPlayOrder = Array(newArraySliceConcatenation)
-            if self.item!.playOrderObject!.currentPlayOrder! != self.item!.playOrderObject!.shuffledPlayOrder! {
+            self.item?.songsPlayOrderObject?.shuffledPlayOrder = Array(newArraySliceConcatenation)
+            if self.item!.songsPlayOrderObject!.currentPlayOrder! != self.item!.songsPlayOrderObject!.shuffledPlayOrder! {
                 let idSet = Set(idArray)
-                self.item?.playOrderObject?.currentPlayOrder = self.item!.playOrderObject!.shuffledPlayOrder!.filter({idSet.contains($0)})
+                self.item?.songsPlayOrderObject?.currentPlayOrder = self.item!.songsPlayOrderObject!.shuffledPlayOrder!.filter({idSet.contains($0)})
             } else {
-                self.item?.playOrderObject?.currentPlayOrder = self.item!.playOrderObject!.shuffledPlayOrder!
+                self.item?.songsPlayOrderObject?.currentPlayOrder = self.item!.songsPlayOrderObject!.shuffledPlayOrder!
             }
             return 0
         } else {
-            self.item?.playOrderObject?.currentPlayOrder = idArray
+            self.item?.songsPlayOrderObject?.currentPlayOrder = idArray
             if row > -1 {
                 return row
             } else {
@@ -375,18 +375,18 @@ class LibraryTableViewController: NSViewController, LibraryViewController, NSMen
         print("fixing play order for changed filter predicate")
         if shuffleState == NSControl.StateValue.on.rawValue {
             let idSet = Set((trackViewArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int}))
-            let newPlayOrder = self.item!.playOrderObject!.shuffledPlayOrder!.filter({idSet.contains($0)})
-            self.item!.playOrderObject!.currentPlayOrder = newPlayOrder
+            let newPlayOrder = self.item!.songsPlayOrderObject!.shuffledPlayOrder!.filter({idSet.contains($0)})
+            self.item!.songsPlayOrderObject!.currentPlayOrder = newPlayOrder
         } else {
-            self.item?.playOrderObject?.currentPlayOrder = (trackViewArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int})
+            self.item?.songsPlayOrderObject?.currentPlayOrder = (trackViewArrayController?.arrangedObjects as! [TrackView]).map( {return $0.track!.id as! Int})
             if mainWindowController?.trackQueueViewController?.currentAudioSource == self.item {
-                if let index = self.item?.playOrderObject?.currentPlayOrder?.firstIndex(of: Int(mainWindowController!.currentTrack!.id!)) {
+                if let index = self.item?.songsPlayOrderObject?.currentPlayOrder?.firstIndex(of: Int(mainWindowController!.currentTrack!.id!)) {
                     mainWindowController?.trackQueueViewController?.currentSourceIndex = index
                 } else {
                     mainWindowController?.trackQueueViewController?.currentSourceIndex = -1
                 }
                 let queuedTrackIDs = Set(mainWindowController!.trackQueueViewController!.trackQueue.filter({$0.viewType == .futureTrack})).map({return Int($0.track!.id!)})
-                self.item!.playOrderObject!.currentPlayOrder = self.item!.playOrderObject!.currentPlayOrder!.filter({!queuedTrackIDs.contains($0)})
+                self.item!.songsPlayOrderObject!.currentPlayOrder = self.item!.songsPlayOrderObject!.currentPlayOrder!.filter({!queuedTrackIDs.contains($0)})
             }
         }
     }
@@ -544,11 +544,11 @@ class LibraryTableViewController: NSViewController, LibraryViewController, NSMen
     func initializePlayOrderObject() {
         print("creating play order object")
         guard let item = self.item else { return }
-        if item.playOrderObject == nil {
+        if item.songsPlayOrderObject == nil {
             let newObject = NSEntityDescription.insertNewObject(forEntityName: "PlayOrderObject", into: managedContext) as! PlayOrderObject
-            item.playOrderObject = newObject
+            item.songsPlayOrderObject = newObject
         }
-        let playOrderObject = item.playOrderObject!
+        let playOrderObject = item.songsPlayOrderObject!
         print((self.trackViewArrayController.arrangedObjects as! NSArray).count)
         let currentIDArray = (self.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
         var shuffledArray = currentIDArray
@@ -572,17 +572,17 @@ class LibraryTableViewController: NSViewController, LibraryViewController, NSMen
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "arrangedObjects" {
             if self.hasCreatedPlayOrder == false && (self.trackViewArrayController.arrangedObjects as! NSArray).count > 0 {
-                if self.item?.playOrderObject == nil {
+                if self.item?.songsPlayOrderObject == nil {
                     initializePlayOrderObject()
                 }
-                mainWindowController!.trackQueueViewController!.activePlayOrders.append(self.item!.playOrderObject!)
-                self.item!.tableViewController = self
+                mainWindowController!.trackQueueViewController!.activePlayOrders.append(self.item!.songsPlayOrderObject!)
+                self.item!.libraryTableViewController = self
                 print("initialized poo for new view")
                 self.hasCreatedPlayOrder = true
                 self.trackViewArrayController.hasInitialized = true
                 (self.trackViewArrayController.arrangedObjects as! NSArray).map({return ($0 as! TrackView).track?.id}) //fire faults
             } else {
-                if (self.trackViewArrayController.arrangedObjects as! NSArray).count != self.item?.playOrderObject?.shuffledPlayOrder?.count ?? 0 {
+                if (self.trackViewArrayController.arrangedObjects as! NSArray).count != self.item?.songsPlayOrderObject?.shuffledPlayOrder?.count ?? 0 {
                     self.initializePlayOrderObject()
                     print("reinitializing poo")
                 }

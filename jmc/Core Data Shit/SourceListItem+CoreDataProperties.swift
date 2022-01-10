@@ -29,7 +29,9 @@ extension SourceListItem {
     @NSManaged public var parent: SourceListItem?
     @NSManaged public var playlist: SongCollection?
     @NSManaged public var volume: Volume?
-    @NSManaged public var playOrderObject: PlayOrderObject?
+    @NSManaged public var songsPlayOrderObject: PlayOrderObject?
+    @NSManaged public var artistPlayOrderObject: PlayOrderObject?
+    @NSManaged public var currentPlayOrderObject: PlayOrderObject?
 
 }
 
