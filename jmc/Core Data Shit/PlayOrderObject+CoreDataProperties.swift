@@ -22,5 +22,7 @@ extension PlayOrderObject {
     @NSManaged public var inorderNeedsUpdate: NSNumber?
     @NSManaged public var statusString: String?
     @NSManaged public var sourceListItem: SourceListItem?
+    @NSManaged public var artistSourceListItem: SourceListItem?
+    @NSManaged public var songsSourceListItem: SourceListItem?
 
 }

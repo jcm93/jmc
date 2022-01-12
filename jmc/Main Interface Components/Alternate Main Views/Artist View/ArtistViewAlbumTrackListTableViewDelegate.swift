@@ -13,7 +13,7 @@ class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, 
     var album: Album
     var tracks: [TrackView]
     var timeFormatter: TimeFormatter!
-    @objc dynamic var tracksArrayController: NSArrayController!
+    var tracksArrayController: NSArrayController!
     var parent: ArtistViewTableCellView!
 
     init(album: Album, tracks: [TrackView], parent: ArtistViewTableCellView) {
@@ -29,7 +29,8 @@ class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, 
         self.timeFormatter = TimeFormatter()
         self.tracksArrayController.sortDescriptors = [NSSortDescriptor(key: "track.track_num", ascending: true)]
         self.tracksArrayController.rearrangeObjects()
-        self.tracksArrayController.addObserver(self.parent.artistViewController, forKeyPath: "arrangedObjects", options: .new, context: &self.parent.artistViewController.avc_context)
+        super.init()
+        self.tracksArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .new, context: nil)
     }
     
     func selectTrackViews(_ trackViews: [TrackView]) {
@@ -44,6 +45,13 @@ class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, 
     
     func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
         return EmphasizedTableRowView()
+    }
+    
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "arrangedObjects" {
+            print("poopy")
+        }
     }
     
     func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {

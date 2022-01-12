@@ -43,6 +43,13 @@ class AlbumArtViewController: NSViewController {
     }
     
     func artCallback(track: Track, found: Bool, background: Bool) {
+        if background {
+            do {
+                try backgroundContext.save()
+            } catch {
+                print(error)
+            }
+        }
         //might be called from background thread
         managedContext.perform {
             let track = managedContext.object(with: track.objectID) as! Track

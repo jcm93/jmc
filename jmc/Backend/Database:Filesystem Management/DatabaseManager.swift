@@ -49,8 +49,11 @@ class DatabaseManager: NSObject {
     var currentTrack: Track?
     var consolidationShouldStop: Bool = false
     
-    func getArtworkFromFile(_ urlString: String) -> Data? {
+    func getArtworkFromFile(_ urlString: String?) -> Data? {
         print("checking for art in file")
+        guard let urlString = urlString else {
+            return nil
+        }
         let url = URL(string: urlString)
         let mediaObject = AVAsset(url: url!)
         var art: Data?
@@ -88,7 +91,7 @@ class DatabaseManager: NSObject {
                 }
             }
         } else {
-            if let art = getArtworkFromFile(track.location!) {
+            if let art = getArtworkFromFile(track.location) {
                 currentContext.perform {
                     let track = currentContext.object(with: track.objectID) as! Track
                     if self.addArtForTrack(track, fromData: art, managedContext: currentContext) == true {

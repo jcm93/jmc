@@ -55,8 +55,13 @@ class ArtistViewTracksTableView: NSTableView {
         } else if theEvent.keyCode == 51 {
             artistViewTableCellView?.interpretDeleteEvent()
             trackQueueViewController?.interpretDeleteEvent()
+        } else if theEvent.keyCode == 124 {
+            print("skipping")
+            self.artistViewTableCellView?.artistViewController.mainWindowController?.skip()
         }
-        else {
+        else if theEvent.keyCode == 123 {
+            self.artistViewTableCellView?.artistViewController?.mainWindowController?.skipBackward()
+        } else {
             super.keyDown(with: theEvent)
         }
     }

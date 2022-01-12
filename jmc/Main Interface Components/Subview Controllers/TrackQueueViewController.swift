@@ -480,6 +480,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     func createPlayOrderArray(_ track: Track, row: Int) {
         print("initialize array called")
         self.currentAudioSource = currentSourceListItem
+        self.currentAudioSource?.currentPlayOrderObject = self.currentAudioSource?.artistPlayOrderObject
         if let avc = self.currentAudioSource?.currentViewController as? ArtistViewController {
             self.currentAudioSource!.currentPlayOrderObject = self.currentAudioSource!.artistPlayOrderObject
         } else {
@@ -519,11 +520,12 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             self.shuffle = false
             UserDefaults.standard.set(false, forKey: "shuffle")
             for poo in activePlayOrders {
-                poo.currentPlayOrder = poo.sourceListItem?.currentViewController?.getArrangedObjects().map({return Int($0.track!.id!)})
+                let pooSourceList = poo.sourceListItem ?? poo.songsSourceListItem ?? poo.artistSourceListItem
+                poo.currentPlayOrder = poo.sourceListItem!.currentViewController!.getArrangedObjects().map({return Int($0.track!.id!)})
                 if currentAudioSource?.currentPlayOrderObject == poo {
                     let queuedTrackIDs = Set(trackQueue.filter({$0.viewType == .futureTrack})).map({return Int($0.track!.id!)})
                     poo.currentPlayOrder = poo.currentPlayOrder!.filter({!queuedTrackIDs.contains($0)})
-                    self.currentSourceIndex = poo.currentPlayOrder?.firstIndex(of: Int(self.currentTrack!.id!))
+                    self.currentSourceIndex = poo.currentPlayOrder!.firstIndex(of: Int(self.currentTrack!.id!))
                 }
             }
         }
@@ -559,7 +561,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             insertTrackInQueue(track, index: theRow, context: currentSourceListItem!.name!, manually: true)
             let queueIndex = currentTrackIndex == nil ? theRow : theRow - currentTrackIndex! - 1
             print("queue index \(theRow), actualRow \(theRow), currentIndex \(currentTrackIndex)")
-            mainWindowController?.delegate?.audioModule.addTrackToQueue(track, index: queueIndex)
+            mainWindowController?.avPlayerAudioModule.addTrackToQueue(track, index: queueIndex)
             theRow += 1
         }
         modifyPlayOrderArrayForQueuedTracks(tracks)
@@ -594,8 +596,9 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 tableView.moveRow(at: element + item_offset, to: row + index_offset)
                 let tqv = trackQueue.remove(at: element + item_offset)
                 trackQueue.insert(tqv, at: row + index_offset)
-                let t = self.mainWindowController!.delegate!.audioModule.trackQueue.remove(at: element + item_offset - currentTrackIndex! - 1)
-                self.mainWindowController?.delegate?.audioModule.trackQueue.insert(t, at: row + index_offset - currentTrackIndex! - 1)
+                let t = self.mainWindowController?.avPlayerAudioModule.removeTrackAtIndex(index: element + item_offset - currentTrackIndex! - 1)
+                self.mainWindowController?.avPlayerAudioModule.addAVPlayerItemToQueue(item: t!, index: row + index_offset - currentTrackIndex! - 1)
+                //self.mainWindowController?.delegate?.audioModule.trackQueue.insert(t, at: row + index_offset - currentTrackIndex! - 1)
                 if index + 1 < flippedRows.count && flippedRows[index + 1] >= row {
                     item_offset += 1
                 } else {
@@ -635,7 +638,8 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             if self.currentTrackIndex != nil {
                 newIndex -= self.currentTrackIndex!
             }
-            self.mainWindowController?.delegate?.audioModule.trackQueue.remove(at: newIndex - 1)
+            self.mainWindowController?.avPlayerAudioModule.removeTrackAtIndex(index: newIndex - 1)
+            //self.mainWindowController?.delegate?.audioModule.trackQueue.remove(at: newIndex - 1)
         }
         //print(self.trackQueue)
         //print(self.mainWindowController?.trackQueue)

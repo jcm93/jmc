@@ -42,6 +42,7 @@ class ArtistViewController: NSViewController, LibraryViewController {
         DispatchQueue.main.async {
             self.splitView.addArrangedSubview(newAlbumsView!.view)
         }
+        self.arrangedObjectsChanged()
     }
     
     func initializeForPlaylist() {
@@ -80,7 +81,7 @@ class ArtistViewController: NSViewController, LibraryViewController {
         }
         let playOrderObject = item.artistPlayOrderObject!
         print((self.trackViewArrayController.arrangedObjects as! NSArray).count)
-        let currentIDArray = self.albumsView.getCurrentShownTrackViews().map({return Int($0.track!.id!)})
+        let currentIDArray = self.albumsView.tracks.map({return Int($0.track!.id!)})
         var shuffledArray = currentIDArray
         shuffle_array(&shuffledArray)
         playOrderObject.shuffledPlayOrder = shuffledArray
@@ -93,7 +94,7 @@ class ArtistViewController: NSViewController, LibraryViewController {
     }
     
     func getUpcomingIDsForPlayEvent(_ shuffleState: Int, id: Int, row: Int) -> Int {
-        let volumes = Set(self.albumsView.getCurrentShownTrackViews().compactMap({return $0.track?.volume}))
+        let volumes = Set(self.albumsView.tracks.compactMap({return $0.track?.volume}))
         var count = 0
         for volume in volumes {
             if !volumeIsAvailable(volume: volume) {
@@ -104,7 +105,7 @@ class ArtistViewController: NSViewController, LibraryViewController {
             print("library status has changed, reloading data")
             self.mainWindowController?.sourceListViewController?.reloadData()
         }
-        let idArray = self.albumsView.getCurrentShownTrackViews().map({return Int($0.track!.id!)})
+        let idArray = self.albumsView.tracks.map({return Int($0.track!.id!)})
         if shuffleState == NSControl.StateValue.on.rawValue {
             //secretly adjust the shuffled array such that it behaves mysteriously like a ring buffer. ssshhhh
             let currentShuffleArray = self.item!.artistPlayOrderObject!.shuffledPlayOrder!
@@ -152,13 +153,8 @@ class ArtistViewController: NSViewController, LibraryViewController {
     
     func interpretEnterEvent() {
         //should be in artistviewalbumviewcontroller
-        var items = [Track]()
-        for album in self.albumsView.views {
-            let albumViewController = album.value
-            if albumViewController.tracksTableView.selectedRowIndexes.count > 0 && albumViewController.trackListTableViewDelegate.tracksArrayController.selectedObjects.count > 0 {
-                items.append(contentsOf: (albumViewController.trackListTableViewDelegate.tracksArrayController.selectedObjects as! [TrackView]).map({return $0.track!}))
-            }
-        }
+        self.item!.currentPlayOrderObject = self.item!.artistPlayOrderObject!
+        var items = self.albumsView.tracks.map({return $0.track!})
         if self.mainWindowController!.playSong(items.removeFirst(), row: -1) {
             self.mainWindowController!.trackQueueViewController?.addTracksToQueue(nil, tracks: items)
         }
@@ -214,6 +210,7 @@ class ArtistViewController: NSViewController, LibraryViewController {
             self.searchString = nil
         }
         self.artistListView.refreshArtistArrayContent()
+        self.arrangedObjectsChanged()
     }
     
     func getFilterPredicate() -> NSPredicate? {
@@ -233,25 +230,19 @@ class ArtistViewController: NSViewController, LibraryViewController {
         self.itemsToSelect = selection
     }
     
+    func arrangedObjectsChanged() {
+        //for some reason direct KVO on the NSArrayController in the album track list view delegates is not working, so call it manually
+        self.initializePlayOrderObject()
+        mainWindowController!.trackQueueViewController!.activePlayOrders.append(self.item!.artistPlayOrderObject!)
+        self.item!.artistViewController = self
+        print("initialized poo for new view")
+        self.hasCreatedPlayOrder = true
+        //self.trackViewArrayController.hasInitialized = true
+        //(self.trackViewArrayController.arrangedObjects as! NSArray).map({return ($0 as! TrackView).track?.id}) //fire faults
+    }
+    
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "arrangedObjects" {
-            if self.hasCreatedPlayOrder == false && self.albumsView.getCurrentShownTrackViews().count > 0 {
-                if self.item?.artistPlayOrderObject == nil {
-                    self.initializePlayOrderObject()
-                }
-                mainWindowController!.trackQueueViewController!.activePlayOrders.append(self.item!.artistPlayOrderObject!)
-                self.item!.artistViewController = self
-                print("initialized poo for new view")
-                self.hasCreatedPlayOrder = true
-                //self.trackViewArrayController.hasInitialized = true
-                //(self.trackViewArrayController.arrangedObjects as! NSArray).map({return ($0 as! TrackView).track?.id}) //fire faults
-            } else {
-                if self.albumsView.getCurrentShownTrackViews().count != self.item?.artistPlayOrderObject?.shuffledPlayOrder?.count ?? 0 {
-                    self.initializePlayOrderObject()
-                    print("reinitializing poo")
-                }
-            }
-        }
+        
     }
     
     override func viewDidLoad() {

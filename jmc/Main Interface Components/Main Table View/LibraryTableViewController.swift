@@ -547,6 +547,7 @@ class LibraryTableViewController: NSViewController, LibraryViewController, NSMen
         if item.songsPlayOrderObject == nil {
             let newObject = NSEntityDescription.insertNewObject(forEntityName: "PlayOrderObject", into: managedContext) as! PlayOrderObject
             item.songsPlayOrderObject = newObject
+            newObject.songsSourceListItem = item
         }
         let playOrderObject = item.songsPlayOrderObject!
         print((self.trackViewArrayController.arrangedObjects as! NSArray).count)

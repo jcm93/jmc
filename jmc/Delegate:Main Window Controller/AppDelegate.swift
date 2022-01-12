@@ -19,7 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     var setupWindowController: InitialSetupWindowController?
     var equalizerWindowController: EqualizerWindowController?
     var importWindowController: ImportWindowController?
-    var iTunesParser: iTunesLibraryParser?
+    var iTunesParser: iTunesLibraryParser?  
     var locationManager: LocationManager?
     var audioModule: AudioModule = AudioModule()
     let fileHandler = FileManager.default

@@ -8,8 +8,9 @@
 
 import Cocoa
 import AVFoundation
+import AVKit
 
-class AVPlayerAudioModule: NSObject {
+class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
     //now that macos natively supports flac, no need for bundled .flac/.ogg, AudioModule, FileBufferer, etc....
     var player: AVQueuePlayer!
     var track: Track!
@@ -23,26 +24,72 @@ class AVPlayerAudioModule: NSObject {
     var mainWindowController: MainWindowController!
     @objc dynamic var done_playing = false
     @objc dynamic var track_changed = false
+    var firstPlay = true
+    var currentBoundaryObserver: Any?
     
     override init() {
         self.player = AVQueuePlayer()
+        super.init()
+        self.player.allowsExternalPlayback = true
+        self.player.addObserver(self, forKeyPath: "currentItem", options: .new, context: nil)
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "currentItem" {
+            changeTrackObservers()
+            self.registerBoundaryObserverForNewTrack()
+        }
+    }
+    
+    func registerBoundaryObserverForNewTrack() {
+        //lets check when 1 second out
+        let boundary = CMTimeSubtract(self.player.currentItem!.asset.duration, CMTime(seconds: 1.0, preferredTimescale: self.player.currentItem!.asset.duration.timescale))
+        let boundaryValue = NSValue(time: boundary)
+        self.player.addBoundaryTimeObserver(forTimes: [boundaryValue], queue: DispatchQueue.main, using: itemAboutToFinishPlaying)
+    }
+    
+    func itemAboutToFinishPlaying() {
+        removeObservers()
+        if self.player.items().count > 1 {
+            //don't need to do anything
+        } else {
+            let nextTrack = mainWindowController?.getNextTrack(background: false)
+            if nextTrack?.is_network == true {
+                networkFlag = true
+            }
+            let newItem = makeAVPlayerItemFromTrack(nextTrack!)
+            self.player.insert(newItem, after: self.player.currentItem)
+        }
+    }
+    
+    func removeObservers() {
+        if let observer = self.currentBoundaryObserver {
+            self.player.removeTimeObserver(observer)
+        }
+    }
+    
+    func makeAVPlayerItemFromTrack(_ track: Track) -> AVPlayerItem {
+        let url = URL(string: track.location!)!
+        let item = AVPlayerItem(url: url)
+        return item
     }
     
     func playImmediately(_ track: Track) {
         if let location = track.location {
             let trackURL = URL(string: location)!
             self.track = track
-            self.player = AVQueuePlayer(url: trackURL)
-            DispatchQueue.main.async {self.changeTrackObservers()}
-            self.player.play()
-        }
-    }
-    
-    func playImmediatelyNoObservers(_ track: Track) {
-        if let location = track.location {
-            let trackURL = URL(string: location)!
-            self.track = track
-            self.player = AVQueuePlayer(url: trackURL)
+            let item = AVPlayerItem(url: trackURL)
+            if item.asset == self.player.currentItem?.asset {
+                self.player.seek(to: CMTime(seconds: 0.0, preferredTimescale: item.duration.timescale))
+            } else {
+                removeObservers()
+                self.player.replaceCurrentItem(with: item)
+                let itemsToRemove = self.player.items()[1..<self.player.items().count]
+                for item in itemsToRemove {
+                    self.player.remove(item)
+                }
+            }
+            //DispatchQueue.main.async {self.changeTrackObservers()}
             self.player.play()
         }
     }
@@ -70,7 +117,7 @@ class AVPlayerAudioModule: NSObject {
         is_paused = false
         self.player.play()
         if upcomingTrack != nil {
-            changeTrack(changeEventID: self.currentValidChangeTrackEventID)
+            self.changeTrack(changeEventID: self.currentValidChangeTrackEventID)
         }
     }
     
@@ -97,7 +144,7 @@ class AVPlayerAudioModule: NSObject {
     func skipBackward() {
         if (self.track != nil) {
             print("skipping to new track")
-            playImmediatelyNoObservers(self.track)
+            playImmediately(self.track)
         }
         else {
             print("skipping, no new track")
@@ -129,4 +176,23 @@ class AVPlayerAudioModule: NSObject {
         }
     }
     
+    func addTrackToQueue(_ track: Track, index: Int) {
+        let itemURL = URL(string: track.location!)!
+        let asset = AVPlayerItem(url: itemURL)
+        let itemToInsertAfter = self.player.items()[index - 1]
+        self.player.insert(asset, after: itemToInsertAfter)
+    }
+    
+    func addAVPlayerItemToQueue(item: AVPlayerItem, index: Int) {
+        let itemToInsertAfter = self.player.items()[index - 1]
+        self.player.insert(item, after: itemToInsertAfter)
+    }
+    
+    func removeTrackAtIndex(index: Int) -> AVPlayerItem {
+        let item = self.player.items()[index]
+        self.player.remove(item)
+        return item
+    }
+    
 }
+

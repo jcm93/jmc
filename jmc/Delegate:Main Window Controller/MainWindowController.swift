@@ -160,6 +160,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         newPlaylistViewController.mainWindowController = self
         newPlaylistViewController.playlist = item.playlist
         newPlaylistViewController.item = item
+        item.currentViewController = newPlaylistViewController
         return newPlaylistViewController
     }
     
@@ -168,6 +169,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         newPlaylistViewController.mainWindowController = self
         newPlaylistViewController.playlist = item.playlist
         newPlaylistViewController.item = item
+        item.currentViewController = newPlaylistViewController
         return newPlaylistViewController
     }
     @IBAction func airPlayButtonPressed(_ sender: Any) {
@@ -547,15 +549,15 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         paused = false
         currentTrack = track
         return true*/
-        guard fileManager.fileExists(atPath: URL(string: track.location!)!.path) else {
+        guard let location = track.location, fileManager.fileExists(atPath: URL(string: location)!.path) else {
             sourceListViewController!.reloadData()
             handleTrackMissing(track: track)
             currentLibraryViewController!.reloadDataForTrack(track, orRow: row)
             return false
         }
         self.trackQueueViewController!.createPlayOrderArray(track, row: row)
-        self.avPlayerAudioModule.playImmediately(track)
         self.trackQueueViewController!.changeCurrentTrack(track)
+        self.avPlayerAudioModule.playImmediately(track)
         self.paused = false
         return true
     }
@@ -1065,6 +1067,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
             // Fallback on earlier versions
         }*/
         self.airplayRoutePickerButton.isRoutePickerButtonBordered = false
+        self.airplayRoutePickerButton.delegate = self.avPlayerAudioModule
         self.avPlayerAudioModule.mainWindowController = self
         self.airplayRoutePickerButton.player = self.avPlayerAudioModule.player
         self.delegate.menuDelegate.initializeViewState()

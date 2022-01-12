@@ -162,8 +162,11 @@ class ArtistViewTableCellView: NSTableRowView {
     }
     
     func interpretEnterEvent() {
-        self.artistViewController.interpretEnterEvent()
-        
+        guard self.tracksTableView!.selectedRow >= 0 else {
+            return
+        }
+        let item = (self.trackListTableViewDelegate.tracksArrayController.arrangedObjects as! [TrackView])[self.tracksTableView.selectedRow].track
+        self.artistViewController.playSong(item!, row: self.tracksTableView!.selectedRow)
     }
     
     func determineRightMouseDownTarget() {

@@ -19,7 +19,7 @@
             <rect key="frame" x="0.0" y="0.0" width="1042" height="1124"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="722" horizontalPageScroll="10" verticalLineScroll="722" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="orH-dp-46e">
+                <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="722" horizontalPageScroll="10" verticalLineScroll="722" verticalPageScroll="10" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="orH-dp-46e">
                     <rect key="frame" x="0.0" y="0.0" width="1042" height="1124"/>
                     <clipView key="contentView" id="dc4-VI-8S6">
                         <rect key="frame" x="1" y="1" width="1040" height="1122"/>
@@ -72,7 +72,7 @@
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
-                                                    <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="acj-sH-Z9B" customClass="DumbScrollVew" customModule="jmc" customModuleProvider="target">
+                                                    <scrollView horizontalCompressionResistancePriority="250" borderType="none" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="acj-sH-Z9B" customClass="DumbScrollVew" customModule="jmc" customModuleProvider="target">
                                                         <rect key="frame" x="342" y="20" width="647" height="650"/>
                                                         <clipView key="contentView" id="yr6-dt-p0M">
                                                             <rect key="frame" x="0.0" y="0.0" width="647" height="650"/>
@@ -134,11 +134,11 @@
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <prototypeCellViews>
                                                                                 <tableCellView id="lea-am-9Qc">
-                                                                                    <rect key="frame" x="73" y="0.0" width="490" height="24"/>
+                                                                                    <rect key="frame" x="73" y="0.0" width="489" height="24"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZI5-ZM-OoM">
-                                                                                            <rect key="frame" x="0.0" y="4" width="490" height="16"/>
+                                                                                            <rect key="frame" x="0.0" y="4" width="489" height="16"/>
                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="fah-Sy-Ee7">
                                                                                                 <font key="font" metaFont="cellTitle"/>
@@ -169,11 +169,11 @@
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <prototypeCellViews>
                                                                                 <tableCellView id="aq8-ft-pV9">
-                                                                                    <rect key="frame" x="580" y="0.0" width="48" height="17"/>
+                                                                                    <rect key="frame" x="579.5" y="0.0" width="49" height="17"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EgC-GW-IBy">
-                                                                                            <rect key="frame" x="0.0" y="1" width="48" height="16"/>
+                                                                                            <rect key="frame" x="0.0" y="1" width="49" height="16"/>
                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="WQh-3T-SaX">
                                                                                                 <font key="font" metaFont="cellTitle"/>
