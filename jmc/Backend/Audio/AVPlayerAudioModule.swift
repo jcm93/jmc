@@ -27,6 +27,7 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
     var firstPlay = true
     var currentBoundaryObserver: Any?
     var musicKitTestThing: MusicKitPlayer?
+    var appleMusicTrackIdentifier: Any?
     
     override init() {
         self.player = AVQueuePlayer()
@@ -36,10 +37,18 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
         self.musicKitTestThing = MusicKitPlayer()
         let appURL = URL(string: "https://github.com/jcm93/jmc")!
         self.musicKitTestThing!.configure(withDeveloperToken: secretAPITokenInSecretFile, appName: "jmc", appBuild: "0.3", appURL: appURL, appIconURL: nil, onSuccess: success, onError: errorAuthorizing)
+        if #available(macOS 12.0, *) {
+            self.appleMusicTrackIdentifier = AppleMusicTrackIdentifier(authorizes: false)
+        }
     }
     
     func success() {
         print("successfully authorized")
+        self.musicKitTestThing?.authorize(onSuccess: successAuthorizing, onError: errorAuthorizing)
+    }
+    
+    func successAuthorizing(_ thing: String) {
+        print("poopy")
     }
     
     func errorAuthorizing(_ error: Error) {
@@ -103,6 +112,10 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
             }
             //DispatchQueue.main.async {self.changeTrackObservers()}
             self.player.play()
+        } else {
+            if track.is_network == true {
+                
+            }
         }
     }
     
