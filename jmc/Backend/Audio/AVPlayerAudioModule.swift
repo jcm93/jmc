@@ -26,12 +26,24 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
     @objc dynamic var track_changed = false
     var firstPlay = true
     var currentBoundaryObserver: Any?
+    var musicKitTestThing: MusicKitPlayer?
     
     override init() {
         self.player = AVQueuePlayer()
         super.init()
         self.player.allowsExternalPlayback = true
         self.player.addObserver(self, forKeyPath: "currentItem", options: .new, context: nil)
+        self.musicKitTestThing = MusicKitPlayer()
+        let appURL = URL(string: "https://github.com/jcm93/jmc")!
+        self.musicKitTestThing!.configure(withDeveloperToken: secretAPITokenInSecretFile, appName: "jmc", appBuild: "0.3", appURL: appURL, appIconURL: nil, onSuccess: success, onError: errorAuthorizing)
+    }
+    
+    func success() {
+        print("successfully authorized")
+    }
+    
+    func errorAuthorizing(_ error: Error) {
+        print("error authorizing")
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {

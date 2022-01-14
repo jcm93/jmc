@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>jmc is a music library manager and player. Allows the user to play music in their Apple Music library.</string>
+	<string>Authorizing will allow you to view and listen to your Apple Music library from within jmc.</string>
 	<key>CFBundleVersion</key>
 	<string>0.3 beta</string>
 	<key>CFBundleDevelopmentRegion</key>
