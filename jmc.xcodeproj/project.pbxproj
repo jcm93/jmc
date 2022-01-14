@@ -103,6 +103,7 @@
 		0D4C0AC02790B85A005BE760 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D4C0A6D2790B85A005BE760 /* Info.plist */; };
 		0D4C0AC22790F9B3005BE760 /* SecretStuff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0AC12790F9B3005BE760 /* SecretStuff.swift */; };
 		0D4C0AC4279210B6005BE760 /* AppleMusicTrackIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0AC3279210B6005BE760 /* AppleMusicTrackIdentifier.swift */; };
+		0D4C0AC62792163D005BE760 /* JMPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0AC52792163D005BE760 /* JMPlayer.swift */; };
 		0D50CF3C22A5CBB30010629A /* AirPlayPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D50CF3A22A5CBB30010629A /* AirPlayPopover.swift */; };
 		0D50CF3D22A5CBB30010629A /* AirPlayPopover.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D50CF3B22A5CBB30010629A /* AirPlayPopover.xib */; };
 		0D51C8A11EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D51C89F1EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift */; };
@@ -373,6 +374,7 @@
 		0D4C0A912790B85A005BE760 /* QueueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueManager.swift; sourceTree = "<group>"; };
 		0D4C0AC12790F9B3005BE760 /* SecretStuff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretStuff.swift; sourceTree = "<group>"; };
 		0D4C0AC3279210B6005BE760 /* AppleMusicTrackIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicTrackIdentifier.swift; sourceTree = "<group>"; };
+		0D4C0AC52792163D005BE760 /* JMPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JMPlayer.swift; sourceTree = "<group>"; };
 		0D50CF3A22A5CBB30010629A /* AirPlayPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayPopover.swift; sourceTree = "<group>"; };
 		0D50CF3B22A5CBB30010629A /* AirPlayPopover.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AirPlayPopover.xib; sourceTree = "<group>"; };
 		0D51C89F1EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangePrimaryFolderSheetController.swift; path = Sheets/ChangePrimaryFolderSheetController.swift; sourceTree = "<group>"; };
@@ -861,6 +863,7 @@
 				0D606EF51E7B4C21007AE152 /* FileBufferer.swift */,
 				0D606EF81E7B4DB0007AE152 /* AVAudioFileBufferer.swift */,
 				0D4B4A0B277CF4AC00161441 /* AVPlayerAudioModule.swift */,
+				0D4C0AC52792163D005BE760 /* JMPlayer.swift */,
 				0D4C0AC3279210B6005BE760 /* AppleMusicTrackIdentifier.swift */,
 			);
 			path = Audio;
@@ -1290,6 +1293,7 @@
 				0D69659D1EA02EC50050D505 /* ProgressBarController.swift in Sources */,
 				0D8A8B401F61CB54007529A0 /* AlbumFileLocationViewController.swift in Sources */,
 				0D592A3B1EDF6C8B0054D553 /* CachedOrder+CoreDataProperties.swift in Sources */,
+				0D4C0AC62792163D005BE760 /* JMPlayer.swift in Sources */,
 				0D5279162777EE70008271CE /* ArtistViewAlbumTrackListTableViewDelegate.swift in Sources */,
 				0D51C8A81EAC1646002F6182 /* URLStringFormatter.swift in Sources */,
 				0D4B4A0A2779778700161441 /* LibraryViewController.swift in Sources */,

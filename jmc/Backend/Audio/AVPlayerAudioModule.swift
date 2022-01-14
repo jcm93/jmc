@@ -38,7 +38,7 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
         let appURL = URL(string: "https://github.com/jcm93/jmc")!
         self.musicKitTestThing!.configure(withDeveloperToken: secretAPITokenInSecretFile, appName: "jmc", appBuild: "0.3", appURL: appURL, appIconURL: nil, onSuccess: success, onError: errorAuthorizing)
         if #available(macOS 12.0, *) {
-            self.appleMusicTrackIdentifier = AppleMusicTrackIdentifier(authorizes: false)
+            self.appleMusicTrackIdentifier = AppleMusicTrackIdentifier(authorizes: true)
         }
     }
     
@@ -113,10 +113,25 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
             //DispatchQueue.main.async {self.changeTrackObservers()}
             self.player.play()
         } else {
-            if track.is_network == true {
-                
-            }
+            let trackName = track.name ?? ""
+            //if track.is_network == true {
+                if #available(macOS 12.0, *) {
+                    Task {
+                        let trackID = await (self.appleMusicTrackIdentifier as! AppleMusicTrackIdentifier).requestResource(track: trackName)
+                        let mediaID = MediaID(trackID)
+                        self.musicKitTestThing!.setQueue(song: mediaID, onSuccess: self.musicKitTestThing!.player.play, onError: errorStartingStreamedTrack)
+                    }
+                }
+            //}
         }
+    }
+    
+    func doNothing() {
+        
+    }
+    
+    func errorStartingStreamedTrack(e: Error) {
+        print(e)
     }
     
     func changeTrackObservers() {

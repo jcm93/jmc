@@ -550,6 +550,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         currentTrack = track
         return true*/
         guard let location = track.location, fileManager.fileExists(atPath: URL(string: location)!.path) else {
+            self.avPlayerAudioModule.playImmediately(track)
             sourceListViewController!.reloadData()
             handleTrackMissing(track: track)
             currentLibraryViewController!.reloadDataForTrack(track, orRow: row)

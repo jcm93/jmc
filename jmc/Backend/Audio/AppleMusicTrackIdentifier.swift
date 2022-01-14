@@ -33,26 +33,35 @@ class AppleMusicTrackIdentifier: NSObject {
         self.status = status
     }
     
-    func requestResource(track: Track) {
-            Task {
-                do {
-                    //form url
-                    let requestURL = URL(string: "https://api.music.apple.com/v1/me/library/search?term=\(track.name ?? "")&types=library-songs&limit=10")!
-                    let urlRequest = URLRequest(url: requestURL)
-                    let request = MusicDataRequest(urlRequest: urlRequest)
-                    let status = try await request.response()
-                    self.determineTrackIDToPlay(response: status, track: track)
-                } catch {
-                    print("error making api request")
-                }
-                
-            }
+    func requestResource(track: String) async -> String {
+        let percentEncodedString = track.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+        let urlString = "https://api.music.apple.com/v1/me/library/search?term=\(percentEncodedString!)&types=library-songs&limit=10"
+        let requestURL = URL(string: urlString)!
+        let urlRequest = URLRequest(url: requestURL)
+        do {
+            //form url
+            let request = MusicDataRequest(urlRequest: urlRequest)
+            let status = try await request.response()
+            let trackID = self.determineTrackIDToPlay(response: status, track: track)
+            return trackID
+        } catch {
+            print("error making api request")
+            return ""
         }
+    }
         
-    func determineTrackIDToPlay(response: MusicDataResponse, track: Track) {
+    func determineTrackIDToPlay(response: MusicDataResponse, track: String) -> String {
         print("patooties")
-        let poop = String(data: response.data, encoding: .utf8)
-        print(poop)
+        do {
+            //let's just take the top response for now
+            let jsonObject = try JSONSerialization.jsonObject(with: response.data, options: [])
+            let songsArray = ((((jsonObject as! NSDictionary)["results"] as! NSDictionary)["library-songs"] as! NSDictionary)["data"] as! NSArray)
+            let firstResult = songsArray[0] as! NSDictionary
+            let resultID = firstResult["id"] as! String
+            return resultID
+        } catch {
+            return ""
+        }
     }
     
     
