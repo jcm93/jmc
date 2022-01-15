@@ -28,6 +28,7 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
     var currentBoundaryObserver: Any?
     var musicKitTestThing: MusicKitPlayer?
     var appleMusicTrackIdentifier: Any?
+    var tempTrack: Track? = nil
     
     override init() {
         self.player = AVQueuePlayer()
@@ -114,15 +115,37 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
             self.player.play()
         } else {
             let trackName = track.name ?? ""
+            self.tempTrack = track
             //if track.is_network == true {
                 if #available(macOS 12.0, *) {
                     Task {
+                        self.beginSearchForTrackID()
                         let trackID = await (self.appleMusicTrackIdentifier as! AppleMusicTrackIdentifier).requestResource(track: trackName)
+                        self.beginRequestForTrackData()
                         let mediaID = MediaID(trackID)
-                        self.musicKitTestThing!.setQueue(song: mediaID, onSuccess: self.musicKitTestThing!.player.play, onError: errorStartingStreamedTrack)
+                        self.musicKitTestThing!.setQueue(song: mediaID, onSuccess: self.trackDataSuccessfullyFound, onError: errorStartingStreamedTrack)
                     }
                 }
             //}
+        }
+    }
+    
+    func trackDataSuccessfullyFound() {
+        self.musicKitTestThing!.player.play()
+        DispatchQueue.main.async {
+            self.mainWindowController.trackDataSuccessfullyFound(track: self.tempTrack!)
+        }
+    }
+    
+    func beginRequestForTrackData() {
+        DispatchQueue.main.async {
+            self.mainWindowController.beginRequestForTrackData()
+        }
+    }
+    
+    func beginSearchForTrackID() {
+        DispatchQueue.main.async {
+            self.mainWindowController.beginSearchForTrackID()
         }
     }
     

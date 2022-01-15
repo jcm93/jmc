@@ -755,7 +755,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         theBox.contentView!.isHidden = false
         songNameLabel.stringValue = name_string
         artistAlbumLabel.stringValue = aa_string
-        duration = self.avPlayerAudioModule.player.currentItem!.asset.duration.seconds
+        duration = self.avPlayerAudioModule.player.currentItem?.asset.duration.seconds ?? ((self.currentTrack!.time! as! Double) / 1000)
         if self.durationShowsTimeRemaining {
             durationLabel.stringValue = "-\(getTimeAsString(duration!)!)"
         } else {
@@ -769,6 +769,31 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         if paused != true {
             startTimer()
         }
+    }
+    
+    func trackDataSuccessfullyFound(track: Track) {
+        self.currentTrack = track
+        self.initializeInterfaceForNewTrack()
+    }
+    
+    func beginSearchForTrackID() {
+        theBox.contentView?.isHidden = false
+        self.progressBar.isIndeterminate = true
+        self.progressBar.startAnimation(nil)
+        self.songNameLabel.stringValue = "Getting Apple Music track identifier..."
+        self.artistAlbumLabel.stringValue = ""
+        self.durationLabel.stringValue = ""
+        self.currentTimeLabel.stringValue = ""
+    }
+    
+    func beginRequestForTrackData() {
+        theBox.contentView?.isHidden = false
+        self.progressBar.isIndeterminate = true
+        self.progressBar.startAnimation(nil)
+        self.songNameLabel.stringValue = "Getting Apple Music track identifier..."
+        self.artistAlbumLabel.stringValue = ""
+        self.durationLabel.stringValue = ""
+        self.currentTimeLabel.stringValue = ""
     }
 
     func startTimer() {

@@ -1,18 +1,17 @@
 # jmc
 ![screenshot](https://puu.sh/xoZYo/bd6d6deeb0.png)
 
-jmc is a fast, elegant and powerful media manager for macOS. jmc aims to give you the power and functionality associated with hackable media managers like foobar2000 with the elegance and simplicity of a well-designed platform-native macOS application.
+jmc is a media manager/player for macOS. jmc aims to give you the power and functionality you want from a hackable media manager, along with the elegance and simplicity of a well-designed macOS application.
 
 jmc:
 
-- Uses less memory and CPU than iTunes while performing better with libraries both small and large (50,000+ tracks).
-- Offers powerful features for viewing album artwork, including text files and PDFs.
-- Has a powerful suite of organization tools that let jmc organize your media however you want to, effortlessly.
-- Centers around a simple, intuitive, and elegant interface for listening to your music that doesn't get in your way.
-- Has a powerful interface for sharing media over a local area network.
-- Supports FLAC.
+- Centers around a sane and consistent interface that stays out of the way of listening to your music.
+- Performs well with large libraries with minimal CPU and RAM use.
+- Has a useful set of organization tools for organizing your media however you want to.
+- Offers features for viewing and organizing album artwork, including images, text files, logs, and PDFs.
+- Integrates seamlessly with Apple Music and iCloud Music Library, as well as offers features for LAN sharing.
 
-jmc is written completely in Swift, is completely open-source, and runs on OS X (macOS) 10.10 and above.
+jmc is open-source, written in Swift and runs on macOS 10.15 and above.
 
 ### Table of Contents
 - [Features](#features)
@@ -20,15 +19,16 @@ jmc is written completely in Swift, is completely open-source, and runs on OS X 
 - [Roadmap](#roadmap)
 
 # Features
+The primary goal of jmc is to act as a replacement for Music.app, solving all of the glaring problems with its user interface. jmc will not randomly scroll away from your focus, does not take 3+ seconds to pause and unpause with a large library, has consistent keyboard controls regardless of how you are viewing your library, and aims to be pleasant and enjoyable to use. jmc also offers a number of useful tools for organizing your music library.
 
 ### Library Manager
 ![screenshot](https://puu.sh/xoZHp/31dddfc751.png)
-jmc offers the most powerful tools for library organization of any media player for macOS. jmc keeps track of album artwork, PDFs, logs, cue sheets and more, and offers powerful tools for organizing your media.
+jmc offers a set of useful tools for library media organization. jmc keeps track of album artwork, PDFs, logs, cue sheets and more, and offers flexible options for organizing your media.
 
-jmc elegantly accounts for media spread across external volumes, showing available and unavailable volumes in the sidebar and filtering the music in your library accordingly.
+jmc accounts for media spread across external volumes, showing available and unavailable volumes in the sidebar and filtering the music in your library accordingly.
 
 #### Location Manager
-jmc will track the locations of files added to it. If your files do missing, when transferring media between volumes or libraries, for example, you can use the location manager to easily relocate lost files and folders.
+jmc will track the locations of files added to it. If your files do go missing, when transferring media between volumes or libraries, for example, you can use the location manager to easily relocate lost files and folders.
 
 ### Advanced Search
 ![screenshot](https://i.imgur.com/oYB83zF.png)
@@ -41,11 +41,8 @@ jmc can connect to jmc clients nearby, displaying them in the source list. Clien
 
 ![screenshot](https://i.imgur.com/SJ5RgM5.png)
 
-### Interface
-jmc's advanced functionality is designed to stay out of the way of its elegant interface. jmc is intuitive. Maintaining a queue of upcoming music is as easy as dragging and dropping. Playlist creation is simple and easy.
-
 # Installation
-You can either compile jmc from source manually or download the latest stable artifact [here](https://github.com/jcm93/jmc/). In the future, binaries for jmc will likely be distributed through the App Store. In the meantime, please consider [buying me some coffee or food](https://jcm93.github.io/money/)!
+You can either compile jmc from source manually or download the latest stable artifact [here](https://github.com/jcm93/jmc/).
 
 ### Setup
 You can choose to allow jmc to organize your library by moving or copying added files, or have it perform no organization at all. 
