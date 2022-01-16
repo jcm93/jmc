@@ -822,6 +822,17 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }
     }
     
+    func updateNetworkValues(progress: Double) {
+        let duration = Double(self.currentTrack!.time!)
+        let seconds = (duration / 1000) * progress
+        self.secsPlayed = seconds
+        let secondsString = getTimeAsString(TimeInterval(seconds))
+        self.currentTimeLabel.stringValue = secondsString!
+        progressBar.doubleValue = progress * 100
+        progressBar.displayIfNeeded()
+        self.lastTimerDate = Date()
+    }
+    
     @objc func updateValuesSafe() {
         let lastUpdateTime = lastTimerDate
         let currentTime = Date()

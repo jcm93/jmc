@@ -30,6 +30,7 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
     var appleMusicTrackIdentifier: Any?
     var tempTrack: Track? = nil
     var isPlayingNetwork: Bool = false
+    var currentNetworkTrackDuration: Double?
     
     override init() {
         self.player = AVQueuePlayer()
@@ -98,8 +99,9 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
     }
     
     func playImmediatelyNoObservers(_ track: Track) {
-        if let location = track.location {
-            let trackURL = URL(string: location)!
+        if let location = track.location, let trackURL = URL(string: location), trackURL.pathExtension != "m4p" {
+            self.musicKitTestThing?.player.stop()
+            self.isPlayingNetwork = false
             self.track = track
             let item = AVPlayerItem(url: trackURL)
             if (item.asset as! AVURLAsset).url == (self.player.currentItem?.asset as? AVURLAsset)?.url {
@@ -136,6 +138,8 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
     
     func playImmediately(_ track: Track) {
         if let location = track.location, let trackURL = URL(string: location), trackURL.pathExtension != "m4p" {
+            self.isPlayingNetwork = false
+            self.musicKitTestThing?.player.stop()
             self.track = track
             let item = AVPlayerItem(url: trackURL)
             if (item.asset as! AVURLAsset).url == (self.player.currentItem?.asset as? AVURLAsset)?.url {
@@ -175,6 +179,7 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
         self.isPlayingNetwork = true
         if self.is_paused != true {
             self.musicKitTestThing!.player.play()
+            self.musicKitTestThing?.player.getNowPlayingItem(onSuccess: networkTrackMetadataCallback)
         }
         self.player.pause()
         //self.musicKitTestThing!.addEventListener(for: .playbackTimeDidChange, callback: networkPlaybackBegan)
@@ -184,8 +189,10 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
         }
     }
     
-    func networkPlaybackBegan() {
-        
+    func networkTrackMetadataCallback(item: MediaItem?) {
+        if let item = item {
+            self.currentNetworkTrackDuration = Double(item.attributes.durationInSecs!)
+        }
     }
     
     func beginRequestForTrackData() {
@@ -221,11 +228,22 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
         
     }
     
+    func updateNetworkValues() {
+        self.musicKitTestThing?.player.getCurrentPlaybackProgress(onSuccess: updateNetworkValuesCallback)
+    }
+    
+    func updateNetworkValuesCallback(progress: Double) {
+        DispatchQueue.main.async {
+            self.mainWindowController.updateNetworkValues(progress: progress)
+        }
+    }
+    
     func pause() {
         self.is_paused = true
         self.player.pause()
         if self.isPlayingNetwork {
             self.musicKitTestThing?.player.pause()
+            self.updateNetworkValues()
         }
     }
     
@@ -238,6 +256,7 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
         }
         if self.isPlayingNetwork {
             self.musicKitTestThing?.player.play()
+            self.musicKitTestThing?.player.getNowPlayingItem(onSuccess: networkTrackMetadataCallback)
         }
     }
     
@@ -247,13 +266,17 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
             return
         }
         self.isSeeking = true
-        let duration = self.player.currentItem!.duration.seconds
-        let timescale = self.player.currentItem!.duration.timescale
-        let newDuration = frac * duration
-        let newTime = CMTime(seconds: newDuration, preferredTimescale: timescale)
-        self.player.seek(to: newTime)
         if self.isPlayingNetwork {
+            let currentTrackDuration = self.currentNetworkTrackDuration ?? (Double(self.track.time!) / 1000)
+            let newDuration = currentTrackDuration * frac
             self.musicKitTestThing?.player.seek(to: newDuration, onSuccess: nil)
+            self.mainWindowController.secsPlayed = newDuration
+        } else {
+            let duration = self.player.currentItem!.duration.seconds
+            let timescale = self.player.currentItem!.duration.timescale
+            let newDuration = frac * duration
+            let newTime = CMTime(seconds: newDuration, preferredTimescale: timescale)
+            self.player.seek(to: newTime)
         }
         //ends up at self.fileBuffererSeekDecodeCallback
         self.isSeeking = false
