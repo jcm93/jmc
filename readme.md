@@ -19,7 +19,7 @@ jmc is open-source, written in Swift and runs on macOS 10.15 and above.
 - [Roadmap](#roadmap)
 
 # Features
-The primary goal of jmc is to act as a replacement for Music.app, solving all of the glaring problems with its user interface. jmc will not randomly scroll away from your focus, does not take 3+ seconds to pause and unpause with a large library, has consistent keyboard controls regardless of how you are viewing your library, and aims to be pleasant and enjoyable to use. jmc also offers a number of useful tools for organizing your music library.
+The primary goal of jmc is to essentialy act as a suitable drop-in replacement for Music.app, solving all of the glaring problems with its user interface. jmc will not randomly scroll away from your focus, does not take 3+ seconds to pause and unpause with a large library, has consistent keyboard controls regardless of how you are viewing your library, and aims to be pleasant and enjoyable to use. jmc also offers a number of useful tools for organizing your music library.
 
 ### Library Manager
 ![screenshot](https://puu.sh/xoZHp/31dddfc751.png)

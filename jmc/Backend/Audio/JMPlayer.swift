@@ -14,5 +14,8 @@ class JMPlayer: AVQueuePlayer {
     var isPlayingNetworkTrack: Bool = false
     
     //player that behaves like AVQueuePlayer from the outside but might instead be interfacing with MusicKitPlayer to access Apple Music tracks
+    
+    //does this make sense? pause could be synchronous or async
+    //whats the best way to organize this
 
 }

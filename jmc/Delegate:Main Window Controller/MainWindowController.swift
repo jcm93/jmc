@@ -549,13 +549,14 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         paused = false
         currentTrack = track
         return true*/
-        guard let location = track.location, fileManager.fileExists(atPath: URL(string: location)!.path) else {
+        //todo check if apple music or missing track
+        /*guard let location = track.location, fileManager.fileExists(atPath: URL(string: location)!.path) else {
             self.avPlayerAudioModule.playImmediately(track)
             sourceListViewController!.reloadData()
             handleTrackMissing(track: track)
             currentLibraryViewController!.reloadDataForTrack(track, orRow: row)
             return false
-        }
+        }*/
         self.trackQueueViewController!.createPlayOrderArray(track, row: row)
         self.trackQueueViewController!.changeCurrentTrack(track)
         self.avPlayerAudioModule.playImmediately(track)
@@ -643,7 +644,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     
     func skip() {
         guard trackQueueViewController!.currentTrack != nil else {return}
-        guard self.isDoneWithSkipOperation else {print("can't skip");return}
+        //guard self.isDoneWithSkipOperation else {print("can't skip");return}
         self.isDoneWithSkipOperation = false
         notEnablingUndo {
             self.currentTrack?.is_playing = false
@@ -654,12 +655,12 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     
     func skipBackward() {
         guard trackQueueViewController!.currentTrack != nil else {return}
-        guard self.isDoneWithSkipBackOperation else {print("can't skip backward");return}
+        //guard self.isDoneWithSkipBackOperation else {print("can't skip backward");return}
         self.isDoneWithSkipBackOperation = false
         notEnablingUndo {
             self.currentTrack?.is_playing = false
         }
-        let seconds = self.avPlayerAudioModule.player.currentTime().seconds
+        let seconds = self.avPlayerAudioModule.player.currentItem!.currentTime().seconds
         print(seconds)
         if seconds > 3 {
             self.avPlayerAudioModule.skipBackward()
@@ -774,6 +775,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     func trackDataSuccessfullyFound(track: Track) {
         self.currentTrack = track
         self.initializeInterfaceForNewTrack()
+        self.trackChanged()
     }
     
     func beginSearchForTrackID() {
@@ -790,7 +792,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         theBox.contentView?.isHidden = false
         self.progressBar.isIndeterminate = true
         self.progressBar.startAnimation(nil)
-        self.songNameLabel.stringValue = "Getting Apple Music track identifier..."
+        self.songNameLabel.stringValue = "Getting Apple Music track data..."
         self.artistAlbumLabel.stringValue = ""
         self.durationLabel.stringValue = ""
         self.currentTimeLabel.stringValue = ""
@@ -805,7 +807,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     
     func updateValuesUnsafe() {
         print("unsafe called")
-        if self.avPlayerAudioModule.isSeeking != true {
+        if self.avPlayerAudioModule.isSeeking != true && !self.avPlayerAudioModule.isPlayingNetwork {
             let seconds = self.avPlayerAudioModule.player.currentTime().seconds
             if let seconds_string = getTimeAsString(seconds) {
                 currentTimeLabel.stringValue = seconds_string
@@ -884,44 +886,48 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         self.currentTrack?.date_last_skipped = NSDate()
     }
     
+    func trackChanged() {
+        if trackQueueViewController?.upcomingTrack != nil {
+            trackQueueViewController.addTrackToQueue(trackQueueViewController.upcomingTrack!, context: trackQueueViewController.currentAudioSource!.name!, tense: 2, manually: false)
+            trackQueueViewController.upcomingTrack = nil
+        }
+        self.progressBarView.blockSeekEvents()
+        notEnablingUndo {
+            self.currentTrack?.is_playing = false
+        }
+        if currentTrack != nil {
+            if delegate?.audioModule.lastTrackCompletionType == .natural {
+                incrementPlayCountForCurrentTrack()
+            } else {
+                checkPlayFractionForSkip()
+            }
+            currentLibraryViewController?.reloadNowPlayingForTrack(currentTrack!)
+        }
+        trackQueueViewController!.nextTrack()
+        currentTrack = managedContext.object(with: trackQueueViewController!.trackQueue[trackQueueViewController!.currentTrackIndex!].track!.objectID) as! Track
+        if is_initialized == false {
+            //trackQueueViewController!.createPlayOrderArray(self.currentTrack!, row: nil)
+            paused = false
+            is_initialized = true
+        }
+        timer?.invalidate()
+        initializeInterfaceForNewTrack()
+        notEnablingUndo {
+            self.currentTrack?.is_playing = true
+        }
+        currentLibraryViewController?.reloadNowPlayingForTrack(currentTrack!)
+        self.isDoneWithSkipOperation = true
+        self.isDoneWithSkipBackOperation = true
+        if UserDefaults.standard.bool(forKey: DEFAULTS_TABLE_SKIP_SHOWS_NEW_TRACK) {
+            currentLibraryViewController?.scrollToNewTrack()
+        }
+    }
+    
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if context == &my_context {
             if keyPath! == "track_changed" {
                 print("controller detects track change")
-                if trackQueueViewController?.upcomingTrack != nil {
-                    trackQueueViewController.addTrackToQueue(trackQueueViewController.upcomingTrack!, context: trackQueueViewController.currentAudioSource!.name!, tense: 2, manually: false)
-                    trackQueueViewController.upcomingTrack = nil
-                }
-                self.progressBarView.blockSeekEvents()
-                notEnablingUndo {
-                    self.currentTrack?.is_playing = false
-                }
-                if currentTrack != nil {
-                    if delegate?.audioModule.lastTrackCompletionType == .natural {
-                        incrementPlayCountForCurrentTrack()
-                    } else {
-                        checkPlayFractionForSkip()
-                    }
-                    currentLibraryViewController?.reloadNowPlayingForTrack(currentTrack!)
-                }
-                trackQueueViewController!.nextTrack()
-                currentTrack = managedContext.object(with: trackQueueViewController!.trackQueue[trackQueueViewController!.currentTrackIndex!].track!.objectID) as! Track
-                if is_initialized == false {
-                    //trackQueueViewController!.createPlayOrderArray(self.currentTrack!, row: nil)
-                    paused = false
-                    is_initialized = true
-                }
-                timer?.invalidate()
-                initializeInterfaceForNewTrack()
-                notEnablingUndo {
-                    self.currentTrack?.is_playing = true
-                }
-                currentLibraryViewController?.reloadNowPlayingForTrack(currentTrack!)
-                self.isDoneWithSkipOperation = true
-                self.isDoneWithSkipBackOperation = true
-                if UserDefaults.standard.bool(forKey: DEFAULTS_TABLE_SKIP_SHOWS_NEW_TRACK) {
-                    currentLibraryViewController?.scrollToNewTrack()
-                }
+                trackChanged()
             }
             else if keyPath! == "done_playing" {
                 print("controller detects finished playing")

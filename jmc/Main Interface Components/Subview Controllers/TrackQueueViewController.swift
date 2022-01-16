@@ -411,7 +411,7 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 } else {
                     next_track = getTrackWithID(id!, background: background)
                 }
-                if !fileManager.fileExists(atPath: URL(string: next_track!.location!)!.path) {
+                if let location = next_track!.location, !fileManager.fileExists(atPath: URL(string: location)!.path) {
                     currentAudioSource?.currentPlayOrderObject?.libraryStatusNeedsUpdate()
                     self.currentSourceIndex = currentAudioSource?.currentPlayOrderObject?.currentPlayOrder?.firstIndex(of: Int(self.currentTrack!.id!))
                     if currentAudioSource!.currentPlayOrderObject!.currentPlayOrder!.count <= currentSourceIndex! + 1 {
