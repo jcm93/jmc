@@ -313,6 +313,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     @IBAction func volumeDidChange(_ sender: AnyObject) {
         print("volume did change called")
         let newVolume = (sender as! NSSlider).floatValue
+        self.avPlayerAudioModule.changeVolume(newVolume: newVolume)
         delegate?.audioModule.changeVolume(newVolume)
     }
     //track queue, source logic
@@ -559,7 +560,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }*/
         self.trackQueueViewController!.createPlayOrderArray(track, row: row)
         self.trackQueueViewController!.changeCurrentTrack(track)
-        self.avPlayerAudioModule.playImmediately(track)
+        self.avPlayerAudioModule.playImmediately(track, observers: true)
         self.paused = false
         return true
     }

@@ -60,7 +60,7 @@ class AirPlayDeviceHandler: NSObject {
     func getAirPlayOutputs() {
         var addr = AudioObjectPropertyAddress(mSelector: kAudioDevicePropertyDataSources, mScope: kAudioDevicePropertyScopeOutput, mElement: kAudioObjectPropertyElementWildcard)
         var propsize: UInt32 = 0
-        AudioObjectGetPropertyDataSize(self.device, &addr, 0, nil, &propsize)
+        let result = AudioObjectGetPropertyDataSize(self.device, &addr, 0, nil, &propsize)
         var sourceIDs = [UInt32](repeating: 0, count: Int(propsize))
         AudioObjectGetPropertyData(self.device, &addr, 0, nil, &propsize, &sourceIDs)
         for source in sourceIDs {

@@ -31,6 +31,7 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
     var tempTrack: Track? = nil
     var isPlayingNetwork: Bool = false
     var currentNetworkTrackDuration: Double?
+    var networkTrackAboutToEndTimer: Timer?
     
     override init() {
         self.player = AVQueuePlayer()
@@ -43,6 +44,7 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
         if #available(macOS 12.0, *) {
             self.appleMusicTrackIdentifier = AppleMusicTrackIdentifier(authorizes: true)
         }
+        let poop = AirPlayDeviceHandler()
     }
     
     func success() {
@@ -86,6 +88,31 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
         }
     }
     
+    func networkItemAboutToFinishPlaying() {
+        let nextTrack = mainWindowController!.getNextTrack(background: false)!
+        if let location = track.location, let trackURL = URL(string: location), trackURL.pathExtension != "m4p" {
+            //uhh
+            let newItem = makeAVPlayerItemFromTrack(nextTrack)
+            self.player.insert(newItem, after: self.player.currentItem)
+        } else {
+            let trackName = nextTrack.name ?? ""
+            let artistName = nextTrack.artist?.name ?? ""
+            let albumName = nextTrack.album?.name ?? ""
+            if #available(macOS 12.0, *) {
+                Task {
+                    let trackID = await (self.appleMusicTrackIdentifier as! AppleMusicTrackIdentifier).requestResource(trackName: trackName, artistName: artistName, albumName: albumName)
+                    self.musicKitTestThing!.setQueue(song: trackID, onSuccess: self.musicKitTestThing?.player.play, onError: self.errorStartingStreamedTrack)
+                    //self.musicKitTestThing?.player.skipToNextItem(onSuccess: nil)
+                }
+            }
+        }
+    }
+    
+    func changeVolume(newVolume: Float) {
+        self.player.volume = newVolume
+        self.musicKitTestThing?.player.setVolume(Double(newVolume), onSuccess: nil)
+    }
+    
     func removeTimeObservers() {
         if let observer = self.currentBoundaryObserver {
             self.player.removeTimeObserver(observer)
@@ -98,45 +125,7 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
         return item
     }
     
-    func playImmediatelyNoObservers(_ track: Track) {
-        if let location = track.location, let trackURL = URL(string: location), trackURL.pathExtension != "m4p" {
-            self.musicKitTestThing?.player.stop()
-            self.isPlayingNetwork = false
-            self.track = track
-            let item = AVPlayerItem(url: trackURL)
-            if (item.asset as! AVURLAsset).url == (self.player.currentItem?.asset as? AVURLAsset)?.url {
-                self.player.seek(to: CMTime(seconds: 0.0, preferredTimescale: self.player.currentItem!.duration.timescale))
-            } else {
-                self.removeTimeObservers()
-                self.player.removeObserver(self, forKeyPath: "currentItem")
-                self.player.replaceCurrentItem(with: item)
-                self.player.addObserver(self, forKeyPath: "currentItem", options: .new, context: nil)
-                let itemsToRemove = self.player.items()[1..<self.player.items().count]
-                for item in itemsToRemove {
-                    self.player.remove(item)
-                }
-                self.player.play()
-            }
-            //DispatchQueue.main.async {self.changeTrackObservers()}
-        } else {
-            let trackName = track.name ?? ""
-            self.tempTrack = track
-            //if track.is_network == true {
-                if #available(macOS 12.0, *) {
-                    Task {
-                        self.beginSearchForTrackID()
-                        let trackID = await (self.appleMusicTrackIdentifier as! AppleMusicTrackIdentifier).requestResource(track: trackName)
-                        self.beginRequestForTrackData()
-                        let mediaID = MediaID(trackID)
-                        self.musicKitTestThing!.setQueue(song: mediaID, onSuccess: self.trackDataSuccessfullyFound, onError: errorStartingStreamedTrack)
-                    }
-                }
-            //}
-        }
-        self.mainWindowController.isDoneWithSkipOperation = true
-    }
-    
-    func playImmediately(_ track: Track) {
+    func playImmediately(_ track: Track, observers: Bool) {
         if let location = track.location, let trackURL = URL(string: location), trackURL.pathExtension != "m4p" {
             self.isPlayingNetwork = false
             self.musicKitTestThing?.player.stop()
@@ -146,9 +135,13 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
                 self.player.seek(to: CMTime(seconds: 0.0, preferredTimescale: self.player.currentItem!.duration.timescale))
             } else {
                 self.removeTimeObservers()
-                //self.player.removeObserver(self, forKeyPath: "currentItem")
+                if !observers {
+                    self.player.removeObserver(self, forKeyPath: "currentItem")
+                }
                 self.player.replaceCurrentItem(with: item)
-                //self.player.addObserver(self, forKeyPath: "currentItem", options: .new, context: nil)
+                if !observers {
+                    self.player.addObserver(self, forKeyPath: "currentItem", options: .new, context: nil)
+                }
                 let itemsToRemove = self.player.items()[1..<self.player.items().count]
                 for item in itemsToRemove {
                     self.player.remove(item)
@@ -159,13 +152,16 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
                 self.player.play()
             }
         } else {
+            self.track = track
             let trackName = track.name ?? ""
+            let artistName = track.artist?.name ?? ""
+            let albumName = track.album?.name ?? ""
             self.tempTrack = track
             //if track.is_network == true {
                 if #available(macOS 12.0, *) {
                     Task {
                         self.beginSearchForTrackID()
-                        let trackID = await (self.appleMusicTrackIdentifier as! AppleMusicTrackIdentifier).requestResource(track: trackName)
+                        let trackID = await (self.appleMusicTrackIdentifier as! AppleMusicTrackIdentifier).requestResource(trackName: trackName, artistName: artistName, albumName: albumName)
                         self.beginRequestForTrackData()
                         let mediaID = MediaID(trackID)
                         self.musicKitTestThing!.setQueue(song: mediaID, onSuccess: self.trackDataSuccessfullyFound, onError: errorStartingStreamedTrack)
@@ -173,12 +169,14 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
                 }
             //}
         }
+        self.mainWindowController.isDoneWithSkipOperation = true
     }
     
     func trackDataSuccessfullyFound() {
         self.isPlayingNetwork = true
         if self.is_paused != true {
             self.musicKitTestThing!.player.play()
+            activateNetworkTrackTimer()
             self.musicKitTestThing?.player.getNowPlayingItem(onSuccess: networkTrackMetadataCallback)
         }
         self.player.pause()
@@ -192,6 +190,10 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
     func networkTrackMetadataCallback(item: MediaItem?) {
         if let item = item {
             self.currentNetworkTrackDuration = Double(item.attributes.durationInSecs!)
+            let timeInterval = TimeInterval(self.currentNetworkTrackDuration! - 6)
+            self.networkTrackAboutToEndTimer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false, block: { _ in
+                self.networkItemAboutToFinishPlaying()
+            })
         }
     }
     
@@ -242,6 +244,7 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
         self.is_paused = true
         self.player.pause()
         if self.isPlayingNetwork {
+            self.networkTrackAboutToEndTimer?.invalidate()
             self.musicKitTestThing?.player.pause()
             self.updateNetworkValues()
         }
@@ -257,7 +260,15 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
         if self.isPlayingNetwork {
             self.musicKitTestThing?.player.play()
             self.musicKitTestThing?.player.getNowPlayingItem(onSuccess: networkTrackMetadataCallback)
+            self.activateNetworkTrackTimer()
         }
+    }
+    
+    func activateNetworkTrackTimer() {
+        let duration = (self.currentNetworkTrackDuration ?? (Double(self.track!.time!) / 1000)) - self.mainWindowController.secsPlayed - 6
+        self.networkTrackAboutToEndTimer = Timer.scheduledTimer(withTimeInterval: duration, repeats: false, block: {_ in
+            self.networkItemAboutToFinishPlaying()
+        })
     }
     
     func seek(_ frac: Double) {
@@ -269,7 +280,7 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
         if self.isPlayingNetwork {
             let currentTrackDuration = self.currentNetworkTrackDuration ?? (Double(self.track.time!) / 1000)
             let newDuration = currentTrackDuration * frac
-            self.musicKitTestThing?.player.seek(to: newDuration, onSuccess: nil)
+            self.musicKitTestThing?.player.seek(to: newDuration, onSuccess: activateNetworkTrackTimer)
             self.mainWindowController.secsPlayed = newDuration
         } else {
             let duration = self.player.currentItem!.duration.seconds
@@ -284,16 +295,17 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
     
     func skip() {
         self.musicKitTestThing?.player.stop()
+        self.networkTrackAboutToEndTimer?.invalidate()
         self.isPlayingNetwork = false
         tryGetMoreTracks(background: false)
-        playImmediately(self.track)
+        playImmediately(self.track, observers: true)
         self.nextTrack = nil
     }
     
     func skipBackward() {
         if (self.track != nil) {
             print("skipping to new track")
-            playImmediatelyNoObservers(self.track)
+            playImmediately(self.track, observers: false)
         }
         else {
             print("skipping, no new track")
