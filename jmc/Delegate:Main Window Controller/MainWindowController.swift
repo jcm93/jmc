@@ -432,7 +432,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     }
     
     @IBAction func skipBackward(_ sender: Any) {
-        self.skipBackward()
+        //self.skipBackward()
+        self.avPlayerAudioModule.musicKitTestThing?.player.getPlaybackBitrate(onSuccess: self.avPlayerAudioModule.reportBitrate)
     }
     
     @IBAction func tempBreak(_ sender: AnyObject) {
@@ -560,8 +561,9 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
         }*/
         self.trackQueueViewController!.createPlayOrderArray(track, row: row)
         self.trackQueueViewController!.changeCurrentTrack(track)
-        self.avPlayerAudioModule.playImmediately(track, observers: true)
         self.paused = false
+        self.avPlayerAudioModule.is_paused = false
+        self.avPlayerAudioModule.playImmediately(track, observers: true)
         return true
     }
     

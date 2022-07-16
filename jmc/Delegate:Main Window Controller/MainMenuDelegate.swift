@@ -117,7 +117,10 @@ class MainMenuDelegate: NSObject, NSMenuDelegate {
     }
     
     @IBAction func openImportWindow(_ sender: AnyObject) {
-        guard self.delegate.importWindowController?.window == nil else { return }
+        guard self.delegate.importWindowController?.window == nil else {
+            self.delegate.importWindowController?.showWindow(self)
+            return
+        }
         self.delegate.importWindowController = ImportWindowController(windowNibName: "ImportWindowController")
         self.delegate.importWindowController!.mainWindowController = mainWindowController
         self.delegate.importWindowController!.showWindow(self)

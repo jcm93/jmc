@@ -32,6 +32,7 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
     var isPlayingNetwork: Bool = false
     var currentNetworkTrackDuration: Double?
     var networkTrackAboutToEndTimer: Timer?
+    var ignoreNetworkTrackChangeEvent = true
     
     override init() {
         self.player = AVQueuePlayer()
@@ -54,6 +55,7 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
     
     func successAuthorizing(_ thing: String) {
         print("poopy")
+        //self.musicKitTestThing?.player.setBitrate(bitrate: .high, onSuccess: successSettingBitrate, onError: errorSettingBitrate)
     }
     
     func errorAuthorizing(_ error: Error) {
@@ -88,23 +90,47 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
         }
     }
     
+    func playLocalAfterNetwork() {
+        if self.ignoreNetworkTrackChangeEvent == false {
+            self.playImmediately(self.tempTrack!, observers: true)
+        }
+        self.tempTrack = nil
+    }
+    
     func networkItemAboutToFinishPlaying() {
         let nextTrack = mainWindowController!.getNextTrack(background: false)!
         if let location = track.location, let trackURL = URL(string: location), trackURL.pathExtension != "m4p" {
             //uhh
-            let newItem = makeAVPlayerItemFromTrack(nextTrack)
-            self.player.insert(newItem, after: self.player.currentItem)
+            self.tempTrack = nextTrack
+            //let newItem = makeAVPlayerItemFromTrack(nextTrack)
+            //self.player.insert(newItem, after: self.player.currentItem)
+            //self.player.play()
+            self.musicKitTestThing?.addEventListener(for: .mediaItemDidChange, callback: playLocalAfterNetwork)
+            //self.musicKitTestThing!.addEventListener(for: .mediaItemDidChange, callback: playLocalAfterNetwork)
+            
         } else {
+            self.tempTrack = nextTrack
             let trackName = nextTrack.name ?? ""
             let artistName = nextTrack.artist?.name ?? ""
             let albumName = nextTrack.album?.name ?? ""
             if #available(macOS 12.0, *) {
                 Task {
                     let trackID = await (self.appleMusicTrackIdentifier as! AppleMusicTrackIdentifier).requestResource(trackName: trackName, artistName: artistName, albumName: albumName)
-                    self.musicKitTestThing!.setQueue(song: trackID, onSuccess: self.musicKitTestThing?.player.play, onError: self.errorStartingStreamedTrack)
-                    //self.musicKitTestThing?.player.skipToNextItem(onSuccess: nil)
+                    print(trackID)
+                    print("prepending")
+                    self.ignoreNetworkTrackChangeEvent = false
+                    self.musicKitTestThing!.player.queue.prepend(song: trackID, type: .librarySong, onSuccess: nil)
+                    self.musicKitTestThing!.addEventListener(for: .mediaItemDidChange, callback: mediaItemChanged)
                 }
             }
+        }
+    }
+    
+    func mediaItemChanged() {
+        if self.ignoreNetworkTrackChangeEvent == false {
+            self.track = self.tempTrack
+            self.tempTrack = nil
+            self.changeTrackObservers()
         }
     }
     
@@ -126,6 +152,7 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
     }
     
     func playImmediately(_ track: Track, observers: Bool) {
+        self.ignoreNetworkTrackChangeEvent = true
         if let location = track.location, let trackURL = URL(string: location), trackURL.pathExtension != "m4p" {
             self.isPlayingNetwork = false
             self.musicKitTestThing?.player.stop()
@@ -190,11 +217,27 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
     func networkTrackMetadataCallback(item: MediaItem?) {
         if let item = item {
             self.currentNetworkTrackDuration = Double(item.attributes.durationInSecs!)
+            print(self.musicKitTestThing?.player.getPlaybackBitrate(onSuccess: reportBitrate))
+            //self.musicKitTestThing?.player.setBitrate(bitrate: .high, onSuccess: successSettingBitrate, onError: errorSettingBitrate)
             let timeInterval = TimeInterval(self.currentNetworkTrackDuration! - 6)
             self.networkTrackAboutToEndTimer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false, block: { _ in
                 self.networkItemAboutToFinishPlaying()
             })
         }
+    }
+    
+    func successSettingBitrate() {
+        print("success?")
+        self.musicKitTestThing?.player.getPlaybackBitrate(onSuccess: reportBitrate)
+    }
+    
+    func errorSettingBitrate(e: Error) {
+        print(e)
+    }
+    
+    
+    func reportBitrate(playbackBitrate: PlaybackBitrate) {
+        print(playbackBitrate)
     }
     
     func beginRequestForTrackData() {
@@ -253,7 +296,6 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
     func play() {
         //guard fileManager.fileExists(atPath: URL(string: self.track.location!)!.path) else {return}
         is_paused = false
-        self.player.play()
         if upcomingTrack != nil {
             self.changeTrack(changeEventID: self.currentValidChangeTrackEventID)
         }
@@ -261,6 +303,8 @@ class AVPlayerAudioModule: NSObject, AVRoutePickerViewDelegate {
             self.musicKitTestThing?.player.play()
             self.musicKitTestThing?.player.getNowPlayingItem(onSuccess: networkTrackMetadataCallback)
             self.activateNetworkTrackTimer()
+        } else {
+            self.player.play()
         }
     }
     

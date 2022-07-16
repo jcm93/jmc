@@ -56,51 +56,20 @@
 		0D4C0A50278FB59F005BE760 /* MusicLibrarySearchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A4F278FB59F005BE760 /* MusicLibrarySearchRequest.swift */; };
 		0D4C0A922790B85A005BE760 /* QueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A5A2790B85A005BE760 /* QueueManager.swift */; };
 		0D4C0A932790B85A005BE760 /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A5B2790B85A005BE760 /* NowPlayingManager.swift */; };
-		0D4C0A942790B85A005BE760 /* QueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A812790B85A005BE760 /* QueueManager.swift */; };
-		0D4C0A952790B85A005BE760 /* QueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A912790B85A005BE760 /* QueueManager.swift */; };
-		0D4C0A962790B85A005BE760 /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A902790B85A005BE760 /* NowPlayingManager.swift */; };
-		0D4C0A972790B85A005BE760 /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A822790B85A005BE760 /* NowPlayingManager.swift */; };
 		0D4C0A982790B85A005BE760 /* MKWebController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A5D2790B85A005BE760 /* MKWebController.swift */; };
 		0D4C0A992790B85A005BE760 /* URLRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A5E2790B85A005BE760 /* URLRequestManager.swift */; };
 		0D4C0A9A2790B85A005BE760 /* MKWebpage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A5F2790B85A005BE760 /* MKWebpage.swift */; };
 		0D4C0A9B2790B85A005BE760 /* AuthorizationWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A602790B85A005BE760 /* AuthorizationWindow.swift */; };
 		0D4C0A9C2790B85A005BE760 /* MKDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A612790B85A005BE760 /* MKDecoder.swift */; };
-		0D4C0A9D2790B85A005BE760 /* MKWebController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A702790B85A005BE760 /* MKWebController.swift */; };
-		0D4C0A9E2790B85A005BE760 /* MKWebController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A832790B85A005BE760 /* MKWebController.swift */; };
-		0D4C0A9F2790B85A005BE760 /* URLRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A712790B85A005BE760 /* URLRequestManager.swift */; };
-		0D4C0AA02790B85A005BE760 /* URLRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A862790B85A005BE760 /* URLRequestManager.swift */; };
-		0D4C0AA12790B85A005BE760 /* MKWebpage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A722790B85A005BE760 /* MKWebpage.swift */; };
-		0D4C0AA22790B85A005BE760 /* MKWebpage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A842790B85A005BE760 /* MKWebpage.swift */; };
-		0D4C0AA32790B85A005BE760 /* AuthorizationWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A732790B85A005BE760 /* AuthorizationWindow.swift */; };
-		0D4C0AA42790B85A005BE760 /* AuthorizationWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A872790B85A005BE760 /* AuthorizationWindow.swift */; };
-		0D4C0AA52790B85A005BE760 /* MKDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A852790B85A005BE760 /* MKDecoder.swift */; };
-		0D4C0AA62790B85A005BE760 /* MKDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A742790B85A005BE760 /* MKDecoder.swift */; };
 		0D4C0AA72790B85A005BE760 /* StringFormatUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A632790B85A005BE760 /* StringFormatUtil.swift */; };
 		0D4C0AA82790B85A005BE760 /* ArrayUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A642790B85A005BE760 /* ArrayUtil.swift */; };
-		0D4C0AA92790B85A005BE760 /* StringFormatUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A762790B85A005BE760 /* StringFormatUtil.swift */; };
-		0D4C0AAA2790B85A005BE760 /* StringFormatUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A892790B85A005BE760 /* StringFormatUtil.swift */; };
-		0D4C0AAB2790B85A005BE760 /* ArrayUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A882790B85A005BE760 /* ArrayUtil.swift */; };
-		0D4C0AAC2790B85A005BE760 /* ArrayUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A772790B85A005BE760 /* ArrayUtil.swift */; };
 		0D4C0AAD2790B85A005BE760 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A662790B85A005BE760 /* Library.swift */; };
 		0D4C0AAE2790B85A005BE760 /* MusicKitUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A672790B85A005BE760 /* MusicKitUtils.swift */; };
 		0D4C0AAF2790B85A005BE760 /* MusicKitPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A682790B85A005BE760 /* MusicKitPlayer.swift */; };
 		0D4C0AB02790B85A005BE760 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A692790B85A005BE760 /* Queue.swift */; };
 		0D4C0AB12790B85A005BE760 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A6A2790B85A005BE760 /* API.swift */; };
 		0D4C0AB22790B85A005BE760 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A6B2790B85A005BE760 /* Player.swift */; };
-		0D4C0AB32790B85A005BE760 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A792790B85A005BE760 /* Library.swift */; };
-		0D4C0AB42790B85A005BE760 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A8C2790B85A005BE760 /* Library.swift */; };
-		0D4C0AB52790B85A005BE760 /* MusicKitUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A7A2790B85A005BE760 /* MusicKitUtils.swift */; };
-		0D4C0AB62790B85A005BE760 /* MusicKitUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A8B2790B85A005BE760 /* MusicKitUtils.swift */; };
-		0D4C0AB72790B85A005BE760 /* MusicKitPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A7B2790B85A005BE760 /* MusicKitPlayer.swift */; };
-		0D4C0AB82790B85A005BE760 /* MusicKitPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A8E2790B85A005BE760 /* MusicKitPlayer.swift */; };
-		0D4C0AB92790B85A005BE760 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A7C2790B85A005BE760 /* Queue.swift */; };
-		0D4C0ABA2790B85A005BE760 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A8D2790B85A005BE760 /* Queue.swift */; };
-		0D4C0ABB2790B85A005BE760 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A7D2790B85A005BE760 /* API.swift */; };
-		0D4C0ABC2790B85A005BE760 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A8F2790B85A005BE760 /* API.swift */; };
-		0D4C0ABD2790B85A005BE760 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A8A2790B85A005BE760 /* Player.swift */; };
-		0D4C0ABE2790B85A005BE760 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0A7E2790B85A005BE760 /* Player.swift */; };
 		0D4C0ABF2790B85A005BE760 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D4C0A7F2790B85A005BE760 /* Info.plist */; };
-		0D4C0AC02790B85A005BE760 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D4C0A6D2790B85A005BE760 /* Info.plist */; };
 		0D4C0AC22790F9B3005BE760 /* SecretStuff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0AC12790F9B3005BE760 /* SecretStuff.swift */; };
 		0D4C0AC4279210B6005BE760 /* AppleMusicTrackIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0AC3279210B6005BE760 /* AppleMusicTrackIdentifier.swift */; };
 		0D4C0AC62792163D005BE760 /* JMPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4C0AC52792163D005BE760 /* JMPlayer.swift */; };
@@ -339,39 +308,7 @@
 		0D4C0A6A2790B85A005BE760 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		0D4C0A6B2790B85A005BE760 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		0D4C0A6C2790B85A005BE760 /* MusicKitPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicKitPlayer.h; sourceTree = "<group>"; };
-		0D4C0A6D2790B85A005BE760 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0D4C0A6E2790B85A005BE760 /* MusicKitPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicKitPlayer.h; sourceTree = "<group>"; };
-		0D4C0A702790B85A005BE760 /* MKWebController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MKWebController.swift; sourceTree = "<group>"; };
-		0D4C0A712790B85A005BE760 /* URLRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLRequestManager.swift; sourceTree = "<group>"; };
-		0D4C0A722790B85A005BE760 /* MKWebpage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MKWebpage.swift; sourceTree = "<group>"; };
-		0D4C0A732790B85A005BE760 /* AuthorizationWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationWindow.swift; sourceTree = "<group>"; };
-		0D4C0A742790B85A005BE760 /* MKDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MKDecoder.swift; sourceTree = "<group>"; };
-		0D4C0A762790B85A005BE760 /* StringFormatUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringFormatUtil.swift; sourceTree = "<group>"; };
-		0D4C0A772790B85A005BE760 /* ArrayUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayUtil.swift; sourceTree = "<group>"; };
-		0D4C0A792790B85A005BE760 /* Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Library.swift; sourceTree = "<group>"; };
-		0D4C0A7A2790B85A005BE760 /* MusicKitUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicKitUtils.swift; sourceTree = "<group>"; };
-		0D4C0A7B2790B85A005BE760 /* MusicKitPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicKitPlayer.swift; sourceTree = "<group>"; };
-		0D4C0A7C2790B85A005BE760 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
-		0D4C0A7D2790B85A005BE760 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
-		0D4C0A7E2790B85A005BE760 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		0D4C0A7F2790B85A005BE760 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0D4C0A812790B85A005BE760 /* QueueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueManager.swift; sourceTree = "<group>"; };
-		0D4C0A822790B85A005BE760 /* NowPlayingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayingManager.swift; sourceTree = "<group>"; };
-		0D4C0A832790B85A005BE760 /* MKWebController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MKWebController.swift; sourceTree = "<group>"; };
-		0D4C0A842790B85A005BE760 /* MKWebpage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MKWebpage.swift; sourceTree = "<group>"; };
-		0D4C0A852790B85A005BE760 /* MKDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MKDecoder.swift; sourceTree = "<group>"; };
-		0D4C0A862790B85A005BE760 /* URLRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLRequestManager.swift; sourceTree = "<group>"; };
-		0D4C0A872790B85A005BE760 /* AuthorizationWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationWindow.swift; sourceTree = "<group>"; };
-		0D4C0A882790B85A005BE760 /* ArrayUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayUtil.swift; sourceTree = "<group>"; };
-		0D4C0A892790B85A005BE760 /* StringFormatUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringFormatUtil.swift; sourceTree = "<group>"; };
-		0D4C0A8A2790B85A005BE760 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
-		0D4C0A8B2790B85A005BE760 /* MusicKitUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicKitUtils.swift; sourceTree = "<group>"; };
-		0D4C0A8C2790B85A005BE760 /* Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Library.swift; sourceTree = "<group>"; };
-		0D4C0A8D2790B85A005BE760 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
-		0D4C0A8E2790B85A005BE760 /* MusicKitPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicKitPlayer.swift; sourceTree = "<group>"; };
-		0D4C0A8F2790B85A005BE760 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
-		0D4C0A902790B85A005BE760 /* NowPlayingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayingManager.swift; sourceTree = "<group>"; };
-		0D4C0A912790B85A005BE760 /* QueueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueManager.swift; sourceTree = "<group>"; };
 		0D4C0AC12790F9B3005BE760 /* SecretStuff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretStuff.swift; sourceTree = "<group>"; };
 		0D4C0AC3279210B6005BE760 /* AppleMusicTrackIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicTrackIdentifier.swift; sourceTree = "<group>"; };
 		0D4C0AC52792163D005BE760 /* JMPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JMPlayer.swift; sourceTree = "<group>"; };
@@ -713,17 +650,11 @@
 			isa = PBXGroup;
 			children = (
 				0D4C0A592790B85A005BE760 /* Managers */,
-				0D4C0A802790B85A005BE760 /* Managers */,
 				0D4C0A5C2790B85A005BE760 /* Internal */,
-				0D4C0A6F2790B85A005BE760 /* Internal */,
 				0D4C0A622790B85A005BE760 /* Utils */,
-				0D4C0A752790B85A005BE760 /* Utils */,
 				0D4C0A652790B85A005BE760 /* API */,
-				0D4C0A782790B85A005BE760 /* API */,
 				0D4C0A6C2790B85A005BE760 /* MusicKitPlayer.h */,
 				0D4C0A7F2790B85A005BE760 /* Info.plist */,
-				0D4C0A6E2790B85A005BE760 /* MusicKitPlayer.h */,
-				0D4C0A6D2790B85A005BE760 /* Info.plist */,
 			);
 			name = MusicKitPlayer;
 			path = ../MusicKitPlayer;
@@ -770,64 +701,6 @@
 				0D4C0A6B2790B85A005BE760 /* Player.swift */,
 			);
 			path = API;
-			sourceTree = "<group>";
-		};
-		0D4C0A6F2790B85A005BE760 /* Internal */ = {
-			isa = PBXGroup;
-			children = (
-				0D4C0A702790B85A005BE760 /* MKWebController.swift */,
-				0D4C0A832790B85A005BE760 /* MKWebController.swift */,
-				0D4C0A712790B85A005BE760 /* URLRequestManager.swift */,
-				0D4C0A862790B85A005BE760 /* URLRequestManager.swift */,
-				0D4C0A722790B85A005BE760 /* MKWebpage.swift */,
-				0D4C0A842790B85A005BE760 /* MKWebpage.swift */,
-				0D4C0A732790B85A005BE760 /* AuthorizationWindow.swift */,
-				0D4C0A872790B85A005BE760 /* AuthorizationWindow.swift */,
-				0D4C0A852790B85A005BE760 /* MKDecoder.swift */,
-				0D4C0A742790B85A005BE760 /* MKDecoder.swift */,
-			);
-			path = Internal;
-			sourceTree = "<group>";
-		};
-		0D4C0A752790B85A005BE760 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				0D4C0A762790B85A005BE760 /* StringFormatUtil.swift */,
-				0D4C0A892790B85A005BE760 /* StringFormatUtil.swift */,
-				0D4C0A882790B85A005BE760 /* ArrayUtil.swift */,
-				0D4C0A772790B85A005BE760 /* ArrayUtil.swift */,
-			);
-			path = Utils;
-			sourceTree = "<group>";
-		};
-		0D4C0A782790B85A005BE760 /* API */ = {
-			isa = PBXGroup;
-			children = (
-				0D4C0A792790B85A005BE760 /* Library.swift */,
-				0D4C0A8C2790B85A005BE760 /* Library.swift */,
-				0D4C0A7A2790B85A005BE760 /* MusicKitUtils.swift */,
-				0D4C0A8B2790B85A005BE760 /* MusicKitUtils.swift */,
-				0D4C0A7B2790B85A005BE760 /* MusicKitPlayer.swift */,
-				0D4C0A8E2790B85A005BE760 /* MusicKitPlayer.swift */,
-				0D4C0A7C2790B85A005BE760 /* Queue.swift */,
-				0D4C0A8D2790B85A005BE760 /* Queue.swift */,
-				0D4C0A7D2790B85A005BE760 /* API.swift */,
-				0D4C0A8F2790B85A005BE760 /* API.swift */,
-				0D4C0A8A2790B85A005BE760 /* Player.swift */,
-				0D4C0A7E2790B85A005BE760 /* Player.swift */,
-			);
-			path = API;
-			sourceTree = "<group>";
-		};
-		0D4C0A802790B85A005BE760 /* Managers */ = {
-			isa = PBXGroup;
-			children = (
-				0D4C0A812790B85A005BE760 /* QueueManager.swift */,
-				0D4C0A912790B85A005BE760 /* QueueManager.swift */,
-				0D4C0A902790B85A005BE760 /* NowPlayingManager.swift */,
-				0D4C0A822790B85A005BE760 /* NowPlayingManager.swift */,
-			);
-			path = Managers;
 			sourceTree = "<group>";
 		};
 		0D5514941E8879090034D742 /* Main Table View */ = {
@@ -1248,7 +1121,6 @@
 				0DC397AC1E5282920009792B /* LibraryManagerViewController.xib in Resources */,
 				0D8AFE551E6CB3E7004AC584 /* LocationVerifierSheetController.xib in Resources */,
 				0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */,
-				0D4C0AC02790B85A005BE760 /* Info.plist in Resources */,
 				0DA4E18D1F27F8BE00EC80B2 /* test_libFLAC++ in Resources */,
 				0D299B181DF111490009CF7A /* AlbumArtViewController.xib in Resources */,
 				0DF188851EDD072B00241785 /* OrganizationRuleViewController.xib in Resources */,
@@ -1299,8 +1171,6 @@
 				0D4B4A0A2779778700161441 /* LibraryViewController.swift in Sources */,
 				0DE74A531D7D9457005211E6 /* SharedLibraryRequestHandler.swift in Sources */,
 				0D592A221EDF6BCE0054D553 /* TrackExtension.swift in Sources */,
-				0D4C0ABA2790B85A005BE760 /* Queue.swift in Sources */,
-				0D4C0A942790B85A005BE760 /* QueueManager.swift in Sources */,
 				0DA02D381EFB098900DDE5A9 /* StupidSearchField.swift in Sources */,
 				0D800C0C1ED3B54100EA2889 /* ArtistViewAlbumViewController.swift in Sources */,
 				0D4C0A9B2790B85A005BE760 /* AuthorizationWindow.swift in Sources */,
@@ -1309,11 +1179,9 @@
 				0DE486861EA58C67009B226B /* JMPathControl.swift in Sources */,
 				0DE957C91EE9D5D0008CBECF /* Volume+CoreDataClass.swift in Sources */,
 				0D592A411EDF6C8B0054D553 /* Composer+CoreDataClass.swift in Sources */,
-				0D4C0AAB2790B85A005BE760 /* ArrayUtil.swift in Sources */,
 				0D0C2AA71E88D8DA00CA82C3 /* MTImageCell.swift in Sources */,
 				0D2D06D01EE32FB600A8EC66 /* Album+CoreDataProperties.swift in Sources */,
 				0DA02D321EF9D41A00DDE5A9 /* MediaMetadataHandler.swift in Sources */,
-				0D4C0A9E2790B85A005BE760 /* MKWebController.swift in Sources */,
 				0D447BB91EB2B73F00372A80 /* JMTextField.swift in Sources */,
 				0D592A421EDF6C8B0054D553 /* Composer+CoreDataProperties.swift in Sources */,
 				0D4C0AA82790B85A005BE760 /* ArrayUtil.swift in Sources */,
@@ -1325,20 +1193,15 @@
 				0DAA858A1EDFE90E004BF089 /* OrganizationFieldToken.swift in Sources */,
 				0D4C0A922790B85A005BE760 /* QueueManager.swift in Sources */,
 				0D2D06CD1EE32FB600A8EC66 /* AlbumFile+CoreDataClass.swift in Sources */,
-				0D4C0AB62790B85A005BE760 /* MusicKitUtils.swift in Sources */,
-				0D4C0AB92790B85A005BE760 /* Queue.swift in Sources */,
 				0DE486941EA92B78009B226B /* AddFilesQueueLoop.swift in Sources */,
-				0D4C0AA62790B85A005BE760 /* MKDecoder.swift in Sources */,
 				0D51C8A11EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift in Sources */,
 				0D60F5291E8720A300CA5420 /* PlaylistOrderObject.swift in Sources */,
 				0D51C8B21EB01731002F6182 /* JMTabView.swift in Sources */,
 				0D01AD911D7079D900F9211F /* EqualizerWindowController.swift in Sources */,
 				0D76F6A81D24B9AC00C6E70F /* DatabaseManager.swift in Sources */,
-				0D4C0AA12790B85A005BE760 /* MKWebpage.swift in Sources */,
 				0D4C0AAF2790B85A005BE760 /* MusicKitPlayer.swift in Sources */,
 				0D48D0DF1F3D444B00ABAAC6 /* MediaKeyListener.swift in Sources */,
 				0D58F74B1D18F778001A99F5 /* SourceListThatYouCanPressSpacebarOn.swift in Sources */,
-				0D4C0AB32790B85A005BE760 /* Library.swift in Sources */,
 				0D2300D81F29108B007D392A /* LastFMDelegate.swift in Sources */,
 				0D606EF91E7B4DB0007AE152 /* AVAudioFileBufferer.swift in Sources */,
 				0D4C0AAD2790B85A005BE760 /* Library.swift in Sources */,
@@ -1363,43 +1226,31 @@
 				0DAB30911CFBA3340028928F /* AppDelegate.swift in Sources */,
 				0D299B1B1DF11F140009CF7A /* TrackQueueViewController.swift in Sources */,
 				0D4C0AAE2790B85A005BE760 /* MusicKitUtils.swift in Sources */,
-				0D4C0AAA2790B85A005BE760 /* StringFormatUtil.swift in Sources */,
 				0DE957D51EEC5465008CBECF /* OrganizationTemplate+CoreDataClass.swift in Sources */,
 				0D76F6AA1D270EB900C6E70F /* DragAndDropArrayController.swift in Sources */,
-				0D4C0ABD2790B85A005BE760 /* Player.swift in Sources */,
 				0D4C0AC4279210B6005BE760 /* AppleMusicTrackIdentifier.swift in Sources */,
 				0D2D06CE1EE32FB600A8EC66 /* AlbumFile+CoreDataProperties.swift in Sources */,
 				0DC2E8F51E0110D200671D83 /* MTTextFieldCell.swift in Sources */,
-				0D4C0A972790B85A005BE760 /* NowPlayingManager.swift in Sources */,
 				0DFE725C1F0190DC00EACE66 /* AlbumFilesViewController.swift in Sources */,
 				0D592A491EDF6C8B0054D553 /* Artist+CoreDataClass.swift in Sources */,
 				0DE957D71EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataClass.swift in Sources */,
 				0D299B171DF111490009CF7A /* AlbumArtViewController.swift in Sources */,
-				0D4C0AB52790B85A005BE760 /* MusicKitUtils.swift in Sources */,
 				0D60F5261E86F77900CA5420 /* TimeFormatter.swift in Sources */,
 				0D592A4A1EDF6C8B0054D553 /* Artist+CoreDataProperties.swift in Sources */,
 				0DE957CF1EEB5654008CBECF /* Library+CoreDataClass.swift in Sources */,
-				0D4C0AA02790B85A005BE760 /* URLRequestManager.swift in Sources */,
-				0D4C0AAC2790B85A005BE760 /* ArrayUtil.swift in Sources */,
 				0D8A8B451F61E5B4007529A0 /* EditingFunctions.swift in Sources */,
 				0D2D06CF1EE32FB600A8EC66 /* Album+CoreDataClass.swift in Sources */,
 				0D3878B81DD11926004CC3C1 /* BitRateFormatter.swift in Sources */,
-				0D4C0AB82790B85A005BE760 /* MusicKitPlayer.swift in Sources */,
 				0D4C0AB12790B85A005BE760 /* API.swift in Sources */,
 				0D592A401EDF6C8B0054D553 /* SongCollection+CoreDataProperties.swift in Sources */,
 				0D34A4781F7306D400CAA6C4 /* AlbumArtwork+CoreDataProperties.swift in Sources */,
 				0D299B231DF158A60009CF7A /* AdvancedFilterViewController.swift in Sources */,
-				0D4C0AB42790B85A005BE760 /* Library.swift in Sources */,
-				0D4C0AB72790B85A005BE760 /* MusicKitPlayer.swift in Sources */,
 				0DF4BEEE1CFBE4CB00AC5824 /* iTunesLibraryParser.swift in Sources */,
 				0DA02D341EFA046A00DDE5A9 /* JMDate.swift in Sources */,
 				0D8B98681ED2ACF000283DD1 /* ArtistViewController.swift in Sources */,
 				0D8AFE541E6CB3E7004AC584 /* LocationVerifierSheetController.swift in Sources */,
 				0D4C0A9A2790B85A005BE760 /* MKWebpage.swift in Sources */,
-				0D4C0A9D2790B85A005BE760 /* MKWebController.swift in Sources */,
 				0D3878BA1DD12530004CC3C1 /* SampleRateFormatter.swift in Sources */,
-				0D4C0AA32790B85A005BE760 /* AuthorizationWindow.swift in Sources */,
-				0D4C0ABC2790B85A005BE760 /* API.swift in Sources */,
 				0DF4BEF31CFD0D4E00AC5824 /* MainWindowController.swift in Sources */,
 				0DE957CA1EE9D5D0008CBECF /* Volume+CoreDataProperties.swift in Sources */,
 				0D606EF61E7B4C21007AE152 /* FileBufferer.swift in Sources */,
@@ -1411,27 +1262,21 @@
 				0D8A8B431F61E524007529A0 /* DefaultsAndConstants.swift in Sources */,
 				0DD7A3BC1EF4738F00FEDD71 /* StupidTableView.swift in Sources */,
 				0D4C0AA72790B85A005BE760 /* StringFormatUtil.swift in Sources */,
-				0D4C0AA42790B85A005BE760 /* AuthorizationWindow.swift in Sources */,
 				0D0C2AA91E88D8FF00CA82C3 /* MTButtonCell.swift in Sources */,
 				0DA02D361EFA099E00DDE5A9 /* JMDateFormatter.swift in Sources */,
 				0D4C0A982790B85A005BE760 /* MKWebController.swift in Sources */,
-				0D4C0A962790B85A005BE760 /* NowPlayingManager.swift in Sources */,
 				0D0E5FAF1D3E909D009E0FA3 /* DragAndDropImageView.swift in Sources */,
 				0D592A441EDF6C8B0054D553 /* SmartCriteria+CoreDataProperties.swift in Sources */,
 				0D50CF3C22A5CBB30010629A /* AirPlayPopover.swift in Sources */,
-				0D4C0ABE2790B85A005BE760 /* Player.swift in Sources */,
-				0D4C0ABB2790B85A005BE760 /* API.swift in Sources */,
 				0D592A471EDF6C8B0054D553 /* Track+CoreDataClass.swift in Sources */,
 				0D800C081ED3B3C800EA2889 /* ArtistListViewController.swift in Sources */,
 				0D800C0F1ED3B6BF00EA2889 /* ArtistViewTableCellView.swift in Sources */,
-				0D4C0A952790B85A005BE760 /* QueueManager.swift in Sources */,
 				0DE486831EA579FD009B226B /* AddWatchFolderSheetController.swift in Sources */,
 				0D76F69B1D24622F00C6E70F /* TagEditorWindow.swift in Sources */,
 				0D1BDFA51D0F44A70092FBA0 /* AudioModule.swift in Sources */,
 				0DCF1D251F1D3C6300240202 /* AirPlayDeviceHandler.swift in Sources */,
 				0DE957D81EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataProperties.swift in Sources */,
 				0D8AFE581E6D136D004AC584 /* MediaScannerSheet.swift in Sources */,
-				0D4C0AA92790B85A005BE760 /* StringFormatUtil.swift in Sources */,
 				0D592A4D1EDF6C8B0054D553 /* TrackView+CoreDataClass.swift in Sources */,
 				0D4C0A9C2790B85A005BE760 /* MKDecoder.swift in Sources */,
 				0DE957CC1EE9DCE5008CBECF /* VolumeExtension.swift in Sources */,
@@ -1439,9 +1284,7 @@
 				0DD274EF1D3190360055C43B /* GlobalFunctions.swift in Sources */,
 				0DD7A3C21EF4B60D00FEDD71 /* MissingFileTableCellView.swift in Sources */,
 				0D299B1F1DF151220009CF7A /* LibraryTableViewController.swift in Sources */,
-				0D4C0A9F2790B85A005BE760 /* URLRequestManager.swift in Sources */,
 				0D592A4E1EDF6C8B0054D553 /* TrackView+CoreDataProperties.swift in Sources */,
-				0D4C0AA22790B85A005BE760 /* MKWebpage.swift in Sources */,
 				0D3878BC1DD125E9004CC3C1 /* StupidNumberFormatter.swift in Sources */,
 				0D5A55E91DDBE16600E46F08 /* SourceListCellView.swift in Sources */,
 				0D9CE6751D34128B004FA8CB /* InitialSetupWindowController.swift in Sources */,
@@ -1452,7 +1295,6 @@
 				0D34A4771F7306D400CAA6C4 /* AlbumArtwork+CoreDataClass.swift in Sources */,
 				0D4B4A0827796D9D00161441 /* ArtistViewTracksTableView.swift in Sources */,
 				0DE957DB1EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift in Sources */,
-				0D4C0AA52790B85A005BE760 /* MKDecoder.swift in Sources */,
 				0DFE2E5A1EC0DAB6007EEF04 /* TrackQueueTableView.swift in Sources */,
 				0DB996D41ED287D400594939 /* AlbumArtCollectionView.swift in Sources */,
 				0DB996C51ECE233000594939 /* AlbumArtWindowController.swift in Sources */,

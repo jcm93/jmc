@@ -1,63 +1,68 @@
 {
   "images" : [
     {
-      "size" : "16x16",
+      "filename" : "newicon32.png",
       "idiom" : "mac",
-      "filename" : "jmc_icon_32-2.png",
-      "scale" : "1x"
+      "scale" : "1x",
+      "size" : "16x16"
     },
     {
+      "filename" : "newicon64-1.png",
       "idiom" : "mac",
-      "size" : "16x16",
-      "scale" : "2x"
+      "scale" : "2x",
+      "size" : "16x16"
     },
     {
-      "size" : "32x32",
+      "filename" : "newicon64.png",
       "idiom" : "mac",
-      "filename" : "jmc_icon_32-1.png",
-      "scale" : "1x"
+      "scale" : "1x",
+      "size" : "32x32"
     },
     {
+      "filename" : "newicon128.png",
       "idiom" : "mac",
-      "size" : "32x32",
-      "scale" : "2x"
+      "scale" : "2x",
+      "size" : "32x32"
     },
     {
-      "size" : "128x128",
+      "filename" : "newicon256-1.png",
       "idiom" : "mac",
-      "filename" : "jmc_icon_128.png",
-      "scale" : "1x"
+      "scale" : "1x",
+      "size" : "128x128"
     },
     {
+      "filename" : "newicon2562.png",
       "idiom" : "mac",
-      "size" : "128x128",
-      "scale" : "2x"
+      "scale" : "2x",
+      "size" : "128x128"
     },
     {
-      "size" : "256x256",
+      "filename" : "newicon2562-1.png",
       "idiom" : "mac",
-      "filename" : "jmc_icon_256.png",
-      "scale" : "1x"
+      "scale" : "1x",
+      "size" : "256x256"
     },
     {
+      "filename" : "newicon512-2.png",
       "idiom" : "mac",
-      "size" : "256x256",
-      "scale" : "2x"
+      "scale" : "2x",
+      "size" : "256x256"
     },
     {
-      "size" : "512x512",
+      "filename" : "newicon512.png",
       "idiom" : "mac",
-      "filename" : "jmc_icon_512.png",
-      "scale" : "1x"
+      "scale" : "1x",
+      "size" : "512x512"
     },
     {
+      "filename" : "newicon3.png",
       "idiom" : "mac",
-      "size" : "512x512",
-      "scale" : "2x"
+      "scale" : "2x",
+      "size" : "512x512"
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   }
 }
