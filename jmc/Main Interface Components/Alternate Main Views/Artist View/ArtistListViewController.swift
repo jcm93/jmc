@@ -85,8 +85,8 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate, NSTableVi
         let artists = (self.artistViewController.trackViewArrayController.arrangedObjects as! [TrackView]).map({return $0.track!.artist})
         let uniqueArtists = Set(Array(artists))
         self.artistArrayController = NSArrayController(content: uniqueArtists)
-        let newSortDescriptor = NSSortDescriptor(key: "name", ascending: true)
-        self.artistArrayController.sortDescriptors = [newSortDescriptor]
+        let artistSortDescriptor = NSSortDescriptor(key: "nameForSorting", ascending: true, selector: "localizedStandardCompare:")
+        self.artistArrayController.sortDescriptors = [artistSortDescriptor]
     }
     
     required init?(coder: NSCoder) {

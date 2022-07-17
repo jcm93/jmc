@@ -93,6 +93,7 @@ class iTunesLibraryParser: NSObject {
                 } else {
                     let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: subContext) as! Artist
                     newArtist.name = artistName
+                    newArtist.sort_name = getSortName(artistName)
                     newArtist.id = rootLibrary!.next_artist_id
                     rootLibrary!.next_artist_id = rootLibrary!.next_artist_id!.intValue + 1 as NSNumber
                     cd_track.artist = newArtist
@@ -123,6 +124,7 @@ class iTunesLibraryParser: NSObject {
                     } else {
                         let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: subContext) as! Artist
                         newArtist.name = albumArtistName
+                        newArtist.sort_name = getSortName(albumArtistName)
                         newArtist.id = rootLibrary!.next_artist_id
                         rootLibrary!.next_artist_id = rootLibrary!.next_artist_id!.intValue + 1 as NSNumber
                         cd_track.album?.album_artist = newArtist

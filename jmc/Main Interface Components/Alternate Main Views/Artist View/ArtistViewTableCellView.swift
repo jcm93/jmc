@@ -82,6 +82,7 @@ class ArtistViewTableCellView: NSTableRowView {
     }
     
     func populateTracksTable(album: Album, tracks: [TrackView], artistViewController: ArtistViewController) {
+        self.dateFormatter.unitsStyle = .full
         self.album = album
         self.artistViewController = artistViewController
         self.trackListTableViewDelegate = ArtistViewAlbumTrackListTableViewDelegate(album: album, tracks: tracks, parent: self)

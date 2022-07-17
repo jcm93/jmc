@@ -19,9 +19,18 @@ extension Artist {
     @NSManaged public var id: NSNumber?
     @NSManaged public var is_network: NSNumber?
     @NSManaged public var name: String?
+    @NSManaged public var sort_name: String?
     @NSManaged public var albums: NSSet?
     @NSManaged public var composers: NSSet?
     @NSManaged public var tracks: NSSet?
+    
+    public override func value(forKey key: String) -> Any? {
+        if key == "nameForSorting" {
+            return sort_name ?? name ?? ""
+        } else {
+            return super.value(forKey: key)
+        }
+    }
 
 }
 

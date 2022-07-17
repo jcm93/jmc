@@ -222,7 +222,7 @@ class ArtistViewController: NSViewController, LibraryViewController {
     }
     
     func getSelectedObjects() -> [TrackView] {
-        let selection = self.albumsView.getSelectedTrackViews()
+        let selection = self.albumsView?.getSelectedTrackViews() ?? [TrackView]()
         return selection
     }
     

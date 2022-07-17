@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21A559" minimumToolsVersion="Xcode 7.3" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21E258" minimumToolsVersion="Xcode 7.3" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Album" representedClassName=".Album" syncable="YES">
         <attribute name="disc_count" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -32,6 +32,7 @@
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
         <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="sort_name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="albums" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Album" inverseName="album_artist" inverseEntity="Album" syncable="YES"/>
         <relationship name="composers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Composer" inverseName="artists" inverseEntity="Composer" syncable="YES"/>
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="artist" inverseEntity="Track" syncable="YES"/>
@@ -209,7 +210,7 @@
         <element name="Album" positionX="-1721" positionY="315" width="128" height="209"/>
         <element name="AlbumArtwork" positionX="-1757" positionY="81" width="128" height="150"/>
         <element name="AlbumFile" positionX="-1269" positionY="81" width="128" height="90"/>
-        <element name="Artist" positionX="-1386" positionY="144" width="128" height="133"/>
+        <element name="Artist" positionX="-1386" positionY="144" width="128" height="134"/>
         <element name="CachedOrder" positionX="-1314" positionY="-171" width="128" height="135"/>
         <element name="Composer" positionX="-1557" positionY="323" width="128" height="120"/>
         <element name="Library" positionX="-801" positionY="-45" width="128" height="510"/>

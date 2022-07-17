@@ -840,6 +840,7 @@ class DatabaseManager: NSObject {
             } else {
                 let newArtist = NSEntityDescription.insertNewObject(forEntityName: "Artist", into: context) as! Artist
                 newArtist.name = artistCheck
+                newArtist.sort_name = getSortName(artistCheck)
                 newArtist.id = globalRootLibrary?.next_artist_id
                 globalRootLibrary?.next_artist_id = Int(globalRootLibrary!.next_artist_id!) + 1 as NSNumber
                 track.artist = newArtist
