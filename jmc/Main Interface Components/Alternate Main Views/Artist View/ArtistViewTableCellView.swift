@@ -174,6 +174,23 @@ class ArtistViewTableCellView: NSTableRowView {
         
     }
     
+    func reloadNowPlayingForTrack(_ track: Track) {
+        guard let row = (self.trackListTableViewDelegate.tracksArrayController.arrangedObjects as! [TrackView]).firstIndex(of: track.view!) else { return }
+        //let currentTrackRow = row
+        let tableRowIndexSet = IndexSet(integer: row)
+        let tableColumnIndexSet = IndexSet([1])
+        self.tracksTableView.reloadData(forRowIndexes: tableRowIndexSet, columnIndexes: tableColumnIndexSet)
+        
+        
+        /*if let row = (trackViewArrayController.arrangedObjects as! [TrackView]).firstIndex(of: track.view!) {
+            self.currentTrackRow = row
+            let tableRowIndexSet = IndexSet(integer: row)
+            let indexOfPlaysColumn = self.tableView.column(withIdentifier: NSUserInterfaceItemIdentifier.init("play_count"))
+            let indexOfSkipsColumn = self.tableView.column(withIdentifier: NSUserInterfaceItemIdentifier.init("skip_count"))
+            let tableColumnIndexSet = IndexSet([0, indexOfPlaysColumn, indexOfSkipsColumn])
+            tableView.reloadData(forRowIndexes: tableRowIndexSet, columnIndexes: tableColumnIndexSet)
+        }*/
+    }
     
 
     override func draw(_ dirtyRect: NSRect) {

@@ -25,7 +25,7 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         self.artists = artists
         self.tracks = (self.artistViewController.trackViewArrayController.arrangedObjects as! [TrackView]).filter({return artists.contains($0.track!.artist!)})
         var albumSet = Set<Album>()
-        tracks.map({
+        tracks.forEach({
             let album = $0.track!.album!
             if let existingAlbum = albumSet.first(where: {$0.name == album.name}) {
                 $0.track?.album = existingAlbum
@@ -155,6 +155,11 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     
     func selectTrackViews(_ trackViews: [TrackView]) {
         self.toBeSelected = trackViews
+    }
+    
+    func reloadNowPlayingForTrack(_ track: Track) {
+        let albumCell = self.views.values.first(where: {$0.album!.tracks!.contains(track)})
+        albumCell?.reloadNowPlayingForTrack(track)
     }
     
 

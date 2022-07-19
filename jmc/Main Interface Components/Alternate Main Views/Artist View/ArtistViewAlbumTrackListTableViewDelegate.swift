@@ -62,6 +62,8 @@ class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, 
             return (self.tracksArrayController.arrangedObjects as! [TrackView])[row].track!.name
         case "Time":
             return timeFormatter.string(for: (self.tracksArrayController.arrangedObjects as! [TrackView])[row].track!.time)
+        case "Is Playing":
+            return (self.tracksArrayController.arrangedObjects as! [TrackView])[row].track!.is_playing
         default:
             return "poop"
         }

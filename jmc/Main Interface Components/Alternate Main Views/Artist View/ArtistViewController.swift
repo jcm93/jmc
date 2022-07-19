@@ -138,7 +138,7 @@ class ArtistViewController: NSViewController, LibraryViewController {
     }
     
     func reloadNowPlayingForTrack(_ track: Track) {
-        
+        self.albumsView.reloadNowPlayingForTrack(track)
     }
     
     func reloadDataForTrack(_ track: Track, orRow: Int) {
