@@ -47,7 +47,11 @@ class ArtistViewController: NSViewController, LibraryViewController {
     
     func initializeForPlaylist() {
         print("initializing for playlist")
-        
+        self.trackViewArrayController.content = self.item!.playlist!.tracks!.array as! [TrackView]
+        for (index, trackView) in self.item!.playlist!.tracks!.array.enumerated() {
+            (trackView as! TrackView).playlist_order = index + 1 as NSNumber
+        }
+        self.trackViewArrayController.rearrangeObjects()
     }
     
     func jumpToCurrentSong(_ track: Track?) {
@@ -67,9 +71,11 @@ class ArtistViewController: NSViewController, LibraryViewController {
     }
     
     func initializeForLibrary() {
+        self.trackViewArrayController.content = self.item!.library!.tracks!.map({return ($0 as! Track).view}) as! [TrackView]
+        self.trackViewArrayController.rearrangeObjects()
         //sets predicates to nil
-        self.artistListView.initializeForLibrary()
-        self.albumsView.initializeForLibrary()
+        //self.artistListView.initializeForLibrary()
+        //self.albumsView.initializeForLibrary()
     }
     
     func initializePlayOrderObject() {
@@ -252,14 +258,25 @@ class ArtistViewController: NSViewController, LibraryViewController {
         }
         // Do view setup here.
         self.trackViewArrayController = NSArrayController()
-        self.trackViewArrayController.managedObjectContext = managedContext
+        if playlist != nil {
+            print("initializing for playlist")
+            if playlist?.smart_criteria != nil {
+                initializeSmartPlaylist()
+            }
+            initializeForPlaylist()
+        } else if item?.library != nil {
+            print("initializing for library")
+            initializeForLibrary()
+        }
+        /*self.trackViewArrayController.managedObjectContext = managedContext
         self.trackViewArrayController.entityName = "TrackView"
-        self.trackViewArrayController.automaticallyPreparesContent = true
-        do {
+        self.trackViewArrayController.automaticallyPreparesContent = true*/
+        //self.trackViewArrayController.fetchPredicate = NSPredicate(format: "track.playlist.id == %@", arguments: self.playlist?.id)
+        /*do {
            try self.trackViewArrayController.fetch(with: nil, merge: false)
         } catch {
             print (error)
-        }
+        }*/
         self.artistListView = ArtistListViewController(nibName: "ArtistListViewController", bundle: nil, artistViewController: self)
         let artists = Array(Set(self.itemsToSelect.compactMap({return $0.track?.artist})))
         self.artistListView.selectArtists(artists: artists)

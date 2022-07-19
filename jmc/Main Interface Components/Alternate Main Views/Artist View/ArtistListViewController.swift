@@ -12,7 +12,7 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate, NSTableVi
 
     var artistArrayController: NSArrayController!
     var artistsToSelect: [Artist]?
-    @IBOutlet weak var tableView: NSTableView!
+    @IBOutlet weak var tableView: ArtistListTableView!
     
     var artistViewController: ArtistViewController!
     @objc var managedContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext
@@ -110,13 +110,14 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate, NSTableVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let currentArtistArray = self.artistArrayController.arrangedObjects as! [Artist]
-        if self.artistsToSelect != nil && self.artistsToSelect!.count > 0 {
-            let selectionIndexes = self.artistsToSelect!.map({return currentArtistArray.startIndex.distance(to: currentArtistArray.firstIndex(of: $0)!)})
-            let newIndexSet = IndexSet(selectionIndexes)
-            self.tableView.selectRowIndexes(newIndexSet, byExtendingSelection: false)
-            self.tableView.scrollRowToVisible(newIndexSet.first!)
-            self.artistsToSelect = [Artist]()
+        if let currentArtistArray = self.artistArrayController.arrangedObjects as? [Artist] {
+            if self.artistsToSelect != nil && self.artistsToSelect!.count > 0 {
+                let selectionIndexes = self.artistsToSelect!.map({return currentArtistArray.startIndex.distance(to: currentArtistArray.firstIndex(of: $0)!)})
+                let newIndexSet = IndexSet(selectionIndexes)
+                self.tableView.selectRowIndexes(newIndexSet, byExtendingSelection: false)
+                self.tableView.scrollRowToVisible(newIndexSet.first!)
+                self.artistsToSelect = [Artist]()
+            }
         }
     }
     

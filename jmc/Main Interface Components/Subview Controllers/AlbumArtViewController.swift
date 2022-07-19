@@ -42,6 +42,10 @@ class AlbumArtViewController: NSViewController {
         }
     }
     
+    func getAssociatedTrack() {
+        
+    }
+    
     func artCallback(track: Track, found: Bool, background: Bool) {
         if background {
             do {

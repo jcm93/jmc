@@ -112,6 +112,7 @@
 		0D76F69C1D24622F00C6E70F /* TagEditorWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */; };
 		0D76F6A81D24B9AC00C6E70F /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */; };
 		0D76F6AA1D270EB900C6E70F /* DragAndDropArrayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D76F6A91D270EB900C6E70F /* DragAndDropArrayController.swift */; };
+		0D7788BA28863A8D001D2191 /* ArtistListTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7788B928863A8D001D2191 /* ArtistListTableView.swift */; };
 		0D800C081ED3B3C800EA2889 /* ArtistListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D800C061ED3B3C800EA2889 /* ArtistListViewController.swift */; };
 		0D800C091ED3B3C800EA2889 /* ArtistListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D800C071ED3B3C800EA2889 /* ArtistListViewController.xib */; };
 		0D800C0C1ED3B54100EA2889 /* ArtistViewAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D800C0A1ED3B54100EA2889 /* ArtistViewAlbumViewController.swift */; };
@@ -351,6 +352,7 @@
 		0D76F69A1D24622F00C6E70F /* TagEditorWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagEditorWindow.xib; sourceTree = "<group>"; };
 		0D76F6A71D24B9AC00C6E70F /* DatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		0D76F6A91D270EB900C6E70F /* DragAndDropArrayController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragAndDropArrayController.swift; sourceTree = "<group>"; };
+		0D7788B928863A8D001D2191 /* ArtistListTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistListTableView.swift; sourceTree = "<group>"; };
 		0D800C061ED3B3C800EA2889 /* ArtistListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistListViewController.swift; path = "Artist View/ArtistListViewController.swift"; sourceTree = "<group>"; };
 		0D800C071ED3B3C800EA2889 /* ArtistListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ArtistListViewController.xib; path = "Artist View/ArtistListViewController.xib"; sourceTree = "<group>"; };
 		0D800C0A1ED3B54100EA2889 /* ArtistViewAlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistViewAlbumViewController.swift; path = "Artist View/ArtistViewAlbumViewController.swift"; sourceTree = "<group>"; };
@@ -765,6 +767,7 @@
 				0D800C0E1ED3B6BF00EA2889 /* ArtistViewTableCellView.swift */,
 				0D800C0A1ED3B54100EA2889 /* ArtistViewAlbumViewController.swift */,
 				0D800C0B1ED3B54100EA2889 /* ArtistViewAlbumViewController.xib */,
+				0D7788B928863A8D001D2191 /* ArtistListTableView.swift */,
 				0D2FAF082788F3F200CF1459 /* EmphasizedTableRowView.swift */,
 				0D52791727783DFC008271CE /* DumbScrollVew.swift */,
 				0D8B98661ED2ACF000283DD1 /* ArtistViewController.swift */,
@@ -1196,6 +1199,7 @@
 				0DE486941EA92B78009B226B /* AddFilesQueueLoop.swift in Sources */,
 				0D51C8A11EABD74B002F6182 /* ChangePrimaryFolderSheetController.swift in Sources */,
 				0D60F5291E8720A300CA5420 /* PlaylistOrderObject.swift in Sources */,
+				0D7788BA28863A8D001D2191 /* ArtistListTableView.swift in Sources */,
 				0D51C8B21EB01731002F6182 /* JMTabView.swift in Sources */,
 				0D01AD911D7079D900F9211F /* EqualizerWindowController.swift in Sources */,
 				0D76F6A81D24B9AC00C6E70F /* DatabaseManager.swift in Sources */,

@@ -19,7 +19,7 @@ class AlbumArtWindowController: NSWindowController {
         if self.timer != nil {
             self.timer?.invalidate()
         }
-        self.window!.standardWindowButton(.closeButton)!.superview!.animator().alphaValue = 1
+        self.window!.standardWindowButton(.closeButton)!.superview!.superview!.animator().alphaValue = 1
         self.timer = Timer.scheduledTimer(timeInterval: 0.9, target: self, selector: #selector(fadeOutTitleBar), userInfo: nil, repeats: false)
     }
     
@@ -29,7 +29,7 @@ class AlbumArtWindowController: NSWindowController {
     
     @objc func fadeOutTitleBar() {
         //self.window!.standardWindowButton(.closeButton)!.superview!.
-        self.window!.standardWindowButton(.closeButton)!.superview!.animator().alphaValue = 0
+        self.window!.standardWindowButton(.closeButton)!.superview!.superview!.animator().alphaValue = 0
     }
     
     func resize(newSize: NSSize) {
@@ -45,6 +45,7 @@ class AlbumArtWindowController: NSWindowController {
 
         //self.window?.contentView?.translatesAutoresizingMaskIntoConstraints = false
         self.window?.isMovableByWindowBackground = true
+        //self.window?.titlebarAppearsTransparent = true
         
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
         self.albumFilesViewController = AlbumFilesViewController(nibName: "AlbumFilesViewController", bundle: nil)
