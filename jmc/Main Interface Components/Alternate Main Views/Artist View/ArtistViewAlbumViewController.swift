@@ -24,7 +24,16 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         self.artistViewController = artistViewController
         self.artists = artists
         self.tracks = (self.artistViewController.trackViewArrayController.arrangedObjects as! [TrackView]).filter({return artists.contains($0.track!.artist!)})
-        self.albums = Array(Set(self.tracks.map({return $0.track!.album!}))).sorted(by: {return ($0.name ?? "") < ($1.name ?? "")})
+        var albumSet = Set<Album>()
+        tracks.map({
+            let album = $0.track!.album!
+            if let existingAlbum = albumSet.first(where: {$0.name == album.name}) {
+                $0.track?.album = existingAlbum
+            } else {
+                albumSet.insert(album)
+            }
+        })
+        self.albums = Array(albumSet).sorted(by: {return ($0.name ?? "") < ($1.name ?? "")})
         super.init(nibName: nibNameOrNil.map { $0 }, bundle: nibBundleOrNil)
     }
     

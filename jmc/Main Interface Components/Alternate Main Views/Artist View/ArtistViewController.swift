@@ -279,7 +279,7 @@ class ArtistViewController: NSViewController, LibraryViewController {
         }*/
         self.artistListView = ArtistListViewController(nibName: "ArtistListViewController", bundle: nil, artistViewController: self)
         let artists = Array(Set(self.itemsToSelect.compactMap({return $0.track?.artist})))
-        self.artistListView.selectArtists(artists: artists)
+        //self.artistListView.selectArtists(artists: artists)
         self.splitView.addArrangedSubview(self.artistListView!.view)
     }
 }

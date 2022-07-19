@@ -119,6 +119,6 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 self.artistsToSelect = [Artist]()
             }
         }
+        //(self.tableView.superview!.superview as! NSScrollView).scrollerStyle = .overlay
     }
-    
 }
