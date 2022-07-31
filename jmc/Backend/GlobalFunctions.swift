@@ -815,6 +815,97 @@ func testFixIndices(_ set: NSMutableOrderedSet, order: String) {
     }
 }
 
+func globalInitializeSmartPlaylist(playlist: SongCollection) {
+    let smart_criteria = playlist.smart_criteria
+    let smart_predicate = smart_criteria?.predicate as! NSPredicate
+    let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackView")
+    fetchRequest.predicate = smart_predicate
+    do {
+        var results = try managedContext.fetch(fetchRequest) as? NSArray
+        if results != nil {
+            results = (results as! [TrackView]).map({return $0.track!}) as NSArray
+            if smart_criteria?.ordering_criterion != nil {
+                switch smart_criteria!.ordering_criterion! {
+                case "random":
+                    results = shuffleArray(results as! [Track]) as NSArray
+                case "name":
+                    results = results!.sortedArray(using: #selector(Track.compareName)) as NSArray
+                case "artist":
+                    results = results!.sortedArray(using: #selector(Track.compareArtist)) as NSArray
+                case "album":
+                    results = results!.sortedArray(using: #selector(Track.compareAlbum)) as NSArray
+                case "composer":
+                    let sortDescriptor = NSSortDescriptor(key: "composer.name", ascending: true)
+                    results = results?.sortedArray(using: [sortDescriptor]) as NSArray?
+                case "genre":
+                    results = results!.sortedArray(using: #selector(Track.compareGenre)) as NSArray
+                case "most recently added":
+                    results = results!.sortedArray(using: #selector(Track.compareDateAdded)) as NSArray
+                case "least recently added":
+                    results = results!.sortedArray(using: #selector(Track.compareDateAdded)).reversed() as NSArray
+                case "most played":
+                    let sortDescriptor = NSSortDescriptor(key: "play_count", ascending: false)
+                    results = results?.sortedArray(using: [sortDescriptor]) as NSArray?
+                case "least played":
+                    let sortDescriptor = NSSortDescriptor(key: "play_count", ascending: true)
+                    results = results?.sortedArray(using: [sortDescriptor]) as NSArray?
+                case "most skipped":
+                    let sortDescriptor = NSSortDescriptor(key: "skip_count", ascending: false)
+                    results = results?.sortedArray(using: [sortDescriptor]) as NSArray?
+                case "least skipped":
+                    let sortDescriptor = NSSortDescriptor(key: "skip_count", ascending: true)
+                    results = results?.sortedArray(using: [sortDescriptor]) as NSArray?
+                case "most recently played":
+                    let sortDescriptor = NSSortDescriptor(key: "date_last_played", ascending: true)
+                    results = results?.sortedArray(using: [sortDescriptor]) as NSArray?
+                case "least recently played":
+                    let sortDescriptor = NSSortDescriptor(key: "date_last_played", ascending: false)
+                    results = results?.sortedArray(using: [sortDescriptor]) as NSArray?
+                default:
+                    print("fuck")
+                }
+            }
+            var limit: Float = 0.0
+            var prunedResults = [Track]()
+            if smart_criteria?.fetch_limit != nil {
+                let fetchType = smart_criteria!.fetch_limit_type!
+                let fetchLimit = Float(smart_criteria!.fetch_limit!)
+                for thing in results! {
+                    switch fetchType {
+                    case "hours":
+                        limit += (Float((thing as! Track).time!) / 1000)/60/60
+                    case "minutes":
+                        limit += (Float((thing as! Track).time!) / 1000)/60
+                    case "GB":
+                        limit += (Float((thing as! Track).size!)/1000000000)
+                    case "MB":
+                        limit += (Float((thing as! Track).size!)/1000000)
+                    case "items":
+                        limit += 1
+                    default:
+                        limit += 1
+                    }
+                    if limit > fetchLimit {
+                        break
+                    } else {
+                        prunedResults.append(thing as! Track)
+                    }
+                }
+            } else {
+                prunedResults = results as! [Track]
+            }
+            playlist.tracks = NSOrderedSet(array: prunedResults.map({return $0.view!}))
+        }
+    } catch {
+        print(error)
+    }
+    do {
+        try managedContext.save()
+    } catch {
+        print(error)
+    }
+}
+
 
 func reorderForTracks(_ tracks: [Track], cachedOrder: CachedOrder, subContext: NSManagedObjectContext?) {
     let actualTracks = subContext != nil ? tracks : tracks.map({return managedContext.object(with: $0.objectID) as! Track})

@@ -12,7 +12,7 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate, NSTableVi
 
     var artistArrayController: NSArrayController!
     var artistsToSelect: [Artist]?
-    @IBOutlet weak var tableView: ArtistListTableView!
+    @IBOutlet weak var tableView: TableViewYouCanPressSpacebarOn!
     
     var artistViewController: ArtistViewController!
     @objc var managedContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext

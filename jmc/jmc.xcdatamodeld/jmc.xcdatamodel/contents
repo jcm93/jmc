@@ -7,6 +7,7 @@
         <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="release_date" optional="YES" attributeType="Transformable" valueTransformerName="" syncable="YES"/>
+        <attribute name="sort_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="track_count" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="album_artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="albums" inverseEntity="Artist" syncable="YES"/>
         <relationship name="other_art" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="AlbumArtwork" inverseName="album_multiple" inverseEntity="AlbumArtwork" syncable="YES"/>
@@ -207,7 +208,7 @@
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="volume" inverseEntity="Track" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Album" positionX="-1721" positionY="315" width="128" height="209"/>
+        <element name="Album" positionX="-1721" positionY="315" width="128" height="224"/>
         <element name="AlbumArtwork" positionX="-1757" positionY="81" width="128" height="150"/>
         <element name="AlbumFile" positionX="-1269" positionY="81" width="128" height="90"/>
         <element name="Artist" positionX="-1386" positionY="144" width="128" height="134"/>

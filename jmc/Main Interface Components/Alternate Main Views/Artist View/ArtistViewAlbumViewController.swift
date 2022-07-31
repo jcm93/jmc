@@ -15,6 +15,7 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     var artists: [Artist]
     @objc var albums = [Album]()
     var views = [Int : ArtistViewTableCellView]()
+    var albumTracksDictionary: [Album : [TrackView]] = [Album : [TrackView]]()
     @IBOutlet var albumArrayController: NSArrayController!
     var artistViewController: ArtistViewController
     var tracks: [TrackView]
@@ -23,7 +24,7 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, artists: [Artist], artistViewController: ArtistViewController) {
         self.artistViewController = artistViewController
         self.artists = artists
-        self.tracks = (self.artistViewController.trackViewArrayController.arrangedObjects as! [TrackView]).filter({return artists.contains($0.track!.artist!)})
+        self.tracks = (self.artistViewController.trackViewArrayController.arrangedObjects as! [TrackView]).filter({return artists.contains($0.track!.artist!)}).sorted(by: {return $0.album_artist_order!.isLessThan($1.album_artist_order!)})
         var albumSet = Set<Album>()
         tracks.forEach({
             let album = $0.track!.album!
@@ -38,7 +39,7 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     }
     
     func refreshTable() {
-        self.tracks = (self.artistViewController.trackViewArrayController.arrangedObjects as! [TrackView]).filter({return artists.contains($0.track!.artist!)})
+        self.tracks = (self.artistViewController.trackViewArrayController.arrangedObjects as! [TrackView]).filter({return artists.contains($0.track!.artist!)}).sorted(by: {$0.album_artist_order!.isLessThan($1.album_artist_order!)})
         self.albums = Array(Set(self.tracks.map({return $0.track!.album!})))
         self.reloadData()
     }
@@ -50,7 +51,7 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ArtistViewTableCellView"), owner: self) as! ArtistViewTableCellView
         let album = (albumArrayController.arrangedObjects as! NSArray)[row] as! Album
-        view.populateTracksTable(album: album, tracks: self.tracks.filter({$0.track!.album! == album}), artistViewController: self.artistViewController)
+        view.populateTracksTable(album: album, tracks: self.tracks.filter({$0.track!.album! == album})/*(Array(album.tracks!) as! [Track]).map({return $0.view!})*/, artistViewController: self.artistViewController)
         self.views[row] = view
         //manage selection
         view.toBeSelected = self.toBeSelected
@@ -73,6 +74,17 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         return prospectiveHeight > 400 ? prospectiveHeight : 400
     }
     
+    func getTrackWithNoContext(_ shuffleState: Int) -> Track? {
+        return nil
+    }
+    
+    func scrollToNewTrack() {
+        let track = self.artistViewController.mainWindowController!.currentTrack!
+        let albumCell = self.views.values.first(where: {$0.album!.tracks!.contains(track)})
+        let rowIndex = self.views.first(where: {$0.value == albumCell})!.key
+        self.tableView.scrollRowToVisible(rowIndex)
+    }
+    
     func jumpToSelection() {
         self.tableView.scrollRowToVisible(self.tableView.selectedRow)
     }
@@ -91,7 +103,8 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     }
     
     func getUpcomingIDsForPlayEvent(_ shuffleState: Int, id: Int, row: Int) -> Int {
-        let trackArray = self.views.flatMap({return ($0.value.trackListTableViewDelegate.tracksArrayController.arrangedObjects as! [TrackView]).compactMap({return $0.track})})
+        let trackArray = self.tracks.map({return $0.track!})
+        //let trackArray = self.views.flatMap({return ($0.value.trackListTableViewDelegate.tracksArrayController.arrangedObjects as! [TrackView]).compactMap({return $0.track})})
         let idArray = trackArray.map({return Int($0.id!)})
         if shuffleState == NSControl.StateValue.on.rawValue {
             //if the array is already shuffled, but we're picking a new track
@@ -170,6 +183,7 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.albumArrayController.content = self.albums
+        //self.artistViewController.artistListView.tableView.mainWindowController = self.artistViewController.mainWindowController
     }
     
 }

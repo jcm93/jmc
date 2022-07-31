@@ -19,15 +19,11 @@ class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, 
     init(album: Album, tracks: [TrackView], parent: ArtistViewTableCellView) {
         self.parent = parent
         self.album = album
-        self.tracks = tracks.sorted(by: {(t1: TrackView, t2: TrackView) -> Bool in
-            let firstValue = t1.track!.track_num?.intValue ?? 0
-            let secondValue = t2.track!.track_num?.intValue ?? 0
-            return firstValue < secondValue
-            })
+        self.tracks = tracks
         self.tracksArrayController = NSArrayController(content: tracks)
         print("array controller stuff added")
         self.timeFormatter = TimeFormatter()
-        self.tracksArrayController.sortDescriptors = [NSSortDescriptor(key: "track.track_num", ascending: true)]
+        self.tracksArrayController.sortDescriptors = [NSSortDescriptor(key: "track.disc_number", ascending: true), NSSortDescriptor(key: "track.track_num", ascending: true)]
         self.tracksArrayController.rearrangeObjects()
         super.init()
         self.tracksArrayController.addObserver(self, forKeyPath: "arrangedObjects", options: .new, context: nil)

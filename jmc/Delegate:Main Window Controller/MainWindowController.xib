@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19455"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -50,23 +50,23 @@
                         <rect key="frame" x="0.0" y="36" width="1805" height="1030"/>
                         <subviews>
                             <splitView fixedFrame="YES" arrangesAllSubviews="NO" autosaveName="Source Area Split View" dividerStyle="thin" id="cpq-tS-fYo" userLabel="Source Area Split View">
-                                <rect key="frame" x="0.0" y="0.0" width="250" height="1030"/>
+                                <rect key="frame" x="0.0" y="0.0" width="268" height="1030"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <box verticalHuggingPriority="750" misplaced="YES" boxType="separator" id="NCt-3z-jDe">
-                                        <rect key="frame" x="0.0" y="-2" width="250" height="5"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <rect key="frame" x="0.0" y="-2" width="268" height="5"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" id="Cl8-AN-f4P"/>
                                         </constraints>
                                     </box>
                                     <customView fixedFrame="YES" id="NBm-y3-IWU" userLabel="Source List Target View">
-                                        <rect key="frame" x="0.0" y="2" width="250" height="704"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <rect key="frame" x="0.0" y="2" width="268" height="760"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </customView>
-                                    <customView misplaced="YES" id="M4o-nI-Oef" userLabel="Artwork Target View">
-                                        <rect key="frame" x="0.0" y="707" width="250" height="323"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <customView id="M4o-nI-Oef" userLabel="Artwork Target View">
+                                        <rect key="frame" x="0.0" y="763" width="268" height="267"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="M4o-nI-Oef" secondAttribute="height" multiplier="1:1" id="MEG-4N-o0r"/>
                                         </constraints>
@@ -86,11 +86,11 @@
                                 </holdingPriorities>
                             </splitView>
                             <splitView fixedFrame="YES" placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="568" autosaveName="Library Split View" dividerStyle="thin" id="wUo-rb-c1E" userLabel="Library Split View">
-                                <rect key="frame" x="251" y="0.0" width="1301" height="1030"/>
+                                <rect key="frame" x="269" y="0.0" width="1265" height="1030"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </splitView>
                             <customView fixedFrame="YES" id="267-Gg-sLE">
-                                <rect key="frame" x="1553" y="0.0" width="252" height="1030"/>
+                                <rect key="frame" x="1535" y="0.0" width="270" height="1030"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </customView>
                         </subviews>
@@ -167,6 +167,7 @@
                                 <rect key="frame" x="170" y="11" width="211" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="C6a-At-bc6"/>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="500" id="Sgd-eP-YWp"/>
                                     <constraint firstAttribute="width" priority="150" constant="200" id="afQ-27-aRs"/>
                                 </constraints>
                                 <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="ogb-69-MQS"/>

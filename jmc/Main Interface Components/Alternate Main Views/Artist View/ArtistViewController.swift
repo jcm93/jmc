@@ -100,7 +100,7 @@ class ArtistViewController: NSViewController, LibraryViewController {
     }
     
     func getUpcomingIDsForPlayEvent(_ shuffleState: Int, id: Int, row: Int) -> Int {
-        let volumes = Set(self.albumsView.tracks.compactMap({return $0.track?.volume}))
+        /*let volumes = Set(self.albumsView.tracks.compactMap({return $0.track?.volume}))
         var count = 0
         for volume in volumes {
             if !volumeIsAvailable(volume: volume) {
@@ -111,7 +111,9 @@ class ArtistViewController: NSViewController, LibraryViewController {
             print("library status has changed, reloading data")
             self.mainWindowController?.sourceListViewController?.reloadData()
         }
-        let idArray = self.albumsView.tracks.map({return Int($0.track!.id!)})
+        let aggregatedTracks = self.albumsView.views.values.map({return $0.album?.tracks})
+        let idArray = (self.trackViewArrayController.arrangedObjects as! [TrackView]).map({return Int($0.track!.id!)})
+        //let idArray = self.albumsView.tracks.map({return Int($0.track!.id!)})
         if shuffleState == NSControl.StateValue.on.rawValue {
             //secretly adjust the shuffled array such that it behaves mysteriously like a ring buffer. ssshhhh
             let currentShuffleArray = self.item!.artistPlayOrderObject!.shuffledPlayOrder!
@@ -134,7 +136,8 @@ class ArtistViewController: NSViewController, LibraryViewController {
             } else {
                 return idArray.firstIndex(of: id)!
             }
-        }
+        }*/
+        return self.albumsView.getUpcomingIDsForPlayEvent(shuffleState, id: id, row: row)
     }
     
     func reloadNowPlayingForTrack(_ track: Track) {
@@ -142,15 +145,17 @@ class ArtistViewController: NSViewController, LibraryViewController {
     }
     
     func reloadDataForTrack(_ track: Track, orRow: Int) {
-        
+        self.albumsView.reloadNowPlayingForTrack(track)
     }
     
     func getTrackWithNoContext(_ shuffleState: Int) -> Track? {
-        return nil
+        self.albumsView.getTrackWithNoContext(shuffleState)
     }
     
     func initializeSmartPlaylist() {
-        
+        if playlist != nil {
+            globalInitializeSmartPlaylist(playlist: self.playlist!)
+        }
     }
     
     func interpretSpacebarEvent() {
@@ -171,7 +176,7 @@ class ArtistViewController: NSViewController, LibraryViewController {
     }
     
     func scrollToNewTrack() {
-        
+        self.albumsView.scrollToNewTrack()
     }
     
     func fixPlayOrderForChangedFilterPredicate(_ shuffleState: Int) {
@@ -184,7 +189,8 @@ class ArtistViewController: NSViewController, LibraryViewController {
     }*/
     
     func getArrangedObjects() -> [TrackView] {
-        return [TrackView]()
+        let trackArray = self.albumsView.tracks
+        return trackArray
     }
     
     func rearrangeObjects() {

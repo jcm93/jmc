@@ -520,8 +520,8 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
             self.shuffle = false
             UserDefaults.standard.set(false, forKey: "shuffle")
             for poo in activePlayOrders {
-                let pooSourceList = poo.sourceListItem ?? poo.songsSourceListItem ?? poo.artistSourceListItem
-                poo.currentPlayOrder = poo.sourceListItem!.currentViewController!.getArrangedObjects().map({return Int($0.track!.id!)})
+                let pooSourceList = poo.sourceListItem
+                poo.currentPlayOrder = pooSourceList!.currentViewController!.getArrangedObjects().map({return Int($0.track!.id!)})
                 if currentAudioSource?.currentPlayOrderObject == poo {
                     let queuedTrackIDs = Set(trackQueue.filter({$0.viewType == .futureTrack})).map({return Int($0.track!.id!)})
                     poo.currentPlayOrder = poo.currentPlayOrder!.filter({!queuedTrackIDs.contains($0)})

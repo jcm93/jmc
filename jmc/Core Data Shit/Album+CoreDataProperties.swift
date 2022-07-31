@@ -28,6 +28,7 @@ extension Album {
     @NSManaged public var primary_art: AlbumArtwork?
     @NSManaged public var tracks: NSSet?
     @NSManaged public var other_files: NSSet?
+    @NSManaged public var sort_name: String?
 
 }
 

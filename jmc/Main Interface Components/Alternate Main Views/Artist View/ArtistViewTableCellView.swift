@@ -131,6 +131,7 @@ class ArtistViewTableCellView: NSTableRowView {
         let infoString = "\(numString!) items; \(timeString!); \(sizeString)"
         self.albumInfoLabel.stringValue = infoString
         
+        
     }
     
     func getSelectedObjects() -> [TrackView] {
