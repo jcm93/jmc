@@ -71,7 +71,6 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         let album = self.albums[row]
         let numTracks = self.tracks.filter({$0.track?.album == album}).count
-        //let numTracks = self.albums[row].tracks?.count ?? 0
         let prospectiveHeight = CGFloat(numTracks * 24) + 100
         return prospectiveHeight > 400 ? prospectiveHeight : 400
     }
