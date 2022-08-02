@@ -311,7 +311,8 @@ func checkIfVolumeExists(withURL url: URL, subcontext: NSManagedObjectContext? =
 
 func createNonTemplateDirectoryFor(album albumOptional: Album?, dry: Bool) -> URL? { // does not handle errors
     guard let album = albumOptional else { return nil }
-    let baseURL = globalRootLibrary.getCentralMediaFolder()!
+    let library = resolve(globalRootLibrary, inBackground: true) as! Library
+    let baseURL = library.getCentralMediaFolder()!
     var albumDirectory = baseURL.appendingPathComponent("Album Files")
     if album.is_compilation == true {
         albumDirectory.appendPathComponent("Compilations")
