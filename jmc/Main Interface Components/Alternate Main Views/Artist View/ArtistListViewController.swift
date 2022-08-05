@@ -12,7 +12,7 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate, NSTableVi
 
     var artistArrayController: NSArrayController!
     var artistsToSelect: [Artist]?
-    @IBOutlet weak var tableView: TableViewYouCanPressSpacebarOn!
+    @IBOutlet weak var tableView: ArtistListTableView!
     
     var artistViewController: ArtistViewController!
     @objc var managedContext = (NSApplication.shared.delegate as! AppDelegate).managedObjectContext
@@ -119,6 +119,7 @@ class ArtistListViewController: NSViewController, NSTableViewDelegate, NSTableVi
                 self.artistsToSelect = [Artist]()
             }
         }
-        //(self.tableView.superview!.superview as! NSScrollView).scrollerStyle = .overlay
+        (self.tableView.superview!.superview as! NSScrollView).scrollerStyle = .overlay
+        self.tableView.mainWindowController = self.artistViewController.mainWindowController
     }
 }

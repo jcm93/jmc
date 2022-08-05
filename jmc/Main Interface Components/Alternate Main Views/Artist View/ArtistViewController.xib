@@ -18,7 +18,7 @@
             <rect key="frame" x="0.0" y="0.0" width="1049" height="845"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <splitView arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HBX-91-W9E">
+                <splitView arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HBX-91-W9E" customClass="LibrarySplitView" customModule="jmc" customModuleProvider="target">
                     <rect key="frame" x="-1" y="0.0" width="1051" height="845"/>
                     <subviews>
                         <customView fixedFrame="YES" id="aEq-ZI-eqU">

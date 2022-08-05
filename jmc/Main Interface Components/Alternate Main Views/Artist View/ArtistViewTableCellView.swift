@@ -28,6 +28,22 @@ class ArtistViewTableCellView: NSTableRowView {
     
     var album: Album?
     
+    override var allowsVibrancy: Bool {
+        return true
+    }
+    
+    override func keyDown(with event: NSEvent) {
+        if event.keyCode == 124 {
+            print("skipping")
+            self.artistViewController.mainWindowController?.skip()
+        }
+        else if event.keyCode == 123 {
+            self.artistViewController?.mainWindowController?.skipBackward()
+        } else {
+            super.keyDown(with: event)
+        }
+    }
+    
     func refreshArtView(track: Track, found: Bool, background: Bool) {
         if background {
             do {
@@ -90,6 +106,8 @@ class ArtistViewTableCellView: NSTableRowView {
         self.tracksTableView.dataSource = self.trackListTableViewDelegate
         self.tracksTableView.artistViewTableCellView = self
         self.tracksTableView.doubleAction = #selector(doubleAction)
+        self.tracksTableView.action = #selector(tableViewAction)
+        self.tracksTableView.registerForDraggedTypes([NSPasteboard.PasteboardType(rawValue: "Track")])
         
         
         //self.tracksViewController = ArtistViewTrackListViewController(nibName: "ArtistViewTrackListViewController", bundle: nil, album: self.album!)
@@ -161,6 +179,14 @@ class ArtistViewTableCellView: NSTableRowView {
     
     func interpretDeleteEvent() {
         
+    }
+    
+    @objc func tableViewAction(_ sender: Any) {
+        guard let tableView = self.tracksTableView else { return }
+        //guard tableView.clickedColumn == 0 else { return }
+        guard tableView.clickedRow > -1 else { return }
+        let album = self.album!
+        self.artistViewController.albumsView.selectionHandler.tableViewRowClicked(album: album, clickedRow: tableView.clickedRow, tableView: tableView)
     }
     
     func interpretEnterEvent() {

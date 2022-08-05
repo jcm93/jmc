@@ -233,7 +233,9 @@ class DragAndDropArrayController: NSArrayController, NSTableViewDataSource, NSTa
         }
         print("writing urls")
         //pboard.addTypes([NSURLPboardType], owner: nil)
-        pboard.writeObjects(fileURLs)
+        //TODO fix this is broken
+        //pboard.setPropertyList(fileURLs, forType: .URL)
+        //pboard.writeObjects(fileURLs)
         draggedRowIndexes = rowIndexes
         let encodedIDs = NSKeyedArchiver.archivedData(withRootObject: rows)
         let context = mainWindow?.currentSourceListItem?.name

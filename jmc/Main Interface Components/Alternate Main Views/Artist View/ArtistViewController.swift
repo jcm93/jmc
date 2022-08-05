@@ -25,7 +25,7 @@ class ArtistViewController: NSViewController, LibraryViewController {
     var itemsToSelect: [TrackView]! = [TrackView]()
     var avc_context = 0
     
-    @IBOutlet weak var splitView: NSSplitView!
+    @IBOutlet weak var splitView: LibrarySplitView!
     
     var artistListView: ArtistListViewController!
     var albumsView: ArtistViewAlbumViewController!
@@ -35,6 +35,7 @@ class ArtistViewController: NSViewController, LibraryViewController {
     
     func newArtistsSelected(artists: [Artist]) {
         albumsView?.view.removeFromSuperview()
+        self.albumsView = nil
         let newAlbumsView = ArtistViewAlbumViewController(nibName: "ArtistViewAlbumViewController", bundle: nil, artists: artists, artistViewController: self)
         newAlbumsView?.artistViewController = self
         self.albumsView = newAlbumsView
@@ -84,6 +85,7 @@ class ArtistViewController: NSViewController, LibraryViewController {
         if item.artistPlayOrderObject == nil {
             let newObject = NSEntityDescription.insertNewObject(forEntityName: "PlayOrderObject", into: managedContext) as! PlayOrderObject
             item.artistPlayOrderObject = newObject
+            newObject.artistSourceListItem = item
         }
         let playOrderObject = item.artistPlayOrderObject!
         print((self.trackViewArrayController.arrangedObjects as! NSArray).count)
@@ -194,11 +196,13 @@ class ArtistViewController: NSViewController, LibraryViewController {
     }
     
     func rearrangeObjects() {
-        
+        self.trackViewArrayController.rearrangeObjects()
+        self.artistListView.refreshArtistArrayContent()
+        self.albumsView.refreshTable()
     }
     
     func setFetchPredicate(_ predicate: NSPredicate?) {
-        
+        self.trackViewArrayController.fetchPredicate = predicate
     }
     
     func setFilterPredicate(_ searchFieldContent: String) {
@@ -226,11 +230,11 @@ class ArtistViewController: NSViewController, LibraryViewController {
     }
     
     func getFilterPredicate() -> NSPredicate? {
-        return nil
+        return self.trackViewArrayController.filterPredicate
     }
     
     func setArrayControllerContent(_ content: Any?) {
-        
+        self.trackViewArrayController.content = content
     }
     
     func getSelectedObjects() -> [TrackView] {

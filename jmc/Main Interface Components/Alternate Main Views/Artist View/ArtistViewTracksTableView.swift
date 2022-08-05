@@ -14,6 +14,7 @@ class ArtistViewTracksTableView: NSTableView {
     var artistViewTableCellView: ArtistViewTableCellView?
     var trackQueueViewController: TrackQueueViewController?
     var windowIdentifier: String?
+    var draggedRowIndexes: IndexSet?
     
     var shouldDrawFocusRing = false
     
@@ -29,6 +30,7 @@ class ArtistViewTracksTableView: NSTableView {
         super.draw(dirtyRect)
         // Drawing code here.
     }
+    
     
     override func awakeFromNib() {
         //self.registerForDraggedTypes(types)

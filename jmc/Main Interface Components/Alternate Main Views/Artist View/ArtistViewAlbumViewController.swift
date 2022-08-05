@@ -10,7 +10,7 @@ import Cocoa
 
 class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate {
     
-    @IBOutlet weak var tableView: NSTableView!
+    @IBOutlet weak var tableView: ArtistListTableView!
     @IBOutlet weak var albumArtworkView: NSImageView!
     var artists: [Artist]
     @objc var albums = [Album]()
@@ -20,11 +20,16 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     var artistViewController: ArtistViewController
     var tracks: [TrackView]
     var toBeSelected: [TrackView]?
+    var selectionHandler = ArtistViewTrackSelectionDelegate()
     
     init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?, artists: [Artist], artistViewController: ArtistViewController) {
         self.artistViewController = artistViewController
         self.artists = artists
-        self.tracks = (self.artistViewController.trackViewArrayController.arrangedObjects as! [TrackView]).filter({return artists.contains($0.track!.artist!)}).sorted(by: {return $0.album_artist_order!.isLessThan($1.album_artist_order!)})
+        let filteredPlaylistTracks = Set(self.artistViewController.trackViewArrayController.arrangedObjects as! [TrackView])
+        let artistTracks = Set(artists.flatMap({return ($0.tracks as! Set<Track>).map({return $0.view!})}))
+        self.tracks = Array(filteredPlaylistTracks.intersection(artistTracks)).sorted(by: {return $0.album_artist_order!.isLessThan($1.album_artist_order!)})
+        //self.tracks = artists.flatMap({return ($0.tracks as! Set<Track>).map({return $0.view!})}).sorted(by: {return $0.album_artist_order!.isLessThan($1.album_artist_order!)})
+        //self.tracks = (self.artistViewController.trackViewArrayController.arrangedObjects as! [TrackView]).filter({return artists.contains($0.track!.artist!)}).sorted(by: {return $0.album_artist_order!.isLessThan($1.album_artist_order!)})
         var albumSet = Set<Album>()
         tracks.forEach({
             let album = $0.track!.album!
@@ -51,7 +56,7 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ArtistViewTableCellView"), owner: self) as! ArtistViewTableCellView
         let album = (albumArrayController.arrangedObjects as! NSArray)[row] as! Album
-        view.populateTracksTable(album: album, tracks: self.tracks.filter({$0.track!.album! == album})/*(Array(album.tracks!) as! [Track]).map({return $0.view!})*/, artistViewController: self.artistViewController)
+        view.populateTracksTable(album: album, tracks: self.tracks.filter({$0.track!.album! == album}), artistViewController: self.artistViewController)
         self.views[row] = view
         //manage selection
         view.toBeSelected = self.toBeSelected
@@ -184,6 +189,8 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.albumArrayController.content = self.albums
+        self.tableView.mainWindowController = self.artistViewController.mainWindowController
+        self.selectionHandler.parent = self
         //self.artistViewController.artistListView.tableView.mainWindowController = self.artistViewController.mainWindowController
     }
     

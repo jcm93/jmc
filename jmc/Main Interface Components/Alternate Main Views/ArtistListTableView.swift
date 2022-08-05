@@ -11,6 +11,10 @@ import Cocoa
 class ArtistListTableView: NSTableView {
     
     var mainWindowController: MainWindowController?
+    
+    override var allowsVibrancy: Bool {
+        return true
+    }
 
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
@@ -27,8 +31,12 @@ class ArtistListTableView: NSTableView {
         } else if theEvent.keyCode == 51 {
             //libraryTableViewController?.interpretDeleteEvent()
             //trackQueueViewController?.interpretDeleteEvent()
-        }
-        else {
+        } else if theEvent.keyCode == 124 {
+            print("skipping")
+            self.mainWindowController?.skip()
+        } else if theEvent.keyCode == 123 {
+            self.mainWindowController?.skipBackward()
+        } else {
             super.keyDown(with: theEvent)
         }
     }

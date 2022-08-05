@@ -46,6 +46,9 @@
                 <rect key="frame" x="0.0" y="0.0" width="1805" height="1126"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
+                    <visualEffectView blendingMode="behindWindow" material="appearanceBased" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="hxk-9Y-jU9">
+                        <rect key="frame" x="0.0" y="-14" width="1805" height="1140"/>
+                    </visualEffectView>
                     <splitView arrangesAllSubviews="NO" autosaveName="Parent Split View" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r3P-eO-TmU">
                         <rect key="frame" x="0.0" y="36" width="1805" height="1030"/>
                         <subviews>
@@ -85,7 +88,7 @@
                                     <real value="242"/>
                                 </holdingPriorities>
                             </splitView>
-                            <splitView fixedFrame="YES" placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="568" autosaveName="Library Split View" dividerStyle="thin" id="wUo-rb-c1E" userLabel="Library Split View">
+                            <splitView fixedFrame="YES" placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="568" autosaveName="Library Split View" dividerStyle="thin" id="wUo-rb-c1E" userLabel="Library Split View" customClass="LibrarySplitView" customModule="jmc" customModuleProvider="target">
                                 <rect key="frame" x="269" y="0.0" width="1265" height="1030"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </splitView>
@@ -487,21 +490,25 @@
                     </customView>
                 </subviews>
                 <constraints>
+                    <constraint firstAttribute="bottom" secondItem="hxk-9Y-jU9" secondAttribute="bottom" constant="-14" id="1me-uU-TDU"/>
                     <constraint firstAttribute="bottom" secondItem="0eg-hu-JdK" secondAttribute="bottom" constant="6" id="1mf-qn-i1B"/>
                     <constraint firstItem="qNB-cP-szA" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="3Zf-1k-4fz"/>
                     <constraint firstItem="rfk-1e-A3X" firstAttribute="leading" secondItem="aLT-7j-MYS" secondAttribute="trailing" constant="8" id="8hA-tp-cFE"/>
                     <constraint firstItem="wUv-cJ-CeL" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="3" id="9dD-af-Zpw"/>
                     <constraint firstAttribute="bottom" secondItem="T0Z-5M-4dl" secondAttribute="bottom" constant="6" id="BjT-gh-AMT"/>
+                    <constraint firstItem="hxk-9Y-jU9" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="FNQ-ta-Rsa"/>
                     <constraint firstItem="r3P-eO-TmU" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="60" id="FWU-KC-1lo"/>
                     <constraint firstItem="wUv-cJ-CeL" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="75" id="Gt8-ei-BxH"/>
                     <constraint firstAttribute="trailing" secondItem="wxs-uU-bSr" secondAttribute="trailing" id="Hgn-uz-KPD"/>
                     <constraint firstItem="wxs-uU-bSr" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="JFe-fa-ed3"/>
                     <constraint firstAttribute="bottom" secondItem="rfk-1e-A3X" secondAttribute="bottom" constant="6" id="Lh9-xM-6AE"/>
                     <constraint firstAttribute="bottom" secondItem="Nyd-Mi-qKV" secondAttribute="bottom" constant="6" id="P1x-bo-07C"/>
+                    <constraint firstAttribute="trailing" secondItem="hxk-9Y-jU9" secondAttribute="trailing" id="Tlp-sn-YIT"/>
                     <constraint firstItem="r3P-eO-TmU" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="U90-gJ-aXX"/>
                     <constraint firstAttribute="bottom" secondItem="eg4-23-xqc" secondAttribute="bottom" constant="6" id="VzN-90-baa"/>
                     <constraint firstAttribute="bottom" secondItem="qNB-cP-szA" secondAttribute="bottom" constant="6" id="Z28-wH-waA"/>
                     <constraint firstItem="gzN-xP-Utz" firstAttribute="leading" secondItem="Nyd-Mi-qKV" secondAttribute="trailing" constant="8" id="aDT-Xk-kuJ"/>
+                    <constraint firstItem="hxk-9Y-jU9" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" id="aWW-fC-CcC"/>
                     <constraint firstAttribute="trailing" secondItem="wUv-cJ-CeL" secondAttribute="trailing" constant="50" id="ago-jV-Jha"/>
                     <constraint firstItem="mb6-nw-TjG" firstAttribute="leading" secondItem="0eg-hu-JdK" secondAttribute="trailing" constant="8" id="bue-9o-k1t"/>
                     <constraint firstItem="eg4-23-xqc" firstAttribute="leading" secondItem="qNB-cP-szA" secondAttribute="trailing" constant="8" id="c7h-lY-NXE"/>

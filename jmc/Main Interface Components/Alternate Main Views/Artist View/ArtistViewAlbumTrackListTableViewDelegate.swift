@@ -15,6 +15,7 @@ class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, 
     var timeFormatter: TimeFormatter!
     var tracksArrayController: NSArrayController!
     var parent: ArtistViewTableCellView!
+    var draggedRowIndexes: IndexSet?
 
     init(album: Album, tracks: [TrackView], parent: ArtistViewTableCellView) {
         self.parent = parent
@@ -37,6 +38,40 @@ class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, 
             }
         }
         self.tracksArrayController.setSelectedObjects(objects)
+    }
+    
+    func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
+        print("table view writerows called")
+        pboard.clearContents()
+        pboard.declareTypes([NSPasteboard.PasteboardType(kUTTypeURL as String)], owner: self)
+        let rows = NSMutableArray()
+        var fileURLs = [NSURL]()
+        for index in rowIndexes {
+            let trackView = (self.parent.trackListTableViewDelegate.tracksArrayController.arrangedObjects as! [TrackView])[index]
+            //let trackView = self.parent.trackListTableViewDelegate.tracks[index]
+            //let trackView = (self.arrangedObjects as! NSArray)[index] as! TrackView
+            rows.add(trackView.track!.objectID.uriRepresentation())
+            fileURLs.append(URL(string: trackView.track!.location!)! as NSURL)
+        }
+        print("writing urls")
+        //pboard.addTypes([NSURLPboardType], owner: nil)
+        //TODO fix this is broken
+        //pboard.setPropertyList(fileURLs, forType: .URL)
+        //pboard.writeObjects(fileURLs)
+        draggedRowIndexes = rowIndexes
+        let encodedIDs = NSKeyedArchiver.archivedData(withRootObject: rows)
+        let context = self.parent.artistViewController?.mainWindowController?.currentSourceListItem?.name
+        print("context is \(context)")
+        if context != nil {
+            pboard.setString(context!, forType: NSPasteboard.PasteboardType(rawValue: "context"))
+        }
+        if self.parent.artistViewController?.mainWindowController?.currentSourceListItem?.is_network == true {
+            print("settin network pboard data")
+            pboard.setData(encodedIDs, forType: NSPasteboard.PasteboardType(rawValue: "NetworkTrack"))
+        } else {
+            pboard.setData(encodedIDs, forType: NSPasteboard.PasteboardType(rawValue: "Track"))
+        }
+        return true
     }
     
     func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
@@ -73,7 +108,12 @@ class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, 
         return self.tracks.count
     }
     
-    func tableViewSelectionDidChange(_ notification: Notification) {
-        self.tracksArrayController.setSelectionIndexes(self.parent.tracksTableView.selectedRowIndexes)
+    
+    func tableView(_ tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: IndexSet) -> IndexSet {
+        return self.parent.artistViewController.albumsView.selectionHandler.getSelection(forProposedSelection: proposedSelectionIndexes, tableView: tableView, album: self.parent.album!)
     }
+    
+    /*func tableViewSelectionDidChange(_ notification: Notification) {
+        self.tracksArrayController.setSelectionIndexes(self.parent.tracksTableView.selectedRowIndexes)
+    }*/
 }

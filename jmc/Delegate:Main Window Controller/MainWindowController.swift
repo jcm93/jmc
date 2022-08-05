@@ -31,7 +31,7 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     var my_context = 0
     //@IBOutlet weak var libraryTableTargetView: NSView!
     @IBOutlet weak var trackQueueTargetView: NSView!
-    @IBOutlet weak var librarySplitView: NSSplitView!
+    @IBOutlet weak var librarySplitView: LibrarySplitView!
     @IBOutlet var noMusicView: NSView!
     @IBOutlet weak var artworkTargetView: NSView!
     @IBOutlet weak var sourceListTargetView: NSView!
