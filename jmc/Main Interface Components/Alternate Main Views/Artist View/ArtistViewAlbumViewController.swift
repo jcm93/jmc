@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import CoreMedia
 
 class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate {
     
@@ -14,7 +15,7 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     @IBOutlet weak var albumArtworkView: NSImageView!
     var artists: [Artist]
     @objc var albums = [Album]()
-    var views = [Int : ArtistViewTableCellView]()
+    var views = [Int : ArtistViewAlbumDataStore]()
     var albumTracksDictionary: [Album : [TrackView]] = [Album : [TrackView]]()
     @IBOutlet var albumArrayController: NSArrayController!
     var artistViewController: ArtistViewController
@@ -56,11 +57,20 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ArtistViewTableCellView"), owner: self) as! ArtistViewTableCellView
         let album = (albumArrayController.arrangedObjects as! NSArray)[row] as! Album
+        view.album = album
+        view.artistViewController = self.artistViewController
+        if let dataStore = self.views[row] {
+            //view.trackListTableViewDelegate.tracksArrayController.setSelectionIndexes(dataStore.selectionIndexes)
+            view.dataStore = dataStore
+        } else {
+            let newDataStore = ArtistViewAlbumDataStore()
+            newDataStore.album = album
+            newDataStore.row = row
+            self.views[row] = newDataStore
+            view.dataStore = newDataStore
+        }
         view.populateTracksTable(album: album, tracks: self.tracks.filter({$0.track!.album! == album}), artistViewController: self.artistViewController)
-        self.views[row] = view
         //manage selection
-        view.toBeSelected = self.toBeSelected
-        view.selectTrackViews()
         return view
     }
     
@@ -86,9 +96,9 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     
     func scrollToNewTrack() {
         let track = self.artistViewController.mainWindowController!.currentTrack!
-        let albumCell = self.views.values.first(where: {$0.album!.tracks!.contains(track)})
-        let rowIndex = self.views.first(where: {$0.value == albumCell})!.key
-        self.tableView.scrollRowToVisible(rowIndex)
+        //let albumCell = self.views.values.first(where: {$0.album!.tracks!.contains(track)})
+        //let rowIndex = self.views.first(where: {$0.value == albumCell})!.key
+        //self.tableView.scrollRowToVisible(rowIndex)
     }
     
     func jumpToSelection() {
@@ -105,7 +115,8 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     }
     
     func getCurrentShownTrackViews() -> [TrackView] {
-        return self.views.flatMap({return ($0.value.trackListTableViewDelegate.tracksArrayController.arrangedObjects as! [TrackView])})
+        //return self.views.flatMap({return ($0.value.trackListTableViewDelegate.tracksArrayController.arrangedObjects as! [TrackView])})
+        return [TrackView]()
     }
     
     func getUpcomingIDsForPlayEvent(_ shuffleState: Int, id: Int, row: Int) -> Int {
@@ -162,14 +173,23 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     }
     
     func getSelectedTrackViews() -> [TrackView] {
-        var result = [TrackView]()
+        let selectedTrackViews = self.views.values.flatMap({ dataStore -> [Track] in
+            let tracks = dataStore.album.tracks as! Set<Track>
+            let tracksArray = Array(tracks).sorted(by: {$0.view!.album_artist_order!.isLessThan($1.view!.album_artist_order)})
+            let selectedTracksFromAlbum = dataStore.selectionIndexes.map({ index -> Track in
+                return tracksArray[index]
+            })
+            return selectedTracksFromAlbum
+        }).map({return $0.view!})
+        return selectedTrackViews
+        /*var result = [TrackView]()
         var count = 0
         for _ in self.views {
             let selection = self.views[count]!
-            result += selection.getSelectedObjects()
+            //result += selection.getSelectedObjects()
             count += 1
         }
-        return result
+        return result*/
     }
     
     func selectTrackViews(_ trackViews: [TrackView]) {
@@ -177,8 +197,8 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
     }
     
     func reloadNowPlayingForTrack(_ track: Track) {
-        let albumCell = self.views.values.first(where: {$0.album!.tracks!.contains(track)})
-        albumCell?.reloadNowPlayingForTrack(track)
+        //let albumCell = self.views.values.first(where: {$0.album!.tracks!.contains(track)})
+        //albumCell?.reloadNowPlayingForTrack(track)
     }
     
 

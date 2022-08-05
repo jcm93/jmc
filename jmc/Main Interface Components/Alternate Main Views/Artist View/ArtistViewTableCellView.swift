@@ -13,8 +13,8 @@ class ArtistViewTableCellView: NSTableRowView {
     @IBOutlet var artistImageView: NSImageView!
     @IBOutlet var albumNameLabel: NSTextField!
     @IBOutlet var albumInfoLabel: NSTextField!
-    @IBOutlet weak var tracksTableView: ArtistViewTracksTableView!
-    var trackListTableViewDelegate: ArtistViewAlbumTrackListTableViewDelegate!
+    @IBOutlet var tracksTableView: ArtistViewTracksTableView!
+    @objc dynamic var trackListTableViewDelegate: ArtistViewAlbumTrackListTableViewDelegate!
     var numberFormatter = NumberFormatter()
     var dateFormatter = DateComponentsFormatter()
     var sizeFormatter = ByteCountFormatter()
@@ -24,12 +24,17 @@ class ArtistViewTableCellView: NSTableRowView {
     //var tracksArrayController: NSArrayController!
     //var tracksViewController: ArtistViewTrackListViewController?
     var toBeSelected: [TrackView]?
-    
+    var hasInitialized = false
+    @objc dynamic var dataStore: ArtistViewAlbumDataStore!
     
     var album: Album?
     
     override var allowsVibrancy: Bool {
         return true
+    }
+    
+    override func prepareForReuse() {
+        
     }
     
     override func keyDown(with event: NSEvent) {
@@ -108,6 +113,7 @@ class ArtistViewTableCellView: NSTableRowView {
         self.tracksTableView.doubleAction = #selector(doubleAction)
         self.tracksTableView.action = #selector(tableViewAction)
         self.tracksTableView.registerForDraggedTypes([NSPasteboard.PasteboardType(rawValue: "Track")])
+        self.trackListTableViewDelegate.tracksArrayController.bind(.selectionIndexes, to: self.dataStore, withKeyPath: "selectionIndexes")
         
         
         //self.tracksViewController = ArtistViewTrackListViewController(nibName: "ArtistViewTrackListViewController", bundle: nil, album: self.album!)
@@ -186,7 +192,7 @@ class ArtistViewTableCellView: NSTableRowView {
         //guard tableView.clickedColumn == 0 else { return }
         guard tableView.clickedRow > -1 else { return }
         let album = self.album!
-        self.artistViewController.albumsView.selectionHandler.tableViewRowClicked(album: album, clickedRow: tableView.clickedRow, tableView: tableView)
+        self.artistViewController.albumsView.selectionHandler.tableViewRowClicked(album: album, clickedRow: tableView.clickedRow, dataStore: self.dataStore)
     }
     
     func interpretEnterEvent() {
@@ -222,6 +228,11 @@ class ArtistViewTableCellView: NSTableRowView {
 
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
+        /*if !self.hasInitialized {
+            let tracks = self.artistViewController.albumsView.tracks.filter({$0.track!.album! == self.album})
+            self.populateTracksTable(album: self.album!, tracks: tracks, artistViewController: self.artistViewController)
+            self.hasInitialized = true
+        }*/
         //resizeImageViewForArt()
         // Drawing code here.
     }

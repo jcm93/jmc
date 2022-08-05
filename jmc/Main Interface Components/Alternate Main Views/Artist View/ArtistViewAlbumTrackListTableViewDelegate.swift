@@ -13,7 +13,7 @@ class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, 
     var album: Album
     var tracks: [TrackView]
     var timeFormatter: TimeFormatter!
-    var tracksArrayController: NSArrayController!
+    @objc dynamic var tracksArrayController: NSArrayController!
     var parent: ArtistViewTableCellView!
     var draggedRowIndexes: IndexSet?
 
@@ -42,23 +42,21 @@ class ArtistViewAlbumTrackListTableViewDelegate: NSObject, NSTableViewDelegate, 
     
     func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
         print("table view writerows called")
+        let tracks = self.parent.artistViewController.albumsView.getSelectedTrackViews().sorted(by: {return $0.album_artist_order!.isLessThan($1.album_artist_order!)})
         pboard.clearContents()
         pboard.declareTypes([NSPasteboard.PasteboardType(kUTTypeURL as String)], owner: self)
         let rows = NSMutableArray()
         var fileURLs = [NSURL]()
-        for index in rowIndexes {
-            let trackView = (self.parent.trackListTableViewDelegate.tracksArrayController.arrangedObjects as! [TrackView])[index]
-            //let trackView = self.parent.trackListTableViewDelegate.tracks[index]
-            //let trackView = (self.arrangedObjects as! NSArray)[index] as! TrackView
-            rows.add(trackView.track!.objectID.uriRepresentation())
-            fileURLs.append(URL(string: trackView.track!.location!)! as NSURL)
+        for track in tracks {
+            rows.add(track.track!.objectID.uriRepresentation())
+            fileURLs.append(URL(string: track.track!.location!)! as NSURL)
         }
         print("writing urls")
         //pboard.addTypes([NSURLPboardType], owner: nil)
         //TODO fix this is broken
         //pboard.setPropertyList(fileURLs, forType: .URL)
         //pboard.writeObjects(fileURLs)
-        draggedRowIndexes = rowIndexes
+        //draggedRowIndexes = rowIndexes
         let encodedIDs = NSKeyedArchiver.archivedData(withRootObject: rows)
         let context = self.parent.artistViewController?.mainWindowController?.currentSourceListItem?.name
         print("context is \(context)")

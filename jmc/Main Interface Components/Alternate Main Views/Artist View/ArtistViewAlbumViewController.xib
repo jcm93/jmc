@@ -223,6 +223,9 @@
                                                                             </prototypeCellViews>
                                                                         </tableColumn>
                                                                     </tableColumns>
+                                                                    <connections>
+                                                                        <binding destination="19j-p4-ypp" name="selectionIndexes" keyPath="trackListTableViewDelegate.tracksArrayController.selectionIndexes" id="2Zy-aa-2LF"/>
+                                                                    </connections>
                                                                 </tableView>
                                                             </subviews>
                                                             <nil key="backgroundColor"/>

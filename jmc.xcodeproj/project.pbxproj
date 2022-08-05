@@ -203,6 +203,7 @@
 		0DE957D81EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE957D41EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataProperties.swift */; };
 		0DE957DB1EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE957D91EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift */; };
 		0DE957DC1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE957DA1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift */; };
+		0DEA3DB3289D4C300030F23D /* ArtistViewAlbumDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEA3DB2289D4C300030F23D /* ArtistViewAlbumDataStore.swift */; };
 		0DEE9D9D1EF7AB280025AA11 /* StupidTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEE9D9C1EF7AB280025AA11 /* StupidTableCellView.swift */; };
 		0DF188801EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF1887E1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift */; };
 		0DF188811EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */; };
@@ -457,6 +458,7 @@
 		0DE957D41EEC5465008CBECF /* OrganizationTemplateBundle+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OrganizationTemplateBundle+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0DE957D91EEC97AA008CBECF /* SourceListItem+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SourceListItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0DE957DA1EEC97AA008CBECF /* SourceListItem+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SourceListItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0DEA3DB2289D4C300030F23D /* ArtistViewAlbumDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ArtistViewAlbumDataStore.swift; path = "Artist View/ArtistViewAlbumDataStore.swift"; sourceTree = "<group>"; };
 		0DEE9D9C1EF7AB280025AA11 /* StupidTableCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StupidTableCellView.swift; path = Sheets/StupidTableCellView.swift; sourceTree = "<group>"; };
 		0DF1887E1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedOrganizationOptionsWindowController.swift; sourceTree = "<group>"; };
 		0DF1887F1EDD034F00241785 /* AdvancedOrganizationOptionsWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdvancedOrganizationOptionsWindowController.xib; sourceTree = "<group>"; };
@@ -774,6 +776,7 @@
 				0D7788B928863A8D001D2191 /* ArtistListTableView.swift */,
 				0D800C071ED3B3C800EA2889 /* ArtistListViewController.xib */,
 				0D800C0A1ED3B54100EA2889 /* ArtistViewAlbumViewController.swift */,
+				0DEA3DB2289D4C300030F23D /* ArtistViewAlbumDataStore.swift */,
 				0D800C0E1ED3B6BF00EA2889 /* ArtistViewTableCellView.swift */,
 				0D5279152777EE70008271CE /* ArtistViewAlbumTrackListTableViewDelegate.swift */,
 				0D4B4A0727796D9D00161441 /* ArtistViewTracksTableView.swift */,
@@ -1254,6 +1257,7 @@
 				0D2D06CF1EE32FB600A8EC66 /* Album+CoreDataClass.swift in Sources */,
 				0D3878B81DD11926004CC3C1 /* BitRateFormatter.swift in Sources */,
 				0D4C0AB12790B85A005BE760 /* API.swift in Sources */,
+				0DEA3DB3289D4C300030F23D /* ArtistViewAlbumDataStore.swift in Sources */,
 				0D592A401EDF6C8B0054D553 /* SongCollection+CoreDataProperties.swift in Sources */,
 				0D34A4781F7306D400CAA6C4 /* AlbumArtwork+CoreDataProperties.swift in Sources */,
 				0D299B231DF158A60009CF7A /* AdvancedFilterViewController.swift in Sources */,
