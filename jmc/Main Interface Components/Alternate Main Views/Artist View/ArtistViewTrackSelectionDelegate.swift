@@ -11,10 +11,11 @@ import Cocoa
 class ArtistViewTrackSelectionDelegate: NSObject {
     
     var tableViews: [NSTableView] = [NSTableView]()
-    var previousSelection: (Int, NSTableView, Int)? //album index, clicked row
+    var previousSelection: (Int, NSTableView, Int)? //album index, table, clicked row
     var parent: ArtistViewAlbumViewController!
     
     func getSelection(forProposedSelection selection: IndexSet, tableView: NSTableView, album: Album) -> IndexSet {
+        //for some reason, this glitches out when the previous selection is offscreen
         if !self.tableViews.contains(tableView) {
             tableViews.append(tableView)
         }
@@ -25,6 +26,7 @@ class ArtistViewTrackSelectionDelegate: NSObject {
                 //if previous row clicked is below this album, select the entire beginning of that album and the end of this album
                 let albumIndex = parent.albums.firstIndex(of: album)!
                 if let previousSelectionTuple = previousSelection {
+                    //previous click is above
                     if previousSelectionTuple.0 < albumIndex {
                         let rowIndexes = IndexSet(previousSelectionTuple.2..<previousSelectionTuple.1.numberOfRows)
                         previousSelectionTuple.1.selectRowIndexes(rowIndexes, byExtendingSelection: true)
@@ -33,7 +35,12 @@ class ArtistViewTrackSelectionDelegate: NSObject {
                             let albumCellView = self.parent.views[i]
                             albumCellView?.tracksTableView.selectAll(nil)
                         }
+                        //return selection for beginning of this album, inclusive of already selected rows
+                        let clickedRow = tableView.clickedRow
+                        let newSelectionForThisTableView = IndexSet(0...clickedRow).union(tableView.selectedRowIndexes)
+                        return newSelectionForThisTableView
                     } else if previousSelectionTuple.0 > albumIndex {
+                        //previous click is below
                         let rowIndexes = IndexSet(0..<previousSelectionTuple.2)
                         previousSelectionTuple.1.selectRowIndexes(rowIndexes, byExtendingSelection: true)
                         for i in (albumIndex + 1)..<previousSelectionTuple.0 {
@@ -43,7 +50,7 @@ class ArtistViewTrackSelectionDelegate: NSObject {
                         }
                         //return selection for end of album instead of beginning
                         let lastRowInSelection = selection.last!
-                        let newSelectionForThisTableView = IndexSet(lastRowInSelection..<tableView.numberOfRows)
+                        let newSelectionForThisTableView = IndexSet(lastRowInSelection..<tableView.numberOfRows).union(tableView.selectedRowIndexes)
                         return newSelectionForThisTableView
                     }
                 }
