@@ -29,6 +29,7 @@ extension Album {
     @NSManaged public var tracks: NSSet?
     @NSManaged public var other_files: NSSet?
     @NSManaged public var sort_name: String?
+    @NSManaged public var apple_music_persistent_id: String?
 
 }
 

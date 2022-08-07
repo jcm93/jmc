@@ -21,8 +21,8 @@ class ArtistViewTrackSelectionDelegate: NSObject {
                 //if previous row clicked is above this album, select the rest of the tracks in that album
                 //if previous row clicked is below this album, select the entire beginning of that album and the end of this album
                 if let previousSelectionTuple = previousSelection {
-                    //previous click is above
                     if previousSelectionTuple.0 < albumIndex {
+                        //previous click is above
                         let rowIndexes = IndexSet(previousSelectionTuple.2..<Int(previousSelectionTuple.1.album.tracks!.count))
                         previousSelectionTuple.1.selectionIndexes = previousSelectionTuple.1.selectionIndexes.union(rowIndexes)
                         for i in (previousSelectionTuple.0 + 1)..<albumIndex {
@@ -48,7 +48,7 @@ class ArtistViewTrackSelectionDelegate: NSObject {
                             //albumCellView?.tracksTableView.selectAll(nil)
                         }
                         //return selection for end of album instead of beginning
-                        let lastRowInSelection = selection.last!
+                        let lastRowInSelection = tableView.clickedRow
                         let newSelectionForThisTableView = IndexSet(lastRowInSelection..<tableView.numberOfRows).union(tableView.selectedRowIndexes)
                         let dataStore = self.parent.views[albumIndex]
                         dataStore?.selectionIndexes = newSelectionForThisTableView

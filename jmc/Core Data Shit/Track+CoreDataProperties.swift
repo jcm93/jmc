@@ -55,5 +55,6 @@ extension Track {
     @NSManaged public var library: Library?
     @NSManaged public var view: TrackView?
     @NSManaged public var volume: Volume?
+    @NSManaged public var apple_music_persistent_id: String?
 
 }

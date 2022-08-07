@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21E258" minimumToolsVersion="Xcode 7.3" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Album" representedClassName=".Album" syncable="YES">
+        <attribute name="apple_music_persistent_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="disc_count" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="is_compilation" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
@@ -30,6 +31,7 @@
         <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="other_files" inverseEntity="Album" syncable="YES"/>
     </entity>
     <entity name="Artist" representedClassName=".Artist" syncable="YES">
+        <attribute name="apple_music_persistent_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
         <attribute name="is_network" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
@@ -143,6 +145,7 @@
         <relationship name="volume" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Volume" inverseName="source_list_item" inverseEntity="Volume" syncable="YES"/>
     </entity>
     <entity name="Track" representedClassName=".Track" syncable="YES">
+        <attribute name="apple_music_persistent_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="bit_rate" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
         <attribute name="bpm" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="comments" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
@@ -208,10 +211,10 @@
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="volume" inverseEntity="Track" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Album" positionX="-1721" positionY="315" width="128" height="224"/>
+        <element name="Album" positionX="-1721" positionY="315" width="128" height="239"/>
         <element name="AlbumArtwork" positionX="-1757" positionY="81" width="128" height="150"/>
         <element name="AlbumFile" positionX="-1269" positionY="81" width="128" height="90"/>
-        <element name="Artist" positionX="-1386" positionY="144" width="128" height="134"/>
+        <element name="Artist" positionX="-1386" positionY="144" width="128" height="149"/>
         <element name="CachedOrder" positionX="-1314" positionY="-171" width="128" height="135"/>
         <element name="Composer" positionX="-1557" positionY="323" width="128" height="120"/>
         <element name="Library" positionX="-801" positionY="-45" width="128" height="510"/>
@@ -221,7 +224,7 @@
         <element name="SmartCriteria" positionX="-1557" positionY="180" width="128" height="120"/>
         <element name="SongCollection" positionX="-954" positionY="108" width="128" height="180"/>
         <element name="SourceListItem" positionX="-561.0703125" positionY="-165.8828125" width="128" height="268"/>
-        <element name="Track" positionX="-1143" positionY="-27" width="128" height="630"/>
+        <element name="Track" positionX="-1143" positionY="-27" width="128" height="629"/>
         <element name="TrackView" positionX="-1548" positionY="-216" width="128" height="268"/>
         <element name="Volume" positionX="-1548" positionY="-63" width="128" height="120"/>
     </elements>

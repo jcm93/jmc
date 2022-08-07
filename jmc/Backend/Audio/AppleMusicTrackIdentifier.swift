@@ -33,6 +33,54 @@ class AppleMusicTrackIdentifier: NSObject {
         self.status = status
     }
     
+    func initializeLibrary() {
+        Task {
+            let artist = await requestArtist(artistName: "Doopees")
+        }
+    }
+    
+    func initializeTracksForArtist(artist: Artist) {
+        let artistName = artist.name!
+        Task {
+            let artistID = await self.requestArtist(artistName: artistName)
+            DispatchQueue.main.async {
+                artist.apple_music_persistent_id = artistID
+            }
+            await self.matchTrackIDs(artistID: artistID)
+        }
+    }
+    
+    func requestArtist(artistName: String) async -> String {
+        var encodedArtistName = String(artistName.replacingOccurrences(of: " ", with: "+").replacingOccurrences(of: ",", with: "").replacingOccurrences(of: "&", with: "").unicodeScalars.filter(CharacterSet.urlQueryAllowed.union(CharacterSet(charactersIn: "+")).contains))
+        let urlString = "https://api.music.apple.com/v1/me/library/search?term=\(encodedArtistName)&types=library-artists&limit=5"
+        let requestURL = URL(string: urlString)!
+        let urlRequest = URLRequest(url: requestURL)
+        do {
+            let request = MusicDataRequest(urlRequest: urlRequest)
+            let response = try await request.response()
+            let artistID = determineArtistID(response: response, initialQuery: artistName)
+            return artistID
+        } catch {
+            print("error making api request")
+            return ""
+        }
+    }
+    
+    func matchTrackIDs(artistID: String) async {
+        let urlString = "https://api.music.apple.com/v1/me/library/artists/\(artistID)/albums"
+        let requestURL = URL(string: urlString)!
+        let urlRequest = URLRequest(url: requestURL)
+        do {
+            let request = MusicDataRequest(urlRequest: urlRequest)
+            let response = try await request.response()
+            let jsonObject = try JSONSerialization.jsonObject(with: response.data, options: [])
+            let songsArray = ((jsonObject as? NSDictionary)?["results"] as? NSDictionary)
+            print(jsonObject)
+        } catch {
+            print("error making api request")
+        }
+    }
+    
     func requestResource(trackName: String, artistName: String, albumName: String) async -> String {
         var encodedTrackName = String(trackName.replacingOccurrences(of: " ", with: "+").replacingOccurrences(of: ",", with: "").replacingOccurrences(of: "&", with: "").unicodeScalars.filter(CharacterSet.urlQueryAllowed.union(CharacterSet(charactersIn: "+")).contains))
         var encodedArtistName = String(artistName.replacingOccurrences(of: " ", with: "+").replacingOccurrences(of: ",", with: "").replacingOccurrences(of: "&", with: "").unicodeScalars.filter(CharacterSet.urlQueryAllowed.union(CharacterSet(charactersIn: "+")).contains))
@@ -58,7 +106,6 @@ class AppleMusicTrackIdentifier: NSObject {
     }
         
     func determineTrackIDToPlay(response: MusicDataResponse, trackName: String, artistName: String, albumName: String) -> String {
-        print("patooties")
         do {
             //let's just take the top response for now
             let jsonObject = try JSONSerialization.jsonObject(with: response.data, options: [])
@@ -75,6 +122,27 @@ class AppleMusicTrackIdentifier: NSObject {
                     albumName.compare(albumName, options: [.diacriticInsensitive, .caseInsensitive]) == .orderedSame {
                     candidates.append(song["id"] as! String)
                 }
+            }
+            if !candidates.isEmpty {
+                return candidates.first!
+            } else {
+                return ""
+            }
+        } catch {
+            return ""
+        }
+    }
+    
+    func determineArtistID(response: MusicDataResponse, initialQuery: String) -> String {
+        do {
+            //let's just take the top response for now
+            let jsonObject = try JSONSerialization.jsonObject(with: response.data, options: [])
+            guard let artistsArray = ((((jsonObject as? NSDictionary)?["results"] as? NSDictionary)?["library-artists"] as? NSDictionary)?["data"] as? NSArray) else { return "" }
+            var candidates = [String]()
+            for artist in artistsArray {
+                let artist = artist as! NSDictionary
+                let id = artist["id"] as! String
+                candidates.append(id)
             }
             if !candidates.isEmpty {
                 return candidates.first!

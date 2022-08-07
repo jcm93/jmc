@@ -23,6 +23,7 @@ extension Artist {
     @NSManaged public var albums: NSSet?
     @NSManaged public var composers: NSSet?
     @NSManaged public var tracks: NSSet?
+    @NSManaged public var apple_music_persistent_id: String?
     
     public override func value(forKey key: String) -> Any? {
         if key == "nameForSorting" {
