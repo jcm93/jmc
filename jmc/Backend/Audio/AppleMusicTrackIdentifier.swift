@@ -34,8 +34,26 @@ class AppleMusicTrackIdentifier: NSObject {
     }
     
     func initializeLibrary() {
-        Task {
-            let artist = await requestArtist(artistName: "Doopees")
+        let appleMusicTracksFetchRequest = NSFetchRequest<Track>(entityName: "Track")
+        let predicate = NSPredicate(format: "file_kind == 'Apple Music AAC audio file'")
+        appleMusicTracksFetchRequest.predicate = predicate
+        do {
+            let tracks = try managedContext.fetch(appleMusicTracksFetchRequest)
+            let artists = Set(tracks.compactMap({return $0.artist}))/*.filter({$0.apple_music_persistent_id == nil})*/.map({return ($0, $0.name!)})
+            //let albums = tracks.compactMap({return $0.album!})
+            Task {
+                for artist in artists {
+                    let artistPersistentID = await requestArtist(artistName: artist.1)
+                    DispatchQueue.main.async {
+                        artist.0.apple_music_persistent_id = artistPersistentID
+                    }
+                    if artistPersistentID != "" {
+                        await requestAlbums(artistPersistentID: artistPersistentID, artist: artist.0)
+                    }
+                }
+            }
+        } catch {
+            print(error)
         }
     }
     
@@ -46,7 +64,7 @@ class AppleMusicTrackIdentifier: NSObject {
             DispatchQueue.main.async {
                 artist.apple_music_persistent_id = artistID
             }
-            await self.matchTrackIDs(artistID: artistID)
+            //await self.matchTrackIDs(artistID: artistID)
         }
     }
     
@@ -66,7 +84,92 @@ class AppleMusicTrackIdentifier: NSObject {
         }
     }
     
-    func matchTrackIDs(artistID: String) async {
+    func requestAlbums(artistPersistentID: String, artist: Artist) async {
+        let urlString = "https://api.music.apple.com/v1/me/library/artists/\(artistPersistentID)/albums"
+        let requestURL = URL(string: urlString)!
+        let urlRequest = URLRequest(url: requestURL)
+        do {
+            let request = MusicDataRequest(urlRequest: urlRequest)
+            let response = try await request.response()
+            DispatchQueue.main.async {
+                self.matchAlbumIDs(artist: artist, response: response)
+            }
+        } catch {
+            DispatchQueue.main.async {
+                print("error making api request for artist \(artist.name)")
+            }
+        }
+    }
+    
+    func getAlbumTracks(albums: [(Album, String)]) {
+        Task {
+            for album in albums {
+                let urlString = "https://api.music.apple.com/v1/me/library/albums/\(album.1)/tracks"
+                let requestURL = URL(string: urlString)!
+                let urlRequest = URLRequest(url: requestURL)
+                do {
+                    let request = MusicDataRequest(urlRequest: urlRequest)
+                    let response = try await request.response()
+                    DispatchQueue.main.async {
+                        self.matchTrackIDs(album: album.0, response: response)
+                    }
+                } catch {
+                    print("error making api request")
+                }
+            }
+        }
+    }
+    
+    func matchTrackIDs(album: Album, response: MusicDataResponse) {
+        do {
+            let jsonObject = try JSONSerialization.jsonObject(with: response.data, options: [])
+            let trackArray = (jsonObject as? NSDictionary)?["data"] as! NSArray
+            let coreDataTracks = Array(album.tracks as! Set<Track>)
+            for track in trackArray {
+                let artistNameFromResponse = ((track as? NSDictionary)?["attributes"] as? NSDictionary)?["artistName"] as! String
+                let trackNameFromResponse = ((track as? NSDictionary)?["attributes"] as? NSDictionary)?["name"] as! String
+                let trackNumberFromResponse = ((track as? NSDictionary)?["attributes"] as? NSDictionary)?["trackNumber"] as! Int
+                let idFromResponse = (track as? NSDictionary)?["id"] as? String
+                if let existingTrack = coreDataTracks.first(where: {
+                    let coreDataTrackNum = $0.track_num ?? 0
+                    let otherNum = NSNumber(value: trackNumberFromResponse)
+                    return coreDataTrackNum.isEqual(to: otherNum)
+                }) {
+                    existingTrack.apple_music_persistent_id = idFromResponse!
+                    print("matched \(trackNameFromResponse) by \(artistNameFromResponse) to \(existingTrack.name) by \(existingTrack.artist?.name)")
+                } else {
+                    print("no match")
+                }
+            }
+            
+        } catch {
+            print(error)
+        }
+    }
+    
+    func matchAlbumIDs(artist: Artist, response: MusicDataResponse) {
+        do {
+            let jsonObject = try JSONSerialization.jsonObject(with: response.data, options: [])
+            let albumArray = (jsonObject as? NSDictionary)?["data"] as! NSArray
+            let coreDataAlbums = Set(artist.tracks!.map({return ($0 as! Track).album!}))
+            var albums = [(Album, String)]()
+            for album in albumArray {
+                let artistNameFromResponse = ((album as? NSDictionary)?["attributes"] as? NSDictionary)?["artistName"] as! String
+                let albumNameFromResponse = ((album as? NSDictionary)?["attributes"] as? NSDictionary)?["name"] as! String
+                let idFromResponse = (album as? NSDictionary)?["id"] as? String
+                if let existingAlbum = coreDataAlbums.first(where: {$0.name!.localizedCaseInsensitiveCompare(albumNameFromResponse) == .orderedSame}) {
+                    existingAlbum.apple_music_persistent_id = idFromResponse!
+                    //now go match tracks for this album
+                    albums.append((existingAlbum, existingAlbum.apple_music_persistent_id!))
+                }
+            }
+            getAlbumTracks(albums: albums)
+        } catch {
+            print(error)
+        }
+    }
+    
+    /*func matchTrackIDs(artistID: String) async {
         let urlString = "https://api.music.apple.com/v1/me/library/artists/\(artistID)/albums"
         let requestURL = URL(string: urlString)!
         let urlRequest = URLRequest(url: requestURL)
@@ -79,7 +182,7 @@ class AppleMusicTrackIdentifier: NSObject {
         } catch {
             print("error making api request")
         }
-    }
+    }*/
     
     func requestResource(trackName: String, artistName: String, albumName: String) async -> String {
         var encodedTrackName = String(trackName.replacingOccurrences(of: " ", with: "+").replacingOccurrences(of: ",", with: "").replacingOccurrences(of: "&", with: "").unicodeScalars.filter(CharacterSet.urlQueryAllowed.union(CharacterSet(charactersIn: "+")).contains))

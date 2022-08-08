@@ -213,16 +213,8 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         self.selectionHandler.parent = self
         //self.artistViewController.artistListView.tableView.mainWindowController = self.artistViewController.mainWindowController
         if #available(macOS 12.0, *) {
-            let doopees = NSFetchRequest<Artist>(entityName: "Artist")
-            let predicate = NSPredicate(format: "name == 'Doopees'")
-            doopees.predicate = predicate
-            do {
-                let artist = try (managedContext.fetch(doopees))[0]
-                (self.artistViewController.mainWindowController?.avPlayerAudioModule.appleMusicTrackIdentifier as! AppleMusicTrackIdentifier).initializeTracksForArtist(artist: artist)
-            } catch {
-                print(error)
-            }
-        }
+            (self.artistViewController.mainWindowController?.avPlayerAudioModule.appleMusicTrackIdentifier as! AppleMusicTrackIdentifier).initializeLibrary()
+         }
     }
     
 }
