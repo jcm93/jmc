@@ -213,7 +213,7 @@ class ArtistViewAlbumViewController: NSViewController, NSTableViewDataSource, NS
         self.selectionHandler.parent = self
         //self.artistViewController.artistListView.tableView.mainWindowController = self.artistViewController.mainWindowController
         if #available(macOS 12.0, *) {
-            (self.artistViewController.mainWindowController?.avPlayerAudioModule.appleMusicTrackIdentifier as! AppleMusicTrackIdentifier).initializeLibrary()
+            //(self.artistViewController.mainWindowController?.avPlayerAudioModule.appleMusicTrackIdentifier as! AppleMusicTrackIdentifier).initializeLibrary()
          }
     }
     

@@ -480,8 +480,8 @@ class TrackQueueViewController: NSViewController, NSTableViewDelegate, NSTableVi
     func createPlayOrderArray(_ track: Track, row: Int) {
         print("initialize array called")
         self.currentAudioSource = currentSourceListItem
-        self.currentAudioSource?.currentPlayOrderObject = self.currentAudioSource?.artistPlayOrderObject
-        if let avc = self.currentAudioSource?.currentViewController as? ArtistViewController {
+        //self.currentAudioSource?.currentPlayOrderObject = self.currentAudioSource?.artistPlayOrderObject
+        if self.currentAudioSource?.currentViewController is ArtistViewController {
             self.currentAudioSource!.currentPlayOrderObject = self.currentAudioSource!.artistPlayOrderObject
         } else {
             self.currentAudioSource!.currentPlayOrderObject = self.currentAudioSource!.songsPlayOrderObject
