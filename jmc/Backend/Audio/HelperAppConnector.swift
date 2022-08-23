@@ -10,4 +10,8 @@ import Cocoa
 
 class HelperAppConnector: NSObject {
 
+    override init() {
+        super.init()
+        NSXPCConnection.init(serviceName: "jmcHelper")
+    }
 }

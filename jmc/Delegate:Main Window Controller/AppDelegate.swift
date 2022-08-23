@@ -19,7 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     var setupWindowController: InitialSetupWindowController?
     var equalizerWindowController: EqualizerWindowController?
     var importWindowController: ImportWindowController?
-    var iTunesParser: iTunesLibraryParser?  
+    var iTunesParser: iTunesLibraryParser?
     var locationManager: LocationManager?
     var audioModule: AudioModule = AudioModule()
     let fileHandler = FileManager.default
@@ -30,6 +30,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     var lastFMDelegate: LastFMDelegate?
     var mediaKeyListener: MediaKeyListener?
     var mediaKeyListenerQueue: DispatchQueue!
+    var helperAppConnector: HelperAppConnector!
     
     @IBOutlet var menuDelegate: MainMenuDelegate!
     
@@ -158,6 +159,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         //self.mediaKeyListenerQueue = mediaKeyListenerQueue temp
         self.menuDelegate.delegate = self
         self.menuDelegate.mainWindowController = self.mainWindowController
+        launchHelper()
+    }
+    
+    func launchHelper() {
+        let helperAppURL = Bundle.main.resourceURL?.appendingPathComponent("HelperAppTest.app")
+        NSWorkspace.shared.openApplication(at: helperAppURL!, configuration: NSWorkspace.OpenConfiguration(), completionHandler: helperLaunchCompletion)
+    }
+    
+    func helperLaunchCompletion(_ app: NSRunningApplication?, _ error: Error?) -> Void {
+        self.helperAppConnector = HelperAppConnector()
     }
     
     @objc func managedObjectsDidUndo() {

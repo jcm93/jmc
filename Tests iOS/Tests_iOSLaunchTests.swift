@@ -1,14 +1,14 @@
 //
-//  AppleMusicHelperUITestsLaunchTests.swift
-//  AppleMusicHelperUITests
+//  Tests_iOSLaunchTests.swift
+//  Tests iOS
 //
-//  Created by John Moody on 8/22/22.
+//  Created by John Moody on 8/23/22.
 //  Copyright © 2022 John Moody. All rights reserved.
 //
 
 import XCTest
 
-class AppleMusicHelperUITestsLaunchTests: XCTestCase {
+class Tests_iOSLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

@@ -1,14 +1,14 @@
 //
-//  AppleMusicHelperUITests.swift
-//  AppleMusicHelperUITests
+//  Tests_macOS.swift
+//  Tests macOS
 //
-//  Created by John Moody on 8/22/22.
+//  Created by John Moody on 8/23/22.
 //  Copyright © 2022 John Moody. All rights reserved.
 //
 
 import XCTest
 
-class AppleMusicHelperUITests: XCTestCase {
+class Tests_macOS: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

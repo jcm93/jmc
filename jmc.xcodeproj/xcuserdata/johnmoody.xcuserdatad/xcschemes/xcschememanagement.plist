@@ -4,10 +4,15 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>AppleMusicHelper.xcscheme_^#shared#^_</key>
+		<key>HelperAppTest (iOS).xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>3</integer>
+		</dict>
+		<key>HelperAppTest (macOS).xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
 		</dict>
 		<key>jmc-license manager.xcscheme</key>
 		<dict>
@@ -33,6 +38,21 @@
 			<true/>
 		</dict>
 		<key>0DAB30A91CFBA3340028928F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0DF518B528B43DB600DF857B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0DF518CA28B43DB700DF857B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0DF518D428B43DB700DF857B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
