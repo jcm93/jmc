@@ -57,6 +57,8 @@
 		0D3189A228B558270039229E /* jmcHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3189A028B558270039229E /* jmcHelperProtocol.swift */; };
 		0D3189A428B558330039229E /* jmcHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3189A328B558330039229E /* jmcHelper.swift */; };
 		0D3189A528B558330039229E /* jmcHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3189A328B558330039229E /* jmcHelper.swift */; };
+		0D3189A828B567A90039229E /* jmcHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3189A728B567A90039229E /* jmcHelperProtocol.swift */; };
+		0D3189AA28B567CD0039229E /* jmcHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3189A928B567CD0039229E /* jmcHelper.swift */; };
 		0D34A4771F7306D400CAA6C4 /* AlbumArtwork+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D34A4751F7306D300CAA6C4 /* AlbumArtwork+CoreDataClass.swift */; };
 		0D34A4781F7306D400CAA6C4 /* AlbumArtwork+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D34A4761F7306D300CAA6C4 /* AlbumArtwork+CoreDataProperties.swift */; };
 		0D3756C01EAADBD700016136 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3756BE1EAADBD700016136 /* PreferencesWindowController.swift */; };
@@ -337,6 +339,8 @@
 		0D31899D28B557FA0039229E /* MusicKitPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicKitPlayer.swift; sourceTree = "<group>"; };
 		0D3189A028B558270039229E /* jmcHelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jmcHelperProtocol.swift; sourceTree = "<group>"; };
 		0D3189A328B558330039229E /* jmcHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jmcHelper.swift; sourceTree = "<group>"; };
+		0D3189A728B567A90039229E /* jmcHelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jmcHelperProtocol.swift; sourceTree = "<group>"; };
+		0D3189A928B567CD0039229E /* jmcHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jmcHelper.swift; sourceTree = "<group>"; };
 		0D34A4751F7306D300CAA6C4 /* AlbumArtwork+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumArtwork+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0D34A4761F7306D300CAA6C4 /* AlbumArtwork+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumArtwork+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0D3756BE1EAADBD700016136 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
@@ -874,6 +878,8 @@
 				0D4C0AC52792163D005BE760 /* JMPlayer.swift */,
 				0D4C0AC3279210B6005BE760 /* AppleMusicTrackIdentifier.swift */,
 				0DF518B028B43D2800DF857B /* HelperAppConnector.swift */,
+				0D3189A728B567A90039229E /* jmcHelperProtocol.swift */,
+				0D3189A928B567CD0039229E /* jmcHelper.swift */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
@@ -1489,11 +1495,13 @@
 				0D5279162777EE70008271CE /* ArtistViewAlbumTrackListTableViewDelegate.swift in Sources */,
 				0D51C8A81EAC1646002F6182 /* URLStringFormatter.swift in Sources */,
 				0D4B4A0A2779778700161441 /* LibraryViewController.swift in Sources */,
+				0D3189AA28B567CD0039229E /* jmcHelper.swift in Sources */,
 				0DE74A531D7D9457005211E6 /* SharedLibraryRequestHandler.swift in Sources */,
 				0D592A221EDF6BCE0054D553 /* TrackExtension.swift in Sources */,
 				0DA02D381EFB098900DDE5A9 /* StupidSearchField.swift in Sources */,
 				0D800C0C1ED3B54100EA2889 /* ArtistViewAlbumViewController.swift in Sources */,
 				0D4C0A9B2790B85A005BE760 /* AuthorizationWindow.swift in Sources */,
+				0D3189A828B567A90039229E /* jmcHelperProtocol.swift in Sources */,
 				0D299B131DF10FFF0009CF7A /* SourceListViewController.swift in Sources */,
 				0D61248E201AAA9300574118 /* PlayOrderObject+CoreDataProperties.swift in Sources */,
 				0DE486861EA58C67009B226B /* JMPathControl.swift in Sources */,
@@ -1808,6 +1816,7 @@
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "HelperAppTest--macOS--Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 John Moody. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
@@ -1853,6 +1862,7 @@
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "HelperAppTest--macOS--Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 John Moody. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 12.3;

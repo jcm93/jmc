@@ -433,7 +433,8 @@ class MainWindowController: NSWindowController, NSSearchFieldDelegate, NSWindowD
     
     @IBAction func skipBackward(_ sender: Any) {
         //self.skipBackward()
-        self.avPlayerAudioModule.musicKitTestThing?.player.getPlaybackBitrate(onSuccess: self.avPlayerAudioModule.reportBitrate)
+        //self.avPlayerAudioModule.musicKitTestThing?.player.getPlaybackBitrate(onSuccess: self.avPlayerAudioModule.reportBitrate)
+        self.delegate.helperAppConnector.connect()
     }
     
     @IBAction func tempBreak(_ sender: AnyObject) {

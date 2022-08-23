@@ -17,13 +17,14 @@ class ConnectionHandler: NSObject, NSXPCListenerDelegate {
     func listener(_ listener: NSXPCListener, shouldAcceptNewConnection newConnection: NSXPCConnection) -> Bool {
         newConnection.exportedInterface = NSXPCInterface(with: jmcHelperProtocol.self)
         newConnection.exportedObject = helper
+        newConnection.resume()
         return true
     }
     
     override init() {
         super.init()
         self.helper = jmcHelper()
-        self.listener = NSXPCListener(machServiceName: "jmcHelper")
+        self.listener = NSXPCListener.init(machServiceName: "com.jcm.jmcHelper")
         self.listener.delegate = self
         //listener.resume()
     }

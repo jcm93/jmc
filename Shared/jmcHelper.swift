@@ -11,7 +11,7 @@ import Foundation
 
 class jmcHelper: NSObject, jmcHelperProtocol {
     func test(input: String, reply: @escaping (String) -> Void) {
-        print("poop")
+        reply("rhewqkrleqjwkh")
     }
     
     

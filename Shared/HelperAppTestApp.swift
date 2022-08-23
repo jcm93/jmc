@@ -17,7 +17,7 @@ class HelperAppTestApp: App {
     var musicKitPlayer: MusicKitPlayer!
     var body: some Scene {
         WindowGroup {
-            //ContentView()
+            ContentView()
         }
     }
     
@@ -25,7 +25,7 @@ class HelperAppTestApp: App {
     required init() {
         self.connectionHandler = ConnectionHandler()
         self.musicKitPlayer = MusicKitPlayer()
-        print("poop")
+        print("connection listener started")
         self.connectionHandler.listener.resume()
         //self.body = fatalError()
         //self.body = fatalError()
